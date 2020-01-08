@@ -1,0 +1,54 @@
+package fr.istic.tools.scanexam
+
+type File wraps java.io.File
+
+class Exam {
+	String label
+	String folderPath
+	int numberOfPages
+	contains Question[] questions 
+	
+}
+class Question {
+	String label
+	contains ScanZone zone
+	contains ScanZone markZone
+	int defaultGradeIndex
+	String[] grades
+	String[] feedback
+	double weight
+}
+
+class ScanZone {
+	
+	int x
+	int y
+	int w
+	int h
+	int page
+	op String toString() {
+		"["+x+","+y+"]->["+(x+w)+","+(y+h)+"]@"+page
+	}
+}
+
+
+class GradingData {
+	String solutionPath
+	String excelFileName
+	File[] images
+	contains Exam exam
+	contains StudentGrade[] grades 	
+	
+}
+
+class StudentGrade {
+	String studentID
+	contains QuestionGrade[] questionGrades
+}
+
+class QuestionGrade {
+	refers Question question
+	boolean validated
+	String filename
+	String grade
+}
