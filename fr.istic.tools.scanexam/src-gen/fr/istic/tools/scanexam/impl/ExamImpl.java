@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link fr.istic.tools.scanexam.impl.ExamImpl#getLabel <em>Label</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.impl.ExamImpl#getFolderPath <em>Folder Path</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.impl.ExamImpl#getNumberOfPages <em>Number Of Pages</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.impl.ExamImpl#getScale <em>Scale</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.impl.ExamImpl#getQuestions <em>Questions</em>}</li>
  * </ul>
  *
@@ -98,6 +99,26 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * @ordered
 	 */
 	protected int numberOfPages = NUMBER_OF_PAGES_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getScale() <em>Scale</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScale()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int SCALE_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getScale() <em>Scale</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScale()
+	 * @generated
+	 * @ordered
+	 */
+	protected int scale = SCALE_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getQuestions() <em>Questions</em>}' containment reference list.
@@ -203,6 +224,29 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * @generated
 	 */
 	@Override
+	public int getScale() {
+		return scale;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setScale(int newScale) {
+		int oldScale = scale;
+		scale = newScale;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ScanexamPackage.EXAM__SCALE, oldScale, scale));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<Question> getQuestions() {
 		if (questions == null) {
 			questions = new EObjectContainmentEList<Question>(Question.class, this, ScanexamPackage.EXAM__QUESTIONS);
@@ -238,6 +282,8 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 				return getFolderPath();
 			case ScanexamPackage.EXAM__NUMBER_OF_PAGES:
 				return getNumberOfPages();
+			case ScanexamPackage.EXAM__SCALE:
+				return getScale();
 			case ScanexamPackage.EXAM__QUESTIONS:
 				return getQuestions();
 		}
@@ -261,6 +307,9 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 				return;
 			case ScanexamPackage.EXAM__NUMBER_OF_PAGES:
 				setNumberOfPages((Integer)newValue);
+				return;
+			case ScanexamPackage.EXAM__SCALE:
+				setScale((Integer)newValue);
 				return;
 			case ScanexamPackage.EXAM__QUESTIONS:
 				getQuestions().clear();
@@ -287,6 +336,9 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 			case ScanexamPackage.EXAM__NUMBER_OF_PAGES:
 				setNumberOfPages(NUMBER_OF_PAGES_EDEFAULT);
 				return;
+			case ScanexamPackage.EXAM__SCALE:
+				setScale(SCALE_EDEFAULT);
+				return;
 			case ScanexamPackage.EXAM__QUESTIONS:
 				getQuestions().clear();
 				return;
@@ -308,6 +360,8 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 				return FOLDER_PATH_EDEFAULT == null ? folderPath != null : !FOLDER_PATH_EDEFAULT.equals(folderPath);
 			case ScanexamPackage.EXAM__NUMBER_OF_PAGES:
 				return numberOfPages != NUMBER_OF_PAGES_EDEFAULT;
+			case ScanexamPackage.EXAM__SCALE:
+				return scale != SCALE_EDEFAULT;
 			case ScanexamPackage.EXAM__QUESTIONS:
 				return questions != null && !questions.isEmpty();
 		}
@@ -330,6 +384,8 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 		result.append(folderPath);
 		result.append(", numberOfPages: ");
 		result.append(numberOfPages);
+		result.append(", scale: ");
+		result.append(scale);
 		result.append(')');
 		return result.toString();
 	}

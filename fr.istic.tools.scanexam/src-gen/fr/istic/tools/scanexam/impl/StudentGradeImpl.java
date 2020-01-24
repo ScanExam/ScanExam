@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.impl.StudentGradeImpl#getStudentID <em>Student ID</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.impl.StudentGradeImpl#getNumAnonymat <em>Num Anonymat</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.impl.StudentGradeImpl#getQuestionGrades <em>Question Grades</em>}</li>
  * </ul>
  *
@@ -56,6 +57,26 @@ public class StudentGradeImpl extends MinimalEObjectImpl.Container implements St
 	 * @ordered
 	 */
 	protected String studentID = STUDENT_ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getNumAnonymat() <em>Num Anonymat</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNumAnonymat()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final long NUM_ANONYMAT_EDEFAULT = 0L;
+
+	/**
+	 * The cached value of the '{@link #getNumAnonymat() <em>Num Anonymat</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNumAnonymat()
+	 * @generated
+	 * @ordered
+	 */
+	protected long numAnonymat = NUM_ANONYMAT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getQuestionGrades() <em>Question Grades</em>}' containment reference list.
@@ -115,6 +136,29 @@ public class StudentGradeImpl extends MinimalEObjectImpl.Container implements St
 	 * @generated
 	 */
 	@Override
+	public long getNumAnonymat() {
+		return numAnonymat;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setNumAnonymat(long newNumAnonymat) {
+		long oldNumAnonymat = numAnonymat;
+		numAnonymat = newNumAnonymat;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ScanexamPackage.STUDENT_GRADE__NUM_ANONYMAT, oldNumAnonymat, numAnonymat));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<QuestionGrade> getQuestionGrades() {
 		if (questionGrades == null) {
 			questionGrades = new EObjectContainmentEList<QuestionGrade>(QuestionGrade.class, this, ScanexamPackage.STUDENT_GRADE__QUESTION_GRADES);
@@ -146,6 +190,8 @@ public class StudentGradeImpl extends MinimalEObjectImpl.Container implements St
 		switch (featureID) {
 			case ScanexamPackage.STUDENT_GRADE__STUDENT_ID:
 				return getStudentID();
+			case ScanexamPackage.STUDENT_GRADE__NUM_ANONYMAT:
+				return getNumAnonymat();
 			case ScanexamPackage.STUDENT_GRADE__QUESTION_GRADES:
 				return getQuestionGrades();
 		}
@@ -163,6 +209,9 @@ public class StudentGradeImpl extends MinimalEObjectImpl.Container implements St
 		switch (featureID) {
 			case ScanexamPackage.STUDENT_GRADE__STUDENT_ID:
 				setStudentID((String)newValue);
+				return;
+			case ScanexamPackage.STUDENT_GRADE__NUM_ANONYMAT:
+				setNumAnonymat((Long)newValue);
 				return;
 			case ScanexamPackage.STUDENT_GRADE__QUESTION_GRADES:
 				getQuestionGrades().clear();
@@ -183,6 +232,9 @@ public class StudentGradeImpl extends MinimalEObjectImpl.Container implements St
 			case ScanexamPackage.STUDENT_GRADE__STUDENT_ID:
 				setStudentID(STUDENT_ID_EDEFAULT);
 				return;
+			case ScanexamPackage.STUDENT_GRADE__NUM_ANONYMAT:
+				setNumAnonymat(NUM_ANONYMAT_EDEFAULT);
+				return;
 			case ScanexamPackage.STUDENT_GRADE__QUESTION_GRADES:
 				getQuestionGrades().clear();
 				return;
@@ -200,6 +252,8 @@ public class StudentGradeImpl extends MinimalEObjectImpl.Container implements St
 		switch (featureID) {
 			case ScanexamPackage.STUDENT_GRADE__STUDENT_ID:
 				return STUDENT_ID_EDEFAULT == null ? studentID != null : !STUDENT_ID_EDEFAULT.equals(studentID);
+			case ScanexamPackage.STUDENT_GRADE__NUM_ANONYMAT:
+				return numAnonymat != NUM_ANONYMAT_EDEFAULT;
 			case ScanexamPackage.STUDENT_GRADE__QUESTION_GRADES:
 				return questionGrades != null && !questionGrades.isEmpty();
 		}
@@ -218,6 +272,8 @@ public class StudentGradeImpl extends MinimalEObjectImpl.Container implements St
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (studentID: ");
 		result.append(studentID);
+		result.append(", numAnonymat: ");
+		result.append(numAnonymat);
 		result.append(')');
 		return result.toString();
 	}

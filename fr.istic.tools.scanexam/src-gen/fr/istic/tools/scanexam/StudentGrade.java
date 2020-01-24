@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.StudentGrade#getStudentID <em>Student ID</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.StudentGrade#getNumAnonymat <em>Num Anonymat</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.StudentGrade#getQuestionGrades <em>Question Grades</em>}</li>
  * </ul>
  *
@@ -45,6 +46,28 @@ public interface StudentGrade extends EObject {
 	 * @generated
 	 */
 	void setStudentID(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Num Anonymat</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Num Anonymat</em>' attribute.
+	 * @see #setNumAnonymat(long)
+	 * @see fr.istic.tools.scanexam.ScanexamPackage#getStudentGrade_NumAnonymat()
+	 * @model unique="false"
+	 * @generated
+	 */
+	long getNumAnonymat();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.StudentGrade#getNumAnonymat <em>Num Anonymat</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Num Anonymat</em>' attribute.
+	 * @see #getNumAnonymat()
+	 * @generated
+	 */
+	void setNumAnonymat(long value);
 
 	/**
 	 * Returns the value of the '<em><b>Question Grades</b></em>' containment reference list.

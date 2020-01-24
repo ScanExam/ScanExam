@@ -96,13 +96,22 @@ public interface ScanexamPackage extends EPackage {
 	int EXAM__NUMBER_OF_PAGES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Scale</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXAM__SCALE = 3;
+
+	/**
 	 * The feature id for the '<em><b>Questions</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM__QUESTIONS = 3;
+	int EXAM__QUESTIONS = 4;
 
 	/**
 	 * The number of structural features of the '<em>Exam</em>' class.
@@ -111,7 +120,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_FEATURE_COUNT = 4;
+	int EXAM_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Exam</em>' class.
@@ -388,13 +397,22 @@ public interface ScanexamPackage extends EPackage {
 	int STUDENT_GRADE__STUDENT_ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Num Anonymat</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_GRADE__NUM_ANONYMAT = 1;
+
+	/**
 	 * The feature id for the '<em><b>Question Grades</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_GRADE__QUESTION_GRADES = 1;
+	int STUDENT_GRADE__QUESTION_GRADES = 2;
 
 	/**
 	 * The number of structural features of the '<em>Student Grade</em>' class.
@@ -403,7 +421,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_GRADE_FEATURE_COUNT = 2;
+	int STUDENT_GRADE_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Student Grade</em>' class.
@@ -531,6 +549,17 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getExam_NumberOfPages();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.Exam#getScale <em>Scale</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Scale</em>'.
+	 * @see fr.istic.tools.scanexam.Exam#getScale()
+	 * @see #getExam()
+	 * @generated
+	 */
+	EAttribute getExam_Scale();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.Exam#getQuestions <em>Questions</em>}'.
@@ -792,6 +821,17 @@ public interface ScanexamPackage extends EPackage {
 	EAttribute getStudentGrade_StudentID();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.StudentGrade#getNumAnonymat <em>Num Anonymat</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Num Anonymat</em>'.
+	 * @see fr.istic.tools.scanexam.StudentGrade#getNumAnonymat()
+	 * @see #getStudentGrade()
+	 * @generated
+	 */
+	EAttribute getStudentGrade_NumAnonymat();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.StudentGrade#getQuestionGrades <em>Question Grades</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -923,6 +963,14 @@ public interface ScanexamPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EXAM__NUMBER_OF_PAGES = eINSTANCE.getExam_NumberOfPages();
+
+		/**
+		 * The meta object literal for the '<em><b>Scale</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXAM__SCALE = eINSTANCE.getExam_Scale();
 
 		/**
 		 * The meta object literal for the '<em><b>Questions</b></em>' containment reference list feature.
@@ -1123,6 +1171,14 @@ public interface ScanexamPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STUDENT_GRADE__STUDENT_ID = eINSTANCE.getStudentGrade_StudentID();
+
+		/**
+		 * The meta object literal for the '<em><b>Num Anonymat</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_GRADE__NUM_ANONYMAT = eINSTANCE.getStudentGrade_NumAnonymat();
 
 		/**
 		 * The meta object literal for the '<em><b>Question Grades</b></em>' containment reference list feature.

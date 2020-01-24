@@ -189,8 +189,18 @@ public class ScanexamPackageImpl extends EPackageImpl implements ScanexamPackage
 	 * @generated
 	 */
 	@Override
+	public EAttribute getExam_Scale() {
+		return (EAttribute)examEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getExam_Questions() {
-		return (EReference)examEClass.getEStructuralFeatures().get(3);
+		return (EReference)examEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -429,8 +439,18 @@ public class ScanexamPackageImpl extends EPackageImpl implements ScanexamPackage
 	 * @generated
 	 */
 	@Override
+	public EAttribute getStudentGrade_NumAnonymat() {
+		return (EAttribute)studentGradeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getStudentGrade_QuestionGrades() {
-		return (EReference)studentGradeEClass.getEStructuralFeatures().get(1);
+		return (EReference)studentGradeEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -526,6 +546,7 @@ public class ScanexamPackageImpl extends EPackageImpl implements ScanexamPackage
 		createEAttribute(examEClass, EXAM__LABEL);
 		createEAttribute(examEClass, EXAM__FOLDER_PATH);
 		createEAttribute(examEClass, EXAM__NUMBER_OF_PAGES);
+		createEAttribute(examEClass, EXAM__SCALE);
 		createEReference(examEClass, EXAM__QUESTIONS);
 
 		questionEClass = createEClass(QUESTION);
@@ -554,6 +575,7 @@ public class ScanexamPackageImpl extends EPackageImpl implements ScanexamPackage
 
 		studentGradeEClass = createEClass(STUDENT_GRADE);
 		createEAttribute(studentGradeEClass, STUDENT_GRADE__STUDENT_ID);
+		createEAttribute(studentGradeEClass, STUDENT_GRADE__NUM_ANONYMAT);
 		createEReference(studentGradeEClass, STUDENT_GRADE__QUESTION_GRADES);
 
 		questionGradeEClass = createEClass(QUESTION_GRADE);
@@ -603,6 +625,7 @@ public class ScanexamPackageImpl extends EPackageImpl implements ScanexamPackage
 		initEAttribute(getExam_Label(), theEcorePackage.getEString(), "label", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExam_FolderPath(), theEcorePackage.getEString(), "folderPath", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExam_NumberOfPages(), theEcorePackage.getEInt(), "numberOfPages", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExam_Scale(), theEcorePackage.getEInt(), "scale", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExam_Questions(), this.getQuestion(), null, "questions", null, 0, -1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(questionEClass, Question.class, "Question", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -632,6 +655,7 @@ public class ScanexamPackageImpl extends EPackageImpl implements ScanexamPackage
 
 		initEClass(studentGradeEClass, StudentGrade.class, "StudentGrade", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStudentGrade_StudentID(), theEcorePackage.getEString(), "studentID", null, 0, 1, StudentGrade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentGrade_NumAnonymat(), theEcorePackage.getELong(), "numAnonymat", null, 0, 1, StudentGrade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStudentGrade_QuestionGrades(), this.getQuestionGrade(), null, "questionGrades", null, 0, -1, StudentGrade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(questionGradeEClass, QuestionGrade.class, "QuestionGrade", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

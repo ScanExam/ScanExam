@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link fr.istic.tools.scanexam.Exam#getLabel <em>Label</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.Exam#getFolderPath <em>Folder Path</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.Exam#getNumberOfPages <em>Number Of Pages</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.Exam#getScale <em>Scale</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.Exam#getQuestions <em>Questions</em>}</li>
  * </ul>
  *
@@ -91,6 +92,28 @@ public interface Exam extends EObject {
 	 * @generated
 	 */
 	void setNumberOfPages(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Scale</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Scale</em>' attribute.
+	 * @see #setScale(int)
+	 * @see fr.istic.tools.scanexam.ScanexamPackage#getExam_Scale()
+	 * @model unique="false"
+	 * @generated
+	 */
+	int getScale();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.Exam#getScale <em>Scale</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Scale</em>' attribute.
+	 * @see #getScale()
+	 * @generated
+	 */
+	void setScale(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Questions</b></em>' containment reference list.

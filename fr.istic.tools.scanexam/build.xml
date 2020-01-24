@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project fr.istic.tools.scanexam">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="${dir.buildfile}/../.."/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/scanexam.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="fr.istic.tools.scanexam.gui.ScanExamMain"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.jarfile}/target/classes"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.core.runtime_3.16.0.v20190823-1314.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.osgi_3.15.0.v20190830-1434.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.osgi.compatibility.state_1.1.600.v20190814-1451.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.equinox.common_3.10.500.v20190815-1535.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.core.jobs_3.10.500.v20190620-1426.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.equinox.registry_3.8.500.v20190714-1850.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.equinox.preferences_3.7.500.v20190815-1535.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.core.contenttype_3.7.400.v20190624-1144.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.equinox.app_1.4.300.v20190815-1535.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.emf.ecore_2.19.0.v20190822-1451.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.emf.common_2.16.0.v20190625-1131.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.xtext.xbase.lib_2.19.0.v20190902-0728.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/com.google.guava_27.1.0.v20190517-1946.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.emf.ecore.xcore.lib_1.4.0.v20190401-0856.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/opt/eclipse-2019-09/Eclipse.app/Contents/Eclipse/plugins/org.eclipse.emf.ecore.xmi_2.16.0.v20190528-0725.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/poi-3.14-20160307.jar"/>
+        </jar>
+    </target>
+</project>
