@@ -154,6 +154,8 @@ class ScanExamMain {
 		val KeyStroke nextStudentKS = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true);
 		val KeyStroke prevStudentKS = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true);
 
+		val KeyStroke gotoStudentKS = KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK, true);
+
 		// Get the input map for our component
 		// In this case we are interested in key strokes in the focused window
 		val InputMap inputMap = buttonPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -206,6 +208,16 @@ class ScanExamMain {
 				]
 			)
 		]
+
+		inputMap.put(gotoStudentKS, "gotoStudent");
+		actionMap.put("gotoStudent", new AbstractAction {
+			override actionPerformed(ActionEvent e) { 
+			val firstNumber = JOptionPane.showInputDialog("Enter student ID");
+			val int studentId= Integer.parseInt(firstNumber);
+			controler.gotoStudent(studentId)
+		}
+		});
+
 		inputMap.put(nextStudentKS, "nextStudent");
 		actionMap.put("nextStudent", new AbstractAction {
 			override actionPerformed(ActionEvent e) { controler.nextExam }

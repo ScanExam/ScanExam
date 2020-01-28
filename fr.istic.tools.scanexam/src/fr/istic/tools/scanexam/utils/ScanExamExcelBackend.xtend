@@ -11,6 +11,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet
 import java.io.FileOutputStream
 import fr.istic.tools.scanexam.Exam
 import fr.istic.tools.scanexam.instances.PFOExams
+import static extension fr.istic.tools.scanexam.utils.ScanExamXtendUtils.*
+import javax.swing.JOptionPane
+import java.util.Comparator
+import fr.istic.tools.scanexam.StudentGrade
 
 class ScanExamExcelBackend {
 	
@@ -28,10 +32,27 @@ class ScanExamExcelBackend {
 			for (questionGrade : studentGrade.questionGrades) {
 				val int column = data.exam.questions.indexOf(questionGrade.question)
 				questionGrade.grade = getStringAt(1,studentId+2, column+1)
-				if (questionGrade.grade.length!=0) {
+				val grade = questionGrade.grade
+				if (grade!==null && grade.length!=0) {
 					questionGrade.validated=true
 				}
-			}	
+			}
+			
+			val anonNumb = getStringAt(1,studentId+2,  data.exam.questions.size+4)
+			if (anonNumb!==null && anonNumb.length>0) {
+				try {
+					studentGrade.numAnonymat = Long.parseLong(anonNumb)	
+				} catch (NumberFormatException e) {
+	        		JOptionPane.showMessageDialog(null, 
+                              '''Wrong format, integer expected but "«anonNumb»" found''', 
+                              "Format error", 
+                              JOptionPane.ERROR_MESSAGE);
+	        	}
+			}
+			
+			
+			
+				
 		}
 		
 		data
@@ -41,6 +62,7 @@ class ScanExamExcelBackend {
 		workbook = new HSSFWorkbook();
 		val summary = workbook.createSheet("Summary")
 		val sheet = workbook.createSheet("Grades")
+		val scol = workbook.createSheet("Final")
 		
 		setStringAt(0,0, 0 , "#Images")
 		setStringAt(0,0, 1 , ""+data.images.size)
@@ -71,37 +93,34 @@ class ScanExamExcelBackend {
 			col+=1
 		}
 
-		val gradeMap = newHashMap(#[
-			"A"->5,
-			"B"->4,
-			"C"->3,
-			"D"->2,
-			"E"->1,
-			"F"->0
-		]);
-		
-		val scale = data.exam.questions.map[weight].reduce[p1, p2|p1+p2]
 		
 		for (studentId : 0..<data.grades.size) {
 			val studentGrade = data.grades.get(studentId)
 			setStringAt(1,studentId+2, 0, "Student_"+studentId)
-			var grade = 0.0;  
 			for (questionGrade : studentGrade.questionGrades) {
 				val int column = data.exam.questions.indexOf(questionGrade.question)
 				setStringAt(1,studentId+2,  column+1, questionGrade.grade)
-				val qgrade =gradeMap.get(questionGrade.grade)
-				if (qgrade!==null) {
-					grade += gradeMap.get(questionGrade.grade)*questionGrade.question.weight
-				} 
 			}
-			val scaledGrade  = grade/scale;
-			
-			setStringAt(1,studentId+2,  data.exam.questions.size+3, ""+ scaledGrade)
+			setStringAt(1,studentId+2,  data.exam.questions.size+3, ""+ studentGrade.computeGrade)
 				
 		}
+		
+		for (studentId : 0..<data.grades.size) {
+			val studentGrade = data.grades.get(studentId)
+			setStringAt(1,studentId+2,  data.exam.questions.size+3, ""+ studentGrade.computeGrade())
+			setStringAt(1,studentId+2,  data.exam.questions.size+4, ""+ studentGrade.numAnonymat)
+		}
+		
+		val r= data.grades.sortBy[it.numAnonymat]
+		for (i : 0..<r.size) {
+			val studentGrade = r.get(i)
+			setStringAt(2,i+1,  1, ""+ studentGrade.numAnonymat)
+			setStringAt(2,i+1,  2, ""+ studentGrade.computeGrade())
+		}
+
 		workbook.write(new FileOutputStream(file))	
 	}
-	
+
 	
 	def static setStringAt(int sheetId, int rowId,int colId, String content) {
 		var HSSFSheet sheet = workbook.getSheetAt(sheetId);
@@ -112,16 +131,32 @@ class ScanExamExcelBackend {
 		cell.cellValue = content 
 	}
 
-	def static getStringAt(int sheetId, int rowId, int colId) {
+	def static String getStringAt(int sheetId, int rowId, int colId) {
 		var HSSFSheet sheet = workbook.getSheetAt(sheetId);
-		val crow = sheet.getRow(rowId);
-		if (crow!==null) {
-			val cell= crow.getCell(colId);
-			if (cell!==null) {
-				return cell.richStringCellValue.string;
-			} 
+		try {
+			val crow = sheet.getRow(rowId);
+			if (crow!==null) {
+				val cell= crow.getCell(colId);
+				
+				if (cell!==null) {
+					switch(cell.cellType) {
+						case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC :{
+							return cell.numericCellValue.intValue.toString;
+						}
+						case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING :{
+							return cell.stringCellValue;
+						}
+						case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK:{
+							return ""
+						}
+						
+					}
+				} 
+			}
+			null
+		} catch (Exception exception) {
+			throw new RuntimeException("Cannot read string at sheet "+sheetId+" cell ("+rowId+","+colId+"), error "+exception.message)
 		}
-		null
 	}
 
 }

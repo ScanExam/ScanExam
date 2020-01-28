@@ -10,6 +10,8 @@ import fr.istic.tools.scanexam.Exam
 import fr.istic.tools.scanexam.GradingData
 import fr.istic.tools.scanexam.ScanexamPackage
 import java.io.File
+import fr.istic.tools.scanexam.StudentGrade
+import fr.istic.tools.scanexam.impl.GradingDataImpl
 
 class ScanExamXtendUtils {
 
@@ -31,4 +33,28 @@ class ScanExamXtendUtils {
 		resource.getContents().add(data)
 		resource.save(null)
 	}
+	
+	val static gradeMap = newHashMap(#[
+			"A"->5,
+			"B"->4,
+			"C"->3,
+			"D"->2,
+			"E"->1,
+			"F"->0
+		]);
+	
+	def static computeGrade(StudentGrade studentGrade) {
+		val exam = (studentGrade.eContainer as GradingData).exam
+		//val scale = exam.questions.map[weight].reduce[p1, p2|p1+p2]
+		
+		var grade = 0.0;  
+		for (questionGrade : studentGrade.questionGrades) {
+			val qgrade =gradeMap.get(questionGrade.grade)
+			if (qgrade!==null && questionGrade.validated) {
+				grade += gradeMap.get(questionGrade.grade)*questionGrade.question.weight
+			} 
+		}
+		Math.ceil(grade/exam.scale*16)/4;
+	}
+	
 }

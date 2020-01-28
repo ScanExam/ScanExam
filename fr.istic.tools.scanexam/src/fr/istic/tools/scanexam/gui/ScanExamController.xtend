@@ -14,11 +14,12 @@ import javax.imageio.ImageIO
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 import fr.istic.tools.scanexam.Question
+import javax.swing.JOptionPane
 
 class ScanExamController {
 
 	int currentStudentIndex =0;
-	int currentQuestionIndex = 0
+	public int currentQuestionIndex = 0
 	int currentGradeValueIndex = 0
 
 	GradingData data;
@@ -66,7 +67,9 @@ class ScanExamController {
 		currentGradeValueIndex=(grades).indexOf(grade)
 		if (currentGradeValueIndex==-1) {
 			if (currentQuestionGrade.validated) {
-				throw new UnsupportedOperationException('''Invalid grade «grade» not found in «grades»''')
+				currentQuestionGrade.validated=false
+				currentGradeValueIndex=currentQuestion.defaultGradeIndex
+				//throw new UnsupportedOperationException('''Invalid grade «grade» not found in «grades»''')
 			} else {
 				currentGradeValueIndex=currentQuestion.defaultGradeIndex 
 			}
@@ -119,9 +122,31 @@ class ScanExamController {
 		currentQuestionGrade.grade=currentQuestion.grades.get(currentGradeValueIndex)
 		currentQuestionGrade.validated=true
 		panel.repaint
-		tableView.updateTable(currentStudent)
+		tableView.updateTable()
 	}
 
+	def getNbStudent() {
+		(data.images.size/data.exam.numberOfPages)
+	}
+	
+	def gotoStudent(long i) {
+		var index = 0
+		for (exam : data.grades) {
+			if (exam.numAnonymat==i) {
+				currentStudentIndex=index
+				panel.repaint
+				tableView.updateTable()
+				return
+			} else {
+			}
+			index++
+		}
+		JOptionPane.showMessageDialog(null, 
+			'''ASnonymous number "«i»" not found''', 
+			"Format error", 
+			JOptionPane.ERROR_MESSAGE);
+	
+	}
 	
 	def nextExam() {
 		currentStudentIndex+=1
@@ -131,7 +156,7 @@ class ScanExamController {
 		updateQuestionGradeIndex		
 		loadCurrentPage
 		panel.updateQuestionZone
-		tableView.updateTable(currentStudent)
+		tableView.updateTable()
 		
 	}
 
@@ -143,8 +168,9 @@ class ScanExamController {
 		updateQuestionGradeIndex		
 		loadCurrentPage
 		panel.updateQuestionZone
-		tableView.updateTable(currentStudent)
+		tableView.updateTable()
 	}
+	
 	
 	def saveExcel() {
 		val chooser = new JFileChooser(System.getProperty("user.dir"));
@@ -211,6 +237,7 @@ class ScanExamController {
 	def getCurrentGradeIndex() {
 		currentGradeValueIndex
 	}
+	
 	
 	
 }

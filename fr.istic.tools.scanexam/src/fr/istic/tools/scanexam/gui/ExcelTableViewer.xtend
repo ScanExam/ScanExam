@@ -9,13 +9,18 @@ import fr.istic.tools.scanexam.StudentGrade
 import java.awt.*
 import java.io.File
 import java.text.Normalizer
+import fr.istic.tools.scanexam.Question
+import javax.swing.event.DocumentListener
+import javax.swing.event.DocumentEvent
 
-class ExcelTableViewer extends JPanel {
+class ExcelTableViewer extends JPanel implements DocumentListener {
 	boolean DEBUG = false
 	package JTable table
 	JScrollPane scrollPane
 	package ListSelectionListener listener
 	JLabel label
+	JTextArea numAnon;
+	ScanExamController controler;
 	def Object getCellAt(int row, int col) {
 		return table.getModel().getValueAt(row, col)
 	}
@@ -37,19 +42,54 @@ class ExcelTableViewer extends JPanel {
 		table.getSelectionModel().addListSelectionListener(listener)
 	}
 
-	def void updateTable(StudentGrade s) {
+	def void updateTable() {
+		val q= controler.currentQuestionIndex;
+		val s = controler.currentStudent
 		label.text = s.studentID
+		label.repaint
+		
+		numAnon.text = ""+ s.numAnonymat
 		label.repaint
 		var GradesTableModel tableModel = new GradesTableModel(s)
 		table.setModel(tableModel)
 		table.repaint()
+		table.editingRow = q
 		repaint
 	}
 
+			def setAnoNumber() {
+				if (numAnon.text.length>0) {
+	        	try {
+					controler.currentStudent.numAnonymat = Long.parseLong(numAnon.text)	
+	        	} catch (NumberFormatException e) {
+	        		JOptionPane.showMessageDialog(null, 
+                              '''Wrong format, integer expected «numAnon.text» found''', 
+                              "Format error", 
+                              JOptionPane.ERROR_MESSAGE);
+	        	}
+				}
+				
+			}
+	        override void removeUpdate(DocumentEvent e) {setAnoNumber}
+	
+	        override void insertUpdate(DocumentEvent e) {setAnoNumber}
+	
+	        override void changedUpdate(DocumentEvent arg0) {setAnoNumber}
+
 	new(ScanExamController c) {
-		super(new GridLayout(2, 0))
+		super()
+		controler =c;  
 		label = new JLabel("none")
+		label.setSize(200,40)
 		add(label)
+		numAnon=new JTextArea("0");
+		this.layout = new BoxLayout(this, BoxLayout.Y_AXIS)
+		numAnon.setSize(200,40)
+		numAnon.getDocument().addDocumentListener(this);
+		
+
+		
+		add(numAnon)
 		table = new JTable()
 		table.setModel(new DefaultTableModel())
 		table.setPreferredScrollableViewportSize(new Dimension(250, 800))
@@ -62,6 +102,6 @@ class ExcelTableViewer extends JPanel {
 		scrollPane.getViewport().setBackground(light_blue)
 		add(scrollPane)
 		c.tableView = this
-		updateTable(c.currentStudent)
+		updateTable()
 	}
 }

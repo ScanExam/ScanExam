@@ -4,6 +4,7 @@ import javax.swing.table.AbstractTableModel
 import fr.istic.tools.scanexam.GradingData
 import fr.istic.tools.scanexam.QuestionGrade
 import fr.istic.tools.scanexam.StudentGrade
+import static extension fr.istic.tools.scanexam.utils.ScanExamXtendUtils.*
 
 class GradesTableModel extends AbstractTableModel {
 	StudentGrade data
@@ -17,23 +18,37 @@ class GradesTableModel extends AbstractTableModel {
 	}
 
 	override Object getValueAt(int row, int col) {
-		var QuestionGrade qgrade = data.getQuestionGrades().get(row)
-
-		switch (col) {
-			case 0: {
-				return qgrade.getQuestion().getLabel()
+		if (row>=data.getQuestionGrades().size) {
+			switch (col) {
+				case 0: {
+					return "Total"
+				}
+				case 1: {
+					return data.computeGrade()
+				}
+				default: {
+					return "ERROR"
+				}
 			}
-			case 1: {
-				return qgrade.getGrade()
-			}
-			default: {
-				return "ERROR"
+		} else {
+			var QuestionGrade qgrade = data.getQuestionGrades().get(row)
+	
+			switch (col) {
+				case 0: {
+					return qgrade.getQuestion().getLabel()
+				}
+				case 1: {
+					return qgrade.getGrade()
+				}
+				default: {
+					return "ERROR"
+				}
 			}
 		}
 	}
 
 	override int getRowCount() {
-		return data.getQuestionGrades().size()
+		return data.getQuestionGrades().size()+1
 	}
 
 	override String getColumnName(int col) {

@@ -15,10 +15,11 @@ class ScanExamXtendFactory {
 		e
 	}
 
-	def static exam(String title, String path, int nPages, Iterable<Question> questions) {
+	def static exam(String title, String path, int nPages, int scale, Iterable<Question> questions) {
 		val e= exam(title)
 
 		e.numberOfPages= nPages
+		e.scale=scale
 		e.folderPath=path
 		e.questions+=questions
 		e

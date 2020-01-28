@@ -10,9 +10,11 @@ class PFOExams{
 		val e= exam(
 			"PFO_december_19", 
 			"/Users/sderrien/Documents/IFSIC/2019-2020/PFO/Examen/dec19/CopiesScan/png",
-			6, 
+			6,
+			42,
 			 #[
 				question("EX1_Q1",#[X0,2400,X1,2750,1], #[30,80,80,60,0], #["F", "A"],1),
+				//question("EX1_Q1",#[X0,0,X1,400,1], #[30,80,80,60,0], #["F", "A"],1),
 				question("EX1_Q2",#[X0,1600,X1,3200,1], #[30,80,80,60,0], #["F", "C", "A"],2),
 				question("EX1_Q3",#[X0,280,X1,650,2],   #[30,80,80,60,0], #["F", "D", "C", "B", "A"],4),
 				question("EX1_Q4",#[X0,700,X1,1350,2],  #[30,80,80,60,0], #["F", "D", "C", "B", "A"],2),
@@ -34,7 +36,7 @@ class PFOExams{
 		val weights = #[	
 			/* EX1 : 14 */ 1,2,2,2,2,4,1,
 			/* EX2 : 19 "*/ 2,6,3,6,2,
-			/* EX3 : 14 */ 4,4,6
+			/* EX3 : 13 */ 4,3,6
 		];
 
 		for(i:0..<e.questions.size) {
