@@ -90,7 +90,7 @@ class ScanExamPanel extends JPanel {
 	
 			g2.drawString("Question:"+ q.label, 40, 30)
 
-			g2.drawString("grades:"+q.grades.toString, 235, 30)
+			//g2.drawString("grades:"+q.grades.toString, 235, 30)
 	
 			g2.drawString("index="+control.currentGradeIndex, 490, 30)
 	
@@ -106,8 +106,11 @@ class ScanExamPanel extends JPanel {
 			g2.fillRect(20,70, 80, control.currentQuestion.grades.size*30+30)
 			g2.setColor(Color.BLACK);
 			
+			val start = Math.max(0,control.currentGradeIndex-5).intValue
+			val end = Math.min(control.currentGradeIndex+5,control.currentQuestion.grades.size).intValue
 			if (control.currentQuestionGrade.validated) {
-				for (i :0..<control.currentQuestion.grades.size) {
+				
+				for (i :start..<end) {
 					if (i== control.currentGradeIndex) {
 						g2.setColor(Color.RED);
 					} else {
@@ -118,7 +121,7 @@ class ScanExamPanel extends JPanel {
 					index++
 				}
 			} else {
-				for (i :0..<control.currentQuestion.grades.size) {
+				for (i :start..<end) {
 					if (i== control.currentGradeIndex) {
 						g2.setColor(Color.ORANGE);
 					} else {

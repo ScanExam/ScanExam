@@ -71,7 +71,8 @@ class ScanExamMain {
 		topPane.add(rightPane)
 		frame.setContentPane(contentPane);
 
-		val exam = PFOExams.december19()
+		//val exam = PFOExams.december19()
+		val exam = PFOExams.olivier()
 
 		val data = ScanExamXtendFactory.gradingData(exam)
 		val controler = new ScanExamController(data)
@@ -91,8 +92,8 @@ class ScanExamMain {
 				if (result == JOptionPane.YES_OPTION) {
 					val DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 					val data_ = df.format(new Date());
-					ScanExamXtendUtils.save(new File('''backup_«data_».xmi'''), data)
-					ScanExamExcelBackend.save(new File('''backup_«data_».xls'''), data)
+					ScanExamXtendUtils.save(new File('''backup_«exam.label»_«data_».xmi'''), data)
+					ScanExamExcelBackend.save(new File('''backup_«exam.label»_«data_».xls'''), data)
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				}
 			}
