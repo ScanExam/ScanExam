@@ -6,16 +6,22 @@ class Exam {
 	String label
 	String folderPath
 	int numberOfPages
+	int scale
+	//contains InfoFields[] info
 	contains Question[] questions 
 	
 }
+class InfoField extends Question {
+	
+}
+
 class Question {
 	String label
 	contains ScanZone zone
 	contains ScanZone markZone
 	int defaultGradeIndex
 	String[] grades
-	String[] feedback
+	String[] feedback 
 	double weight
 }
 
@@ -43,6 +49,7 @@ class GradingData {
 
 class StudentGrade {
 	String studentID
+	long numAnonymat
 	contains QuestionGrade[] questionGrades
 }
 
