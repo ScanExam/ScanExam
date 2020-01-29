@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -22,7 +23,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 public class ScanExamController {
   private int currentStudentIndex = 0;
   
-  private int currentQuestionIndex = 0;
+  public int currentQuestionIndex = 0;
   
   private int currentGradeValueIndex = 0;
   
@@ -106,12 +107,13 @@ public class ScanExamController {
         int _xifexpression_1 = (int) 0;
         boolean _isValidated = this.getCurrentQuestionGrade().isValidated();
         if (_isValidated) {
-          StringConcatenation _builder = new StringConcatenation();
-          _builder.append("Invalid grade ");
-          _builder.append(grade);
-          _builder.append(" not found in ");
-          _builder.append(grades);
-          throw new UnsupportedOperationException(_builder.toString());
+          int _xblockexpression_1 = (int) 0;
+          {
+            QuestionGrade _currentQuestionGrade = this.getCurrentQuestionGrade();
+            _currentQuestionGrade.setValidated(false);
+            _xblockexpression_1 = this.currentGradeValueIndex = this.getCurrentQuestion().getDefaultGradeIndex();
+          }
+          _xifexpression_1 = _xblockexpression_1;
         } else {
           _xifexpression_1 = this.currentGradeValueIndex = this.getCurrentQuestion().getDefaultGradeIndex();
         }
@@ -191,7 +193,39 @@ public class ScanExamController {
     QuestionGrade _currentQuestionGrade_1 = this.getCurrentQuestionGrade();
     _currentQuestionGrade_1.setValidated(true);
     this.panel.repaint();
-    this.tableView.updateTable(this.getCurrentStudent());
+    this.tableView.updateTable();
+  }
+  
+  public int getNbStudent() {
+    int _size = this.data.getImages().size();
+    int _numberOfPages = this.data.getExam().getNumberOfPages();
+    return (_size / _numberOfPages);
+  }
+  
+  public void gotoStudent(final long i) {
+    int index = 0;
+    EList<StudentGrade> _grades = this.data.getGrades();
+    for (final StudentGrade exam : _grades) {
+      {
+        long _numAnonymat = exam.getNumAnonymat();
+        boolean _equals = (_numAnonymat == i);
+        if (_equals) {
+          this.currentStudentIndex = index;
+          this.panel.repaint();
+          this.tableView.updateTable();
+          return;
+        } else {
+        }
+        index++;
+      }
+    }
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("ASnonymous number \"");
+    _builder.append(i);
+    _builder.append("\" not found");
+    JOptionPane.showMessageDialog(null, _builder, 
+      "Format error", 
+      JOptionPane.ERROR_MESSAGE);
   }
   
   public void nextExam() {
@@ -206,7 +240,7 @@ public class ScanExamController {
     this.updateQuestionGradeIndex();
     this.loadCurrentPage();
     this.panel.updateQuestionZone();
-    this.tableView.updateTable(this.getCurrentStudent());
+    this.tableView.updateTable();
   }
   
   public void prevExam() {
@@ -224,7 +258,7 @@ public class ScanExamController {
     this.updateQuestionGradeIndex();
     this.loadCurrentPage();
     this.panel.updateQuestionZone();
-    this.tableView.updateTable(this.getCurrentStudent());
+    this.tableView.updateTable();
   }
   
   public void saveExcel() {

@@ -182,6 +182,7 @@ public class ScanExamMain {
     final KeyStroke prevQuestion = KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.META_DOWN_MASK, true);
     final KeyStroke nextStudentKS = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true);
     final KeyStroke prevStudentKS = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true);
+    final KeyStroke gotoStudentKS = KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK, true);
     final InputMap inputMap = buttonPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     final ActionMap actionMap = buttonPanel.getActionMap();
     final Consumer<List<Integer>> _function_8 = (List<Integer> p) -> {
@@ -218,6 +219,15 @@ public class ScanExamMain {
         0, _function_10);
     };
     Collections.<List<Integer>>unmodifiableList(CollectionLiterals.<List<Integer>>newArrayList(Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_1), Integer.valueOf(0))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_2), Integer.valueOf(1))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_3), Integer.valueOf(2))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_4), Integer.valueOf(3))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_5), Integer.valueOf(4))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_6), Integer.valueOf(5))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_7), Integer.valueOf(6))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(KeyEvent.VK_8), Integer.valueOf(7))))).forEach(_function_9);
+    inputMap.put(gotoStudentKS, "gotoStudent");
+    actionMap.put("gotoStudent", new AbstractAction() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        final String firstNumber = JOptionPane.showInputDialog("Enter student ID");
+        final int studentId = Integer.parseInt(firstNumber);
+        controler.gotoStudent(studentId);
+      }
+    });
     inputMap.put(nextStudentKS, "nextStudent");
     actionMap.put("nextStudent", new AbstractAction() {
       @Override

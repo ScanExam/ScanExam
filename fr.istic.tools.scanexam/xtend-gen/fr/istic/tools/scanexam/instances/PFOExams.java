@@ -34,8 +34,9 @@ public class PFOExams {
         "PFO_december_19", 
         "/Users/sderrien/Documents/IFSIC/2019-2020/PFO/Examen/dec19/CopiesScan/png", 
         6, 
+        42, 
         Collections.<Question>unmodifiableList(CollectionLiterals.<Question>newArrayList(_question, _question_1, _question_2, _question_3, _question_4, _question_5, _question_6, _question_7, _question_8, _question_9, _question_10, _question_11, _question_12, _question_13, _question_14)));
-      final List<Integer> weights = Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(2), Integer.valueOf(2), Integer.valueOf(2), Integer.valueOf(4), Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(6), Integer.valueOf(3), Integer.valueOf(6), Integer.valueOf(2), Integer.valueOf(4), Integer.valueOf(4), Integer.valueOf(6)));
+      final List<Integer> weights = Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(2), Integer.valueOf(2), Integer.valueOf(2), Integer.valueOf(4), Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(6), Integer.valueOf(3), Integer.valueOf(6), Integer.valueOf(2), Integer.valueOf(4), Integer.valueOf(3), Integer.valueOf(6)));
       int _size = e.getQuestions().size();
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
       for (final Integer i : _doubleDotLessThan) {

@@ -31,11 +31,12 @@ public class ScanExamXtendFactory {
     return _xblockexpression;
   }
   
-  public static Exam exam(final String title, final String path, final int nPages, final Iterable<Question> questions) {
+  public static Exam exam(final String title, final String path, final int nPages, final int scale, final Iterable<Question> questions) {
     Exam _xblockexpression = null;
     {
       final Exam e = ScanExamXtendFactory.exam(title);
       e.setNumberOfPages(nPages);
+      e.setScale(scale);
       e.setFolderPath(path);
       EList<Question> _questions = e.getQuestions();
       Iterables.<Question>addAll(_questions, questions);
