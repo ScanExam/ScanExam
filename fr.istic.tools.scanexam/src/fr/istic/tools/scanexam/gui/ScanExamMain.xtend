@@ -32,6 +32,9 @@ import java.util.Date
 import javax.swing.JOptionPane
 import java.util.Timer
 import java.util.TimerTask
+import javax.swing.JLabel
+import java.awt.GridLayout
+import javax.swing.JTabbedPane
 
 class ScanExamMain {
 
@@ -44,6 +47,16 @@ class ScanExamMain {
 			override actionPerformed(ActionEvent e) { action.apply(e) }
 		});
 	}
+
+	def static protected JComponent makeTextPanel(String text) {
+		var JPanel panel = new JPanel(false)
+		var JLabel filler = new JLabel(text)
+		filler.setHorizontalAlignment(JLabel.CENTER)
+		panel.setLayout(new GridLayout(1, 1))
+		panel.add(filler)
+		return panel
+	}
+
 
 	def static void main(String[] args) throws IOException {
 
@@ -69,8 +82,18 @@ class ScanExamMain {
 
 		topPane.add(leftPane)
 		topPane.add(rightPane)
-		frame.setContentPane(contentPane);
+	
+		var JTabbedPane tabbedPane = new JTabbedPane()
+		
+		tabbedPane.addTab("Correction mode", null, contentPane, "Does nothing")
+		tabbedPane.setMnemonicAt(0, KeyEvent.VK_F1)
+		frame.setContentPane(tabbedPane);
 
+	
+
+//		tabbedPane.addTab("Edition mode", null, templateMode, "Does nothing")
+//		tabbedPane.setMnemonicAt(0, KeyEvent.VK_F2)
+ 
 		//val exam = PFOExams.december19()
 		val exam = PFOExams.olivier()
 
