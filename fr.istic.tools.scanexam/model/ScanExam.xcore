@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam
 type File wraps java.io.File
 
 class Exam {
+	String filepath
 	String label
 	String folderPath
 	int numberOfPages
@@ -16,7 +17,7 @@ class InfoField extends Question {
 }
 
 class Question {
-	String label
+	String label	
 	contains ScanZone zone
 	contains ScanZone markZone
 	int defaultGradeIndex
