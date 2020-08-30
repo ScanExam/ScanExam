@@ -29,7 +29,27 @@
             <artifactId>org.eclipse.emf.common</artifactId>
             <version>${emf-common-version}</version>
         </dependency>
+        
+        
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox</artifactId>
+		    <version>2.0.21</version>
+		</dependency>
+        
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox-tools</artifactId>
+		    <version>2.0.21</version>
+		</dependency>
 
+<dependency>
+      <groupId>org.openpnp</groupId>
+      <artifactId>opencv</artifactId>
+      <version>4.3.0-1</version>
+    </dependency>
+    
+    
         <dependency>
             <groupId>org.eclipse.emf</groupId>
             <artifactId>org.eclipse.emf.ecore</artifactId>
@@ -41,19 +61,19 @@
             <artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
             <version>${ecore-xcore-lib-version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.xtext</groupId>
-            <artifactId>org.eclipse.xtext.xbase.lib</artifactId>
-            <version>${xtext-version}</version>
-        </dependency>
-        
+       
  		<dependency>
         	<groupId>org.eclipse.xtend</groupId>
             <artifactId>org.eclipse.xtend.core</artifactId>
             <version>${xtext-version}</version>
         </dependency>
         
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>3.14</version>
+		</dependency>
+ 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -137,26 +157,7 @@
             </plugin>
 
   
- 			 <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${basedir}/src</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
+ 
             <plugin>
                 <groupId>org.eclipse.xtext</groupId>
                 <artifactId>xtext-maven-plugin</artifactId>
@@ -259,23 +260,6 @@
                 </dependencies>
             </plugin>
             
-            <plugin>
-  <groupId>org.eclipse.xtend</groupId>
-  <artifactId>xtend-maven-plugin</artifactId>
-  <version>${xtext-version}</version>
-  <executions>
-    <execution>
-      <goals>
-        <goal>compile</goal>
-        <goal>testCompile</goal>
-      </goals>
-      <configuration>
-        <outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
-        <testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
-      </configuration>
-    </execution>
-  </executions>
-   </plugin>
         </plugins>
     </build>
 

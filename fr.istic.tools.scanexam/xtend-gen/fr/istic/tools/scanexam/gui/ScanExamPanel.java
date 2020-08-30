@@ -83,19 +83,16 @@ public class ScanExamPanel extends JPanel {
       String _label = q.getLabel();
       String _plus = ("Question:" + _label);
       g2.drawString(_plus, 40, 30);
-      String _string = q.getGrades().toString();
-      String _plus_1 = ("grades:" + _string);
-      g2.drawString(_plus_1, 235, 30);
       int _currentGradeIndex = this.control.getCurrentGradeIndex();
-      String _plus_2 = ("index=" + Integer.valueOf(_currentGradeIndex));
-      g2.drawString(_plus_2, 490, 30);
+      String _plus_1 = ("index=" + Integer.valueOf(_currentGradeIndex));
+      g2.drawString(_plus_1, 490, 30);
       String _currentGradeValue = this.control.getCurrentGradeValue();
-      String _plus_3 = ("grade:" + _currentGradeValue);
-      g2.drawString(_plus_3, 600, 30);
+      String _plus_2 = ("grade:" + _currentGradeValue);
+      g2.drawString(_plus_2, 600, 30);
       String _filename = this.control.getCurrentQuestionGrade().getFilename();
       String _name = new File(_filename).getName();
-      String _plus_4 = ("file:" + _name);
-      g2.drawString(_plus_4, 750, 30);
+      String _plus_3 = ("file:" + _name);
+      g2.drawString(_plus_3, 750, 30);
       Font _font_1 = new Font("Arial", Font.BOLD, 24);
       g2.setFont(_font_1);
       int offsety = 80;
@@ -103,17 +100,22 @@ public class ScanExamPanel extends JPanel {
       g2.setColor(Color.WHITE);
       int _size = this.control.getCurrentQuestion().getGrades().size();
       int _multiply = (_size * 30);
-      int _plus_5 = (_multiply + 30);
-      g2.fillRect(20, 70, 80, _plus_5);
+      int _plus_4 = (_multiply + 30);
+      g2.fillRect(20, 70, 80, _plus_4);
       g2.setColor(Color.BLACK);
+      int _currentGradeIndex_1 = this.control.getCurrentGradeIndex();
+      int _minus = (_currentGradeIndex_1 - 5);
+      final int start = Integer.valueOf(Math.max(0, _minus)).intValue();
+      int _currentGradeIndex_2 = this.control.getCurrentGradeIndex();
+      int _plus_5 = (_currentGradeIndex_2 + 5);
+      final int end = Integer.valueOf(Math.min(_plus_5, this.control.getCurrentQuestion().getGrades().size())).intValue();
       boolean _isValidated = this.control.getCurrentQuestionGrade().isValidated();
       if (_isValidated) {
-        int _size_1 = this.control.getCurrentQuestion().getGrades().size();
-        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size_1, true);
+        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(start, end, true);
         for (final Integer i : _doubleDotLessThan) {
           {
-            int _currentGradeIndex_1 = this.control.getCurrentGradeIndex();
-            boolean _equals = ((i).intValue() == _currentGradeIndex_1);
+            int _currentGradeIndex_3 = this.control.getCurrentGradeIndex();
+            boolean _equals = ((i).intValue() == _currentGradeIndex_3);
             if (_equals) {
               g2.setColor(Color.RED);
             } else {
@@ -126,12 +128,11 @@ public class ScanExamPanel extends JPanel {
           }
         }
       } else {
-        int _size_2 = this.control.getCurrentQuestion().getGrades().size();
-        ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _size_2, true);
+        ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(start, end, true);
         for (final Integer i_1 : _doubleDotLessThan_1) {
           {
-            int _currentGradeIndex_1 = this.control.getCurrentGradeIndex();
-            boolean _equals = ((i_1).intValue() == _currentGradeIndex_1);
+            int _currentGradeIndex_3 = this.control.getCurrentGradeIndex();
+            boolean _equals = ((i_1).intValue() == _currentGradeIndex_3);
             if (_equals) {
               g2.setColor(Color.ORANGE);
             } else {

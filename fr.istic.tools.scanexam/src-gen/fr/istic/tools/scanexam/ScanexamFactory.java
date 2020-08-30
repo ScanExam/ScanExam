@@ -31,6 +31,15 @@ public interface ScanexamFactory extends EFactory {
 	Exam createExam();
 
 	/**
+	 * Returns a new object of class '<em>Info Field</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Info Field</em>'.
+	 * @generated
+	 */
+	InfoField createInfoField();
+
+	/**
 	 * Returns a new object of class '<em>Question</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

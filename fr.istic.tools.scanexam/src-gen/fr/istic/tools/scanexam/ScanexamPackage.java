@@ -69,13 +69,22 @@ public interface ScanexamPackage extends EPackage {
 	int EXAM = 0;
 
 	/**
+	 * The feature id for the '<em><b>Filepath</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXAM__FILEPATH = 0;
+
+	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM__LABEL = 0;
+	int EXAM__LABEL = 1;
 
 	/**
 	 * The feature id for the '<em><b>Folder Path</b></em>' attribute.
@@ -84,7 +93,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM__FOLDER_PATH = 1;
+	int EXAM__FOLDER_PATH = 2;
 
 	/**
 	 * The feature id for the '<em><b>Number Of Pages</b></em>' attribute.
@@ -93,7 +102,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM__NUMBER_OF_PAGES = 2;
+	int EXAM__NUMBER_OF_PAGES = 3;
 
 	/**
 	 * The feature id for the '<em><b>Scale</b></em>' attribute.
@@ -102,7 +111,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM__SCALE = 3;
+	int EXAM__SCALE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Questions</b></em>' containment reference list.
@@ -111,7 +120,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM__QUESTIONS = 4;
+	int EXAM__QUESTIONS = 5;
 
 	/**
 	 * The number of structural features of the '<em>Exam</em>' class.
@@ -120,7 +129,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_FEATURE_COUNT = 5;
+	int EXAM_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Exam</em>' class.
@@ -139,7 +148,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getQuestion()
 	 * @generated
 	 */
-	int QUESTION = 1;
+	int QUESTION = 2;
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
@@ -223,6 +232,97 @@ public interface ScanexamPackage extends EPackage {
 	int QUESTION_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link fr.istic.tools.scanexam.impl.InfoFieldImpl <em>Info Field</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.istic.tools.scanexam.impl.InfoFieldImpl
+	 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getInfoField()
+	 * @generated
+	 */
+	int INFO_FIELD = 1;
+
+	/**
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD__LABEL = QUESTION__LABEL;
+
+	/**
+	 * The feature id for the '<em><b>Zone</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD__ZONE = QUESTION__ZONE;
+
+	/**
+	 * The feature id for the '<em><b>Mark Zone</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD__MARK_ZONE = QUESTION__MARK_ZONE;
+
+	/**
+	 * The feature id for the '<em><b>Default Grade Index</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD__DEFAULT_GRADE_INDEX = QUESTION__DEFAULT_GRADE_INDEX;
+
+	/**
+	 * The feature id for the '<em><b>Grades</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD__GRADES = QUESTION__GRADES;
+
+	/**
+	 * The feature id for the '<em><b>Feedback</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD__FEEDBACK = QUESTION__FEEDBACK;
+
+	/**
+	 * The feature id for the '<em><b>Weight</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD__WEIGHT = QUESTION__WEIGHT;
+
+	/**
+	 * The number of structural features of the '<em>Info Field</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD_FEATURE_COUNT = QUESTION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Info Field</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFO_FIELD_OPERATION_COUNT = QUESTION_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.impl.ScanZoneImpl <em>Scan Zone</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -230,7 +330,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getScanZone()
 	 * @generated
 	 */
-	int SCAN_ZONE = 2;
+	int SCAN_ZONE = 3;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -312,7 +412,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getGradingData()
 	 * @generated
 	 */
-	int GRADING_DATA = 3;
+	int GRADING_DATA = 4;
 
 	/**
 	 * The feature id for the '<em><b>Solution Path</b></em>' attribute.
@@ -385,7 +485,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getStudentGrade()
 	 * @generated
 	 */
-	int STUDENT_GRADE = 4;
+	int STUDENT_GRADE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Student ID</b></em>' attribute.
@@ -440,7 +540,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getQuestionGrade()
 	 * @generated
 	 */
-	int QUESTION_GRADE = 5;
+	int QUESTION_GRADE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Question</b></em>' reference.
@@ -504,7 +604,7 @@ public interface ScanexamPackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getFile()
 	 * @generated
 	 */
-	int FILE = 6;
+	int FILE = 7;
 
 
 	/**
@@ -516,6 +616,17 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getExam();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.Exam#getFilepath <em>Filepath</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Filepath</em>'.
+	 * @see fr.istic.tools.scanexam.Exam#getFilepath()
+	 * @see #getExam()
+	 * @generated
+	 */
+	EAttribute getExam_Filepath();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.Exam#getLabel <em>Label</em>}'.
@@ -571,6 +682,16 @@ public interface ScanexamPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getExam_Questions();
+
+	/**
+	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.InfoField <em>Info Field</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Info Field</em>'.
+	 * @see fr.istic.tools.scanexam.InfoField
+	 * @generated
+	 */
+	EClass getInfoField();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.Question <em>Question</em>}'.
@@ -941,6 +1062,14 @@ public interface ScanexamPackage extends EPackage {
 		EClass EXAM = eINSTANCE.getExam();
 
 		/**
+		 * The meta object literal for the '<em><b>Filepath</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXAM__FILEPATH = eINSTANCE.getExam_Filepath();
+
+		/**
 		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -979,6 +1108,16 @@ public interface ScanexamPackage extends EPackage {
 		 * @generated
 		 */
 		EReference EXAM__QUESTIONS = eINSTANCE.getExam_Questions();
+
+		/**
+		 * The meta object literal for the '{@link fr.istic.tools.scanexam.impl.InfoFieldImpl <em>Info Field</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.istic.tools.scanexam.impl.InfoFieldImpl
+		 * @see fr.istic.tools.scanexam.impl.ScanexamPackageImpl#getInfoField()
+		 * @generated
+		 */
+		EClass INFO_FIELD = eINSTANCE.getInfoField();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.impl.QuestionImpl <em>Question</em>}' class.

@@ -60,6 +60,7 @@ public class ScanexamFactoryImpl extends EFactoryImpl implements ScanexamFactory
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ScanexamPackage.EXAM: return createExam();
+			case ScanexamPackage.INFO_FIELD: return createInfoField();
 			case ScanexamPackage.QUESTION: return createQuestion();
 			case ScanexamPackage.SCAN_ZONE: return createScanZone();
 			case ScanexamPackage.GRADING_DATA: return createGradingData();
@@ -109,6 +110,17 @@ public class ScanexamFactoryImpl extends EFactoryImpl implements ScanexamFactory
 	public Exam createExam() {
 		ExamImpl exam = new ExamImpl();
 		return exam;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public InfoField createInfoField() {
+		InfoFieldImpl infoField = new InfoFieldImpl();
+		return infoField;
 	}
 
 	/**

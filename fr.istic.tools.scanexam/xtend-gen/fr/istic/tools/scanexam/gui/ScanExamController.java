@@ -49,6 +49,10 @@ public class ScanExamController {
     return this.tableView = panel;
   }
   
+  public GradingData getGradingData() {
+    return this.data;
+  }
+  
   public BufferedImage extractQuestionZone() {
     BufferedImage _xblockexpression = null;
     {
@@ -220,7 +224,7 @@ public class ScanExamController {
       }
     }
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("ASnonymous number \"");
+    _builder.append("Anonymous number \"");
     _builder.append(i);
     _builder.append("\" not found");
     JOptionPane.showMessageDialog(null, _builder, 

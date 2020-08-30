@@ -55,32 +55,47 @@ public class ScanExamXtendFactory {
       e.setExam(exam);
       String _folderPath = exam.getFolderPath();
       final File dir = new File(_folderPath);
-      EList<File> _images = e.getImages();
-      final Comparator<File> _function = (File a, File b) -> {
-        return a.getName().compareTo(b.getName());
-      };
-      List<File> _sortInplace = ListExtensions.<File>sortInplace(((List<File>)Conversions.doWrapArray(dir.listFiles(new FilenameFilter() {
+      final File[] pngfiles = dir.listFiles(new FilenameFilter() {
         @Override
         public boolean accept(final File dir, final String name) {
           return name.toLowerCase().endsWith(".png");
         }
-      }))), _function);
+      });
+      if (((pngfiles == null) || ((List<File>)Conversions.doWrapArray(pngfiles)).isEmpty())) {
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("No png files found in folder ");
+        String _folderPath_1 = exam.getFolderPath();
+        _builder.append(_folderPath_1);
+        _builder.append(" ");
+        throw new UnsupportedOperationException(_builder.toString());
+      }
+      EList<File> _images = e.getImages();
+      final Comparator<File> _function = (File a, File b) -> {
+        return a.getName().compareTo(b.getName());
+      };
+      List<File> _sortInplace = ListExtensions.<File>sortInplace(((List<File>)Conversions.doWrapArray(pngfiles)), _function);
       Iterables.<File>addAll(_images, _sortInplace);
       int _size = e.getImages().size();
       int _numberOfPages = exam.getNumberOfPages();
       int _modulo = (_size % _numberOfPages);
       boolean _notEquals = (_modulo != 0);
       if (_notEquals) {
-        StringConcatenation _builder = new StringConcatenation();
-        _builder.append("Uneven number of scans ");
-        throw new UnsupportedOperationException(_builder.toString());
+        StringConcatenation _builder_1 = new StringConcatenation();
+        _builder_1.append("Inconsistent number of pages ");
+        int _size_1 = e.getImages().size();
+        _builder_1.append(_size_1);
+        _builder_1.append(" images found, should b multiple by ");
+        int _numberOfPages_1 = exam.getNumberOfPages();
+        _builder_1.append(_numberOfPages_1);
+        _builder_1.append("  ");
+        throw new UnsupportedOperationException(_builder_1.toString());
       }
-      int _size_1 = e.getImages().size();
-      String _plus_1 = ("Nb images " + Integer.valueOf(_size_1));
-      InputOutput.<String>println(_plus_1);
       int _size_2 = e.getImages().size();
-      int _numberOfPages_1 = exam.getNumberOfPages();
-      final int nbStudents = (_size_2 / _numberOfPages_1);
+      String _plus_1 = ("Nb images " + Integer.valueOf(_size_2));
+      InputOutput.<String>println(_plus_1);
+      int _size_3 = e.getImages().size();
+      int _numberOfPages_2 = exam.getNumberOfPages();
+      final int nbStudents = (_size_3 / _numberOfPages_2);
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbStudents, true);
       for (final Integer i : _doubleDotLessThan) {
         {
@@ -95,8 +110,8 @@ public class ScanExamXtendFactory {
               EList<QuestionGrade> _questionGrades = grade.getQuestionGrades();
               _questionGrades.add(questionGrade);
               EList<File> _images_1 = e.getImages();
-              int _numberOfPages_2 = exam.getNumberOfPages();
-              int _multiply = ((i).intValue() * _numberOfPages_2);
+              int _numberOfPages_3 = exam.getNumberOfPages();
+              int _multiply = ((i).intValue() * _numberOfPages_3);
               int _page = q.getZone().getPage();
               int _plus_2 = (_multiply + _page);
               int _minus = (_plus_2 - 1);

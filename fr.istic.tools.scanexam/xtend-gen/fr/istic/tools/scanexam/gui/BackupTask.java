@@ -18,7 +18,10 @@ public class BackupTask extends TimerTask {
     Date _date = new Date();
     final String data_ = df.format(_date);
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("auto-backup_");
+    _builder.append("backups/backup_");
+    String _label = this.controller.getGradingData().getExam().getLabel();
+    _builder.append(_label);
+    _builder.append("_");
     _builder.append(data_);
     _builder.append(".xls");
     File _file = new File(_builder.toString());

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="ASCII"?>
+<scanexam:Exam xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:scanexam="fr.istic.tools.scanexam" label="DS_CCI" folderPath="./CopieScanOSentieys/png" numberOfPages="6" scale="42">
+  <questions label="NAME">
+    <zone x="100" w="2350" h="800" page="1"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>ALLA Haphet</grades>
+    <grades>ARQUES Alexandre</grades>
+    <grades>BONNEAU Quentin</grades>
+    <grades>CHEVALIER Michel</grades>
+    <grades>CHILLET Alice</grades>
+    <grades>DE TAEYE Caroline</grades>
+    <grades>DELPORTE Kevin</grades>
+    <grades>DENES PIERRE</grades>
+    <grades>DUPIN Lucas</grades>
+    <grades>ETRILLARD Olivier</grades>
+    <grades>GUILBAUD Valentin</grades>
+    <grades>KLEIN Nicolas</grades>
+    <grades>LASSOUT Leo</grades>
+    <grades>LE PERON-SLAES Alix</grades>
+    <grades>MAITRE Kilian</grades>
+    <grades>MALHERBE Tom</grades>
+    <grades>MANDELLI Zoe</grades>
+    <grades>MOLLARD Arnaud</grades>
+    <grades>MROUEH Celia</grades>
+    <grades>NADAL Sophie</grades>
+    <grades>PLUMIER Quentin</grades>
+    <grades>POULLOT Amelie</grades>
+    <grades>ROGER Benoit-Joseph</grades>
+    <grades>SCIASCIA Hugo</grades>
+    <grades>SOURY Theo</grades>
+    <grades>THUILLIER Corentyn</grades>
+    <grades>THURA Remy</grades>
+    <grades>TOURTEAU Remy</grades>
+    <grades>TURBAULT Adrien</grades>
+    <grades>UMENHOVER Lola</grades>
+  </questions>
+  <questions label="EX1_Q1" defaultGradeIndex="2" weight="1.0">
+    <zone x="100" y="1200" w="2350" h="1700" page="1"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX1_Q2" defaultGradeIndex="2" weight="2.0">
+    <zone x="100" y="2700" w="2350" h="550" page="1"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX1_Q3" defaultGradeIndex="2" weight="2.0">
+    <zone x="100" y="300" w="2350" h="650" page="2"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q1" defaultGradeIndex="2" weight="1.0">
+    <zone x="100" y="2100" w="2350" h="500" page="2"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q2" defaultGradeIndex="2" weight="6.0">
+    <zone x="100" y="2500" w="2350" h="550" page="2"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q3" defaultGradeIndex="2" weight="3.0">
+    <zone x="100" y="100" w="2350" h="2300" page="3"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q4" defaultGradeIndex="2" weight="6.0">
+    <zone x="100" y="2500" w="2350" h="800" page="3"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q5" defaultGradeIndex="2" weight="2.0">
+    <zone x="100" y="450" w="2350" h="550" page="4"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q6" defaultGradeIndex="2" weight="2.0">
+    <zone x="100" y="1000" w="2350" h="500" page="4"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q7" defaultGradeIndex="2" weight="2.0">
+    <zone x="100" y="1550" w="2350" h="850" page="4"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q8" defaultGradeIndex="2" weight="9.0">
+    <zone x="100" y="2300" w="2350" h="500" page="4"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX2_Q9" defaultGradeIndex="2" weight="10.0">
+    <zone x="100" y="2700" w="2350" h="550" page="4"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX3_Q1" defaultGradeIndex="2" weight="4.0">
+    <zone x="100" y="1300" w="2350" h="500" page="5"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX3_Q2" defaultGradeIndex="2" weight="3.0">
+    <zone x="100" y="1700" w="2350" h="400" page="5"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+  <questions label="EX3_Q3" defaultGradeIndex="5" weight="6.0">
+    <zone x="100" w="2350" h="3150" page="5"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
+    <grades>A</grades>
+    <grades>B</grades>
+    <grades>C</grades>
+    <grades>D</grades>
+    <grades>E</grades>
+    <grades>F</grades>
+  </questions>
+</scanexam:Exam>

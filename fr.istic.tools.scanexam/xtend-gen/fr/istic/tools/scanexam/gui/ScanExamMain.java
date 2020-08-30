@@ -6,10 +6,11 @@ import fr.istic.tools.scanexam.gui.BackupTask;
 import fr.istic.tools.scanexam.gui.ExcelTableViewer;
 import fr.istic.tools.scanexam.gui.ScanExamController;
 import fr.istic.tools.scanexam.gui.ScanExamPanel;
-import fr.istic.tools.scanexam.instances.PFOExams;
+import fr.istic.tools.scanexam.instances.ExamIO;
 import fr.istic.tools.scanexam.utils.ScanExamExcelBackend;
 import fr.istic.tools.scanexam.utils.ScanExamXtendFactory;
 import fr.istic.tools.scanexam.utils.ScanExamXtendUtils;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -34,12 +35,15 @@ import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 @SuppressWarnings("all")
@@ -55,6 +59,16 @@ public class ScanExamMain {
         action.apply(e);
       }
     });
+  }
+  
+  protected static JComponent makeTextPanel(final String text) {
+    JPanel panel = new JPanel(false);
+    JLabel filler = new JLabel(text);
+    filler.setHorizontalAlignment(JLabel.CENTER);
+    GridLayout _gridLayout = new GridLayout(1, 1);
+    panel.setLayout(_gridLayout);
+    panel.add(filler);
+    return panel;
   }
   
   public static void main(final String[] args) throws IOException {
@@ -76,9 +90,50 @@ public class ScanExamMain {
     rightPane.setLayout(_boxLayout_4);
     topPane.add(leftPane);
     topPane.add(rightPane);
-    frame.setContentPane(contentPane);
-    final Exam exam = PFOExams.december19();
-    final GradingData data = ScanExamXtendFactory.gradingData(exam);
+    JTabbedPane tabbedPane = new JTabbedPane();
+    tabbedPane.addTab("Correction mode", null, contentPane, "Does nothing");
+    tabbedPane.setMnemonicAt(0, KeyEvent.VK_F1);
+    frame.setContentPane(tabbedPane);
+    Exam _xtrycatchfinallyexpression = null;
+    try {
+      Exam _xblockexpression = null;
+      {
+        boolean _isEmpty = ((List<String>)Conversions.doWrapArray(args)).isEmpty();
+        if (_isEmpty) {
+          JOptionPane.showMessageDialog(null, "argument missing\nusage : scanexam file", "InfoBox: ", JOptionPane.ERROR_MESSAGE);
+          return;
+        }
+        _xblockexpression = ExamIO.load(args[0]);
+      }
+      _xtrycatchfinallyexpression = _xblockexpression;
+    } catch (final Throwable _t) {
+      if (_t instanceof Exception) {
+        String _get = args[0];
+        String _plus = ("Could not open exam model file " + _get);
+        JOptionPane.showMessageDialog(null, _plus, "InfoBox: ", JOptionPane.ERROR_MESSAGE);
+        return;
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+    final Exam exam = _xtrycatchfinallyexpression;
+    GradingData _xtrycatchfinallyexpression_1 = null;
+    try {
+      _xtrycatchfinallyexpression_1 = ScanExamXtendFactory.gradingData(exam);
+    } catch (final Throwable _t) {
+      if (_t instanceof Exception) {
+        final Exception exception = (Exception)_t;
+        String _simpleName = exception.getClass().getSimpleName();
+        String _plus = (_simpleName + ":");
+        String _message = exception.getMessage();
+        String _plus_1 = (_plus + _message);
+        JOptionPane.showMessageDialog(null, _plus_1, "InfoBox: ", JOptionPane.ERROR_MESSAGE);
+        return;
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+    final GradingData data = _xtrycatchfinallyexpression_1;
     final ScanExamController controler = new ScanExamController(data);
     final Timer timer = new Timer();
     final TimerTask task = new BackupTask(controler);
@@ -97,13 +152,19 @@ public class ScanExamMain {
             Date _date = new Date();
             final String data_ = df.format(_date);
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append("backup_");
+            _builder.append("./backups/");
+            String _label = exam.getLabel();
+            _builder.append(_label);
+            _builder.append("_");
             _builder.append(data_);
             _builder.append(".xmi");
             File _file = new File(_builder.toString());
             ScanExamXtendUtils.save(_file, data);
             StringConcatenation _builder_1 = new StringConcatenation();
-            _builder_1.append("backup_");
+            _builder_1.append("./backups/");
+            String _label_1 = exam.getLabel();
+            _builder_1.append(_label_1);
+            _builder_1.append("_");
             _builder_1.append(data_);
             _builder_1.append(".xls");
             File _file_1 = new File(_builder_1.toString());
@@ -224,8 +285,15 @@ public class ScanExamMain {
       @Override
       public void actionPerformed(final ActionEvent e) {
         final String firstNumber = JOptionPane.showInputDialog("Enter student ID");
-        final int studentId = Integer.parseInt(firstNumber);
-        controler.gotoStudent(studentId);
+        try {
+          final int studentId = Integer.parseInt(firstNumber);
+          controler.gotoStudent(studentId);
+        } catch (final Throwable _t) {
+          if (_t instanceof Exception) {
+          } else {
+            throw Exceptions.sneakyThrow(_t);
+          }
+        }
       }
     });
     inputMap.put(nextStudentKS, "nextStudent");

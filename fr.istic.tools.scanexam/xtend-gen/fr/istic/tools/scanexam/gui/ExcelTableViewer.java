@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,7 +15,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 @SuppressWarnings("all")
@@ -72,28 +70,26 @@ public class ExcelTableViewer extends JPanel implements DocumentListener {
     this.repaint();
   }
   
-  public void setAnoNumber() {
+  public Object setAnoNumber() {
+    Object _xifexpression = null;
     int _length = this.numAnon.getText().length();
     boolean _greaterThan = (_length > 0);
     if (_greaterThan) {
+      Object _xtrycatchfinallyexpression = null;
       try {
+        final long number = Long.parseLong(this.numAnon.getText());
         StudentGrade _currentStudent = this.controler.getCurrentStudent();
-        _currentStudent.setNumAnonymat(Long.parseLong(this.numAnon.getText()));
+        _currentStudent.setNumAnonymat(number);
       } catch (final Throwable _t) {
         if (_t instanceof NumberFormatException) {
-          StringConcatenation _builder = new StringConcatenation();
-          _builder.append("Wrong format, integer expected ");
-          String _text = this.numAnon.getText();
-          _builder.append(_text);
-          _builder.append(" found");
-          JOptionPane.showMessageDialog(null, _builder, 
-            "Format error", 
-            JOptionPane.ERROR_MESSAGE);
+          _xtrycatchfinallyexpression = null;
         } else {
           throw Exceptions.sneakyThrow(_t);
         }
       }
+      _xifexpression = _xtrycatchfinallyexpression;
     }
+    return _xifexpression;
   }
   
   @Override

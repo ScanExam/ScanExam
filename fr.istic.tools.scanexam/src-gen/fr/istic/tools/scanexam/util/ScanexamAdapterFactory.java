@@ -72,6 +72,10 @@ public class ScanexamAdapterFactory extends AdapterFactoryImpl {
 				return createExamAdapter();
 			}
 			@Override
+			public Adapter caseInfoField(InfoField object) {
+				return createInfoFieldAdapter();
+			}
+			@Override
 			public Adapter caseQuestion(Question object) {
 				return createQuestionAdapter();
 			}
@@ -122,6 +126,20 @@ public class ScanexamAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.InfoField <em>Info Field</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see fr.istic.tools.scanexam.InfoField
+	 * @generated
+	 */
+	public Adapter createInfoFieldAdapter() {
 		return null;
 	}
 

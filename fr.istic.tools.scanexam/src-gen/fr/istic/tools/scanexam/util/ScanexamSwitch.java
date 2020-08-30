@@ -72,6 +72,13 @@ public class ScanexamSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ScanexamPackage.INFO_FIELD: {
+				InfoField infoField = (InfoField)theEObject;
+				T result = caseInfoField(infoField);
+				if (result == null) result = caseQuestion(infoField);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ScanexamPackage.QUESTION: {
 				Question question = (Question)theEObject;
 				T result = caseQuestion(question);
@@ -118,6 +125,21 @@ public class ScanexamSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseExam(Exam object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Info Field</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Info Field</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInfoField(InfoField object) {
 		return null;
 	}
 

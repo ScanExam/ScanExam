@@ -10,7 +10,7 @@ class Exam {
 	int scale
 	//contains InfoFields[] info
 	contains Question[] questions 
-	
+	 
 }
 class InfoField extends Question {
 	

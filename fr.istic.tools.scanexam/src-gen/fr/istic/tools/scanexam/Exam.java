@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link fr.istic.tools.scanexam.Exam#getFilepath <em>Filepath</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.Exam#getLabel <em>Label</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.Exam#getFolderPath <em>Folder Path</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.Exam#getNumberOfPages <em>Number Of Pages</em>}</li>
@@ -27,6 +28,28 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Exam extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Filepath</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Filepath</em>' attribute.
+	 * @see #setFilepath(String)
+	 * @see fr.istic.tools.scanexam.ScanexamPackage#getExam_Filepath()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getFilepath();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.Exam#getFilepath <em>Filepath</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Filepath</em>' attribute.
+	 * @see #getFilepath()
+	 * @generated
+	 */
+	void setFilepath(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Label</b></em>' attribute.
 	 * <!-- begin-user-doc -->
