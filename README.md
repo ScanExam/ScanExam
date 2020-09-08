@@ -9,6 +9,7 @@ Beware this is an very preliminary version.
 # How to compile/install ?
 
 ```
+cd fr.istic.tools.scanexam
 mvn package
 java -jar target/ exams/sample.xmi
 ``` 
