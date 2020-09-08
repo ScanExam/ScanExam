@@ -75,7 +75,7 @@ public class PFOExams {
       Question _question_15 = ScanExamXtendFactory.question("EX3_Q2b", Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(X0), Integer.valueOf(1900), Integer.valueOf(X1), Integer.valueOf(3250), Integer.valueOf(6))), Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(30), Integer.valueOf(80), Integer.valueOf(80), Integer.valueOf(60), Integer.valueOf(0))), Collections.<String>unmodifiableList(CollectionLiterals.<String>newArrayList("A", "B", "C", "D", "E", "F")), 2);
       final Exam e = ScanExamXtendFactory.exam(
         "PFO_december_19", 
-        "/Users/steven/Documents/ISTIC/2020-2021/PFO/Examen/dec19/CopiesScan/png/", 
+        "./examples/scan/", 
         6, 
         42, 
         Collections.<Question>unmodifiableList(CollectionLiterals.<Question>newArrayList(_question, _question_1, _question_2, _question_3, _question_4, _question_5, _question_6, _question_7, _question_8, _question_9, _question_10, _question_11, _question_12, _question_13, _question_14, _question_15)));
@@ -95,12 +95,12 @@ public class PFOExams {
     try {
       final Exam dec19 = PFOExams.december19();
       String _label = dec19.getLabel();
-      String _plus = ("exams/" + _label);
+      String _plus = ("examples/" + _label);
       String _plus_1 = (_plus + ".xmi");
       ExamIO.save(dec19, _plus_1);
       final Exam eii = PFOExams.olivier();
       String _label_1 = eii.getLabel();
-      String _plus_2 = ("exams/" + _label_1);
+      String _plus_2 = ("examples/" + _label_1);
       String _plus_3 = (_plus_2 + ".xmi");
       ExamIO.save(eii, _plus_3);
     } catch (Throwable _e) {
