@@ -1,4 +1,4 @@
-# What is scanexam
+java -jar target/scanexam-0.1.0-SNAPSHOT-shaded.jar scanexam-0.1.0-SNAPSHOT-shaded.jar examples/sample.xmi# What is scanexam
 
 ScanExam is a tool to help grading scanned paper exams. 
 
@@ -11,8 +11,8 @@ Beware this is an very preliminary version.
 
 ```
 cd fr.istic.tools.scanexam
-mvn package
-java -jar targetscanexam-0.1.0-SNAPSHOT-shaded.jar scanexam-0.1.0-SNAPSHOT-shaded.jar examples/sample.xmi
+mvn clean compile assembly:single
+java -jar target/scanexam-0.1.0-SNAPSHOT-jar-with-dependencies.jar examples/sample.xmi
 ``` 
 
 # What else is there in the repository ?
