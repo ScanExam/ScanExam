@@ -34,7 +34,7 @@ import javax.swing.JTabbedPane
 import javax.swing.KeyStroke
 
 class ScanExamMain {
-
+//Ceci est un commentaire dans la class Main 
 	def static mapKeyAction(String name, JPanel buttonPanel, int e, int i, Function<ActionEvent, Object> action) {
 		val KeyStroke prevStudentKS = KeyStroke.getKeyStroke(e, i, true);
 		val InputMap inputMap = buttonPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
