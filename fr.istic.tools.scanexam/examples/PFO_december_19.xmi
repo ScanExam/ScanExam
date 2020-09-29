@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ASCII"?>
 <scanexam:Exam xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:scanexam="fr.istic.tools.scanexam" label="PFO_december_19" folderPath="./examples/scan/" numberOfPages="6" scale="42">
-  <questions label="ID" defaultGradeIndex="1">
-    <zone x="100" y="1" w="2350" h="399" page="1"/>
-    <markZone x="30" y="80" w="50" h="-20" page="1"/>
+  <questions label="ID">
+    <zone x="100" w="2350" h="400" page="1"/>
+    <markZone x="30" y="80" w="50" h="-20"/>
     <grades>1</grades>
   </questions>
   <questions label="EX1_Q1" defaultGradeIndex="1" weight="1.0">
