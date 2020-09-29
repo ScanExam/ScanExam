@@ -70,26 +70,23 @@ public class ExcelTableViewer extends JPanel implements DocumentListener {
     this.repaint();
   }
   
-  public Object setAnoNumber() {
-    Object _xifexpression = null;
+  public void setAnoNumber() {
     int _length = this.numAnon.getText().length();
     boolean _greaterThan = (_length > 0);
     if (_greaterThan) {
-      Object _xtrycatchfinallyexpression = null;
       try {
         final long number = Long.parseLong(this.numAnon.getText());
         StudentGrade _currentStudent = this.controler.getCurrentStudent();
         _currentStudent.setNumAnonymat(number);
       } catch (final Throwable _t) {
         if (_t instanceof NumberFormatException) {
-          _xtrycatchfinallyexpression = null;
+          final NumberFormatException e = (NumberFormatException)_t;
+          e.printStackTrace();
         } else {
           throw Exceptions.sneakyThrow(_t);
         }
       }
-      _xifexpression = _xtrycatchfinallyexpression;
     }
-    return _xifexpression;
   }
   
   @Override

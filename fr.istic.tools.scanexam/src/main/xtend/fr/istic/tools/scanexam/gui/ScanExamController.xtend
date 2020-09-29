@@ -62,6 +62,7 @@ class ScanExamController {
 		val grades = currentQuestion.grades
 		val grade = currentQuestionGrade.grade
 		currentGradeValueIndex=(grades).indexOf(grade)
+		println(">> " + currentGradeValueIndex + " " + currentQuestion.grades.size + " " + currentQuestion.defaultGradeIndex)
 		if (currentGradeValueIndex==-1) {
 			if (currentQuestionGrade.validated) {
 				currentQuestionGrade.validated=false

@@ -63,6 +63,7 @@ class ExcelTableViewer extends JPanel implements DocumentListener {
     		val number = Long.parseLong(numAnon.text)	
 			controler.currentStudent.numAnonymat = number 
     	} catch (NumberFormatException e) {
+    		e.printStackTrace();
 //    		JOptionPane.showMessageDialog(null, 
 //                      '''Wrong format, integer expected «numAnon.text» found''', 
 //                      "Format error", 

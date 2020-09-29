@@ -108,6 +108,8 @@ public class ScanExamMain {
       _xtrycatchfinallyexpression = _xblockexpression;
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
+        final Exception e = (Exception)_t;
+        e.printStackTrace();
         String _get = args[0];
         String _plus = ("Could not open exam model file " + _get);
         JOptionPane.showMessageDialog(null, _plus, "InfoBox: ", JOptionPane.ERROR_MESSAGE);
@@ -123,6 +125,7 @@ public class ScanExamMain {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception exception = (Exception)_t;
+        exception.printStackTrace();
         String _simpleName = exception.getClass().getSimpleName();
         String _plus = (_simpleName + ":");
         String _message = exception.getMessage();

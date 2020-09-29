@@ -112,6 +112,7 @@ class ScanExamPanel extends JPanel {
 			}
 			g2.setColor(Color.BLACK);
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			JOptionPane.showMessageDialog(null, exception.stackTrace, "InfoBox: ", JOptionPane.ERROR_MESSAGE);
 		}
 	}

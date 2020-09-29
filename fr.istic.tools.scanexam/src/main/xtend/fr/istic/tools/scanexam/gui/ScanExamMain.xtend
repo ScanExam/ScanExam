@@ -99,6 +99,7 @@ class ScanExamMain {
 			}
 			ExamIO.load(args.get(0))}
 		catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Could not open exam model file "+args.get(0), "InfoBox: ", JOptionPane.ERROR_MESSAGE);
 			return 
 		}
@@ -107,6 +108,7 @@ class ScanExamMain {
 		try {
 			ScanExamXtendFactory.gradingData(exam)
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			JOptionPane.showMessageDialog(null, exception.class.simpleName+":"+exception.message, "InfoBox: ", JOptionPane.ERROR_MESSAGE);
 			return
 		}

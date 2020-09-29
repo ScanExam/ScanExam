@@ -149,6 +149,7 @@ public class ScanExamPanel extends JPanel {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception exception = (Exception)_t;
+        exception.printStackTrace();
         JOptionPane.showMessageDialog(null, exception.getStackTrace(), "InfoBox: ", JOptionPane.ERROR_MESSAGE);
       } else {
         throw Exceptions.sneakyThrow(_t);

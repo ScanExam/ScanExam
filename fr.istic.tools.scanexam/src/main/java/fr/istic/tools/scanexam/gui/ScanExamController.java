@@ -106,6 +106,12 @@ public class ScanExamController {
       final EList<String> grades = this.getCurrentQuestion().getGrades();
       final String grade = this.getCurrentQuestionGrade().getGrade();
       this.currentGradeValueIndex = grades.indexOf(grade);
+      int _size = this.getCurrentQuestion().getGrades().size();
+      String _plus = (((">> " + Integer.valueOf(this.currentGradeValueIndex)) + " ") + Integer.valueOf(_size));
+      String _plus_1 = (_plus + " ");
+      int _defaultGradeIndex = this.getCurrentQuestion().getDefaultGradeIndex();
+      String _plus_2 = (_plus_1 + Integer.valueOf(_defaultGradeIndex));
+      InputOutput.<String>println(_plus_2);
       int _xifexpression = (int) 0;
       if ((this.currentGradeValueIndex == (-1))) {
         int _xifexpression_1 = (int) 0;
