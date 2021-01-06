@@ -8,7 +8,7 @@ class Exam {
 	String folderPath
 	int numberOfPages
 	int scale
-	//contains InfoFields[] info
+//	contains InfoFields[] info
 	contains Question[] questions 
 	 
 }
