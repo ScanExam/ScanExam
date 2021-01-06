@@ -3,7 +3,7 @@
   <questions label="ID" defaultGradeIndex="0">
     <zone x="100" w="2350" h="400" page="1"/>
     <markZone x="30" y="80" w="50" h="-20"/>
-    <grades>1</grades>
+    <grades>0</grades>
   </questions>
   <questions label="EX1_Q1" defaultGradeIndex="1" weight="1.0">
     <zone x="100" y="2400" w="2350" h="350" page="1"/>
