@@ -9,8 +9,8 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated ScanExam -->
       <package
-            uri="fr.istic.tools.scanexam"
-            class="fr.istic.tools.scanexam.ScanexamPackage"
+            uri="fr.istic.tools.scanexam.core"
+            class="fr.istic.tools.scanexam.core.CorePackage"
             genModel="model/ScanExam.xcore"/>
    </extension>
 

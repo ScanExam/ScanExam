@@ -1,62 +1,50 @@
-package fr.istic.tools.scanexam
+package fr.istic.tools.scanexam.core
 
-type File wraps java.io.File
-
-class Exam {
-	String filepath
-	String label
-	String folderPath
-	int numberOfPages
-	int scale
-//	contains InfoFields[] info
-	contains Question[] questions 
-	 
-}
-class InfoField extends Question {
-	
-}
+type Pair<T1,T2> wraps fr.istic.tools.scanexam.utils.Pair
+type Rectangle wraps fr.istic.tools.scanexam.utils.Rectangle
 
 class Question {
-	String label	
-	contains ScanZone zone
-	contains ScanZone markZone
-	int defaultGradeIndex
-	String[] grades
-	String[] feedback 
-	double weight
-}
-
-class ScanZone {
-	
-	int x
-	int y
-	int w
-	int h
-	int page
-	op String toString() {
-		"["+x+","+y+"]->["+(x+w)+","+(y+h)+"]@"+page
-	}
-}
-
-
-class GradingData {
-	String solutionPath
-	String excelFileName
-	File[] images
-	contains Exam exam
-	contains StudentGrade[] grades 	
+	int ^id
+	contains GradeScale gradeScale
 	
 }
 
-class StudentGrade {
-	String studentID
-	long numAnonymat
-	contains QuestionGrade[] questionGrades
+class GradeScale {
+	float weigth
+	Pair<String,Float>[] steps
+	op boolean modifyStep(int ^id,float value)
+	op boolean removeStep(int ^id)
+	op float getStep(int ^id)
+	op boolean addStep(String comment,float value)
 }
 
-class QuestionGrade {
-	refers Question question
-	boolean validated
-	String filename
-	String grade
+class ExamMarker {
+	int ^id
+	String name
+	contains Question[] questions
+	op Rectangle getQuestionZone(int index)
+	
+}
+
+class ExamManager extends ExamMarker {
+	op void addQuestion(Question question,Rectangle r)
+}
+
+class Comment {
+	float x
+	float y
+}
+
+class Grade {
+	float value
+	String gradeLabel
+	contains Comment[] comments	
+}
+
+class StudentSheet {
+	int ^id
+	contains Grade[] grades
+	op Grade getGrade(int ^id)
+	op boolean removeGrade(int ^id)
+	op boolean addGrade(int ^id,Grade grade)
 }
