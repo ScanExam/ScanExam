@@ -10,7 +10,7 @@ import javax.mail.MessagingException
 import javax.mail.internet.MimeMessage
 import java.util.Date
 
-class SendMailTLS {
+class SendMailTls {
 	
 	static def sendMail(String user, String msgText) {
 		val username = "...@gmail.com"
@@ -18,7 +18,7 @@ class SendMailTLS {
 	    val props = new Properties()
 	    
 	    props.put("mail.smtp.auth", "true")
-	    props.put("mail.smtp.localhost", "test");
+	    props.put("mail.smtp.localhost", "ScanExam");
 	    props.put("mail.smtp.starttls.enable", "true")
 	    props.put("mail.smtp.host", "smtp.gmail.com")
 	    props.put("mail.smtp.port", "587")
@@ -40,7 +40,7 @@ class SendMailTLS {
 	    	message.setSubject("ScanExam Envoie")
 	    	message.setText(msgText)
 	    	
-	    	message.setHeader("X-Mailer", "Java");
+	    	message.setHeader("X-Mailer", "ScanExam");
             message.setSentDate(new Date());
 	        session.setDebug(true);
 	    	

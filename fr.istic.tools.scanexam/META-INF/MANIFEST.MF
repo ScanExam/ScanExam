@@ -9,8 +9,8 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: fr.istic.tools.scanexam,
- fr.istic.tools.scanexam.impl,
- fr.istic.tools.scanexam.util,
+ fr.istic.tools.scanexam.core,
+ fr.istic.tools.scanexam.utils,
  fr.istic.tools.scanexam.core,
  fr.istic.tools.scanexam.core.impl,
  fr.istic.tools.scanexam.core.util

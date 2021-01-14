@@ -1,8 +1,6 @@
 package fr.istic.tools.scanexam.javamail
 
-import fr.istic.tools.scanexam.javamail.SendMailTLS
-
-class SendMailXtend extends SendMailTLS {
+class SendMailXtend  {
 	def static void main(String[] arg){
 		
 		//Adresse mail cible du mail
@@ -18,6 +16,6 @@ class SendMailXtend extends SendMailTLS {
 		Ceci est un mail envoyé par ScanExam pour prochainement pouvoir vous envoyer votre note directement par mail.
 		À bientôt"
 		
-		sendMail(user,message)
+		SendMailTls.sendMail(user,message)
 	}
 }

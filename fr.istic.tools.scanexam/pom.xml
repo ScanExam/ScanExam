@@ -80,21 +80,21 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.0</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>javax.mail</groupId>
-    		<artifactId>javax.mail-api</artifactId>
-    		<version>1.6.0</version>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.6.0</version>
 		</dependency>
-   		<dependency>
-    		<groupId>com.sun.mail</groupId>
-    		<artifactId>javax.mail</artifactId>
-    		<version>1.6.0</version>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.0</version>
 		</dependency>
 
 	</dependencies>
@@ -103,9 +103,6 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<pluginManagement>
 			<plugins>
-
-
-
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.3.0</version>
@@ -163,22 +160,22 @@
 				<!-- </executions> -->
 				<!-- </plugin> -->
 
-<!-- 				<plugin> -->
-<!-- 					<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 					<artifactId>maven-jar-plugin</artifactId> -->
-<!-- 					<version>3.1.0</version> -->
-<!-- 					<configuration> -->
-<!-- 						<archive> -->
-<!-- 							<manifest> -->
-<!-- 								<addClasspath>true</addClasspath> -->
-<!-- 								<classpathPrefix>libs/</classpathPrefix> -->
-<!-- 								<mainClass> -->
-<!-- 									fr.istic.tools.scanexam.gui.ScanExamMain -->
-<!-- 								</mainClass> -->
-<!-- 							</manifest> -->
-<!-- 						</archive> -->
-<!-- 					</configuration> -->
-<!-- 				</plugin> -->
+				<!-- <plugin> -->
+				<!-- <groupId>org.apache.maven.plugins</groupId> -->
+				<!-- <artifactId>maven-jar-plugin</artifactId> -->
+				<!-- <version>3.1.0</version> -->
+				<!-- <configuration> -->
+				<!-- <archive> -->
+				<!-- <manifest> -->
+				<!-- <addClasspath>true</addClasspath> -->
+				<!-- <classpathPrefix>libs/</classpathPrefix> -->
+				<!-- <mainClass> -->
+				<!-- fr.istic.tools.scanexam.gui.ScanExamMain -->
+				<!-- </mainClass> -->
+				<!-- </manifest> -->
+				<!-- </archive> -->
+				<!-- </configuration> -->
+				<!-- </plugin> -->
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -199,7 +196,7 @@
 					<configuration>
 						<filesets>
 							<fileset>
-								<directory>src/main/src-gen</directory>
+								<directory>src/main/javagen</directory>
 							</fileset>
 						</filesets>
 					</configuration>
