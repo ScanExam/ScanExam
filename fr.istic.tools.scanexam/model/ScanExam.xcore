@@ -1,12 +1,17 @@
 package fr.istic.tools.scanexam.core
 
 type Pair<T1,T2> wraps fr.istic.tools.scanexam.utils.Pair
-type Rectangle wraps fr.istic.tools.scanexam.utils.Rectangle
+
+class Rectangle {
+	float x
+	float y
+	float width
+	float heigth
+}
 
 class Question {
 	int ^id
 	contains GradeScale gradeScale
-	
 }
 
 class GradeScale {
@@ -24,11 +29,20 @@ class Exam {
 	contains Question[] questions
 	op Rectangle getQuestionZone(int index)
 	op void addQuestion(Question question, Rectangle r)
+	op void removeQuestion(int index)
 }
 
 class Comment {
 	float x
 	float y
+}
+
+class TextComment extends Comment {
+	op String getText()
+}
+
+class HandwritingComment {
+	//TODO
 }
 
 class Grade {
@@ -42,5 +56,5 @@ class StudentSheet {
 	contains Grade[] grades
 	op Grade getGrade(int ^id)
 	op boolean removeGrade(int ^id)
-	op boolean addGrade(int ^id,Grade grade)
+	op boolean addGrade(int ^id, Grade grade)
 }
