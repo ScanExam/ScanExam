@@ -92,13 +92,15 @@ class SendMailTls {
 	    	
 	    	// Sujet du mail et contenu du message
 	    	message.setSubject(TITLE_MAIL)
-	    	message.setText(MESSAGE_MAIL)
 	    	
+	    	
+	    	//Gestion de l'envoie de la piece jointe
 	    	if(PIECE_JOINTE != null){
 	    		var source = new FileDataSource(PIECE_JOINTE)
 	    		message.setDataHandler(new DataHandler(source))
 	    		message.setFileName(PIECE_JOINTE)
 	    	}
+	    	message.setText(MESSAGE_MAIL)
 	    	
 	    	message.setHeader("X-Mailer", "ScanExam")
             message.setSentDate(new Date())
