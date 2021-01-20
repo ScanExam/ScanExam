@@ -18,16 +18,12 @@ class GradeScale {
 	op boolean addStep(String comment,float value)
 }
 
-class ExamMarker {
+class Exam {
 	int ^id
 	String name
 	contains Question[] questions
 	op Rectangle getQuestionZone(int index)
-	
-}
-
-class ExamManager extends ExamMarker {
-	op void addQuestion(Question question,Rectangle r)
+	op void addQuestion(Question question, Rectangle r)
 }
 
 class Comment {
