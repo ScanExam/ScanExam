@@ -1,0 +1,7 @@
+package fr.istic.tools.scanexam.core.config
+
+class Config {
+	String param1
+	String param2
+	String param3
+}

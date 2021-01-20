@@ -14,4 +14,12 @@
             genModel="model/ScanExam.xcore"/>
    </extension>
 
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated Config -->
+      <package
+            uri="fr.istic.tools.scanexam.core.config"
+            class="fr.istic.tools.scanexam.core.config.ConfigPackage"
+            genModel="model/Config.xcore"/>
+   </extension>
+
 </plugin>
