@@ -1,3 +1,4 @@
+
 package fr.istic.tools.scanexam.javamail
 
 import java.util.Properties
@@ -19,19 +20,22 @@ class SendMailTls {
 
 /**
  * La fonction sendMail va chercher dans le fichier configMailFile pour trouver le port et les smtp (host) de l'adresse mail donnée puis qui ce charge d'envoier le mail
- * @param SENDER : Adresse mail de l'expediteur qui ne doit pas etre null
- * @param SENDER_PASSWORD : Mot de passe de l'expediteur qui ne doit pas etre nul
- * @param RECIPIENT : Adresse mail du destinataire qui ne doit pas etre null
- * @param TITLE_MAIL : Titre du mail qui ne doit pas etre null
- * @param MESSAGE_MAIL : Contenu du mail
+ * @param sender : Adresse mail de l'expediteur qui ne doit pas etre null
+ * @param senderPassword : Mot de passe de l'expediteur qui ne doit pas etre nul
+ * @param recipient : Adresse mail du destinataire qui ne doit pas etre null
+ * @param titleMail : Titre du mail qui ne doit pas etre null
+ * @param messageMail : Contenu du mail
+ * @param pieceJointe : piece jointe du mail
  */
-	static def sendMail(String SENDER, String SENDER_PASSWORD, String RECIPIENT, String TITLE_MAIL, String MESSAGE_MAIL, String PIECE_JOINTE) {
+	static def sendMail(String sender, String senderPassword, String recipient, String titleMail, String messageMail, String pieceJointe) {
 		
 		//Verification des parametres
-		Objects.requireNonNull(SENDER, "Erreur : L'expediteur donner doit etre non Null");
-		Objects.requireNonNull(SENDER_PASSWORD, "Erreur : Le mot de passe de l'expediteur donner doit etre non Null");
-		Objects.requireNonNull(RECIPIENT, "Erreur : Le destinataire donner doit etre non Null");
-		Objects.requireNonNull(TITLE_MAIL, "Erreur : Le titre du mail ne doit pas etre Null");
+		Objects.requireNonNull(sender, "Erreur : L'expediteur donner doit etre non Null");
+		Objects.requireNonNull(senderPassword, "Erreur : Le mot de passe de l'expediteur donner doit etre non Null");
+		Objects.requireNonNull(recipient, "Erreur : Le destinataire donner doit etre non Null");
+		Objects.requireNonNull(titleMail, "Erreur : Le titre du mail ne doit pas etre Null");
+		Objects.requireNonNull(messageMail, "Erreur : Le message du mail ne doit pas etre Null");
+		Objects.requireNonNull(pieceJointe, "Erreur : La piece Jointe du mail ne doit pas etre Null");
 		
 	    val props = new Properties()
 	    
@@ -40,36 +44,28 @@ class SendMailTls {
 	    props.load(file)
 	    file.close()
 	    
-	    var arobaseFind = false
-	    var i = 0
 	    
 	    //Verification de la validiter d'une adresse
-	    if(!SENDER.contains('@')){
+	    if(!sender.contains('@')){
 	    	throw new Exception("L'expediteur n'a pas une adresse mail valide");}
-	    	
-	    if(!RECIPIENT.contains('@')){
+	    if(!recipient.contains('@')){
 	    	throw new Exception("Le destinataire n'a pas une adresse mail valide");}
 	    	
-	    
-	    while(!arobaseFind){
-	    	if(SENDER.charAt(i).compareTo("@") == 0){
-	    		arobaseFind = true
-	    	}
-	    	i++
-	    }
-	    //println(SENDER.contains())
-	    var typeMail = SENDER.substring(i, SENDER.length)
+	    //Extraction de la chaine de caractère situer apres l'@ dans l'adresse de l'expediteur
+	    var typeMail = sender.substring(sender.indexOf('@')+1, sender.length)
 	    
 	    //Création des clés qui vont permetre de recuperer le host et le port nécessaire a l'envoie du mail
 	    val HOST = props.getProperty(typeMail + "Host")
 	    val PORT = props.getProperty(typeMail + "Port")
 	    
+	   
+	    //Gestion du cas ou le type d'adresse n'est pas dans le fichier configMailFile
 	    Objects.requireNonNull(HOST, "Erreur : Le type d'adresse mail n'est pas présent dans le fichier configuration")
 	    Objects.requireNonNull(PORT, "Erreur : Le port de l'adresse mail n'est pas présent dans le fichier configuration")
 	    
 	    //Propriété du mail
 	    props.put("mail.smtp.auth", "true")
-	    props.put("mail.smtp.localhost", "ScanExam");
+	    props.put("mail.smtp.localhost", "ScanExam")
 	    props.put("mail.smtp.starttls.enable", "true")
 	    props.put("mail.smtp.host", HOST)
 	    props.put("mail.smtp.port", PORT)
@@ -78,7 +74,7 @@ class SendMailTls {
 	    //session de l'expediteur
 	    val session = Session.getInstance(props, new javax.mail.Authenticator() {
 	            override protected PasswordAuthentication getPasswordAuthentication() {
-	                new PasswordAuthentication(SENDER, SENDER_PASSWORD);
+	                new PasswordAuthentication(sender, senderPassword);
 	            }
 	          })
 	          
@@ -87,20 +83,20 @@ class SendMailTls {
 	    	val message = new MimeMessage(session);
 	    	
 	    	// Expéditeur et destinataire du message
-	    	message.setFrom(new InternetAddress(SENDER))
-	    	message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(RECIPIENT))
+	    	message.setFrom(new InternetAddress(sender))
+	    	message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient))
 	    	
 	    	// Sujet du mail et contenu du message
-	    	message.setSubject(TITLE_MAIL)
+	    	message.setSubject(titleMail)
 	    	
 	    	
 	    	//Gestion de l'envoie de la piece jointe
-	    	if(PIECE_JOINTE != null){
-	    		var source = new FileDataSource(PIECE_JOINTE)
+	    	if(pieceJointe != ""){
+	    		var source = new FileDataSource(pieceJointe)
 	    		message.setDataHandler(new DataHandler(source))
-	    		message.setFileName(PIECE_JOINTE)
+	    		message.setFileName(pieceJointe)
 	    	}
-	    	message.setText(MESSAGE_MAIL)
+	    	message.setText(messageMail)
 	    	
 	    	message.setHeader("X-Mailer", "ScanExam")
             message.setSentDate(new Date())
