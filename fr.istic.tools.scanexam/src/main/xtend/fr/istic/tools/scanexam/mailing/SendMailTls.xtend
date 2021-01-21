@@ -1,5 +1,5 @@
 
-package fr.istic.tools.scanexam.javamail
+package fr.istic.tools.scanexam.mailing
 
 import java.util.Properties
 import javax.mail.Session
