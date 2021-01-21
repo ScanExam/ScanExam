@@ -1,9 +1,12 @@
 package fr.istic.tools.scanexam
 
-class Main {
-	
-	def static void main(String[] args) {
-		println("Hello World!")
+import fr.istic.tools.scanexam.config.ConfigurationManager
+
+class Main 
+{
+	def static void main(String[] args)
+	{
+		ConfigurationManager.init();
 	}
 	
 }
