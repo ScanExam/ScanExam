@@ -1,16 +1,15 @@
 package fr.istic.tools.scanexam.config
 
 import fr.istic.tools.scanexam.core.config.Config
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.resource.Resource
-
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
-import org.eclipse.emf.common.util.URI
+import fr.istic.tools.scanexam.core.config.ConfigFactory
 import fr.istic.tools.scanexam.core.config.ConfigPackage
-import java.util.logging.Logger
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.nio.file.Path
+import java.util.logging.Logger
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 
 /**
  * @author Marius Lumbroso
@@ -46,12 +45,12 @@ class ConfigurationManager
 		}	
 	}
 	
-/* 	def static Config create() 
+ 	def static Config create() 
 	{
-		val config = ConfigFactoryImpl.init().createConfig(); <----- le soucis est ici 
+		val config = ConfigFactory.eINSTANCE.createConfig();
 		return config;
 	}
-	*/
+	
 	
 	/**
 	 * Charge la configuration courante a partir du disque.
