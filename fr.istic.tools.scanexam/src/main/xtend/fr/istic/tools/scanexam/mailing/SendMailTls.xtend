@@ -15,7 +15,15 @@ import java.util.Objects
 import javax.activation.DataSource
 import javax.activation.FileDataSource
 import javax.activation.DataHandler
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import java.util.logging.Logger
+import javax.mail.internet.MimeBodyPart
+import javax.mail.internet.MimeMultipart
+import javax.mail.Multipart
 
+/**
+ * @author Thomas Guibert
+ */
 class SendMailTls {
 
 /**
@@ -40,7 +48,8 @@ class SendMailTls {
 	    val props = new Properties()
 	    
 	    //Lecture du fichier config
-	    val file = new FileInputStream("src\\main\\resources\\configMailFile")
+	    val file = ResourcesUtils.getInputStreamResource("/mailing/configMailFile.properties")
+	    
 	    props.load(file)
 	    file.close()
 	    
@@ -88,15 +97,25 @@ class SendMailTls {
 	    	
 	    	// Sujet du mail et contenu du message
 	    	message.setSubject(titleMail)
+	    	var messageBodyPart = new MimeBodyPart();
+	    	messageBodyPart.setText("TEST")
 	    	
-	    	
+	    	var multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+	    
 	    	//Gestion de l'envoie de la piece jointe
 	    	if(pieceJointe != ""){
+	    		
+	    		messageBodyPart = new MimeBodyPart();
+        		val fileName = "attachmentName";
+	    		
 	    		var source = new FileDataSource(pieceJointe)
-	    		message.setDataHandler(new DataHandler(source))
-	    		message.setFileName(pieceJointe)
+	    		messageBodyPart.setDataHandler(new DataHandler(source))
+	    		messageBodyPart.setFileName(pieceJointe)
+	    		multipart.addBodyPart(messageBodyPart)
+	    		
 	    	}
-	    	message.setText(messageMail)
+	    	message.setContent(multipart)
 	    	
 	    	message.setHeader("X-Mailer", "ScanExam")
             message.setSentDate(new Date())
@@ -104,7 +123,7 @@ class SendMailTls {
 	    	
 	    	// Envoie du mail
 	    	Transport.send(message)
-	    	println("Message envoyé !")
+	    	Logger.getGlobal.info("Message envoyé !")
 	    	
 	    } catch(MessagingException e) {
 	    	e.printStackTrace

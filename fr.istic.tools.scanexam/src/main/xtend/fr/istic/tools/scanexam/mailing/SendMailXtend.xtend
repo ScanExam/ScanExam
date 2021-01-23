@@ -1,30 +1,35 @@
 package fr.istic.tools.scanexam.mailing
 
+/**
+ * @author Thomas Guibert
+ */
 class SendMailXtend  {
 	
 	//Remplissage des champ par défault
 	
 	
+	
 	//Adresse mail de l'expediteur
-	var static sender = "A completer"
+	var static sender = "thomas.guibert@etudiant.univ-rennes1.fr"
 		
 	//mot de passe de l'expediteur
-	var static senderPassword= "A completer"
+	var static senderPassword= "Twinrai*39"
 		
 	//Adresse mail cible du mail
-	var static recipient = "A completer"
+	var static recipient = "thomas.guibert0930@gmail.com"
 		
 	//Titre du mail
-	var static titleMail = "A completer"
+	var static titleMail = "Test"
 		
 	//Message a envoier - (changer la nature du message a envoyer)
-	var static messageMail =
-	"A completer"
+	var static messageMail ="Voici un message"
 
 	//chemin vers la piece jointe - (de la forme C:\\Users\\... mettre "" quand il n'y a pas de piece jointe)
-	var static pieceJointe = "A completer"
-	
-	
+	var static pieceJointe = ""
+
+
+
+
 	
 	def static void main(String[] arg){
 		
@@ -35,13 +40,19 @@ class SendMailXtend  {
 	
 	
 	
-	//Fonction envoie du mail
+	/**
+	 * Fonction envoie du mail avec les valeur donnée par les getter
+	 * 
+	 */
 	def static sendMailXtend(){
 		SendMailTls.sendMail(getSender(), getSenderPassword(), getRecipent(), getTitle(), getMessage(), getPieceJointe())
 	}
 	
+	/**
+	 *Liste des getter et setter pour modifier est acceder au parametre 
+	 * 
+	 */
 	
-	//Liste des getter et setter
 	
 	def static String getSender(){
 		return sender
