@@ -98,7 +98,7 @@ class SendMailTls {
 	    	// Sujet du mail et contenu du message
 	    	message.setSubject(titleMail)
 	    	var messageBodyPart = new MimeBodyPart();
-	    	messageBodyPart.setText("TEST")
+	    	messageBodyPart.setText(messageMail)
 	    	
 	    	var multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
