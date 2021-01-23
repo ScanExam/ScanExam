@@ -7,27 +7,23 @@ class SendMailXtend  {
 	
 	//Remplissage des champ par défault
 	
-	
-	
 	//Adresse mail de l'expediteur
-	var static sender = "thomas.guibert@etudiant.univ-rennes1.fr"
+	var static sender = "A completer"
 		
 	//mot de passe de l'expediteur
-	var static senderPassword= "Twinrai*39"
+	var static senderPassword= "A completer"
 		
 	//Adresse mail cible du mail
-	var static recipient = "thomas.guibert0930@gmail.com"
+	var static recipient = "A completer"
 		
 	//Titre du mail
-	var static titleMail = "Test"
+	var static titleMail = "A completer"
 		
 	//Message a envoier - (changer la nature du message a envoyer)
-	var static messageMail ="Voici un message"
+	var static messageMail ="A completer"
 
 	//chemin vers la piece jointe - (de la forme C:\\Users\\... mettre "" quand il n'y a pas de piece jointe)
-	var static pieceJointe = ""
-
-
+	var static pieceJointe = "A completer"
 
 
 	
