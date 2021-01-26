@@ -8,7 +8,6 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.WriterException
 import java.io.IOException
-import java.util.Scanner
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
@@ -19,9 +18,9 @@ import org.apache.pdfbox.multipdf.PDFMergerUtility
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.lang.Character.Subset
+import org.apache.pdfbox.io.MemoryUsageSetting
 
-class QRCodeGeneratorImpl implements QRCodeGenerator{
+class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 	/**
 	 * @param text Le texte a encoder 
@@ -68,36 +67,51 @@ class QRCodeGeneratorImpl implements QRCodeGenerator{
 		}
 	}
 
+	override createAllExamCopies(String inputFile, int nbCopie) {
 
-	override createAllExamCopies(String inputFile, String outputFile, int nbCopie) {
-		val PDFMergerUtility PDFmerger = new PDFMergerUtility()
-		PDFmerger.setDestinationFileName("./pfo_exemple_Inserted.pdf");
+		val String base = inputFile.substring(0, inputFile.lastIndexOf('.'))
+		val String outputFile = base + "_Inserted.pdf"
+		val String save = base + "_save.pdf"
 
-		val PDDocument doc = PDDocument.load(new File("./pfo_example.pdf"))
-
+		val PDDocument doc = PDDocument.load(new File(base + ".pdf"))
 		val int nbPages = doc.numberOfPages
-		doc.save("./pfo_exemple1.pdf");
+
+		val PDFMergerUtility PDFmerger = new PDFMergerUtility()
+
+		PDFmerger.setDestinationFileName(base + "_Duplicated.pdf");
+
+		doc.save(save);
 
 		for (i : 0 ..< nbCopie) {
-			PDFmerger.addSource("./pfo_exemple1.pdf")
+			PDFmerger.addSource(save)
 		}
 
-		// adding the source files
-		// Merging the two documents
-		PDFmerger.mergeDocuments()
+		val File f2 = new File(base + "_Duplicated.pdf")
 
-		val PDDocument docSujetMaitre = PDDocument.load(new File("./pfo_exemple_Inserted.pdf"))
+		val MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly()
+		memUsSett.tempDir = f2
+		PDFmerger.mergeDocuments(memUsSett)
+
+		val PDDocument docSujetMaitre = PDDocument.load(f2)
 		createThread(nbCopie, docSujetMaitre, outputFile, nbPages)
 
 		docSujetMaitre.save(outputFile)
+		docSujetMaitre.close
 
+		// Supressiopn des documents temporaires
+		val File f1 = new File(save)
+		if (f1.delete())
+			println("Deleted 1")
+
+		if (f2.delete)
+			println("Deleted dupli")
 	}
 
 	/**
 	 * 
-	 * @param nbCopies nombre de copies désirées
+	 * @param nbCopies nombre de copies désirées //FIXME gerer le cas ou le nbCopies < 4 (nombre de threads)
 	 * @param docSujetMaitre document dans lequel insérer les Codes
-	 * @param outputFile Chemin d'acces du fichier //TODO 
+	 * @param outputFile Chemin d'acces du fichier //TODO décider si le param sera une string ou un File
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
@@ -107,11 +121,19 @@ class QRCodeGeneratorImpl implements QRCodeGenerator{
 
 		service.execute(new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, outputFile, 1, nbPage))
 		service.execute(new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, outputFile, 2, nbPage))
-		service.execute(new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, outputFile, 3, nbPage))
+		service.execute(
+			new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, outputFile, 3, nbPage))
 		service.execute(new QRThreadWriter(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, outputFile, 4, nbPage))
 
 		service.shutdown()
 		service.awaitTermination(1, TimeUnit.MINUTES);
+
+		for (i : 1 ..< 5) {
+			val File png = new File("./QRCode" + i + ".png")
+			if (png.delete())
+				println("Deleted png " + i)
+		}
+
 	}
 
 	/**
@@ -133,7 +155,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator{
 	 */
 	def insertQRCodeInPage(int numPage, PDDocument doc, String nbThread, int numCopie, int nbPagesSujet) {
 		val String stringAEncoder = "PFO2019_" + numCopie + "_" + numPage
-
+		//TODO Gestion de l'id a faire une fois la partie de création des copies réalisée
 		val String pathImage = "./QRCode" + nbThread.toString() + ".png"
 		generateQRCodeImage(stringAEncoder, 350, 350, pathImage)
 
@@ -167,10 +189,9 @@ class QRCodeGeneratorImpl implements QRCodeGenerator{
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
-		val String input = "./pfo_example.pdf"
-		val String output = "./pfo_example_Inserted.pdf"
-		gen.createAllExamCopies(input, output, 40)
-
+		val String input = "./test.pdf"
+		gen.createAllExamCopies(input, 5)
+		println("Done")
 	}
 
 }

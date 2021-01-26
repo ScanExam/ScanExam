@@ -1,5 +1,4 @@
 package fr.istic.tools.scanexam.qrCode.writer
-import fr.istic.tools.scanexam.qrCode.*
 import org.apache.pdfbox.pdmodel.PDDocument
 
 class QRThreadWriter extends Thread implements Runnable {

@@ -12,4 +12,16 @@ import org.eclipse.xtend.lib.annotations.Data
 		this.numPageInSubject = numPageInSubject
 
 	}
+	
+	def int getNumPageInSubject(){
+		return this.numPageInSubject
+	}
+	
+	def int getNumPageInPDF(){
+		return this.numPageInPDF
+	}
+	
+	override String toString(){
+		return "["+numPageInSubject+", "+numPageInPDF+"]"
+	}
 }

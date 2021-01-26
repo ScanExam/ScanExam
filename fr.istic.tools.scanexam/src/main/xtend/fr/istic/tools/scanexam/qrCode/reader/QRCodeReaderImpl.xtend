@@ -19,15 +19,29 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
+import java.io.File
 
 class QRCodeReaderImpl implements QRCodeReader {
+	
+	Examen examen
+	
+	new(int nbPages, int nbCopies){
+		examen = new Examen(nbPages, nbCopies)
+	}
 
 	override readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
 		for (page : startPages ..< endPages) {
 			val BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB)
 			// val int taille = (bim.getHeight() * 0.3f) as int
 			// val BufferedImage dest = bim.getSubimage(0, bim.getHeight() -  taille , taille, taille)
-			System.out.println(QRCodeReaderImpl.decodeQRCodeBuffered(bim))
+
+			
+			val Pattern pattern = Pattern.compile("_")
+			val String[] items = pattern.split(decodeQRCodeBuffered(bim))
+			
+			val Copie cop = new Copie(Integer.parseInt(items.get(1)), Integer.parseInt(items.get(2)), page)
+			examen.addCopie(cop)
 		}
 
 	}
@@ -40,7 +54,7 @@ class QRCodeReaderImpl implements QRCodeReader {
 	 *                     Décode le contenu de qrCodeImage et affiche le contenu
 	 *                     décodé dans le system.out
 	 */
-	static def String decodeQRCodeBuffered(BufferedImage bufferedImage) throws IOException {
+	def String decodeQRCodeBuffered(BufferedImage bufferedImage) throws IOException {
 		val LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage)
 		val BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source))
 
@@ -82,5 +96,16 @@ class QRCodeReaderImpl implements QRCodeReader {
 
 
 	def static void main(String[] arg) {
+		//quatre copies de deux pages
+		val QRCodeReaderImpl qrcodeReader = new QRCodeReaderImpl(2,4)		
+		
+		val PDDocument document = PDDocument.load(new File("test_Inserted.pdf"));
+		val PDFRenderer pdfRenderer = new PDFRenderer(document);
+		
+		
+		qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
+		
+		println(qrcodeReader.examen.toString())
+		
 	}
 }
