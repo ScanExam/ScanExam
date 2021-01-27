@@ -88,17 +88,17 @@ class QRCodeReaderImpl implements QRCodeReader {
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
-	def createThread(int nbCopie, PDDocument docSujetMaitre, String outputFile, int nbPage) {
+	def createThread(int nbPage, PDFRenderer pdfRenderer) {
 
 		val ExecutorService service = Executors.newFixedThreadPool(4)
 
-		/*service.execute(new QRThread(this, 0, (nbCopie / 4), docSujetMaitre, outputFile, 1, nbPage))
-		service.execute(new QRThread(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, outputFile, 2, nbPage))
-		service.execute(new QRThread(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, outputFile, 3, nbPage))
-		service.execute(new QRThread(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, outputFile, 4, nbPage))
-*/
+		service.execute(new QRCodeThreadReader(this, 0, (nbPage / 4), pdfRenderer))
+		service.execute(new QRCodeThreadReader(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
+		service.execute(new QRCodeThreadReader(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
+		service.execute(new QRCodeThreadReader(this, (3 * nbPage / 4), nbPage, pdfRenderer))
+
 		service.shutdown()
-		service.awaitTermination(1, TimeUnit.MINUTES);
+		service.awaitTermination(5, TimeUnit.MINUTES);
 	}
 
 
@@ -162,11 +162,11 @@ class QRCodeReaderImpl implements QRCodeReader {
 		//cinq copies de deux pages
 		val QRCodeReaderImpl qrcodeReader = new QRCodeReaderImpl(2,20)		
 		
-		val PDDocument document = PDDocument.load(new File("TDIA_Inserted.pdf"));
+		val PDDocument document = PDDocument.load(new File("pfo_example_Inserted.pdf"));
 		val PDFRenderer pdfRenderer = new PDFRenderer(document);
 		
-		
-		qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
+		qrcodeReader.createThread(64, pdfRenderer)
+		//qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
 		
 		
 		for(i:0 ..<qrcodeReader.sheets.length)

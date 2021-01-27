@@ -175,8 +175,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
-		val String input = "./TDIA.pdf"
-		gen.createAllExamCopies(input, 5)
+		val String input = "./pfo_example.pdf"
+		gen.createAllExamCopies(input, 8)
 		println("Done")
 	}
 
