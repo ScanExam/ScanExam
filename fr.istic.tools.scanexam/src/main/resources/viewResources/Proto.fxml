@@ -94,7 +94,7 @@
                      <children>
                         <ImageView fitHeight="500.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@cow.jpg" />
+                              <Image url="@logo.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -118,7 +118,7 @@
                            <content>
                               <ImageView fitHeight="2000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@cow.jpg" />
+                                    <Image url="@logo.png" />
                                  </image>
                               </ImageView>
                            </content>

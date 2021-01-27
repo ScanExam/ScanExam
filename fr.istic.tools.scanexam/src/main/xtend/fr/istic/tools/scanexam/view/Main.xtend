@@ -14,7 +14,6 @@ class Main extends Application{
 		val root = loader.load(ResourcesUtils.getInputStreamResource("/viewResources/Proto.fxml"));
         primaryStage.setTitle("Corrector GUI - ScanExam");
         primaryStage.setScene(new Scene(root, 1280, 720));
-        primaryStage.getScene().getStylesheets().add("MyStyle.css");
         primaryStage.setMinHeight(720);
         primaryStage.setMinWidth(720);
         primaryStage.show();
