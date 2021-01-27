@@ -1,0 +1,42 @@
+Label {
+    -fx-font-family: Arial;
+    -fx-font-weight: bold;
+    -fx-text-fill: darkblue;
+    -fx-font-size: 19;
+    -fx-label-padding: 10px;
+}
+
+.ArrowButton {
+    -fx-padding: 5px;
+    -fx-background-size: 40px 40px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+
+}
+
+.TopArrowButton {
+    -fx-background-image: url(viewResources/down-arrow.png);
+}
+
+.BotArrowButton {
+    -fx-background-image: url(/viewResources/up-arrow.png);
+}
+
+.TogglePanel {
+    -fx-background-color: rgba(128,128,128,0.5);
+}
+
+.MainPane {
+    -fx-border-width: 0px 3px 0px 3px ;
+    -fx-border-color: #ececec ;
+    -fx-background-color: white;
+}
+ListView {
+    -fx-padding: 5px;
+}
+
+.SideBoxes {
+    -fx-padding: 0px 3px 0px 3px;
+}
+

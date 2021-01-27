@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox minHeight="720.0" minWidth="720.0" prefHeight="540.0" prefWidth="938.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.Controller">
+  <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox>
+         <children>
+            <ToolBar maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" HBox.hgrow="SOMETIMES">
+              <items>
+                <Button mnemonicParsing="false" text="Button" />
+                  <Button mnemonicParsing="false" text="Button" />
+              </items>
+            </ToolBar>
+            <ToolBar prefWidth="200.0" HBox.hgrow="ALWAYS">
+              <items>
+                <Button mnemonicParsing="false" text="Pen" />
+                  <Button mnemonicParsing="false" text="Gomme" />
+                  <Button mnemonicParsing="false" text="Stamp" />
+                  <Button mnemonicParsing="false" text="Thicc" />
+                  <Button mnemonicParsing="false" text="Thinn" />
+                  <Button mnemonicParsing="false" text="Button" />
+                  <Button mnemonicParsing="false" text="Button" />
+                  <Button mnemonicParsing="false" text="Button" />
+              </items>
+            </ToolBar>
+            <ToolBar prefWidth="150.0" HBox.hgrow="SOMETIMES">
+               <items>
+                  <Button mnemonicParsing="false" text="save" />
+                  <Button mnemonicParsing="false" text="Load" />
+                  <Button mnemonicParsing="false" text="Exp" />
+               </items>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </ToolBar>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label prefHeight="100.0" text="Copie No.x" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="leftList" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <Label text="Note actuelle :" textOverrun="CLIP" />
+                  <Label alignment="CENTER" text="x/20" textOverrun="CLIP" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+                     <children>
+                        <Button mnemonicParsing="false" text="&lt;&lt;" />
+                        <Button mnemonicParsing="false" text="&gt;&gt;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <AnchorPane fx:id="mainPane" styleClass="MainPane" HBox.hgrow="ALWAYS">
+               <children>
+                  <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fitHeight="500.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@logo.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <AnchorPane id="BottomTogglePanel" fx:id="topPane" layoutX="150.0" layoutY="-76.0" prefHeight="100.0" prefWidth="200.0" styleClass="TogglePanel" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox alignment="TOP_CENTER" pickOnBounds="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <children>
+                              <Button fx:id="topButtonActive" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleTop" prefHeight="15.0" prefWidth="40.0">
+                                 <styleClass>
+                                    <String fx:value="ArrowButton" />
+                                    <String fx:value="BotArrowButton" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children></AnchorPane>
+                  <AnchorPane id="TopTogglePanel" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="TogglePanel" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <ImageView fitHeight="2000.0" fitWidth="2000.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@logo.png" />
+                                 </image>
+                              </ImageView>
+                           </content>
+                        </ScrollPane>
+                        <HBox alignment="TOP_CENTER" pickOnBounds="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="botButtonActive" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0">
+                                 <styleClass>
+                                    <String fx:value="ArrowButton" />
+                                    <String fx:value="TopArrowButton" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <Separator accessibleRole="IMAGE_VIEW" onMouseDragged="#dragBottom" onMousePressed="#dragBottom" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <cursor>
+                              <Cursor fx:constant="V_RESIZE" />
+                           </cursor>
+                        </Separator>
+                     </children></AnchorPane>
+                  <HBox alignment="BOTTOM_CENTER" pickOnBounds="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button fx:id="botButtonHidden" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0">
+                           <styleClass>
+                              <String fx:value="ArrowButton" />
+                              <String fx:value="BotArrowButton" />
+                           </styleClass></Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label prefHeight="100.0" text="Question No.i" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="rightList" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+                     <children>
+                        <Button mnemonicParsing="false" text="&lt;" />
+                        <Button mnemonicParsing="false" text="&gt;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+  </children>
+</VBox>
