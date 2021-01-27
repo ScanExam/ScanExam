@@ -16,7 +16,7 @@ Label {
 }
 
 .TopArrowButton {
-    -fx-background-image: url(viewResources/down-arrow.png);
+    -fx-background-image: url(/viewResources/down-arrow.png);
 }
 
 .BotArrowButton {
@@ -33,7 +33,7 @@ Label {
     -fx-background-color: white;
 }
 ListView {
-    -fx-padding: 5px;
+	
 }
 
 .SideBoxes {
