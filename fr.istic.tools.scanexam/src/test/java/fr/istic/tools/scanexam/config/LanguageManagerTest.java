@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,6 +131,6 @@ public class LanguageManagerTest {
 	@Test
 	@DisplayName("translate sur un mot non défini")
 	void translateTest2() {
-		assertThrows(MissingResourceException.class, () -> LanguageManager.translate("oyster"));
+		assertEquals("oyster", LanguageManager.translate("oyster"));
 	}
 }

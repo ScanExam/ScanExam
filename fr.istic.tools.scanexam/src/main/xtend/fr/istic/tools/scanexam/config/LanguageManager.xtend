@@ -5,6 +5,7 @@ import java.util.Collection
 import java.util.Collections
 import java.util.HashSet
 import java.util.Locale
+import java.util.MissingResourceException
 import java.util.Objects
 import java.util.ResourceBundle
 import java.util.logging.Logger
@@ -121,11 +122,14 @@ class LanguageManager {
 	
 	/**
 	 * @param un code à traduire (non null)
-	 * @return une chaîne de caractères correspondant à la traduction de <b>code</b> dans le langage courant de l'application
+	 * @return une chaîne de caractères correspondant à la traduction de <b>code</b> dans le langage courant de l'application ou <b>code</b> si aucune traduction n'est définie pour ce code.
 	 * @throw NullPointerException si <b>code</b> est null
-	 * @throw MissingResourceException si aucune traduction n'a été trouvé pour <b>code</b> dans le langage courant
 	 */
 	static def String translate(String code) {
-		currentBundle.getString(code)
+		try {
+			currentBundle.getString(code)
+		} catch(MissingResourceException e) {
+			return code
+		}
 	}
 }
