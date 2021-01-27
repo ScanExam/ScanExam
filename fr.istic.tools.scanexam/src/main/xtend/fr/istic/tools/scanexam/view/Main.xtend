@@ -6,7 +6,8 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
 
-class Main extends Application{
+
+class Main extends Application {
 	
 	override start(Stage primaryStage) throws Exception {
 		println("started App");
