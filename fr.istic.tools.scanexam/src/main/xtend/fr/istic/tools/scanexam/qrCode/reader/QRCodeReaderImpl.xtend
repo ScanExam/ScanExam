@@ -21,13 +21,20 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import java.io.File
+import java.util.Set
+import java.util.HashSet
 
 class QRCodeReaderImpl implements QRCodeReader {
 	
-	Examen examen
+	Set<Copie> sheets
+	int nbSheetsTotal
+	int nbPagesInSheet
 	
 	new(int nbPages, int nbCopies){
-		examen = new Examen(nbPages, nbCopies)
+		this.nbPagesInSheet = nbPages
+		this.nbSheetsTotal = nbCopies
+		
+		sheets = new HashSet<Copie>()
 	}
 
 	override readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
@@ -41,7 +48,8 @@ class QRCodeReaderImpl implements QRCodeReader {
 			val String[] items = pattern.split(decodeQRCodeBuffered(bim))
 			
 			val Copie cop = new Copie(Integer.parseInt(items.get(1)), Integer.parseInt(items.get(2)), page)
-			examen.addCopie(cop)
+			addCopie(cop)
+			println("Success page " + page)
 		}
 
 	}
@@ -94,18 +102,77 @@ class QRCodeReaderImpl implements QRCodeReader {
 	}
 
 
+	def boolean isExamenComplete(){
+		var boolean ret = true
+		for(i : 0 ..< sheets.length){
+			ret = ret && sheets.get(i).isCopyComplete(nbPagesInSheet)
+		}
+		return ret && (nbSheetsTotal == sheets.length)
+	}
+	
+	def Set<Copie> getUncompleteCopies(){
+		val Set<Copie> uncompleteCopies = new HashSet<Copie>()
+		
+		for(i : 0 ..< sheets.length){
+			if(!sheets.get(i).isCopyComplete(nbPagesInSheet))
+				uncompleteCopies.add(sheets.get(i))
+		}
+		return uncompleteCopies
+	}
+	
+	def Set<Copie> getCompleteCopies(){
+		val Set<Copie> completeCopies = new HashSet<Copie>()
+		
+		for(i : 0 ..< sheets.length){
+			if(sheets.get(i).isCopyComplete(nbPagesInSheet))
+				completeCopies.add(sheets.get(i))
+		}
+		return completeCopies
+	}
+	
+	def Copie getCopie(int numCopie){
+		for(i : 0 ..< sheets.length)
+			if(sheets.get(i).numCopie == numCopie)
+				return sheets.get(i)
+	}
+	
+	def addCopie(Copie copie){
+		var boolean trouve = false
+		var int i = 0
+		
+		while(!trouve && i < sheets.length){
+			if(sheets.get(i).numCopie == copie.numCopie)
+				trouve = true
+			i++
+		}//while
+		
+		i--
+		if(trouve){
+			sheets.get(i).addInSet(copie.pagesCopie)
+		}
+		else
+			sheets.add(copie)
+	}
+		
+	def Set<Copie> getSheets(){
+		return sheets
+	}
 
 	def static void main(String[] arg) {
-		//quatre copies de deux pages
-		val QRCodeReaderImpl qrcodeReader = new QRCodeReaderImpl(2,4)		
+		//cinq copies de deux pages
+		val QRCodeReaderImpl qrcodeReader = new QRCodeReaderImpl(2,20)		
 		
-		val PDDocument document = PDDocument.load(new File("test_Inserted.pdf"));
+		val PDDocument document = PDDocument.load(new File("TDIA_Inserted.pdf"));
 		val PDFRenderer pdfRenderer = new PDFRenderer(document);
 		
 		
 		qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
 		
-		println(qrcodeReader.examen.toString())
+		
+		for(i:0 ..<qrcodeReader.sheets.length)
+			println(qrcodeReader.sheets.get(i).toString())
+			
+		println(qrcodeReader.isExamenComplete())
 		
 	}
 }

@@ -94,9 +94,11 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val PDDocument docSujetMaitre = PDDocument.load(f2)
 		createThread(nbCopie, docSujetMaitre, outputFile, nbPages)
-
+		
+		
 		docSujetMaitre.save(outputFile)
-		docSujetMaitre.close
+		
+		//docSujetMaitre.close
 
 		// Supressiopn des documents temporaires
 		val File f1 = new File(save)
@@ -105,6 +107,12 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		if (f2.delete)
 			println("Deleted dupli")
+			
+		for (i : 1 ..< 5) {
+			val File png = new File("./QRCode" + i + ".png")
+			if (png.delete())
+				println("Deleted png " + i)
+		}
 	}
 
 	/**
@@ -121,18 +129,11 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		service.execute(new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, outputFile, 1, nbPage))
 		service.execute(new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, outputFile, 2, nbPage))
-		service.execute(
-			new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, outputFile, 3, nbPage))
+		service.execute(new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, outputFile, 3, nbPage))
 		service.execute(new QRThreadWriter(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, outputFile, 4, nbPage))
 
 		service.shutdown()
 		service.awaitTermination(1, TimeUnit.MINUTES);
-
-		for (i : 1 ..< 5) {
-			val File png = new File("./QRCode" + i + ".png")
-			if (png.delete())
-				println("Deleted png " + i)
-		}
 
 	}
 
@@ -169,27 +170,12 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		}
 	}
 
-	/*
-	 * creation des threads
-	 * 
-	 * tant que => Il reste des pages sans QRCode
-	 * 		Genere le bon QRCode
-	 * 		insere le QRCode
-	 * 
-	 * Fin des threads
-	 * 
-	 * 
-	 * 
-	 * On sait crer un QRCode et l'insérer dans une page
-	 * Créer une copie d'examen en insérant le QRCode sur chacune des pages (String nameExam, int numCopie) .... for(nbpage -> i) créer le QRCode de nom nameExam + i.IntegerToString
-	 * Créer toutes les copies d'examen //ici on sépare en freds
-	 * 
-	 * 
-	 */
+
+
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
-		val String input = "./test.pdf"
+		val String input = "./TDIA.pdf"
 		gen.createAllExamCopies(input, 5)
 		println("Done")
 	}

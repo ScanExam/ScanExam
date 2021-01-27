@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view
 
+import fr.istic.tools.scanexam.config.LanguageManager
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
@@ -142,7 +143,7 @@ class SwingView {
 	 * Initialise la fenêtre
 	 */
 	def private void initialize() {
-		window = new JFrame()
+		window = new JFrame(LanguageManager.translate("title.ScanExam"))
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 		
@@ -289,8 +290,6 @@ class SwingView {
 		
 		btnNextQst = new JButton(">")
 		spltPnQst.setRightComponent(btnNextQst)
-		
-		showContentDown
 	}
 
 	/** 
