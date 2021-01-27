@@ -16,11 +16,11 @@ Label {
 }
 
 .TopArrowButton {
-    -fx-background-image: url(../../ScanGrading/fr.istic.tools.scanexam/src/main/resources/viewResources/down-arrow.png);
+    -fx-background-image: url(viewResources/down-arrow.png);
 }
 
 .BotArrowButton {
-    -fx-background-image: url(../../ScanGrading/fr.istic.tools.scanexam/src/main/resources/viewResources/up-arrow.png);
+    -fx-background-image: url(/viewResources/up-arrow.png);
 }
 
 .TogglePanel {
