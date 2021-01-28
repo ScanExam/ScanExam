@@ -43,7 +43,7 @@ class MainView {
 	/** 
 	 * Lancement de l'application Swing
 	 */
-	def private static void lunchSwing() {
+	def static void lunchSwing() {
 		EventQueue.invokeLater([
 			try {
 				var SwingView window = new SwingView()
@@ -63,7 +63,7 @@ class MainView {
 	/** 
 	 * Lancement de l'application FX
 	 */
-	def private static void lunchFX(String[] args) {
+	def static void lunchFX(String[] args) {
 		FXMain.fxMain(args)
 	}
 	
