@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<fully.qualified.main.class>fr.istic.tools.scanexam.gui.ScanExamMain</fully.qualified.main.class>
+		<fully.qualified.main.class>fr.istic.tools.scanexam.view.Main</fully.qualified.main.class>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.fork>true</maven.compiler.fork>
@@ -107,12 +107,21 @@
 	</dependencies>
 
 	<build>
+		<finalName>ScanExam</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<pluginManagement>
 			<plugins>
+
+				<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>3.3.0</version> 
+					<configuration> <archive> <manifest> <mainClass>${fully.qualified.main.class}</mainClass> 
+					</manifest> </archive> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
+					</descriptorRefs> </configuration> <executions> <execution> <id>make-assembly</id> 
+					<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
+					</executions> </plugin> -->
+
+
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.3.0</version>
 					<configuration>
 						<archive>
 							<manifest>
@@ -123,66 +132,51 @@
 							<descriptorRef>jar-with-dependencies</descriptorRef>
 						</descriptorRefs>
 					</configuration>
-					<executions>
-						<execution>
-							<id>make-assembly</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 
+				<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
+					<executions> <execution> <phase>package</phase> <goals> <goal>shade</goal> 
+					</goals> <configuration> <filters> <filter> <artifact>*:*</artifact> <excludes> 
+					<exclude>META-INF/*.SF</exclude> <exclude>META-INF/*.DSA</exclude> <exclude>META-INF/*.RSA</exclude> 
+					</excludes> </filter> </filters> <shadedArtifactAttached>true</shadedArtifactAttached> 
+					<transformers> <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> 
+					<mainClass>${fully.qualified.main.class}</mainClass> </transformer> </transformers> 
+					</configuration> </execution> </executions> </plugin> -->
 
-				<!-- <plugin> -->
-				<!-- <groupId>org.apache.maven.plugins</groupId> -->
-				<!-- <artifactId>maven-shade-plugin</artifactId> -->
-				<!-- <executions> -->
-				<!-- <execution> -->
-				<!-- <phase>package</phase> -->
-				<!-- <goals> -->
-				<!-- <goal>shade</goal> -->
-				<!-- </goals> -->
-				<!-- <configuration> -->
-				<!-- <filters> -->
-				<!-- <filter> -->
-				<!-- <artifact>*:*</artifact> -->
-				<!-- <excludes> -->
-				<!-- <exclude>META-INF/*.SF</exclude> -->
-				<!-- <exclude>META-INF/*.DSA</exclude> -->
-				<!-- <exclude>META-INF/*.RSA</exclude> -->
-				<!-- </excludes> -->
-				<!-- </filter> -->
-				<!-- </filters> -->
-				<!-- <shadedArtifactAttached>true</shadedArtifactAttached> -->
-				<!-- <transformers> -->
-				<!-- <transformer -->
-				<!-- implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> -->
-				<!-- <mainClass>${fully.qualified.main.class}</mainClass> -->
-				<!-- </transformer> -->
-				<!-- </transformers> -->
-				<!-- </configuration> -->
-				<!-- </execution> -->
-				<!-- </executions> -->
-				<!-- </plugin> -->
+				<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
+					<version>3.1.0</version> <configuration> <archive> <manifest> <addClasspath>true</addClasspath> 
+					<classpathPrefix>libs/</classpathPrefix> <mainClass> ${fully.qualified.main.class} 
+					</mainClass> </manifest> </archive> </configuration> </plugin> -->
 
-				<!-- <plugin> -->
-				<!-- <groupId>org.apache.maven.plugins</groupId> -->
-				<!-- <artifactId>maven-jar-plugin</artifactId> -->
-				<!-- <version>3.1.0</version> -->
-				<!-- <configuration> -->
-				<!-- <archive> -->
-				<!-- <manifest> -->
-				<!-- <addClasspath>true</addClasspath> -->
-				<!-- <classpathPrefix>libs/</classpathPrefix> -->
-				<!-- <mainClass> -->
-				<!-- fr.istic.tools.scanexam.gui.ScanExamMain -->
-				<!-- </mainClass> -->
-				<!-- </manifest> -->
-				<!-- </archive> -->
-				<!-- </configuration> -->
-				<!-- </plugin> -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.2.1</version>
+					<configuration>
+						<mainClass>${fully.qualified.main.class}</mainClass>
+						<arguments>
+							<argument></argument>
+						</arguments>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.21.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.junit.platform</groupId>
+							<artifactId>junit-platform-surefire-provider</artifactId>
+							<version>1.2.0-M1</version>
+						</dependency>
+						<dependency>
+							<groupId>org.junit.jupiter</groupId>
+							<artifactId>junit-jupiter-engine</artifactId>
+							<version>5.4.0</version>
+						</dependency>
+					</dependencies>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
