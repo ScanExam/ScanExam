@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<fully.qualified.main.class>fr.istic.tools.scanexam.view.Main</fully.qualified.main.class>
+		<fully.qualified.main.class>fr.istic.tools.scanexam.Main</fully.qualified.main.class>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.fork>true</maven.compiler.fork>
@@ -154,9 +154,7 @@
 					<version>1.2.1</version>
 					<configuration>
 						<mainClass>${fully.qualified.main.class}</mainClass>
-						<arguments>
-							<argument></argument>
-						</arguments>
+						
 					</configuration>
 				</plugin>
 
