@@ -2,10 +2,11 @@ package fr.istic.tools.scanexam
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.view.MainView
 import java.util.Objects
 import java.util.logging.Level
 import java.util.logging.Logger
+import fr.istic.tools.scanexam.view.MainSwing
+import fr.istic.tools.scanexam.view.MainJavaFX
 
 class Main 
 {
@@ -27,8 +28,8 @@ class Main
 	
 	def static void launchView(GraphicLib graphicLib) {
 		switch(graphicLib) {
-			case GraphicLib.JAVAFX : MainView.lunchFX(null)
-			case GraphicLib.SWING : MainView.lunchSwing
+			case GraphicLib.JAVAFX : MainJavaFX.launchApp(null)
+			case GraphicLib.SWING : MainSwing.launchApp()
 		} 
 	}	
 	
