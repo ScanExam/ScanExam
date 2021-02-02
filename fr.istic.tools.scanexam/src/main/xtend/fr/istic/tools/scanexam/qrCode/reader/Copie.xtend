@@ -1,9 +1,10 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
 import java.util.Set
+import org.eclipse.xtend.lib.annotations.Data
 import java.util.HashSet
 
-class Copie {
+@Data class Copie {
 
 	Set<Page> setPages
 	int numCopie

@@ -24,20 +24,30 @@ import java.io.File
 import java.util.Set
 import java.util.HashSet
 
-class QRCodeReaderImpl implements QRCodeReader {
+class PDFReaderQRCodeImpl implements PDFReaderQRCode {
 	
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
+	String pathToPDF
 	
-	new(int nbPages, int nbCopies){
+	new(String pathToPDF,int nbPages, int nbCopies){
+		this.pathToPDF = pathToPDF
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
 		
 		sheets = new HashSet<Copie>()
 	}
 
-	override readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
+	override readPDf() {
+		val PDDocument doc = PDDocument.load(new File(pathToPDF))
+		val PDFRenderer pdf = new PDFRenderer(doc)
+		createThread(doc.numberOfPages, pdf)
+	}
+	
+
+
+	def void readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
 		for (page : startPages ..< endPages) {
 			val BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB)
 			// val int taille = (bim.getHeight() * 0.3f) as int
@@ -47,8 +57,11 @@ class QRCodeReaderImpl implements QRCodeReader {
 			val Pattern pattern = Pattern.compile("_")
 			val String[] items = pattern.split(decodeQRCodeBuffered(bim))
 			
-			val Copie cop = new Copie(Integer.parseInt(items.get(1)), Integer.parseInt(items.get(2)), page)
+			val Copie cop = new Copie(Integer.parseInt(items.get(1)),page, Integer.parseInt(items.get(2)))
+			// WARNING Possible racecondtion dans addCopie
+			synchronized(sheets){
 			addCopie(cop)
+			}
 			println("Success page " + page)
 		}
 
@@ -92,15 +105,14 @@ class QRCodeReaderImpl implements QRCodeReader {
 
 		val ExecutorService service = Executors.newFixedThreadPool(4)
 
-		service.execute(new QRCodeThreadReader(this, 0, (nbPage / 4), pdfRenderer))
-		service.execute(new QRCodeThreadReader(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
-		service.execute(new QRCodeThreadReader(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
-		service.execute(new QRCodeThreadReader(this, (3 * nbPage / 4), nbPage, pdfRenderer))
+		service.execute(new PDFReaderQRCodeThread(this, 0, (nbPage / 4), pdfRenderer))
+		service.execute(new PDFReaderQRCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
+		service.execute(new PDFReaderQRCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
+		service.execute(new PDFReaderQRCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
 
 		service.shutdown()
 		service.awaitTermination(5, TimeUnit.MINUTES);
 	}
-
 
 	def boolean isExamenComplete(){
 		var boolean ret = true
@@ -154,18 +166,15 @@ class QRCodeReaderImpl implements QRCodeReader {
 			sheets.add(copie)
 	}
 		
-	def Set<Copie> getSheets(){
+	override Set<Copie> getSheets(){
 		return sheets
 	}
 
 	def static void main(String[] arg) {
 		//cinq copies de deux pages
-		val QRCodeReaderImpl qrcodeReader = new QRCodeReaderImpl(2,20)		
+		val PDFReaderQRCodeImpl qrcodeReader = new PDFReaderQRCodeImpl("pfo_example_Inserted.pdf",8,8)		
 		
-		val PDDocument document = PDDocument.load(new File("pfo_example_Inserted.pdf"));
-		val PDFRenderer pdfRenderer = new PDFRenderer(document);
-		
-		qrcodeReader.createThread(64, pdfRenderer)
+		qrcodeReader.readPDf
 		//qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
 		
 		
@@ -175,4 +184,6 @@ class QRCodeReaderImpl implements QRCodeReader {
 		println(qrcodeReader.isExamenComplete())
 		
 	}
+	
+
 }
