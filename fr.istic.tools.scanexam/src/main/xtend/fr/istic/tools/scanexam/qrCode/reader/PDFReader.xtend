@@ -1,15 +1,27 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
-import java.util.Set
+import fr.istic.tools.scanexam.core.StudentSheet
+import java.util.Collection
 
 interface PDFReader {
+	
 	/**
-	 * Lit le PDF spécifié au constructeur et le rentre dans une structure de donnée
+	 * Lit le PDF spécifié
 	 */
 	def void readPDf()
 	
 	/**
-	 * @return un set de copies extraites du PDF
+	 * Renvoie la collection des copies complètes
 	 */
-	def Set<Copie> getSheets()
+	def Collection<StudentSheet> getStudentSheets()
+	
+	/**
+	 * 
+	 */
+	def int getNbPagesPdf()
+	
+	/**
+	 * 
+	 */
+	def int getNbPagesTreated()
 }

@@ -1,13 +1,14 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
+import java.io.File
 import java.util.HashSet
 import java.util.Set
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.rendering.PDFRenderer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.io.File
+import java.util.stream.Collectors
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.rendering.PDFRenderer
 
 class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
 	Set<Copie> sheets
@@ -98,14 +99,20 @@ class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
 		return uncompleteCopies
 	}
 
-	def Set<Copie> getCompleteCopies() {
-		val Set<Copie> completeCopies = new HashSet<Copie>()
-
-		for (i : 0 ..< sheets.length) {
-			if (sheets.get(i).isCopyComplete(nbPagesInSheet))
-				completeCopies.add(sheets.get(i))
-		}
+	def Set<Copie> getCompleteCopies(){
+		var Set<Copie> completeCopies = new HashSet<Copie>()
+		
+		completeCopies = sheets.stream
+			.filter(copie|copie.isCopyComplete(nbPagesInSheet))
+			.collect(Collectors.toSet)
+		
 		return completeCopies
+		/*for(i : 0 ..< sheets.length){
+			if(sheets.get(i).isCopyComplete(nbPagesInSheet))
+				completeCopies.add(sheets.get(i))
+		}*/
+		
+		//return completeCopies
 	}
 
 	def Copie getCopie(int numCopie) {
@@ -115,7 +122,7 @@ class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
 	}
 
 	
-	override Set<Copie> getSheets() {
+	def Set<Copie> getSheets() {
 		return sheets
 	}
 
@@ -128,6 +135,18 @@ class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
 		for (i : 0 ..< qrcodeReader.sheets.length)
 			println(qrcodeReader.sheets.get(i).toString())
 
+	}
+	
+	override getStudentSheets() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override getNbPagesPdf() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override getNbPagesTreated() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
 }
