@@ -25,7 +25,7 @@ class Main
 		LanguageManager.change(ConfigurationManager.instance.language);
 		
 		
-		//launchView(getUiLib(args))
+		launchView(getUiLib(args))
 		
 				
 	}
