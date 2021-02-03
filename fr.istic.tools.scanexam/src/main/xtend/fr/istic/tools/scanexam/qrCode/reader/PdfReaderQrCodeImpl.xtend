@@ -9,11 +9,15 @@ import com.google.zxing.NotFoundException
 import com.google.zxing.Result
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource
 import com.google.zxing.common.HybridBinarizer
+import fr.istic.tools.scanexam.api.DataFactory
+import fr.istic.tools.scanexam.core.StudentSheet
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
+import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
+import java.util.List
 import java.util.Map
 import java.util.Set
 import java.util.concurrent.ExecutorService
@@ -30,10 +34,10 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
-	String pathToPDF
+	File pdfFile
 	
-	new(String pathToPDF,int nbPages, int nbCopies){
-		this.pathToPDF = pathToPDF
+	new(File pFile,int nbPages, int nbCopies){
+		this.pdfFile = pFile
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
 	
@@ -41,7 +45,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 
 	override readPDf() {
-		val PDDocument doc = PDDocument.load(new File(pathToPDF))
+		val PDDocument doc = PDDocument.load(pdfFile)
 		val PDFRenderer pdf = new PDFRenderer(doc)
 		createThread(doc.numberOfPages, pdf)
 	}
@@ -63,7 +67,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 			synchronized(sheets){
 			addCopie(cop)
 			}
-			println("Success page " + page)
+			//println("Success page " + page)
 		}
 
 	}
@@ -98,8 +102,6 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * 
 	 * @param nbCopies nombre de copies désirées
 	 * @param docSujetMaitre document dans lequel insérer les Codes
-	 * @param outputFile Chemin d'acces du fichier //TODO 
-	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
 	def createThread(int nbPage, PDFRenderer pdfRenderer) {
@@ -112,7 +114,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		service.execute(new PdfReaderQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
 
 		service.shutdown()
-		service.awaitTermination(5, TimeUnit.MINUTES);
+		//service.awaitTermination(5, TimeUnit.MINUTES);
 	}
 
 	def boolean isExamenComplete(){
@@ -178,15 +180,23 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 	
 	
-
+	/*FIXME
+	 * C'est parti en sucette je crois, boucle infini, il a pas trouvé de QRCode dans une des pages
+	 * impossible de comprendre pour le moment, à check
+	 */
 	def static void main(String[] arg) {
 		//cinq copies de deux pages
-		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl("pfo_example_Inserted.pdf",8,8)		
+		val File pdf = new File("pfo_example_Inserted.pdf")
+		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(pdf,8,200)		
 		
 		qrcodeReader.readPDf
 		//qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
-		
-		
+		var progress = 0
+		while(progress!=100){
+			TimeUnit.SECONDS.sleep(1)
+			progress = (qrcodeReader.nbPagesTreated*100)/qrcodeReader.nbPagesPdf
+			println("Progress : " + progress)
+		}
 		for(i:0 ..<qrcodeReader.sheets.length)
 			println(qrcodeReader.sheets.get(i).toString())
 			
@@ -194,16 +204,41 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		
 	}
 	
+	
 	override getStudentSheets() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		val Set<StudentSheet> res = new HashSet<StudentSheet>()
+		var Set<Copie> temp = new HashSet<Copie>()
+		val DataFactory dF = new DataFactory()
+		
+		temp = completeCopies
+		
+		for(i : 0 ..< temp.length){
+			val int index = temp.get(i).numCopie
+			val List<Integer> pages = new ArrayList<Integer>()
+			
+			for(j : 0 ..< temp.get(i).pagesCopie.length){
+				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+			}
+			
+			res.add(dF.createStudentSheet(index, pages))
+		}
+		return res
 	}
 	
 	override getNbPagesPdf() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		val PDDocument doc = PDDocument.load(pdfFile)
+		val int nbPages = doc.numberOfPages
+		doc.close
+		return nbPages
 	}
 	
 	override getNbPagesTreated() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		var int res = 0
+		
+		for(i : 0 ..< sheets.length){
+			res += sheets.get(i).setPages.length
+		}
+		return res
 	}
 	
 
