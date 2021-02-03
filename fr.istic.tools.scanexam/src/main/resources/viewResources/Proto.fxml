@@ -73,7 +73,7 @@
                <items>
                   <Button mnemonicParsing="false" onAction="#savePressed" text="save" />
                   <Button mnemonicParsing="false" text="Load" />
-                  <Button mnemonicParsing="false" text="Exp" />
+                  <Button mnemonicParsing="false" onAction="#exportPressed" text="Exp" />
                </items>
                <opaqueInsets>
                   <Insets />
@@ -86,11 +86,11 @@
             <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
                <children>
                   <Label prefHeight="100.0" text="Copie No.x" VBox.vgrow="ALWAYS" />
-                  <ScrollPane focusTraversable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                     <content>
-                        <VBox fx:id="leftList" />
-                     </content>
-                  </ScrollPane>
+                  <ListView fx:id="leftList" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </ListView>
                   <Label text="Note actuelle :" textOverrun="CLIP" />
                   <Label alignment="CENTER" text="x/20" textOverrun="CLIP" />
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">

@@ -1,15 +1,16 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
+import java.io.File
 import java.util.HashSet
 import java.util.Set
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.rendering.PDFRenderer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.io.File
+import java.util.stream.Collectors
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.rendering.PDFRenderer
 
-class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
+class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
@@ -41,10 +42,10 @@ class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
 
 		val ExecutorService service = Executors.newFixedThreadPool(4)
 
-		service.execute(new PDFReaderWithoutQRCodeThread(this, 0, (nbPage / 4), pdfRenderer))
-		service.execute(new PDFReaderWithoutQRCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
-		service.execute(new PDFReaderWithoutQRCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
-		service.execute(new PDFReaderWithoutQRCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
+		service.execute(new PdfReaderWithoutQrCodeThread(this, 0, (nbPage / 4), pdfRenderer))
+		service.execute(new PdfReaderWithoutQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
+		service.execute(new PdfReaderWithoutQrCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
+		service.execute(new PdfReaderWithoutQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
 
 		service.shutdown()
 		service.awaitTermination(5, TimeUnit.MINUTES);
@@ -98,14 +99,20 @@ class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
 		return uncompleteCopies
 	}
 
-	def Set<Copie> getCompleteCopies() {
-		val Set<Copie> completeCopies = new HashSet<Copie>()
-
-		for (i : 0 ..< sheets.length) {
-			if (sheets.get(i).isCopyComplete(nbPagesInSheet))
-				completeCopies.add(sheets.get(i))
-		}
+	def Set<Copie> getCompleteCopies(){
+		var Set<Copie> completeCopies = new HashSet<Copie>()
+		
+		completeCopies = sheets.stream
+			.filter(copie|copie.isCopyComplete(nbPagesInSheet))
+			.collect(Collectors.toSet)
+		
 		return completeCopies
+		/*for(i : 0 ..< sheets.length){
+			if(sheets.get(i).isCopyComplete(nbPagesInSheet))
+				completeCopies.add(sheets.get(i))
+		}*/
+		
+		//return completeCopies
 	}
 
 	def Copie getCopie(int numCopie) {
@@ -115,19 +122,31 @@ class PDFReaderWithoutQRCodeImpl implements PDFReaderWithoutQrcode {
 	}
 
 	
-	override Set<Copie> getSheets() {
+	def Set<Copie> getSheets() {
 		return sheets
 	}
 
 	def static void main(String[] arg) {
 		// cinq copies de deux pages
-		val PDFReaderWithoutQRCodeImpl qrcodeReader = new PDFReaderWithoutQRCodeImpl("pfo_example_Inserted.pdf", 8, 8)
+		val PdfReaderWithoutQrCodeImpl qrcodeReader = new PdfReaderWithoutQrCodeImpl("pfo_example_Inserted.pdf", 8, 8)
 
 		qrcodeReader.readPDf
 		// qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
 		for (i : 0 ..< qrcodeReader.sheets.length)
 			println(qrcodeReader.sheets.get(i).toString())
 
+	}
+	
+	override getStudentSheets() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override getNbPagesPdf() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override getNbPagesTreated() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
 }
