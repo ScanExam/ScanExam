@@ -40,6 +40,7 @@ class DataFactory {
 	def StudentSheet createStudentSheet(int idSheet, List<Integer> pages){
 		val sheet = CoreFactory.eINSTANCE.createStudentSheet
 		sheet.id = idSheet
+		sheet.posPage.addAll(pages)
 		sheet
 	}
 	
