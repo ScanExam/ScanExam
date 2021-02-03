@@ -22,6 +22,10 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.JTextPane
 import javax.swing.SwingConstants
+import java.awt.event.ActionListener
+import java.awt.event.ActionEvent
+import javax.swing.JTree
+import javax.swing.JTextArea
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -125,6 +129,8 @@ class SwingView {
 	var JPanel pnlContentDown
 	/* Panel d'énoncé d'une question */
 	var boolean contentDown
+	
+	var JSplitPane mainSplitPane
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -263,12 +269,26 @@ class SwingView {
 		pnlDown.setLayout(new BorderLayout(0, 0))
 		
 		btnDown = new JButton("▲")
-		pnlDown.add(btnDown, BorderLayout.NORTH)
+		
+		btnDown.addActionListener(new ActionListener() { 
+			override actionPerformed(ActionEvent e) {
+				showContentDown()
+			}			
+		})
+		
+		
 		
 		// pnlContentDown = new JPanel();
 		pnlContentDown = new ImagePanel("src/main/resources/logo.png")
 		pnlContentDown.setPreferredSize(new Dimension(pnlContentDown.getSize().width, 180))
 		contentDown = false
+		
+		
+		
+		// to resize the correction 
+		mainSplitPane = new JSplitPane( 
+        JSplitPane.VERTICAL_SPLIT, new JPanel(), pnlContentDown );
+		pnlDown.add(btnDown, BorderLayout.NORTH)
 		
 		pnlQst = new JPanel()
 		window.getContentPane().add(pnlQst, BorderLayout.EAST)
@@ -297,11 +317,11 @@ class SwingView {
 	 */
 	def void showContentDown() {
 		if (contentDown) {
-			pnlDown.remove(pnlContentDown)
+			pnlDown.remove(mainSplitPane)
 			btnDown.setText("▲")
 			contentDown = false
 		} else {
-			pnlDown.add(pnlContentDown, BorderLayout.CENTER)
+			pnlDown.add(mainSplitPane, BorderLayout.CENTER)
 			btnDown.setText("▼")
 			contentDown = true
 		}
