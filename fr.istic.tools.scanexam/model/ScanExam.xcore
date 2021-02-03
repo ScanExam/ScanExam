@@ -97,6 +97,7 @@ class Grade {
 
 class StudentSheet {
 	int ^id
+    int[] posPage
 	contains Grade[] grades
 	op Grade getGrade(int ^id)
 	{

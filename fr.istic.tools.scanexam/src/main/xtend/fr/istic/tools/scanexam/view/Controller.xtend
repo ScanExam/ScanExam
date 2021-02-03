@@ -9,6 +9,10 @@ import javafx.scene.layout.VBox
 import javafx.scene.layout.HBox
 import javafx.scene.control.Label
 import javafx.scene.control.SelectionMode
+import javafx.scene.image.ImageView
+import javafx.geometry.Rectangle2D
+import javafx.scene.input.ScrollEvent
+import javafx.scene.Node
 
 class Controller {
 	boolean topShow = false;
@@ -22,19 +26,21 @@ class Controller {
     public ListView leftList;
     public ListView rightList;
 
-
-    def void toggleTop() throws IOException {
-        topPane.setVisible(!topShow);
-        topButtonHidden.setVisible(topShow);
-        topShow = !topShow;
-    }
-
+	//***********************//
+   	//***** UI CONTROLS *****//
+   	//***********************//
+	/**
+     * Toggles the visibility of the bottom window
+     */
     def void toggleBottom() throws IOException {
         bottomPane.setVisible(!botShow);
         botButtonHidden.setVisible(botShow);
         botShow = !botShow;
     }
     
+    /**
+     * Used to resize the window containing the corrected exam
+     */
     def void dragBottom(MouseEvent event) {
         if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
             bottomPane.setPrefHeight(Math.max(0,Math.min(bottomPane.getScene().getHeight()-100,bottomPane.getScene().getHeight()-event.getSceneY())));
@@ -42,6 +48,91 @@ class Controller {
         }
     }
     
+    var mouseOriginX = 0d;
+    var mouseOriginY = 0d;
+    var objectOriginX = 0d;
+    var objectOriginY = 0d;
+    
+    def void MoveImage(MouseEvent e) {
+    	
+    	if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
+    		println("Starting to move")
+    		mouseOriginX = e.screenX
+    		mouseOriginY = e.screenY
+    		var source =  e.source as Node
+    		println(source)
+    		objectOriginX = source.layoutX
+    		objectOriginY = source.layoutY
+    	}
+    	if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+    		println("moving")
+    		var source =  e.source as Node
+    		
+    		source.layoutX = objectOriginX + (e.screenX - mouseOriginX)
+    		source.layoutY = objectOriginY + (e.screenY - mouseOriginY)
+    		println(source + " " + source.layoutX + " " + source.layoutY )
+    	}
+    }
+    
+    def void ZoomImage(ScrollEvent e) {
+    		var source = e.source as Node
+    		if (e.deltaY > 0 ) {
+    			source.scaleX = source.scaleX * 0.95
+    			source.scaleY = source.scaleY * 0.95
+    		}else {
+    			source.scaleX = source.scaleX * 1.05
+    			source.scaleY = source.scaleY * 1.05
+    		}
+    	}
+    
+    /* 
+    var mouseOriginX = 0d;
+    var mouseOriginY = 0d;
+    var objectOriginX = 0d;
+    var objectOriginY = 0d;
+    
+    def void MoveImage(MouseEvent e) {
+    	println("trying to move")
+    	if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
+    		mouseOriginX = e.x
+    		mouseOriginY = e.y
+    		var source =  e.source as ImageView
+    		var vp = source.viewport
+    		objectOriginX = vp.minX
+    		objectOriginY = vp.minY
+    	}
+    	if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+    		var source =  e.source as ImageView
+    		var vp = source.viewport
+    		var rect = new Rectangle2D(objectOriginX - (e.x - mouseOriginX),objectOriginY - (e.y - mouseOriginY),vp.height,vp.width )
+    		source.viewport = rect
+    	}
+    }
+    
+    def void ZoomImage(ScrollEvent e) {
+    	var source = e.source as ImageView
+    	if (e.deltaY > 0) {
+    		var vp = source.viewport
+    		source.viewport = new Rectangle2D(vp.minX,vp.minY,vp.height * 0.95,vp.width*0.95)
+    	}
+    	
+    	if (e.deltaY < 0) {
+    		var vp = source.viewport
+    		source.viewport = new Rectangle2D(vp.minX,vp.minY,vp.height * 1.05,vp.width*1.05)
+    	}
+    }
+    
+    */
+    
+    
+    
+    
+    
+    
+    
+    //***********************//
+   	//* PRESENTER CONTROLS **//
+   	//***********************//
     
     /**
      * Called when a <b>save</b> button is pressed

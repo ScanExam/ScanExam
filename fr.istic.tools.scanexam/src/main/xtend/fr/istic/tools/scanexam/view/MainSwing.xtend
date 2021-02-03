@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.view
 
+import fr.istic.tools.scanexam.box.BoxList
+import fr.istic.tools.scanexam.controller.PdfPresenterSwing
 import java.awt.EventQueue
 
 /** 
@@ -20,7 +22,8 @@ class MainSwing {
 	def static void launchApp() {
 		EventQueue.invokeLater([
 			try {
-				var SwingView window = new SwingView()
+				var PdfPresenterSwing pdfPresenteur = new PdfPresenterSwing(1280, 720, "pfo_example.pdf", new BoxList())
+				var SwingView window = new SwingView(pdfPresenteur)
 				window.getWindow().setVisible(true)
 			} catch (Exception e) {
 				e.printStackTrace()
