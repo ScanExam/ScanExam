@@ -72,7 +72,7 @@ class PdfPanel extends JPanel {
 	    g2d.setColor(selectionColor);
 	    var BoxList paintedBoxes = new BoxList(boxes.getMinWidth(), boxes.getMinHeight(), boxes.getMaxWidth(), boxes.getMaxHeight())
 	    for (Box box : boxes.getList()) {
-			paintedBoxes.addBox(box.getX() + (pdfPresenter.getOriginX() / width), box.getY() + (pdfPresenter.getOriginY() / height), box.getWidth(), box.getHeight(), box.getTitle())
+			paintedBoxes.addBox(box.getX() + ((pdfPresenter.getOriginX() - box.getWidth()) / width), box.getY() + ((pdfPresenter.getOriginY() - box.getHeight()) / height), box.getWidth(), box.getHeight(), box.getTitle())
 		}
 	    for (Box paintedBox : paintedBoxes.getList()) {
 	        g2d.fill(convertBoxToRectangle(paintedBox))
@@ -95,7 +95,7 @@ class PdfPanel extends JPanel {
 	    var BoxList boxesTitle = new BoxList(selectionPresenter.getMinWidth() / width, selectionPresenter.getTitleHeight() / height, -1.0, selectionPresenter.getTitleHeight() / height)
 		boxesTitle.updateBounds(selectionPresenter.getMinWidth() / width / pdfPresenter.getScale(), selectionPresenter.getMinHeight() / height, -1.0, -1.0)
 		for (Box box : boxes.getList()) {
-			boxesTitle.addBox(box.getX() + (pdfPresenter.getOriginX() / width), box.getY() + ((pdfPresenter.getOriginY() - selectionPresenter.getTitleHeight()) / height), box.getWidth(), selectionPresenter.getTitleHeight() / height, box.getTitle())
+			boxesTitle.addBox(box.getX() + ((pdfPresenter.getOriginX() - box.getWidth()) / width), box.getY() + ((pdfPresenter.getOriginY() - selectionPresenter.getTitleHeight()) / height), box.getWidth(), selectionPresenter.getTitleHeight() / height, box.getTitle())
 		}
 	        
 	    // Coloration de l'intérieur des titres
