@@ -19,7 +19,7 @@ class Controller {
     public Button botButtonHidden;
     public Button botButtonActive;
     public Pane bottomPane;
-    public VBox leftList;
+    public ListView leftList;
     public ListView rightList;
 
 
@@ -35,30 +35,37 @@ class Controller {
         botShow = !botShow;
     }
     
-    double startY ;
-
     def void dragBottom(MouseEvent event) {
         if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
             bottomPane.setPrefHeight(Math.max(0,Math.min(bottomPane.getScene().getHeight()-100,bottomPane.getScene().getHeight()-event.getSceneY())));
 
         }
-        if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
-            startY = event.getY();
-        }
     }
     
+    
+    /**
+     * Called when a <b>save</b> button is pressed
+     */
     def void savePressed() {
     	println("Saving method");
     }
-    
+    /**
+     * Called when a <b>save a</b> button is pressed
+     */
     def void saveAsPressed() {
     	println("Saving as method");
     }
     
+     /**
+     * Called when a <b>load</b> button is pressed
+     */
     def void loadPressed() {
     	println("Load method");
     }
     
+     /**
+     * Called when a <b>import</b> button is pressed
+     */
     def void importPressed() {
     	println("Import method");
     	rightList.getItems().add(new Button("11"));
@@ -67,32 +74,44 @@ class Controller {
     	addQuestionList();
     }
     
+     /**
+     * Called when a <b>export</b> button is pressed
+     */
     def void exportPressed() {
     	println("Export method");
     }
-    
+     /**
+     * Called when a <b>next question</b> button is pressed
+     */
     def void nextQuestionPressed(){
     	println("Next question method");
     }
-    
+     /**
+     * Called when a <b>previous question pressed</b> button is pressed
+     */
     def void prevQuestionPressed(){
     	println("Prev question method");
     }
-    
+     /**
+     * Called when a <b>next student</b> button is pressed
+     */
     def void nextStudentPressed(){
     	println("Next student method");
     }
-    
+     /**
+     * Called when a <b>previous studend</b> button is pressed
+     */
     def void prevStudentPressed(){
     	println("Prev student method");
     }
+    
     
     def void addBaremeList() {
     	
     }
     
     def void addQuestionList() {
-    	leftList.children.add(new CopieItem());
+  
     }
     
     

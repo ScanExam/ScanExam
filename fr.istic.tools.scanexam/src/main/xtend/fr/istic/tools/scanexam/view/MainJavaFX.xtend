@@ -10,21 +10,23 @@ import javafx.stage.Stage
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
  * @author Stefan Locke
  */
-class MainJavaFX {
+class MainJavaFX extends Application {
 
 	/** 
 	 * Lancement de l'application FX
 	 */
 	def static void launchApp(String[] args) {
-		FXMain.fxMain(args)
+		launch(args);
+	}
+	
+	def static void launchApp() {
+		launch(null);
 	}
 	
 	/**
 	 * Classe de lancement de l'application FX
 	 */
-	static class FXMain extends Application {
-		
-		override start(Stage primaryStage) throws Exception {
+	override start(Stage primaryStage) throws Exception {
 			println("started App");
 			val loader = new FXMLLoader();
 			val root = loader.load(ResourcesUtils.getInputStreamResource("/viewResources/Proto.fxml"));
@@ -33,11 +35,6 @@ class MainJavaFX {
 			primaryStage.setMinHeight(720);
 			primaryStage.setMinWidth(720);
 			primaryStage.show();
-		}
-
-		def static void fxMain(String[] args) {
-			launch(args);
-		}
 	}
-
 }
+
