@@ -1,11 +1,15 @@
 package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.controller.PdfPresenterSwing
+import fr.istic.tools.scanexam.controller.SelectionPresenterSwing
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
@@ -34,6 +38,11 @@ class SwingView {
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	/* Controlleur liant les controlleurs du Pdf et des boîtes */
+	var PdfPresenterSwing pdfPresenter
+	/* Controlleur pour la gestions des boîtes */
+	var SelectionPresenterSwing selectionPresenter
 	
 	/* Fenêtre de création d'examen */
 	var JFrame window
@@ -102,7 +111,7 @@ class SwingView {
 	var JLabel lblNote
 	
 	/* Panel principal présentant la copie */
-	var JPanel pnlMain
+	var JPanel pnlPdf
 	
 	/* Panel de navigation entre les questions */
 	var JPanel pnlQst
@@ -125,6 +134,8 @@ class SwingView {
 	var JPanel pnlContentDown
 	/* Panel d'énoncé d'une question */
 	var boolean contentDown
+	
+	var JSplitPane mainSplitPane
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -135,7 +146,10 @@ class SwingView {
 	/** 
 	 * Constructeur
 	 */
-	new() {
+	new(PdfPresenterSwing pdfPresenter) {
+		this.pdfPresenter = pdfPresenter
+		this.selectionPresenter = this.pdfPresenter.getSelectionController()
+		
 		initialize()
 	}
 
@@ -253,22 +267,36 @@ class SwingView {
 		btnNextPaper = new JButton(">>")
 		spltPnPaper.setRightComponent(btnNextPaper)
 		
-		// pnlMain = new JPanel();
-		pnlMain = new ImagePanel("src/main/resources/logo.png")
-		window.getContentPane().add(pnlMain, BorderLayout.CENTER)
-		pnlMain.setLayout(new BorderLayout(0, 0))
+		// pnlPdf = new JPanel();
+		pnlPdf = new PdfPanel(this.pdfPresenter)
+		window.getContentPane().add(pnlPdf, BorderLayout.CENTER)
+		pnlPdf.setLayout(new BorderLayout(0, 0))
 		
 		pnlDown = new JPanel()
-		pnlMain.add(pnlDown, BorderLayout.SOUTH)
+		pnlPdf.add(pnlDown, BorderLayout.SOUTH)
 		pnlDown.setLayout(new BorderLayout(0, 0))
 		
 		btnDown = new JButton("▲")
-		pnlDown.add(btnDown, BorderLayout.NORTH)
+		
+		btnDown.addActionListener(new ActionListener() { 
+			override actionPerformed(ActionEvent e) {
+				showContentDown()
+			}			
+		})
+		
+		
 		
 		// pnlContentDown = new JPanel();
 		pnlContentDown = new ImagePanel("src/main/resources/logo.png")
 		pnlContentDown.setPreferredSize(new Dimension(pnlContentDown.getSize().width, 180))
 		contentDown = false
+		
+		
+		
+		// to resize the correction 
+		mainSplitPane = new JSplitPane( 
+        JSplitPane.VERTICAL_SPLIT, new JPanel(), pnlContentDown );
+		pnlDown.add(btnDown, BorderLayout.NORTH)
 		
 		pnlQst = new JPanel()
 		window.getContentPane().add(pnlQst, BorderLayout.EAST)
@@ -297,11 +325,11 @@ class SwingView {
 	 */
 	def void showContentDown() {
 		if (contentDown) {
-			pnlDown.remove(pnlContentDown)
+			pnlDown.remove(mainSplitPane)
 			btnDown.setText("▲")
 			contentDown = false
 		} else {
-			pnlDown.add(pnlContentDown, BorderLayout.CENTER)
+			pnlDown.add(mainSplitPane, BorderLayout.CENTER)
 			btnDown.setText("▼")
 			contentDown = true
 		}

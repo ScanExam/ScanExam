@@ -10,6 +10,8 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import java.util.logging.Level
+import java.util.Optional
 
 /**
  * @author Marius Lumbroso
@@ -17,7 +19,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
  */
 class ConfigurationManager 
 {
-	static final Logger logger = Logger.getGlobal();
+	static final Logger logger = Logger.getGlobal;
 	
 	/**
 	 * Chemin d'accès au fichier de configuration.
@@ -26,37 +28,57 @@ class ConfigurationManager
 	/**
 	 * Instance unique de la configuration courante 
 	 */
-	static Config Instance 
+	public static Config instance 
 	
+	/**
+	 * Charge le fichier de configuration a partir du disque.
+	 * Si le fichier n'existe pas ou est corrompue, la 
+	 * configuration par defaut est crée.
+	 */
 	def static void init()
 	{
 		val path = Paths.get(PATH);
 		
 		if (Files.exists(path)) 
-		{  
-			Instance = load();
-			logger.info("Configuration loaded.");
+		{
+			val config = load();
+			
+			if (config.present)
+			{
+				instance = config.get
+				logger.info("Configuration loaded.");
+			}
+			else
+			{	
+				logger.log(Level.WARNING , "Unable to load configuration. Using default.");
+				instance = create()
+				save()
+			}
 		}  
 		else  
 		{ 
-		 //	Instance = create();
+		 	instance = create();
 			logger.info("Configuration created.");
 			save();
-		}	
+		}
 	}
-	
+	/**
+	 * Genère la configuration par defaut.
+	 */
  	def static Config create() 
 	{
 		val config = ConfigFactory.eINSTANCE.createConfig();
+		config.language = LanguageManager.currentLanguage
 		return config;
 	}
 	
 	
 	/**
 	 * Charge la configuration courante a partir du disque.
-	 * !!! IO Exception n'est jamais soulevée ? !!! 
+	 * Si le fichier est corrompu, la configuration par defaut 
+	 * est chargée.
 	 */
-	def static Config load()
+	def static Optional<Config> load()
 	{
 		val resourceSet = new ResourceSetImpl();
    		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
@@ -64,13 +86,24 @@ class ConfigurationManager
     	_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl);
     	
     	resourceSet.getPackageRegistry().put(ConfigPackage.eNS_URI, ConfigPackage.eINSTANCE);
-    	val resource = resourceSet.getResource(URI.createFileURI(PATH), true);
     	
-    	return resource.getContents().get(0) as Config; 
+    	var Resource resource = null;
+    	
+    	try
+    	{
+    		 resource = resourceSet.getResource(URI.createFileURI(PATH), true);
+    	}
+    	catch (Throwable ex)
+    	{
+    	 	return Optional.empty;
+    	}
+    	
+    	return Optional.ofNullable(resource.getContents().get(0) as Config); 
 	}
 	/**
-	 * Sauvegarde la configuration courante sur le disque.
-	 * !!! IO Exception n'est jamais soulevée ? !!! 
+	 * Sauvegarde la configuration courante (Instance) 
+	 * sur le disque à l'emplacement PATH.
+	 *  
 	 */
 	def static void save()
 	{
@@ -82,7 +115,9 @@ class ConfigurationManager
     	resourceSet.getPackageRegistry().put(ConfigPackage.eNS_URI, ConfigPackage.eINSTANCE);
     	
     	val resource = resourceSet.createResource(URI.createFileURI(PATH));
-    	resource.getContents().add(Instance);
+    	
+    	resource.getContents().add(instance);
+    
     	resource.save(null);
     	
     	logger.info("Configuration saved.");

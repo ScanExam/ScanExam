@@ -50,12 +50,14 @@ class GradeScale {
 	
 }
 
-
-class Exam {
+class Page {
 	int ^id
-	String name
 	contains Question[] questions
 	
+	op void modifyQuestion(int index,Question question)
+	{
+		questions.set(index,question);
+	}
 	op void addQuestion(Question question)
 	{
 		questions.add(question)
@@ -64,6 +66,14 @@ class Exam {
 	{
 		questions.remove(index)
 	}
+}
+
+class Exam {
+	int ^id
+	String name
+	contains Page[] pages
+	
+	
 }
 
 class Comment {
@@ -87,6 +97,7 @@ class Grade {
 
 class StudentSheet {
 	int ^id
+    int[] posPage
 	contains Grade[] grades
 	op Grade getGrade(int ^id)
 	{

@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.core.config
+import java.util.Locale
+type Locale wraps Locale
 
 class Config {
-	String language
+	Locale language
 }

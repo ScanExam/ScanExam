@@ -17,7 +17,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox minHeight="720.0" minWidth="720.0" prefHeight="540.0" prefWidth="938.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.Controller">
@@ -103,28 +103,23 @@
             </VBox>
             <AnchorPane fx:id="mainPane" styleClass="MainPane" HBox.hgrow="ALWAYS">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <ImageView fitHeight="500.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@logo.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </StackPane>
-                  <AnchorPane id="BottomTogglePanel" fx:id="topPane" layoutX="150.0" layoutY="-76.0" prefHeight="100.0" prefWidth="200.0" styleClass="TogglePanel" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <HBox alignment="TOP_CENTER" pickOnBounds="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <AnchorPane style="-fx-background-color: RED;">
                            <children>
-                              <Button fx:id="topButtonActive" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleTop" prefHeight="15.0" prefWidth="40.0">
-                                 <styleClass>
-                                    <String fx:value="ArrowButton" />
-                                    <String fx:value="BotArrowButton" />
-                                 </styleClass>
-                              </Button>
+                              <Pane onMouseDragged="#MoveImage" onMousePressed="#MoveImage" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
+                                 <children>
+                                    <ImageView fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@logo.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </Pane>
                            </children>
-                        </HBox>
-                     </children></AnchorPane>
+                        </AnchorPane>
+                     </content>
+                  </ScrollPane>
                   <AnchorPane id="TopTogglePanel" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="TogglePanel" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
                         <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -135,6 +130,9 @@
                                  </image>
                               </ImageView>
                            </content>
+                           <cursor>
+                              <Cursor fx:constant="OPEN_HAND" />
+                           </cursor>
                         </ScrollPane>
                         <HBox alignment="TOP_CENTER" pickOnBounds="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>

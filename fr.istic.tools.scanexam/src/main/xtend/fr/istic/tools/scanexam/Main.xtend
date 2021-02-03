@@ -14,16 +14,18 @@ class Main
 	/**
 	 * Library graphique à utiliser par défaut. 
 	 */
-	static val DEFAULT_LIB = GraphicLib.JAVAFX
+	static val DEFAULT_LIB = GraphicLib.SWING;
 	
 	def static void main(String[] args)
 	{
-		//ConfigurationManager.init
 		LanguageManager.init
 		
+		ConfigurationManager.init
+		
+		LanguageManager.change(ConfigurationManager.instance.language);
+
 		launchView(getUiLib(args))
 		
-				
 	}
 	
 	def static void launchView(GraphicLib graphicLib) {
