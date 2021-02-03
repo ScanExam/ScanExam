@@ -3,21 +3,21 @@ package fr.istic.tools.scanexam.view
 import java.awt.EventQueue
 
 /** 
- * Classe pour lancer directement la vue de la création d'examen
+ * Classe pour lancer directement la vue en utilisant la librairie Swing
  * @author Julien Cochet
  */
-class MainSwingView {
+class MainSwing {
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
-	 * MAIN
+	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
 	/** 
-	 * Launch the application.
+	 * Lancement de l'application Swing
 	 */
-	def static void main(String[] args) {
+	def static void launchApp() {
 		EventQueue.invokeLater([
 			try {
 				var SwingView window = new SwingView()

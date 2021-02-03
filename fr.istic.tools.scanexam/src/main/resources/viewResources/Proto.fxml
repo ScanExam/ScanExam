@@ -11,6 +11,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -25,7 +26,15 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#savePressed" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAsPressed" text="Save as" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadPressed" text="Load" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportPressed" text="Export" />
+                  <MenuItem mnemonicParsing="false" onAction="#importPressed" text="Import" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Quit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -62,7 +71,7 @@
             </ToolBar>
             <ToolBar prefWidth="150.0" HBox.hgrow="SOMETIMES">
                <items>
-                  <Button mnemonicParsing="false" text="save" />
+                  <Button mnemonicParsing="false" onAction="#savePressed" text="save" />
                   <Button mnemonicParsing="false" text="Load" />
                   <Button mnemonicParsing="false" text="Exp" />
                </items>
@@ -77,13 +86,17 @@
             <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
                <children>
                   <Label prefHeight="100.0" text="Copie No.x" VBox.vgrow="ALWAYS" />
-                  <ListView fx:id="leftList" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ScrollPane focusTraversable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="leftList" />
+                     </content>
+                  </ScrollPane>
                   <Label text="Note actuelle :" textOverrun="CLIP" />
                   <Label alignment="CENTER" text="x/20" textOverrun="CLIP" />
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
                      <children>
-                        <Button mnemonicParsing="false" text="&lt;&lt;" />
-                        <Button mnemonicParsing="false" text="&gt;&gt;" />
+                        <Button mnemonicParsing="false" onAction="#prevStudentPressed" text="&lt;&lt;" />
+                        <Button mnemonicParsing="false" onAction="#nextStudentPressed" text="&gt;&gt;" />
                      </children>
                   </HBox>
                </children>
@@ -153,11 +166,14 @@
             <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
                <children>
                   <Label prefHeight="100.0" text="Question No.i" VBox.vgrow="ALWAYS" />
-                  <ListView fx:id="rightList" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ListView fx:id="rightList" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin></ListView>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
                      <children>
-                        <Button mnemonicParsing="false" text="&lt;" />
-                        <Button mnemonicParsing="false" text="&gt;" />
+                        <Button mnemonicParsing="false" onAction="#prevQuestionPressed" text="&lt;" />
+                        <Button mnemonicParsing="false" onAction="#nextQuestionPressed" text="&gt;" />
                      </children>
                   </HBox>
                </children>
