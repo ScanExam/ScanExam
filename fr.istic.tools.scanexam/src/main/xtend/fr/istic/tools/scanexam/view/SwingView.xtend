@@ -1,11 +1,15 @@
 package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.controller.PdfPresenterSwing
+import fr.istic.tools.scanexam.controller.SelectionPresenterSwing
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Graphics
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
@@ -22,10 +26,6 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.JTextPane
 import javax.swing.SwingConstants
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
-import javax.swing.JTree
-import javax.swing.JTextArea
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -38,6 +38,11 @@ class SwingView {
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	/* Controlleur liant les controlleurs du Pdf et des boîtes */
+	var PdfPresenterSwing pdfPresenter
+	/* Controlleur pour la gestions des boîtes */
+	var SelectionPresenterSwing selectionPresenter
 	
 	/* Fenêtre de création d'examen */
 	var JFrame window
@@ -106,7 +111,7 @@ class SwingView {
 	var JLabel lblNote
 	
 	/* Panel principal présentant la copie */
-	var JPanel pnlMain
+	var JPanel pnlPdf
 	
 	/* Panel de navigation entre les questions */
 	var JPanel pnlQst
@@ -141,7 +146,10 @@ class SwingView {
 	/** 
 	 * Constructeur
 	 */
-	new() {
+	new(PdfPresenterSwing pdfPresenter) {
+		this.pdfPresenter = pdfPresenter
+		this.selectionPresenter = this.pdfPresenter.getSelectionController()
+		
 		initialize()
 	}
 
@@ -259,13 +267,13 @@ class SwingView {
 		btnNextPaper = new JButton(">>")
 		spltPnPaper.setRightComponent(btnNextPaper)
 		
-		// pnlMain = new JPanel();
-		pnlMain = new ImagePanel("src/main/resources/logo.png")
-		window.getContentPane().add(pnlMain, BorderLayout.CENTER)
-		pnlMain.setLayout(new BorderLayout(0, 0))
+		// pnlPdf = new JPanel();
+		pnlPdf = new PdfPanel(this.pdfPresenter)
+		window.getContentPane().add(pnlPdf, BorderLayout.CENTER)
+		pnlPdf.setLayout(new BorderLayout(0, 0))
 		
 		pnlDown = new JPanel()
-		pnlMain.add(pnlDown, BorderLayout.SOUTH)
+		pnlPdf.add(pnlDown, BorderLayout.SOUTH)
 		pnlDown.setLayout(new BorderLayout(0, 0))
 		
 		btnDown = new JButton("▲")
