@@ -1,6 +1,9 @@
 package fr.istic.tools.scanexam.core
 
-type Pair<T1,T2> wraps fr.istic.tools.scanexam.utils.Pair
+import fr.istic.tools.scanexam.utils.Pair
+
+type Pair<T1,T2> wraps Pair
+
 
 class Rectangle {
 	float x
@@ -12,24 +15,55 @@ class Rectangle {
 class Question {
 	int ^id
 	contains GradeScale gradeScale
+	contains Rectangle zone
 }
-
 class GradeScale {
+	
 	float weigth
 	Pair<String,Float>[] steps
+	
 	op boolean modifyStep(int ^id,float value)
+	{
+		if (^id < steps.size() - 1)
+		{
+		   val step = steps.get(^id);
+		   steps.set(^id,new Pair<String,Float>(step._1,value));
+		   true
+		 }
+		 else
+		 {
+		 	false
+		 }
+	}
 	op boolean removeStep(int ^id)
-	op float getStep(int ^id)
-	op boolean addStep(String comment,float value)
+	{
+		steps.remove(^id) !== null
+	}
+	op float getStep(int ^id) 
+	{
+		steps.get(^id)._2
+	}
+	op boolean addStep(String comment,float value) 
+	{
+		steps.add(new Pair<String,Float>(comment,value))
+	}
+	
 }
+
 
 class Exam {
 	int ^id
 	String name
 	contains Question[] questions
-	op Rectangle getQuestionZone(int index)
-	op void addQuestion(Question question, Rectangle r)
+	
+	op void addQuestion(Question question)
+	{
+		questions.add(question)
+	}
 	op void removeQuestion(int index)
+	{
+		questions.remove(index)
+	}
 }
 
 class Comment {
@@ -55,6 +89,23 @@ class StudentSheet {
 	int ^id
 	contains Grade[] grades
 	op Grade getGrade(int ^id)
+	{
+		grades.get(^id)
+	}
 	op boolean removeGrade(int ^id)
-	op boolean addGrade(int ^id, Grade grade)
+	{
+		grades.remove(^id) !== null
+	}
+	op boolean setGrade(int ^id,Grade grade)
+	{
+		if (^id < grades.size() - 1)
+		{
+			grades.set( ^id,grade)
+			true
+		}
+		else
+		{
+			false
+		}
+	}
 }
