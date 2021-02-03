@@ -1,30 +1,31 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
-import org.apache.pdfbox.rendering.PDFRenderer
-import java.awt.image.BufferedImage
-import java.io.IOException
-import org.apache.pdfbox.rendering.ImageType
-import com.google.zxing.Result
-import com.google.zxing.MultiFormatReader
-import com.google.zxing.DecodeHintType
-import java.util.HashMap
-import com.google.zxing.LuminanceSource
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource
-import com.google.zxing.NotFoundException
-import java.util.Map
-import com.google.zxing.BinaryBitmap
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
+import com.google.zxing.LuminanceSource
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.NotFoundException
+import com.google.zxing.Result
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource
 import com.google.zxing.common.HybridBinarizer
-import org.apache.pdfbox.pdmodel.PDDocument
+import java.awt.image.BufferedImage
+import java.io.File
+import java.io.IOException
+import java.util.HashMap
+import java.util.HashSet
+import java.util.Map
+import java.util.Set
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
-import java.io.File
-import java.util.Set
-import java.util.HashSet
+import java.util.stream.Collectors
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.rendering.ImageType
+import org.apache.pdfbox.rendering.PDFRenderer
 
-class PDFReaderQRCodeImpl implements PDFReaderQRCode {
+class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	
 	Set<Copie> sheets
 	int nbSheetsTotal
@@ -35,7 +36,7 @@ class PDFReaderQRCodeImpl implements PDFReaderQRCode {
 		this.pathToPDF = pathToPDF
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
-		
+	
 		sheets = new HashSet<Copie>()
 	}
 
@@ -105,10 +106,10 @@ class PDFReaderQRCodeImpl implements PDFReaderQRCode {
 
 		val ExecutorService service = Executors.newFixedThreadPool(4)
 
-		service.execute(new PDFReaderQRCodeThread(this, 0, (nbPage / 4), pdfRenderer))
-		service.execute(new PDFReaderQRCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
-		service.execute(new PDFReaderQRCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
-		service.execute(new PDFReaderQRCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
+		service.execute(new PdfReaderQrCodeThread(this, 0, (nbPage / 4), pdfRenderer))
+		service.execute(new PdfReaderQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
+		service.execute(new PdfReaderQrCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
+		service.execute(new PdfReaderQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
 
 		service.shutdown()
 		service.awaitTermination(5, TimeUnit.MINUTES);
@@ -133,13 +134,19 @@ class PDFReaderQRCodeImpl implements PDFReaderQRCode {
 	}
 	
 	def Set<Copie> getCompleteCopies(){
-		val Set<Copie> completeCopies = new HashSet<Copie>()
+		var Set<Copie> completeCopies = new HashSet<Copie>()
 		
-		for(i : 0 ..< sheets.length){
+		completeCopies = sheets.stream
+			.filter(copie|copie.isCopyComplete(nbPagesInSheet))
+			.collect(Collectors.toSet)
+		
+		return completeCopies
+		/*for(i : 0 ..< sheets.length){
 			if(sheets.get(i).isCopyComplete(nbPagesInSheet))
 				completeCopies.add(sheets.get(i))
-		}
-		return completeCopies
+		}*/
+		
+		//return completeCopies
 	}
 	
 	def Copie getCopie(int numCopie){
@@ -166,13 +173,15 @@ class PDFReaderQRCodeImpl implements PDFReaderQRCode {
 			sheets.add(copie)
 	}
 		
-	override Set<Copie> getSheets(){
+	def Set<Copie> getSheets(){
 		return sheets
 	}
+	
+	
 
 	def static void main(String[] arg) {
 		//cinq copies de deux pages
-		val PDFReaderQRCodeImpl qrcodeReader = new PDFReaderQRCodeImpl("pfo_example_Inserted.pdf",8,8)		
+		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl("pfo_example_Inserted.pdf",8,8)		
 		
 		qrcodeReader.readPDf
 		//qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
@@ -183,6 +192,18 @@ class PDFReaderQRCodeImpl implements PDFReaderQRCode {
 			
 		println(qrcodeReader.isExamenComplete())
 		
+	}
+	
+	override getStudentSheets() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override getNbPagesPdf() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override getNbPagesTreated() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
 

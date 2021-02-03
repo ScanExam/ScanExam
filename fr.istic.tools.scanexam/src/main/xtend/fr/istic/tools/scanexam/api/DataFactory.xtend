@@ -1,11 +1,12 @@
 package fr.istic.tools.scanexam.api
 
 import fr.istic.tools.scanexam.core.CoreFactory
-import fr.istic.tools.scanexam.core.Rectangle
-import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.Grade
 import fr.istic.tools.scanexam.core.GradeScale
 import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.core.Rectangle
+import fr.istic.tools.scanexam.core.StudentSheet
+import java.util.List
 
 /**
  * Factory qui crée des objets de type Data: {@link Rectangle},   {@link StudentSheet},  {@link Grade},  {@link GradeScale}, {@link Question}
@@ -36,8 +37,11 @@ class DataFactory {
 	 * @return une instance d'objet de type {@link StudentSheet}
 	 * @author Antoine Degas
 	 */
-	def StudentSheet createStudentSheet(){
-		CoreFactory.eINSTANCE.createStudentSheet
+	def StudentSheet createStudentSheet(int idSheet, List<Integer> pages){
+		val sheet = CoreFactory.eINSTANCE.createStudentSheet
+		sheet.id = idSheet
+		sheet.posPage.addAll(pages)
+		sheet
 	}
 	
 	/** 

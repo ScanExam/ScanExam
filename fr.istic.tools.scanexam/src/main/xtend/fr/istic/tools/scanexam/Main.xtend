@@ -18,10 +18,14 @@ class Main
 	
 	def static void main(String[] args)
 	{
-		//ConfigurationManager.init
 		LanguageManager.init
 		
-		launchView(getUiLib(args))
+		ConfigurationManager.init
+		
+		LanguageManager.change(ConfigurationManager.instance.language);
+		
+		
+		//launchView(getUiLib(args))
 		
 				
 	}
