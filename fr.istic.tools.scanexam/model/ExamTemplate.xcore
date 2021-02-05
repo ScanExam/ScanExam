@@ -1,0 +1,9 @@
+package fr.istic.tools.scanexam.core.template
+
+type Exam wraps fr.istic.tools.scanexam.core.Exam
+
+class ExamTemplate 
+{
+	 String pdfPath
+	 Exam exam
+}

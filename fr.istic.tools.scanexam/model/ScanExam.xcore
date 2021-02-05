@@ -5,7 +5,7 @@ import fr.istic.tools.scanexam.utils.Pair
 type Pair<T1,T2> wraps Pair
 
 
-class Rectangle {
+class QuestionZone {
 	float x
 	float y
 	float width
@@ -15,7 +15,7 @@ class Rectangle {
 class Question {
 	int ^id
 	contains GradeScale gradeScale
-	contains Rectangle zone
+	contains QuestionZone zone
 }
 class GradeScale {
 	
@@ -72,6 +72,7 @@ class Exam {
 	int ^id
 	String name
 	contains Page[] pages
+	
 	
 	
 }

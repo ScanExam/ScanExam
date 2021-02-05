@@ -33,5 +33,5 @@ interface ExamReader {
 	 * @param index Index de la question
 	 * @author degas
 	 */
-	def Rectangle getQuestionZone(int index)
+	def QuestionZone getQuestionZone(int index)
 }

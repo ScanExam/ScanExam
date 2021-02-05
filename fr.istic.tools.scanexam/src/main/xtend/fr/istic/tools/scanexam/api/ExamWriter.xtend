@@ -11,7 +11,7 @@ interface ExamWriter extends ExamReader {
 	 * @param r Un Rectangle
 	 * @author degas
 	 */
-	def void addQuestion(Question q, Rectangle r)
+	def void addQuestion(Question q, QuestionZone r)
 	
 	/**
 	 * Supprime une question

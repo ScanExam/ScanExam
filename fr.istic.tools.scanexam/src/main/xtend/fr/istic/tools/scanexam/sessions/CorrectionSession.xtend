@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.sessions
 
-interface CorrectionSession
- {
+class CorrectionSession extends Session
+{
 	
 }
