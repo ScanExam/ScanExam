@@ -90,6 +90,11 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly()
 		memUsSett.tempDir = f2
+
+		/* FIXME
+		 * problème de mémoire lors de grands nombres de pages (2000+)
+		 * Voir pour ne pas rajouter page par page, mais par paquets de pages
+		 */
 		PDFmerger.mergeDocuments(memUsSett)
 
 		val PDDocument docSujetMaitre = PDDocument.load(f2)
@@ -176,8 +181,9 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
 		val String input = "./pfo_example.pdf"
-		gen.createAllExamCopies(input, 8)
+		gen.createAllExamCopies(input, 10)
 		println("Done")
+
 	}
 
 }

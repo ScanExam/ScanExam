@@ -1,7 +1,11 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
+import fr.istic.tools.scanexam.api.DataFactory
+import fr.istic.tools.scanexam.core.StudentSheet
 import java.io.File
+import java.util.ArrayList
 import java.util.HashSet
+import java.util.List
 import java.util.Set
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -14,10 +18,10 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
-	String pathToPDF
-
-	new(String pathToPDF, int nbPages, int nbCopies) {
-		this.pathToPDF = pathToPDF
+	File pdfFile
+	
+	new(File pFile,int nbPages, int nbCopies){
+		this.pdfFile = pFile
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
 
@@ -25,7 +29,7 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	}
 
 	override readPDf() {
-		val PDDocument doc = PDDocument.load(new File(pathToPDF))
+		val PDDocument doc = PDDocument.load(pdfFile)
 		val PDFRenderer pdf = new PDFRenderer(doc)
 		createThread(doc.numberOfPages, pdf)
 	}
@@ -126,27 +130,46 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		return sheets
 	}
 
+	
+	override getStudentSheets() {
+		val Set<StudentSheet> res = new HashSet<StudentSheet>()
+		var Set<Copie> temp = new HashSet<Copie>()
+		val DataFactory dF = new DataFactory()
+		
+		temp = completeCopies
+		
+		for(i : 0 ..< temp.length){
+			val int index = temp.get(i).numCopie
+			val List<Integer> pages = new ArrayList<Integer>()
+			
+			for(j : 0 ..< temp.get(i).pagesCopie.length){
+				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+			}
+			
+			res.add(dF.createStudentSheet(index, pages))
+		}
+		return res
+	}
+	
+	override getNbPagesPdf() {
+		val PDDocument doc = PDDocument.load(pdfFile)
+		return doc.numberOfPages
+	}
+	
+	override getNbPagesTreated() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
 	def static void main(String[] arg) {
 		// cinq copies de deux pages
-		val PdfReaderWithoutQrCodeImpl qrcodeReader = new PdfReaderWithoutQrCodeImpl("pfo_example_Inserted.pdf", 8, 8)
+		val File pdf = new File("pfo_example_Inserted.pdf")
+		val PdfReaderWithoutQrCodeImpl qrcodeReader = new PdfReaderWithoutQrCodeImpl(pdf, 8, 8)
 
 		qrcodeReader.readPDf
 		// qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
 		for (i : 0 ..< qrcodeReader.sheets.length)
 			println(qrcodeReader.sheets.get(i).toString())
 
-	}
-	
-	override getStudentSheets() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override getNbPagesPdf() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override getNbPagesTreated() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
 }

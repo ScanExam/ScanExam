@@ -4,8 +4,7 @@ import fr.istic.tools.scanexam.utils.Pair
 
 type Pair<T1,T2> wraps Pair
 
-
-class Rectangle {
+class QuestionZone {
 	float x
 	float y
 	float width
@@ -15,65 +14,23 @@ class Rectangle {
 class Question {
 	int ^id
 	contains GradeScale gradeScale
-	contains Rectangle zone
+	contains QuestionZone zone
 }
+
 class GradeScale {
-	
 	float weigth
-	Pair<String,Float>[] steps
-	
-	op boolean modifyStep(int ^id,float value)
-	{
-		if (^id < steps.size() - 1)
-		{
-		   val step = steps.get(^id);
-		   steps.set(^id,new Pair<String,Float>(step._1,value));
-		   true
-		 }
-		 else
-		 {
-		 	false
-		 }
-	}
-	op boolean removeStep(int ^id)
-	{
-		steps.remove(^id) !== null
-	}
-	op float getStep(int ^id) 
-	{
-		steps.get(^id)._2
-	}
-	op boolean addStep(String comment,float value) 
-	{
-		steps.add(new Pair<String,Float>(comment,value))
-	}
-	
+	Pair<String, Float>[] steps
 }
 
 class Page {
 	int ^id
 	contains Question[] questions
-	
-	op void modifyQuestion(int index,Question question)
-	{
-		questions.set(index,question);
-	}
-	op void addQuestion(Question question)
-	{
-		questions.add(question)
-	}
-	op void removeQuestion(int index)
-	{
-		questions.remove(index)
-	}
 }
 
 class Exam {
 	int ^id
 	String name
 	contains Page[] pages
-	
-	
 }
 
 class Comment {
@@ -86,37 +43,19 @@ class TextComment extends Comment {
 }
 
 class HandwritingComment {
-	//TODO
+	// TODO
 }
 
 class Grade {
 	float value
 	String gradeLabel
-	contains Comment[] comments	
+	contains Comment[] comments
 }
 
 class StudentSheet {
 	int ^id
-    int[] posPage
+	int[] posPage
 	contains Grade[] grades
-	op Grade getGrade(int ^id)
-	{
-		grades.get(^id)
-	}
-	op boolean removeGrade(int ^id)
-	{
-		grades.remove(^id) !== null
-	}
-	op boolean setGrade(int ^id,Grade grade)
-	{
-		if (^id < grades.size() - 1)
-		{
-			grades.set( ^id,grade)
-			true
-		}
-		else
-		{
-			false
-		}
-	}
+	
+	
 }

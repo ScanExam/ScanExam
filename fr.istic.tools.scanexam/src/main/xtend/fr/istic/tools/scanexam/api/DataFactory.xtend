@@ -4,9 +4,10 @@ import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.Grade
 import fr.istic.tools.scanexam.core.GradeScale
 import fr.istic.tools.scanexam.core.Question
-import fr.istic.tools.scanexam.core.Rectangle
+import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.List
+import fr.istic.tools.scanexam.core.QuestionZone
 
 /**
  * Factory qui crée des objets de type Data: {@link Rectangle},   {@link StudentSheet},  {@link Grade},  {@link GradeScale}, {@link Question}
@@ -24,8 +25,8 @@ class DataFactory {
 	 * @return une instance d'objet de type {@link Rectangle}
 	 * @author Antoine Degas
 	 */
-	def Rectangle createRectangle(float x, float y, float width, float height){
-		val rec = CoreFactory.eINSTANCE.createRectangle
+	def QuestionZone createRectangle(float x, float y, float width, float height){
+		val rec = CoreFactory.eINSTANCE.createQuestionZone
 		rec.x = x
 		rec.y = y
 		rec.width = width
