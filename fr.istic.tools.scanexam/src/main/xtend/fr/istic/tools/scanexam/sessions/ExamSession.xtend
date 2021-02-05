@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.sessions
 
 import fr.istic.tools.scanexam.core.Question
+import java.io.File
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -31,6 +32,14 @@ class ExamSession extends Session // TODO : renommer
 	def void removeQuestion(int index)
 	{
 		getPage().questions.remove(index);
+	}
+	
+	override save() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override open(File xmiFile) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
 	

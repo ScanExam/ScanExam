@@ -8,13 +8,24 @@ import java.util.Collections
 import java.util.List
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
+import java.io.File
 
 abstract class Session 
 {
+	/**
+	 * Pdf chargé
+	 */
 	@Accessors PDDocument document
-	protected Exam exam
+	/**
+	 * Examen courant
+	 */
+	Exam exam
 	
-	private int pageIndex
+	/**
+	 * Index de la page courante
+	 */
+	int pageIndex
+	
 	/**
 	 * @return Identifiant de l'examen
 	 * @author degas
@@ -66,4 +77,9 @@ abstract class Session
 	}
 	
 	
+	def void save()
+	
+	def void open(File xmiFile);
+
+
 }

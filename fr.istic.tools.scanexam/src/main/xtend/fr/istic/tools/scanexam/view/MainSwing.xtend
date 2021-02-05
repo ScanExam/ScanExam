@@ -17,7 +17,7 @@ class MainSwing {
 	// ----------------------------------------------------------------------------------------------------
 	
 	/** 
-	 * Lancement de l'application Swing
+	 * Lancement de l'application Swing ---->  launchApp(presenter(session));
 	 */
 	def static void launchApp() {
 		EventQueue.invokeLater([

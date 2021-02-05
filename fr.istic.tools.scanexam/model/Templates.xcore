@@ -1,0 +1,15 @@
+package fr.istic.tools.scanexam.core.templates
+
+type Exam wraps fr.istic.tools.scanexam.core.Exam
+
+class CorrectionTemplate 
+{
+	 String pdfPath
+	 Exam exam
+}
+class ExamTemplate 
+{
+	 String pdfPath
+	 Exam exam
+}
+
