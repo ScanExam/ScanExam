@@ -4,6 +4,7 @@ import java.util.Objects
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
+ * @author Benjamin Danlos
  */
 class ControllerFX {
 	

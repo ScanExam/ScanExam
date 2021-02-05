@@ -4,6 +4,7 @@ import java.util.Objects
 
 /**
  * Class representing a controller to be used with the Swing view. 
+ * @author Benjamin Danlos
  */
 class ControllerSwing {
 	
