@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
 import java.util.Objects
-import fr.istic.tools.scanexam.view.ControllerVueCreation
+import fr.istic.tools.scanexam.view.ControllerVueCorrection
 
 /**
  * Class defining the presenter for the exam correction view(s)
