@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.reader;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import fr.istic.tools.scanexam.qrCode.reader.Page;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 
@@ -45,10 +47,27 @@ public class TestReaderWithoutQRCode {
 	}
 	
 	@Test
+	@DisplayName("Test getNbPagesPdf")
+	void getNbPagesPdfTest() {
+		assertTrue(readerGood.readPDf());
+		assertEquals(readerGood.getNbPagesPdf(), 40);
+	}
+	
+	@Test
+	@DisplayName("Test getNbPagesTraitee")
+	void getNbPagesTraiteePdfTest() {
+		assertEquals(readerGood.getNbPagesTreated(), 0);
+		assertTrue(readerGood.readPDf());
+		assertEquals(readerGood.getNbPagesTreated(), 40);
+	}
+	
+	
+	/*
+	@Test
 	@DisplayName("Test du renvoi de la structure au format de l'API quand tout est bon")
 	void getStudentSheetsTestGood() {
-		//yolo
-	}
+		assertEquals(readerGood.getStudentSheets()), 40);
+	}*/
 	
 	@Test
 	@DisplayName("Test du renvoi de la structure au format de l'API quand il manque une page")
