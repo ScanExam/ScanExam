@@ -71,7 +71,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val String base = inputFile.substring(0, inputFile.lastIndexOf('.'))
 		val String outputFile = base + "_Inserted.pdf"
-		val String save = base + "_save.pdf"
+		//val String save = base + "_save.pdf"
 
 		val PDDocument doc = PDDocument.load(new File(base + ".pdf"))
 		val int nbPages = doc.numberOfPages
@@ -80,10 +80,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		PDFmerger.setDestinationFileName(base + "_Duplicated.pdf");
 
-		doc.save(save);
-
 		for (i : 0 ..< nbCopie) {
-			PDFmerger.addSource(save)
+			PDFmerger.addSource(inputFile)
 		}
 
 		val File f2 = new File(base + "_Duplicated.pdf")
@@ -98,7 +96,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		PDFmerger.mergeDocuments(memUsSett)
 
 		val PDDocument docSujetMaitre = PDDocument.load(f2)
-		createThread(nbCopie, docSujetMaitre, outputFile, nbPages)
+		createThread(nbCopie, docSujetMaitre, nbPages)
 		
 		
 		docSujetMaitre.save(outputFile)
@@ -106,10 +104,6 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		//docSujetMaitre.close
 
 		// Supressiopn des documents temporaires
-		val File f1 = new File(save)
-		if (f1.delete())
-			println("Deleted 1")
-
 		if (f2.delete)
 			println("Deleted dupli")
 			
@@ -124,19 +118,22 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * 
 	 * @param nbCopies nombre de copies désirées //FIXME gerer le cas ou le nbCopies < 4 (nombre de threads)
 	 * @param docSujetMaitre document dans lequel insérer les Codes
-	 * @param outputFile Chemin d'acces du fichier //TODO décider si le param sera une string ou un File
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
-	def createThread(int nbCopie, PDDocument docSujetMaitre, String outputFile, int nbPage) {
+	def createThread(int nbCopie, PDDocument docSujetMaitre, int nbPage) {
 
 		val ExecutorService service = Executors.newFixedThreadPool(4)
 
-		service.execute(new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, outputFile, 1, nbPage))
-		service.execute(new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, outputFile, 2, nbPage))
-		service.execute(new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, outputFile, 3, nbPage))
-		service.execute(new QRThreadWriter(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, outputFile, 4, nbPage))
+		service.execute(new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage))
+		service.execute(new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, 2, nbPage))
+		service.execute(new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, 3, nbPage))
+		service.execute(new QRThreadWriter(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, 4, nbPage))
 
+		/*
+		 * //FIXME
+		 * problème au lancement du dernier thread, il manque une copie complète de QRCode (mais le autres numéros sont corrects)
+		 */
 		service.shutdown()
 		service.awaitTermination(1, TimeUnit.MINUTES);
 
@@ -148,7 +145,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * @param nameExam nom de l'examen à insérer dans le QRCode
 	 * @param numSubject numéro de l'examen à insérer dans le QRCode
 	 */
-	def insertQRCodeInSubject(PDDocument docSujetMaitre, int numCopie, String outputFile, int numThread,
+	def insertQRCodeInSubject(PDDocument docSujetMaitre, int numCopie, int numThread,
 		int nbPagesSujet) {
 
 		for (i : 0 ..< nbPagesSujet) {
@@ -181,7 +178,16 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
 		val String input = "./pfo_example.pdf"
-		gen.createAllExamCopies(input, 10)
+		gen.createAllExamCopies(input, 5)
+		
+		val String in = "./pfo_example_Inserted.pdf"
+		val File f = new File(in)
+		val PDDocument doc = PDDocument.load(f)
+		val File desti = new File("./pfo_example_Dirty.pdf")
+		
+		doc.removePage(12)
+		doc.save(desti)
+		
 		println("Done")
 
 	}

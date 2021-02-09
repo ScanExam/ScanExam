@@ -44,10 +44,19 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		sheets = new HashSet<Copie>()
 	}
 
-	override readPDf() {
+	override readPDf() {		
+		try{
 		val PDDocument doc = PDDocument.load(pdfFile)
 		val PDFRenderer pdf = new PDFRenderer(doc)
 		createThread(doc.numberOfPages, pdf)
+		}
+		catch(Exception e){
+			e.printStackTrace
+			return false
+		}
+		
+		return true
+	
 	}
 	
 
@@ -180,7 +189,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 	
 	
-	/*FIXME
+	/* FIXME
 	 * C'est parti en sucette je crois, boucle infini, il a pas trouvé de QRCode dans une des pages
 	 * impossible de comprendre pour le moment, à check
 	 */
