@@ -34,10 +34,11 @@ class ExamCorrectionSwingView {
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
 	/* Controlleur liant les controlleurs du Pdf et des boîtes */
 	var PdfPresenterSwing pdfPresenter
 
-	/* Fenêtre de création d'examen */
+	/* Fenêtre de correction d'examen */
 	var JFrame window
 
 	/* Barre de menu de la fenêtre */
@@ -140,7 +141,6 @@ class ExamCorrectionSwingView {
 	 */
 	new(PdfPresenterSwing pdfPresenter) {
 		this.pdfPresenter = pdfPresenter
-
 		initialize()
 	}
 

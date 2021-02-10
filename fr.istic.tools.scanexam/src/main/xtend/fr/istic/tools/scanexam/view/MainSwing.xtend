@@ -26,7 +26,7 @@ class MainSwing {
 			try {
 				var InputStream pdfInput = ResourcesUtils.getInputStreamResource("/viewResources/pfo_example.pdf")
 				var PdfPresenterSwing pdfPresenteur = new PdfPresenterSwing(1280, 720, pdfInput, new BoxList())
-				var ExamCorrectionSwingView window = new ExamCorrectionSwingView(pdfPresenteur)
+				var ExamCreationSwingView window = new ExamCreationSwingView(pdfPresenteur)
 				window.getWindow().setVisible(true)
 			} catch (Exception e) {
 				e.printStackTrace()
