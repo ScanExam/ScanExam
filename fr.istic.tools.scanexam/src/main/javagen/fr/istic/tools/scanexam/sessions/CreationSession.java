@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.sessions;
 
+import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
@@ -27,6 +28,8 @@ public class CreationSession extends Session {
   private PDDocument document;
   
   private CreationTemplate template;
+  
+  private String currentPdfPath;
   
   /**
    * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
@@ -74,12 +77,13 @@ public class CreationSession extends Session {
     try {
       File _file = new File(pdfPath);
       this.document = PDDocument.load(_file);
-      super.exam = null;
+      super.exam = CoreFactory.eINSTANCE.createExam();
       int _size = IterableExtensions.size(this.document.getPages());
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
       for (final Integer i : _doubleDotLessThan) {
-        this.exam.getPages().add(null);
+        this.exam.getPages().add(CoreFactory.eINSTANCE.createPage());
       }
+      this.currentPdfPath = pdfPath;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

@@ -12,6 +12,7 @@ import fr.istic.tools.scanexam.core.templates.TemplatesPackage
 import org.apache.pdfbox.pdmodel.PDDocument
 import fr.istic.tools.scanexam.core.Exam
 import fr.istic.tools.scanexam.core.impl.ExamImpl
+import fr.istic.tools.scanexam.core.CoreFactory
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -26,6 +27,8 @@ class CreationSession extends Session // TODO : renommer
 	
 	CreationTemplate template;
 	
+	String currentPdfPath;
+	
 	/**
 	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
 	 * @param q Une Question
@@ -36,8 +39,6 @@ class CreationSession extends Session // TODO : renommer
 	{
 		getPage().questions.add(q);
 	}
-	
-
 	/**
 	 * Supprime une question
 	 * @param index Index de la question à supprimer
@@ -51,7 +52,6 @@ class CreationSession extends Session // TODO : renommer
 	override save(String path) 
 	{
 		template.exam = super.exam;
-		
 		val resourceSet = new ResourceSetImpl();
     	val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
     	val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
@@ -70,14 +70,14 @@ class CreationSession extends Session // TODO : renommer
 	{
 		document = PDDocument.load(new File(pdfPath));
 		
-		super.exam = null;
+		super.exam =  CoreFactory.eINSTANCE.createExam();
 		
 		for (i : 0 ..< document.pages.size())
 		{
-    		exam.pages.add(null); // new Page()
+    		exam.pages.add(CoreFactory.eINSTANCE.createPage()); 
 		}
 		
-		
+	    currentPdfPath = pdfPath;
 	}
 	
 }

@@ -23,35 +23,15 @@ public class CreationSessionTest
 	void init() 
 	{
 		session = new CreationSession();
-		
-		
 	}
 	
 	@Test
-	@DisplayName("Test de lecture d'un pdf ou il manque une page")
-	void readPdfTestDirty() 
+	@DisplayName("Créer un nouveau projet et ouvre un fichier PDF")
+	void createProject() 
 	{
+		session.create("pfo_example.pdf");
 		
 	}
 	
-	@Test
-	@DisplayName("Test getNbPagesPdf")
-	void getNbPagesPdfTest()
-	{
-	
-	}
-	
-	@Test
-	@DisplayName("Test getNbPagesTraitee")
-	void getNbPagesTraiteePdfTest() {
-		
-	}
-	
-	
-	@Test
-	@DisplayName("Test du renvoi de la structure au format de l'API quand il manque une page")
-	void getStundentSheetsTestDirty() 
-	{
-		
-	}
+
 }
