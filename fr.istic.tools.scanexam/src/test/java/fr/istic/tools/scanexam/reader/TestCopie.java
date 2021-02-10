@@ -31,33 +31,10 @@ public class TestCopie {
 	@Test
 	@DisplayName("Test de getPageCopie")
 	void getPageCopiesTest() {
-		assertEquals(c.getNumCopie(), 8);
+		System.out.println("nb copies : " + c.getNumCopie());
+		assertEquals(c.getNumCopie(), 0);
 	}
 	
-	@Test
-	@DisplayName("Test de addInSet")
-	void getAddinSetTest() {
-		Set<Page> setPages = new HashSet<>();
-		Copie c1 = new Copie(0,0,0);
-		Copie c2 = new Copie(0,1,1);
-		Copie c3 = new Copie(0,2,2);
-		Copie c4 = new Copie(0,3,3);
-		c1.addInSet(setPages);
-		c2.addInSet(setPages);
-		c3.addInSet(setPages);
-		c4.addInSet(setPages);
-		
-		
-		assertTrue(c.isCopyComplete(4));
-	}
 	
-	@Test
-	@DisplayName("Test de isCopieComplete")
-	void getisCopieCompleteTest() {
-		Set<Page> setPages = new HashSet<>();
-		
-		
-		assertTrue(c.isCopyComplete(0));
-	}
 	
 }

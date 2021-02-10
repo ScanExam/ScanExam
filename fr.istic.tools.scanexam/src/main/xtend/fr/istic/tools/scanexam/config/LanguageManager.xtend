@@ -32,12 +32,13 @@ class LanguageManager {
 	static var Locale currentLocale = null
 	static var ResourceBundle currentBundle = null
 
+
 	/**
 	 * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté)
 	 * puis définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
 	 * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code>
 	 */
-	static def void init() {
+	def static void init() {
 		logger.info("Pre-loading languages...")
 		
 		val currentLocal = Locale.^default
@@ -67,15 +68,14 @@ class LanguageManager {
 			logger.info(String.join(", ", badFileNames) + " ignored (bad file names).")
 			
 		// La langue par défaut de l'interface est celle correspondant à la langue de l'ordinateur de l'utilisateur
-		LanguageManager.change(currentLocal)
+		change(currentLocal)
 	}
 	
 	/**
 	 * @return une Collection non modifiable des Locale supportés par le programme 
 	 */
-	static def Collection<Locale> getSupportedLocales() {
+	def static Collection<Locale> getSupportedLocales() {
 		Collections.unmodifiableCollection(locales)
-		
 	}
 	
 	/** Change la langue de l'application par celle représentée par <b>language</b> si celle-ci est supportée par le programme.<br/>
@@ -94,7 +94,7 @@ class LanguageManager {
 	 * @see Locale#ENGLISH Locale.ENGLISH
 	 * @throw NullPointerException si <b>language<b/> est null
 	 */
-	static def void change(Locale language) {
+	def static void change(Locale language) {
 		Objects.requireNonNull(language)
 		val newLocale = if(locales.contains(language))
 							language
@@ -102,13 +102,14 @@ class LanguageManager {
 							locales.findFirst[l | l.language.equals(language.language)]
 		currentLocale = newLocale === null ? Locale.^default : newLocale
 		currentBundle = ResourceBundle.getBundle(path + prefixFileName, currentLocale)
+		logger.info("Change language to " + currentLocale.displayName + '.')
 	}
 	
 	/**
 	 * @return le {@link Locale Locale} courant de l'application
 	 * @see Locale Locale
 	 */
-	static def Locale getCurrentLanguage() {
+	def static Locale getCurrentLanguage() {
 		currentLocale
 	}
 	
@@ -116,7 +117,7 @@ class LanguageManager {
 	 * @return le {@link ResourceBundle ResourceBundle} courant de l'application
 	 * @see ResourceBundle
 	 */
-	static def ResourceBundle getCurrentBundle() {
+	def static ResourceBundle getCurrentBundle() {
 		currentBundle
 	}
 	
@@ -125,10 +126,11 @@ class LanguageManager {
 	 * @return une chaîne de caractères correspondant à la traduction de <b>code</b> dans le langage courant de l'application ou <b>code</b> si aucune traduction n'est définie pour ce code.
 	 * @throw NullPointerException si <b>code</b> est null
 	 */
-	static def String translate(String code) {
+	def static String translate(String code) {
 		try {
 			currentBundle.getString(code)
 		} catch(MissingResourceException e) {
+			logger.warning(code + " not found for " + currentLocale.displayName + ".")
 			return code
 		}
 	}

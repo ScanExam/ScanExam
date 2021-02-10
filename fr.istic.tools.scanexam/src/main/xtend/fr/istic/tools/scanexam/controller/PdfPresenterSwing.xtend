@@ -14,6 +14,7 @@ import java.util.Optional
 import javax.swing.JPanel
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
+import java.io.InputStream
 
 /** 
  * Controlleur Swing du pdf avec swing
@@ -75,9 +76,9 @@ class PdfPresenterSwing extends PdfPresenter {
 	 * @param pdfPath Chemin vers le pdf
 	 * @param selectionBoxes Objet contenant les boîtes de sélection
 	 */
-	new(int width, int height, String pdfPath, BoxList selectionBoxes) {
-		super(width, height, pdfPath, selectionBoxes)
-		pdf = getImageFromPDF(pdfPath, 0)
+	new(int width, int height, InputStream pdfInput, BoxList selectionBoxes) {
+		super(width, height, pdfInput, selectionBoxes)
+		pdf = getImageFromPDF(pdfInput, 0)
 		if (this.SCALE_ON_WIDTH) {
 			scale = (pdf.getWidth(null) / width) + 1
 		} else {
@@ -148,9 +149,9 @@ class PdfPresenterSwing extends PdfPresenter {
 		repaint()
 	}
 
-	def private BufferedImage getImageFromPDF(String filePath, int pageindex) {
+	def private BufferedImage getImageFromPDF(InputStream pdfInput, int pageindex) {
 		try {
-			var PDDocument document = PDDocument::load(new File(filePath))
+			var PDDocument document = PDDocument::load(pdfInput)
 			var PDFRenderer renderer = new PDFRenderer(document)
 			var BufferedImage img = renderer.renderImageWithDPI(pageindex, 300)
 			document.close()

@@ -60,13 +60,11 @@ public class TestReaderWithoutQRCode {
 		assertTrue(readerGood.readPDf());
 		assertEquals(readerGood.getNbPagesTreated(), 40);
 	}
-	
-	
 	/*
 	@Test
-	@DisplayName("Test du renvoi de la structure au format de l'API quand tout est bon")
-	void getStudentSheetsTestGood() {
-		assertEquals(readerGood.getStudentSheets()), 40);
+	@DisplayName("Test isExamenComplete")
+	void isExamenCompleteTest() {
+		
 	}*/
 	
 	@Test
