@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing
 import java.awt.BorderLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -16,6 +17,7 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
+<<<<<<< HEAD
 import fr.istic.tools.scanexam.controller.PdfPresenterSwing
 import javax.swing.JMenuItem
 import java.awt.event.ActionListener
@@ -25,6 +27,8 @@ import javax.swing.JFileChooser
 import java.io.File
 import javax.swing.filechooser.FileFilter
 import javax.swing.filechooser.FileNameExtensionFilter
+=======
+>>>>>>> 8a724c11428ca0561474fe19590f43867bf25122
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -39,7 +43,7 @@ class ExamCreationSwingView {
 	// ----------------------------------------------------------------------------------------------------
 	
 	/* Controlleur liant les controlleurs du Pdf et des boîtes */
-	var PdfPresenterSwing pdfPresenter
+	var PdfAndBoxPresenterSwing pdfPresenter
 	
 	/* Fenêtre de correction d'examen */
 	var JFrame window
@@ -52,8 +56,6 @@ class ExamCreationSwingView {
 		
 	/* Menu fichier de la bare de menu de la fenêtre */
 	var JMenu mnFile
-	
-	var JMenuItem mnItemLoad
 
 	/* Menu édition de la bare de menu de la fenêtre */
 	var JMenu mnEdit 
@@ -106,7 +108,7 @@ class ExamCreationSwingView {
 	/** 
 	 * Constructeur
 	 */
-	new(PdfPresenterSwing pdfPresenter) {
+	new(PdfAndBoxPresenterSwing pdfPresenter) {
 		this.pdfPresenter = pdfPresenter
 		initialize()
 	}
@@ -125,14 +127,6 @@ class ExamCreationSwingView {
 		window.setJMenuBar(menuBar)
 		
 		mnFile = new JMenu("File")
-		
-		mnItemLoad = new JMenuItem("Load")
-		mnItemLoad.addActionListener(new ActionListener() {
-			override actionPerformed(ActionEvent e) {
-				openFile()
-			}
-	    })
-		mnFile.add(mnItemLoad)
 		menuBar.add(mnFile)
 		
 		mnEdit = new JMenu("Edit")
@@ -227,6 +221,7 @@ class ExamCreationSwingView {
 	def JFrame getWindow() {
 		return window;
 	}
+<<<<<<< HEAD
 	
 	def void openFile() throws IOException, ClassNotFoundException {
 	    var FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -264,4 +259,6 @@ class ExamCreationSwingView {
 
 	    }
 	}
+=======
+>>>>>>> 8a724c11428ca0561474fe19590f43867bf25122
 }

@@ -1,10 +1,10 @@
 package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.box.BoxList
-import fr.istic.tools.scanexam.controller.PdfPresenterSwing
+import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing
+import fr.istic.tools.scanexam.utils.ResourcesUtils
 import java.awt.EventQueue
 import java.io.InputStream
-import fr.istic.tools.scanexam.utils.ResourcesUtils
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie Swing
@@ -25,7 +25,7 @@ class MainSwing {
 		EventQueue.invokeLater([
 			try {
 				var InputStream pdfInput = ResourcesUtils.getInputStreamResource("/viewResources/pfo_example.pdf")
-				var PdfPresenterSwing pdfPresenteur = new PdfPresenterSwing(1280, 720, pdfInput, new BoxList())
+				var PdfAndBoxPresenterSwing pdfPresenteur = new PdfAndBoxPresenterSwing(1280, 720, pdfInput, new BoxList())
 				var ExamCreationSwingView window = new ExamCreationSwingView(pdfPresenteur)
 				window.getWindow().setVisible(true)
 			} catch (Exception e) {

@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.controller
 
+import fr.istic.tools.scanexam.box.BoxList
 import fr.istic.tools.scanexam.presenter.PdfPresenter
 import java.awt.Image
 import java.awt.Point
@@ -18,7 +19,7 @@ import org.apache.pdfbox.rendering.PDFRenderer
  * Controlleur Swing du pdf avec swing
  * @author Julien Cochet
  */
-class PdfPresenterSwing extends PdfPresenter {
+class PdfAndBoxPresenterSwing extends PdfPresenter {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -26,11 +27,14 @@ class PdfPresenterSwing extends PdfPresenter {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/* Indique si la mise à l'échelle se base sur la largueur ou non  */
+	/* Indique si la mise à l'échelle se base sur la largueur ou non */
 	boolean SCALE_ON_WIDTH = false
 	
 	/* PDF a afficher */
 	var Image pdf
+	
+	/* Controlleur des boîtes de sélection */
+	var SelectionPresenterSwing selectionController
 	
 	/* Echelle pour l'affichage */
 	protected var int scale
@@ -49,6 +53,9 @@ class PdfPresenterSwing extends PdfPresenter {
 	
 	/* Vue */
 	var Optional<JPanel> view
+	
+	/* Objet contenant les boîtes de sélection */
+	BoxList selectionBoxes
 
 
 	// ----------------------------------------------------------------------------------------------------
@@ -63,8 +70,9 @@ class PdfPresenterSwing extends PdfPresenter {
 	 * @param pdfPath Chemin vers le pdf
 	 * @param selectionBoxes Objet contenant les boîtes de sélection
 	 */
-	new(int width, int height, InputStream pdfInput) {
+	new(int width, int height, InputStream pdfInput, BoxList selectionBoxes) {
 		super(width, height, pdfInput)
+		this.selectionBoxes = selectionBoxes
 		pdf = getImageFromPDF(pdfInput, 0)
 		if (this.SCALE_ON_WIDTH) {
 			scale = (pdf.getWidth(null) / width) + 1
@@ -73,6 +81,9 @@ class PdfPresenterSwing extends PdfPresenter {
 		}
 		originX = 0
 		originY = 0
+		var int selectWidth = pdf.getWidth(null)
+		var int selectHeight = pdf.getHeight(null)
+		selectionController = new SelectionPresenterSwing(selectWidth, selectHeight, scale, originX, originY, selectionBoxes)
 		lastClickPoint = Optional::empty()
 		view = Optional::empty()
 		mouseHandler = new MouseAdapter() {
@@ -96,7 +107,6 @@ class PdfPresenterSwing extends PdfPresenter {
 			}
 		}
 	}
-
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -145,6 +155,7 @@ class PdfPresenterSwing extends PdfPresenter {
 			e.printStackTrace()
 			return null
 		}
+
 	}
 
 	/** 
@@ -155,7 +166,6 @@ class PdfPresenterSwing extends PdfPresenter {
 			view.get().repaint()
 		}
 	}
-
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -186,7 +196,10 @@ class PdfPresenterSwing extends PdfPresenter {
 	def SelectionPresenterSwing getSelectionController() {
 		return selectionController
 	}
-
+	
+	def BoxList getSelectionBoxes() {
+		return selectionBoxes
+	}
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -198,5 +211,4 @@ class PdfPresenterSwing extends PdfPresenter {
 		this.view = Optional::of(view)
 		selectionController.setView(this.view.get())
 	}
-	
 }
