@@ -2,16 +2,23 @@ package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.box.Box
 import fr.istic.tools.scanexam.box.BoxList
-import fr.istic.tools.scanexam.controller.PdfPresenterSwing
+import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing
 import fr.istic.tools.scanexam.controller.SelectionPresenterSwing
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Rectangle
+import javax.swing.JPanel
 
-class PdfAndBoxPanel extends PdfPanel {
+class PdfAndBoxPanel extends JPanel {
 	
+	public var PdfAndBoxPresenterSwing pdfPresenter
 	public var SelectionPresenterSwing selectionPresenter
+	
+	/* Largeur du panel */
+	public var int width
+	/* Hauteur du panel */
+	public var int height
 	
 	/* Couleur de l'intérieur des boîtes */
 	val Color selectionColor = new Color(255, 255, 255, 64)
@@ -20,12 +27,19 @@ class PdfAndBoxPanel extends PdfPanel {
 	/* Couleur des contours des boîtes */
 	val Color outLineColor = Color.BLACK
 		
-	new(PdfPresenterSwing pdfPresenter) {
-		super(pdfPresenter)
+	new(PdfAndBoxPresenterSwing pdfPresenter) {
+		this.pdfPresenter = pdfPresenter
 		
-		this.selectionPresenter = pdfPresenter.selectionController
+		width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
+		height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
+		pdfPresenter.setView(this)
         
+		this.selectionPresenter = pdfPresenter.selectionController
 		this.selectionPresenter.getSelectionBoxes().setPanel(this)
+        
+        addMouseWheelListener(pdfPresenter.getMouseHandler())
+        addMouseListener(pdfPresenter.getMouseHandler())
+        addMouseMotionListener(pdfPresenter.getMouseHandler())
         
         addMouseListener(selectionPresenter.getMouseHandler())
         addMouseMotionListener(selectionPresenter.getMouseHandler())
@@ -36,6 +50,11 @@ class PdfAndBoxPanel extends PdfPanel {
 	 */
 	override protected void paintComponent(Graphics g) {
 		super.paintComponent(g)
+	
+		width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
+		height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
+	        
+	    g.drawImage(pdfPresenter.getPdf(), pdfPresenter.getOriginX(), pdfPresenter.getOriginY(), width, height, this)
 		
 	    var Graphics2D g2d = g.create() as Graphics2D
 	    paintSelectionBoxes(g2d, selectionPresenter.getSelectionBoxes())

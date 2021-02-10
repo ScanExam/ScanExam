@@ -82,6 +82,7 @@ abstract class SelectionPresenter {
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
 	/** 
 	 * Ajoute une boîte à l'interface graphique
 	 * @param x Position x
@@ -89,7 +90,7 @@ abstract class SelectionPresenter {
 	 * @param title Nom de la boîte
 	 */
 	def protected void createBox(double x, double y) {
-		selectionBoxes.addBox(x, y, '''Qst «selectionBoxes.size()»'''.toString)
+		selectionBoxes.addBox(x, y, "Qst " + selectionBoxes.size().toString)
 	}
 
 	/** 
@@ -122,6 +123,7 @@ abstract class SelectionPresenter {
 		selectionBoxes.removeBox(box)
 	}
 
+
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * GETTERS
@@ -144,6 +146,7 @@ abstract class SelectionPresenter {
 		return selectionBoxes
 	}
 
+
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * SETTERS
@@ -161,4 +164,5 @@ abstract class SelectionPresenter {
 	def void setOriginY(int originY) {
 		this.originY = originY
 	}
+	
 }
