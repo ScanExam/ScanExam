@@ -23,6 +23,8 @@ import java.awt.event.ActionEvent
 import java.io.IOException
 import javax.swing.JFileChooser
 import java.io.File
+import javax.swing.filechooser.FileFilter
+import javax.swing.filechooser.FileNameExtensionFilter
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -91,6 +93,8 @@ class ExamCreationSwingView {
 	
 	/* Panel principal présentant la copie */
 	var JPanel pnlPdf
+	
+	var File pdfFileSelected
 
 
 	// ----------------------------------------------------------------------------------------------------
@@ -114,6 +118,8 @@ class ExamCreationSwingView {
 		window = new JFrame(LanguageManager.translate("title.ScanExam"))
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+		
+		pdfFileSelected = new File("")
 		
 		menuBar = new JMenuBar()
 		window.setJMenuBar(menuBar)
@@ -223,24 +229,23 @@ class ExamCreationSwingView {
 	}
 	
 	def void openFile() throws IOException, ClassNotFoundException {
+	    var FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        "Pdf file(.pdf)", "pdf")
+	    var JFileChooser fc = new JFileChooser()
+	    fc.setDialogTitle("Open your file")
+	   	fc.setFileSelectionMode(JFileChooser.FILES_ONLY)
+	    fc.setCurrentDirectory(new File("."))
+	    fc.setFileFilter(filter)
 
-	    //FileFilter fJavaFilter = new FileFilter();
-	    var JFileChooser fc = new JFileChooser();
-	    fc.setDialogTitle("Open your file");
-	    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-	    fc.setCurrentDirectory(new File("."));
-	    //fc.setFileFilter(fJavaFilter);
-
-	    var result = fc.showOpenDialog(window);
+	    var result = fc.showOpenDialog(window)
 	    if (result == JFileChooser.CANCEL_OPTION) {
 	        //cancel action
 	    } else if (result == JFileChooser.APPROVE_OPTION) {
-
 	        //open file using 
-	        var File selectedFile = fc.getSelectedFile();
-	        var path = selectedFile.getAbsolutePath();
+	        var File selectedFile = fc.getSelectedFile()
+	        var path = selectedFile.getAbsolutePath()
 
-	        //File myFile = new File(path);
+	        pdfFileSelected = new File(path)
 	        //Desktop.getDesktop().open(myFile);
 	        
 	        //pasController.setPdfPath(path);
@@ -252,7 +257,7 @@ class ExamCreationSwingView {
 	        //System.out.println(SwingWindowController.pdfPath);
 	        
 	        //PdfAndSelectionView.s = "boubou";
-	        System.out.println(path);
+	        println(pdfFileSelected)
 	        //pasView.validate();
 	        //pasView.repaint();
 	        //System.out.println(PdfAndSelectionView.s);
