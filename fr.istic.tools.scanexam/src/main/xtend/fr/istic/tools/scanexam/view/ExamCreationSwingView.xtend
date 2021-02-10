@@ -6,9 +6,12 @@ import java.awt.BorderLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
+import java.io.File
+import java.io.IOException
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComboBox
+import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JMenu
@@ -17,18 +20,7 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
-<<<<<<< HEAD
-import fr.istic.tools.scanexam.controller.PdfPresenterSwing
-import javax.swing.JMenuItem
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
-import java.io.IOException
-import javax.swing.JFileChooser
-import java.io.File
-import javax.swing.filechooser.FileFilter
 import javax.swing.filechooser.FileNameExtensionFilter
-=======
->>>>>>> 8a724c11428ca0561474fe19590f43867bf25122
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -221,7 +213,6 @@ class ExamCreationSwingView {
 	def JFrame getWindow() {
 		return window;
 	}
-<<<<<<< HEAD
 	
 	def void openFile() throws IOException, ClassNotFoundException {
 	    var FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -259,6 +250,5 @@ class ExamCreationSwingView {
 
 	    }
 	}
-=======
->>>>>>> 8a724c11428ca0561474fe19590f43867bf25122
+
 }
