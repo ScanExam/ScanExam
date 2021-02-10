@@ -7,7 +7,7 @@ class CorrectionTemplate
 	 String pdfPath
 	 Exam exam
 }
-class ExamTemplate 
+class CreationTemplate 
 {
 	 String pdfPath
 	 Exam exam

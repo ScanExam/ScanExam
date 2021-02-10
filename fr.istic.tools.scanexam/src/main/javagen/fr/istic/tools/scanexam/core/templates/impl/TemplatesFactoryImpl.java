@@ -60,7 +60,7 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case TemplatesPackage.CORRECTION_TEMPLATE: return createCorrectionTemplate();
-			case TemplatesPackage.EXAM_TEMPLATE: return createExamTemplate();
+			case TemplatesPackage.CREATION_TEMPLATE: return createCreationTemplate();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -113,9 +113,9 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 	 * @generated
 	 */
 	@Override
-	public ExamTemplate createExamTemplate() {
-		ExamTemplateImpl examTemplate = new ExamTemplateImpl();
-		return examTemplate;
+	public CreationTemplate createCreationTemplate() {
+		CreationTemplateImpl creationTemplate = new CreationTemplateImpl();
+		return creationTemplate;
 	}
 
 	/**

@@ -72,9 +72,9 @@ public class TemplatesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TemplatesPackage.EXAM_TEMPLATE: {
-				ExamTemplate examTemplate = (ExamTemplate)theEObject;
-				T result = caseExamTemplate(examTemplate);
+			case TemplatesPackage.CREATION_TEMPLATE: {
+				CreationTemplate creationTemplate = (CreationTemplate)theEObject;
+				T result = caseCreationTemplate(creationTemplate);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -98,17 +98,17 @@ public class TemplatesSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Exam Template</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Creation Template</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Exam Template</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Creation Template</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseExamTemplate(ExamTemplate object) {
+	public T caseCreationTemplate(CreationTemplate object) {
 		return null;
 	}
 

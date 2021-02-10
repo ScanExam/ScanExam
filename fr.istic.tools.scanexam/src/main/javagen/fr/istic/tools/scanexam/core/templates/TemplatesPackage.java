@@ -103,14 +103,14 @@ public interface TemplatesPackage extends EPackage {
 	int CORRECTION_TEMPLATE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.templates.impl.ExamTemplateImpl <em>Exam Template</em>}' class.
+	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl <em>Creation Template</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see fr.istic.tools.scanexam.core.templates.impl.ExamTemplateImpl
-	 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getExamTemplate()
+	 * @see fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl
+	 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getCreationTemplate()
 	 * @generated
 	 */
-	int EXAM_TEMPLATE = 1;
+	int CREATION_TEMPLATE = 1;
 
 	/**
 	 * The feature id for the '<em><b>Pdf Path</b></em>' attribute.
@@ -119,7 +119,7 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_TEMPLATE__PDF_PATH = 0;
+	int CREATION_TEMPLATE__PDF_PATH = 0;
 
 	/**
 	 * The feature id for the '<em><b>Exam</b></em>' attribute.
@@ -128,25 +128,25 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_TEMPLATE__EXAM = 1;
+	int CREATION_TEMPLATE__EXAM = 1;
 
 	/**
-	 * The number of structural features of the '<em>Exam Template</em>' class.
+	 * The number of structural features of the '<em>Creation Template</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_TEMPLATE_FEATURE_COUNT = 2;
+	int CREATION_TEMPLATE_FEATURE_COUNT = 2;
 
 	/**
-	 * The number of operations of the '<em>Exam Template</em>' class.
+	 * The number of operations of the '<em>Creation Template</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_TEMPLATE_OPERATION_COUNT = 0;
+	int CREATION_TEMPLATE_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '<em>Exam</em>' data type.
@@ -192,36 +192,36 @@ public interface TemplatesPackage extends EPackage {
 	EAttribute getCorrectionTemplate_Exam();
 
 	/**
-	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.templates.ExamTemplate <em>Exam Template</em>}'.
+	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate <em>Creation Template</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Exam Template</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.ExamTemplate
+	 * @return the meta object for class '<em>Creation Template</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate
 	 * @generated
 	 */
-	EClass getExamTemplate();
+	EClass getCreationTemplate();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.ExamTemplate#getPdfPath <em>Pdf Path</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getPdfPath <em>Pdf Path</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Pdf Path</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.ExamTemplate#getPdfPath()
-	 * @see #getExamTemplate()
+	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getPdfPath()
+	 * @see #getCreationTemplate()
 	 * @generated
 	 */
-	EAttribute getExamTemplate_PdfPath();
+	EAttribute getCreationTemplate_PdfPath();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.ExamTemplate#getExam <em>Exam</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Exam</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.ExamTemplate#getExam()
-	 * @see #getExamTemplate()
+	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam()
+	 * @see #getCreationTemplate()
 	 * @generated
 	 */
-	EAttribute getExamTemplate_Exam();
+	EAttribute getCreationTemplate_Exam();
 
 	/**
 	 * Returns the meta object for data type '{@link fr.istic.tools.scanexam.core.Exam <em>Exam</em>}'.
@@ -284,14 +284,14 @@ public interface TemplatesPackage extends EPackage {
 		EAttribute CORRECTION_TEMPLATE__EXAM = eINSTANCE.getCorrectionTemplate_Exam();
 
 		/**
-		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.templates.impl.ExamTemplateImpl <em>Exam Template</em>}' class.
+		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl <em>Creation Template</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see fr.istic.tools.scanexam.core.templates.impl.ExamTemplateImpl
-		 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getExamTemplate()
+		 * @see fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl
+		 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getCreationTemplate()
 		 * @generated
 		 */
-		EClass EXAM_TEMPLATE = eINSTANCE.getExamTemplate();
+		EClass CREATION_TEMPLATE = eINSTANCE.getCreationTemplate();
 
 		/**
 		 * The meta object literal for the '<em><b>Pdf Path</b></em>' attribute feature.
@@ -299,7 +299,7 @@ public interface TemplatesPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EXAM_TEMPLATE__PDF_PATH = eINSTANCE.getExamTemplate_PdfPath();
+		EAttribute CREATION_TEMPLATE__PDF_PATH = eINSTANCE.getCreationTemplate_PdfPath();
 
 		/**
 		 * The meta object literal for the '<em><b>Exam</b></em>' attribute feature.
@@ -307,7 +307,7 @@ public interface TemplatesPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EXAM_TEMPLATE__EXAM = eINSTANCE.getExamTemplate_Exam();
+		EAttribute CREATION_TEMPLATE__EXAM = eINSTANCE.getCreationTemplate_Exam();
 
 		/**
 		 * The meta object literal for the '<em>Exam</em>' data type.

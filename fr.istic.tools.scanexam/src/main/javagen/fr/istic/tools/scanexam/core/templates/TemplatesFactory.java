@@ -31,13 +31,13 @@ public interface TemplatesFactory extends EFactory {
 	CorrectionTemplate createCorrectionTemplate();
 
 	/**
-	 * Returns a new object of class '<em>Exam Template</em>'.
+	 * Returns a new object of class '<em>Creation Template</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exam Template</em>'.
+	 * @return a new object of class '<em>Creation Template</em>'.
 	 * @generated
 	 */
-	ExamTemplate createExamTemplate();
+	CreationTemplate createCreationTemplate();
 
 	/**
 	 * Returns the package supported by this factory.

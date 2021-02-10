@@ -2,20 +2,17 @@ package fr.istic.tools.scanexam.view;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.controller.PdfPresenterSwing;
-import fr.istic.tools.scanexam.controller.SelectionPresenterSwing;
+import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.ImagePanel;
 import fr.istic.tools.scanexam.view.PdfPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.io.InputStream;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -28,59 +25,20 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 
 /**
- * Vue swing de la fenêtre de création d'examen
+ * Vue swing de la fenêtre de correction d'examen
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class SwingView {
-  /**
-   * Classe pour afficher une image dans un panel
-   */
-  private static class ImagePanel extends JPanel {
-    /**
-     * Image affichée
-     */
-    private BufferedImage image;
-    
-    /**
-     * Constructeur
-     */
-    public ImagePanel(final String path) {
-      try {
-        File _file = new File(path);
-        this.image = ImageIO.read(_file);
-      } catch (final Throwable _t) {
-        if (_t instanceof IOException) {
-          final IOException e = (IOException)_t;
-          e.printStackTrace();
-        } else {
-          throw Exceptions.sneakyThrow(_t);
-        }
-      }
-    }
-    
-    @Override
-    protected void paintComponent(final Graphics g) {
-      super.paintComponent(g);
-      g.drawImage(this.image, 0, 0, this);
-    }
-  }
-  
+public class ExamCorrectionSwingView {
   /**
    * Controlleur liant les controlleurs du Pdf et des boîtes
    */
   private PdfPresenterSwing pdfPresenter;
   
   /**
-   * Controlleur pour la gestions des boîtes
-   */
-  private SelectionPresenterSwing selectionPresenter;
-  
-  /**
-   * Fenêtre de création d'examen
+   * Fenêtre de correction d'examen
    */
   private JFrame window;
   
@@ -294,9 +252,8 @@ public class SwingView {
   /**
    * Constructeur
    */
-  public SwingView(final PdfPresenterSwing pdfPresenter) {
+  public ExamCorrectionSwingView(final PdfPresenterSwing pdfPresenter) {
     this.pdfPresenter = pdfPresenter;
-    this.selectionPresenter = this.pdfPresenter.getSelectionController();
     this.initialize();
   }
   
@@ -436,17 +393,17 @@ public class SwingView {
     this.btnDown.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        SwingView.this.showContentDown();
+        ExamCorrectionSwingView.this.showContentDown();
       }
     });
-    SwingView.ImagePanel _imagePanel = new SwingView.ImagePanel("src/main/resources/logo.png");
+    InputStream inputContentDown = ResourcesUtils.getInputStreamResource("/logo.png");
+    ImagePanel _imagePanel = new ImagePanel(inputContentDown);
     this.pnlContentDown = _imagePanel;
     Dimension _dimension = new Dimension(this.pnlContentDown.getSize().width, 180);
     this.pnlContentDown.setPreferredSize(_dimension);
     this.contentDown = false;
     JPanel _jPanel_4 = new JPanel();
-    JSplitPane _jSplitPane_1 = new JSplitPane(
-      JSplitPane.VERTICAL_SPLIT, _jPanel_4, this.pnlContentDown);
+    JSplitPane _jSplitPane_1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, _jPanel_4, this.pnlContentDown);
     this.mainSplitPane = _jSplitPane_1;
     this.pnlDown.add(this.btnDown, BorderLayout.NORTH);
     JPanel _jPanel_5 = new JPanel();

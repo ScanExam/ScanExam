@@ -5,7 +5,7 @@ package fr.istic.tools.scanexam.core.templates.impl;
 import fr.istic.tools.scanexam.core.Exam;
 
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
-import fr.istic.tools.scanexam.core.templates.ExamTemplate;
+import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 
@@ -36,7 +36,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass examTemplateEClass = null;
+	private EClass creationTemplateEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -145,8 +145,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * @generated
 	 */
 	@Override
-	public EClass getExamTemplate() {
-		return examTemplateEClass;
+	public EClass getCreationTemplate() {
+		return creationTemplateEClass;
 	}
 
 	/**
@@ -155,8 +155,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getExamTemplate_PdfPath() {
-		return (EAttribute)examTemplateEClass.getEStructuralFeatures().get(0);
+	public EAttribute getCreationTemplate_PdfPath() {
+		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -165,8 +165,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * @generated
 	 */
 	@Override
-	public EAttribute getExamTemplate_Exam() {
-		return (EAttribute)examTemplateEClass.getEStructuralFeatures().get(1);
+	public EAttribute getCreationTemplate_Exam() {
+		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -212,9 +212,9 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__PDF_PATH);
 		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__EXAM);
 
-		examTemplateEClass = createEClass(EXAM_TEMPLATE);
-		createEAttribute(examTemplateEClass, EXAM_TEMPLATE__PDF_PATH);
-		createEAttribute(examTemplateEClass, EXAM_TEMPLATE__EXAM);
+		creationTemplateEClass = createEClass(CREATION_TEMPLATE);
+		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__PDF_PATH);
+		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__EXAM);
 
 		// Create data types
 		examEDataType = createEDataType(EXAM);
@@ -257,9 +257,9 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		initEAttribute(getCorrectionTemplate_PdfPath(), theEcorePackage.getEString(), "pdfPath", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCorrectionTemplate_Exam(), this.getExam(), "exam", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(examTemplateEClass, ExamTemplate.class, "ExamTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getExamTemplate_PdfPath(), theEcorePackage.getEString(), "pdfPath", null, 0, 1, ExamTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getExamTemplate_Exam(), this.getExam(), "exam", null, 0, 1, ExamTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(creationTemplateEClass, CreationTemplate.class, "CreationTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCreationTemplate_PdfPath(), theEcorePackage.getEString(), "pdfPath", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCreationTemplate_Exam(), this.getExam(), "exam", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(examEDataType, Exam.class, "Exam", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

@@ -4,7 +4,7 @@ package fr.istic.tools.scanexam.core.templates.impl;
 
 import fr.istic.tools.scanexam.core.Exam;
 
-import fr.istic.tools.scanexam.core.templates.ExamTemplate;
+import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -16,19 +16,19 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Exam Template</b></em>'.
+ * An implementation of the model object '<em><b>Creation Template</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.ExamTemplateImpl#getPdfPath <em>Pdf Path</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.ExamTemplateImpl#getExam <em>Exam</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getPdfPath <em>Pdf Path</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getExam <em>Exam</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements ExamTemplate {
+public class CreationTemplateImpl extends MinimalEObjectImpl.Container implements CreationTemplate {
 	/**
 	 * The default value of the '{@link #getPdfPath() <em>Pdf Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -74,7 +74,7 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ExamTemplateImpl() {
+	protected CreationTemplateImpl() {
 		super();
 	}
 
@@ -85,7 +85,7 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return TemplatesPackage.Literals.EXAM_TEMPLATE;
+		return TemplatesPackage.Literals.CREATION_TEMPLATE;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 		String oldPdfPath = pdfPath;
 		pdfPath = newPdfPath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.EXAM_TEMPLATE__PDF_PATH, oldPdfPath, pdfPath));
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__PDF_PATH, oldPdfPath, pdfPath));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 		Exam oldExam = exam;
 		exam = newExam;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.EXAM_TEMPLATE__EXAM, oldExam, exam));
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__EXAM, oldExam, exam));
 	}
 
 	/**
@@ -142,9 +142,9 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TemplatesPackage.EXAM_TEMPLATE__PDF_PATH:
+			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
 				return getPdfPath();
-			case TemplatesPackage.EXAM_TEMPLATE__EXAM:
+			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return getExam();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -158,10 +158,10 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TemplatesPackage.EXAM_TEMPLATE__PDF_PATH:
+			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
 				setPdfPath((String)newValue);
 				return;
-			case TemplatesPackage.EXAM_TEMPLATE__EXAM:
+			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam((Exam)newValue);
 				return;
 		}
@@ -176,10 +176,10 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.EXAM_TEMPLATE__PDF_PATH:
+			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
 				setPdfPath(PDF_PATH_EDEFAULT);
 				return;
-			case TemplatesPackage.EXAM_TEMPLATE__EXAM:
+			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam(EXAM_EDEFAULT);
 				return;
 		}
@@ -194,9 +194,9 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.EXAM_TEMPLATE__PDF_PATH:
+			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
 				return PDF_PATH_EDEFAULT == null ? pdfPath != null : !PDF_PATH_EDEFAULT.equals(pdfPath);
-			case TemplatesPackage.EXAM_TEMPLATE__EXAM:
+			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return EXAM_EDEFAULT == null ? exam != null : !EXAM_EDEFAULT.equals(exam);
 		}
 		return super.eIsSet(featureID);
@@ -220,4 +220,4 @@ public class ExamTemplateImpl extends MinimalEObjectImpl.Container implements Ex
 		return result.toString();
 	}
 
-} //ExamTemplateImpl
+} //CreationTemplateImpl

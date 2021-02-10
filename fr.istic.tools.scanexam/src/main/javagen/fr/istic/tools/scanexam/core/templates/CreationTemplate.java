@@ -8,36 +8,36 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Exam Template</b></em>'.
+ * A representation of the model object '<em><b>Creation Template</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.ExamTemplate#getPdfPath <em>Pdf Path</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.ExamTemplate#getExam <em>Exam</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getPdfPath <em>Pdf Path</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}</li>
  * </ul>
  *
- * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getExamTemplate()
+ * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCreationTemplate()
  * @model
  * @generated
  */
-public interface ExamTemplate extends EObject {
+public interface CreationTemplate extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Pdf Path</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Pdf Path</em>' attribute.
 	 * @see #setPdfPath(String)
-	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getExamTemplate_PdfPath()
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCreationTemplate_PdfPath()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getPdfPath();
 
 	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.ExamTemplate#getPdfPath <em>Pdf Path</em>}' attribute.
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getPdfPath <em>Pdf Path</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Pdf Path</em>' attribute.
@@ -52,14 +52,14 @@ public interface ExamTemplate extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Exam</em>' attribute.
 	 * @see #setExam(Exam)
-	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getExamTemplate_Exam()
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCreationTemplate_Exam()
 	 * @model unique="false" dataType="fr.istic.tools.scanexam.core.templates.Exam"
 	 * @generated
 	 */
 	Exam getExam();
 
 	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.ExamTemplate#getExam <em>Exam</em>}' attribute.
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Exam</em>' attribute.
@@ -68,4 +68,4 @@ public interface ExamTemplate extends EObject {
 	 */
 	void setExam(Exam value);
 
-} // ExamTemplate
+} // CreationTemplate

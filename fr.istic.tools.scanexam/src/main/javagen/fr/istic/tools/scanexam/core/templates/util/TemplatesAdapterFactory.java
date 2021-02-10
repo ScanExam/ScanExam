@@ -72,8 +72,8 @@ public class TemplatesAdapterFactory extends AdapterFactoryImpl {
 				return createCorrectionTemplateAdapter();
 			}
 			@Override
-			public Adapter caseExamTemplate(ExamTemplate object) {
-				return createExamTemplateAdapter();
+			public Adapter caseCreationTemplate(CreationTemplate object) {
+				return createCreationTemplateAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -110,16 +110,16 @@ public class TemplatesAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.templates.ExamTemplate <em>Exam Template</em>}'.
+	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate <em>Creation Template</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see fr.istic.tools.scanexam.core.templates.ExamTemplate
+	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate
 	 * @generated
 	 */
-	public Adapter createExamTemplateAdapter() {
+	public Adapter createCreationTemplateAdapter() {
 		return null;
 	}
 

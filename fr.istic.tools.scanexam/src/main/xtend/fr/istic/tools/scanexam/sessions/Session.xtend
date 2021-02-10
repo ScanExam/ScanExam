@@ -66,6 +66,10 @@ abstract class Session
 	{
 		return exam.pages.get(pageIndex);
 	}
+	def Exam getExam()
+	{
+		return exam;
+	}
 	
 	/** Retourne la zone associée à une question
 	 * @param index Index de la question
@@ -77,7 +81,7 @@ abstract class Session
 	}
 	
 	
-	def void save()
+	def void save(String path)
 	
 	def void open(File xmiFile);
 

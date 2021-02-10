@@ -2,6 +2,14 @@ package fr.istic.tools.scanexam.sessions
 
 import fr.istic.tools.scanexam.core.Question
 import java.io.File
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.Resource
+import fr.istic.tools.scanexam.core.templates.CreationTemplate
+import fr.istic.tools.scanexam.core.Page
+import fr.istic.tools.scanexam.core.templates.TemplatesPackage
+import org.apache.pdfbox.pdmodel.PDDocument
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -10,8 +18,12 @@ import java.io.File
  * 
  * Factory -> on créer une session en passant la précedente en paramètre.
  */
-class ExamSession extends Session // TODO : renommer
+class CreationSession extends Session // TODO : renommer
 {
+	PDDocument document;
+	
+	CreationTemplate template;
+	
 	/**
 	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
 	 * @param q Une Question
@@ -23,6 +35,10 @@ class ExamSession extends Session // TODO : renommer
 		getPage().questions.add(q);
 	}
 	
+	def void addPage(Page p)
+	{
+		getExam().pages.add(p);
+	}
 	/**
 	 * Supprime une question
 	 * @param index Index de la question à supprimer
@@ -33,14 +49,27 @@ class ExamSession extends Session // TODO : renommer
 	{
 		getPage().questions.remove(index);
 	}
-	
-	override save() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	override save(String path) 
+	{
+		template.exam = super.getExam();
+		
+		val resourceSet = new ResourceSetImpl();
+    	val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
+    	val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
+    	_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl);
+    	resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
+    	val resource = resourceSet.createResource(URI.createFileURI(path));
+    	resource.getContents().add(template);
+    	resource.save(null);
 	}
 	
-	override open(File xmiFile) {
+	override open(File xmiFile) 
+	{
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
-	
+	def void create(String pdfPath)
+	{
+		
+	}
 	
 }

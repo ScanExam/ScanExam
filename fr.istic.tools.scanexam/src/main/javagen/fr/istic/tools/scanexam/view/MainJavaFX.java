@@ -1,43 +1,37 @@
 package fr.istic.tools.scanexam.view;
 
-import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.eclipse.xtext.xbase.lib.InputOutput;
-
 /**
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
  * @author Stefan Locke
  */
 @SuppressWarnings("all")
-public class MainJavaFX extends Application {
+public class MainJavaFX /* implements Application  */{
   /**
    * Lancement de l'application FX
    */
   public static void launchApp(final String[] args) {
-    Application.launch(args);
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method launch(String[]) is undefined");
   }
   
   public static void launchApp() {
-    Application.launch(null);
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method launch(Object) is undefined");
   }
   
   /**
    * Classe de lancement de l'application FX
    */
   @Override
-  public void start(final Stage primaryStage) throws Exception {
-    InputOutput.<String>println("started App");
-    final FXMLLoader loader = new FXMLLoader();
-    final Parent root = loader.<Parent>load(ResourcesUtils.getInputStreamResource("/viewResources/Proto.fxml"));
-    primaryStage.setTitle("Corrector GUI - ScanExam");
-    Scene _scene = new Scene(root, 1280, 720);
-    primaryStage.setScene(_scene);
-    primaryStage.setMinHeight(720);
-    primaryStage.setMinWidth(720);
-    primaryStage.show();
+  public Object start(final /* Stage */Object primaryStage) throws Exception {
+    throw new Error("Unresolved compilation problems:"
+      + "\nFXMLLoader cannot be resolved."
+      + "\nScene cannot be resolved."
+      + "\nload cannot be resolved"
+      + "\nsetTitle cannot be resolved"
+      + "\nsetScene cannot be resolved"
+      + "\nsetMinHeight cannot be resolved"
+      + "\nsetMinWidth cannot be resolved"
+      + "\nshow cannot be resolved");
   }
 }
