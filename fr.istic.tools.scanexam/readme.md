@@ -16,32 +16,41 @@ Move file pfo_example.pdf to `target` directory
 java -jar target/ScanExam-jar-with-dependencies.jar
 ```
 
-# Other useful commands
+# Useful commands
+
+## Compile
 
 ```maven
 mvn compile
 ```
-To compile the program.
+
+## Execute program
 
 ```maven
 mvn exec:java
 ```
-To execute the program as a Java Program
 
 You can specify Graphic Library to use by adding program argument:
 ```maven
 mvn exec:java -D exec.args="-javafx"
 ```
 
+## Execute tests
 
 ```maven
 mvn test
 ```
-To run unit tests.
+
+## Build to jar
+```maven
+mvn compile assembly:single
+```
 
 # Program arguments
 
+
+| Argument |  Description |
+|----------|---------------------------------|
 | -javafx | Run program with JavaFX library |
-|---------|---------------------------------|
 | -swing  | Run program with Swing library  |
  
