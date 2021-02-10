@@ -87,6 +87,7 @@ class PresenterVueCorrection {
 	}
 	
 	/**
+	 * @param question is the actual question
 	 * @return previous question
 	 */
 	def getPreviousQuestion(int question){
