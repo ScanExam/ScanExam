@@ -21,6 +21,9 @@ import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 import javax.swing.filechooser.FileNameExtensionFilter
+import javax.swing.JMenuItem
+import java.awt.event.ActionListener
+import java.awt.event.ActionEvent
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -48,6 +51,8 @@ class ExamCreationSwingView {
 		
 	/* Menu fichier de la bare de menu de la fenêtre */
 	var JMenu mnFile
+	
+	var JMenuItem mnItemLoad
 
 	/* Menu édition de la bare de menu de la fenêtre */
 	var JMenu mnEdit 
@@ -119,6 +124,13 @@ class ExamCreationSwingView {
 		window.setJMenuBar(menuBar)
 		
 		mnFile = new JMenu("File")
+		mnItemLoad = new JMenuItem("Load")
+		mnItemLoad.addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				openFile()
+			}
+	    });
+	    mnFile.add(mnItemLoad)
 		menuBar.add(mnFile)
 		
 		mnEdit = new JMenu("Edit")
