@@ -22,13 +22,13 @@ class PdfAndBoxPanel extends PdfPanel {
 		
 	new(PdfPresenterSwing pdfPresenter) {
 		super(pdfPresenter)
-		selectionPresenter = pdfPresenter.selectionController
-
-		selectionPresenter.getSelectionBoxes().setPanel(this)
+		
+		this.selectionPresenter = pdfPresenter.selectionController
         
-        addMouseWheelListener(pdfPresenter.getMouseHandler())
-        addMouseListener(pdfPresenter.getMouseHandler())
-        addMouseMotionListener(pdfPresenter.getMouseHandler())
+		this.selectionPresenter.getSelectionBoxes().setPanel(this)
+        
+        addMouseListener(selectionPresenter.getMouseHandler())
+        addMouseMotionListener(selectionPresenter.getMouseHandler())
 	}
 	
 	/**
@@ -36,7 +36,7 @@ class PdfAndBoxPanel extends PdfPanel {
 	 */
 	override protected void paintComponent(Graphics g) {
 		super.paintComponent(g)
-	
+		
 	    var Graphics2D g2d = g.create() as Graphics2D
 	    paintSelectionBoxes(g2d, selectionPresenter.getSelectionBoxes())
 	    paintBoxesTitle(g2d, selectionPresenter.getSelectionBoxes())
