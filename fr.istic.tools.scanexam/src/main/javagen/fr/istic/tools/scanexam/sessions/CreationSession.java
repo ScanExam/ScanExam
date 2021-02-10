@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.ExclusiveRange;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Representer l'état courant de l'interface graphique
@@ -73,6 +75,11 @@ public class CreationSession extends Session {
       File _file = new File(pdfPath);
       this.document = PDDocument.load(_file);
       super.exam = null;
+      int _size = IterableExtensions.size(this.document.getPages());
+      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
+      for (final Integer i : _doubleDotLessThan) {
+        this.exam.getPages().add(null);
+      }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

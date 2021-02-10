@@ -72,6 +72,12 @@ class CreationSession extends Session // TODO : renommer
 		
 		super.exam = null;
 		
+		for (i : 0 ..< document.pages.size())
+		{
+    		exam.pages.add(null); // new Page()
+		}
+		
+		
 	}
 	
 }
