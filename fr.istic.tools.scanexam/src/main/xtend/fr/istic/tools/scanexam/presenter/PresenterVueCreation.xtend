@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.view.ControllerVueCreation
 import java.util.Objects
+import fr.istic.tools.scanexam.sessions.Session
 
 /**
  * Class defining the presenter for the exam creation view(s)
@@ -17,7 +18,24 @@ class PresenterVueCreation {
 	PresenterRectangle presRectangle
 	PresenterMarkingScheme presMarkingScheme
 	ControllerVueCreation controller;
+	Session session;
 	
+	
+	
+	/**
+	 * Setter for the session API
+	 * @param {@link Session} session of the API) 
+	 */
+	def setPresenterQRCode(Session apiSession){
+		Objects.requireNonNull(apiSession)
+		session = apiSession
+	}
+	/**
+	 * @return API session 
+	 */
+	def getSessionAPI(){
+		session
+	}
 	
 	/**
 	 * setter for the PresenterQRCode attribute

@@ -67,4 +67,19 @@ class ControllerVueCorrection {
     def getControllerSwing(){
     	controllerSwing
     }
+    
+    /**
+	 * @return next question
+	 */
+    def getNextQuestion(int question){
+    	presenter.getNextQuestion(question)
+    }
+    
+    /**
+     * @param question is the actual question
+	 * @return previous question
+	 */
+    def getPreviousQuestion(int question){
+    	presenter.getPreviousQuestion(question)
+    }
 }

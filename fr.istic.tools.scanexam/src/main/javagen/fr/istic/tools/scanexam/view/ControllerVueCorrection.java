@@ -85,4 +85,19 @@ public class ControllerVueCorrection {
   public ControllerSwing getControllerSwing() {
     return this.controllerSwing;
   }
+  
+  /**
+   * @return next question
+   */
+  public int getNextQuestion(final int question) {
+    return this.presenter.getNextQuestion(question);
+  }
+  
+  /**
+   * @param question is the actual question
+   * @return previous question
+   */
+  public int getPreviousQuestion(final int question) {
+    return this.presenter.getPreviousQuestion(question);
+  }
 }

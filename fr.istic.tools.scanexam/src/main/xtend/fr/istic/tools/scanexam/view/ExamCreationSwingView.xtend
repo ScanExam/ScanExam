@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing
 import java.awt.BorderLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -16,7 +17,18 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
+<<<<<<< HEAD
 import fr.istic.tools.scanexam.controller.PdfPresenterSwing
+import javax.swing.JMenuItem
+import java.awt.event.ActionListener
+import java.awt.event.ActionEvent
+import java.io.IOException
+import javax.swing.JFileChooser
+import java.io.File
+import javax.swing.filechooser.FileFilter
+import javax.swing.filechooser.FileNameExtensionFilter
+=======
+>>>>>>> 8a724c11428ca0561474fe19590f43867bf25122
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -31,7 +43,7 @@ class ExamCreationSwingView {
 	// ----------------------------------------------------------------------------------------------------
 	
 	/* Controlleur liant les controlleurs du Pdf et des boîtes */
-	var PdfPresenterSwing pdfPresenter
+	var PdfAndBoxPresenterSwing pdfPresenter
 	
 	/* Fenêtre de correction d'examen */
 	var JFrame window
@@ -83,6 +95,8 @@ class ExamCreationSwingView {
 	
 	/* Panel principal présentant la copie */
 	var JPanel pnlPdf
+	
+	var File pdfFileSelected
 
 
 	// ----------------------------------------------------------------------------------------------------
@@ -94,7 +108,7 @@ class ExamCreationSwingView {
 	/** 
 	 * Constructeur
 	 */
-	new(PdfPresenterSwing pdfPresenter) {
+	new(PdfAndBoxPresenterSwing pdfPresenter) {
 		this.pdfPresenter = pdfPresenter
 		initialize()
 	}
@@ -106,6 +120,8 @@ class ExamCreationSwingView {
 		window = new JFrame(LanguageManager.translate("title.ScanExam"))
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+		
+		pdfFileSelected = new File("")
 		
 		menuBar = new JMenuBar()
 		window.setJMenuBar(menuBar)
@@ -205,4 +221,44 @@ class ExamCreationSwingView {
 	def JFrame getWindow() {
 		return window;
 	}
+<<<<<<< HEAD
+	
+	def void openFile() throws IOException, ClassNotFoundException {
+	    var FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        "Pdf file(.pdf)", "pdf")
+	    var JFileChooser fc = new JFileChooser()
+	    fc.setDialogTitle("Open your file")
+	   	fc.setFileSelectionMode(JFileChooser.FILES_ONLY)
+	    fc.setCurrentDirectory(new File("."))
+	    fc.setFileFilter(filter)
+
+	    var result = fc.showOpenDialog(window)
+	    if (result == JFileChooser.CANCEL_OPTION) {
+	        //cancel action
+	    } else if (result == JFileChooser.APPROVE_OPTION) {
+	        //open file using 
+	        var File selectedFile = fc.getSelectedFile()
+	        var path = selectedFile.getAbsolutePath()
+
+	        pdfFileSelected = new File(path)
+	        //Desktop.getDesktop().open(myFile);
+	        
+	        //pasController.setPdfPath(path);
+	        //SwingWindowController.setPdfPath(path);
+	        //PdfAndSelectionController.pdfPath = path;
+	        //frame.invalidate();
+	        //frame.validate();
+	        //frame.repaint();
+	        //System.out.println(SwingWindowController.pdfPath);
+	        
+	        //PdfAndSelectionView.s = "boubou";
+	        println(pdfFileSelected)
+	        //pasView.validate();
+	        //pasView.repaint();
+	        //System.out.println(PdfAndSelectionView.s);
+
+	    }
+	}
+=======
+>>>>>>> 8a724c11428ca0561474fe19590f43867bf25122
 }

@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.controller
 
-import fr.istic.tools.scanexam.box.BoxList
 import fr.istic.tools.scanexam.presenter.PdfPresenter
 import java.awt.Image
 import java.awt.Point
@@ -8,13 +7,12 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.image.BufferedImage
-import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.util.Optional
 import javax.swing.JPanel
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
-import java.io.InputStream
 
 /** 
  * Controlleur Swing du pdf avec swing
@@ -27,42 +25,31 @@ class PdfPresenterSwing extends PdfPresenter {
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
-	/** 
-	 * Indique si la mise à l'échelle se base sur la largueur ou non 
-	 */
-	final boolean SCALE_ON_WIDTH = false
-	/** 
-	 * PDF a afficher 
-	 */
+	
+	/* Indique si la mise à l'échelle se base sur la largueur ou non  */
+	boolean SCALE_ON_WIDTH = false
+	
+	/* PDF a afficher */
 	var Image pdf
-	/** 
-	 * Controlleur des boîtes de sélection 
-	 */
-	var SelectionPresenterSwing selectionController
-	/** 
-	 * Echelle pour l'affichage 
-	 */
+	
+	/* Echelle pour l'affichage */
 	protected var int scale
-	/** 
-	 * Point d'origine sur l'axe X 
-	 */
+	
+	/* Point d'origine sur l'axe X */
 	protected var int originX
-	/** 
-	 * Point d'origine sur l'axe Y 
-	 */
+	
+	/* Point d'origine sur l'axe Y */
 	protected var int originY
-	/** 
-	 * Handler pour les événements liés à la souris 
-	 */
+	
+	/* Handler pour les événements liés à la souris */
 	var MouseAdapter mouseHandler
-	/** 
-	 * Dernier point cliqué par l'utilisateur 
-	 */
+	
+	/* Dernier point cliqué par l'utilisateur */
 	var Optional<Point> lastClickPoint
-	/** 
-	 * Vue 
-	 */
+	
+	/* Vue */
 	var Optional<JPanel> view
+
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -76,8 +63,8 @@ class PdfPresenterSwing extends PdfPresenter {
 	 * @param pdfPath Chemin vers le pdf
 	 * @param selectionBoxes Objet contenant les boîtes de sélection
 	 */
-	new(int width, int height, InputStream pdfInput, BoxList selectionBoxes) {
-		super(width, height, pdfInput, selectionBoxes)
+	new(int width, int height, InputStream pdfInput) {
+		super(width, height, pdfInput)
 		pdf = getImageFromPDF(pdfInput, 0)
 		if (this.SCALE_ON_WIDTH) {
 			scale = (pdf.getWidth(null) / width) + 1
@@ -86,9 +73,6 @@ class PdfPresenterSwing extends PdfPresenter {
 		}
 		originX = 0
 		originY = 0
-		var int selectWidth = pdf.getWidth(null)
-		var int selectHeight = pdf.getHeight(null)
-		selectionController = new SelectionPresenterSwing(selectWidth, selectHeight, scale, originX, originY, selectionBoxes)
 		lastClickPoint = Optional::empty()
 		view = Optional::empty()
 		mouseHandler = new MouseAdapter() {
@@ -112,6 +96,7 @@ class PdfPresenterSwing extends PdfPresenter {
 			}
 		}
 	}
+
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -160,7 +145,6 @@ class PdfPresenterSwing extends PdfPresenter {
 			e.printStackTrace()
 			return null
 		}
-
 	}
 
 	/** 
@@ -171,6 +155,7 @@ class PdfPresenterSwing extends PdfPresenter {
 			view.get().repaint()
 		}
 	}
+
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -202,6 +187,7 @@ class PdfPresenterSwing extends PdfPresenter {
 		return selectionController
 	}
 
+
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * SETTERS
@@ -212,4 +198,5 @@ class PdfPresenterSwing extends PdfPresenter {
 		this.view = Optional::of(view)
 		selectionController.setView(this.view.get())
 	}
+	
 }

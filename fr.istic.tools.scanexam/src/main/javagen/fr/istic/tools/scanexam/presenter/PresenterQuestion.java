@@ -34,4 +34,19 @@ public class PresenterQuestion {
   public PresenterVueCorrection getPresenterVueCorrection() {
     return this.presenterCorrection;
   }
+  
+  /**
+   * @return next question
+   */
+  public int getNextQuestion(final int question) {
+    return 0;
+  }
+  
+  /**
+   * @param question is the actual question
+   * @return previous question
+   */
+  public int getPreviousQuestion(final int question) {
+    return 0;
+  }
 }

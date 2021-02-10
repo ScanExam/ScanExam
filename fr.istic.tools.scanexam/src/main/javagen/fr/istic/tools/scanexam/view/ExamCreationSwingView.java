@@ -7,20 +7,29 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Vue swing de la fenêtre de création d'examen
@@ -52,6 +61,8 @@ public class ExamCreationSwingView {
    * Menu fichier de la bare de menu de la fenêtre
    */
   private JMenu mnFile;
+  
+  private JMenuItem mnItemLoad;
   
   /**
    * Menu édition de la bare de menu de la fenêtre
@@ -118,6 +129,8 @@ public class ExamCreationSwingView {
    */
   private JPanel pnlPdf;
   
+  private File pdfFileSelected;
+  
   /**
    * Constructeur
    */
@@ -135,11 +148,26 @@ public class ExamCreationSwingView {
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
     this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    File _file = new File("");
+    this.pdfFileSelected = _file;
     JMenuBar _jMenuBar = new JMenuBar();
     this.menuBar = _jMenuBar;
     this.window.setJMenuBar(this.menuBar);
     JMenu _jMenu = new JMenu("File");
     this.mnFile = _jMenu;
+    JMenuItem _jMenuItem = new JMenuItem("Load");
+    this.mnItemLoad = _jMenuItem;
+    this.mnItemLoad.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        try {
+          ExamCreationSwingView.this.openFile();
+        } catch (Throwable _e) {
+          throw Exceptions.sneakyThrow(_e);
+        }
+      }
+    });
+    this.mnFile.add(this.mnItemLoad);
     this.menuBar.add(this.mnFile);
     JMenu _jMenu_1 = new JMenu("Edit");
     this.mnEdit = _jMenu_1;
@@ -229,5 +257,27 @@ public class ExamCreationSwingView {
    */
   public JFrame getWindow() {
     return this.window;
+  }
+  
+  public void openFile() throws IOException, ClassNotFoundException {
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+      "Pdf file(.pdf)", "pdf");
+    JFileChooser fc = new JFileChooser();
+    fc.setDialogTitle("Open your file");
+    fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    File _file = new File(".");
+    fc.setCurrentDirectory(_file);
+    fc.setFileFilter(filter);
+    int result = fc.showOpenDialog(this.window);
+    if ((result == JFileChooser.CANCEL_OPTION)) {
+    } else {
+      if ((result == JFileChooser.APPROVE_OPTION)) {
+        File selectedFile = fc.getSelectedFile();
+        String path = selectedFile.getAbsolutePath();
+        File _file_1 = new File(path);
+        this.pdfFileSelected = _file_1;
+        InputOutput.<File>println(this.pdfFileSelected);
+      }
+    }
   }
 }

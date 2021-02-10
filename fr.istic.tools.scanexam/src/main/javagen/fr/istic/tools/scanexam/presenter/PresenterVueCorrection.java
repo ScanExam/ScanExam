@@ -104,4 +104,19 @@ public class PresenterVueCorrection {
   public ControllerVueCorrection getControllerVueCorrection() {
     return this.controller;
   }
+  
+  /**
+   * @return next question
+   */
+  public int getNextQuestion(final int question) {
+    return this.presQuestion.getNextQuestion(question);
+  }
+  
+  /**
+   * @param question is the actual question
+   * @return previous question
+   */
+  public int getPreviousQuestion(final int question) {
+    return this.presQuestion.getPreviousQuestion(question);
+  }
 }
