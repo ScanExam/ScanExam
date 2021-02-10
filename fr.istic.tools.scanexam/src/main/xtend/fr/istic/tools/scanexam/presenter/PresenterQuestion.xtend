@@ -26,4 +26,19 @@ class PresenterQuestion {
 	def getPresenterVueCorrection(){
 		presenterCorrection
 	}
+	
+	/**
+	 * @return next question
+	 */
+	def getNextQuestion(int question){
+		return 0;
+	}
+	
+	/**
+	 * @param question is the actual question
+	 * @return previous question
+	 */
+	def getPreviousQuestion(int question){
+		return 0;
+	}
 }

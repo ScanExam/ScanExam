@@ -78,4 +78,18 @@ class PresenterVueCorrection {
 	def getControllerVueCorrection(){
 		controller
 	}
+	
+	/**
+	 * @return next question
+	 */
+	def getNextQuestion(int question){
+		presQuestion.getNextQuestion(question)
+	}
+	
+	/**
+	 * @return previous question
+	 */
+	def getPreviousQuestion(int question){
+		presQuestion.getPreviousQuestion(question)
+	}
 }
