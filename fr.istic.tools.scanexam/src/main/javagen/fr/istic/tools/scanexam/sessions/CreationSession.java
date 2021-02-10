@@ -69,7 +69,12 @@ public class CreationSession extends Session {
   }
   
   public void create(final String pdfPath) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nExamImpl cannot be resolved.");
+    try {
+      File _file = new File(pdfPath);
+      this.document = PDDocument.load(_file);
+      super.exam = null;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
 }

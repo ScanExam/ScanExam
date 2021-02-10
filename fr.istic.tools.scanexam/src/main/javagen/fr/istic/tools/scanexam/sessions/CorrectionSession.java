@@ -16,7 +16,7 @@ public class CorrectionSession extends Session {
   private Set<StudentSheet> visibleSheets;
   
   @Override
-  public void save() {
+  public void save(final String path) {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
   

@@ -11,6 +11,7 @@ import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage
 import org.apache.pdfbox.pdmodel.PDDocument
 import fr.istic.tools.scanexam.core.Exam
+import fr.istic.tools.scanexam.core.impl.ExamImpl
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -69,7 +70,7 @@ class CreationSession extends Session // TODO : renommer
 	{
 		document = PDDocument.load(new File(pdfPath));
 		
-		super.exam = new ExamImpl();
+		super.exam = null;
 		
 	}
 	
