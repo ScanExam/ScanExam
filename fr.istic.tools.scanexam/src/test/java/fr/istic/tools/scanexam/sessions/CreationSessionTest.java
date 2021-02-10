@@ -24,7 +24,7 @@ public class CreationSessionTest
 	{
 		session = new CreationSession();
 		
-		session.addQuestion(q);
+		
 	}
 	
 	@Test
