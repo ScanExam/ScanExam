@@ -9,8 +9,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 import javax.swing.JPanel;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -75,9 +75,9 @@ public class PdfPresenterSwing extends PdfPresenter {
    * @param pdfPath Chemin vers le pdf
    * @param selectionBoxes Objet contenant les boîtes de sélection
    */
-  public PdfPresenterSwing(final int width, final int height, final String pdfPath, final BoxList selectionBoxes) {
-    super(width, height, pdfPath, selectionBoxes);
-    this.pdf = this.getImageFromPDF(pdfPath, 0);
+  public PdfPresenterSwing(final int width, final int height, final InputStream pdfInput, final BoxList selectionBoxes) {
+    super(width, height, pdfInput, selectionBoxes);
+    this.pdf = this.getImageFromPDF(pdfInput, 0);
     if (this.SCALE_ON_WIDTH) {
       int _width = this.pdf.getWidth(null);
       int _divide = (_width / width);
@@ -160,10 +160,9 @@ public class PdfPresenterSwing extends PdfPresenter {
     this.repaint();
   }
   
-  private BufferedImage getImageFromPDF(final String filePath, final int pageindex) {
+  private BufferedImage getImageFromPDF(final InputStream pdfInput, final int pageindex) {
     try {
-      File _file = new File(filePath);
-      PDDocument document = PDDocument.load(_file);
+      PDDocument document = PDDocument.load(pdfInput);
       PDFRenderer renderer = new PDFRenderer(document);
       BufferedImage img = renderer.renderImageWithDPI(pageindex, 300);
       document.close();

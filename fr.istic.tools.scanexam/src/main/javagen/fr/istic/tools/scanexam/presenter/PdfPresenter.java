@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.box.BoxList;
+import java.io.InputStream;
 
 /**
  * Controlleur du pdf
@@ -19,9 +20,9 @@ public abstract class PdfPresenter {
   protected int height;
   
   /**
-   * Chemin vers le pdf
+   * InputStream du pdf
    */
-  protected String pdfPath;
+  protected InputStream pdfInput;
   
   /**
    * Objet contenant les boîtes de sélection
@@ -34,10 +35,10 @@ public abstract class PdfPresenter {
    * @param height Hauteur de la fenêtre
    * @param pdfPath Chemin vers le pdf
    */
-  public PdfPresenter(final int width, final int height, final String pdfPath, final BoxList selectionBoxes) {
+  public PdfPresenter(final int width, final int height, final InputStream pdfInput, final BoxList selectionBoxes) {
     this.width = width;
     this.height = height;
-    this.pdfPath = pdfPath;
+    this.pdfInput = pdfInput;
     this.selectionBoxes = selectionBoxes;
   }
   

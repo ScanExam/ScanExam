@@ -17,6 +17,12 @@ import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 import fr.istic.tools.scanexam.controller.PdfPresenterSwing
+import javax.swing.JMenuItem
+import java.awt.event.ActionListener
+import java.awt.event.ActionEvent
+import java.io.IOException
+import javax.swing.JFileChooser
+import java.io.File
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -44,6 +50,8 @@ class ExamCreationSwingView {
 		
 	/* Menu fichier de la bare de menu de la fenêtre */
 	var JMenu mnFile
+	
+	var JMenuItem mnItemLoad
 
 	/* Menu édition de la bare de menu de la fenêtre */
 	var JMenu mnEdit 
@@ -111,6 +119,14 @@ class ExamCreationSwingView {
 		window.setJMenuBar(menuBar)
 		
 		mnFile = new JMenu("File")
+		
+		mnItemLoad = new JMenuItem("Load")
+		mnItemLoad.addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				openFile()
+			}
+	    })
+		mnFile.add(mnItemLoad)
 		menuBar.add(mnFile)
 		
 		mnEdit = new JMenu("Edit")
@@ -204,5 +220,43 @@ class ExamCreationSwingView {
 	
 	def JFrame getWindow() {
 		return window;
+	}
+	
+	def void openFile() throws IOException, ClassNotFoundException {
+
+	    //FileFilter fJavaFilter = new FileFilter();
+	    var JFileChooser fc = new JFileChooser();
+	    fc.setDialogTitle("Open your file");
+	    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+	    fc.setCurrentDirectory(new File("."));
+	    //fc.setFileFilter(fJavaFilter);
+
+	    var result = fc.showOpenDialog(window);
+	    if (result == JFileChooser.CANCEL_OPTION) {
+	        //cancel action
+	    } else if (result == JFileChooser.APPROVE_OPTION) {
+
+	        //open file using 
+	        var File selectedFile = fc.getSelectedFile();
+	        var path = selectedFile.getAbsolutePath();
+
+	        //File myFile = new File(path);
+	        //Desktop.getDesktop().open(myFile);
+	        
+	        //pasController.setPdfPath(path);
+	        //SwingWindowController.setPdfPath(path);
+	        //PdfAndSelectionController.pdfPath = path;
+	        //frame.invalidate();
+	        //frame.validate();
+	        //frame.repaint();
+	        //System.out.println(SwingWindowController.pdfPath);
+	        
+	        //PdfAndSelectionView.s = "boubou";
+	        System.out.println(path);
+	        //pasView.validate();
+	        //pasView.repaint();
+	        //System.out.println(PdfAndSelectionView.s);
+
+	    }
 	}
 }
