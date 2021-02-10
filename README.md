@@ -11,16 +11,46 @@ Beware this is an very preliminary version.
 
 ```
 cd fr.istic.tools.scanexam
-mvn package
-java -jar targetscanexam-0.1.0-SNAPSHOT-shaded.jar scanexam-0.1.0-SNAPSHOT-shaded.jar examples/sample.xmi
-``` 
+mvn compile assembly:single
+Move file pfo_example.pdf to `target` directory
+java -jar target/ScanExam-jar-with-dependencies.jar
+```
 
-# What else is there in the repository ?
+# Useful commands
 
-There is a PoC for a graphical question selection tool in fr.isitc.tools.scanexam.cropping
+## Compile
 
-An example of PDF to png conversion in /src/main/src/fr/istic/tools/scanexam/gui/pdf
+```maven
+mvn compile
+```
+
+## Execute program
+
+```maven
+mvn exec:java
+```
+
+You can specify Graphic Library to use by adding program argument:
+```maven
+mvn exec:java -D exec.args="-javafx"
+```
+
+## Execute tests
+
+```maven
+mvn test
+```
+
+## Build to jar
+```maven
+mvn compile assembly:single
+```
+
+# Program arguments
 
 
- 
+| Argument |  Description |
+|----------|---------------------------------|
+| -javafx | Run program with JavaFX library |
+| -swing  | Run program with Swing library  |
  
