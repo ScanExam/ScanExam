@@ -1,21 +1,31 @@
 package fr.istic.tools.scanexam.view;
 
+import com.google.common.base.Objects;
 import java.io.IOException;
+import javafx.collections.ObservableList;
+import javafx.event.EventType;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class Controller {
-  public static class CopieItem /* implements HBox  */{
+  public static class CopieItem extends HBox {
     public CopieItem() {
-      throw new Error("Unresolved compilation problems:"
-        + "\nThe method super() is undefined");
+      super();
+      this.add("question something");
     }
     
     public void add(final String s) {
-      throw new Error("Unresolved compilation problems:"
-        + "\nThe method or field children is undefined for the type CopieItem"
-        + "\nLabel cannot be resolved."
-        + "\nadd cannot be resolved");
+      ObservableList<Node> _children = this.getChildren();
+      Label _label = new Label(s);
+      _children.add(_label);
     }
   }
   
@@ -23,53 +33,45 @@ public class Controller {
   
   private boolean botShow = false;
   
-  public /* Pane */Object topPane;
+  public Pane topPane;
   
-  public /* Button */Object topButtonHidden;
+  public Button topButtonHidden;
   
-  public /* Button */Object topButtonActive;
+  public Button topButtonActive;
   
-  public /* Button */Object botButtonHidden;
+  public Button botButtonHidden;
   
-  public /* Button */Object botButtonActive;
+  public Button botButtonActive;
   
-  public /* Pane */Object bottomPane;
+  public Pane bottomPane;
   
-  public /* ListView */Object leftList;
+  public ListView leftList;
   
-  public /* ListView */Object rightList;
+  public ListView rightList;
   
   /**
    * Toggles the visibility of the bottom window
    */
   public void toggleBottom() throws IOException {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe field Controller.bottomPane refers to the missing type Pane"
-      + "\nThe field Controller.botButtonHidden refers to the missing type Button"
-      + "\nsetVisible cannot be resolved"
-      + "\nsetVisible cannot be resolved");
+    this.bottomPane.setVisible((!this.botShow));
+    this.botButtonHidden.setVisible(this.botShow);
+    this.botShow = (!this.botShow);
   }
   
   /**
    * Used to resize the window containing the corrected exam
    */
-  public void dragBottom(final /* MouseEvent */Object event) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field MouseEvent is undefined"
-      + "\nThe field Controller.bottomPane refers to the missing type Pane"
-      + "\nThe field Controller.bottomPane refers to the missing type Pane"
-      + "\nThe field Controller.bottomPane refers to the missing type Pane"
-      + "\ngetEventType cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\nMOUSE_DRAGGED cannot be resolved"
-      + "\nsetPrefHeight cannot be resolved"
-      + "\ngetScene cannot be resolved"
-      + "\ngetHeight cannot be resolved"
-      + "\n- cannot be resolved"
-      + "\ngetScene cannot be resolved"
-      + "\ngetHeight cannot be resolved"
-      + "\n- cannot be resolved"
-      + "\ngetSceneY cannot be resolved");
+  public void dragBottom(final MouseEvent event) {
+    EventType<? extends MouseEvent> _eventType = event.getEventType();
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_DRAGGED);
+    if (_equals) {
+      double _height = this.bottomPane.getScene().getHeight();
+      double _minus = (_height - 100);
+      double _height_1 = this.bottomPane.getScene().getHeight();
+      double _sceneY = event.getSceneY();
+      double _minus_1 = (_height_1 - _sceneY);
+      this.bottomPane.setPrefHeight(Math.max(0, Math.min(_minus, _minus_1)));
+    }
   }
   
   private double mouseOriginX = 0d;
@@ -80,56 +82,63 @@ public class Controller {
   
   private double objectOriginY = 0d;
   
-  public void MoveImage(final /* MouseEvent */Object e) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nNode cannot be resolved to a type."
-      + "\nNode cannot be resolved to a type."
-      + "\nThe method or field MouseEvent is undefined"
-      + "\nThe method or field MouseEvent is undefined"
-      + "\ngetEventType cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\nMOUSE_PRESSED cannot be resolved"
-      + "\nscreenX cannot be resolved"
-      + "\nscreenY cannot be resolved"
-      + "\nsource cannot be resolved"
-      + "\nlayoutX cannot be resolved"
-      + "\nlayoutY cannot be resolved"
-      + "\ngetEventType cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\nMOUSE_DRAGGED cannot be resolved"
-      + "\nsource cannot be resolved"
-      + "\nlayoutX cannot be resolved"
-      + "\nscreenX cannot be resolved"
-      + "\n- cannot be resolved"
-      + "\nlayoutY cannot be resolved"
-      + "\nscreenY cannot be resolved"
-      + "\n- cannot be resolved"
-      + "\n+ cannot be resolved"
-      + "\n+ cannot be resolved"
-      + "\nlayoutX cannot be resolved"
-      + "\n+ cannot be resolved"
-      + "\n+ cannot be resolved"
-      + "\nlayoutY cannot be resolved");
+  public void MoveImage(final MouseEvent e) {
+    EventType<? extends MouseEvent> _eventType = e.getEventType();
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
+    if (_equals) {
+      InputOutput.<String>println("Starting to move");
+      this.mouseOriginX = e.getScreenX();
+      this.mouseOriginY = e.getScreenY();
+      Object _source = e.getSource();
+      Node source = ((Node) _source);
+      InputOutput.<Node>println(source);
+      this.objectOriginX = source.getLayoutX();
+      this.objectOriginY = source.getLayoutY();
+    }
+    EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
+    boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
+    if (_equals_1) {
+      InputOutput.<String>println("moving");
+      Object _source_1 = e.getSource();
+      Node source_1 = ((Node) _source_1);
+      double _screenX = e.getScreenX();
+      double _minus = (_screenX - this.mouseOriginX);
+      double _plus = (this.objectOriginX + _minus);
+      source_1.setLayoutX(_plus);
+      double _screenY = e.getScreenY();
+      double _minus_1 = (_screenY - this.mouseOriginY);
+      double _plus_1 = (this.objectOriginY + _minus_1);
+      source_1.setLayoutY(_plus_1);
+      String _plus_2 = (source_1 + " ");
+      double _layoutX = source_1.getLayoutX();
+      String _plus_3 = (_plus_2 + Double.valueOf(_layoutX));
+      String _plus_4 = (_plus_3 + " ");
+      double _layoutY = source_1.getLayoutY();
+      String _plus_5 = (_plus_4 + Double.valueOf(_layoutY));
+      InputOutput.<String>println(_plus_5);
+    }
   }
   
-  public void ZoomImage(final /* ScrollEvent */Object e) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nNode cannot be resolved to a type."
-      + "\nsource cannot be resolved"
-      + "\ndeltaY cannot be resolved"
-      + "\n> cannot be resolved"
-      + "\nscaleX cannot be resolved"
-      + "\nscaleX cannot be resolved"
-      + "\n* cannot be resolved"
-      + "\nscaleY cannot be resolved"
-      + "\nscaleY cannot be resolved"
-      + "\n* cannot be resolved"
-      + "\nscaleX cannot be resolved"
-      + "\nscaleX cannot be resolved"
-      + "\n* cannot be resolved"
-      + "\nscaleY cannot be resolved"
-      + "\nscaleY cannot be resolved"
-      + "\n* cannot be resolved");
+  public void ZoomImage(final ScrollEvent e) {
+    Object _source = e.getSource();
+    Node source = ((Node) _source);
+    double _deltaY = e.getDeltaY();
+    boolean _greaterThan = (_deltaY > 0);
+    if (_greaterThan) {
+      double _scaleX = source.getScaleX();
+      double _multiply = (_scaleX * 0.95);
+      source.setScaleX(_multiply);
+      double _scaleY = source.getScaleY();
+      double _multiply_1 = (_scaleY * 0.95);
+      source.setScaleY(_multiply_1);
+    } else {
+      double _scaleX_1 = source.getScaleX();
+      double _multiply_2 = (_scaleX_1 * 1.05);
+      source.setScaleX(_multiply_2);
+      double _scaleY_1 = source.getScaleY();
+      double _multiply_3 = (_scaleY_1 * 1.05);
+      source.setScaleY(_multiply_3);
+    }
   }
   
   /**
@@ -157,17 +166,13 @@ public class Controller {
    * Called when a <b>import</b> button is pressed
    */
   public void importPressed() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nButton cannot be resolved."
-      + "\nThe field Controller.rightList refers to the missing type ListView"
-      + "\nThe field Controller.rightList refers to the missing type ListView"
-      + "\nThe field Controller.rightList refers to the missing type ListView"
-      + "\ngetItems cannot be resolved"
-      + "\nadd cannot be resolved"
-      + "\ngetItems cannot be resolved"
-      + "\nadd cannot be resolved"
-      + "\ngetItems cannot be resolved"
-      + "\nadd cannot be resolved");
+    InputOutput.<String>println("Import method");
+    ObservableList _items = this.rightList.getItems();
+    Button _button = new Button("11");
+    _items.add(_button);
+    this.rightList.getItems().add("1");
+    this.rightList.getItems().add("2");
+    this.addQuestionList();
   }
   
   /**

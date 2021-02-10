@@ -8,10 +8,10 @@ import java.util.Locale
 import java.util.MissingResourceException
 import java.util.Objects
 import java.util.ResourceBundle
-import java.util.logging.Logger
 import java.util.stream.Collectors
 
 import static java.util.Locale.*
+import org.apache.log4j.Logger
 
 /**
  * Classe permettant de gérer le langage d'affichage de l'application en se basant sur les {@link Locale Locale}.
@@ -21,7 +21,7 @@ import static java.util.Locale.*
  */
 class LanguageManager {
 	
-	static val logger = Logger.getGlobal;
+	static val logger = Logger.getLogger("LanguageManager");
 	static val path = "langs/"
 	static val prefixFileName = "ScanExam"
 	static val extFileName = "properties"
@@ -130,7 +130,7 @@ class LanguageManager {
 		try {
 			currentBundle.getString(code)
 		} catch(MissingResourceException e) {
-			logger.warning(code + " not found for " + currentLocale.displayName + ".")
+			logger.warn(code + " not found for " + currentLocale.displayName + ".")
 			return code
 		}
 	}

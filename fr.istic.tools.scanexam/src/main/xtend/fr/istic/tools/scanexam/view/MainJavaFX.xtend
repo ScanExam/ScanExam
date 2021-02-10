@@ -2,9 +2,9 @@ package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import javafx.application.Application
-import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
+import javafx.fxml.FXMLLoader
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX

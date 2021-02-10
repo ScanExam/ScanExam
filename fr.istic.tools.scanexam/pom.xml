@@ -10,8 +10,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<fully.qualified.main.class>fr.istic.tools.scanexam.Main</fully.qualified.main.class>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.11</maven.compiler.source>
+		<maven.compiler.target>1.11</maven.compiler.target>
 		<maven.compiler.fork>true</maven.compiler.fork>
 		<emf-version>2.15.0</emf-version>
 		<emf-common-version>2.15.0</emf-common-version>
@@ -23,6 +23,19 @@
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>11</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>15.0.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
@@ -112,6 +125,15 @@
 		<pluginManagement>
 			<plugins>
 
+				<plugin>
+					<groupId>org.openjfx</groupId>
+					<artifactId>javafx-maven-plugin</artifactId>
+					<version>0.0.5</version>
+					<configuration>
+						<mainClass>${fully.qualified.main.class}</mainClass>
+					</configuration>
+				</plugin>
+
 				<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>3.3.0</version> 
 					<configuration> <archive> <manifest> <mainClass>${fully.qualified.main.class}</mainClass> 
 					</manifest> </archive> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
@@ -155,7 +177,7 @@
 					<version>1.2.1</version>
 					<configuration>
 						<mainClass>${fully.qualified.main.class}</mainClass>
-						
+
 					</configuration>
 				</plugin>
 

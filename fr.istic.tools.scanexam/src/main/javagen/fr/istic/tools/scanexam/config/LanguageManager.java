@@ -9,8 +9,8 @@ import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Function;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -24,7 +24,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  */
 @SuppressWarnings("all")
 public class LanguageManager {
-  private static final Logger logger = Logger.getGlobal();
+  private static final Logger logger = Logger.getLogger("LanguageManager");
   
   private static final String path = "langs/";
   
@@ -185,7 +185,7 @@ public class LanguageManager {
         String _displayName = LanguageManager.currentLocale.getDisplayName();
         String _plus = ((code + " not found for ") + _displayName);
         String _plus_1 = (_plus + ".");
-        LanguageManager.logger.warning(_plus_1);
+        LanguageManager.logger.warn(_plus_1);
         return code;
       } else {
         throw Exceptions.sneakyThrow(_t);
