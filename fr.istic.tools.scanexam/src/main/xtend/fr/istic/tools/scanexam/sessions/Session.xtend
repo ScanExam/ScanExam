@@ -19,7 +19,7 @@ abstract class Session
 	/**
 	 * Examen courant
 	 */
-	Exam exam
+	protected Exam exam
 	
 	/**
 	 * Index de la page courante
@@ -65,10 +65,6 @@ abstract class Session
 	def Page getPage()
 	{
 		return exam.pages.get(pageIndex);
-	}
-	def Exam getExam()
-	{
-		return exam;
 	}
 	
 	/** Retourne la zone associée à une question

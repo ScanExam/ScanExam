@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.sessions;
 
-import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
@@ -37,10 +36,6 @@ public class CreationSession extends Session {
     this.getPage().getQuestions().add(q);
   }
   
-  public void addPage(final Page p) {
-    this.getExam().getPages().add(p);
-  }
-  
   /**
    * Supprime une question
    * @param index Index de la question à supprimer
@@ -54,7 +49,7 @@ public class CreationSession extends Session {
   @Override
   public void save(final String path) {
     try {
-      this.template.setExam(super.getExam());
+      this.template.setExam(super.exam);
       final ResourceSetImpl resourceSet = new ResourceSetImpl();
       final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
       final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
@@ -74,5 +69,7 @@ public class CreationSession extends Session {
   }
   
   public void create(final String pdfPath) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nExamImpl cannot be resolved.");
   }
 }

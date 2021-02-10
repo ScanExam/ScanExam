@@ -10,6 +10,7 @@ import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage
 import org.apache.pdfbox.pdmodel.PDDocument
+import fr.istic.tools.scanexam.core.Exam
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -35,10 +36,7 @@ class CreationSession extends Session // TODO : renommer
 		getPage().questions.add(q);
 	}
 	
-	def void addPage(Page p)
-	{
-		getExam().pages.add(p);
-	}
+
 	/**
 	 * Supprime une question
 	 * @param index Index de la question à supprimer
@@ -51,7 +49,7 @@ class CreationSession extends Session // TODO : renommer
 	}
 	override save(String path) 
 	{
-		template.exam = super.getExam();
+		template.exam = super.exam;
 		
 		val resourceSet = new ResourceSetImpl();
     	val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
@@ -69,6 +67,9 @@ class CreationSession extends Session // TODO : renommer
 	}
 	def void create(String pdfPath)
 	{
+		document = PDDocument.load(new File(pdfPath));
+		
+		super.exam = new ExamImpl();
 		
 	}
 	

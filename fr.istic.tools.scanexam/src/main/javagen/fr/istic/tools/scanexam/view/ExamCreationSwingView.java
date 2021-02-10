@@ -1,35 +1,14 @@
 package fr.istic.tools.scanexam.view;
 
-import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.controller.PdfPresenterSwing;
-import fr.istic.tools.scanexam.view.PdfAndBoxPanel;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing;
 import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Vue swing de la fenêtre de création d'examen
@@ -40,7 +19,7 @@ public class ExamCreationSwingView {
   /**
    * Controlleur liant les controlleurs du Pdf et des boîtes
    */
-  private PdfPresenterSwing pdfPresenter;
+  private PdfAndBoxPresenterSwing pdfPresenter;
   
   /**
    * Fenêtre de correction d'examen
@@ -61,8 +40,6 @@ public class ExamCreationSwingView {
    * Menu fichier de la bare de menu de la fenêtre
    */
   private JMenu mnFile;
-  
-  private JMenuItem mnItemLoad;
   
   /**
    * Menu édition de la bare de menu de la fenêtre
@@ -134,7 +111,7 @@ public class ExamCreationSwingView {
   /**
    * Constructeur
    */
-  public ExamCreationSwingView(final PdfPresenterSwing pdfPresenter) {
+  public ExamCreationSwingView(final PdfAndBoxPresenterSwing pdfPresenter) {
     this.pdfPresenter = pdfPresenter;
     this.initialize();
   }
@@ -143,113 +120,8 @@ public class ExamCreationSwingView {
    * Initialise la fenêtre
    */
   private void initialize() {
-    String _translate = LanguageManager.translate("title.ScanExam");
-    JFrame _jFrame = new JFrame(_translate);
-    this.window = _jFrame;
-    this.window.setBounds(100, 100, 1280, 720);
-    this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    File _file = new File("");
-    this.pdfFileSelected = _file;
-    JMenuBar _jMenuBar = new JMenuBar();
-    this.menuBar = _jMenuBar;
-    this.window.setJMenuBar(this.menuBar);
-    JMenu _jMenu = new JMenu("File");
-    this.mnFile = _jMenu;
-    JMenuItem _jMenuItem = new JMenuItem("Load");
-    this.mnItemLoad = _jMenuItem;
-    this.mnItemLoad.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        try {
-          ExamCreationSwingView.this.openFile();
-        } catch (Throwable _e) {
-          throw Exceptions.sneakyThrow(_e);
-        }
-      }
-    });
-    this.mnFile.add(this.mnItemLoad);
-    this.menuBar.add(this.mnFile);
-    JMenu _jMenu_1 = new JMenu("Edit");
-    this.mnEdit = _jMenu_1;
-    this.menuBar.add(this.mnEdit);
-    JMenu _jMenu_2 = new JMenu("Help");
-    this.mnHelp = _jMenu_2;
-    this.menuBar.add(this.mnHelp);
-    JPanel _jPanel = new JPanel();
-    this.contentPane = _jPanel;
-    EmptyBorder _emptyBorder = new EmptyBorder(5, 5, 5, 5);
-    this.contentPane.setBorder(_emptyBorder);
-    this.window.setContentPane(this.contentPane);
-    BorderLayout _borderLayout = new BorderLayout(0, 0);
-    this.contentPane.setLayout(_borderLayout);
-    JPanel _jPanel_1 = new JPanel();
-    this.pnlButtons = _jPanel_1;
-    this.contentPane.add(this.pnlButtons, BorderLayout.NORTH);
-    BoxLayout _boxLayout = new BoxLayout(this.pnlButtons, BoxLayout.X_AXIS);
-    this.pnlButtons.setLayout(_boxLayout);
-    JButton _jButton = new JButton("Question area");
-    this.btnQuestionArea = _jButton;
-    this.pnlButtons.add(this.btnQuestionArea);
-    JButton _jButton_1 = new JButton("ID area");
-    this.btnIdArea = _jButton_1;
-    this.pnlButtons.add(this.btnIdArea);
-    JButton _jButton_2 = new JButton("QR area");
-    this.btnQrArea = _jButton_2;
-    this.pnlButtons.add(this.btnQrArea);
-    JSplitPane splitPane = new JSplitPane();
-    splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-    this.contentPane.add(splitPane, BorderLayout.WEST);
-    JPanel _jPanel_2 = new JPanel();
-    this.pnlLeft = _jPanel_2;
-    splitPane.setLeftComponent(this.pnlLeft);
-    GridBagLayout gblPnlLeft = new GridBagLayout();
-    gblPnlLeft.columnWidths = ((int[]) ((int[])Conversions.unwrapArray(Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(100), Integer.valueOf(0))), int.class)));
-    gblPnlLeft.rowHeights = ((int[]) ((int[])Conversions.unwrapArray(Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(22), Integer.valueOf(0))), int.class)));
-    gblPnlLeft.columnWeights = ((double[]) ((double[])Conversions.unwrapArray(Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf(0.0), Double.valueOf(Double.MIN_VALUE))), double.class)));
-    gblPnlLeft.rowWeights = ((double[]) ((double[])Conversions.unwrapArray(Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(Double.MIN_VALUE))), double.class)));
-    this.pnlLeft.setLayout(gblPnlLeft);
-    JLabel _jLabel = new JLabel("Selected Thing :");
-    this.lblThing = _jLabel;
-    this.lblThing.setHorizontalAlignment(SwingConstants.LEFT);
-    GridBagConstraints gbcPnlLeft = new GridBagConstraints();
-    gbcPnlLeft.fill = GridBagConstraints.BOTH;
-    Insets _insets = new Insets(0, 0, 5, 0);
-    gbcPnlLeft.insets = _insets;
-    gbcPnlLeft.gridx = 0;
-    gbcPnlLeft.gridy = 0;
-    this.pnlLeft.add(this.lblThing, gbcPnlLeft);
-    JComboBox<String> _jComboBox = new JComboBox<String>();
-    this.cmbBxThing = _jComboBox;
-    GridBagConstraints gbcCmbBxThing = new GridBagConstraints();
-    gbcCmbBxThing.fill = GridBagConstraints.BOTH;
-    Insets _insets_1 = new Insets(0, 0, 5, 0);
-    gbcCmbBxThing.insets = _insets_1;
-    gbcCmbBxThing.gridx = 0;
-    gbcCmbBxThing.gridy = 1;
-    this.pnlLeft.add(this.cmbBxThing, gbcCmbBxThing);
-    JLabel _jLabel_1 = new JLabel("Selected Blank Exam :");
-    this.lblBlankExam = _jLabel_1;
-    this.lblBlankExam.setHorizontalAlignment(SwingConstants.LEFT);
-    GridBagConstraints gbcLblBlankExam = new GridBagConstraints();
-    gbcLblBlankExam.fill = GridBagConstraints.BOTH;
-    Insets _insets_2 = new Insets(0, 0, 5, 0);
-    gbcLblBlankExam.insets = _insets_2;
-    gbcLblBlankExam.gridx = 0;
-    gbcLblBlankExam.gridy = 2;
-    this.pnlLeft.add(this.lblBlankExam, gbcLblBlankExam);
-    JComboBox<String> _jComboBox_1 = new JComboBox<String>();
-    this.cmbBxBlankExam = _jComboBox_1;
-    GridBagConstraints gbcCmbBxBlankExam = new GridBagConstraints();
-    gbcCmbBxBlankExam.fill = GridBagConstraints.BOTH;
-    gbcCmbBxBlankExam.gridx = 0;
-    gbcCmbBxBlankExam.gridy = 3;
-    this.pnlLeft.add(this.cmbBxBlankExam, gbcCmbBxBlankExam);
-    JPanel _jPanel_3 = new JPanel();
-    this.pnlLeftMain = _jPanel_3;
-    splitPane.setRightComponent(this.pnlLeftMain);
-    PdfAndBoxPanel _pdfAndBoxPanel = new PdfAndBoxPanel(this.pdfPresenter);
-    this.pnlPdf = _pdfAndBoxPanel;
-    this.contentPane.add(this.pnlPdf, BorderLayout.CENTER);
+    throw new Error("Unresolved compilation problems:"
+      + "\nEmptyBorder cannot be resolved.");
   }
   
   /**
@@ -257,27 +129,5 @@ public class ExamCreationSwingView {
    */
   public JFrame getWindow() {
     return this.window;
-  }
-  
-  public void openFile() throws IOException, ClassNotFoundException {
-    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-      "Pdf file(.pdf)", "pdf");
-    JFileChooser fc = new JFileChooser();
-    fc.setDialogTitle("Open your file");
-    fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    File _file = new File(".");
-    fc.setCurrentDirectory(_file);
-    fc.setFileFilter(filter);
-    int result = fc.showOpenDialog(this.window);
-    if ((result == JFileChooser.CANCEL_OPTION)) {
-    } else {
-      if ((result == JFileChooser.APPROVE_OPTION)) {
-        File selectedFile = fc.getSelectedFile();
-        String path = selectedFile.getAbsolutePath();
-        File _file_1 = new File(path);
-        this.pdfFileSelected = _file_1;
-        InputOutput.<File>println(this.pdfFileSelected);
-      }
-    }
   }
 }

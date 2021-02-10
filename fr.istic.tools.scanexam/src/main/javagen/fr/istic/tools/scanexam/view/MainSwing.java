@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view;
 
 import fr.istic.tools.scanexam.box.BoxList;
-import fr.istic.tools.scanexam.controller.PdfPresenterSwing;
+import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.ExamCreationSwingView;
 import java.awt.EventQueue;
@@ -22,7 +22,7 @@ public class MainSwing {
       try {
         InputStream pdfInput = ResourcesUtils.getInputStreamResource("/viewResources/pfo_example.pdf");
         BoxList _boxList = new BoxList();
-        PdfPresenterSwing pdfPresenteur = new PdfPresenterSwing(1280, 720, pdfInput, _boxList);
+        PdfAndBoxPresenterSwing pdfPresenteur = new PdfAndBoxPresenterSwing(1280, 720, pdfInput, _boxList);
         ExamCreationSwingView window = new ExamCreationSwingView(pdfPresenteur);
         window.getWindow().setVisible(true);
       } catch (final Throwable _t) {

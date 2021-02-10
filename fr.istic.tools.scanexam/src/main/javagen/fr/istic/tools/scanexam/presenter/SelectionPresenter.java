@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.box.BoxList;
-import org.eclipse.xtend2.lib.StringConcatenation;
 
 /**
  * Permet de dessiner des boîtes de sélection
@@ -83,11 +82,9 @@ public abstract class SelectionPresenter {
    * @param title Nom de la boîte
    */
   protected void createBox(final double x, final double y) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("Qst ");
-    int _size = this.selectionBoxes.size();
-    _builder.append(_size);
-    this.selectionBoxes.addBox(x, y, _builder.toString());
+    String _string = Integer.valueOf(this.selectionBoxes.size()).toString();
+    String _plus = ("Qst " + _string);
+    this.selectionBoxes.addBox(x, y, _plus);
   }
   
   /**

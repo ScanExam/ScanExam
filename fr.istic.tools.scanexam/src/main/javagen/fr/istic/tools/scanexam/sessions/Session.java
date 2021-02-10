@@ -22,7 +22,7 @@ public abstract class Session {
   /**
    * Examen courant
    */
-  private Exam exam;
+  protected Exam exam;
   
   /**
    * Index de la page courante
@@ -66,10 +66,6 @@ public abstract class Session {
   
   public Page getPage() {
     return this.exam.getPages().get(this.pageIndex);
-  }
-  
-  public Exam getExam() {
-    return this.exam;
   }
   
   /**

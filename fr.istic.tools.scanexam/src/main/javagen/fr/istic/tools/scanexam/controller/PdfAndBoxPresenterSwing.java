@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.controller;
 
+import fr.istic.tools.scanexam.box.BoxList;
 import fr.istic.tools.scanexam.controller.SelectionPresenterSwing;
 import fr.istic.tools.scanexam.presenter.PdfPresenter;
 import java.awt.Image;
@@ -21,7 +22,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class PdfPresenterSwing extends PdfPresenter {
+public class PdfAndBoxPresenterSwing extends PdfPresenter {
   /**
    * Indique si la mise à l'échelle se base sur la largueur ou non
    */
@@ -31,6 +32,11 @@ public class PdfPresenterSwing extends PdfPresenter {
    * PDF a afficher
    */
   private Image pdf;
+  
+  /**
+   * Controlleur des boîtes de sélection
+   */
+  private SelectionPresenterSwing selectionController;
   
   /**
    * Echelle pour l'affichage
@@ -63,14 +69,20 @@ public class PdfPresenterSwing extends PdfPresenter {
   private Optional<JPanel> view;
   
   /**
+   * Objet contenant les boîtes de sélection
+   */
+  private BoxList selectionBoxes;
+  
+  /**
    * Constructeur
    * @param width Largeur de la fenêtre
    * @param height Hauteur de la fenêtre
    * @param pdfPath Chemin vers le pdf
    * @param selectionBoxes Objet contenant les boîtes de sélection
    */
-  public PdfPresenterSwing(final int width, final int height, final InputStream pdfInput) {
+  public PdfAndBoxPresenterSwing(final int width, final int height, final InputStream pdfInput, final BoxList selectionBoxes) {
     super(width, height, pdfInput);
+    this.selectionBoxes = selectionBoxes;
     this.pdf = this.getImageFromPDF(pdfInput, 0);
     if (this.SCALE_ON_WIDTH) {
       int _width = this.pdf.getWidth(null);
@@ -85,29 +97,33 @@ public class PdfPresenterSwing extends PdfPresenter {
     }
     this.originX = 0;
     this.originY = 0;
+    int selectWidth = this.pdf.getWidth(null);
+    int selectHeight = this.pdf.getHeight(null);
+    SelectionPresenterSwing _selectionPresenterSwing = new SelectionPresenterSwing(selectWidth, selectHeight, this.scale, this.originX, this.originY, selectionBoxes);
+    this.selectionController = _selectionPresenterSwing;
     this.lastClickPoint = Optional.<Point>empty();
     this.view = Optional.<JPanel>empty();
     this.mouseHandler = new MouseAdapter() {
       @Override
       public void mousePressed(final MouseEvent e) {
         if (((e.getButton() == 2) || (e.getButton() == 3))) {
-          PdfPresenterSwing.this.lastClickPoint = Optional.<Point>of(e.getPoint());
+          PdfAndBoxPresenterSwing.this.lastClickPoint = Optional.<Point>of(e.getPoint());
         }
       }
       
       @Override
       public void mouseReleased(final MouseEvent e) {
-        PdfPresenterSwing.this.lastClickPoint = Optional.<Point>empty();
+        PdfAndBoxPresenterSwing.this.lastClickPoint = Optional.<Point>empty();
       }
       
       @Override
       public void mouseDragged(final MouseEvent e) {
-        PdfPresenterSwing.this.moveOrigin(e);
+        PdfAndBoxPresenterSwing.this.moveOrigin(e);
       }
       
       @Override
       public void mouseWheelMoved(final MouseWheelEvent e) {
-        PdfPresenterSwing.this.incrScale(e.getWheelRotation());
+        PdfAndBoxPresenterSwing.this.incrScale(e.getWheelRotation());
       }
     };
   }
@@ -128,8 +144,8 @@ public class PdfPresenterSwing extends PdfPresenter {
       double _y = this.lastClickPoint.get().getY();
       double _minus_1 = (dragPoint.y - _y);
       this.originY = (_originY + ((int) _minus_1));
-      this.getSelectionController().setOriginX(this.originX);
-      this.getSelectionController().setOriginY(this.originY);
+      this.selectionController.setOriginX(this.originX);
+      this.selectionController.setOriginY(this.originY);
       this.repaint();
       this.lastClickPoint = Optional.<Point>of(dragPoint);
     }
@@ -146,7 +162,7 @@ public class PdfPresenterSwing extends PdfPresenter {
       int _scale = this.scale;
       this.scale = (_scale + value);
     }
-    this.getSelectionController().setScale(this.scale);
+    this.selectionController.setScale(this.scale);
     this.repaint();
   }
   
@@ -202,7 +218,11 @@ public class PdfPresenterSwing extends PdfPresenter {
   }
   
   public SelectionPresenterSwing getSelectionController() {
-    return this.getSelectionController();
+    return this.selectionController;
+  }
+  
+  public BoxList getSelectionBoxes() {
+    return this.selectionBoxes;
   }
   
   /**
@@ -210,6 +230,6 @@ public class PdfPresenterSwing extends PdfPresenter {
    */
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);
-    this.getSelectionController().setView(this.view.get());
+    this.selectionController.setView(this.view.get());
   }
 }

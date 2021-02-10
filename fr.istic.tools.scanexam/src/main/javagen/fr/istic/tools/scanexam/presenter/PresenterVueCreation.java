@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
 import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterRectangle;
+import fr.istic.tools.scanexam.sessions.Session;
 import fr.istic.tools.scanexam.view.ControllerVueCreation;
 import java.util.Objects;
 
@@ -24,6 +25,28 @@ public class PresenterVueCreation {
   private PresenterMarkingScheme presMarkingScheme;
   
   private ControllerVueCreation controller;
+  
+  private Session session;
+  
+  /**
+   * Setter for the session API
+   * @param {@link Session} session of the API)
+   */
+  public Session setPresenterQRCode(final Session apiSession) {
+    Session _xblockexpression = null;
+    {
+      Objects.<Session>requireNonNull(apiSession);
+      _xblockexpression = this.session = apiSession;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * @return API session
+   */
+  public Session getSessionAPI() {
+    return this.session;
+  }
   
   /**
    * setter for the PresenterQRCode attribute
