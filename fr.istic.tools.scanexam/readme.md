@@ -12,6 +12,30 @@ Beware this is an very preliminary version.
 ```
 cd fr.istic.tools.scanexam
 mvn compile assembly:single
+Move file pfo_example.pdf to `target` directory
 java -jar target/ScanExam-jar-with-dependencies.jar
 ```
+
+# Other useful commands:
+
+```
+mvn compile```
+To compile the program.
+
+```mvn exec:java```
+To execute the program as a Java Program
+
+You can specify Graphic Library to use by adding program argument:
+```mvn
+mvn exec:java -D exec.args="-javafx"```
+
+
+```mvn test```
+To run unit tests.
+
+# Program arguments
+
+| -javafx | Run program with JavaFX library |
+|---------|---------------------------------|
+| -swing  | Run program with Swing library  |
  
