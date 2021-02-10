@@ -7,6 +7,8 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -18,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
@@ -25,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
@@ -57,6 +61,8 @@ public class ExamCreationSwingView {
    * Menu fichier de la bare de menu de la fenêtre
    */
   private JMenu mnFile;
+  
+  private JMenuItem mnItemLoad;
   
   /**
    * Menu édition de la bare de menu de la fenêtre
@@ -149,6 +155,19 @@ public class ExamCreationSwingView {
     this.window.setJMenuBar(this.menuBar);
     JMenu _jMenu = new JMenu("File");
     this.mnFile = _jMenu;
+    JMenuItem _jMenuItem = new JMenuItem("Load");
+    this.mnItemLoad = _jMenuItem;
+    this.mnItemLoad.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        try {
+          ExamCreationSwingView.this.openFile();
+        } catch (Throwable _e) {
+          throw Exceptions.sneakyThrow(_e);
+        }
+      }
+    });
+    this.mnFile.add(this.mnItemLoad);
     this.menuBar.add(this.mnFile);
     JMenu _jMenu_1 = new JMenu("Edit");
     this.mnEdit = _jMenu_1;

@@ -3,22 +3,24 @@
 package fr.istic.tools.scanexam.core.impl;
 
 import fr.istic.tools.scanexam.core.CorePackage;
+import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
-
-import fr.istic.tools.scanexam.utils.Pair;
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -56,14 +58,14 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	protected float weigth = WEIGTH_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSteps() <em>Steps</em>}' attribute list.
+	 * The cached value of the '{@link #getSteps() <em>Steps</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getSteps()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Pair<String, Float>> steps;
+	protected EList<GradeEntry> steps;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -113,11 +115,25 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	 * @generated
 	 */
 	@Override
-	public EList<Pair<String, Float>> getSteps() {
+	public EList<GradeEntry> getSteps() {
 		if (steps == null) {
-			steps = new EDataTypeEList<Pair<String, Float>>(Pair.class, this, CorePackage.GRADE_SCALE__STEPS);
+			steps = new EObjectContainmentEList<GradeEntry>(GradeEntry.class, this, CorePackage.GRADE_SCALE__STEPS);
 		}
 		return steps;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CorePackage.GRADE_SCALE__STEPS:
+				return ((InternalEList<?>)getSteps()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -150,7 +166,7 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 				return;
 			case CorePackage.GRADE_SCALE__STEPS:
 				getSteps().clear();
-				getSteps().addAll((Collection<? extends Pair<String, Float>>)newValue);
+				getSteps().addAll((Collection<? extends GradeEntry>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -202,8 +218,6 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (weigth: ");
 		result.append(weigth);
-		result.append(", steps: ");
-		result.append(steps);
 		result.append(')');
 		return result.toString();
 	}

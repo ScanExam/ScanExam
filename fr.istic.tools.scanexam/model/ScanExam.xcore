@@ -19,9 +19,13 @@ class Question {
 
 class GradeScale {
 	float weigth
-	Pair<String, Float>[] steps
+	contains GradeEntry[] steps
 }
-
+class GradeEntry
+{
+	float step
+	String header
+}
 class Page {
 	int ^id
 	contains Question[] questions
@@ -47,8 +51,7 @@ class HandwritingComment {
 }
 
 class Grade {
-	float value
-	String gradeLabel
+	contains GradeEntry[] entries
 	contains Comment[] comments
 }
 

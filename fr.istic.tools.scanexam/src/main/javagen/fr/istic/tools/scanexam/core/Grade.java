@@ -15,8 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.Grade#getValue <em>Value</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.Grade#getGradeLabel <em>Grade Label</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.Grade#getEntries <em>Entries</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.Grade#getComments <em>Comments</em>}</li>
  * </ul>
  *
@@ -26,48 +25,16 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Grade extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * Returns the value of the '<em><b>Entries</b></em>' containment reference list.
+	 * The list contents are of type {@link fr.istic.tools.scanexam.core.GradeEntry}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Value</em>' attribute.
-	 * @see #setValue(float)
-	 * @see fr.istic.tools.scanexam.core.CorePackage#getGrade_Value()
-	 * @model unique="false"
+	 * @return the value of the '<em>Entries</em>' containment reference list.
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getGrade_Entries()
+	 * @model containment="true"
 	 * @generated
 	 */
-	float getValue();
-
-	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.Grade#getValue <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Value</em>' attribute.
-	 * @see #getValue()
-	 * @generated
-	 */
-	void setValue(float value);
-
-	/**
-	 * Returns the value of the '<em><b>Grade Label</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Grade Label</em>' attribute.
-	 * @see #setGradeLabel(String)
-	 * @see fr.istic.tools.scanexam.core.CorePackage#getGrade_GradeLabel()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getGradeLabel();
-
-	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.Grade#getGradeLabel <em>Grade Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Grade Label</em>' attribute.
-	 * @see #getGradeLabel()
-	 * @generated
-	 */
-	void setGradeLabel(String value);
+	EList<GradeEntry> getEntries();
 
 	/**
 	 * Returns the value of the '<em><b>Comments</b></em>' containment reference list.

@@ -49,6 +49,15 @@ public interface CoreFactory extends EFactory {
 	GradeScale createGradeScale();
 
 	/**
+	 * Returns a new object of class '<em>Grade Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Grade Entry</em>'.
+	 * @generated
+	 */
+	GradeEntry createGradeEntry();
+
+	/**
 	 * Returns a new object of class '<em>Page</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

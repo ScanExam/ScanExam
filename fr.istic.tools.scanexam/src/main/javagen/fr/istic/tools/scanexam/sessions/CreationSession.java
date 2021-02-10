@@ -54,6 +54,7 @@ public class CreationSession extends Session {
   @Override
   public void save(final String path) {
     try {
+      this.template.setPdfPath(this.currentPdfPath);
       this.template.setExam(super.exam);
       final ResourceSetImpl resourceSet = new ResourceSetImpl();
       final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();

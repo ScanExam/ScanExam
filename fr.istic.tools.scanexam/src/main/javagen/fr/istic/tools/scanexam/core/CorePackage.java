@@ -197,7 +197,7 @@ public interface CorePackage extends EPackage {
 	int GRADE_SCALE__WEIGTH = 0;
 
 	/**
-	 * The feature id for the '<em><b>Steps</b></em>' attribute list.
+	 * The feature id for the '<em><b>Steps</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -224,6 +224,52 @@ public interface CorePackage extends EPackage {
 	int GRADE_SCALE_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.GradeEntryImpl <em>Grade Entry</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.istic.tools.scanexam.core.impl.GradeEntryImpl
+	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getGradeEntry()
+	 * @generated
+	 */
+	int GRADE_ENTRY = 3;
+
+	/**
+	 * The feature id for the '<em><b>Step</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GRADE_ENTRY__STEP = 0;
+
+	/**
+	 * The feature id for the '<em><b>Header</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GRADE_ENTRY__HEADER = 1;
+
+	/**
+	 * The number of structural features of the '<em>Grade Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GRADE_ENTRY_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Grade Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GRADE_ENTRY_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -231,7 +277,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPage()
 	 * @generated
 	 */
-	int PAGE = 3;
+	int PAGE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -277,7 +323,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getExam()
 	 * @generated
 	 */
-	int EXAM = 4;
+	int EXAM = 5;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -332,7 +378,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getComment()
 	 * @generated
 	 */
-	int COMMENT = 5;
+	int COMMENT = 6;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -378,7 +424,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getTextComment()
 	 * @generated
 	 */
-	int TEXT_COMMENT = 6;
+	int TEXT_COMMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -433,7 +479,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getHandwritingComment()
 	 * @generated
 	 */
-	int HANDWRITING_COMMENT = 7;
+	int HANDWRITING_COMMENT = 8;
 
 	/**
 	 * The number of structural features of the '<em>Handwriting Comment</em>' class.
@@ -461,25 +507,16 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getGrade()
 	 * @generated
 	 */
-	int GRADE = 8;
+	int GRADE = 9;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * The feature id for the '<em><b>Entries</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE__VALUE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Grade Label</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GRADE__GRADE_LABEL = 1;
+	int GRADE__ENTRIES = 0;
 
 	/**
 	 * The feature id for the '<em><b>Comments</b></em>' containment reference list.
@@ -488,7 +525,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE__COMMENTS = 2;
+	int GRADE__COMMENTS = 1;
 
 	/**
 	 * The number of structural features of the '<em>Grade</em>' class.
@@ -497,7 +534,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_FEATURE_COUNT = 3;
+	int GRADE_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Grade</em>' class.
@@ -516,7 +553,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getStudentSheet()
 	 * @generated
 	 */
-	int STUDENT_SHEET = 9;
+	int STUDENT_SHEET = 10;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -571,7 +608,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPair()
 	 * @generated
 	 */
-	int PAIR = 10;
+	int PAIR = 11;
 
 
 	/**
@@ -693,15 +730,47 @@ public interface CorePackage extends EPackage {
 	EAttribute getGradeScale_Weigth();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.GradeScale#getSteps <em>Steps</em>}'.
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.GradeScale#getSteps <em>Steps</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Steps</em>'.
+	 * @return the meta object for the containment reference list '<em>Steps</em>'.
 	 * @see fr.istic.tools.scanexam.core.GradeScale#getSteps()
 	 * @see #getGradeScale()
 	 * @generated
 	 */
-	EAttribute getGradeScale_Steps();
+	EReference getGradeScale_Steps();
+
+	/**
+	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.GradeEntry <em>Grade Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Grade Entry</em>'.
+	 * @see fr.istic.tools.scanexam.core.GradeEntry
+	 * @generated
+	 */
+	EClass getGradeEntry();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeEntry#getStep <em>Step</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Step</em>'.
+	 * @see fr.istic.tools.scanexam.core.GradeEntry#getStep()
+	 * @see #getGradeEntry()
+	 * @generated
+	 */
+	EAttribute getGradeEntry_Step();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeEntry#getHeader <em>Header</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Header</em>'.
+	 * @see fr.istic.tools.scanexam.core.GradeEntry#getHeader()
+	 * @see #getGradeEntry()
+	 * @generated
+	 */
+	EAttribute getGradeEntry_Header();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Page <em>Page</em>}'.
@@ -851,26 +920,15 @@ public interface CorePackage extends EPackage {
 	EClass getGrade();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Grade#getValue <em>Value</em>}'.
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.Grade#getEntries <em>Entries</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see fr.istic.tools.scanexam.core.Grade#getValue()
+	 * @return the meta object for the containment reference list '<em>Entries</em>'.
+	 * @see fr.istic.tools.scanexam.core.Grade#getEntries()
 	 * @see #getGrade()
 	 * @generated
 	 */
-	EAttribute getGrade_Value();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Grade#getGradeLabel <em>Grade Label</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Grade Label</em>'.
-	 * @see fr.istic.tools.scanexam.core.Grade#getGradeLabel()
-	 * @see #getGrade()
-	 * @generated
-	 */
-	EAttribute getGrade_GradeLabel();
+	EReference getGrade_Entries();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.Grade#getComments <em>Comments</em>}'.
@@ -1055,12 +1113,38 @@ public interface CorePackage extends EPackage {
 		EAttribute GRADE_SCALE__WEIGTH = eINSTANCE.getGradeScale_Weigth();
 
 		/**
-		 * The meta object literal for the '<em><b>Steps</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Steps</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute GRADE_SCALE__STEPS = eINSTANCE.getGradeScale_Steps();
+		EReference GRADE_SCALE__STEPS = eINSTANCE.getGradeScale_Steps();
+
+		/**
+		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.GradeEntryImpl <em>Grade Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.istic.tools.scanexam.core.impl.GradeEntryImpl
+		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getGradeEntry()
+		 * @generated
+		 */
+		EClass GRADE_ENTRY = eINSTANCE.getGradeEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GRADE_ENTRY__STEP = eINSTANCE.getGradeEntry_Step();
+
+		/**
+		 * The meta object literal for the '<em><b>Header</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GRADE_ENTRY__HEADER = eINSTANCE.getGradeEntry_Header();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
@@ -1187,20 +1271,12 @@ public interface CorePackage extends EPackage {
 		EClass GRADE = eINSTANCE.getGrade();
 
 		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Entries</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute GRADE__VALUE = eINSTANCE.getGrade_Value();
-
-		/**
-		 * The meta object literal for the '<em><b>Grade Label</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute GRADE__GRADE_LABEL = eINSTANCE.getGrade_GradeLabel();
+		EReference GRADE__ENTRIES = eINSTANCE.getGrade_Entries();
 
 		/**
 		 * The meta object literal for the '<em><b>Comments</b></em>' containment reference list feature.

@@ -7,6 +7,7 @@ import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Grade;
+import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.HandwritingComment;
 import fr.istic.tools.scanexam.core.Page;
@@ -20,7 +21,6 @@ import fr.istic.tools.scanexam.utils.Pair;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -55,6 +55,13 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	private EClass gradeScaleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass gradeEntryEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -292,8 +299,38 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getGradeScale_Steps() {
-		return (EAttribute)gradeScaleEClass.getEStructuralFeatures().get(1);
+	public EReference getGradeScale_Steps() {
+		return (EReference)gradeScaleEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getGradeEntry() {
+		return gradeEntryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getGradeEntry_Step() {
+		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getGradeEntry_Header() {
+		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -442,18 +479,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getGrade_Value() {
-		return (EAttribute)gradeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getGrade_GradeLabel() {
-		return (EAttribute)gradeEClass.getEStructuralFeatures().get(1);
+	public EReference getGrade_Entries() {
+		return (EReference)gradeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -463,7 +490,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 */
 	@Override
 	public EReference getGrade_Comments() {
-		return (EReference)gradeEClass.getEStructuralFeatures().get(2);
+		return (EReference)gradeEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -558,7 +585,11 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		gradeScaleEClass = createEClass(GRADE_SCALE);
 		createEAttribute(gradeScaleEClass, GRADE_SCALE__WEIGTH);
-		createEAttribute(gradeScaleEClass, GRADE_SCALE__STEPS);
+		createEReference(gradeScaleEClass, GRADE_SCALE__STEPS);
+
+		gradeEntryEClass = createEClass(GRADE_ENTRY);
+		createEAttribute(gradeEntryEClass, GRADE_ENTRY__STEP);
+		createEAttribute(gradeEntryEClass, GRADE_ENTRY__HEADER);
 
 		pageEClass = createEClass(PAGE);
 		createEAttribute(pageEClass, PAGE__ID);
@@ -579,8 +610,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		handwritingCommentEClass = createEClass(HANDWRITING_COMMENT);
 
 		gradeEClass = createEClass(GRADE);
-		createEAttribute(gradeEClass, GRADE__VALUE);
-		createEAttribute(gradeEClass, GRADE__GRADE_LABEL);
+		createEReference(gradeEClass, GRADE__ENTRIES);
 		createEReference(gradeEClass, GRADE__COMMENTS);
 
 		studentSheetEClass = createEClass(STUDENT_SHEET);
@@ -641,12 +671,11 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		initEClass(gradeScaleEClass, GradeScale.class, "GradeScale", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getGradeScale_Weigth(), theEcorePackage.getEFloat(), "weigth", null, 0, 1, GradeScale.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		EGenericType g1 = createEGenericType(this.getPair());
-		EGenericType g2 = createEGenericType(theEcorePackage.getEString());
-		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType(theEcorePackage.getEFloatObject());
-		g1.getETypeArguments().add(g2);
-		initEAttribute(getGradeScale_Steps(), g1, "steps", null, 0, -1, GradeScale.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getGradeScale_Steps(), this.getGradeEntry(), null, "steps", null, 0, -1, GradeScale.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(gradeEntryEClass, GradeEntry.class, "GradeEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGradeEntry_Step(), theEcorePackage.getEFloat(), "step", null, 0, 1, GradeEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGradeEntry_Header(), theEcorePackage.getEString(), "header", null, 0, 1, GradeEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pageEClass, Page.class, "Page", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPage_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -668,8 +697,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEClass(handwritingCommentEClass, HandwritingComment.class, "HandwritingComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(gradeEClass, Grade.class, "Grade", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getGrade_Value(), theEcorePackage.getEFloat(), "value", null, 0, 1, Grade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getGrade_GradeLabel(), theEcorePackage.getEString(), "gradeLabel", null, 0, 1, Grade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getGrade_Entries(), this.getGradeEntry(), null, "entries", null, 0, -1, Grade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGrade_Comments(), this.getComment(), null, "comments", null, 0, -1, Grade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(studentSheetEClass, StudentSheet.class, "StudentSheet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

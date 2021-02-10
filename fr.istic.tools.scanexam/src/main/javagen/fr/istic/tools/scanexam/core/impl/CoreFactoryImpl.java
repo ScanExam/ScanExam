@@ -62,6 +62,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 			case CorePackage.QUESTION_ZONE: return createQuestionZone();
 			case CorePackage.QUESTION: return createQuestion();
 			case CorePackage.GRADE_SCALE: return createGradeScale();
+			case CorePackage.GRADE_ENTRY: return createGradeEntry();
 			case CorePackage.PAGE: return createPage();
 			case CorePackage.EXAM: return createExam();
 			case CorePackage.COMMENT: return createComment();
@@ -135,6 +136,17 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	public GradeScale createGradeScale() {
 		GradeScaleImpl gradeScale = new GradeScaleImpl();
 		return gradeScale;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public GradeEntry createGradeEntry() {
+		GradeEntryImpl gradeEntry = new GradeEntryImpl();
+		return gradeEntry;
 	}
 
 	/**

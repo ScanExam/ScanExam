@@ -80,6 +80,10 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 				return createGradeScaleAdapter();
 			}
 			@Override
+			public Adapter caseGradeEntry(GradeEntry object) {
+				return createGradeEntryAdapter();
+			}
+			@Override
 			public Adapter casePage(Page object) {
 				return createPageAdapter();
 			}
@@ -166,6 +170,20 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createGradeScaleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.GradeEntry <em>Grade Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see fr.istic.tools.scanexam.core.GradeEntry
+	 * @generated
+	 */
+	public Adapter createGradeEntryAdapter() {
 		return null;
 	}
 

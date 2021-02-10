@@ -2,8 +2,6 @@
  */
 package fr.istic.tools.scanexam.core;
 
-import fr.istic.tools.scanexam.utils.Pair;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
@@ -49,15 +47,15 @@ public interface GradeScale extends EObject {
 	void setWeigth(float value);
 
 	/**
-	 * Returns the value of the '<em><b>Steps</b></em>' attribute list.
-	 * The list contents are of type {@link fr.istic.tools.scanexam.utils.Pair}<code>&lt;java.lang.String, java.lang.Float&gt;</code>.
+	 * Returns the value of the '<em><b>Steps</b></em>' containment reference list.
+	 * The list contents are of type {@link fr.istic.tools.scanexam.core.GradeEntry}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Steps</em>' attribute list.
+	 * @return the value of the '<em>Steps</em>' containment reference list.
 	 * @see fr.istic.tools.scanexam.core.CorePackage#getGradeScale_Steps()
-	 * @model unique="false" dataType="fr.istic.tools.scanexam.core.Pair&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EFloatObject&gt;"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Pair<String, Float>> getSteps();
+	EList<GradeEntry> getSteps();
 
 } // GradeScale

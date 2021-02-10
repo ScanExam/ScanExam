@@ -51,6 +51,7 @@ class CreationSession extends Session // TODO : renommer
 	}
 	override save(String path) 
 	{
+		template.pdfPath = this.currentPdfPath;
 		template.exam = super.exam;
 		val resourceSet = new ResourceSetImpl();
     	val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
