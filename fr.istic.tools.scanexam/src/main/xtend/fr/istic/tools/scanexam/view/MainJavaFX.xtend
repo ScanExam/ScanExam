@@ -30,6 +30,7 @@ class MainJavaFX extends Application {
 			println("started App");
 			val loader = new FXMLLoader();
 			val root = loader.load(ResourcesUtils.getInputStreamResource("/viewResources/Proto.fxml"));
+			
 			primaryStage.setTitle("Corrector GUI - ScanExam");
 			primaryStage.setScene(new Scene(root, 1280, 720));
 			primaryStage.setMinHeight(720);

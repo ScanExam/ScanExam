@@ -1,4 +1,4 @@
-Label {
+.UILabel {
     -fx-font-family: Arial;
     -fx-font-weight: bold;
     -fx-text-fill: darkblue;
@@ -28,15 +28,38 @@ Label {
 }
 
 .MainPane {
-    -fx-border-width: 0px 3px 0px 3px ;
-    -fx-border-color: #ececec ;
-    -fx-background-color: white;
+    -fx-border-width: 1px ;
+    -fx-border-color : lightgrey ;
+    -fx-background-color : white;
 }
+
 ListView {
 	
 }
 
 .SideBoxes {
-    -fx-padding: 0px 3px 0px 3px;
+    -fx-border-color : lightgrey;
+    -fx-border-width : 1px;
 }
 
+.detailsBox{
+	-fx-border-color: lightgrey;
+	-fx-border-width: 1px;
+	
+}
+
+.scrollPanes {
+	-fx-background-color: transparent;
+	-fx-focus-color : transparent;
+	-fx-faint-focus-color : transparent;
+}
+
+#correctionScrollPane > .viewport {
+	-fx-background-color: rgba(211,211,211,0.80);
+	
+}
+
+.botBar {
+	-fx-border-color: lightgrey ;
+	-fx-border-width: 1px 0px 0px 0px;
+}
