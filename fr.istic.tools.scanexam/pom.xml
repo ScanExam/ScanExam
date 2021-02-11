@@ -10,8 +10,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<fully.qualified.main.class>fr.istic.tools.scanexam.Main</fully.qualified.main.class>
-		<maven.compiler.source>1.11</maven.compiler.source>
-		<maven.compiler.target>1.11</maven.compiler.target>
+		<java_version>11</java_version>
+		<maven.compiler.source>1.${java_version}</maven.compiler.source>
+		<maven.compiler.target>1.${java_version}</maven.compiler.target>
 		<maven.compiler.fork>true</maven.compiler.fork>
 		<emf-version>2.15.0</emf-version>
 		<emf-common-version>2.15.0</emf-common-version>
@@ -224,8 +225,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.5.1</version>
 					<configuration>
-						<source>11</source>
-						<target>11</target>
+						<source>${java_version}</source>
+						<target>${java_version}</target>
 					</configuration>
 				</plugin>
 				<plugin>
