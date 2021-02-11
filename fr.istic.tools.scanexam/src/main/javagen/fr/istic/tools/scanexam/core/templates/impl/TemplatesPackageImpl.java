@@ -114,7 +114,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getCorrectionTemplate() {
 		return correctionTemplateEClass;
 	}
@@ -124,7 +123,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getCorrectionTemplate_PdfPath() {
 		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(0);
 	}
@@ -134,7 +132,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getCorrectionTemplate_Exam() {
 		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(1);
 	}
@@ -144,7 +141,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getCreationTemplate() {
 		return creationTemplateEClass;
 	}
@@ -154,7 +150,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getCreationTemplate_PdfPath() {
 		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(0);
 	}
@@ -164,7 +159,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getCreationTemplate_Exam() {
 		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(1);
 	}
@@ -174,7 +168,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EDataType getExam() {
 		return examEDataType;
 	}
@@ -184,7 +177,6 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TemplatesFactory getTemplatesFactory() {
 		return (TemplatesFactory)getEFactoryInstance();
 	}

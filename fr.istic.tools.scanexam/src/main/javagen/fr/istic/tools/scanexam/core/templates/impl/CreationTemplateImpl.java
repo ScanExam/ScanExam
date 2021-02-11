@@ -93,7 +93,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getPdfPath() {
 		return pdfPath;
 	}
@@ -103,7 +102,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPdfPath(String newPdfPath) {
 		String oldPdfPath = pdfPath;
 		pdfPath = newPdfPath;
@@ -116,7 +114,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Exam getExam() {
 		return exam;
 	}
@@ -126,7 +123,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExam(Exam newExam) {
 		Exam oldExam = exam;
 		exam = newExam;

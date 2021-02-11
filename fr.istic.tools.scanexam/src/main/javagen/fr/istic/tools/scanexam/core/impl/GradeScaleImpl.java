@@ -89,7 +89,6 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getWeigth() {
 		return weigth;
 	}
@@ -99,7 +98,6 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setWeigth(float newWeigth) {
 		float oldWeigth = weigth;
 		weigth = newWeigth;
@@ -112,7 +110,6 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Pair<String, Float>> getSteps() {
 		if (steps == null) {
 			steps = new EDataTypeEList<Pair<String, Float>>(Pair.class, this, CorePackage.GRADE_SCALE__STEPS);

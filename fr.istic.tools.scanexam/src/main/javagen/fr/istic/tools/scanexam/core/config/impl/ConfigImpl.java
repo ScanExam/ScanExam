@@ -72,7 +72,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Locale getLanguage() {
 		return language;
 	}
@@ -82,7 +81,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setLanguage(Locale newLanguage) {
 		Locale oldLanguage = language;
 		language = newLanguage;

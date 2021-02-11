@@ -112,7 +112,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getValue() {
 		return value;
 	}
@@ -122,7 +121,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setValue(float newValue) {
 		float oldValue = value;
 		value = newValue;
@@ -135,7 +133,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getGradeLabel() {
 		return gradeLabel;
 	}
@@ -145,7 +142,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setGradeLabel(String newGradeLabel) {
 		String oldGradeLabel = gradeLabel;
 		gradeLabel = newGradeLabel;
@@ -158,7 +154,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Comment> getComments() {
 		if (comments == null) {
 			comments = new EObjectContainmentEList<Comment>(Comment.class, this, CorePackage.GRADE__COMMENTS);

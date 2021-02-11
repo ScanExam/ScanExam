@@ -43,7 +43,6 @@ public class TextCommentImpl extends CommentImpl implements TextComment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getText() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT

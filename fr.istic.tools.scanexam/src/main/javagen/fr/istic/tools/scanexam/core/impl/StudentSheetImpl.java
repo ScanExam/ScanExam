@@ -103,7 +103,6 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getId() {
 		return id;
 	}
@@ -113,7 +112,6 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setId(int newId) {
 		int oldId = id;
 		id = newId;
@@ -126,7 +124,6 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Integer> getPosPage() {
 		if (posPage == null) {
 			posPage = new EDataTypeEList<Integer>(Integer.class, this, CorePackage.STUDENT_SHEET__POS_PAGE);
@@ -139,7 +136,6 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Grade> getGrades() {
 		if (grades == null) {
 			grades = new EObjectContainmentEList<Grade>(Grade.class, this, CorePackage.STUDENT_SHEET__GRADES);
