@@ -144,7 +144,7 @@
 							</goals>
 							<configuration>
 								<sources>
-									<source>${xtend-gen-path}</source>
+									<source>${basedir}/src/main/javagen</source>
 								</sources>
 							</configuration>
 						</execution>
