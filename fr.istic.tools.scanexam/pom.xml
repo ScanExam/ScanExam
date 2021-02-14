@@ -125,11 +125,11 @@
 
 	<build>
 		<finalName>ScanExam</finalName>
-		<sourceDirectory>src/main/java</sourceDirectory>
+		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 		<pluginManagement>
 			<plugins>
 
-				<plugin>
+				<!-- <plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
 					<version>3.2.0</version>
@@ -142,12 +142,12 @@
 							</goals>
 							<configuration>
 								<sources>
-									<source>src/main/javagen</source>
+									<source>${basedir}/src/main/javagen</source>
 								</sources>
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>
+				</plugin> -->
 
 				<plugin>
 					<groupId>org.openjfx</groupId>
