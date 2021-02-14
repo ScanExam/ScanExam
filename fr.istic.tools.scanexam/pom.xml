@@ -10,8 +10,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java_version>11</java_version>
-		<maven.compiler.source>1.${java_version}</maven.compiler.source>
-		<maven.compiler.target>1.${java_version}</maven.compiler.target>
+		<maven.compiler.source>${java_version}</maven.compiler.source>
+		<maven.compiler.target>${java_version}</maven.compiler.target>
 		<maven.compiler.fork>true</maven.compiler.fork>
 		<emf-version>2.15.0</emf-version>
 		<emf-common-version>2.15.0</emf-common-version>
@@ -20,7 +20,7 @@
 		<ecore-xtext-version>1.4.0</ecore-xtext-version>
 		<ecore-xcore-version>1.7.0</ecore-xcore-version>
 		<ecore-xcore-lib-version>1.3.0</ecore-xcore-lib-version>
-		
+
 		<fully.qualified.main.class>fr.istic.tools.scanexam.Main</fully.qualified.main.class>
 		<xtend-path>${basedir}/src/main/xtend</xtend-path>
 		<xcore-path>${basedir}/model</xcore-path>
@@ -36,7 +36,6 @@
 			<version>11</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -48,7 +47,6 @@
 			<artifactId>org.eclipse.emf.common</artifactId>
 			<version>${emf-common-version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
@@ -144,7 +142,7 @@
 							</goals>
 							<configuration>
 								<sources>
-									<source>${basedir}/src/main/javagen</source>
+									<source>src/main/javagen</source>
 								</sources>
 							</configuration>
 						</execution>
@@ -160,14 +158,6 @@
 					</configuration>
 				</plugin>
 
-				<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>3.3.0</version> 
-					<configuration> <archive> <manifest> <mainClass>${fully.qualified.main.class}</mainClass> 
-					</manifest> </archive> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
-					</descriptorRefs> </configuration> <executions> <execution> <id>make-assembly</id> 
-					<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
-					</executions> </plugin> -->
-
-
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.3.0</version>
@@ -181,7 +171,22 @@
 							<descriptorRef>jar-with-dependencies</descriptorRef>
 						</descriptorRefs>
 					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
+
+
+				<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>3.3.0</version> 
+					<configuration> <archive> <manifest> <mainClass>${fully.qualified.main.class}</mainClass> 
+					</manifest> </archive> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
+					</descriptorRefs> </configuration> </plugin> -->
 
 				<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
 					<executions> <execution> <phase>package</phase> <goals> <goal>shade</goal> 
@@ -228,12 +233,9 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.5.1</version>
-					<configuration>
-						<source>${java_version}</source>
-						<target>${java_version}</target>
-					</configuration>
+					<version>3.8.1</version>
 				</plugin>
+				
 				<plugin>
 					<groupId>org.eclipse.xtend</groupId>
 					<artifactId>xtend-maven-plugin</artifactId>
