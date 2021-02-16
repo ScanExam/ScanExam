@@ -5,15 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import fr.istic.tools.scanexam.qrCode.reader.Page;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 
 public class TestPage {
 
