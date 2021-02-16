@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.qrCode.writer
 
 import java.nio.file.FileSystems
+
 import java.nio.file.Path
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.BarcodeFormat
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import org.apache.pdfbox.io.MemoryUsageSetting
+import java.util.concurrent.CountDownLatch
 
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
@@ -71,8 +73,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val String base = inputFile.substring(0, inputFile.lastIndexOf('.'))
 		val String outputFile = base + "_Inserted.pdf"
-		//val String save = base + "_save.pdf"
-
+		// val String save = base + "_save.pdf"
 		val PDDocument doc = PDDocument.load(new File(base + ".pdf"))
 		val int nbPages = doc.numberOfPages
 
@@ -97,21 +98,19 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val PDDocument docSujetMaitre = PDDocument.load(f2)
 		createThread(nbCopie, docSujetMaitre, nbPages)
-		
-		
+
 		docSujetMaitre.save(outputFile)
-		
-		//docSujetMaitre.close
 
 		// Supressiopn des documents temporaires
-		if (f2.delete)
-			println("Deleted dupli")
-			
 		for (i : 1 ..< 5) {
 			val File png = new File("./QRCode" + i + ".png")
 			if (png.delete())
 				println("Deleted png " + i)
 		}
+
+		val File f2test = new File("pfo_example_Duplicated.pdf")
+		if ( f2test.delete)
+			println("Deleted dupli")
 	}
 
 	/**
@@ -122,20 +121,29 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 *  
 	 */
 	def createThread(int nbCopie, PDDocument docSujetMaitre, int nbPage) {
-
 		val ExecutorService service = Executors.newFixedThreadPool(4)
+		val CountDownLatch LatchThreads = new CountDownLatch(4);
+		val CountDownLatch LatchMain = new CountDownLatch(1);
 
-		service.execute(new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage))
-		service.execute(new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, 2, nbPage))
-		service.execute(new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, 3, nbPage))
-		service.execute(new QRThreadWriter(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, 4, nbPage))
+		if (nbCopie <= 4) {
+			service.execute(new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, 1, nbPage, LatchThreads, LatchMain))
+		} else {
+			service.execute(
+				new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage, LatchThreads, LatchMain))
+			service.execute(
+				new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, 2, nbPage, LatchThreads,
+					LatchMain))
+			service.execute(
+				new QRThreadWriter(this, (nbCopie / 2), 3 * (nbCopie / 4), docSujetMaitre, 3, nbPage, LatchThreads,
+					LatchMain))
+			service.execute(
+				new QRThreadWriter(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, 4, nbPage, LatchThreads,
+					LatchMain))
+		}
 
-		/*
-		 * //FIXME
-		 * problème au lancement du dernier thread, il manque une copie complète de QRCode (mais le autres numéros sont corrects)
-		 */
+		LatchMain.countDown();
+		LatchThreads.await();
 		service.shutdown()
-		service.awaitTermination(1, TimeUnit.MINUTES);
 
 	}
 
@@ -145,8 +153,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * @param nameExam nom de l'examen à insérer dans le QRCode
 	 * @param numSubject numéro de l'examen à insérer dans le QRCode
 	 */
-	def insertQRCodeInSubject(PDDocument docSujetMaitre, int numCopie, int numThread,
-		int nbPagesSujet) {
+	def insertQRCodeInSubject(PDDocument docSujetMaitre, int numCopie, int numThread, int nbPagesSujet) {
 
 		for (i : 0 ..< nbPagesSujet) {
 			insertQRCodeInPage(i, docSujetMaitre, numThread.toString, numCopie, nbPagesSujet)
@@ -158,7 +165,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 */
 	def insertQRCodeInPage(int numPage, PDDocument doc, String nbThread, int numCopie, int nbPagesSujet) {
 		val String stringAEncoder = "PFO2019_" + numCopie + "_" + numPage
-		//TODO Gestion de l'id a faire une fois la partie de création des copies réalisée
+		// TODO Gestion de l'id a faire une fois la partie de création des copies réalisée
 		val String pathImage = "./QRCode" + nbThread.toString() + ".png"
 		generateQRCodeImage(stringAEncoder, 350, 350, pathImage)
 
@@ -172,22 +179,20 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		}
 	}
 
-
-
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
 		val String input = "./pfo_example.pdf"
 		gen.createAllExamCopies(input, 5)
-		
+
 		val String in = "./pfo_example_Inserted.pdf"
 		val File f = new File(in)
 		val PDDocument doc = PDDocument.load(f)
 		val File desti = new File("./pfo_example_Dirty.pdf")
-		
+
 		doc.removePage(12)
 		doc.save(desti)
-		
+
 		println("Done")
 
 	}

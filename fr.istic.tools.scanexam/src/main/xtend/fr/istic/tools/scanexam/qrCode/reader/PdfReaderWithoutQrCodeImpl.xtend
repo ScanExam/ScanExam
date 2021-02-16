@@ -13,33 +13,32 @@ import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
+import java.util.concurrent.CountDownLatch
 
 class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
 	File pdfFile
-	
-	new(File pFile,int nbPages, int nbCopies){
+
+	new(File pFile, int nbPages, int nbCopies) {
 		this.pdfFile = pFile
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
 
 		sheets = new HashSet<Copie>()
 	}
-	
+
 	/**
 	 * Lit le PDF spécifié
 	 */
 	override readPDf() {
-		try{
-		val PDDocument doc = PDDocument.load(pdfFile)
-		val PDFRenderer pdf = new PDFRenderer(doc)
-		createThread(doc.numberOfPages, pdf)
-		
-		}
-		catch(Exception e)
-		{
+		try {
+			val PDDocument doc = PDDocument.load(pdfFile)
+			val PDFRenderer pdf = new PDFRenderer(doc)
+			createThread(doc.numberOfPages, pdf)
+			doc.close
+		} catch (Exception e) {
 			e.printStackTrace
 			return false
 		}
@@ -53,16 +52,24 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 *  
 	 */
 	def createThread(int nbPage, PDFRenderer pdfRenderer) {
-
 		val ExecutorService service = Executors.newFixedThreadPool(4)
+		val CountDownLatch LatchThreads = new CountDownLatch(4);
+		val CountDownLatch LatchMain = new CountDownLatch(1);
 
-		service.execute(new PdfReaderWithoutQrCodeThread(this, 0, (nbPage / 4), pdfRenderer))
-		service.execute(new PdfReaderWithoutQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
-		service.execute(new PdfReaderWithoutQrCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
-		service.execute(new PdfReaderWithoutQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
+		service.execute(new PdfReaderWithoutQrCodeThread(this, 0, (nbPage / 4), pdfRenderer, LatchThreads, LatchMain))
+		service.execute(
+			new PdfReaderWithoutQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer, LatchThreads, LatchMain))
+		service.execute(
+			new PdfReaderWithoutQrCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer, LatchThreads,
+				LatchMain))
+		service.execute(
+			new PdfReaderWithoutQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer, LatchThreads, LatchMain))
+
+		LatchMain.countDown();
+		LatchThreads.await();
 
 		service.shutdown()
-		service.awaitTermination(5, TimeUnit.MINUTES);
+
 	}
 
 	/**
@@ -135,20 +142,17 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 * Renvoie une collection de toutes les copies complètes
 	 * @return une collection de copies complètes
 	 */
-	def Set<Copie> getCompleteCopies(){
+	def Set<Copie> getCompleteCopies() {
 		var Set<Copie> completeCopies = new HashSet<Copie>()
-		
-		completeCopies = sheets.stream
-			.filter(copie|copie.isCopyComplete(nbPagesInSheet))
-			.collect(Collectors.toSet)
-		
+
+		completeCopies = sheets.stream.filter(copie|copie.isCopyComplete(nbPagesInSheet)).collect(Collectors.toSet)
+
 		return completeCopies
-		/*for(i : 0 ..< sheets.length){
-			if(sheets.get(i).isCopyComplete(nbPagesInSheet))
-				completeCopies.add(sheets.get(i))
-		}*/
-		
-		//return completeCopies
+	/*for(i : 0 ..< sheets.length){
+	 * 	if(sheets.get(i).isCopyComplete(nbPagesInSheet))
+	 * 		completeCopies.add(sheets.get(i))
+	 }*/
+	// return completeCopies
 	}
 
 	/**
@@ -178,22 +182,22 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		val Set<StudentSheet> res = new HashSet<StudentSheet>()
 		var Set<Copie> temp = new HashSet<Copie>()
 		val DataFactory dF = new DataFactory()
-		
+
 		temp = completeCopies
-		
-		for(i : 0 ..< temp.length){
+
+		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val List<Integer> pages = new ArrayList<Integer>()
-			
-			for(j : 0 ..< temp.get(i).pagesCopie.length){
+
+			for (j : 0 ..< temp.get(i).pagesCopie.length) {
 				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-			
+
 			res.add(dF.createStudentSheet(index, pages))
 		}
 		return res
 	}
-	
+
 	/**
 	 * Renvoie le nombre de total de pages du PDF de toutes les copies
 	 * @return le nombre de pages du PDF source
@@ -204,32 +208,32 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		doc.close
 		return nbPages
 	}
-	
+
 	/**
 	 * Renvoie le nombre de pages traitées par la lecture du PDF
 	 * @return le nombre de pages que le reader a lu du PDF source
 	 */
 	override getNbPagesTreated() {
 		var int res = 0
-		
-		for(i : 0 ..< sheets.length){
+
+		for (i : 0 ..< sheets.length) {
 			res += sheets.get(i).setPages.length
 		}
 		return res
 	}
-	
-	/*def static void main(String[] arg) {
+
+	def static void main(String[] arg) {
 		val File pdf = new File("pfo_example_Inserted.pdf")
 		val PdfReaderWithoutQrCodeImpl qrcodeReader = new PdfReaderWithoutQrCodeImpl(pdf, 8, 10)
 
 		qrcodeReader.readPDf
 		for (i : 0 ..< qrcodeReader.sheets.length)
 			println(qrcodeReader.sheets.get(i).toString())
-			
+
+		
 		println("Nombre de pages  du doc : " + qrcodeReader.nbPagesPdf)
 		println("Nombre de pages traitées : " + qrcodeReader.nbPagesTreated)
 
 		println("Examen complet? : " + qrcodeReader.isExamenComplete)
-	}*/
-
+	}
 }
