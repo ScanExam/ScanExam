@@ -2,10 +2,13 @@ package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing
+import fr.istic.tools.scanexam.sessions.CreationSession
 import java.awt.BorderLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import java.io.File
 import java.io.IOException
 import javax.swing.BoxLayout
@@ -16,14 +19,12 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JMenu
 import javax.swing.JMenuBar
+import javax.swing.JMenuItem
 import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 import javax.swing.filechooser.FileNameExtensionFilter
-import javax.swing.JMenuItem
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -36,6 +37,9 @@ class ExamCreationSwingView {
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	/* Créateur de session */
+	var CreationSession creaSess;
 	
 	/* Controlleur liant les controlleurs du Pdf et des boîtes */
 	var PdfAndBoxPresenterSwing pdfPresenter
@@ -52,7 +56,11 @@ class ExamCreationSwingView {
 	/* Menu fichier de la bare de menu de la fenêtre */
 	var JMenu mnFile
 	
+	/* Bouton pour charger un examen */
 	var JMenuItem mnItemLoad
+	
+	/* Bouton pour charger de session */
+	var JMenuItem mnItemSession
 
 	/* Menu édition de la bare de menu de la fenêtre */
 	var JMenu mnEdit 
@@ -131,6 +139,14 @@ class ExamCreationSwingView {
 			}
 	    });
 	    mnFile.add(mnItemLoad)
+	    
+		mnItemSession = new JMenuItem("Change session")
+		mnItemSession.addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				changeSession()
+			}
+	    });
+	    mnFile.add(mnItemSession)
 		menuBar.add(mnFile)
 		
 		mnEdit = new JMenu("Edit")
@@ -261,6 +277,10 @@ class ExamCreationSwingView {
 	        //System.out.println(PdfAndSelectionView.s);
 
 	    }
+	}
+	
+	def void changeSession() throws IOException, ClassNotFoundException {
+		
 	}
 
 }
