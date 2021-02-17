@@ -11,6 +11,7 @@ import java.io.IOException
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.JFileChooser
 import java.io.File
+import java.io.FileInputStream
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
@@ -27,10 +28,10 @@ class ExamCreationSwingController {
 	/* Vue de la création d'exman */
 	var ExamCreationSwingView view
 	
+	/* Présentateur du pdf */
+	var PdfAndBoxPresenterSwing pdfPresenteur
 	/* Créateur de session */
 	var CreationSession creaSess
-	
-	var File pdfFileSelected
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -42,10 +43,8 @@ class ExamCreationSwingController {
 	 * Constructeur
 	 */
 	new() {
-		
-		pdfFileSelected = new File("")
 		var InputStream pdfInput = ResourcesUtils.getInputStreamResource("/viewResources/pfo_example.pdf")
-		var PdfAndBoxPresenterSwing pdfPresenteur = new PdfAndBoxPresenterSwing(1280, 720, pdfInput, new BoxList())
+		pdfPresenteur = new PdfAndBoxPresenterSwing(1280, 720, pdfInput, new BoxList())
 		view = new ExamCreationSwingView(pdfPresenteur)
 		addActionListeners()
 		
@@ -87,9 +86,14 @@ class ExamCreationSwingController {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
 	        var path = selectedFile.getAbsolutePath()
-
+	        
+	        
+			var InputStream pdfInput = new FileInputStream(path);
+			pdfPresenteur.setPDF(pdfInput, 0)
+			/*
 			pdfFileSelected = new File(path)
 	        println(pdfFileSelected)
+	        */
 	    }
 	}
 }
