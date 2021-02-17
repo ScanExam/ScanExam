@@ -22,17 +22,21 @@ import javafx.scene.control.ScrollPane
 import java.util.List
 import java.util.ArrayList
 import java.util.LinkedList
+import fr.istic.tools.scanexam.core.Question
+import javafx.stage.FileChooser
+import java.io.File
+import javafx.stage.FileChooser.ExtensionFilter
+import java.util.Arrays
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
  * @author Benjamin Danlos
  */
-class ControllerFX {
+class ControllerFX implements ControllerI {
 
 	/**
 	 * High level Controllers to access the Presenters
 	 */
-	FXMockBackend test;
 	ControllerVueCreation controllerCreation
 	ControllerVueCorrection controllerCorrection
 
@@ -224,6 +228,7 @@ class ControllerFX {
 	def void loadPressed() {
 		// TODO TEST CONTENT REMOVE FOR PROD
 		println("Load method");
+		chooseFile
 	// TODO TEST CONTENT REMOVE FOR PROD
 	}
 
@@ -249,7 +254,7 @@ class ControllerFX {
 	@FXML
 	def void nextQuestionPressed() {
 		println("Next question method");
-		test.nextQuestion;
+		controllerCorrection.nextQuestion;
 	}
 
 	/**
@@ -258,7 +263,7 @@ class ControllerFX {
 	@FXML
 	def void prevQuestionPressed() {
 		println("Previous question method");
-		test.previousQuestion;		
+		controllerCorrection.previousQuestion
 	}
 
 	/**
@@ -293,7 +298,7 @@ class ControllerFX {
 
 	@FXML
 	def void setZoomArea(int x, int y, int height, int width) {
-		var newrect = new Rectangle2D(test.selectedX, test.selectedY, test.selectedHeight, test.selectedWidth);
+		var newrect = new Rectangle2D(currentQuestion.x, currentQuestion.y, currentQuestion.w,currentQuestion.h);
 		imview.viewport = newrect
 	}
 
@@ -308,38 +313,20 @@ class ControllerFX {
 	
 	
 	//---------------------------------//
-	def void initQuestions(List<String> names) {//TODO complete, called on load of a new exam template
-		for (String s : names) {
-			rightList.items.add(new Label(s));
-		}
-	}
+	
+	QuestionDetails currentQuestion;
+	
+	
+	
+	
 
 	
 	def void initStudents(int nbStudents) {//TODO complete, called on load of a new exam template
 	}
 
-	def void selectedQuestion() {
-	}
 
-	def void setSelectedQuestion() {//Called by presenter when we change the selected question, maybe we should get details on the question on this call and not stock in list
-		var q = new QuestionDetails(test.selectedName);
-		q.x = test.selectedX;
-		q.y = test.selectedY;
-		q.h = test.selectedHeight;
-		q.w = test.selectedWidth;
-		questionDetails.children.clear
-		questionDetails.children.add(q.details);
-		var i = 0;
-		for (Label l : rightList.items) {
-			if (l.text == test.selectedName) {
-				rightList.selectionModel.select(i);
-			}
-			i++;
-		}
-		
-	}
 
-	static class QuestionDetails extends Label {
+	static class QuestionDetails {
 		int id;
 		String name;
 		double x;
@@ -348,7 +335,6 @@ class ControllerFX {
 		double w;
 		List<Integer> bareme;
 		new(String name) {
-			super(name)
 			this.name = name;
 			id = 0;
 			x = 0;
@@ -366,7 +352,10 @@ class ControllerFX {
 			var container = new VBox();
 			container.children.add(new Label("Question : " + name))
 			container.children.add(new Label("ID :" + id))
-			container.children.add(new Label("x:"+x+" y:"+y+" h:"+h+" w:"+w))
+			container.children.add(new Label("x:"+x))
+			container.children.add(new Label("y:"+y))
+			container.children.add(new Label("h:"+h))
+			container.children.add(new Label("w:"+w))
 			container.children.add(new Label("Bareme: " + bareme))
 			return container;
 			
@@ -413,12 +402,61 @@ class ControllerFX {
 		Binds(scrollBis);
 	}
 	
+	
+	
+	def void chooseFile(){
+		var fileChooser = new FileChooser();
+		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files",Arrays.asList("*.xmi")));
+		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Documents");
+		var file = fileChooser.showOpenDialog(imagePane.scene.window)
+		
+	}
+	
 	def void initTests() {
 		setKeybinds
-		test = new FXMockBackend();
-		test.controllerFX = this;
-		test.setQuestions
+		var mock = new FXMockBackend();
+		controllerCorrection = mock;
+		mock.controller = this;
+		mock.setQuestions
 		
 		
 	}
+	
+	override void initQuestionNames(List<String> names) {//TODO complete, called on load of a new exam template
+		rightList.items.clear
+		for (String s : names) {
+			rightList.items.add(new Label(s));
+		}
+	}
+	
+	
+	def nextQuestion() {
+		controllerCorrection.nextQuestion
+	}
+	
+	def previousQuestion() {
+		controllerCorrection.previousQuestion
+	}
+	
+	override showQuestion(Question question) {
+		
+		currentQuestion = new QuestionDetails(question.name);
+		currentQuestion.x = question.zone.x
+		currentQuestion.y = question.zone.y
+		currentQuestion.h = question.zone.heigth
+		currentQuestion.w = question.zone.width
+		currentQuestion.id = question.id
+		
+		questionDetails.children.clear
+		questionDetails.children.add(currentQuestion.details);
+		var i = 0;
+		for (Label l : rightList.items) {
+			if (l.text.equals(currentQuestion.name)) {
+				rightList.selectionModel.select(i);
+			}
+			i++;
+		}
+	}
+	
+	
 }
