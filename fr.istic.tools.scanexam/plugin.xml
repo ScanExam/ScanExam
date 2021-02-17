@@ -23,14 +23,6 @@
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated ExamTemplate -->
-      <package
-            uri="fr.istic.tools.scanexam.core.template"
-            class="fr.istic.tools.scanexam.core.template.TemplatePackage"
-            genModel="model/ExamTemplate.xcore"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated Templates -->
       <package
             uri="fr.istic.tools.scanexam.core.templates"
