@@ -44,7 +44,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#initTests" text="Init Tests" />
             </items>
           </Menu>
         </menus>
@@ -88,7 +88,7 @@
          <children>
             <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
                <children>
-                  <Label prefHeight="100.0" styleClass="UILabel" text="Copie No.x" VBox.vgrow="NEVER" />
+                  <Label prefHeight="100.0" styleClass="UILabel" text="Students" VBox.vgrow="NEVER" />
                   <ListView fx:id="leftList" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />
@@ -124,6 +124,9 @@
                                        </image>
                                     </ImageView>
                                  </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
                               </Pane>
                            </children>
                         </AnchorPane>
@@ -186,7 +189,7 @@
             </AnchorPane>
             <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
                <children>
-                  <Label prefHeight="100.0" styleClass="UILabel" text="Question No.i" VBox.vgrow="NEVER" />
+                  <Label prefHeight="100.0" styleClass="UILabel" text="Questions" VBox.vgrow="NEVER" />
                   <ListView fx:id="rightList" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />

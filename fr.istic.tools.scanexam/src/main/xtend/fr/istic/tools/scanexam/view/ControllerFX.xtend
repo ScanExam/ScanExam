@@ -32,6 +32,7 @@ class ControllerFX {
 	/**
 	 * High level Controllers to access the Presenters
 	 */
+	FXMockBackend test;
 	ControllerVueCreation controllerCreation
 	ControllerVueCorrection controllerCorrection
 
@@ -85,9 +86,9 @@ class ControllerFX {
 	@FXML
 	public Pane parentPane;
 	@FXML
-	public ListView leftList;
+	public ListView<Label> leftList;
 	@FXML
-	public ListView rightList;
+	public ListView<Label> rightList;
 	@FXML
 	public ImageView imview;
 
@@ -133,7 +134,6 @@ class ControllerFX {
 	def void MoveImage(MouseEvent e) {
 
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
-			println("Starting to move")
 			mouseOriginX = e.screenX
 			mouseOriginY = e.screenY
 			var source = e.source as Node
@@ -142,12 +142,9 @@ class ControllerFX {
 			objectOriginY = source.layoutY
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			println("moving")
 			var source = e.source as Node
-
 			source.layoutX = objectOriginX + (e.screenX - mouseOriginX)
 			source.layoutY = objectOriginY + (e.screenY - mouseOriginY)
-			println(source + " " + source.layoutX + " " + source.layoutY + " " + source.scaleX)
 		}
 	}
 
@@ -227,9 +224,6 @@ class ControllerFX {
 	def void loadPressed() {
 		// TODO TEST CONTENT REMOVE FOR PROD
 		println("Load method");
-		initQuestions(10);
-		initStudents(10)
-		setKeybinds
 	// TODO TEST CONTENT REMOVE FOR PROD
 	}
 
@@ -255,7 +249,7 @@ class ControllerFX {
 	@FXML
 	def void nextQuestionPressed() {
 		println("Next question method");
-		selectedQuestion = rightList.selectionModel.selectedIndex + 1
+		test.nextQuestion;
 	}
 
 	/**
@@ -264,7 +258,7 @@ class ControllerFX {
 	@FXML
 	def void prevQuestionPressed() {
 		println("Previous question method");
-		selectedQuestion = rightList.selectionModel.selectedIndex - 1
+		test.previousQuestion;		
 	}
 
 	/**
@@ -273,6 +267,8 @@ class ControllerFX {
 	@FXML
 	def void nextStudentPressed() {
 		println("Next student method");
+		
+		
 	}
 
 	/**
@@ -297,20 +293,7 @@ class ControllerFX {
 
 	@FXML
 	def void setZoomArea(int x, int y, int height, int width) {
-		/*imagePane.scaleX=1;
-		 * imagePane.scaleY=1;
-		 * var pX = parentPane.width;
-		 * var ratio = pX/width;
-		 * imagePane.scaleX = ratio
-		 * imagePane.scaleY = ratio
-		 * 
-		 * var posX=parentPane.height/2 - imagePane.height/2
-		 * imagePane.layoutX = posX * ratio
-		 * 
-		 * 
-		 * var PosY=parentPane.width/2 - imagePane.width/2
-		 imagePane.layoutY = PosY * ratio*/
-		var newrect = new Rectangle2D(100, 300, 400, 100);
+		var newrect = new Rectangle2D(test.selectedX, test.selectedY, test.selectedHeight, test.selectedWidth);
 		imview.viewport = newrect
 	}
 
@@ -325,15 +308,9 @@ class ControllerFX {
 	
 	
 	//---------------------------------//
-	
-	List<Question> questions;
-	def void initQuestions(int nbQuestion) {//TODO complete, called on load of a new exam template
-		questions = new LinkedList()
-		for (var i = 0; i < nbQuestion; i++) {
-			var number = i + 1;
-			var q = new Question(number + "");
-			questions.add(q);
-			rightList.items.add(q.label)
+	def void initQuestions(List<String> names) {//TODO complete, called on load of a new exam template
+		for (String s : names) {
+			rightList.items.add(new Label(s));
 		}
 	}
 
@@ -344,23 +321,25 @@ class ControllerFX {
 	def void selectedQuestion() {
 	}
 
-	def void setSelectedQuestion(int selectedQuestion) {//Called by presenter when we change the selected question, maybe we should get details on the question on this call and not stock in list
-		var index = selectedQuestion;
-		if (index < 0 ) {
-			index = questions.size-1;
-		}
-		if (index >= questions.size ) {
-			index = 0;
+	def void setSelectedQuestion() {//Called by presenter when we change the selected question, maybe we should get details on the question on this call and not stock in list
+		var q = new QuestionDetails(test.selectedName);
+		q.x = test.selectedX;
+		q.y = test.selectedY;
+		q.h = test.selectedHeight;
+		q.w = test.selectedWidth;
+		questionDetails.children.clear
+		questionDetails.children.add(q.details);
+		var i = 0;
+		for (Label l : rightList.items) {
+			if (l.text == test.selectedName) {
+				rightList.selectionModel.select(i);
+			}
+			i++;
 		}
 		
-		rightList.selectionModel.select(index);
-		questionDetails.children.clear
-		if (rightList.selectionModel.selectedItem !== null) {
-			questionDetails.children.add(questions.get(index).details)
-		}
 	}
 
-	static class Question extends Label {
+	static class QuestionDetails extends Label {
 		int id;
 		String name;
 		double x;
@@ -432,5 +411,14 @@ class ControllerFX {
 		])
 		Binds(scrollMain);
 		Binds(scrollBis);
+	}
+	
+	def void initTests() {
+		setKeybinds
+		test = new FXMockBackend();
+		test.controllerFX = this;
+		test.setQuestions
+		
+		
 	}
 }
