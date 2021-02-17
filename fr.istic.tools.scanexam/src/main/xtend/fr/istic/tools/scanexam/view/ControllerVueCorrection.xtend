@@ -2,6 +2,8 @@ package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.presenter.PresenterVueCorrection
 import java.util.Objects
+import fr.istic.tools.scanexam.core.Question
+import java.util.LinkedList
 
 /**
  * General controller for the Correction view
@@ -12,17 +14,10 @@ class ControllerVueCorrection {
 	 * Presenter to send the requests to to interact with the model
 	 */
 	PresenterVueCorrection presenter
-	
 	/**
-	 * Controller used by the JavaFX view
+	 * Controller used 
 	 */
-	ControllerFX controllerFX
-	
-	/**
-	 * Controller used by the Swing view
-	 */
-    ControllerSwing controllerSwing
-    
+	ControllerI controller
     /**
 	 * setter for the PresenterVueCorrection attribute
 	 * @param {@link PresenterVueCorrection} pres instance of the presenter (not null) 
@@ -39,47 +34,60 @@ class ControllerVueCorrection {
     }
     
     /**
-	 * setter for the ControllerFX attribute
+	 * setter for the Controller attribute
 	 * @param {@link ControllerFX} pres instance of the Java FX Controller (not null) 
 	 */
-    def setControllerFX(ControllerFX contr){
+    def setController(ControllerI contr){
     	Objects.requireNonNull(contr)
-    	controllerFX=contr
+    	controller=contr
     }
     /**
-	 * @return current Java FX controller {@link ControllerFX} 
+	 * @return current controller {@link ControllerFX} 
 	 */
-    def getControllerFX(){
-    	controllerFX
+    def getController(){
+    	controller
     }
     
-    /**
-	 * setter for the ControllerSwing attribute
-	 * @param {@link ControllerSwing} pres instance of the Swing Controller (not null) 
-	 */
-    def setControllerSwing(ControllerSwing contr){
-    	Objects.requireNonNull(contr)
-    	controllerSwing=contr
-    }
-    /**
-	 * @return current Swing controller {@link ControllerSwing} 
-	 */
-    def getControllerSwing(){
-    	controllerSwing
-    }
     
+  	
+    
+    
+    def LinkedList<String> questionNames(){/*
+    	var questions = presenter.presenterQuestion.getAllQuestions();
+    	var names = new LinkedList<String>();
+    	for (Question q : questions) {
+    		names.add(q.name)
+    	}
+    	controller.initQuestionNames(names);*/
+  
+   	}
     /**
 	 * @return next question
 	 */
-    def getNextQuestion(int question){
-    	presenter.getNextQuestion(question)
+    def void nextQuestion(){
+    	/*
+    	var question = presenter.presenterQuestion.getNextQuestion();
+    	controller.showQuestion(question)
+    	* 
+    	*/
+    	
     }
-    
     /**
      * @param question is the actual question
 	 * @return previous question
 	 */
-    def getPreviousQuestion(int question){
-    	presenter.getPreviousQuestion(question)
+    def void previousQuestion(){
+    	/* 
+    	var question = presenter.presenterQuestion.getPreviousQuestion();
+    	controller.showQuestion(question)
+    	* */
     }
-}
+
+    def void thisQuestion(int index) {
+    	/* 
+    	var question = presenter.presenterQuestion.getQuestion(index);
+    	controller.showQuestion(question)
+    	*/
+    }
+    
+    }

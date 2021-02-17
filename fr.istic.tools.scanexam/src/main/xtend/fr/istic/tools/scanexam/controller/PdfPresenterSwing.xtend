@@ -65,7 +65,7 @@ class PdfPresenterSwing extends PdfPresenter {
 	 */
 	new(int width, int height, InputStream pdfInput) {
 		super(width, height, pdfInput)
-		pdf = getImageFromPDF(pdfInput, 0)
+		setPDF(pdfInput, 0)
 		if (this.SCALE_ON_WIDTH) {
 			scale = (pdf.getWidth(null) / width) + 1
 		} else {
@@ -134,24 +134,11 @@ class PdfPresenterSwing extends PdfPresenter {
 		repaint()
 	}
 
-	def private BufferedImage getImageFromPDF(InputStream pdfInput, int pageindex) {
-		try {
-			var PDDocument document = PDDocument::load(pdfInput)
-			var PDFRenderer renderer = new PDFRenderer(document)
-			var BufferedImage img = renderer.renderImageWithDPI(pageindex, 300)
-			document.close()
-			return img
-		} catch (IOException e) {
-			e.printStackTrace()
-			return null
-		}
-	}
-
 	/** 
 	 * Actualise la vue
 	 */
 	def private void repaint() {
-		if (view.isPresent()) {
+		if (view != null) {
 			view.get().repaint()
 		}
 	}
@@ -199,4 +186,16 @@ class PdfPresenterSwing extends PdfPresenter {
 		selectionController.setView(this.view.get())
 	}
 	
+	def void setPDF(InputStream pdfInput, int pageindex) {
+		try {
+			var PDDocument document = PDDocument::load(pdfInput)
+			var PDFRenderer renderer = new PDFRenderer(document)
+			var BufferedImage img = renderer.renderImageWithDPI(pageindex, 300)
+			document.close()
+			pdf = img
+			repaint()
+		} catch (IOException e) {
+			e.printStackTrace()
+		}
+	}
 }

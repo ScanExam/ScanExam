@@ -13,6 +13,7 @@ class QuestionZone {
 
 class Question {
 	int ^id
+	String name
 	contains GradeScale gradeScale
 	contains QuestionZone zone
 }
