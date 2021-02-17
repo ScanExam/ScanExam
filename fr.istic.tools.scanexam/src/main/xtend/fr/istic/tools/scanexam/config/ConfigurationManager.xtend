@@ -68,7 +68,7 @@ class ConfigurationManager
  	def static Config create() 
 	{
 		val config = ConfigFactory.eINSTANCE.createConfig();
-		config.language = LanguageManager.currentLanguage
+		config.language = null
 		return config;
 	}
 	

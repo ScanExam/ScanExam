@@ -2,11 +2,13 @@ package fr.istic.tools.scanexam;
 
 import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.view.MainJavaFX;
-import fr.istic.tools.scanexam.view.MainSwing;
+import fr.istic.tools.scanexam.launcher.LauncherFX;
+import fr.istic.tools.scanexam.launcher.LauncherSwing;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 @SuppressWarnings("all")
 public class Main {
@@ -19,15 +21,17 @@ public class Main {
     SWING;
   }
   
+  private static final Logger logger = LogManager.getLogger();
+  
   /**
    * Library graphique à utiliser par défaut.
    */
   private static final Main.GraphicLib DEFAULT_LIB = Main.GraphicLib.SWING;
   
   public static void main(final String[] args) {
-    LanguageManager.init();
+    Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
     ConfigurationManager.init();
-    LanguageManager.change(ConfigurationManager.instance.getLanguage());
+    LanguageManager.init(ConfigurationManager.instance.getLanguage());
     Main.launchView(Main.getUiLib(args));
   }
   
@@ -35,10 +39,10 @@ public class Main {
     if (graphicLib != null) {
       switch (graphicLib) {
         case JAVAFX:
-          MainJavaFX.launchApp(null);
+          LauncherFX.launchApp(null);
           break;
         case SWING:
-          MainSwing.launchApp();
+          LauncherSwing.launchApp();
           break;
         default:
           break;
@@ -65,11 +69,10 @@ public class Main {
         if (_equals_2) {
           return Main.GraphicLib.SWING;
         } else {
-          Logger _global = Logger.getGlobal();
           String _get = args[0];
           String _plus = ("Argument " + _get);
           String _plus_1 = (_plus + " is not a valid argument!");
-          _global.log(Level.SEVERE, _plus_1);
+          Main.logger.error(_plus_1);
           System.exit(0);
         }
       }
@@ -77,7 +80,7 @@ public class Main {
       int _length_1 = args.length;
       boolean _greaterThan = (_length_1 > 1);
       if (_greaterThan) {
-        Logger.getGlobal().log(Level.SEVERE, "Too many arguments! Only \'-javafx\' or \'-swing\' are accepted.");
+        Main.logger.error("Too many arguments! Only \'-javafx\' or \'-swing\' are accepted.");
         System.exit(0);
       }
     }

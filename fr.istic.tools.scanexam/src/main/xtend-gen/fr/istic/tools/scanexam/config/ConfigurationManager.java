@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.config;
 
-import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.config.Config;
 import fr.istic.tools.scanexam.core.config.ConfigFactory;
 import fr.istic.tools.scanexam.core.config.ConfigPackage;
@@ -67,7 +66,7 @@ public class ConfigurationManager {
    */
   public static Config create() {
     final Config config = ConfigFactory.eINSTANCE.createConfig();
-    config.setLanguage(LanguageManager.getCurrentLanguage());
+    config.setLanguage(null);
     return config;
   }
   

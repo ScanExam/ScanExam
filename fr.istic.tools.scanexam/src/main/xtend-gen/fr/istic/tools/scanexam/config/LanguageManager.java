@@ -9,22 +9,26 @@ import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Function;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
- * Classe permettant de gérer le langage d'affichage de l'application en se basant sur les {@link Locale Locale}.
+ * Classe permettant de gérer le langage d'affichage de l'application en se basant sur les {@link Locale Locale}.<br/>
+ * La fonction {@link #init init} doit au moins être appelée une fois par le programme avant d'appeler une quelconque autre opération de la classe.
  * @author Théo Giraudet
  * @see Locale
  * @see ResourceBundle
  */
 @SuppressWarnings("all")
 public class LanguageManager {
-  private static final Logger logger = Logger.getGlobal();
+  private static final Logger logger = LogManager.getLogger();
   
   private static final String path = "langs/";
   
@@ -41,13 +45,21 @@ public class LanguageManager {
   private static ResourceBundle currentBundle = null;
   
   /**
-   * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté)
-   * puis définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
+   * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté) ou
+   * par le langage en paramètre si celui-ci est spécifié et supporté.
+   * Définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
    * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code>
+   * @param language la langue de l'application (peut être null)
    */
-  public static void init() {
+  public static void init(@Nullable final Locale language) {
     LanguageManager.logger.info("Pre-loading languages...");
-    final Locale currentLocal = Locale.getDefault();
+    Locale _xifexpression = null;
+    if ((language == null)) {
+      _xifexpression = Locale.getDefault();
+    } else {
+      _xifexpression = language;
+    }
+    final Locale currentLocal = _xifexpression;
     final String namePattern = (((LanguageManager.prefixFileName + LanguageManager.langCodePattern) + "\\.") + LanguageManager.extFileName);
     final Collection<String> names = ResourcesUtils.getFolderContentNames(("/" + LanguageManager.path));
     final HashSet<String> badFileNames = new HashSet<String>();
@@ -65,15 +77,15 @@ public class LanguageManager {
         int _minus_1 = (_minus - 1);
         final String[] langCode = name.substring(_plus, _minus_1).split("_");
         final String lang = IterableExtensions.<String>head(((Iterable<String>)Conversions.doWrapArray(langCode)));
-        String _xifexpression = null;
+        String _xifexpression_1 = null;
         int _length_3 = langCode.length;
         boolean _greaterThan = (_length_3 > 1);
         if (_greaterThan) {
-          _xifexpression = IterableExtensions.<String>last(((Iterable<String>)Conversions.doWrapArray(langCode)));
+          _xifexpression_1 = IterableExtensions.<String>last(((Iterable<String>)Conversions.doWrapArray(langCode)));
         } else {
-          _xifexpression = "";
+          _xifexpression_1 = "";
         }
-        final String country = _xifexpression;
+        final String country = _xifexpression_1;
         Locale _locale_1 = new Locale(lang, country);
         LanguageManager.locales.add(_locale_1);
       } else {
@@ -128,7 +140,7 @@ public class LanguageManager {
    * @see Locale#ENGLISH Locale.ENGLISH
    * @throw NullPointerException si <b>language<b/> est null
    */
-  public static void change(final Locale language) {
+  private static void change(final Locale language) {
     Objects.<Locale>requireNonNull(language);
     Locale _xifexpression = null;
     boolean _contains = LanguageManager.locales.contains(language);
@@ -148,11 +160,25 @@ public class LanguageManager {
       _xifexpression_1 = newLocale;
     }
     LanguageManager.currentLocale = _xifexpression_1;
+    boolean _equals = LanguageManager.currentLocale.equals(language);
+    boolean _not = (!_equals);
+    if (_not) {
+      StringConcatenation _builder = new StringConcatenation();
+      String _displayName = language.getDisplayName();
+      _builder.append(_displayName);
+      _builder.append(" is not supported, fallback to ");
+      String _displayName_1 = LanguageManager.currentLocale.getDisplayName();
+      _builder.append(_displayName_1);
+      _builder.append(".");
+      LanguageManager.logger.info(_builder);
+    }
     LanguageManager.currentBundle = ResourceBundle.getBundle((LanguageManager.path + LanguageManager.prefixFileName), LanguageManager.currentLocale);
-    String _displayName = LanguageManager.currentLocale.getDisplayName();
-    String _plus = ("Change language to " + _displayName);
-    String _plus_1 = (_plus + ".");
-    LanguageManager.logger.info(_plus_1);
+    StringConcatenation _builder_1 = new StringConcatenation();
+    _builder_1.append("Change language to ");
+    String _displayName_2 = LanguageManager.currentLocale.getDisplayName();
+    _builder_1.append(_displayName_2);
+    _builder_1.append(".");
+    LanguageManager.logger.info(_builder_1);
   }
   
   /**
@@ -185,7 +211,7 @@ public class LanguageManager {
         String _displayName = LanguageManager.currentLocale.getDisplayName();
         String _plus = ((code + " not found for ") + _displayName);
         String _plus_1 = (_plus + ".");
-        LanguageManager.logger.warning(_plus_1);
+        LanguageManager.logger.warn(_plus_1);
         return code;
       } else {
         throw Exceptions.sneakyThrow(_t);

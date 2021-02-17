@@ -2,14 +2,16 @@ package fr.istic.tools.scanexam
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
-import java.util.Objects
-import java.util.logging.Level
-import java.util.logging.Logger
 import fr.istic.tools.scanexam.launcher.LauncherFX
 import fr.istic.tools.scanexam.launcher.LauncherSwing
+import java.util.Objects
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.core.config.Configurator
 
 class Main 
 {
+	static val logger = LogManager.logger
 	
 	/**
 	 * Library graphique à utiliser par défaut. 
@@ -18,11 +20,10 @@ class Main
 	
 	def static void main(String[] args)
 	{
-		LanguageManager.init
 		
+		Configurator.setAllLevels(LogManager.rootLogger.getName, Level.ALL)
 		ConfigurationManager.init
-		
-		LanguageManager.change(ConfigurationManager.instance.language);
+		LanguageManager.init(ConfigurationManager.instance.language)
 
 		launchView(getUiLib(args))
 		
@@ -50,11 +51,11 @@ class Main
 			else if(args.get(0).equals("-swing"))
 				return GraphicLib.SWING
 			else {
-				Logger.getGlobal().log(Level.SEVERE, "Argument " + args.get(0) + " is not a valid argument!")
+				logger.error("Argument " + args.get(0) + " is not a valid argument!")
 				System.exit(0)
 			}
 		} else if(args.length > 1){
-			Logger.getGlobal().log(Level.SEVERE, "Too many arguments! Only '-javafx' or '-swing' are accepted.")
+			logger.error("Too many arguments! Only '-javafx' or '-swing' are accepted.")
 			System.exit(0)
 		}
 		return DEFAULT_LIB

@@ -8,20 +8,22 @@ import java.util.Locale
 import java.util.MissingResourceException
 import java.util.Objects
 import java.util.ResourceBundle
-import java.util.logging.Logger
 import java.util.stream.Collectors
+import org.apache.logging.log4j.LogManager
 
 import static java.util.Locale.*
+import javax.annotation.Nullable
 
 /**
- * Classe permettant de gérer le langage d'affichage de l'application en se basant sur les {@link Locale Locale}.
+ * Classe permettant de gérer le langage d'affichage de l'application en se basant sur les {@link Locale Locale}.<br/>
+ * La fonction {@link #init init} doit au moins être appelée une fois par le programme avant d'appeler une quelconque autre opération de la classe.
  * @author Théo Giraudet
  * @see Locale
  * @see ResourceBundle
  */
 class LanguageManager {
 	
-	static val logger = Logger.getGlobal;
+	static val logger = LogManager.logger
 	static val path = "langs/"
 	static val prefixFileName = "ScanExam"
 	static val extFileName = "properties"
@@ -34,14 +36,16 @@ class LanguageManager {
 
 
 	/**
-	 * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté)
-	 * puis définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
+	 * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté) ou
+	 * par le langage en paramètre si celui-ci est spécifié et supporté.
+	 * Définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
 	 * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code>
+	 * @param language la langue de l'application (peut être null)
 	 */
-	def static void init() {
+	def static void init(@Nullable Locale language) {
 		logger.info("Pre-loading languages...")
 		
-		val currentLocal = Locale.^default
+		val currentLocal = language === null ? Locale.^default : language
 		
 		val namePattern = prefixFileName + langCodePattern + "\\." + extFileName
 		val names = ResourcesUtils.getFolderContentNames("/" + path)
@@ -94,15 +98,17 @@ class LanguageManager {
 	 * @see Locale#ENGLISH Locale.ENGLISH
 	 * @throw NullPointerException si <b>language<b/> est null
 	 */
-	def static void change(Locale language) {
+	private def static void change(Locale language) {
 		Objects.requireNonNull(language)
 		val newLocale = if(locales.contains(language))
 							language
 						else
 							locales.findFirst[l | l.language.equals(language.language)]
 		currentLocale = newLocale === null ? Locale.^default : newLocale
+		if(!currentLocale.equals(language))
+			logger.info('''«language.displayName» is not supported, fallback to «currentLocale.displayName».''')
 		currentBundle = ResourceBundle.getBundle(path + prefixFileName, currentLocale)
-		logger.info("Change language to " + currentLocale.displayName + '.')
+		logger.info('''Change language to «currentLocale.displayName».''')
 	}
 	
 	/**
@@ -130,7 +136,7 @@ class LanguageManager {
 		try {
 			currentBundle.getString(code)
 		} catch(MissingResourceException e) {
-			logger.warning(code + " not found for " + currentLocale.displayName + ".")
+			logger.warn(code + " not found for " + currentLocale.displayName + ".")
 			return code
 		}
 	}
