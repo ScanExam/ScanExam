@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing
-import fr.istic.tools.scanexam.sessions.CreationSession
 import java.awt.BorderLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -10,11 +9,9 @@ import java.awt.Insets
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
-import java.io.IOException
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComboBox
-import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JMenu
@@ -24,7 +21,6 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
-import javax.swing.filechooser.FileNameExtensionFilter
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -37,9 +33,6 @@ class ExamCreationSwingView {
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
-	
-	/* Créateur de session */
-	var CreationSession creaSess;
 	
 	/* Controlleur liant les controlleurs du Pdf et des boîtes */
 	var PdfAndBoxPresenterSwing pdfPresenter
@@ -100,8 +93,6 @@ class ExamCreationSwingView {
 	
 	/* Panel principal présentant la copie */
 	var JPanel pnlPdf
-	
-	var File pdfFileSelected
 
 
 	// ----------------------------------------------------------------------------------------------------
@@ -126,26 +117,15 @@ class ExamCreationSwingView {
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 		
-		pdfFileSelected = new File("")
-		
 		menuBar = new JMenuBar()
 		window.setJMenuBar(menuBar)
 		
 		mnFile = new JMenu("File")
+		
 		mnItemLoad = new JMenuItem("Load")
-		mnItemLoad.addActionListener(new ActionListener() {
-			override actionPerformed(ActionEvent e) {
-				openFile()
-			}
-	    });
 	    mnFile.add(mnItemLoad)
 	    
 		mnItemSession = new JMenuItem("Change session")
-		mnItemSession.addActionListener(new ActionListener() {
-			override actionPerformed(ActionEvent e) {
-				changeSession()
-			}
-	    });
 	    mnFile.add(mnItemSession)
 		menuBar.add(mnFile)
 		
@@ -238,49 +218,28 @@ class ExamCreationSwingView {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Envoie la fenêtre principale
+	 * @return window
+	 */
 	def JFrame getWindow() {
 		return window;
 	}
 	
-	def void openFile() throws IOException, ClassNotFoundException {
-	    var FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        "Pdf file(.pdf)", "pdf")
-	    var JFileChooser fc = new JFileChooser()
-	    fc.setDialogTitle("Open your file")
-	   	fc.setFileSelectionMode(JFileChooser.FILES_ONLY)
-	    fc.setCurrentDirectory(new File("."))
-	    fc.setFileFilter(filter)
-
-	    var result = fc.showOpenDialog(window)
-	    if (result == JFileChooser.CANCEL_OPTION) {
-	        //cancel action
-	    } else if (result == JFileChooser.APPROVE_OPTION) {
-	        //open file using 
-	        var File selectedFile = fc.getSelectedFile()
-	        var path = selectedFile.getAbsolutePath()
-
-	        pdfFileSelected = new File(path)
-	        //Desktop.getDesktop().open(myFile);
-	        
-	        //pasController.setPdfPath(path);
-	        //SwingWindowController.setPdfPath(path);
-	        //PdfAndSelectionController.pdfPath = path;
-	        //frame.invalidate();
-	        //frame.validate();
-	        //frame.repaint();
-	        //System.out.println(SwingWindowController.pdfPath);
-	        
-	        //PdfAndSelectionView.s = "boubou";
-	        println(pdfFileSelected)
-	        //pasView.validate();
-	        //pasView.repaint();
-	        //System.out.println(PdfAndSelectionView.s);
-
-	    }
+	/**
+	 * Envoie le bouton de chargement de pdf
+	 * @return mnItemLoad
+	 */
+	def JMenuItem getMnItemLoad() {
+		return mnItemLoad;
+	}
+	/**
+	 * Envoie le bouton de changement de session
+	 * @return mnItemSession
+	 */
+	def JMenuItem getMnItemSession() {
+		return mnItemSession;
 	}
 	
-	def void changeSession() throws IOException, ClassNotFoundException {
-		
-	}
 
 }
