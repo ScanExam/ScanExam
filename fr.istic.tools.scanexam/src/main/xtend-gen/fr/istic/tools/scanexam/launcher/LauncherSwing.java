@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view;
+package fr.istic.tools.scanexam.launcher;
 
 import fr.istic.tools.scanexam.controller.ExamCreationSwingController;
 import java.awt.EventQueue;
@@ -9,7 +9,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class MainSwing {
+public class LauncherSwing {
   /**
    * Lancement de l'application Swing ---->  launchApp(presenter(session));
    */

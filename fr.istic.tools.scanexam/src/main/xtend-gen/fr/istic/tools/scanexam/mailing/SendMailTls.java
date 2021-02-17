@@ -88,7 +88,6 @@ public class SendMailTls {
         if (_notEquals) {
           MimeBodyPart _mimeBodyPart = new MimeBodyPart();
           messageBodyPart = _mimeBodyPart;
-          final String fileName = "attachmentName";
           FileDataSource source = new FileDataSource(pieceJointe);
           DataHandler _dataHandler = new DataHandler(source);
           messageBodyPart.setDataHandler(_dataHandler);

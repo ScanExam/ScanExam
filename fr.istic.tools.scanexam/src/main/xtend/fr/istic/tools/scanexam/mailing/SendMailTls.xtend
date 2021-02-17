@@ -1,25 +1,23 @@
 
 package fr.istic.tools.scanexam.mailing
 
-import java.util.Properties
-import javax.mail.Session
-import javax.mail.PasswordAuthentication
-import javax.mail.Message
-import javax.mail.internet.InternetAddress
-import javax.mail.Transport
-import javax.mail.MessagingException
-import javax.mail.internet.MimeMessage
-import java.util.Date
-import java.io.FileInputStream
-import java.util.Objects
-import javax.activation.DataSource
-import javax.activation.FileDataSource
-import javax.activation.DataHandler
 import fr.istic.tools.scanexam.utils.ResourcesUtils
+import java.util.Date
+import java.util.Objects
+import java.util.Properties
 import java.util.logging.Logger
+import javax.activation.DataHandler
+import javax.activation.FileDataSource
+import javax.mail.Authenticator
+import javax.mail.Message
+import javax.mail.MessagingException
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
+import javax.mail.Transport
+import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeBodyPart
+import javax.mail.internet.MimeMessage
 import javax.mail.internet.MimeMultipart
-import javax.mail.Multipart
 
 /**
  * @author Thomas Guibert
@@ -81,7 +79,7 @@ class SendMailTls {
 	    
 	    
 	    //session de l'expediteur
-	    val session = Session.getInstance(props, new javax.mail.Authenticator() {
+	    val session = Session.getInstance(props, new Authenticator() {
 	            override protected PasswordAuthentication getPasswordAuthentication() {
 	                new PasswordAuthentication(sender, senderPassword);
 	            }
@@ -107,7 +105,7 @@ class SendMailTls {
 	    	if(pieceJointe != ""){
 	    		
 	    		messageBodyPart = new MimeBodyPart();
-        		val fileName = "attachmentName";
+        		//val fileName = "attachmentName";
 	    		
 	    		var source = new FileDataSource(pieceJointe)
 	    		messageBodyPart.setDataHandler(new DataHandler(source))

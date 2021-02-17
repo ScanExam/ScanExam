@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view;
+package fr.istic.tools.scanexam.launcher;
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import javafx.application.Application;
@@ -13,7 +13,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * @author Stefan Locke
  */
 @SuppressWarnings("all")
-public class MainJavaFX extends Application {
+public class LauncherFX extends Application {
   /**
    * Lancement de l'application FX
    */
