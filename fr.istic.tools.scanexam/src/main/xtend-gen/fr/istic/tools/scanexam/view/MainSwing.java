@@ -1,11 +1,7 @@
 package fr.istic.tools.scanexam.view;
 
-import fr.istic.tools.scanexam.box.BoxList;
-import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing;
-import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.ExamCreationSwingView;
+import fr.istic.tools.scanexam.controller.ExamCreationSwingController;
 import java.awt.EventQueue;
-import java.io.InputStream;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 /**
@@ -20,11 +16,7 @@ public class MainSwing {
   public static void launchApp() {
     final Runnable _function = () -> {
       try {
-        InputStream pdfInput = ResourcesUtils.getInputStreamResource("/viewResources/pfo_example.pdf");
-        BoxList _boxList = new BoxList();
-        PdfAndBoxPresenterSwing pdfPresenteur = new PdfAndBoxPresenterSwing(1280, 720, pdfInput, _boxList);
-        ExamCreationSwingView window = new ExamCreationSwingView(pdfPresenteur);
-        window.getWindow().setVisible(true);
+        new ExamCreationSwingController();
       } catch (final Throwable _t) {
         if (_t instanceof Exception) {
           final Exception e = (Exception)_t;

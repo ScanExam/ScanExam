@@ -1,8 +1,8 @@
 package fr.istic.tools.scanexam.view;
 
 import fr.istic.tools.scanexam.presenter.PresenterVueCorrection;
-import fr.istic.tools.scanexam.view.ControllerFX;
-import fr.istic.tools.scanexam.view.ControllerSwing;
+import fr.istic.tools.scanexam.view.ControllerI;
+import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -17,14 +17,9 @@ public class ControllerVueCorrection {
   private PresenterVueCorrection presenter;
   
   /**
-   * Controller used by the JavaFX view
+   * Controller used
    */
-  private ControllerFX controllerFX;
-  
-  /**
-   * Controller used by the Swing view
-   */
-  private ControllerSwing controllerSwing;
+  private ControllerI controller;
   
   /**
    * setter for the PresenterVueCorrection attribute
@@ -47,57 +42,42 @@ public class ControllerVueCorrection {
   }
   
   /**
-   * setter for the ControllerFX attribute
+   * setter for the Controller attribute
    * @param {@link ControllerFX} pres instance of the Java FX Controller (not null)
    */
-  public ControllerFX setControllerFX(final ControllerFX contr) {
-    ControllerFX _xblockexpression = null;
+  public ControllerI setController(final ControllerI contr) {
+    ControllerI _xblockexpression = null;
     {
-      Objects.<ControllerFX>requireNonNull(contr);
-      _xblockexpression = this.controllerFX = contr;
+      Objects.<ControllerI>requireNonNull(contr);
+      _xblockexpression = this.controller = contr;
     }
     return _xblockexpression;
   }
   
   /**
-   * @return current Java FX controller {@link ControllerFX}
+   * @return current controller {@link ControllerFX}
    */
-  public ControllerFX getControllerFX() {
-    return this.controllerFX;
+  public ControllerI getController() {
+    return this.controller;
   }
   
-  /**
-   * setter for the ControllerSwing attribute
-   * @param {@link ControllerSwing} pres instance of the Swing Controller (not null)
-   */
-  public ControllerSwing setControllerSwing(final ControllerSwing contr) {
-    ControllerSwing _xblockexpression = null;
-    {
-      Objects.<ControllerSwing>requireNonNull(contr);
-      _xblockexpression = this.controllerSwing = contr;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * @return current Swing controller {@link ControllerSwing}
-   */
-  public ControllerSwing getControllerSwing() {
-    return this.controllerSwing;
+  public LinkedList<String> questionNames() {
+    return null;
   }
   
   /**
    * @return next question
    */
-  public int getNextQuestion(final int question) {
-    return this.presenter.getNextQuestion(question);
+  public void nextQuestion() {
   }
   
   /**
    * @param question is the actual question
    * @return previous question
    */
-  public int getPreviousQuestion(final int question) {
-    return this.presenter.getPreviousQuestion(question);
+  public void previousQuestion() {
+  }
+  
+  public void thisQuestion(final int index) {
   }
 }

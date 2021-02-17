@@ -2,21 +2,15 @@ package fr.istic.tools.scanexam.view;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing;
-import fr.istic.tools.scanexam.sessions.CreationSession;
 import fr.istic.tools.scanexam.view.PdfAndBoxPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -26,11 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Vue swing de la fenêtre de création d'examen
@@ -38,11 +29,6 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  */
 @SuppressWarnings("all")
 public class ExamCreationSwingView {
-  /**
-   * Créateur de session
-   */
-  private CreationSession creaSess;
-  
   /**
    * Controlleur liant les controlleurs du Pdf et des boîtes
    */
@@ -143,8 +129,6 @@ public class ExamCreationSwingView {
    */
   private JPanel pnlPdf;
   
-  private File pdfFileSelected;
-  
   /**
    * Constructeur
    */
@@ -162,8 +146,6 @@ public class ExamCreationSwingView {
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
     this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    File _file = new File("");
-    this.pdfFileSelected = _file;
     JMenuBar _jMenuBar = new JMenuBar();
     this.menuBar = _jMenuBar;
     this.window.setJMenuBar(this.menuBar);
@@ -171,29 +153,9 @@ public class ExamCreationSwingView {
     this.mnFile = _jMenu;
     JMenuItem _jMenuItem = new JMenuItem("Load");
     this.mnItemLoad = _jMenuItem;
-    this.mnItemLoad.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        try {
-          ExamCreationSwingView.this.openFile();
-        } catch (Throwable _e) {
-          throw Exceptions.sneakyThrow(_e);
-        }
-      }
-    });
     this.mnFile.add(this.mnItemLoad);
     JMenuItem _jMenuItem_1 = new JMenuItem("Change session");
     this.mnItemSession = _jMenuItem_1;
-    this.mnItemSession.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        try {
-          ExamCreationSwingView.this.changeSession();
-        } catch (Throwable _e) {
-          throw Exceptions.sneakyThrow(_e);
-        }
-      }
-    });
     this.mnFile.add(this.mnItemSession);
     this.menuBar.add(this.mnFile);
     JMenu _jMenu_1 = new JMenu("Edit");
@@ -280,34 +242,26 @@ public class ExamCreationSwingView {
   }
   
   /**
-   * GETTERS
+   * Envoie la fenêtre principale
+   * @return window
    */
   public JFrame getWindow() {
     return this.window;
   }
   
-  public void openFile() throws IOException, ClassNotFoundException {
-    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-      "Pdf file(.pdf)", "pdf");
-    JFileChooser fc = new JFileChooser();
-    fc.setDialogTitle("Open your file");
-    fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    File _file = new File(".");
-    fc.setCurrentDirectory(_file);
-    fc.setFileFilter(filter);
-    int result = fc.showOpenDialog(this.window);
-    if ((result == JFileChooser.CANCEL_OPTION)) {
-    } else {
-      if ((result == JFileChooser.APPROVE_OPTION)) {
-        File selectedFile = fc.getSelectedFile();
-        String path = selectedFile.getAbsolutePath();
-        File _file_1 = new File(path);
-        this.pdfFileSelected = _file_1;
-        InputOutput.<File>println(this.pdfFileSelected);
-      }
-    }
+  /**
+   * Envoie le bouton de chargement de pdf
+   * @return mnItemLoad
+   */
+  public JMenuItem getMnItemLoad() {
+    return this.mnItemLoad;
   }
   
-  public void changeSession() throws IOException, ClassNotFoundException {
+  /**
+   * Envoie le bouton de changement de session
+   * @return mnItemSession
+   */
+  public JMenuItem getMnItemSession() {
+    return this.mnItemSession;
   }
 }

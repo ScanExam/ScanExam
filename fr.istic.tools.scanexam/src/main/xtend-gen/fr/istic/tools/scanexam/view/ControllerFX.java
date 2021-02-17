@@ -1,10 +1,14 @@
 package fr.istic.tools.scanexam.view;
 
+import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.view.ControllerI;
 import fr.istic.tools.scanexam.view.ControllerVueCorrection;
 import fr.istic.tools.scanexam.view.ControllerVueCreation;
 import fr.istic.tools.scanexam.view.FXMockBackend;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import javafx.collections.ObservableList;
@@ -25,6 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
@@ -32,8 +37,8 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * @author Benjamin Danlos
  */
 @SuppressWarnings("all")
-public class ControllerFX {
-  public static class QuestionDetails extends Label {
+public class ControllerFX implements ControllerI {
+  public static class QuestionDetails {
     private int id;
     
     private String name;
@@ -49,7 +54,6 @@ public class ControllerFX {
     private List<Integer> bareme;
     
     public QuestionDetails(final String name) {
-      super(name);
       this.name = name;
       this.id = 0;
       this.x = 0;
@@ -73,11 +77,20 @@ public class ControllerFX {
       Label _label_1 = new Label(("ID :" + Integer.valueOf(this.id)));
       _children_1.add(_label_1);
       ObservableList<Node> _children_2 = container.getChildren();
-      Label _label_2 = new Label(((((((("x:" + Double.valueOf(this.x)) + " y:") + Double.valueOf(this.y)) + " h:") + Double.valueOf(this.h)) + " w:") + Double.valueOf(this.w)));
+      Label _label_2 = new Label(("x:" + Double.valueOf(this.x)));
       _children_2.add(_label_2);
       ObservableList<Node> _children_3 = container.getChildren();
-      Label _label_3 = new Label(("Bareme: " + this.bareme));
+      Label _label_3 = new Label(("y:" + Double.valueOf(this.y)));
       _children_3.add(_label_3);
+      ObservableList<Node> _children_4 = container.getChildren();
+      Label _label_4 = new Label(("h:" + Double.valueOf(this.h)));
+      _children_4.add(_label_4);
+      ObservableList<Node> _children_5 = container.getChildren();
+      Label _label_5 = new Label(("w:" + Double.valueOf(this.w)));
+      _children_5.add(_label_5);
+      ObservableList<Node> _children_6 = container.getChildren();
+      Label _label_6 = new Label(("Bareme: " + this.bareme));
+      _children_6.add(_label_6);
       return container;
     }
   }
@@ -94,8 +107,6 @@ public class ControllerFX {
   /**
    * High level Controllers to access the Presenters
    */
-  private FXMockBackend test;
-  
   private ControllerVueCreation controllerCreation;
   
   private ControllerVueCorrection controllerCorrection;
@@ -292,6 +303,7 @@ public class ControllerFX {
   @FXML
   public void loadPressed() {
     InputOutput.<String>println("Load method");
+    this.chooseFile();
   }
   
   /**
@@ -316,7 +328,7 @@ public class ControllerFX {
   @FXML
   public void nextQuestionPressed() {
     InputOutput.<String>println("Next question method");
-    this.test.nextQuestion();
+    this.controllerCorrection.nextQuestion();
   }
   
   /**
@@ -325,7 +337,7 @@ public class ControllerFX {
   @FXML
   public void prevQuestionPressed() {
     InputOutput.<String>println("Previous question method");
-    this.test.previousQuestion();
+    this.controllerCorrection.previousQuestion();
   }
   
   /**
@@ -358,11 +370,7 @@ public class ControllerFX {
   
   @FXML
   public void setZoomArea(final int x, final int y, final int height, final int width) {
-    double _selectedX = this.test.selectedX();
-    double _selectedY = this.test.selectedY();
-    double _selectedHeight = this.test.selectedHeight();
-    double _selectedWidth = this.test.selectedWidth();
-    Rectangle2D newrect = new Rectangle2D(_selectedX, _selectedY, _selectedHeight, _selectedWidth);
+    Rectangle2D newrect = new Rectangle2D(this.currentQuestion.x, this.currentQuestion.y, this.currentQuestion.w, this.currentQuestion.h);
     this.imview.setViewport(newrect);
   }
   
@@ -375,42 +383,9 @@ public class ControllerFX {
     this.imview.setViewport(null);
   }
   
-  public void initQuestions(final List<String> names) {
-    for (final String s : names) {
-      ObservableList<Label> _items = this.rightList.getItems();
-      Label _label = new Label(s);
-      _items.add(_label);
-    }
-  }
+  private ControllerFX.QuestionDetails currentQuestion;
   
   public void initStudents(final int nbStudents) {
-  }
-  
-  public void selectedQuestion() {
-  }
-  
-  public void setSelectedQuestion() {
-    String _selectedName = this.test.selectedName();
-    ControllerFX.QuestionDetails q = new ControllerFX.QuestionDetails(_selectedName);
-    q.x = this.test.selectedX();
-    q.y = this.test.selectedY();
-    q.h = this.test.selectedHeight();
-    q.w = this.test.selectedWidth();
-    this.questionDetails.getChildren().clear();
-    this.questionDetails.getChildren().add(q.getDetails());
-    int i = 0;
-    ObservableList<Label> _items = this.rightList.getItems();
-    for (final Label l : _items) {
-      {
-        String _text = l.getText();
-        String _selectedName_1 = this.test.selectedName();
-        boolean _equals = com.google.common.base.Objects.equal(_text, _selectedName_1);
-        if (_equals) {
-          this.rightList.getSelectionModel().select(i);
-        }
-        i++;
-      }
-    }
   }
   
   public void Binds(final Node n) {
@@ -468,11 +443,69 @@ public class ControllerFX {
     this.Binds(this.scrollBis);
   }
   
+  public void chooseFile() {
+    FileChooser fileChooser = new FileChooser();
+    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+    List<String> _asList = Arrays.<String>asList("*.xmi");
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XMI files", _asList);
+    _extensionFilters.add(_extensionFilter);
+    String _property = System.getProperty("user.home");
+    String _property_1 = System.getProperty("file.separator");
+    String _plus = (_property + _property_1);
+    String _plus_1 = (_plus + "Documents");
+    File _file = new File(_plus_1);
+    fileChooser.setInitialDirectory(_file);
+    File file = fileChooser.showOpenDialog(this.imagePane.getScene().getWindow());
+  }
+  
   public void initTests() {
     this.setKeybinds();
-    FXMockBackend _fXMockBackend = new FXMockBackend();
-    this.test = _fXMockBackend;
-    this.test.setControllerFX(this);
-    this.test.setQuestions();
+    FXMockBackend mock = new FXMockBackend();
+    this.controllerCorrection = mock;
+    mock.setController(this);
+    mock.setQuestions();
+  }
+  
+  @Override
+  public void initQuestionNames(final List<String> names) {
+    this.rightList.getItems().clear();
+    for (final String s : names) {
+      ObservableList<Label> _items = this.rightList.getItems();
+      Label _label = new Label(s);
+      _items.add(_label);
+    }
+  }
+  
+  public void nextQuestion() {
+    this.controllerCorrection.nextQuestion();
+  }
+  
+  public void previousQuestion() {
+    this.controllerCorrection.previousQuestion();
+  }
+  
+  @Override
+  public void showQuestion(final Question question) {
+    String _name = question.getName();
+    ControllerFX.QuestionDetails _questionDetails = new ControllerFX.QuestionDetails(_name);
+    this.currentQuestion = _questionDetails;
+    this.currentQuestion.x = question.getZone().getX();
+    this.currentQuestion.y = question.getZone().getY();
+    this.currentQuestion.h = question.getZone().getHeigth();
+    this.currentQuestion.w = question.getZone().getWidth();
+    this.currentQuestion.id = question.getId();
+    this.questionDetails.getChildren().clear();
+    this.questionDetails.getChildren().add(this.currentQuestion.getDetails());
+    int i = 0;
+    ObservableList<Label> _items = this.rightList.getItems();
+    for (final Label l : _items) {
+      {
+        boolean _equals = l.getText().equals(this.currentQuestion.name);
+        if (_equals) {
+          this.rightList.getSelectionModel().select(i);
+        }
+        i++;
+      }
+    }
   }
 }

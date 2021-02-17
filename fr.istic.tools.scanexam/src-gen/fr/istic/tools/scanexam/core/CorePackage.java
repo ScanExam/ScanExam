@@ -142,13 +142,22 @@ public interface CorePackage extends EPackage {
 	int QUESTION__ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int QUESTION__NAME = 1;
+
+	/**
 	 * The feature id for the '<em><b>Grade Scale</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int QUESTION__GRADE_SCALE = 1;
+	int QUESTION__GRADE_SCALE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Zone</b></em>' containment reference.
@@ -157,7 +166,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUESTION__ZONE = 2;
+	int QUESTION__ZONE = 3;
 
 	/**
 	 * The number of structural features of the '<em>Question</em>' class.
@@ -166,7 +175,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int QUESTION_FEATURE_COUNT = 3;
+	int QUESTION_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Question</em>' class.
@@ -687,6 +696,17 @@ public interface CorePackage extends EPackage {
 	EAttribute getQuestion_Id();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Question#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.Question#getName()
+	 * @see #getQuestion()
+	 * @generated
+	 */
+	EAttribute getQuestion_Name();
+
+	/**
 	 * Returns the meta object for the containment reference '{@link fr.istic.tools.scanexam.core.Question#getGradeScale <em>Grade Scale</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1077,6 +1097,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute QUESTION__ID = eINSTANCE.getQuestion_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute QUESTION__NAME = eINSTANCE.getQuestion_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Grade Scale</b></em>' containment reference feature.

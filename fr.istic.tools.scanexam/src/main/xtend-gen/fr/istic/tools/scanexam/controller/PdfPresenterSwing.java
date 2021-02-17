@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.controller;
 
+import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.controller.SelectionPresenterSwing;
 import fr.istic.tools.scanexam.presenter.PdfPresenter;
 import java.awt.Image;
@@ -71,7 +72,7 @@ public class PdfPresenterSwing extends PdfPresenter {
    */
   public PdfPresenterSwing(final int width, final int height, final InputStream pdfInput) {
     super(width, height, pdfInput);
-    this.pdf = this.getImageFromPDF(pdfInput, 0);
+    this.setPDF(pdfInput, 0);
     if (this.SCALE_ON_WIDTH) {
       int _width = this.pdf.getWidth(null);
       int _divide = (_width / width);
@@ -150,30 +151,12 @@ public class PdfPresenterSwing extends PdfPresenter {
     this.repaint();
   }
   
-  private BufferedImage getImageFromPDF(final InputStream pdfInput, final int pageindex) {
-    try {
-      PDDocument document = PDDocument.load(pdfInput);
-      PDFRenderer renderer = new PDFRenderer(document);
-      BufferedImage img = renderer.renderImageWithDPI(pageindex, 300);
-      document.close();
-      return img;
-    } catch (final Throwable _t) {
-      if (_t instanceof IOException) {
-        final IOException e = (IOException)_t;
-        e.printStackTrace();
-        return null;
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
-  }
-  
   /**
    * Actualise la vue
    */
   private void repaint() {
-    boolean _isPresent = this.view.isPresent();
-    if (_isPresent) {
+    boolean _notEquals = (!Objects.equal(this.view, null));
+    if (_notEquals) {
       this.view.get().repaint();
     }
   }
@@ -211,5 +194,23 @@ public class PdfPresenterSwing extends PdfPresenter {
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);
     this.getSelectionController().setView(this.view.get());
+  }
+  
+  public void setPDF(final InputStream pdfInput, final int pageindex) {
+    try {
+      PDDocument document = PDDocument.load(pdfInput);
+      PDFRenderer renderer = new PDFRenderer(document);
+      BufferedImage img = renderer.renderImageWithDPI(pageindex, 300);
+      document.close();
+      this.pdf = img;
+      this.repaint();
+    } catch (final Throwable _t) {
+      if (_t instanceof IOException) {
+        final IOException e = (IOException)_t;
+        e.printStackTrace();
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
   }
 }

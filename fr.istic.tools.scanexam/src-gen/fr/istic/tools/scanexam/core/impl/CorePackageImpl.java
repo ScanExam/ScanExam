@@ -251,8 +251,17 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getQuestion_Name() {
+		return (EAttribute)questionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getQuestion_GradeScale() {
-		return (EReference)questionEClass.getEStructuralFeatures().get(1);
+		return (EReference)questionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -261,7 +270,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	public EReference getQuestion_Zone() {
-		return (EReference)questionEClass.getEStructuralFeatures().get(2);
+		return (EReference)questionEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -543,6 +552,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		questionEClass = createEClass(QUESTION);
 		createEAttribute(questionEClass, QUESTION__ID);
+		createEAttribute(questionEClass, QUESTION__NAME);
 		createEReference(questionEClass, QUESTION__GRADE_SCALE);
 		createEReference(questionEClass, QUESTION__ZONE);
 
@@ -629,6 +639,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		initEClass(questionEClass, Question.class, "Question", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getQuestion_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, Question.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getQuestion_Name(), theEcorePackage.getEString(), "name", null, 0, 1, Question.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getQuestion_GradeScale(), this.getGradeScale(), null, "gradeScale", null, 0, 1, Question.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getQuestion_Zone(), this.getQuestionZone(), null, "zone", null, 0, 1, Question.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
