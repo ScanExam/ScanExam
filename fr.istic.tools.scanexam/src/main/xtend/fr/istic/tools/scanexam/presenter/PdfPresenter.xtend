@@ -14,19 +14,13 @@ abstract class PdfPresenter {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/** 
-	 * Largeur de la fenêtre 
-	 */
+	/* Largeur de la fenêtre */
 	protected int width
 	
-	/** 
-	 * Hauteur de la fenêtre 
-	 */
+	/* Hauteur de la fenêtre */
 	protected int height
 	
-	/** 
-	 * InputStream du pdf 
-	 */
+	/* InputStream du pdf */
 	protected InputStream pdfInput
 	
 

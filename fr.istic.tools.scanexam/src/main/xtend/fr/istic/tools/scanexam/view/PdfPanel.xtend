@@ -1,19 +1,19 @@
 package fr.istic.tools.scanexam.view
 
-import fr.istic.tools.scanexam.controller.PdfPresenterSwing
 import java.awt.Graphics
 import javax.swing.JPanel
+import fr.istic.tools.scanexam.view.AdapterSwingPdfPanel
 
 class PdfPanel extends JPanel {
 	
-	public var PdfPresenterSwing pdfPresenter
+	public var AdapterSwingPdfPanel adapter
 	/* Largeur du panel */
 	public var int width
 	/* Hauteur du panel */
 	public var int height
 		
-	new(PdfPresenterSwing pdfPresenter) {
-		this.pdfPresenter = pdfPresenter
+	new(AdapterSwingPdfPanel pdfPresenter) {
+		this.adapter = pdfPresenter
 		
 		width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
 		height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
@@ -30,10 +30,10 @@ class PdfPanel extends JPanel {
 	override protected void paintComponent(Graphics g) {
 		super.paintComponent(g)
 	
-		width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
-		height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
+		width = adapter.getPdf().getWidth(this) / adapter.getScale()
+		height = adapter.getPdf().getHeight(this) / adapter.getScale()
 	        
-	    g.drawImage(pdfPresenter.getPdf(), pdfPresenter.getOriginX(), pdfPresenter.getOriginY(), width, height, this)
+	    g.drawImage(adapter.getPdf(), adapter.getOriginX(), adapter.getOriginY(), width, height, this)
 	}
 	
 }

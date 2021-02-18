@@ -2,18 +2,18 @@ package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.box.Box
 import fr.istic.tools.scanexam.box.BoxList
-import fr.istic.tools.scanexam.controller.PdfAndBoxPresenterSwing
-import fr.istic.tools.scanexam.controller.SelectionPresenterSwing
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Rectangle
 import javax.swing.JPanel
+import fr.istic.tools.scanexam.view.AdapterSwingPdfAndBoxPanel
+import fr.istic.tools.scanexam.view.AdapterSwingBox
 
 class PdfAndBoxPanel extends JPanel {
 	
-	public var PdfAndBoxPresenterSwing pdfPresenter
-	public var SelectionPresenterSwing selectionPresenter
+	public var AdapterSwingPdfAndBoxPanel adapter
+	public var AdapterSwingBox selectionPresenter
 	
 	/* Largeur du panel */
 	public var int width
@@ -27,19 +27,19 @@ class PdfAndBoxPanel extends JPanel {
 	/* Couleur des contours des boîtes */
 	val Color outLineColor = Color.BLACK
 		
-	new(PdfAndBoxPresenterSwing pdfPresenter) {
-		this.pdfPresenter = pdfPresenter
+	new(AdapterSwingPdfAndBoxPanel adapter) {
+		this.adapter = adapter
 		
-		width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
-		height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
-		pdfPresenter.setView(this)
+		width = this.adapter.getPdf().getWidth(this) / this.adapter.getScale()
+		height = this.adapter.getPdf().getHeight(this) / this.adapter.getScale()
+		this.adapter.setView(this)
         
-		this.selectionPresenter = pdfPresenter.selectionController
+		this.selectionPresenter = this.adapter.selectionController
 		this.selectionPresenter.getSelectionBoxes().setPanel(this)
         
-        addMouseWheelListener(pdfPresenter.getMouseHandler())
-        addMouseListener(pdfPresenter.getMouseHandler())
-        addMouseMotionListener(pdfPresenter.getMouseHandler())
+        addMouseWheelListener(this.adapter.getMouseHandler())
+        addMouseListener(this.adapter.getMouseHandler())
+        addMouseMotionListener(this.adapter.getMouseHandler())
         
         addMouseListener(selectionPresenter.getMouseHandler())
         addMouseMotionListener(selectionPresenter.getMouseHandler())
@@ -51,10 +51,10 @@ class PdfAndBoxPanel extends JPanel {
 	override protected void paintComponent(Graphics g) {
 		super.paintComponent(g)
 	
-		width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
-		height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
+		width = adapter.getPdf().getWidth(this) / adapter.getScale()
+		height = adapter.getPdf().getHeight(this) / adapter.getScale()
 	        
-	    g.drawImage(pdfPresenter.getPdf(), pdfPresenter.getOriginX(), pdfPresenter.getOriginY(), width, height, this)
+	    g.drawImage(adapter.getPdf(), adapter.getOriginX(), adapter.getOriginY(), width, height, this)
 		
 	    var Graphics2D g2d = g.create() as Graphics2D
 	    paintSelectionBoxes(g2d, selectionPresenter.getSelectionBoxes())
@@ -73,7 +73,7 @@ class PdfAndBoxPanel extends JPanel {
 	    g2d.setColor(selectionColor);
 	    var BoxList paintedBoxes = new BoxList(boxes.getMinWidth(), boxes.getMinHeight(), boxes.getMaxWidth(), boxes.getMaxHeight())
 	    for (Box box : boxes.getList()) {
-			paintedBoxes.addBox(box.getX() + ((pdfPresenter.getOriginX() - box.getWidth()) / width), box.getY() + ((pdfPresenter.getOriginY() - box.getHeight()) / height), box.getWidth(), box.getHeight(), box.getTitle())
+			paintedBoxes.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - box.getHeight()) / height), box.getWidth(), box.getHeight(), box.getTitle())
 		}
 	    for (Box paintedBox : paintedBoxes.getList()) {
 	        g2d.fill(convertBoxToRectangle(paintedBox))
@@ -94,9 +94,9 @@ class PdfAndBoxPanel extends JPanel {
 	def void paintBoxesTitle(Graphics2D g2d, BoxList boxes) {
 		// Création d'un list de boîtes de titre
 	    var BoxList boxesTitle = new BoxList(selectionPresenter.getMinWidth() / width, selectionPresenter.getTitleHeight() / height, -1.0, selectionPresenter.getTitleHeight() / height)
-		boxesTitle.updateBounds(selectionPresenter.getMinWidth() / width / pdfPresenter.getScale(), selectionPresenter.getMinHeight() / height, -1.0, -1.0)
+		boxesTitle.updateBounds(selectionPresenter.getMinWidth() / width / adapter.getScale(), selectionPresenter.getMinHeight() / height, -1.0, -1.0)
 		for (Box box : boxes.getList()) {
-			boxesTitle.addBox(box.getX() + ((pdfPresenter.getOriginX() - box.getWidth()) / width), box.getY() + ((pdfPresenter.getOriginY() - selectionPresenter.getTitleHeight()) / height), box.getWidth(), selectionPresenter.getTitleHeight() / height, box.getTitle())
+			boxesTitle.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - selectionPresenter.getTitleHeight()) / height), box.getWidth(), selectionPresenter.getTitleHeight() / height, box.getTitle())
 		}
 	        
 	    // Coloration de l'intérieur des titres

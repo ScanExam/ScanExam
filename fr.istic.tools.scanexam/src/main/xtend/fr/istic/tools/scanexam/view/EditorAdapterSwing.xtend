@@ -1,23 +1,21 @@
-package fr.istic.tools.scanexam.controller
+package fr.istic.tools.scanexam.view
 
-import fr.istic.tools.scanexam.view.ExamCreationSwingView
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
-import fr.istic.tools.scanexam.sessions.CreationSession
-import java.io.InputStream
-import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.box.BoxList
-import java.io.IOException
-import javax.swing.filechooser.FileNameExtensionFilter
-import javax.swing.JFileChooser
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
+import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
  * @author Julien Cochet
  */
-class ExamCreationSwingController {
+class EditorAdapterSwing {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -26,12 +24,10 @@ class ExamCreationSwingController {
 	// ----------------------------------------------------------------------------------------------------
 	
 	/* Vue de la création d'exman */
-	var ExamCreationSwingView view
+	var EditorViewSwing view
 	
 	/* Présentateur du pdf */
-	var PdfAndBoxPresenterSwing pdfPresenteur
-	/* Créateur de session */
-	var CreationSession creaSess
+	var AdapterSwingPdfAndBoxPanel adapterPdfAndBox	
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -44,8 +40,9 @@ class ExamCreationSwingController {
 	 */
 	new() {
 		var InputStream pdfInput = ResourcesUtils.getInputStreamResource("/viewResources/pfo_example.pdf")
-		pdfPresenteur = new PdfAndBoxPresenterSwing(1280, 720, pdfInput, new BoxList())
-		view = new ExamCreationSwingView(pdfPresenteur)
+		
+		adapterPdfAndBox = new AdapterSwingPdfAndBoxPanel(1280, 720, pdfInput, new BoxList())
+		view = new EditorViewSwing(adapterPdfAndBox)
 		addActionListeners()
 		
 		view.getWindow().setVisible(true)
@@ -89,7 +86,7 @@ class ExamCreationSwingController {
 	        
 	        
 			var InputStream pdfInput = new FileInputStream(path);
-			pdfPresenteur.setPDF(pdfInput, 0)
+			adapterPdfAndBox.setPDF(pdfInput, 0)
 			/*
 			pdfFileSelected = new File(path)
 	        println(pdfFileSelected)

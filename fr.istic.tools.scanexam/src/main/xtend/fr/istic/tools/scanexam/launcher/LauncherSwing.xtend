@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.launcher
 
-import fr.istic.tools.scanexam.controller.ExamCreationSwingController
 import java.awt.EventQueue
+import fr.istic.tools.scanexam.view.EditorAdapterSwing
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie Swing
@@ -21,7 +21,7 @@ class LauncherSwing {
 	def static void launchApp() {
 		EventQueue.invokeLater([
 			try {
-				new ExamCreationSwingController
+				new EditorAdapterSwing
 			} catch (Exception e) {
 				e.printStackTrace()
 			}
