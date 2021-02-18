@@ -1,0 +1,62 @@
+package fr.istic.tools.scanexam.services
+
+import fr.istic.tools.scanexam.core.Exam
+import fr.istic.tools.scanexam.core.Page
+import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.core.QuestionZone
+import java.util.Collections
+import java.util.List
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.eclipse.xtend.lib.annotations.Accessors
+import java.io.File
+
+abstract class Service 
+{
+	/**
+	 * Pdf chargé
+	 */
+	@Accessors PDDocument document
+	
+	/**
+	 * Index de la page courante
+	 */
+	int pageIndex
+	
+	/**
+	 * @return Identifiant de l'examen
+	 * @author degas
+	 */
+	def int getExamId()
+	{
+		return ExamSingleton.instance.id;
+	}
+	
+	/**@return Nom de l'examen
+	 * @author degas
+	 */
+	def String getExamName()
+	{
+		return ExamSingleton.instance.name;
+	}
+	
+
+	def getPage()
+	{
+		return ExamSingleton.getPage(pageIndex);
+	}
+	/** Retourne la zone associée à une question
+	 * @param index Index de la question
+	 * @author degas
+	 */
+	def QuestionZone getQuestionZone(int index)
+	{
+		return ExamSingleton.getQuestion(pageIndex,index).zone
+	}
+	
+	
+	def void save(String path)
+	
+	def void open(String xmiFile);
+
+
+}
