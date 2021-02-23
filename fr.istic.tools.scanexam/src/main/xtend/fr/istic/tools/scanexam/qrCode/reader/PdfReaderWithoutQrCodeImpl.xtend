@@ -2,27 +2,26 @@ package fr.istic.tools.scanexam.qrCode.reader
 
 import fr.istic.tools.scanexam.api.DataFactory
 import fr.istic.tools.scanexam.core.StudentSheet
-import java.io.File
 import java.util.ArrayList
 import java.util.HashSet
 import java.util.List
 import java.util.Set
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
 import java.util.concurrent.CountDownLatch
+import java.io.InputStream
 
 class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
-	File pdfFile
+	InputStream inStream
 
-	new(File pFile, int nbPages, int nbCopies) {
-		this.pdfFile = pFile
+	new(InputStream inStream, int nbPages, int nbCopies) {
+		this.inStream = inStream
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
 
@@ -34,7 +33,7 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 */
 	override readPDf() {
 		try {
-			val PDDocument doc = PDDocument.load(pdfFile)
+			val PDDocument doc = PDDocument.load(inStream);
 			val PDFRenderer pdf = new PDFRenderer(doc)
 			createThread(doc.numberOfPages, pdf)
 			doc.close
@@ -203,7 +202,7 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 * @return le nombre de pages du PDF source
 	 */
 	override getNbPagesPdf() {
-		val PDDocument doc = PDDocument.load(pdfFile)
+		val PDDocument doc = PDDocument.load(inStream)
 		val int nbPages = doc.numberOfPages
 		doc.close
 		return nbPages
@@ -223,7 +222,7 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	}
 
 	def static void main(String[] arg) {
-		val File pdf = new File("pfo_example_Inserted.pdf")
+		/*val File pdf = new File("pfo_example_Inserted.pdf")
 		val PdfReaderWithoutQrCodeImpl qrcodeReader = new PdfReaderWithoutQrCodeImpl(pdf, 8, 10)
 
 		qrcodeReader.readPDf
@@ -234,6 +233,6 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		println("Nombre de pages  du doc : " + qrcodeReader.nbPagesPdf)
 		println("Nombre de pages traitées : " + qrcodeReader.nbPagesTreated)
 
-		println("Examen complet? : " + qrcodeReader.isExamenComplete)
+		println("Examen complet? : " + qrcodeReader.isExamenComplete)*/
 	}
 }

@@ -18,7 +18,6 @@ import java.io.File
 import org.apache.pdfbox.multipdf.PDFMergerUtility
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import org.apache.pdfbox.io.MemoryUsageSetting
 import java.util.concurrent.CountDownLatch
 
@@ -30,8 +29,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * @param height Hauteur de l'image
 	 * @param filePath Chemin du nouveau fichier 
 	 * 
-	 * Crée un QRCode (21 * 21 carrés) de taille width * height encryptant la chaine text.
-	 * Un fichier PNG du QRCode est crée en suivant le filePath
+	 * CrÃ©e un QRCode (21 * 21 carrÃ©s) de taille width * height encryptant la chaine text.
+	 * Un fichier PNG du QRCode est crÃ©e en suivant le filePath
 	 *  
 	 * @throws WriterException
 	 * @throws IOException
@@ -48,8 +47,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * l'enregistre dans outputFile
 	 * 
 	 * @param inputFile  Chemin du pdf cible
-	 * @param imagePath  Chemin de l'image a insérer
-	 * @param outputFile Chemin du fichier a écrire
+	 * @param imagePath  Chemin de l'image a insÃ©rer
+	 * @param outputFile Chemin du fichier a Ã©crire
 	 * 
 	 * @throws IOException If there is an error writing the data.
 	 */
@@ -91,7 +90,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		memUsSett.tempDir = f2
 
 		/* FIXME
-		 * problème de mémoire lors de grands nombres de pages (2000+)
+		 * problÃ¨me de mÃ©moire lors de grands nombres de pages (2000+)
 		 * Voir pour ne pas rajouter page par page, mais par paquets de pages
 		 */
 		PDFmerger.mergeDocuments(memUsSett)
@@ -115,8 +114,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 	/**
 	 * 
-	 * @param nbCopies nombre de copies désirées //FIXME gerer le cas ou le nbCopies < 4 (nombre de threads)
-	 * @param docSujetMaitre document dans lequel insérer les Codes
+	 * @param nbCopies nombre de copies dÃ©sirÃ©es //FIXME gerer le cas ou le nbCopies < 4 (nombre de threads)
+	 * @param docSujetMaitre document dans lequel insÃ©rer les Codes
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
@@ -148,10 +147,10 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	}
 
 	/**
-	 * Insère le QRCode sur chacun des pages (en changeant le numéro de page sur chacunes des pages)
+	 * InsÃ¨re le QRCode sur chacun des pages (en changeant le numÃ©ro de page sur chacunes des pages)
 	 * 
-	 * @param nameExam nom de l'examen à insérer dans le QRCode
-	 * @param numSubject numéro de l'examen à insérer dans le QRCode
+	 * @param nameExam nom de l'examen Ã  insÃ©rer dans le QRCode
+	 * @param numSubject numÃ©ro de l'examen Ã  insÃ©rer dans le QRCode
 	 */
 	def insertQRCodeInSubject(PDDocument docSujetMaitre, int numCopie, int numThread, int nbPagesSujet) {
 
@@ -161,11 +160,11 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	}
 
 	/**
-	 * Inèsre un QRCode sur une page
+	 * InÃ¨sre un QRCode sur une page
 	 */
 	def insertQRCodeInPage(int numPage, PDDocument doc, String nbThread, int numCopie, int nbPagesSujet) {
 		val String stringAEncoder = "PFO2019_" + numCopie + "_" + numPage
-		// TODO Gestion de l'id a faire une fois la partie de création des copies réalisée
+		// TODO Gestion de l'id a faire une fois la partie de crÃ©ation des copies rÃ©alisÃ©e
 		val String pathImage = "./QRCode" + nbThread.toString() + ".png"
 		generateQRCodeImage(stringAEncoder, 350, 350, pathImage)
 
