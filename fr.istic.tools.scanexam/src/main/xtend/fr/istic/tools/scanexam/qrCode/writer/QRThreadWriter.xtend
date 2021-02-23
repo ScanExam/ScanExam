@@ -29,7 +29,7 @@ class QRThreadWriter extends Thread implements Runnable {
 		for (i : borneInf ..< borneMax) {
 			generator.insertQRCodeInSubject(docSujetMaitre, i, numThread, nbPages)
 		}
-		
+		countDown.countDown
 	}
 
 }

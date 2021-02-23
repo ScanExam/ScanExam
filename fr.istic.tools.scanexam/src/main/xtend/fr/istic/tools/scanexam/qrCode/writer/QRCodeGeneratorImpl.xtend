@@ -21,6 +21,7 @@ import java.util.concurrent.Executors
 import org.apache.pdfbox.io.MemoryUsageSetting
 import java.util.concurrent.CountDownLatch
 
+
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 	/**
@@ -68,31 +69,29 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		}
 	}
 
-	override createAllExamCopies(String inputFile, int nbCopie) {
-
+	override createAllExamCopies(/*InputStream */ String inputFile, int nbCopie) {
+		//TODO passer sur de l'inputStream
+		
 		val String base = inputFile.substring(0, inputFile.lastIndexOf('.'))
-		val String outputFile = base + "_Inserted.pdf"
-		// val String save = base + "_save.pdf"
+		val String outputFile = "pfo_Inserted.pdf"
+		//val String save = base + "_save.pdf"
 		val PDDocument doc = PDDocument.load(new File(base + ".pdf"))
 		val int nbPages = doc.numberOfPages
 
 		val PDFMergerUtility PDFmerger = new PDFMergerUtility()
 
-		PDFmerger.setDestinationFileName(base + "_Duplicated.pdf");
+		PDFmerger.setDestinationFileName("pfo_Duplicated.pdf");
 
 		for (i : 0 ..< nbCopie) {
 			PDFmerger.addSource(inputFile)
 		}
 
-		val File f2 = new File(base + "_Duplicated.pdf")
+		val File f2 = new File("pfo_Duplicated.pdf")
+
 
 		val MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly()
 		memUsSett.tempDir = f2
 
-		/* FIXME
-		 * problÃ¨me de mÃ©moire lors de grands nombres de pages (2000+)
-		 * Voir pour ne pas rajouter page par page, mais par paquets de pages
-		 */
 		PDFmerger.mergeDocuments(memUsSett)
 
 		val PDDocument docSujetMaitre = PDDocument.load(f2)
@@ -114,7 +113,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 	/**
 	 * 
-	 * @param nbCopies nombre de copies dÃ©sirÃ©es //FIXME gerer le cas ou le nbCopies < 4 (nombre de threads)
+	 * @param nbCopies nombre de copies dÃ©sirÃ©es
 	 * @param docSujetMaitre document dans lequel insÃ©rer les Codes
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
@@ -181,13 +180,14 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
+		//val InputStream input = ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf");
 		val String input = "./pfo_example.pdf"
 		gen.createAllExamCopies(input, 5)
 
-		val String in = "./pfo_example_Inserted.pdf"
+		val String in = "./pfo_Inserted.pdf"
 		val File f = new File(in)
 		val PDDocument doc = PDDocument.load(f)
-		val File desti = new File("./pfo_example_Dirty.pdf")
+		val File desti = new File("./pfo_Dirty.pdf")
 
 		doc.removePage(12)
 		doc.save(desti)

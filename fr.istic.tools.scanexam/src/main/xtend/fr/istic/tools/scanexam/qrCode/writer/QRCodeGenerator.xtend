@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.qrCode.writer
 
+import java.io.InputStream
+
 interface QRCodeGenerator {
 	
 	/**
@@ -9,5 +11,5 @@ interface QRCodeGenerator {
 	 * @param outpuFile Chemin ou mettre le sujet avec QRCode
 	 * @param nbCopies Nombre de copies de l'examen souhaité
 	 */
-	def void createAllExamCopies(String inputFile, int nbCopie)
+	def void createAllExamCopies(/*InputStream*/ String inputFile, int nbCopie)
 }
