@@ -1,50 +1,47 @@
-package fr.istic.tools.scanexam.view
+package fr.istic.tools.scanexam.view;
 
-import java.util.Objects
-import javafx.scene.control.Button
-import javafx.scene.control.ListView
-import javafx.scene.input.MouseEvent
+import fr.istic.tools.scanexam.core.Question
+import java.io.File
 import java.io.IOException
+import java.util.ArrayList
+import java.util.Arrays
+import java.util.List
+import java.util.Objects
+import javafx.fxml.FXML
+import javafx.geometry.Rectangle2D
+import javafx.scene.Node
+import javafx.scene.control.Button
+import javafx.scene.control.Label
+import javafx.scene.control.ListView
+import javafx.scene.control.ScrollPane
+import javafx.scene.image.ImageView
+import javafx.scene.input.KeyCode
+import javafx.scene.input.MouseEvent
+import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
-import javafx.scene.layout.HBox
-import javafx.scene.control.Label
-import javafx.scene.control.SelectionMode
-import javafx.scene.image.ImageView
-import javafx.geometry.Rectangle2D
-import javafx.scene.input.ScrollEvent
-import javafx.scene.Node
-import javafx.fxml.FXML
-import javafx.scene.Scene
-import javafx.scene.input.KeyEvent
-import javafx.scene.input.KeyCode
-import javafx.scene.control.ScrollPane
-import java.util.List
-import java.util.ArrayList
-import java.util.LinkedList
-import fr.istic.tools.scanexam.core.Question
 import javafx.stage.FileChooser
-import java.io.File
 import javafx.stage.FileChooser.ExtensionFilter
-import java.util.Arrays
+import org.apache.logging.log4j.LogManager
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
  * @author Benjamin Danlos
  */
-class ControllerFX implements ControllerI {
+class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 
+	static val logger = LogManager.logger
 	/**
 	 * High level Controllers to access the Presenters
 	 */
-	ControllerVueCreation controllerCreation
-	ControllerVueCorrection controllerCorrection
+	fr.istic.tools.scanexam.view.ControllerVueCreation controllerCreation
+	fr.istic.tools.scanexam.view.ControllerVueCorrection controllerCorrection
 
 	/**
 	 * setter for the ControllerVueCreation attribute
 	 * @param {@link ControllerVueCreation} controller instance of ControllerVueCreation (not null) 
 	 */
-	def setControllerVueCreation(ControllerVueCreation controller) {
+	def setControllerVueCreation(fr.istic.tools.scanexam.view.ControllerVueCreation controller) {
 		Objects.requireNonNull(controller)
 		controllerCreation = controller
 	}
@@ -60,7 +57,7 @@ class ControllerFX implements ControllerI {
 	 * setter for the ControllerVueCorrection attribute
 	 * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null) 
 	 */
-	def setControllerVueCorrection(ControllerVueCorrection controller) {
+	def setControllerVueCorrection(fr.istic.tools.scanexam.view.ControllerVueCorrection controller) {
 		Objects.requireNonNull(controller)
 		controllerCorrection = controller
 	}
@@ -296,7 +293,6 @@ class ControllerFX implements ControllerI {
 		setZoomArea(0, 0, 100, 200)
 	}
 
-	@FXML
 	def void setZoomArea(int x, int y, int height, int width) {
 		var newrect = new Rectangle2D(currentQuestion.x, currentQuestion.y, currentQuestion.w,currentQuestion.h);
 		imview.viewport = newrect
@@ -321,7 +317,7 @@ class ControllerFX implements ControllerI {
 	
 
 	
-	def void initStudents(int nbStudents) {//TODO complete, called on load of a new exam template
+	def void initStudents(int nbStudents) { //TODO complete, called on load of a new exam template
 	}
 
 
@@ -372,7 +368,7 @@ class ControllerFX implements ControllerI {
 		}
 
 	}
-	def void Binds(Node n){
+	def void binds(Node n){
 		n.setOnKeyPressed([ event |
 			{
 				switch event.code {
@@ -380,7 +376,7 @@ class ControllerFX implements ControllerI {
 				case KeyCode.LEFT : prevQuestionPressed
 				case KeyCode.UP : nextStudentPressed
 				case KeyCode.DOWN : prevStudentPressed
-				}
+				default : logger.warn("Key not supported.")		}
 				event.consume
 			}
 		])
@@ -394,12 +390,13 @@ class ControllerFX implements ControllerI {
 				case KeyCode.LEFT : prevQuestionPressed
 				case KeyCode.UP : nextStudentPressed
 				case KeyCode.DOWN : prevStudentPressed
+				default : logger.warn("Key not supported.")
 				}
 				event.consume
 			}
 		])
-		Binds(scrollMain);
-		Binds(scrollBis);
+		binds(scrollMain);
+		binds(scrollBis);
 	}
 	
 	
@@ -414,7 +411,7 @@ class ControllerFX implements ControllerI {
 	
 	def void initTests() {
 		setKeybinds
-		var mock = new FXMockBackend();
+		var mock = new fr.istic.tools.scanexam.view.FXMockBackend();
 		controllerCorrection = mock;
 		mock.controller = this;
 		mock.setQuestions
@@ -422,7 +419,7 @@ class ControllerFX implements ControllerI {
 		
 	}
 	
-	override void initQuestionNames(List<String> names) {//TODO complete, called on load of a new exam template
+	override void initQuestionNames(List<String> names) { //TODO complete, called on load of a new exam template
 		rightList.items.clear
 		for (String s : names) {
 			rightList.items.add(new Label(s));
