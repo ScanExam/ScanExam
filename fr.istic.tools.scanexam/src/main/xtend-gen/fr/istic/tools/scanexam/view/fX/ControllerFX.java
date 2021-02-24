@@ -1,10 +1,10 @@
-package fr.istic.tools.scanexam.view;
+package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.view.ControllerI;
-import fr.istic.tools.scanexam.view.ControllerVueCorrection;
-import fr.istic.tools.scanexam.view.ControllerVueCreation;
-import fr.istic.tools.scanexam.view.FXMockBackend;
+import fr.istic.tools.scanexam.view.fX.CorrectorAdapterFX;
+import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -111,19 +111,19 @@ public class ControllerFX implements ControllerI {
   /**
    * High level Controllers to access the Presenters
    */
-  private ControllerVueCreation controllerCreation;
+  private CorrectorAdapterFX corrector;
   
-  private ControllerVueCorrection controllerCorrection;
+  private EditorAdapterFX editor;
   
   /**
    * setter for the ControllerVueCreation attribute
    * @param {@link ControllerVueCreation} controller instance of ControllerVueCreation (not null)
    */
-  public ControllerVueCreation setControllerVueCreation(final ControllerVueCreation controller) {
-    ControllerVueCreation _xblockexpression = null;
+  public EditorAdapterFX setAdapterEditor(final EditorAdapterFX edit) {
+    EditorAdapterFX _xblockexpression = null;
     {
-      Objects.<ControllerVueCreation>requireNonNull(controller);
-      _xblockexpression = this.controllerCreation = controller;
+      Objects.<EditorAdapterFX>requireNonNull(edit);
+      _xblockexpression = this.editor = edit;
     }
     return _xblockexpression;
   }
@@ -131,28 +131,24 @@ public class ControllerFX implements ControllerI {
   /**
    * @return current {@link ControllerVueCreation}
    */
-  public ControllerVueCreation getControllerVueCreation() {
-    return this.controllerCreation;
+  public EditorAdapterFX getAdapterEditor() {
+    return this.editor;
   }
   
   /**
    * setter for the ControllerVueCorrection attribute
    * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null)
    */
-  public ControllerVueCorrection setControllerVueCorrection(final ControllerVueCorrection controller) {
-    ControllerVueCorrection _xblockexpression = null;
-    {
-      Objects.<ControllerVueCorrection>requireNonNull(controller);
-      _xblockexpression = this.controllerCorrection = controller;
-    }
-    return _xblockexpression;
+  public void setAdapterCorrection(final CorrectorAdapterFX adapterCor) {
+    Objects.<CorrectorAdapterFX>requireNonNull(adapterCor);
+    this.corrector = adapterCor;
   }
   
   /**
    * @return current {@link ControllerVueCorrection}
    */
-  public ControllerVueCorrection getControllerVueCorrection() {
-    return this.controllerCorrection;
+  public CorrectorAdapterFX getAdapterCorrection() {
+    return this.corrector;
   }
   
   private boolean botShow = false;
@@ -332,7 +328,7 @@ public class ControllerFX implements ControllerI {
   @FXML
   public void nextQuestionPressed() {
     InputOutput.<String>println("Next question method");
-    this.controllerCorrection.nextQuestion();
+    this.corrector.nextQuestion();
   }
   
   /**
@@ -341,7 +337,7 @@ public class ControllerFX implements ControllerI {
   @FXML
   public void prevQuestionPressed() {
     InputOutput.<String>println("Previous question method");
-    this.controllerCorrection.previousQuestion();
+    this.corrector.previousQuestion();
   }
   
   /**
@@ -469,9 +465,9 @@ public class ControllerFX implements ControllerI {
   
   public void initTests() {
     this.setKeybinds();
-    FXMockBackend mock = new FXMockBackend();
-    this.controllerCorrection = mock;
-    mock.setController(this);
+    MockFXAdapter mock = new MockFXAdapter();
+    this.corrector = mock;
+    mock.controller = this;
     mock.setQuestions();
   }
   
@@ -483,14 +479,6 @@ public class ControllerFX implements ControllerI {
       Label _label = new Label(s);
       _items.add(_label);
     }
-  }
-  
-  public void nextQuestion() {
-    this.controllerCorrection.nextQuestion();
-  }
-  
-  public void previousQuestion() {
-    this.controllerCorrection.previousQuestion();
   }
   
   @Override

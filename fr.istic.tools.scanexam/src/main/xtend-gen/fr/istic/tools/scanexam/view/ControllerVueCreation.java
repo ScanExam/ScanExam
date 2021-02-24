@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view;
 
 import fr.istic.tools.scanexam.presenter.PresenterVueCreation;
-import fr.istic.tools.scanexam.view.ControllerFX;
+import fr.istic.tools.scanexam.view.ControllerI;
 import fr.istic.tools.scanexam.view.ControllerSwing;
 import java.util.Objects;
 
@@ -19,7 +19,7 @@ public class ControllerVueCreation {
   /**
    * Controller used by the JavaFX view
    */
-  private ControllerFX controllerFX;
+  private ControllerI controllerFX;
   
   /**
    * Controller used by the Swing view
@@ -50,10 +50,10 @@ public class ControllerVueCreation {
    * setter for the ControllerFX attribute
    * @param {@link ControllerFX} pres instance of the Java FX Controller (not null)
    */
-  public ControllerFX setControllerFX(final ControllerFX contr) {
-    ControllerFX _xblockexpression = null;
+  public ControllerI setControllerFX(final ControllerI contr) {
+    ControllerI _xblockexpression = null;
     {
-      Objects.<ControllerFX>requireNonNull(contr);
+      Objects.<ControllerI>requireNonNull(contr);
       _xblockexpression = this.controllerFX = contr;
     }
     return _xblockexpression;
@@ -62,7 +62,7 @@ public class ControllerVueCreation {
   /**
    * @return current Java FX controller {@link ControllerFX}
    */
-  public ControllerFX getControllerFX() {
+  public ControllerI getControllerFX() {
     return this.controllerFX;
   }
   

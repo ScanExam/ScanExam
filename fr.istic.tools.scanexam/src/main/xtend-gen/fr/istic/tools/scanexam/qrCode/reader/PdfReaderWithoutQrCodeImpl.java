@@ -226,16 +226,40 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
     return this.sheets;
   }
   
-  /**
-   * Renvoie une collection de toutes les copies complètes au format de l'API
-   * @return une collection des copies complètes au format de l'API
-   */
   @Override
-  public Collection<StudentSheet> getStudentSheets() {
+  public Collection<StudentSheet> getCompleteStudentSheets() {
     final Set<StudentSheet> res = new HashSet<StudentSheet>();
     Set<Copie> temp = new HashSet<Copie>();
     final DataFactory dF = new DataFactory();
     temp = this.getCompleteCopies();
+    final Set<Copie> _converted_temp = (Set<Copie>)temp;
+    int _length = ((Object[])Conversions.unwrapArray(_converted_temp, Object.class)).length;
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
+    for (final Integer i : _doubleDotLessThan) {
+      {
+        final Set<Copie> _converted_temp_1 = (Set<Copie>)temp;
+        final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
+        final List<Integer> pages = new ArrayList<Integer>();
+        final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
+        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
+        ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
+        for (final Integer j : _doubleDotLessThan_1) {
+          final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
+          final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
+          pages.add((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject(), Integer.valueOf((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF()));
+        }
+        res.add(dF.createStudentSheet(index, pages));
+      }
+    }
+    return res;
+  }
+  
+  @Override
+  public Collection<StudentSheet> getUncompleteStudentSheets() {
+    final Set<StudentSheet> res = new HashSet<StudentSheet>();
+    Set<Copie> temp = new HashSet<Copie>();
+    final DataFactory dF = new DataFactory();
+    temp = this.getUncompleteCopies();
     final Set<Copie> _converted_temp = (Set<Copie>)temp;
     int _length = ((Object[])Conversions.unwrapArray(_converted_temp, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);

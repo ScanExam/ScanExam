@@ -6,4 +6,9 @@ package fr.istic.tools.scanexam.view;
  */
 @SuppressWarnings("all")
 public interface CorrectorAdapter {
+  default void previousQuestion() {
+  }
+  
+  default void nextQuestion() {
+  }
 }

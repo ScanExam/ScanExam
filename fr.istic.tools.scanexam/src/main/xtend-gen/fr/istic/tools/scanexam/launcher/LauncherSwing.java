@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.launcher;
 
+import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.view.EditorAdapterSwing;
 import java.awt.EventQueue;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -9,11 +10,19 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class LauncherSwing {
+public class LauncherSwing implements Launcher {
   /**
-   * Lancement de l'application Swing ---->  launchApp(presenter(session));
+   * METHODES
    */
-  public static void launchApp() {
+  @Override
+  public void setup() {
+  }
+  
+  /**
+   * Lancement de l'application Swing
+   */
+  @Override
+  public void launch() {
     final Runnable _function = () -> {
       try {
         new EditorAdapterSwing();

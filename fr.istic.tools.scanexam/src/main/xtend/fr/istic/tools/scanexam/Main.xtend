@@ -28,18 +28,15 @@ class Main
 		ConfigurationManager.init
 		LanguageManager.init(ConfigurationManager.instance.language)
 
-
-
-		val service = new ExamEditionService();
-		val presenter = new PresenterVueCreation(service);
-		
 		launchView(getUiLib(args))
 		
 	}
 	
-	def static void launchView(GraphicLib graphicLib) {
+	def static void launchView(GraphicLib graphicLib) 
+	{
 		var Launcher launcher;
-		switch(graphicLib) {
+		switch(graphicLib) 
+		{
 			case GraphicLib.JAVAFX : LauncherFX.launchApp(null)
 			case GraphicLib.SWING : launcher = new LauncherSwing
 		}

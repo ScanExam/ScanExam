@@ -6,7 +6,7 @@ import fr.istic.tools.scanexam.view.ControllerVueCorrection;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-@SuppressWarnings("all")
+@SuppressWarnings("all") 
 public class FXMockBackend extends ControllerVueCorrection {
   private ArrayList<Question> questions = new ArrayList<Question>();
   

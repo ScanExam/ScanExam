@@ -7,15 +7,21 @@ import java.util.Collection;
 public interface PdfReader {
   /**
    * Lit le PDF spécifié
+   * @return true ssi la lecture du PDF est réussie
    */
   boolean readPDf();
   
   /**
    * Renvoie la collection des copies complètes uniquement au format de l'API
-   * //TODO voir ce qu'on fait avec les copies pas complètes
    * @return la collection des copies complètes au format de l'API
    */
-  Collection<StudentSheet> getStudentSheets();
+  Collection<StudentSheet> getCompleteStudentSheets();
+  
+  /**
+   * Renvoie la collection des copies incomplètes uniquement au format de l'API
+   * @return la collection des copies incomplètes au format de l'API
+   */
+  Collection<StudentSheet> getUncompleteStudentSheets();
   
   /**
    * Renvoie le nombre de total de pages du PDF de toutes les copies
