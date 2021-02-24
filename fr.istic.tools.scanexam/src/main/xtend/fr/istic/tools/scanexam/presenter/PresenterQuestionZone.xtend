@@ -7,7 +7,7 @@ import java.util.Objects
  * delimitation of a question's zone for the model
  * @author Benjamin Danlos
  */
-class PresenterRectangle {
+class PresenterQuestionZone {
 	/**
 	 * Presenter for the creation view
 	 */

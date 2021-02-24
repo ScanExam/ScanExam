@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author Benjamin Danlos
  */
 @SuppressWarnings("all")
-public class PresenterRectangle {
+public class PresenterQuestionZone {
   /**
    * Presenter for the creation view
    */
