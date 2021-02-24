@@ -2,15 +2,13 @@ package fr.istic.tools.scanexam
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.launcher.Launcher
 import fr.istic.tools.scanexam.launcher.LauncherFX
 import fr.istic.tools.scanexam.launcher.LauncherSwing
 import java.util.Objects
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.config.Configurator
-import fr.istic.tools.scanexam.services.ExamEditionService
-import fr.istic.tools.scanexam.presenter.PresenterVueCreation
-import fr.istic.tools.scanexam.launcher.Launcher
 
 class Main 
 {
@@ -37,7 +35,7 @@ class Main
 		var Launcher launcher;
 		switch(graphicLib) 
 		{
-			case GraphicLib.JAVAFX : LauncherFX.launchApp(null)
+			case GraphicLib.JAVAFX : launcher = new LauncherFX
 			case GraphicLib.SWING : launcher = new LauncherSwing
 		}
 		launcher.launch

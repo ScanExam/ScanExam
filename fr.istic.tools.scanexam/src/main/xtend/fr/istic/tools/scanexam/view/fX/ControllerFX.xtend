@@ -1,6 +1,9 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.view.ControllerI
+import fr.istic.tools.scanexam.view.ControllerVueCorrection
+import fr.istic.tools.scanexam.view.ControllerVueCreation
 import java.io.File
 import java.io.IOException
 import java.util.ArrayList
@@ -23,13 +26,12 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.view.CorrectorAdapter
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
  * @author Benjamin Danlos
  */
-class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
+class ControllerFX implements ControllerI {
 
 	static val logger = LogManager.logger
 	/**
@@ -318,8 +320,7 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 	
 
 	
-	def void initStudents(int nbStudents) { //TODO complete, called on load of a new exam template
-	}
+	
 
 
 
@@ -407,7 +408,12 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files",Arrays.asList("*.xmi")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Documents");
 		var file = fileChooser.showOpenDialog(imagePane.scene.window)
-		
+		if (file != null) {
+			corrector.loadFile(file);
+		}
+		else {
+			logger.warn("File not chosen")
+		}
 	}
 	
 	def void initTests() {
@@ -427,6 +433,16 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 		}
 	}
 	
+	def void initStudentNames(List<String> names) { //TODO complete, called on load of a new exam template
+		leftList.items.clear
+		for (String s : names) {
+			leftList.items.add(new Label(s))
+		}
+	}
+	
+	def void showStudent() {
+		
+	}
 	
 	override showQuestion(Question question) {
 		
