@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.view.CorrectorAdapter
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -34,39 +35,39 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 	/**
 	 * High level Controllers to access the Presenters
 	 */
-	fr.istic.tools.scanexam.view.ControllerVueCreation controllerCreation
-	fr.istic.tools.scanexam.view.ControllerVueCorrection controllerCorrection
+	CorrectorAdapterFX corrector;
+	EditorAdapterFX editor;
 
 	/**
 	 * setter for the ControllerVueCreation attribute
 	 * @param {@link ControllerVueCreation} controller instance of ControllerVueCreation (not null) 
 	 */
-	def setControllerVueCreation(fr.istic.tools.scanexam.view.ControllerVueCreation controller) {
-		Objects.requireNonNull(controller)
-		controllerCreation = controller
+	def setAdapterEditor(EditorAdapterFX edit) {
+		Objects.requireNonNull(edit)
+		editor = edit
 	}
 
 	/**
 	 * @return current {@link ControllerVueCreation} 
 	 */
-	def getControllerVueCreation() {
-		controllerCreation
+	def getAdapterEditor() {
+		editor
 	}
 
 	/**
 	 * setter for the ControllerVueCorrection attribute
 	 * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null) 
 	 */
-	def setControllerVueCorrection(fr.istic.tools.scanexam.view.ControllerVueCorrection controller) {
-		Objects.requireNonNull(controller)
-		controllerCorrection = controller
+	def void setAdapterCorrection(CorrectorAdapterFX adapterCor) {
+		Objects.requireNonNull(adapterCor)
+		corrector = adapterCor
 	}
 
 	/**
 	 * @return current {@link ControllerVueCorrection} 
 	 */
-	def getControllerVueCorrection() {
-		controllerCorrection
+	def getAdapterCorrection() {
+		corrector
 	}
 
 	boolean botShow = false;
@@ -251,7 +252,7 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 	@FXML
 	def void nextQuestionPressed() {
 		println("Next question method");
-		controllerCorrection.nextQuestion;
+		corrector.nextQuestion;
 	}
 
 	/**
@@ -260,7 +261,7 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 	@FXML
 	def void prevQuestionPressed() {
 		println("Previous question method");
-		controllerCorrection.previousQuestion
+		corrector.previousQuestion
 	}
 
 	/**
@@ -411,8 +412,8 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 	
 	def void initTests() {
 		setKeybinds
-		var mock = new fr.istic.tools.scanexam.view.FXMockBackend();
-		controllerCorrection = mock;
+		var mock = new MockFXAdapter();
+		corrector = mock;
 		mock.controller = this;
 		mock.setQuestions
 		
@@ -426,14 +427,6 @@ class ControllerFX implements fr.istic.tools.scanexam.view.ControllerI {
 		}
 	}
 	
-	
-	def nextQuestion() {
-		controllerCorrection.nextQuestion
-	}
-	
-	def previousQuestion() {
-		controllerCorrection.previousQuestion
-	}
 	
 	override showQuestion(Question question) {
 		

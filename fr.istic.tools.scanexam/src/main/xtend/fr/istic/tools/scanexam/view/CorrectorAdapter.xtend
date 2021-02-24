@@ -5,5 +5,9 @@ package fr.istic.tools.scanexam.view
  * @author Julien Cochet
  */
 interface CorrectorAdapter {
+	def void previousQuestion() {
+		
+	}
+	def void nextQuestion(){}
 	
 }
