@@ -97,9 +97,9 @@ class ExamEditionService extends Service // TODO : renommer
     	
     	return Optional.ofNullable(resource.getContents().get(0) as CreationTemplate)
 	}
-	def void create(String pdfPath)
+	def void create(File file)
 	{
-		document = PDDocument.load(new File(pdfPath))
+		document = PDDocument.load(file)
 		
 		ExamSingleton.instance =  CoreFactory.eINSTANCE.createExam()
 		
@@ -108,7 +108,7 @@ class ExamEditionService extends Service // TODO : renommer
     		ExamSingleton.instance.pages.add(CoreFactory.eINSTANCE.createPage());
 		}
 		
-	    currentPdfPath = pdfPath;
+	    currentPdfPath = file.absolutePath
 	}
 	
 }

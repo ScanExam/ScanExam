@@ -2,6 +2,8 @@ package fr.istic.tools.scanexam.sessions;
 
 
 
+import java.io.File;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,7 @@ public class ExamEditionServiceTest
 	@DisplayName("Créer un nouveau projet et ouvre un fichier PDF")
 	void createProject() 
 	{
-		session.create("pfo_example.pdf");
+		session.create(new File("pfo_example.pdf"));
 		
 	}
 	

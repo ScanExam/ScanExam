@@ -2,6 +2,8 @@ package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.view.ControllerI;
+import fr.istic.tools.scanexam.view.ControllerVueCorrection;
+import fr.istic.tools.scanexam.view.ControllerVueCreation;
 import fr.istic.tools.scanexam.view.fX.CorrectorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
@@ -384,9 +386,6 @@ public class ControllerFX implements ControllerI {
   
   private ControllerFX.QuestionDetails currentQuestion;
   
-  public void initStudents(final int nbStudents) {
-  }
-  
   public void binds(final Node n) {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
       KeyCode _code = event.getCode();
@@ -461,6 +460,12 @@ public class ControllerFX implements ControllerI {
     File _file = new File(_plus_1);
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showOpenDialog(this.imagePane.getScene().getWindow());
+    boolean _notEquals = (!com.google.common.base.Objects.equal(file, null));
+    if (_notEquals) {
+      this.corrector.loadFile(file);
+    } else {
+      ControllerFX.logger.warn("File not chosen");
+    }
   }
   
   public void initTests() {
@@ -479,6 +484,18 @@ public class ControllerFX implements ControllerI {
       Label _label = new Label(s);
       _items.add(_label);
     }
+  }
+  
+  public void initStudentNames(final List<String> names) {
+    this.leftList.getItems().clear();
+    for (final String s : names) {
+      ObservableList<Label> _items = this.leftList.getItems();
+      Label _label = new Label(s);
+      _items.add(_label);
+    }
+  }
+  
+  public void showStudent() {
   }
   
   @Override

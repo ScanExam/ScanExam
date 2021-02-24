@@ -1,6 +1,9 @@
 package fr.istic.tools.scanexam.launcher;
 
+import fr.istic.tools.scanexam.launcher.Launcher;
+import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,16 +16,12 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * @author Stefan Locke
  */
 @SuppressWarnings("all")
-public class LauncherFX extends Application {
+public class LauncherFX extends Application implements Launcher {
   /**
    * Lancement de l'application FX
    */
   public static void launchApp(final String[] args) {
     Application.launch(args);
-  }
-  
-  public static void launchApp() {
-    Application.launch(null);
   }
   
   /**
@@ -39,5 +38,12 @@ public class LauncherFX extends Application {
     primaryStage.setMinHeight(720);
     primaryStage.setMinWidth(720);
     primaryStage.show();
+  }
+  
+  @Override
+  public void launch() {
+    final EditorAdapterFX edit = new EditorAdapterFX();
+    PresenterBindings.linkEditorPresenter(edit);
+    LauncherFX.launchApp(null);
   }
 }

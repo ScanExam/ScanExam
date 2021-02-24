@@ -6,7 +6,7 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
-import fr.istic.tools.scanexam.presenter.PresenterLinker
+import fr.istic.tools.scanexam.presenter.PresenterBindings
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -38,7 +38,7 @@ class LauncherFX extends Application implements Launcher {
 	
 	override launch() {
 		val edit = new EditorAdapterFX();
-		PresenterLinker.linkEditorPresenter(edit);
+		PresenterBindings.linkEditorPresenter(edit);
 		launchApp(null);
 	}
 	

@@ -4,7 +4,7 @@ import fr.istic.tools.scanexam.services.ExamEditionService
 import fr.istic.tools.scanexam.services.ExamGraduationService
 import fr.istic.tools.scanexam.view.Adapter
 
-class PresenterLinker 
+class PresenterBindings 
 {
 	
 	def static void linkEditorPresenter(Adapter adapter)

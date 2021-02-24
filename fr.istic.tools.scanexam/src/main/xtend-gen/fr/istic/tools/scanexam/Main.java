@@ -41,7 +41,8 @@ public class Main {
     if (graphicLib != null) {
       switch (graphicLib) {
         case JAVAFX:
-          LauncherFX.launchApp(null);
+          LauncherFX _launcherFX = new LauncherFX();
+          launcher = _launcherFX;
           break;
         case SWING:
           LauncherSwing _launcherSwing = new LauncherSwing();

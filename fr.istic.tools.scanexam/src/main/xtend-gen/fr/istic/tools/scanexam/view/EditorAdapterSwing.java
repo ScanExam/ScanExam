@@ -1,8 +1,11 @@
 package fr.istic.tools.scanexam.view;
 
 import fr.istic.tools.scanexam.box.BoxList;
+import fr.istic.tools.scanexam.presenter.Presenter;
+import fr.istic.tools.scanexam.presenter.PresenterVueCreation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.AdapterSwingPdfAndBoxPanel;
+import fr.istic.tools.scanexam.view.EditorAdapter;
 import fr.istic.tools.scanexam.view.EditorViewSwing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +24,12 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class EditorAdapterSwing {
+public class EditorAdapterSwing implements EditorAdapter {
+  /**
+   * Presenter de la création d'exman
+   */
+  private PresenterVueCreation editorPresenter;
+  
   /**
    * Vue de la création d'exman
    */
@@ -91,5 +99,10 @@ public class EditorAdapterSwing {
         this.adapterPdfAndBox.setPDF(pdfInput, 0);
       }
     }
+  }
+  
+  @Override
+  public void setPresenter(final Presenter presenter) {
+    this.editorPresenter = ((PresenterVueCreation) presenter);
   }
 }

@@ -109,17 +109,16 @@ public class ExamEditionService extends Service {
     return Optional.<CreationTemplate>ofNullable(((CreationTemplate) _get));
   }
   
-  public void create(final String pdfPath) {
+  public void create(final File file) {
     try {
-      File _file = new File(pdfPath);
-      this.document = PDDocument.load(_file);
+      this.document = PDDocument.load(file);
       ExamSingleton.instance = CoreFactory.eINSTANCE.createExam();
       int _size = IterableExtensions.size(this.document.getPages());
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
       for (final Integer i : _doubleDotLessThan) {
         ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());
       }
-      this.currentPdfPath = pdfPath;
+      this.currentPdfPath = file.getAbsolutePath();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
