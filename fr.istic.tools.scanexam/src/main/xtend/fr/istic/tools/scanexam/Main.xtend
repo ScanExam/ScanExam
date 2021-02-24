@@ -8,6 +8,8 @@ import java.util.Objects
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.config.Configurator
+import fr.istic.tools.scanexam.services.ExamEditionService
+import fr.istic.tools.scanexam.presenter.PresenterVueCreation
 
 class Main 
 {
@@ -25,6 +27,11 @@ class Main
 		ConfigurationManager.init
 		LanguageManager.init(ConfigurationManager.instance.language)
 
+
+
+		val service = new ExamEditionService();
+		val presenter = new PresenterVueCreation(service);
+		
 		launchView(getUiLib(args))
 		
 	}

@@ -36,7 +36,7 @@ public class EditorAdapterSwing {
    * Constructeur
    */
   public EditorAdapterSwing() {
-    InputStream pdfInput = ResourcesUtils.getInputStreamResource("/viewResources/pfo_example.pdf");
+    InputStream pdfInput = ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf");
     BoxList _boxList = new BoxList();
     AdapterSwingPdfAndBoxPanel _adapterSwingPdfAndBoxPanel = new AdapterSwingPdfAndBoxPanel(1280, 720, pdfInput, _boxList);
     this.adapterPdfAndBox = _adapterSwingPdfAndBoxPanel;

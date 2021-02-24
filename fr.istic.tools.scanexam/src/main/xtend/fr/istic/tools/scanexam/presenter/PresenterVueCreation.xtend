@@ -21,13 +21,12 @@ class PresenterVueCreation {
 	ControllerVueCreation controller;
 	ExamEditionService service;
 	
-	
-	def PresenterVueCreation(ExamEditionService service)
+	new(ExamEditionService service) 
 	{
 		Objects.requireNonNull(service)
 		this.service = service
 	}
-	
+
 	/**
 	 * @return API session 
 	 */

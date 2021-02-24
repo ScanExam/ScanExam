@@ -4,6 +4,8 @@ import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.launcher.LauncherSwing;
+import fr.istic.tools.scanexam.presenter.PresenterVueCreation;
+import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.util.Objects;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +34,8 @@ public class Main {
     Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
     ConfigurationManager.init();
     LanguageManager.init(ConfigurationManager.instance.getLanguage());
+    final ExamEditionService service = new ExamEditionService();
+    final PresenterVueCreation presenter = new PresenterVueCreation(service);
     Main.launchView(Main.getUiLib(args));
   }
   

@@ -28,13 +28,9 @@ public class PresenterVueCorrection {
   
   private ExamGraduationService service;
   
-  public ExamGraduationService PresenterVueCorrection(final ExamGraduationService service) {
-    ExamGraduationService _xblockexpression = null;
-    {
-      Objects.<ExamGraduationService>requireNonNull(service);
-      _xblockexpression = this.service = service;
-    }
-    return _xblockexpression;
+  public PresenterVueCorrection(final ExamGraduationService service) {
+    Objects.<ExamGraduationService>requireNonNull(service);
+    this.service = service;
   }
   
   /**

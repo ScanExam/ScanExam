@@ -28,13 +28,9 @@ public class PresenterVueCreation {
   
   private ExamEditionService service;
   
-  public ExamEditionService PresenterVueCreation(final ExamEditionService service) {
-    ExamEditionService _xblockexpression = null;
-    {
-      Objects.<ExamEditionService>requireNonNull(service);
-      _xblockexpression = this.service = service;
-    }
-    return _xblockexpression;
+  public PresenterVueCreation(final ExamEditionService service) {
+    Objects.<ExamEditionService>requireNonNull(service);
+    this.service = service;
   }
   
   /**
