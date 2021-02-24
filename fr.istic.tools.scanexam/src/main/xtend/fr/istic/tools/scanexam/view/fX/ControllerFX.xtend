@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view;
+package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question
 import java.io.File
