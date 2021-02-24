@@ -3,7 +3,7 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
-import fr.istic.tools.scanexam.services.Service;
+import fr.istic.tools.scanexam.services.ExamGraduationService;
 import fr.istic.tools.scanexam.view.ControllerVueCorrection;
 import java.util.Objects;
 
@@ -26,17 +26,13 @@ public class PresenterVueCorrection {
   
   private ControllerVueCorrection controller;
   
-  private Service service;
+  private ExamGraduationService service;
   
-  /**
-   * Setter for the session API
-   * @param {@link Session} session of the API)
-   */
-  public Service setPresenterQRCode(final Service apiService) {
-    Service _xblockexpression = null;
+  public ExamGraduationService PresenterVueCorrection(final ExamGraduationService service) {
+    ExamGraduationService _xblockexpression = null;
     {
-      Objects.<Service>requireNonNull(apiService);
-      _xblockexpression = this.service = apiService;
+      Objects.<ExamGraduationService>requireNonNull(service);
+      _xblockexpression = this.service = service;
     }
     return _xblockexpression;
   }
@@ -44,7 +40,7 @@ public class PresenterVueCorrection {
   /**
    * @return API session
    */
-  public Service getServiceAPI() {
+  public ExamGraduationService getServiceAPI() {
     return this.service;
   }
   

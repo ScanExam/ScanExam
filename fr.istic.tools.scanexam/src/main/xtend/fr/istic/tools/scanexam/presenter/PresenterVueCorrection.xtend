@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.presenter
 import java.util.Objects
 import fr.istic.tools.scanexam.view.ControllerVueCorrection
 import fr.istic.tools.scanexam.services.Service
+import fr.istic.tools.scanexam.services.ExamGraduationService
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -18,16 +19,14 @@ class PresenterVueCorrection {
 	PresenterCopy presCopy
 	PresenterMarkingScheme presMarkingScheme
 	ControllerVueCorrection controller;
-	Service service;
+	ExamGraduationService service;
 	
-	/**
-	 * Setter for the session API
-	 * @param {@link Session} session of the API) 
-	 */
-	def setPresenterQRCode(Service apiService){
-		Objects.requireNonNull(apiService)
-		service = apiService
+	def PresenterVueCorrection(ExamGraduationService service)
+	{
+		Objects.requireNonNull(service);
+		this.service = service;
 	}
+
 	/**
 	 * @return API session 
 	 */

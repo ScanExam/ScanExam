@@ -3,7 +3,7 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
 import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterRectangle;
-import fr.istic.tools.scanexam.services.Service;
+import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.view.ControllerVueCreation;
 import java.util.Objects;
 
@@ -26,17 +26,13 @@ public class PresenterVueCreation {
   
   private ControllerVueCreation controller;
   
-  private Service service;
+  private ExamEditionService service;
   
-  /**
-   * Setter for the session API
-   * @param {@link Session} session of the API)
-   */
-  public Service setPresenterQRCode(final Service apiService) {
-    Service _xblockexpression = null;
+  public ExamEditionService PresenterVueCreation(final ExamEditionService service) {
+    ExamEditionService _xblockexpression = null;
     {
-      Objects.<Service>requireNonNull(apiService);
-      _xblockexpression = this.service = apiService;
+      Objects.<ExamEditionService>requireNonNull(service);
+      _xblockexpression = this.service = service;
     }
     return _xblockexpression;
   }
@@ -44,7 +40,7 @@ public class PresenterVueCreation {
   /**
    * @return API session
    */
-  public Service getSessionAPI() {
+  public ExamEditionService getSessionAPI() {
     return this.service;
   }
   
