@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
@@ -83,6 +84,9 @@ public class ConfigPackageImpl extends EPackageImpl implements ConfigPackage {
 
 		isInited = true;
 
+		// Initialize simple dependencies
+		EcorePackage.eINSTANCE.eClass();
+
 		// Create package meta-data objects
 		theConfigPackage.createPackageContents();
 
@@ -113,6 +117,42 @@ public class ConfigPackageImpl extends EPackageImpl implements ConfigPackage {
 	 */
 	public EAttribute getConfig_Language() {
 		return (EAttribute)configEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConfig_Email() {
+		return (EAttribute)configEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConfig_EmailPassword() {
+		return (EAttribute)configEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConfig_MailHost() {
+		return (EAttribute)configEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConfig_MailPort() {
+		return (EAttribute)configEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -154,6 +194,10 @@ public class ConfigPackageImpl extends EPackageImpl implements ConfigPackage {
 		// Create classes and their features
 		configEClass = createEClass(CONFIG);
 		createEAttribute(configEClass, CONFIG__LANGUAGE);
+		createEAttribute(configEClass, CONFIG__EMAIL);
+		createEAttribute(configEClass, CONFIG__EMAIL_PASSWORD);
+		createEAttribute(configEClass, CONFIG__MAIL_HOST);
+		createEAttribute(configEClass, CONFIG__MAIL_PORT);
 
 		// Create data types
 		localeEDataType = createEDataType(LOCALE);
@@ -182,6 +226,9 @@ public class ConfigPackageImpl extends EPackageImpl implements ConfigPackage {
 		setNsPrefix(eNS_PREFIX);
 		setNsURI(eNS_URI);
 
+		// Obtain other dependent packages
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+
 		// Create type parameters
 
 		// Set bounds for type parameters
@@ -191,6 +238,10 @@ public class ConfigPackageImpl extends EPackageImpl implements ConfigPackage {
 		// Initialize classes, features, and operations; add parameters
 		initEClass(configEClass, Config.class, "Config", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getConfig_Language(), this.getLocale(), "language", null, 0, 1, Config.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConfig_Email(), theEcorePackage.getEString(), "email", null, 0, 1, Config.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConfig_EmailPassword(), theEcorePackage.getEString(), "emailPassword", null, 0, 1, Config.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConfig_MailHost(), theEcorePackage.getEString(), "mailHost", null, 0, 1, Config.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConfig_MailPort(), theEcorePackage.getEString(), "mailPort", null, 0, 1, Config.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(localeEDataType, Locale.class, "Locale", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
