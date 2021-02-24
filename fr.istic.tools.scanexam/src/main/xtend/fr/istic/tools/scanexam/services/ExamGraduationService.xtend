@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.services
 
-import java.io.File
+
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.Set
 

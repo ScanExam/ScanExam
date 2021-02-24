@@ -1,14 +1,10 @@
 package fr.istic.tools.scanexam.services
 
-import fr.istic.tools.scanexam.core.Exam
-import fr.istic.tools.scanexam.core.Page
-import fr.istic.tools.scanexam.core.Question
+
 import fr.istic.tools.scanexam.core.QuestionZone
-import java.util.Collections
-import java.util.List
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
-import java.io.File
+
 
 abstract class Service 
 {
