@@ -13,12 +13,15 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
 import java.util.concurrent.CountDownLatch
 import java.io.InputStream
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 
 class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
 	InputStream inStream
+	int nbPagesInPdf;
 
 	new(InputStream inStream, int nbPages, int nbCopies) {
 		this.inStream = inStream
@@ -33,7 +36,8 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 */
 	override readPDf() {
 		try {
-			val PDDocument doc = PDDocument.load(inStream);
+			val PDDocument doc = PDDocument.load(inStream)
+			this.nbPagesInPdf = doc.numberOfPages
 			val PDFRenderer pdf = new PDFRenderer(doc)
 			createThread(doc.numberOfPages, pdf)
 			doc.close
@@ -52,25 +56,32 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 */
 	def createThread(int nbPage, PDFRenderer pdfRenderer) {
 		val ExecutorService service = Executors.newFixedThreadPool(4)
-		val CountDownLatch LatchThreads = new CountDownLatch(4);
-		val CountDownLatch LatchMain = new CountDownLatch(1);
+		val CountDownLatch latchThreads = new CountDownLatch(4);
+		val CountDownLatch latchMain = new CountDownLatch(1);
 
-		service.execute(new PdfReaderWithoutQrCodeThread(this, 0, (nbPage / 4), pdfRenderer, LatchThreads, LatchMain))
+		service.execute(new PdfReaderWithoutQrCodeThread(this, 0, (nbPage / 4), pdfRenderer, latchThreads, latchMain))
 		service.execute(
-			new PdfReaderWithoutQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer, LatchThreads, LatchMain))
+			new PdfReaderWithoutQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer, latchThreads, latchMain))
 		service.execute(
-			new PdfReaderWithoutQrCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer, LatchThreads,
-				LatchMain))
+			new PdfReaderWithoutQrCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer, latchThreads,
+				latchMain))
 		service.execute(
-			new PdfReaderWithoutQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer, LatchThreads, LatchMain))
+			new PdfReaderWithoutQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer, latchThreads, latchMain))
 
-		LatchMain.countDown();
-		LatchThreads.await();
-
+		latchMain.countDown()
+		latchThreads.await()
 		service.shutdown()
 
 	}
+	
+	//TODO
+	def verificationClosureThreads(ExecutorService service, CountDownLatch lThreads){
+		if(lThreads.count == 0)
+			service.shutdown()
+	}
 
+
+	val Lock lock = new ReentrantLock()
 	/**
 	 * Méthode qui lit une certaine partie d'un pdf
 	 * @param renderer le pdf lu
@@ -80,12 +91,12 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	def readPartition(PDFRenderer renderer, int i, int j) {
 		for (page : i ..< j) {
 			val Copie cop = new Copie(page / nbPagesInSheet, page, page % nbPagesInSheet)
-			// WARNING race condition sur le get de la taille dans addCopie
-			synchronized (sheets) {
-				addCopie(cop)
-			}
+			
+			lock.lock()
+			addCopie(cop)
+			lock.unlock()
 
-			println("Success page " + page)
+			//println("Success page " + page)
 		}
 	}
 
@@ -202,10 +213,7 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 * @return le nombre de pages du PDF source
 	 */
 	override getNbPagesPdf() {
-		val PDDocument doc = PDDocument.load(inStream)
-		val int nbPages = doc.numberOfPages
-		doc.close
-		return nbPages
+		return this.nbPagesInPdf;
 	}
 
 	/**

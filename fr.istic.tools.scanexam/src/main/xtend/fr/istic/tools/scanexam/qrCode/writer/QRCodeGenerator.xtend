@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.qrCode.writer
 
-import java.io.InputStream
-
 interface QRCodeGenerator {
 	
 	/**

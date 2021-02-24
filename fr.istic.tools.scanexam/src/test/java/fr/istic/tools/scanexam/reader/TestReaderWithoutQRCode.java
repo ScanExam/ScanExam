@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.reader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,19 +15,20 @@ public class TestReaderWithoutQRCode {
 
 	PdfReader readerGood;
 	PdfReader readerDirty;
+	int nbPages = 8;
+	int nbCopies = 5;
 
 	@BeforeEach
 	void init() {
 
-		int nbPages = 8;
-		int nbCopies = 5;
+		
 
 
-			InputStream inStreamGood = ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf");
+			InputStream inStreamGood = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Inserted.pdf");
 			if(inStreamGood != null) 
 			readerGood = new PdfReaderWithoutQrCodeImpl(inStreamGood, nbPages, nbCopies);
 
-			InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("/QRCode/pfo_example_dirty.pdf");
+			InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Dirty.pdf");
 			if(inStreamDirty != null) 
 			readerDirty = new PdfReaderWithoutQrCodeImpl(inStreamDirty, nbPages, nbCopies);
 	}
@@ -44,10 +46,17 @@ public class TestReaderWithoutQRCode {
 	}
 
 	@Test
-	@DisplayName("Test getNbPagesPdf")
-	void getNbPagesPdfTest() {
+	@DisplayName("Test getNbPagesPdf dans le pdf complet")
+	void getNbPagesPdfTestGood() {
 		assertTrue(readerGood.readPDf());
-		assertEquals(readerGood.getNbPagesPdf(), 40);
+		assertEquals(readerGood.getNbPagesPdf(), nbPages * nbCopies);
+	}
+	
+	@Test
+	@DisplayName("Test getNbPagesPdf dans un pdf incomplet")
+	void getNbPagesPdfTestDirty() {
+		assertTrue(readerDirty.readPDf());
+		assertNotEquals(readerDirty.getNbPagesPdf(), nbPages * nbCopies);
 	}
 
 	@Test
@@ -55,7 +64,7 @@ public class TestReaderWithoutQRCode {
 	void getNbPagesTraiteePdfTest() {
 		assertEquals(readerGood.getNbPagesTreated(), 0);
 		assertTrue(readerGood.readPDf());
-		assertEquals(readerGood.getNbPagesTreated(), 40);
+		assertEquals(readerGood.getNbPagesTreated(), nbCopies * nbPages);
 	}
 
 
