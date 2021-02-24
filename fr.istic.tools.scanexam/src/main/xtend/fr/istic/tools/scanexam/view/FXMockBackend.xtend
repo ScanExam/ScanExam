@@ -1,11 +1,8 @@
 package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.core.Question
-import fr.istic.tools.scanexam.core.impl.QuestionImpl
 import java.util.ArrayList
-import java.util.LinkedList;
-import java.util.List;
-import fr.istic.tools.scanexam.core.impl.CoreFactoryImpl;
+import java.util.LinkedList
 import fr.istic.tools.scanexam.api.DataFactory
 
 class FXMockBackend extends ControllerVueCorrection {
