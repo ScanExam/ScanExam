@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.launcher
 
-import fr.istic.tools.scanexam.view.Adapter
-
 /** 
  * Interface de lancement de vue 
  * @author Julien Cochet
@@ -14,9 +12,14 @@ interface Launcher {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/** 
-	 * Lancement de l'application
+	/**
+	 * Créé l'adapter et initialise les attributs du presenter
 	 */
-	def Adapter launchApp()
+	def void setup()
+	
+	/** 
+	 * Lance l'application
+	 */
+	def void launch()
 
 }

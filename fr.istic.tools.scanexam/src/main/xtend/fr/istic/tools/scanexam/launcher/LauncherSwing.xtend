@@ -7,7 +7,7 @@ import fr.istic.tools.scanexam.view.EditorAdapterSwing
  * Classe pour lancer directement la vue en utilisant la librairie Swing
  * @author Julien Cochet
  */
-class LauncherSwing {
+class LauncherSwing implements Launcher {
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -15,10 +15,14 @@ class LauncherSwing {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	override void setup() {
+		
+	}
+	
 	/** 
-	 * Lancement de l'application Swing ---->  launchApp(presenter(session));
+	 * Lancement de l'application Swing
 	 */
-	def static void launchApp() {
+	override void launch() {
 		EventQueue.invokeLater([
 			try {
 				new EditorAdapterSwing
