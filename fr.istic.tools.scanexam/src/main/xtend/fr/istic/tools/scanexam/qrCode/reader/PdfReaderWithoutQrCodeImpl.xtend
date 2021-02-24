@@ -158,11 +158,6 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		completeCopies = sheets.stream.filter(copie|copie.isCopyComplete(nbPagesInSheet)).collect(Collectors.toSet)
 
 		return completeCopies
-	/*for(i : 0 ..< sheets.length){
-	 * 	if(sheets.get(i).isCopyComplete(nbPagesInSheet))
-	 * 		completeCopies.add(sheets.get(i))
-	 }*/
-	// return completeCopies
 	}
 
 	/**
@@ -184,16 +179,35 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		return sheets
 	}
 
-	/**
-	 * Renvoie une collection de toutes les copies complètes au format de l'API
-	 * @return une collection des copies complètes au format de l'API
-	 */
-	override getStudentSheets() {
+	
+		
+	override getCompleteStudentSheets() {
 		val Set<StudentSheet> res = new HashSet<StudentSheet>()
 		var Set<Copie> temp = new HashSet<Copie>()
 		val DataFactory dF = new DataFactory()
 
 		temp = completeCopies
+
+		for (i : 0 ..< temp.length) {
+			val int index = temp.get(i).numCopie
+			val List<Integer> pages = new ArrayList<Integer>()
+
+			for (j : 0 ..< temp.get(i).pagesCopie.length) {
+				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+			}
+
+			res.add(dF.createStudentSheet(index, pages))
+		}
+		return res
+		
+	}
+	
+	override getUncompleteStudentSheets() {
+		val Set<StudentSheet> res = new HashSet<StudentSheet>()
+		var Set<Copie> temp = new HashSet<Copie>()
+		val DataFactory dF = new DataFactory()
+
+		temp = uncompleteCopies
 
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
@@ -243,4 +257,6 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 
 		println("Examen complet? : " + qrcodeReader.isExamenComplete)*/
 	}
+
+	
 }

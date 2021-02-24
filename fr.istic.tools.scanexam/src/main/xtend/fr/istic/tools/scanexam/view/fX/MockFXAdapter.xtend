@@ -1,19 +1,20 @@
-package fr.istic.tools.scanexam.view
+package fr.istic.tools.scanexam.view.fX
 
 import fr.istic.tools.scanexam.core.Question
 import java.util.ArrayList
 import java.util.LinkedList
 import fr.istic.tools.scanexam.api.DataFactory
+import fr.istic.tools.scanexam.view.fX.ControllerFX
 
-class FXMockBackend extends ControllerVueCorrection {
+class MockFXAdapter extends CorrectorAdapterFX {
 	
 	var questions = new ArrayList<Question>();
 	Question currentQuestion;
 	int index;
 	
 	
-	
-	override LinkedList<String> questionNames(){
+	public ControllerFX controller;
+	def LinkedList<String> questionNames(){
 		var stringList = new LinkedList<String>();
 		for (Question q : questions) {
 			stringList.add(q.name);

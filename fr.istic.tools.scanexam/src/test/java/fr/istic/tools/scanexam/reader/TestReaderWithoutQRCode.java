@@ -11,7 +11,7 @@ import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 
-public class TestReaderWithoutQRCode {
+class TestReaderWithoutQRCode {
 
 	PdfReader readerGood;
 	PdfReader readerDirty;
@@ -20,16 +20,12 @@ public class TestReaderWithoutQRCode {
 
 	@BeforeEach
 	void init() {
-
-		
-
-
-			InputStream inStreamGood = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Inserted.pdf");
-			if(inStreamGood != null) 
+		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Inserted.pdf");
+		if (inStreamGood != null)
 			readerGood = new PdfReaderWithoutQrCodeImpl(inStreamGood, nbPages, nbCopies);
 
-			InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Dirty.pdf");
-			if(inStreamDirty != null) 
+		InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Dirty.pdf");
+		if (inStreamDirty != null)
 			readerDirty = new PdfReaderWithoutQrCodeImpl(inStreamDirty, nbPages, nbCopies);
 	}
 
@@ -49,24 +45,23 @@ public class TestReaderWithoutQRCode {
 	@DisplayName("Test getNbPagesPdf dans le pdf complet")
 	void getNbPagesPdfTestGood() {
 		assertTrue(readerGood.readPDf());
-		assertEquals(readerGood.getNbPagesPdf(), nbPages * nbCopies);
+		assertEquals(nbCopies * nbPages, readerGood.getNbPagesPdf());
 	}
-	
+
 	@Test
 	@DisplayName("Test getNbPagesPdf dans un pdf incomplet")
 	void getNbPagesPdfTestDirty() {
 		assertTrue(readerDirty.readPDf());
-		assertNotEquals(readerDirty.getNbPagesPdf(), nbPages * nbCopies);
+		assertNotEquals(nbCopies * nbPages,readerDirty.getNbPagesPdf());
 	}
 
 	@Test
 	@DisplayName("Test getNbPagesTraitee")
 	void getNbPagesTraiteePdfTest() {
-		assertEquals(readerGood.getNbPagesTreated(), 0);
+		assertEquals(0,readerGood.getNbPagesTreated());
 		assertTrue(readerGood.readPDf());
-		assertEquals(readerGood.getNbPagesTreated(), nbCopies * nbPages);
+		assertEquals(nbCopies * nbPages,readerGood.getNbPagesTreated());
 	}
-
 
 	@Test
 	@DisplayName("Test du renvoi de la structure au format de l'API quand il manque une page")

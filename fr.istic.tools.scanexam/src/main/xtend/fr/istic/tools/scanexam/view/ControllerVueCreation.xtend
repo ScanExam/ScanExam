@@ -16,7 +16,7 @@ class ControllerVueCreation {
 	/**
 	 * Controller used by the JavaFX view
 	 */
-	ControllerFX controllerFX
+	ControllerI controllerFX
 	
 	/**
 	 * Controller used by the Swing view
@@ -42,7 +42,7 @@ class ControllerVueCreation {
 	 * setter for the ControllerFX attribute
 	 * @param {@link ControllerFX} pres instance of the Java FX Controller (not null) 
 	 */
-    def setControllerFX(ControllerFX contr){
+    def setControllerFX(ControllerI contr){
     	Objects.requireNonNull(contr)
     	controllerFX=contr
     }

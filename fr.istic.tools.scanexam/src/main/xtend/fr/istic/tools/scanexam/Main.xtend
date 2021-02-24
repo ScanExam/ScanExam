@@ -10,8 +10,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.config.Configurator
 import fr.istic.tools.scanexam.services.ExamEditionService
 import fr.istic.tools.scanexam.presenter.PresenterVueCreation
-import fr.istic.tools.scanexam.presenter.PresenterVueCorrection
-import fr.istic.tools.scanexam.services.ExamGraduationService
+import fr.istic.tools.scanexam.launcher.Launcher
 
 class Main 
 {
@@ -31,21 +30,20 @@ class Main
 
 
 
-		val editionService = new ExamEditionService();
-		val presenterVueCreation = new PresenterVueCreation(editionService);
-		
-		val graduationService = new ExamGraduationService();
-		val presenterVueCorrection = new PresenterVueCorrection(graduationService);
+		val service = new ExamEditionService();
+		val presenter = new PresenterVueCreation(service);
 		
 		launchView(getUiLib(args))
 		
 	}
 	
 	def static void launchView(GraphicLib graphicLib) {
+		var Launcher launcher;
 		switch(graphicLib) {
 			case GraphicLib.JAVAFX : LauncherFX.launchApp(null)
-			case GraphicLib.SWING : LauncherSwing.launchApp()
-		} 
+			case GraphicLib.SWING : launcher = new LauncherSwing
+		}
+		launcher.launch
 	}	
 	
 	

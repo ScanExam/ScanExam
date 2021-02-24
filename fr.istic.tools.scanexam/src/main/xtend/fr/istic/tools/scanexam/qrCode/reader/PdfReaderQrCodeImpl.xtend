@@ -60,7 +60,6 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 	
 
-
 	def void readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
 		for (page : startPages ..< endPages) {
 			val BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB)
@@ -152,12 +151,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 			.collect(Collectors.toSet)
 		
 		return completeCopies
-		/*for(i : 0 ..< sheets.length){
-			if(sheets.get(i).isCopyComplete(nbPagesInSheet))
-				completeCopies.add(sheets.get(i))
-		}*/
-		
-		//return completeCopies
+
 	}
 	
 	def Copie getCopie(int numCopie){
@@ -189,6 +183,52 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 	
 	
+		
+	override getCompleteStudentSheets() {
+		val Set<StudentSheet> res = new HashSet<StudentSheet>()
+		var Set<Copie> temp = new HashSet<Copie>()
+		val DataFactory dF = new DataFactory()
+		
+		temp = completeCopies
+		
+		for(i : 0 ..< temp.length){
+			val int index = temp.get(i).numCopie
+			val List<Integer> pages = new ArrayList<Integer>()
+			
+			for(j : 0 ..< temp.get(i).pagesCopie.length){
+				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+			}
+			
+			res.add(dF.createStudentSheet(index, pages))
+		}
+		return res
+	}
+	
+	override getUncompleteStudentSheets() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getStudentSheets() {
+		
+	}
+	
+	override getNbPagesPdf() {
+		val PDDocument doc = PDDocument.load(pdfFile)
+		val int nbPages = doc.numberOfPages
+		doc.close
+		return nbPages
+	}
+	
+	override getNbPagesTreated() {
+		var int res = 0
+		
+		for(i : 0 ..< sheets.length){
+			res += sheets.get(i).setPages.length
+		}
+		return res
+	}
+	
+	
 	/* FIXME
 	 * C'est parti en sucette je crois, boucle infini, il a pas trouvé de QRCode dans une des pages
 	 * impossible de comprendre pour le moment, à check
@@ -214,41 +254,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 	
 	
-	override getStudentSheets() {
-		val Set<StudentSheet> res = new HashSet<StudentSheet>()
-		var Set<Copie> temp = new HashSet<Copie>()
-		val DataFactory dF = new DataFactory()
-		
-		temp = completeCopies
-		
-		for(i : 0 ..< temp.length){
-			val int index = temp.get(i).numCopie
-			val List<Integer> pages = new ArrayList<Integer>()
-			
-			for(j : 0 ..< temp.get(i).pagesCopie.length){
-				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
-			}
-			
-			res.add(dF.createStudentSheet(index, pages))
-		}
-		return res
-	}
 	
-	override getNbPagesPdf() {
-		val PDDocument doc = PDDocument.load(pdfFile)
-		val int nbPages = doc.numberOfPages
-		doc.close
-		return nbPages
-	}
-	
-	override getNbPagesTreated() {
-		var int res = 0
-		
-		for(i : 0 ..< sheets.length){
-			res += sheets.get(i).setPages.length
-		}
-		return res
-	}
 	
 
 }
