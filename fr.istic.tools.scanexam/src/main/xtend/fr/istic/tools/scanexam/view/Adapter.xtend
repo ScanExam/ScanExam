@@ -6,9 +6,9 @@ import fr.istic.tools.scanexam.presenter.Presenter
  * Interface d'adaptateur général
  * @author Julien Cochet
  */
-interface Adapter {
+interface Adapter<T extends Presenter> {
 	
-	def void setPresenter(Presenter presenter);
+	def void setPresenter(T presenter);
 	
 	
 	

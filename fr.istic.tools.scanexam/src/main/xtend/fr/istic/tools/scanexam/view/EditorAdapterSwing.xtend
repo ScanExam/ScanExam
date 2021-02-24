@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view
 
 import fr.istic.tools.scanexam.box.BoxList
+import fr.istic.tools.scanexam.presenter.PresenterVueCreation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -10,8 +11,6 @@ import java.io.IOException
 import java.io.InputStream
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
-import fr.istic.tools.scanexam.presenter.Presenter
-import fr.istic.tools.scanexam.presenter.PresenterVueCreation
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
@@ -99,8 +98,8 @@ class EditorAdapterSwing implements EditorAdapter {
 	    }
 	}
 	
-	override setPresenter(Presenter presenter) {
-		editorPresenter = presenter as PresenterVueCreation
+	override setPresenter(PresenterVueCreation presenter) {
+		editorPresenter = presenter
 	}
 	
 }

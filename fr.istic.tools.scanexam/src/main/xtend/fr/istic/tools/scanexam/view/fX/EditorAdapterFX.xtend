@@ -7,8 +7,8 @@ import fr.istic.tools.scanexam.presenter.PresenterVueCreation
 class EditorAdapterFX implements EditorAdapter {
 	
 	PresenterVueCreation presenter;
-	override setPresenter(Presenter presenter) {
-		this.presenter = presenter as PresenterVueCreation 
+	override setPresenter(PresenterVueCreation presenter) {
+		this.presenter = presenter
 	}
 	
 }
