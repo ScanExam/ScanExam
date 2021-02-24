@@ -43,6 +43,7 @@ public class QRThreadWriter extends Thread implements Runnable {
       for (final Integer i : _doubleDotLessThan) {
         this.generator.insertQRCodeInSubject(this.docSujetMaitre, (i).intValue(), this.numThread, this.nbPages);
       }
+      this.countDown.countDown();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

@@ -16,8 +16,6 @@ import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 
 public class ExamGraduationServiceTest 
 {
-	
-	
 	@BeforeEach
 	void init() 
 	{

@@ -34,8 +34,8 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param height Hauteur de l'image
    * @param filePath Chemin du nouveau fichier
    * 
-   * Crée un QRCode (21 * 21 carrés) de taille width * height encryptant la chaine text.
-   * Un fichier PNG du QRCode est crée en suivant le filePath
+   * CrÃ©e un QRCode (21 * 21 carrÃ©s) de taille width * height encryptant la chaine text.
+   * Un fichier PNG du QRCode est crÃ©e en suivant le filePath
    * 
    * @throws WriterException
    * @throws IOException
@@ -52,8 +52,8 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * l'enregistre dans outputFile
    * 
    * @param inputFile  Chemin du pdf cible
-   * @param imagePath  Chemin de l'image a insérer
-   * @param outputFile Chemin du fichier a écrire
+   * @param imagePath  Chemin de l'image a insÃ©rer
+   * @param outputFile Chemin du fichier a Ã©crire
    * 
    * @throws IOException If there is an error writing the data.
    */
@@ -99,17 +99,17 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   public void createAllExamCopies(final String inputFile, final int nbCopie) {
     try {
       final String base = inputFile.substring(0, inputFile.lastIndexOf("."));
-      final String outputFile = (base + "_Inserted.pdf");
+      final String outputFile = "pfo_Inserted.pdf";
       File _file = new File((base + ".pdf"));
       final PDDocument doc = PDDocument.load(_file);
       final int nbPages = doc.getNumberOfPages();
       final PDFMergerUtility PDFmerger = new PDFMergerUtility();
-      PDFmerger.setDestinationFileName((base + "_Duplicated.pdf"));
+      PDFmerger.setDestinationFileName("pfo_Duplicated.pdf");
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbCopie, true);
       for (final Integer i : _doubleDotLessThan) {
         PDFmerger.addSource(inputFile);
       }
-      final File f2 = new File((base + "_Duplicated.pdf"));
+      final File f2 = new File("pfo_Duplicated.pdf");
       final MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly();
       memUsSett.setTempDir(f2);
       PDFmerger.mergeDocuments(memUsSett);
@@ -137,8 +137,8 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   /**
-   * @param nbCopies nombre de copies désirées //FIXME gerer le cas ou le nbCopies < 4 (nombre de threads)
-   * @param docSujetMaitre document dans lequel insérer les Codes
+   * @param nbCopies nombre de copies dÃ©sirÃ©es
+   * @param docSujetMaitre document dans lequel insÃ©rer les Codes
    * @param nbPages nombre de pages du sujet Maitre
    */
   public void createThread(final int nbCopie, final PDDocument docSujetMaitre, final int nbPage) {
@@ -168,10 +168,10 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   /**
-   * Insère le QRCode sur chacun des pages (en changeant le numéro de page sur chacunes des pages)
+   * InsÃ¨re le QRCode sur chacun des pages (en changeant le numÃ©ro de page sur chacunes des pages)
    * 
-   * @param nameExam nom de l'examen à insérer dans le QRCode
-   * @param numSubject numéro de l'examen à insérer dans le QRCode
+   * @param nameExam nom de l'examen Ã  insÃ©rer dans le QRCode
+   * @param numSubject numÃ©ro de l'examen Ã  insÃ©rer dans le QRCode
    */
   public void insertQRCodeInSubject(final PDDocument docSujetMaitre, final int numCopie, final int numThread, final int nbPagesSujet) {
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbPagesSujet, true);
@@ -181,7 +181,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   /**
-   * Inèsre un QRCode sur une page
+   * InÃ¨sre un QRCode sur une page
    */
   public void insertQRCodeInPage(final int numPage, final PDDocument doc, final String nbThread, final int numCopie, final int nbPagesSujet) {
     try {
@@ -220,10 +220,10 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
       final String input = "./pfo_example.pdf";
       gen.createAllExamCopies(input, 5);
-      final String in = "./pfo_example_Inserted.pdf";
+      final String in = "./pfo_Inserted.pdf";
       final File f = new File(in);
       final PDDocument doc = PDDocument.load(f);
-      final File desti = new File("./pfo_example_Dirty.pdf");
+      final File desti = new File("./pfo_Dirty.pdf");
       doc.removePage(12);
       doc.save(desti);
       InputOutput.<String>println("Done");

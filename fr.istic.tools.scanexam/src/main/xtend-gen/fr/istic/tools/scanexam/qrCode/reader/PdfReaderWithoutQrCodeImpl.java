@@ -6,7 +6,7 @@ import fr.istic.tools.scanexam.qrCode.reader.Copie;
 import fr.istic.tools.scanexam.qrCode.reader.Page;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCode;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeThread;
-import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -22,7 +24,6 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
@@ -32,10 +33,12 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   
   private int nbPagesInSheet;
   
-  private File pdfFile;
+  private InputStream inStream;
   
-  public PdfReaderWithoutQrCodeImpl(final File pFile, final int nbPages, final int nbCopies) {
-    this.pdfFile = pFile;
+  private int nbPagesInPdf;
+  
+  public PdfReaderWithoutQrCodeImpl(final InputStream inStream, final int nbPages, final int nbCopies) {
+    this.inStream = inStream;
     this.nbPagesInSheet = nbPages;
     this.nbSheetsTotal = nbCopies;
     HashSet<Copie> _hashSet = new HashSet<Copie>();
@@ -48,7 +51,8 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   @Override
   public boolean readPDf() {
     try {
-      final PDDocument doc = PDDocument.load(this.pdfFile);
+      final PDDocument doc = PDDocument.load(this.inStream);
+      this.nbPagesInPdf = doc.getNumberOfPages();
       final PDFRenderer pdf = new PDFRenderer(doc);
       this.createThread(doc.getNumberOfPages(), pdf);
       doc.close();
@@ -72,23 +76,33 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   public void createThread(final int nbPage, final PDFRenderer pdfRenderer) {
     try {
       final ExecutorService service = Executors.newFixedThreadPool(4);
-      final CountDownLatch LatchThreads = new CountDownLatch(4);
-      final CountDownLatch LatchMain = new CountDownLatch(1);
-      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread = new PdfReaderWithoutQrCodeThread(this, 0, (nbPage / 4), pdfRenderer, LatchThreads, LatchMain);
+      final CountDownLatch latchThreads = new CountDownLatch(4);
+      final CountDownLatch latchMain = new CountDownLatch(1);
+      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread = new PdfReaderWithoutQrCodeThread(this, 0, (nbPage / 4), pdfRenderer, latchThreads, latchMain);
       service.execute(_pdfReaderWithoutQrCodeThread);
-      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread_1 = new PdfReaderWithoutQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer, LatchThreads, LatchMain);
+      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread_1 = new PdfReaderWithoutQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer, latchThreads, latchMain);
       service.execute(_pdfReaderWithoutQrCodeThread_1);
-      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread_2 = new PdfReaderWithoutQrCodeThread(this, (nbPage / 2), (3 * (nbPage / 4)), pdfRenderer, LatchThreads, LatchMain);
+      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread_2 = new PdfReaderWithoutQrCodeThread(this, (nbPage / 2), (3 * (nbPage / 4)), pdfRenderer, latchThreads, latchMain);
       service.execute(_pdfReaderWithoutQrCodeThread_2);
-      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread_3 = new PdfReaderWithoutQrCodeThread(this, ((3 * nbPage) / 4), nbPage, pdfRenderer, LatchThreads, LatchMain);
+      PdfReaderWithoutQrCodeThread _pdfReaderWithoutQrCodeThread_3 = new PdfReaderWithoutQrCodeThread(this, ((3 * nbPage) / 4), nbPage, pdfRenderer, latchThreads, latchMain);
       service.execute(_pdfReaderWithoutQrCodeThread_3);
-      LatchMain.countDown();
-      LatchThreads.await();
+      latchMain.countDown();
+      latchThreads.await();
       service.shutdown();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
+  
+  public void verificationClosureThreads(final ExecutorService service, final CountDownLatch lThreads) {
+    long _count = lThreads.getCount();
+    boolean _equals = (_count == 0);
+    if (_equals) {
+      service.shutdown();
+    }
+  }
+  
+  private final Lock lock = new ReentrantLock();
   
   /**
    * Méthode qui lit une certaine partie d'un pdf
@@ -101,10 +115,9 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
     for (final Integer page : _doubleDotLessThan) {
       {
         final Copie cop = new Copie(((page).intValue() / this.nbPagesInSheet), (page).intValue(), ((page).intValue() % this.nbPagesInSheet));
-        synchronized (this.sheets) {
-          this.addCopie(cop);
-        }
-        InputOutput.<String>println(("Success page " + page));
+        this.lock.lock();
+        this.addCopie(cop);
+        this.lock.unlock();
       }
     }
   }
@@ -251,14 +264,7 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
    */
   @Override
   public int getNbPagesPdf() {
-    try {
-      final PDDocument doc = PDDocument.load(this.pdfFile);
-      final int nbPages = doc.getNumberOfPages();
-      doc.close();
-      return nbPages;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+    return this.nbPagesInPdf;
   }
   
   /**
@@ -279,22 +285,5 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   }
   
   public static void main(final String[] arg) {
-    final File pdf = new File("pfo_example_Inserted.pdf");
-    final PdfReaderWithoutQrCodeImpl qrcodeReader = new PdfReaderWithoutQrCodeImpl(pdf, 8, 10);
-    qrcodeReader.readPDf();
-    int _length = ((Object[])Conversions.unwrapArray(qrcodeReader.sheets, Object.class)).length;
-    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
-    for (final Integer i : _doubleDotLessThan) {
-      InputOutput.<String>println((((Copie[])Conversions.unwrapArray(qrcodeReader.sheets, Copie.class))[(i).intValue()]).toString());
-    }
-    int _nbPagesPdf = qrcodeReader.getNbPagesPdf();
-    String _plus = ("Nombre de pages  du doc : " + Integer.valueOf(_nbPagesPdf));
-    InputOutput.<String>println(_plus);
-    int _nbPagesTreated = qrcodeReader.getNbPagesTreated();
-    String _plus_1 = ("Nombre de pages traitées : " + Integer.valueOf(_nbPagesTreated));
-    InputOutput.<String>println(_plus_1);
-    boolean _isExamenComplete = qrcodeReader.isExamenComplete();
-    String _plus_2 = ("Examen complet? : " + Boolean.valueOf(_isExamenComplete));
-    InputOutput.<String>println(_plus_2);
   }
 }

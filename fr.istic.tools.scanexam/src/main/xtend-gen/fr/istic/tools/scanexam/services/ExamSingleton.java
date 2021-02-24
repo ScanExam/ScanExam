@@ -10,8 +10,8 @@ import java.util.List;
  * A revoir ?
  */
 @SuppressWarnings("all")
-public class ExamSingleton {
-  public static Exam instance;
+public final class ExamSingleton {
+  protected static Exam instance = null;
   
   /**
    * Permet de récupérer une Question

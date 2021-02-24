@@ -12,9 +12,10 @@ import fr.istic.tools.scanexam.core.Page
 /**
  * A revoir ?
  */
-class ExamSingleton 
+final class ExamSingleton 
 {
-	public static Exam instance;
+	protected static Exam instance = null;
+	
 	 /** Permet de récupérer une Question
 	 * @param index Index de la question
 	 * @return Question Retourne une instance de Question
