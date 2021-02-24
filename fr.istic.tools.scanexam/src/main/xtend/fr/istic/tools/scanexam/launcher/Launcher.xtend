@@ -12,11 +12,6 @@ interface Launcher {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/**
-	 * Créé l'adapter et initialise les attributs du presenter
-	 */
-	def void setup()
-	
 	/** 
 	 * Lance l'application
 	 */

@@ -10,18 +10,23 @@ import java.io.IOException
 import java.io.InputStream
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
+import fr.istic.tools.scanexam.presenter.Presenter
+import fr.istic.tools.scanexam.presenter.PresenterVueCreation
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
  * @author Julien Cochet
  */
-class EditorAdapterSwing {
+class EditorAdapterSwing implements EditorAdapter {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	/* Presenter de la création d'exman */
+	var PresenterVueCreation editorPresenter
 	
 	/* Vue de la création d'exman */
 	var EditorViewSwing view
@@ -93,4 +98,9 @@ class EditorAdapterSwing {
 	        */
 	    }
 	}
+	
+	override setPresenter(Presenter presenter) {
+		editorPresenter = presenter as PresenterVueCreation
+	}
+	
 }
