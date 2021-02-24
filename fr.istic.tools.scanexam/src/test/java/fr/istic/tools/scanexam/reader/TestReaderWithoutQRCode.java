@@ -1,12 +1,19 @@
 package fr.istic.tools.scanexam.reader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import fr.istic.tools.scanexam.api.DataFactory;
+import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
@@ -16,7 +23,7 @@ class TestReaderWithoutQRCode {
 	PdfReader readerGood;
 	PdfReader readerDirty;
 	int nbPages = 8;
-	int nbCopies = 5;
+	int nbCopies = 3;
 
 	@BeforeEach
 	void init() {
@@ -52,7 +59,7 @@ class TestReaderWithoutQRCode {
 	@DisplayName("Test getNbPagesPdf dans un pdf incomplet")
 	void getNbPagesPdfTestDirty() {
 		assertTrue(readerDirty.readPDf());
-		assertNotEquals(nbCopies * nbPages,readerDirty.getNbPagesPdf());
+		assertEquals(nbCopies * nbPages -1 ,readerDirty.getNbPagesPdf());
 	}
 
 	@Test
@@ -64,8 +71,30 @@ class TestReaderWithoutQRCode {
 	}
 
 	@Test
+	@DisplayName("Test du renvoi de la structure au format de l'API quand toutes les pages sont là")
+	void getCompleteStundentSheetsTestDirty() {
+		assertEquals(true, readerGood.readPDf());
+		DataFactory dF = new DataFactory();
+		Set<StudentSheet> collection = new HashSet<>();
+		
+		
+		for(int i = 0; i<nbCopies; i++) {
+			List<Integer> pages = new ArrayList<>();
+			for(int j = 0; j < nbPages; j++) {
+				pages.add((i * nbPages)+j);
+				
+			}
+			System.out.println(pages.toString());
+			collection.add(dF.createStudentSheet(i, pages));
+		}
+		
+		
+		assertEquals(collection, readerGood.getCompleteStudentSheets());
+	}
+	
+	@Test
 	@DisplayName("Test du renvoi de la structure au format de l'API quand il manque une page")
-	void getStundentSheetsTestDirty() {
+	void getUncompleteStundentSheetsTestDirty() {
 		// yolo
 	}
 }

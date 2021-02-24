@@ -2,9 +2,7 @@ package fr.istic.tools.scanexam.qrCode.reader
 
 import fr.istic.tools.scanexam.api.DataFactory
 import fr.istic.tools.scanexam.core.StudentSheet
-import java.util.ArrayList
 import java.util.HashSet
-import java.util.List
 import java.util.Set
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -15,6 +13,7 @@ import java.util.concurrent.CountDownLatch
 import java.io.InputStream
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+
 
 class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
@@ -187,16 +186,16 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		val DataFactory dF = new DataFactory()
 
 		temp = completeCopies
-
+		
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
-			val List<Integer> pages = new ArrayList<Integer>()
-
+			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
+			
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
-				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-
-			res.add(dF.createStudentSheet(index, pages))
+			res.add(dF.createStudentSheet(index, pagesArray))
+			
 		}
 		return res
 		
@@ -211,13 +210,13 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
-			val List<Integer> pages = new ArrayList<Integer>()
-
+			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
+			
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
-				pages.add(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-
-			res.add(dF.createStudentSheet(index, pages))
+			println(pagesArray.toString)
+			res.add(dF.createStudentSheet(index, pagesArray))
 		}
 		return res
 	}

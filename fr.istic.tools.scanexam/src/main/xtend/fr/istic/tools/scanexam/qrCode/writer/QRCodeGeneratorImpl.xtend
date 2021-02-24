@@ -120,12 +120,17 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 */
 	def createThread(int nbCopie, PDDocument docSujetMaitre, int nbPage) {
 		val ExecutorService service = Executors.newFixedThreadPool(4)
-		val CountDownLatch LatchThreads = new CountDownLatch(4);
-		val CountDownLatch LatchMain = new CountDownLatch(1);
+		
+		val CountDownLatch LatchMain = new CountDownLatch(1)
 
 		if (nbCopie <= 4) {
+			val CountDownLatch LatchThreads = new CountDownLatch(1)
 			service.execute(new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, 1, nbPage, LatchThreads, LatchMain))
+			LatchMain.countDown()
+			LatchThreads.await()
+			service.shutdown()
 		} else {
+			val CountDownLatch LatchThreads = new CountDownLatch(4)
 			service.execute(
 				new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage, LatchThreads, LatchMain))
 			service.execute(
@@ -137,11 +142,12 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 			service.execute(
 				new QRThreadWriter(this, (3 * nbCopie / 4), nbCopie, docSujetMaitre, 4, nbPage, LatchThreads,
 					LatchMain))
+			LatchMain.countDown()
+			LatchThreads.await()
+			service.shutdown()
 		}
 
-		LatchMain.countDown();
-		LatchThreads.await();
-		service.shutdown()
+		
 
 	}
 
@@ -182,7 +188,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
 		//val InputStream input = ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf");
 		val String input = "./pfo_example.pdf"
-		gen.createAllExamCopies(input, 5)
+		gen.createAllExamCopies(input, 3)
 
 		val String in = "./pfo_Inserted.pdf"
 		val File f = new File(in)
