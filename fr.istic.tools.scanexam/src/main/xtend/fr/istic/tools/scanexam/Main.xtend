@@ -27,8 +27,6 @@ class Main
 		ConfigurationManager.init
 		LanguageManager.init(ConfigurationManager.instance.language)
 
-
-
 		val service = new ExamEditionService();
 		val presenter = new PresenterVueCreation(service);
 		

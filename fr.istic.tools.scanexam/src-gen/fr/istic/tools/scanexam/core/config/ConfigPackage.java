@@ -76,13 +76,49 @@ public interface ConfigPackage extends EPackage {
 	int CONFIG__LANGUAGE = 0;
 
 	/**
+	 * The feature id for the '<em><b>Email</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG__EMAIL = 1;
+
+	/**
+	 * The feature id for the '<em><b>Email Password</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG__EMAIL_PASSWORD = 2;
+
+	/**
+	 * The feature id for the '<em><b>Mail Host</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG__MAIL_HOST = 3;
+
+	/**
+	 * The feature id for the '<em><b>Mail Port</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG__MAIL_PORT = 4;
+
+	/**
 	 * The number of structural features of the '<em>Config</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_FEATURE_COUNT = 1;
+	int CONFIG_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Config</em>' class.
@@ -124,6 +160,50 @@ public interface ConfigPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getConfig_Language();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.config.Config#getEmail <em>Email</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Email</em>'.
+	 * @see fr.istic.tools.scanexam.core.config.Config#getEmail()
+	 * @see #getConfig()
+	 * @generated
+	 */
+	EAttribute getConfig_Email();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.config.Config#getEmailPassword <em>Email Password</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Email Password</em>'.
+	 * @see fr.istic.tools.scanexam.core.config.Config#getEmailPassword()
+	 * @see #getConfig()
+	 * @generated
+	 */
+	EAttribute getConfig_EmailPassword();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.config.Config#getMailHost <em>Mail Host</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Mail Host</em>'.
+	 * @see fr.istic.tools.scanexam.core.config.Config#getMailHost()
+	 * @see #getConfig()
+	 * @generated
+	 */
+	EAttribute getConfig_MailHost();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.config.Config#getMailPort <em>Mail Port</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Mail Port</em>'.
+	 * @see fr.istic.tools.scanexam.core.config.Config#getMailPort()
+	 * @see #getConfig()
+	 * @generated
+	 */
+	EAttribute getConfig_MailPort();
 
 	/**
 	 * Returns the meta object for data type '{@link java.util.Locale <em>Locale</em>}'.
@@ -176,6 +256,38 @@ public interface ConfigPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONFIG__LANGUAGE = eINSTANCE.getConfig_Language();
+
+		/**
+		 * The meta object literal for the '<em><b>Email</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFIG__EMAIL = eINSTANCE.getConfig_Email();
+
+		/**
+		 * The meta object literal for the '<em><b>Email Password</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFIG__EMAIL_PASSWORD = eINSTANCE.getConfig_EmailPassword();
+
+		/**
+		 * The meta object literal for the '<em><b>Mail Host</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFIG__MAIL_HOST = eINSTANCE.getConfig_MailHost();
+
+		/**
+		 * The meta object literal for the '<em><b>Mail Port</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONFIG__MAIL_PORT = eINSTANCE.getConfig_MailPort();
 
 		/**
 		 * The meta object literal for the '<em>Locale</em>' data type.
