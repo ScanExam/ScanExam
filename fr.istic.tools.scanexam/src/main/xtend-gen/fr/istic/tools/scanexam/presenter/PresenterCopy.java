@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.PresenterVueCorrection;
+import fr.istic.tools.scanexam.presenter.GraduationPresenter;
 import java.util.Objects;
 
 /**
@@ -13,16 +13,16 @@ public class PresenterCopy {
   /**
    * Presenter for the correction view
    */
-  private PresenterVueCorrection presenterCorrection;
+  private GraduationPresenter presenterCorrection;
   
   /**
    * setter for the PresenterVueCorrection attribute
    * @param {@link PresenterVueCorrection} pres instance of the presenter (not null)
    */
-  public PresenterVueCorrection setPresenterVueCorrection(final PresenterVueCorrection pres) {
-    PresenterVueCorrection _xblockexpression = null;
+  public GraduationPresenter setPresenterVueCorrection(final GraduationPresenter pres) {
+    GraduationPresenter _xblockexpression = null;
     {
-      Objects.<PresenterVueCorrection>requireNonNull(pres);
+      Objects.<GraduationPresenter>requireNonNull(pres);
       _xblockexpression = this.presenterCorrection = pres;
     }
     return _xblockexpression;
@@ -31,7 +31,7 @@ public class PresenterCopy {
   /**
    * @return current {@link PresenterVueCreation}
    */
-  public PresenterVueCorrection getPresenterVueCorrection() {
+  public GraduationPresenter getPresenterVueCorrection() {
     return this.presenterCorrection;
   }
 }

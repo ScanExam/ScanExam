@@ -7,6 +7,6 @@ import fr.istic.tools.scanexam.presenter.Presenter;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public interface Adapter {
-  void setPresenter(final Presenter presenter);
+public interface Adapter<T extends Presenter> {
+  void setPresenter(final T presenter);
 }

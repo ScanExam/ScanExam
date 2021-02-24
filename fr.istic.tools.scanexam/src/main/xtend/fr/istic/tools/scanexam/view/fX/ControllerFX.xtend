@@ -1,9 +1,6 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question
-import fr.istic.tools.scanexam.view.ControllerI
-import fr.istic.tools.scanexam.view.ControllerVueCorrection
-import fr.istic.tools.scanexam.view.ControllerVueCreation
 import java.io.File
 import java.io.IOException
 import java.util.ArrayList
@@ -31,13 +28,13 @@ import org.apache.logging.log4j.LogManager
  * Class used by the JavaFX library as a controller for the view. 
  * @author Benjamin Danlos
  */
-class ControllerFX implements ControllerI {
+class ControllerFX {
 
 	static val logger = LogManager.logger
 	/**
 	 * High level Controllers to access the Presenters
 	 */
-	CorrectorAdapterFX corrector;
+	GraduationAdapterFX corrector;
 	EditorAdapterFX editor;
 
 	/**
@@ -60,7 +57,7 @@ class ControllerFX implements ControllerI {
 	 * setter for the ControllerVueCorrection attribute
 	 * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null) 
 	 */
-	def void setAdapterCorrection(CorrectorAdapterFX adapterCor) {
+	def void setAdapterCorrection(GraduationAdapterFX adapterCor) {
 		Objects.requireNonNull(adapterCor)
 		corrector = adapterCor
 	}
@@ -426,7 +423,7 @@ class ControllerFX implements ControllerI {
 		
 	}
 	
-	override void initQuestionNames(List<String> names) { //TODO complete, called on load of a new exam template
+	def void initQuestionNames(List<String> names) { //TODO complete, called on load of a new exam template
 		rightList.items.clear
 		for (String s : names) {
 			rightList.items.add(new Label(s));
@@ -444,7 +441,7 @@ class ControllerFX implements ControllerI {
 		
 	}
 	
-	override showQuestion(Question question) {
+	def showQuestion(Question question) {
 		
 		currentQuestion = new QuestionDetails(question.name);
 		currentQuestion.x = question.zone.x

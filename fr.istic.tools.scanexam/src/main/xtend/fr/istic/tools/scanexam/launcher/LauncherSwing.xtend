@@ -1,8 +1,8 @@
 package fr.istic.tools.scanexam.launcher
 
-import java.awt.EventQueue
-import fr.istic.tools.scanexam.view.EditorAdapterSwing
 import fr.istic.tools.scanexam.presenter.PresenterBindings
+import fr.istic.tools.scanexam.view.swing.EditorAdapterSwing
+import java.awt.EventQueue
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie Swing

@@ -5,8 +5,9 @@ import java.util.ArrayList
 import java.util.LinkedList
 import fr.istic.tools.scanexam.api.DataFactory
 import fr.istic.tools.scanexam.view.fX.ControllerFX
+import java.util.List
 
-class MockFXAdapter extends CorrectorAdapterFX {
+class MockFXAdapter extends GraduationAdapterFX {
 	
 	var questions = new ArrayList<Question>();
 	Question currentQuestion;
@@ -14,7 +15,7 @@ class MockFXAdapter extends CorrectorAdapterFX {
 	
 	
 	public ControllerFX controller;
-	def LinkedList<String> questionNames(){
+	override List<String> questionNames(){
 		var stringList = new LinkedList<String>();
 		for (Question q : questions) {
 			stringList.add(q.name);
@@ -77,6 +78,10 @@ class MockFXAdapter extends CorrectorAdapterFX {
 		index = 0;
 		controller.showQuestion(questions.get(0));
 		
+	}
+	
+	override thisQuestion(int index) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
 

@@ -10,13 +10,13 @@ class PresenterQRCode {
 	/**
 	 * Presenter for the creation view
 	 */
-	PresenterVueCreation presenter
+	EditorPresenter presenter
 	
 	/**
 	 * setter for the PresenterVueCreation attribute
 	 * @param {@link PresenterVueCreation} pres instance of the presenter (not null) 
 	 */
-	def setPresenterVueCreation(PresenterVueCreation pres){
+	def setPresenterVueCreation(EditorPresenter pres){
 		Objects.requireNonNull(pres)
 		presenter = pres
 	}

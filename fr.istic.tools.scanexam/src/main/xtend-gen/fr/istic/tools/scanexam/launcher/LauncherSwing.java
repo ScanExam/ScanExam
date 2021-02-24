@@ -2,7 +2,7 @@ package fr.istic.tools.scanexam.launcher;
 
 import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
-import fr.istic.tools.scanexam.view.EditorAdapterSwing;
+import fr.istic.tools.scanexam.view.swing.EditorAdapterSwing;
 import java.awt.EventQueue;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 

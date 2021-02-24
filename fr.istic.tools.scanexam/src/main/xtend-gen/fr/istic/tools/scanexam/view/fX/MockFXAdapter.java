@@ -3,12 +3,13 @@ package fr.istic.tools.scanexam.view.fX;
 import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.view.fX.ControllerFX;
-import fr.istic.tools.scanexam.view.fX.CorrectorAdapterFX;
+import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 @SuppressWarnings("all")
-public class MockFXAdapter extends CorrectorAdapterFX {
+public class MockFXAdapter extends GraduationAdapterFX {
   private ArrayList<Question> questions = new ArrayList<Question>();
   
   private Question currentQuestion;
@@ -17,7 +18,8 @@ public class MockFXAdapter extends CorrectorAdapterFX {
   
   public ControllerFX controller;
   
-  public LinkedList<String> questionNames() {
+  @Override
+  public List<String> questionNames() {
     LinkedList<String> _xblockexpression = null;
     {
       LinkedList<String> stringList = new LinkedList<String>();
@@ -86,5 +88,10 @@ public class MockFXAdapter extends CorrectorAdapterFX {
     this.controller.initQuestionNames(stringList);
     this.index = 0;
     this.controller.showQuestion(this.questions.get(0));
+  }
+  
+  @Override
+  public void thisQuestion(final int index) {
+    throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
 }

@@ -1,11 +1,8 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.view.ControllerI;
-import fr.istic.tools.scanexam.view.ControllerVueCorrection;
-import fr.istic.tools.scanexam.view.ControllerVueCreation;
-import fr.istic.tools.scanexam.view.fX.CorrectorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
 import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +38,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * @author Benjamin Danlos
  */
 @SuppressWarnings("all")
-public class ControllerFX implements ControllerI {
+public class ControllerFX {
   public static class QuestionDetails {
     private int id;
     
@@ -113,7 +110,7 @@ public class ControllerFX implements ControllerI {
   /**
    * High level Controllers to access the Presenters
    */
-  private CorrectorAdapterFX corrector;
+  private GraduationAdapterFX corrector;
   
   private EditorAdapterFX editor;
   
@@ -141,15 +138,15 @@ public class ControllerFX implements ControllerI {
    * setter for the ControllerVueCorrection attribute
    * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null)
    */
-  public void setAdapterCorrection(final CorrectorAdapterFX adapterCor) {
-    Objects.<CorrectorAdapterFX>requireNonNull(adapterCor);
+  public void setAdapterCorrection(final GraduationAdapterFX adapterCor) {
+    Objects.<GraduationAdapterFX>requireNonNull(adapterCor);
     this.corrector = adapterCor;
   }
   
   /**
    * @return current {@link ControllerVueCorrection}
    */
-  public CorrectorAdapterFX getAdapterCorrection() {
+  public GraduationAdapterFX getAdapterCorrection() {
     return this.corrector;
   }
   
@@ -476,7 +473,6 @@ public class ControllerFX implements ControllerI {
     mock.setQuestions();
   }
   
-  @Override
   public void initQuestionNames(final List<String> names) {
     this.rightList.getItems().clear();
     for (final String s : names) {
@@ -498,7 +494,6 @@ public class ControllerFX implements ControllerI {
   public void showStudent() {
   }
   
-  @Override
   public void showQuestion(final Question question) {
     String _name = question.getName();
     ControllerFX.QuestionDetails _questionDetails = new ControllerFX.QuestionDetails(_name);

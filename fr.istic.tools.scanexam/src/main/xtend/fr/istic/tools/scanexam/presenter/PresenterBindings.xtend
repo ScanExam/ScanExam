@@ -7,17 +7,17 @@ import fr.istic.tools.scanexam.view.Adapter
 class PresenterBindings 
 {
 	
-	def static void linkEditorPresenter(Adapter adapter)
+	def static void linkEditorPresenter(Adapter<EditorPresenter> adapter)
 	{
 		val service = new ExamEditionService;
-		val presenter = new PresenterVueCreation(adapter,service);
+		val presenter = new EditorPresenter(adapter,service);
 		adapter.setPresenter(presenter);
 	}
 	
-	def static void linkGraduationPresenter(Adapter adapter)
+	def static void linkGraduationPresenter(Adapter<GraduationPresenter> adapter)
 	{
 		val service = new ExamGraduationService;
-		val presenter = new PresenterVueCorrection(adapter,service);
+		val presenter = new GraduationPresenter(adapter,service);
 		adapter.setPresenter(presenter);
 	}
 	

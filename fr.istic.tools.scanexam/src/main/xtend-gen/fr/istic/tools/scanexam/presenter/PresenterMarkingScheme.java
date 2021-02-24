@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.PresenterVueCorrection;
-import fr.istic.tools.scanexam.presenter.PresenterVueCreation;
+import fr.istic.tools.scanexam.presenter.EditorPresenter;
+import fr.istic.tools.scanexam.presenter.GraduationPresenter;
 import java.util.Objects;
 
 /**
@@ -13,21 +13,21 @@ public class PresenterMarkingScheme {
   /**
    * Presenter for the creation view
    */
-  private PresenterVueCreation presenterCreation;
+  private EditorPresenter presenterCreation;
   
   /**
    * Presenter for the correction view
    */
-  private PresenterVueCorrection presenterCorrection;
+  private GraduationPresenter presenterCorrection;
   
   /**
    * setter for the PresenterVueCreation attribute
    * @param {@link PresenterVueCreation} pres instance of the presenter (not null)
    */
-  public PresenterVueCreation setPresenterVueCreation(final PresenterVueCreation pres) {
-    PresenterVueCreation _xblockexpression = null;
+  public EditorPresenter setPresenterVueCreation(final EditorPresenter pres) {
+    EditorPresenter _xblockexpression = null;
     {
-      Objects.<PresenterVueCreation>requireNonNull(pres);
+      Objects.<EditorPresenter>requireNonNull(pres);
       _xblockexpression = this.presenterCreation = pres;
     }
     return _xblockexpression;
@@ -36,7 +36,7 @@ public class PresenterMarkingScheme {
   /**
    * @return current {@link PresenterVueCreation}
    */
-  public PresenterVueCreation getPresenterVueCreation() {
+  public EditorPresenter getPresenterVueCreation() {
     return this.presenterCreation;
   }
   
@@ -44,10 +44,10 @@ public class PresenterMarkingScheme {
    * setter for the PresenterVueCorrection attribute
    * @param {@link PresenterVueCorrection} pres instance of the presenter (not null)
    */
-  public PresenterVueCorrection setPresenterVueCorrection(final PresenterVueCorrection pres) {
-    PresenterVueCorrection _xblockexpression = null;
+  public GraduationPresenter setPresenterVueCorrection(final GraduationPresenter pres) {
+    GraduationPresenter _xblockexpression = null;
     {
-      Objects.<PresenterVueCorrection>requireNonNull(pres);
+      Objects.<GraduationPresenter>requireNonNull(pres);
       _xblockexpression = this.presenterCorrection = pres;
     }
     return _xblockexpression;
@@ -56,7 +56,7 @@ public class PresenterMarkingScheme {
   /**
    * @return current {@link PresenterVueCreation}
    */
-  public PresenterVueCorrection getPresenterVueCorrection() {
+  public GraduationPresenter getPresenterVueCorrection() {
     return this.presenterCorrection;
   }
 }

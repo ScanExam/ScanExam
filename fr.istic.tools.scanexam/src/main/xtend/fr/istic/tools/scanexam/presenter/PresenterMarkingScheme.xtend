@@ -10,17 +10,17 @@ class PresenterMarkingScheme {
 	/**
 	 * Presenter for the creation view
 	 */
-	PresenterVueCreation presenterCreation
+	EditorPresenter presenterCreation
 	/**
 	 * Presenter for the correction view
 	 */
-	PresenterVueCorrection presenterCorrection
+	GraduationPresenter presenterCorrection
 	
 	/**
 	 * setter for the PresenterVueCreation attribute
 	 * @param {@link PresenterVueCreation} pres instance of the presenter (not null) 
 	 */
-	def setPresenterVueCreation(PresenterVueCreation pres){
+	def setPresenterVueCreation(EditorPresenter pres){
 		Objects.requireNonNull(pres)
 		presenterCreation = pres
 	}
@@ -35,7 +35,7 @@ class PresenterMarkingScheme {
 	 * setter for the PresenterVueCorrection attribute
 	 * @param {@link PresenterVueCorrection} pres instance of the presenter (not null) 
 	 */
-	def setPresenterVueCorrection(PresenterVueCorrection pres){
+	def setPresenterVueCorrection(GraduationPresenter pres){
 		Objects.requireNonNull(pres)
 		presenterCorrection = pres
 	}

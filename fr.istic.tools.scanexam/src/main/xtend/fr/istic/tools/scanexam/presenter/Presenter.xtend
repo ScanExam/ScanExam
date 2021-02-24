@@ -1,10 +1,9 @@
 package fr.istic.tools.scanexam.presenter
 
 /** 
- * Controlleur du pdf
+ * Interface des presenters
  * @author Julien Cochet
  */
 interface Presenter {
 	
-
 }

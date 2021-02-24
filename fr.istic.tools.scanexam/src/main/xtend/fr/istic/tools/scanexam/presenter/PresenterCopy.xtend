@@ -11,13 +11,13 @@ class PresenterCopy {
 	/**
 	 * Presenter for the correction view
 	 */
-	PresenterVueCorrection presenterCorrection
+	GraduationPresenter presenterCorrection
 	
 	/**
 	 * setter for the PresenterVueCorrection attribute
 	 * @param {@link PresenterVueCorrection} pres instance of the presenter (not null) 
 	 */
-	def setPresenterVueCorrection(PresenterVueCorrection pres){
+	def setPresenterVueCorrection(GraduationPresenter pres){
 		Objects.requireNonNull(pres)
 		presenterCorrection = pres
 	}
