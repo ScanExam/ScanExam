@@ -16,7 +16,7 @@ class EditorPresenter implements Presenter
 	 * and main controller of the view
 	 */
 	PresenterQRCode presQRCode
-	PresenterRectangle presRectangle
+	PresenterQuestionZone presQuestionZone
 	PresenterMarkingScheme presMarkingScheme
 	EditorPresenter editorPresenter
 	ExamEditionService service
@@ -55,18 +55,18 @@ class EditorPresenter implements Presenter
 	}
 	
 	/**
-	 * Setter for {@link PresenterRectangle} attribute
-	 * @param {@link PresenterRectangle} pres an instance (not null)
+	 * Setter for {@link PresenterQuestionZone} attribute
+	 * @param {@link PresenterQuestionZone} pres an instance (not null)
 	 */
-	def setPresenterRectangle(PresenterRectangle pres){
+	def setPresenterQuestionZone(PresenterQuestionZone pres){
 		Objects.requireNonNull(pres)
-		presRectangle = pres
+		presQuestionZone = pres
 	}
 	/**
-	 * @return current {@link PresenterRectangle} 
+	 * @return current {@link PresenterQuestionZone} 
 	 */
-	def getPresenterRectangle(){
-		presRectangle
+	def getPresenterQuestionZone(){
+		presQuestionZone
 	}
 	
 	/**
