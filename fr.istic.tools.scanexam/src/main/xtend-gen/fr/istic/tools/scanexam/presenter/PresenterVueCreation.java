@@ -1,9 +1,11 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
 import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterRectangle;
 import fr.istic.tools.scanexam.services.ExamEditionService;
+import fr.istic.tools.scanexam.view.Adapter;
 import fr.istic.tools.scanexam.view.ControllerVueCreation;
 import java.util.Objects;
 
@@ -13,7 +15,7 @@ import java.util.Objects;
  * @author Benjamin Danlos
  */
 @SuppressWarnings("all")
-public class PresenterVueCreation {
+public class PresenterVueCreation implements Presenter {
   /**
    * Bidirectional associations with the concrete presenters
    * and main controller of the view
@@ -28,9 +30,13 @@ public class PresenterVueCreation {
   
   private ExamEditionService service;
   
-  public PresenterVueCreation(final ExamEditionService service) {
+  private Adapter adapter;
+  
+  public PresenterVueCreation(final Adapter adapter, final ExamEditionService service) {
     Objects.<ExamEditionService>requireNonNull(service);
     this.service = service;
+    Objects.<Adapter>requireNonNull(adapter);
+    this.adapter = adapter;
   }
   
   /**

@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view;
 
-import fr.istic.tools.scanexam.view.CorrectorAdapter;
-import fr.istic.tools.scanexam.view.EditorAdapter;
+import fr.istic.tools.scanexam.presenter.Presenter;
 
 /**
  * Interface d'adaptateur général
@@ -9,15 +8,5 @@ import fr.istic.tools.scanexam.view.EditorAdapter;
  */
 @SuppressWarnings("all")
 public interface Adapter {
-  /**
-   * Renvoie l'adaptateur du correcteur d'examen
-   * @return correctorAdapter
-   */
-  CorrectorAdapter getCorrectorAdapter();
-  
-  /**
-   * Renvoie l'adaptateur de l'éditeur d'examen
-   * @return editorAdapter
-   */
-  EditorAdapter getEditorAdapter();
+  void setPresenter(final Presenter presenter);
 }

@@ -30,6 +30,8 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
@@ -103,6 +105,8 @@ public class ControllerFX implements ControllerI {
       this.id = s;
     }
   }
+  
+  private static final Logger logger = LogManager.getLogger();
   
   /**
    * High level Controllers to access the Presenters
@@ -368,7 +372,6 @@ public class ControllerFX implements ControllerI {
     this.setZoomArea(0, 0, 100, 200);
   }
   
-  @FXML
   public void setZoomArea(final int x, final int y, final int height, final int width) {
     Rectangle2D newrect = new Rectangle2D(this.currentQuestion.x, this.currentQuestion.y, this.currentQuestion.w, this.currentQuestion.h);
     this.imview.setViewport(newrect);
@@ -388,7 +391,7 @@ public class ControllerFX implements ControllerI {
   public void initStudents(final int nbStudents) {
   }
   
-  public void Binds(final Node n) {
+  public void binds(final Node n) {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
       KeyCode _code = event.getCode();
       if (_code != null) {
@@ -406,8 +409,11 @@ public class ControllerFX implements ControllerI {
             this.prevStudentPressed();
             break;
           default:
+            ControllerFX.logger.warn("Key not supported.");
             break;
         }
+      } else {
+        ControllerFX.logger.warn("Key not supported.");
       }
       event.consume();
     };
@@ -433,14 +439,17 @@ public class ControllerFX implements ControllerI {
             this.prevStudentPressed();
             break;
           default:
+            ControllerFX.logger.warn("Key not supported.");
             break;
         }
+      } else {
+        ControllerFX.logger.warn("Key not supported.");
       }
       event.consume();
     };
     s.setOnKeyPressed(_function);
-    this.Binds(this.scrollMain);
-    this.Binds(this.scrollBis);
+    this.binds(this.scrollMain);
+    this.binds(this.scrollBis);
   }
   
   public void chooseFile() {

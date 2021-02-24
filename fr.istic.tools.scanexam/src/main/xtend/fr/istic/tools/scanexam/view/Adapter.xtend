@@ -1,27 +1,15 @@
 package fr.istic.tools.scanexam.view
 
+import fr.istic.tools.scanexam.presenter.Presenter
+
 /** 
  * Interface d'adaptateur général
  * @author Julien Cochet
  */
 interface Adapter {
 	
-	// ----------------------------------------------------------------------------------------------------
-	/** 
-	 * GETTER
-	 */
-	// ----------------------------------------------------------------------------------------------------
+	def void setPresenter(Presenter presenter);
 	
-	/**
-	 * Renvoie l'adaptateur du correcteur d'examen
-	 * @return correctorAdapter
-	 */
-	def CorrectorAdapter getCorrectorAdapter();
 	
-	/**
-	 * Renvoie l'adaptateur de l'éditeur d'examen
-	 * @return editorAdapter
-	 */
-	def EditorAdapter getEditorAdapter();
 	
 }

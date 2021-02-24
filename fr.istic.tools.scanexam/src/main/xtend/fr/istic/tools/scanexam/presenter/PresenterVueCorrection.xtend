@@ -4,13 +4,15 @@ import java.util.Objects
 import fr.istic.tools.scanexam.view.ControllerVueCorrection
 import fr.istic.tools.scanexam.services.Service
 import fr.istic.tools.scanexam.services.ExamGraduationService
+import fr.istic.tools.scanexam.view.Adapter
 
 /**
  * Class defining the presenter for the exam correction view(s)
  * and linking with more concrete sub presenters
  * @author Benjamin Danlos
  */
-class PresenterVueCorrection {
+class PresenterVueCorrection implements Presenter
+{
 	/**
 	 * Bidirectional associations with the concrete presenters
 	 * and main controller of the view
@@ -21,10 +23,16 @@ class PresenterVueCorrection {
 	ControllerVueCorrection controller;
 	ExamGraduationService service;
 	
-	new(ExamGraduationService service) 
+	Adapter adapter;
+	
+	new(Adapter adapter,ExamGraduationService service) 
 	{
 		Objects.requireNonNull(service)
 		this.service = service
+		
+		Objects.requireNonNull(adapter)
+		this.adapter = adapter
+		
 	}
 
 

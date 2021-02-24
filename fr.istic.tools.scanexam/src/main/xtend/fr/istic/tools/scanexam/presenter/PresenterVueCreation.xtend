@@ -4,13 +4,15 @@ import fr.istic.tools.scanexam.view.ControllerVueCreation
 import java.util.Objects
 import fr.istic.tools.scanexam.services.Service
 import fr.istic.tools.scanexam.services.ExamEditionService
+import fr.istic.tools.scanexam.view.Adapter
 
 /**
  * Class defining the presenter for the exam creation view(s)
  * and linking with more concrete sub presenters
  * @author Benjamin Danlos
  */
-class PresenterVueCreation {
+class PresenterVueCreation implements Presenter
+{
 	/**
 	 * Bidirectional associations with the concrete presenters
 	 * and main controller of the view
@@ -18,13 +20,18 @@ class PresenterVueCreation {
 	PresenterQRCode presQRCode
 	PresenterRectangle presRectangle
 	PresenterMarkingScheme presMarkingScheme
-	ControllerVueCreation controller;
-	ExamEditionService service;
+	ControllerVueCreation controller
+	ExamEditionService service
+	Adapter adapter
 	
-	new(ExamEditionService service) 
+	new(Adapter adapter,ExamEditionService service) 
 	{
 		Objects.requireNonNull(service)
 		this.service = service
+		
+		Objects.requireNonNull(adapter)
+		this.adapter = adapter
+		
 	}
 
 	/**

@@ -1,9 +1,11 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
+import fr.istic.tools.scanexam.view.Adapter;
 import fr.istic.tools.scanexam.view.ControllerVueCorrection;
 import java.util.Objects;
 
@@ -13,7 +15,7 @@ import java.util.Objects;
  * @author Benjamin Danlos
  */
 @SuppressWarnings("all")
-public class PresenterVueCorrection {
+public class PresenterVueCorrection implements Presenter {
   /**
    * Bidirectional associations with the concrete presenters
    * and main controller of the view
@@ -28,9 +30,13 @@ public class PresenterVueCorrection {
   
   private ExamGraduationService service;
   
-  public PresenterVueCorrection(final ExamGraduationService service) {
+  private Adapter adapter;
+  
+  public PresenterVueCorrection(final Adapter adapter, final ExamGraduationService service) {
     Objects.<ExamGraduationService>requireNonNull(service);
     this.service = service;
+    Objects.<Adapter>requireNonNull(adapter);
+    this.adapter = adapter;
   }
   
   /**
