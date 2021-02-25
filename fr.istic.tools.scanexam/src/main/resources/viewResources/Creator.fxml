@@ -45,9 +45,10 @@
       </MenuBar>
       <ToolBar>
         <items>
-          <Button mnemonicParsing="false" text="Question area" />
-            <Button mnemonicParsing="false" text="ID area" />
-            <Button mnemonicParsing="false" text="QR area" />
+          <Button mnemonicParsing="false" onAction="#questionAreaPressed" text="Question area" />
+            <Button fx:id="iDAreaPressed" mnemonicParsing="false" text="ID area" />
+            <Button mnemonicParsing="false" onAction="#qRArearessed" text="QR area" />
+            <Button mnemonicParsing="false" onAction="#movePressed" text="Move Camera" />
         </items>
       </ToolBar>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -73,7 +74,7 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <Pane onMouseDragged="#MoveImage" onMousePressed="#MoveImage" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
+                        <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
                            <children>
                               <ImageView fx:id="imview" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                                  <image>
