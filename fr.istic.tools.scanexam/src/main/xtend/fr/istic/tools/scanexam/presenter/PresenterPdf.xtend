@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
 import java.io.InputStream
+import java.io.File
 
 /** 
  * Controlleur du pdf
@@ -42,4 +43,12 @@ abstract class PresenterPdf {
 		this.pdfInput = pdfInput
 	}
 	
+	
+	def void loadPDF(File file) {
+		//TODO
+	}
+	
+	def InputStream getPage(int index) {
+		return null;//TODO
+	}
 }

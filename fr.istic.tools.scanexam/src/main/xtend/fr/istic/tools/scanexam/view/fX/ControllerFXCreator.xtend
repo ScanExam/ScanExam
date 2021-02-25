@@ -1,22 +1,27 @@
 package fr.istic.tools.scanexam.view.fX;
 
+import fr.istic.tools.scanexam.view.fX.Box.BoxType
 import javafx.fxml.FXML
+import javafx.scene.Cursor
 import javafx.scene.Node
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Pane
-import javafx.scene.shape.Rectangle
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.view.fX.ControllerFXCreator.Box.BoxType
-import javafx.scene.Cursor
 
 class ControllerFXCreator {
 	
 	
 	
+	EditorAdapterFX editor;
+	
 	@FXML
 	var Pane mainPane;
 	
+	@FXML
+	var ImageView PDFView;
 	
 	var logger = LogManager.logger
 	enum SelectedTool {
@@ -79,8 +84,8 @@ class ControllerFXCreator {
 	Box currentRectangle = null;
 	def void CreateBox(MouseEvent e){
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { //TODO add type checks
-			mouseOriginX = e.screenX
-			mouseOriginY = e.screenY
+			mouseOriginX = e.x
+			mouseOriginY = e.y
 			var source = e.source as Pane
 			currentRectangle = createBox(e.x,e.y);
 			
@@ -88,8 +93,26 @@ class ControllerFXCreator {
 			logger.debug("Created Box")
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.height = e.screenY - mouseOriginY;
-			currentRectangle.width = e.screenX - mouseOriginX;
+			
+			var xDelta = e.x - mouseOriginX;
+			var yDelta =  e.y - mouseOriginY;
+			if (xDelta > 0 ) {
+				currentRectangle.width = xDelta;
+			}
+			else {
+				currentRectangle.width = Math.abs(xDelta);
+				currentRectangle.x = mouseOriginX - Math.abs(xDelta);
+			}
+			
+			if (yDelta > 0) {
+				currentRectangle.height = yDelta ;
+			}else {
+				currentRectangle.height = Math.abs(yDelta);
+				currentRectangle.y = mouseOriginY - Math.abs(yDelta);
+				
+			}
+			
+			
 		}
 	}
 	
@@ -162,26 +185,16 @@ class ControllerFXCreator {
 		}
 	}
 	
-	static class Box extends Rectangle {
-		
-		new(BoxType type) {
-			super(0,0,0,0);
-			name = "box"
-			this.type = type
-			
-		}
-		new(BoxType type,double x, double y) {
-			super(x,y,0,0);
-			name = "box"
-			this.type = type
-			
-		}
-		enum BoxType {
-			QUESTION,
-			ID,
-			QR
-		}
-		BoxType type;
-		String name;
+	
+	
+	
+	
+	def DisplayPDF(Image pdf) {
+		PDFView.setImage(pdf);
+	}
+	
+	
+	def void setEditorAdapterFX(EditorAdapterFX editor) {
+		this.editor = editor;
 	}
 }

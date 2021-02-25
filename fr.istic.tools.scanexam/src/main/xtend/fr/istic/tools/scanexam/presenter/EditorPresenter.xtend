@@ -18,6 +18,7 @@ class EditorPresenter implements Presenter
 	PresenterQRCode presQRCode
 	PresenterQuestionZone presQuestionZone
 	PresenterMarkingScheme presMarkingScheme
+	PresenterPdf presPdf
 	EditorPresenter editorPresenter
 	ExamEditionService service
 	Adapter<EditorPresenter> adapter
@@ -97,6 +98,14 @@ class EditorPresenter implements Presenter
 	 */
 	def getControllerVueCreation(){
 		editorPresenter
+	}
+	
+	def void setPresenterPdf(PresenterPdf presenterPdf) {
+		presPdf = presenterPdf
+		
+	}
+	def PresenterPdf getPresenterPdf(){
+		presPdf
 	}
 	
 }
