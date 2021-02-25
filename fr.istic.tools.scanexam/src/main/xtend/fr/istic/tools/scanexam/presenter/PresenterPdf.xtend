@@ -2,13 +2,24 @@ package fr.istic.tools.scanexam.presenter
 
 import java.io.InputStream
 import java.io.File
+import java.util.Objects
 
 /** 
  * Controlleur du pdf
  * @author Julien Cochet
  */
 abstract class PresenterPdf {
+	/**
+	 * presenter used for the edition of an exam
+	 * @author Benjamin Danlos
+	 */
+	EditorPresenter editorPresenter
 	
+	/**
+	 * presenter used for the graduation of student sheets of an exam
+	 * @author Benjamin Danlos
+	 */
+	GraduationPresenter graduationPresenter
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * ATTRIBUTS
@@ -31,7 +42,57 @@ abstract class PresenterPdf {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/** 
+	/**
+	 * Constructor 
+	 * @author Benjamin Danlos
+	 * @param {@link EditorPresenter} (not null)
+	 * @param {@link GraduationPresenter} (not null)
+	 * Constructs a PDFPresenter object.
+	 */
+    new(EditorPresenter presE, GraduationPresenter presG){
+    	Objects.requireNonNull(presE)
+    	Objects.requireNonNull(presG)
+    	this.editorPresenter = presE
+    	this.graduationPresenter = presG
+    }
+    /**
+     * set {@link EditorPresenter} for the association 
+     * @param {@link EditorPresenter} presenter to make the association with
+     * @author Benjamin Danlos
+     */
+    def setEditorPresenter(EditorPresenter p){
+    	Objects.requireNonNull(p)
+    	this.editorPresenter = p
+    }
+    
+    /**
+     * set {@link GraduationPresenter} for the association 
+     * @param {@link GraduationPresenter} presenter to make the association with
+     * @author Benjamin Danlos
+     */
+    def setGraduationPresenter(GraduationPresenter p){
+    	Objects.requireNonNull(p)
+    	this.graduationPresenter = p
+    }
+    /**
+     * returns the current editor presenter associated
+     * @return {@link EditorPresenter}
+     * @author Benjamin Danlos
+     */
+    def getEditorPresenter(){
+    	this.editorPresenter
+    }
+    
+    /**
+     * returns the current graduation presenter associated
+     * @return {@link GraduationPresenter}
+     * @author Benjamin Danlos
+     */
+    def getGraduationPresenter(){
+    	this.graduationPresenter
+    }
+    
+    /** 
 	 * Constructeur
 	 * @param width Largeur de la fenêtre
 	 * @param height Hauteur de la fenêtre
@@ -44,11 +105,48 @@ abstract class PresenterPdf {
 	}
 	
 	
+	/**
+	 * tells the api to change the working pdf in the model
+	 * @param {@link File} path to the pdf file to be loaded
+     * @author Benjamin Danlos
+	 */
 	def void loadPDF(File file) {
-		//TODO
+		Objects.requireNonNull(file)
+		//check if file.path is in pdf format ?
+		editorPresenter.getSessionAPI().create(file)
 	}
 	
-	def InputStream getPage(int index) {
-		return null;//TODO
+	/**
+	 * get the page number i from the pdf loaded in the model. Use getContents() on the return to get an InputStream if any
+	 * @param i the page number
+	 * @throws IllegalArgumentExcpetion if i<0 or document has less pages than i
+	 * @return {@link PDPage} page of the document
+     * @author Benjamin Danlos
+	 */
+	def getPage(int i){
+		var pdf = editorPresenter.getSessionAPI().document
+		//if pdf === null ?
+	 	//check if i is in the number of pages of the document
+	 	if(i<0){
+	 		throw new IllegalArgumentException("i can't be negative(" + i + ")")
+	 	}
+	 	if(pdf.getNumberOfPages() < i){
+	 		throw new IllegalArgumentException("i can't be greater than the number of pages in the document (" + i + ")")
+	 	}
+	 	pdf.getPage(i)
 	}
+	
+	/*def InputStream getPage(int index) {
+		return null;//TODO
+	}*/
+	/**
+	 * returns all the pages in the pdf loaded in the document
+	 * @return {@link PDPageTree} the pages of the document
+     * @author Benjamin Danlos
+	 */
+	def getPages(){
+		//if pdf === null ?
+		editorPresenter.getSessionAPI().document.getPages()
+	}
+	
 }
