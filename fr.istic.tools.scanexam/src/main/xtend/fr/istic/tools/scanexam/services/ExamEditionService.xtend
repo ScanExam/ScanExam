@@ -11,6 +11,7 @@ import fr.istic.tools.scanexam.core.templates.TemplatesPackage
 import org.apache.pdfbox.pdmodel.PDDocument
 import fr.istic.tools.scanexam.core.CoreFactory
 import java.util.Optional
+import java.io.InputStream
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -35,7 +36,7 @@ class ExamEditionService extends Service // TODO : renommer
 	 */
 	def void addQuestion(Question q)
 	{
-		getPage().questions.add(q);
+		getCurrentPage().questions.add(q);
 	}
 	/**
 	 * Supprime une question
@@ -45,7 +46,7 @@ class ExamEditionService extends Service // TODO : renommer
 	 */
 	def void removeQuestion(int index)
 	{
-		getPage().questions.remove(index);
+		getCurrentPage().questions.remove(index);
 	}
 	override save(String path) 
 	{

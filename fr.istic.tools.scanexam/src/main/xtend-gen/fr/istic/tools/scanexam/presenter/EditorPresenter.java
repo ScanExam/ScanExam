@@ -3,9 +3,11 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
 import fr.istic.tools.scanexam.presenter.PresenterQRCode;
-import fr.istic.tools.scanexam.presenter.PresenterRectangle;
+import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.view.Adapter;
+import java.io.File;
+import java.io.InputStream;
 import java.util.Objects;
 
 /**
@@ -21,7 +23,7 @@ public class EditorPresenter implements Presenter {
    */
   private PresenterQRCode presQRCode;
   
-  private PresenterRectangle presRectangle;
+  private PresenterQuestionZone presQuestionZone;
   
   private PresenterMarkingScheme presMarkingScheme;
   
@@ -66,23 +68,23 @@ public class EditorPresenter implements Presenter {
   }
   
   /**
-   * Setter for {@link PresenterRectangle} attribute
-   * @param {@link PresenterRectangle} pres an instance (not null)
+   * Setter for {@link PresenterQuestionZone} attribute
+   * @param {@link PresenterQuestionZone} pres an instance (not null)
    */
-  public PresenterRectangle setPresenterRectangle(final PresenterRectangle pres) {
-    PresenterRectangle _xblockexpression = null;
+  public PresenterQuestionZone setPresenterQuestionZone(final PresenterQuestionZone pres) {
+    PresenterQuestionZone _xblockexpression = null;
     {
-      Objects.<PresenterRectangle>requireNonNull(pres);
-      _xblockexpression = this.presRectangle = pres;
+      Objects.<PresenterQuestionZone>requireNonNull(pres);
+      _xblockexpression = this.presQuestionZone = pres;
     }
     return _xblockexpression;
   }
   
   /**
-   * @return current {@link PresenterRectangle}
+   * @return current {@link PresenterQuestionZone}
    */
-  public PresenterRectangle getPresenterRectangle() {
-    return this.presRectangle;
+  public PresenterQuestionZone getPresenterQuestionZone() {
+    return this.presQuestionZone;
   }
   
   /**
@@ -123,5 +125,13 @@ public class EditorPresenter implements Presenter {
    */
   public EditorPresenter getControllerVueCreation() {
     return this.editorPresenter;
+  }
+  
+  public InputStream getCurrentPdfPage() {
+    return this.service.getCurrentPdfPage();
+  }
+  
+  public void create(final File file) {
+    this.service.create(file);
   }
 }

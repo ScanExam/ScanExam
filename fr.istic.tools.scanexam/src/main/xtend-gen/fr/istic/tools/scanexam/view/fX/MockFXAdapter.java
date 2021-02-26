@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.presenter.GraduationPresenter;
 import fr.istic.tools.scanexam.view.fX.ControllerFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
 import java.util.ArrayList;
@@ -93,5 +94,10 @@ public class MockFXAdapter extends GraduationAdapterFX {
   @Override
   public void thisQuestion(final int index) {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
+  }
+  
+  @Override
+  public GraduationPresenter getPresenter() {
+    return this.getPresenter();
   }
 }

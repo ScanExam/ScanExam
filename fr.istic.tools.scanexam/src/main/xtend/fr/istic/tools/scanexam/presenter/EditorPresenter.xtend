@@ -3,6 +3,8 @@ package fr.istic.tools.scanexam.presenter
 import fr.istic.tools.scanexam.services.ExamEditionService
 import fr.istic.tools.scanexam.view.Adapter
 import java.util.Objects
+import java.io.File
+import java.io.InputStream
 
 /**
  * Class defining the presenter for the exam creation view(s)
@@ -18,7 +20,6 @@ class EditorPresenter implements Presenter
 	PresenterQRCode presQRCode
 	PresenterQuestionZone presQuestionZone
 	PresenterMarkingScheme presMarkingScheme
-	PresenterPdf presPdf
 	EditorPresenter editorPresenter
 	ExamEditionService service
 	Adapter<EditorPresenter> adapter
@@ -100,12 +101,14 @@ class EditorPresenter implements Presenter
 		editorPresenter
 	}
 	
-	def void setPresenterPdf(PresenterPdf presenterPdf) {
-		presPdf = presenterPdf
-		
+	def getCurrentPdfPage()
+	{
+		return service.getCurrentPdfPage
 	}
-	def PresenterPdf getPresenterPdf(){
-		presPdf
+	def create(File file)
+	{
+		 service.create(file);
 	}
+	
 	
 }

@@ -41,7 +41,7 @@ public class ExamEditionService extends Service {
    * @author degas
    */
   public void addQuestion(final Question q) {
-    this.getPage().getQuestions().add(q);
+    this.getCurrentPage().getQuestions().add(q);
   }
   
   /**
@@ -51,7 +51,7 @@ public class ExamEditionService extends Service {
    * @author degas
    */
   public void removeQuestion(final int index) {
-    this.getPage().getQuestions().remove(index);
+    this.getCurrentPage().getQuestions().remove(index);
   }
   
   @Override

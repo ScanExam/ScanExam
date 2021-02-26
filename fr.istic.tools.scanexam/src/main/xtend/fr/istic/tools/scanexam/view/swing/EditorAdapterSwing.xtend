@@ -103,4 +103,8 @@ class EditorAdapterSwing implements EditorAdapter {
 		editorPresenter = presenter
 	}
 	
+	override getPresenter() {
+		presenter
+	}
+	
 }

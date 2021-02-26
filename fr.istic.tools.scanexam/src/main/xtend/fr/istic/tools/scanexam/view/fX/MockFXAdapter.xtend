@@ -84,6 +84,10 @@ class MockFXAdapter extends GraduationAdapterFX {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
+	override getPresenter() {
+		presenter
+	}
+	
 
 	
 }

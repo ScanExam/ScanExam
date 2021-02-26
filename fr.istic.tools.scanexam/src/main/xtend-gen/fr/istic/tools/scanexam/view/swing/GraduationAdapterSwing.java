@@ -114,4 +114,9 @@ public class GraduationAdapterSwing implements GraduationAdapter {
   public void setPresenter(final GraduationPresenter presenter) {
     this.graduationPresenter = presenter;
   }
+  
+  @Override
+  public GraduationPresenter getPresenter() {
+    return this.getPresenter();
+  }
 }

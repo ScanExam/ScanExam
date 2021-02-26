@@ -35,8 +35,12 @@ abstract class Service
 		return ExamSingleton.instance.name;
 	}
 	
-
-	def getPage()
+	
+	def getCurrentPdfPage()
+	{
+		return document.getPage(pageIndex).contents
+	}
+	protected def getCurrentPage()
 	{
 		return ExamSingleton.getPage(pageIndex);
 	}

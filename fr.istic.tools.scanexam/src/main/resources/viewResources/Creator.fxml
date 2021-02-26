@@ -27,7 +27,7 @@
             <items>
               <MenuItem mnemonicParsing="false" text="Save" />
                   <MenuItem mnemonicParsing="false" text="Load" />
-                  <MenuItem mnemonicParsing="false" text="Create New Thing" />
+                  <MenuItem mnemonicParsing="false"  onAction="#onCreateClick"  text="Create New Thing" />
                   <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>

@@ -11,10 +11,7 @@ class GraduationAdapterFX implements GraduationAdapter {
 	def void loadFile(File file) {
 		
 	}
-	
-	override setPresenter(GraduationPresenter presenter) {
-		this.presenter = presenter
-	}
+
 	
 	override void nextQuestion(){
 		
@@ -34,6 +31,13 @@ class GraduationAdapterFX implements GraduationAdapter {
 	
 	def void showQuestion(Question question){
 		
+	}
+	
+	override setPresenter(GraduationPresenter presenter) {
+		this.presenter = presenter
+	}
+	override getPresenter() {
+		presenter
 	}
 	
 }

@@ -10,6 +10,12 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Pane
 import org.apache.logging.log4j.LogManager
+import javafx.stage.FileChooser
+import java.util.Arrays
+import javafx.stage.FileChooser.ExtensionFilter
+import java.io.File
+import java.awt.event.ActionEvent
+import java.awt.Event
 
 class ControllerFXCreator {
 	
@@ -185,7 +191,32 @@ class ControllerFXCreator {
 		}
 	}
 	
+	@FXML
+	def onCreateClick()
+	{
+		
+		var fileChooser = new FileChooser();
+		fileChooser.extensionFilters.add(new ExtensionFilter("PDF files",Arrays.asList("*.pdf")));
+		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Documents");
+		var file = fileChooser.showOpenDialog(mainPane.scene.window)
+		
+		if (file !== null) 
+		{
+			editor.presenter.create(file);
+			renderDocument();
+		}
+		else 
+		{
+			logger.warn("File not chosen")
+		}
+		
+		
+	}
 	
+	def renderDocument()
+	{
+		
+	}
 	
 	
 	

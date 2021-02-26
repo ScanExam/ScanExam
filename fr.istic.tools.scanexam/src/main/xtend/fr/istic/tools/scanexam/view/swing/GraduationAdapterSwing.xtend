@@ -113,4 +113,8 @@ class GraduationAdapterSwing implements GraduationAdapter {
 		graduationPresenter = presenter
 	}
 	
+	override getPresenter() {
+		presenter
+	}
+	
 }
