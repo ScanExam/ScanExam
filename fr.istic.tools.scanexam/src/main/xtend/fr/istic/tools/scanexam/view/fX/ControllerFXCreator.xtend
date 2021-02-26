@@ -18,16 +18,14 @@ import java.awt.event.ActionEvent
 import java.awt.Event
 
 class ControllerFXCreator {
-	
-	
-	
+
 	EditorAdapterFX editor;
 	
 	@FXML
-	var Pane mainPane;
+	Pane mainPane;
 	
 	@FXML
-	var ImageView PDFView;
+	ImageView pdfView;
 	
 	var logger = LogManager.logger
 	enum SelectedTool {
@@ -216,12 +214,14 @@ class ControllerFXCreator {
 	def renderDocument()
 	{
 		
+		
+		pdfView.image = new Image(editor.presenter.getCurrentPdfPage);
 	}
 	
 	
 	
-	def DisplayPDF(Image pdf) {
-		PDFView.setImage(pdf);
+	def displayPDF(Image pdf) {
+		pdfView.setImage(pdf);
 	}
 	
 	

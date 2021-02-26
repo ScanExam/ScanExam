@@ -16,7 +16,7 @@ abstract class Service
 	/**
 	 * Index de la page courante
 	 */
-	int pageIndex
+	int pageIndex 
 	
 	/**
 	 * @return Identifiant de l'examen
@@ -38,7 +38,7 @@ abstract class Service
 	
 	def getCurrentPdfPage()
 	{
-		return document.getPage(pageIndex).contents
+		document.getPage(pageIndex).contents
 	}
 	protected def getCurrentPage()
 	{

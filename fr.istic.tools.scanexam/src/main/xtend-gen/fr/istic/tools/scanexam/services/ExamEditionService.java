@@ -28,8 +28,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  */
 @SuppressWarnings("all")
 public class ExamEditionService extends Service {
-  private PDDocument document;
-  
   private CreationTemplate template;
   
   private String currentPdfPath;
@@ -82,7 +80,7 @@ public class ExamEditionService extends Service {
         ExamSingleton.instance = creationTemplate.get().getExam();
         String _pdfPath = creationTemplate.get().getPdfPath();
         final File pdfFile = new File(_pdfPath);
-        this.document = PDDocument.load(pdfFile);
+        this.setDocument(PDDocument.load(pdfFile));
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -111,9 +109,9 @@ public class ExamEditionService extends Service {
   
   public void create(final File file) {
     try {
-      this.document = PDDocument.load(file);
+      this.setDocument(PDDocument.load(file));
       ExamSingleton.instance = CoreFactory.eINSTANCE.createExam();
-      int _size = IterableExtensions.size(this.document.getPages());
+      int _size = IterableExtensions.size(this.getDocument().getPages());
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
       for (final Integer i : _doubleDotLessThan) {
         ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());

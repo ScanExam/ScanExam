@@ -22,8 +22,6 @@ import java.io.InputStream
  */
 class ExamEditionService extends Service // TODO : renommer
 {
-	PDDocument document;
-	
 	CreationTemplate template;
 	
 	String currentPdfPath;

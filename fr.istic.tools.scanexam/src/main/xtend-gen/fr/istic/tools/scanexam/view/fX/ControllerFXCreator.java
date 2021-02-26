@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.view.fX.Box;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -39,7 +40,7 @@ public class ControllerFXCreator {
   private Pane mainPane;
   
   @FXML
-  private ImageView PDFView;
+  private ImageView pdfView;
   
   private Logger logger = LogManager.getLogger();
   
@@ -238,43 +239,35 @@ public class ControllerFXCreator {
   }
   
   @FXML
-  public Object onCreateClick() {
-    Object _xblockexpression = null;
-    {
-      FileChooser fileChooser = new FileChooser();
-      ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-      List<String> _asList = Arrays.<String>asList("*.pdf");
-      FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
-      _extensionFilters.add(_extensionFilter);
-      String _property = System.getProperty("user.home");
-      String _property_1 = System.getProperty("file.separator");
-      String _plus = (_property + _property_1);
-      String _plus_1 = (_plus + "Documents");
-      File _file = new File(_plus_1);
-      fileChooser.setInitialDirectory(_file);
-      File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-      Object _xifexpression = null;
-      if ((file != null)) {
-        Object _xblockexpression_1 = null;
-        {
-          this.editor.getPresenter().create(file);
-          _xblockexpression_1 = this.renderDocument();
-        }
-        _xifexpression = _xblockexpression_1;
-      } else {
-        this.logger.warn("File not chosen");
-      }
-      _xblockexpression = _xifexpression;
+  public void onCreateClick() {
+    FileChooser fileChooser = new FileChooser();
+    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+    List<String> _asList = Arrays.<String>asList("*.pdf");
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
+    _extensionFilters.add(_extensionFilter);
+    String _property = System.getProperty("user.home");
+    String _property_1 = System.getProperty("file.separator");
+    String _plus = (_property + _property_1);
+    String _plus_1 = (_plus + "Documents");
+    File _file = new File(_plus_1);
+    fileChooser.setInitialDirectory(_file);
+    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
+    if ((file != null)) {
+      this.editor.getPresenter().create(file);
+      this.renderDocument();
+    } else {
+      this.logger.warn("File not chosen");
     }
-    return _xblockexpression;
   }
   
-  public Object renderDocument() {
-    return null;
+  public void renderDocument() {
+    InputStream _currentPdfPage = this.editor.getPresenter().getCurrentPdfPage();
+    Image _image = new Image(_currentPdfPage);
+    this.pdfView.setImage(_image);
   }
   
-  public void DisplayPDF(final Image pdf) {
-    this.PDFView.setImage(pdf);
+  public void displayPDF(final Image pdf) {
+    this.pdfView.setImage(pdf);
   }
   
   public void setEditorAdapterFX(final EditorAdapterFX editor) {
