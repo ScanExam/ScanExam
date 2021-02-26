@@ -45,8 +45,17 @@ class EditorViewSwing {
 	/* Menu fichier de la bare de menu de la fenêtre */
 	var JMenu mnFile
 	
+	/* Bouton pour sauver un examen */
+	var JMenuItem mnItemSave
+	
 	/* Bouton pour charger un examen */
 	var JMenuItem mnItemLoad
+	
+	/* Bouton pour créer un examen */
+	var JMenuItem mnItemCreate
+	
+	/* Bouton pour fermer un examen */
+	var JMenuItem mnItemClose
 	
 	/* Bouton pour charger de session */
 	var JMenuItem mnItemSession
@@ -118,8 +127,17 @@ class EditorViewSwing {
 		
 		mnFile = new JMenu("File")
 		
+		mnItemSave = new JMenuItem("Save")
+	    mnFile.add(mnItemSave)
+	    
 		mnItemLoad = new JMenuItem("Load")
 	    mnFile.add(mnItemLoad)
+	    
+		mnItemCreate = new JMenuItem("Create")
+	    mnFile.add(mnItemCreate)
+	    
+		mnItemClose = new JMenuItem("Close")
+	    mnFile.add(mnItemClose)
 	    
 		mnItemSession = new JMenuItem("Change session")
 	    mnFile.add(mnItemSession)
@@ -222,6 +240,10 @@ class EditorViewSwing {
 		return window;
 	}
 	
+	def JMenuItem getMnItemSave() {
+		return mnItemSave;
+	}
+	
 	/**
 	 * Envoie le bouton de chargement de pdf
 	 * @return mnItemLoad
@@ -229,6 +251,16 @@ class EditorViewSwing {
 	def JMenuItem getMnItemLoad() {
 		return mnItemLoad;
 	}
+	
+	def JMenuItem getMnItemCreate() {
+		return mnItemCreate;
+	}
+	
+	
+	def JMenuItem getMnItemClose() {
+		return mnItemSave;
+	}
+	
 	/**
 	 * Envoie le bouton de changement de session
 	 * @return mnItemSession
@@ -236,6 +268,5 @@ class EditorViewSwing {
 	def JMenuItem getMnItemSession() {
 		return mnItemSession;
 	}
-	
 
 }

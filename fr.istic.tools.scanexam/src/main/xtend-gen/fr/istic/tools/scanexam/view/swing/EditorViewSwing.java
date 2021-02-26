@@ -55,9 +55,24 @@ public class EditorViewSwing {
   private JMenu mnFile;
   
   /**
+   * Bouton pour sauver un examen
+   */
+  private JMenuItem mnItemSave;
+  
+  /**
    * Bouton pour charger un examen
    */
   private JMenuItem mnItemLoad;
+  
+  /**
+   * Bouton pour créer un examen
+   */
+  private JMenuItem mnItemCreate;
+  
+  /**
+   * Bouton pour fermer un examen
+   */
+  private JMenuItem mnItemClose;
   
   /**
    * Bouton pour charger de session
@@ -151,11 +166,20 @@ public class EditorViewSwing {
     this.window.setJMenuBar(this.menuBar);
     JMenu _jMenu = new JMenu("File");
     this.mnFile = _jMenu;
-    JMenuItem _jMenuItem = new JMenuItem("Load");
-    this.mnItemLoad = _jMenuItem;
+    JMenuItem _jMenuItem = new JMenuItem("Save");
+    this.mnItemSave = _jMenuItem;
+    this.mnFile.add(this.mnItemSave);
+    JMenuItem _jMenuItem_1 = new JMenuItem("Load");
+    this.mnItemLoad = _jMenuItem_1;
     this.mnFile.add(this.mnItemLoad);
-    JMenuItem _jMenuItem_1 = new JMenuItem("Change session");
-    this.mnItemSession = _jMenuItem_1;
+    JMenuItem _jMenuItem_2 = new JMenuItem("Create");
+    this.mnItemCreate = _jMenuItem_2;
+    this.mnFile.add(this.mnItemCreate);
+    JMenuItem _jMenuItem_3 = new JMenuItem("Close");
+    this.mnItemClose = _jMenuItem_3;
+    this.mnFile.add(this.mnItemClose);
+    JMenuItem _jMenuItem_4 = new JMenuItem("Change session");
+    this.mnItemSession = _jMenuItem_4;
     this.mnFile.add(this.mnItemSession);
     this.menuBar.add(this.mnFile);
     JMenu _jMenu_1 = new JMenu("Edit");
@@ -249,12 +273,24 @@ public class EditorViewSwing {
     return this.window;
   }
   
+  public JMenuItem getMnItemSave() {
+    return this.mnItemSave;
+  }
+  
   /**
    * Envoie le bouton de chargement de pdf
    * @return mnItemLoad
    */
   public JMenuItem getMnItemLoad() {
     return this.mnItemLoad;
+  }
+  
+  public JMenuItem getMnItemCreate() {
+    return this.mnItemCreate;
+  }
+  
+  public JMenuItem getMnItemClose() {
+    return this.mnItemSave;
   }
   
   /**

@@ -15,7 +15,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Controlleur swing de la fenêtre de création d'examen
@@ -56,11 +55,10 @@ public class EditorAdapterSwing implements EditorAdapter {
    * Ajoute les action listeners aux boutons de la vue
    */
   private void addActionListeners() {
-    JMenuItem _mnItemSession = this.view.getMnItemSession();
-    _mnItemSession.addActionListener(new ActionListener() {
+    JMenuItem _mnItemSave = this.view.getMnItemSave();
+    _mnItemSave.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        InputOutput.<String>print("koukou");
       }
     });
     JMenuItem _mnItemLoad = this.view.getMnItemLoad();
@@ -72,6 +70,24 @@ public class EditorAdapterSwing implements EditorAdapter {
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);
         }
+      }
+    });
+    JMenuItem _mnItemCreate = this.view.getMnItemCreate();
+    _mnItemCreate.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+      }
+    });
+    JMenuItem _mnItemClose = this.view.getMnItemClose();
+    _mnItemClose.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+      }
+    });
+    JMenuItem _mnItemSession = this.view.getMnItemSession();
+    _mnItemSession.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
       }
     });
   }

@@ -4,29 +4,19 @@ import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.box.BoxList;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
+import fr.istic.tools.scanexam.view.swing.PdfPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.List;
-import javax.swing.JPanel;
 
 @SuppressWarnings("all")
-public class PdfAndBoxPanel extends JPanel {
-  public AdapterSwingPdfAndBoxPanel adapter;
-  
+public class PdfAndBoxPanel extends PdfPanel {
+  /**
+   * Adaptateur swing du gestionnaire de boîtes de sélection
+   */
   public AdapterSwingBox adapterBox;
-  
-  /**
-   * Largeur du panel
-   */
-  public int width;
-  
-  /**
-   * Hauteur du panel
-   */
-  public int height;
   
   /**
    * Couleur de l'intérieur des boîtes
@@ -44,25 +34,10 @@ public class PdfAndBoxPanel extends JPanel {
   private final Color outLineColor = Color.BLACK;
   
   public PdfAndBoxPanel(final AdapterSwingPdfAndBoxPanel adapter) {
-    this.adapter = adapter;
-    Image _pdf = this.adapter.getPdf();
-    boolean _tripleNotEquals = (_pdf != null);
-    if (_tripleNotEquals) {
-      int _width = this.adapter.getPdf().getWidth(this);
-      int _scale = this.adapter.getScale();
-      int _divide = (_width / _scale);
-      this.width = _divide;
-      int _height = this.adapter.getPdf().getHeight(this);
-      int _scale_1 = this.adapter.getScale();
-      int _divide_1 = (_height / _scale_1);
-      this.height = _divide_1;
-    }
+    super(adapter);
     this.adapter.setView(this);
-    this.adapterBox = this.adapter.getAdapterBox();
+    this.adapterBox = adapter.getAdapterBox();
     this.adapterBox.getSelectionBoxes().setPanel(this);
-    this.addMouseWheelListener(this.adapter.getMouseHandler());
-    this.addMouseListener(this.adapter.getMouseHandler());
-    this.addMouseMotionListener(this.adapter.getMouseHandler());
     this.addMouseListener(this.adapterBox.getMouseHandler());
     this.addMouseMotionListener(this.adapterBox.getMouseHandler());
   }
@@ -73,19 +48,6 @@ public class PdfAndBoxPanel extends JPanel {
   @Override
   protected void paintComponent(final Graphics g) {
     super.paintComponent(g);
-    Image _pdf = this.adapter.getPdf();
-    boolean _tripleNotEquals = (_pdf != null);
-    if (_tripleNotEquals) {
-      int _width = this.adapter.getPdf().getWidth(this);
-      int _scale = this.adapter.getScale();
-      int _divide = (_width / _scale);
-      this.width = _divide;
-      int _height = this.adapter.getPdf().getHeight(this);
-      int _scale_1 = this.adapter.getScale();
-      int _divide_1 = (_height / _scale_1);
-      this.height = _divide_1;
-      g.drawImage(this.adapter.getPdf(), this.adapter.getOriginX(), this.adapter.getOriginY(), this.width, this.height, this);
-    }
     Graphics _create = g.create();
     Graphics2D g2d = ((Graphics2D) _create);
     this.paintSelectionBoxes(g2d, this.adapterBox.getSelectionBoxes());

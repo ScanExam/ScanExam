@@ -11,18 +11,18 @@ class PdfPanel extends JPanel {
 	/* Hauteur du panel */
 	public var int height
 		
-	new(AdapterSwingPdfPanel pdfPresenter) {
-		this.adapter = pdfPresenter
+	new(AdapterSwingPdfPanel adapter) {
+		this.adapter = adapter
 		
 		if(this.adapter.getPdf() !== null) {
-			width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
-			height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
+			width = this.adapter.getPdf().getWidth(this) / this.adapter.getScale()
+			height = this.adapter.getPdf().getHeight(this) / this.adapter.getScale()
 		}
-		pdfPresenter.setView(this)
+		this.adapter.setView(this)
         
-        addMouseWheelListener(pdfPresenter.getMouseHandler())
-        addMouseListener(pdfPresenter.getMouseHandler())
-        addMouseMotionListener(pdfPresenter.getMouseHandler())
+        addMouseWheelListener(this.adapter.getMouseHandler())
+        addMouseListener(this.adapter.getMouseHandler())
+        addMouseMotionListener(this.adapter.getMouseHandler())
 	}
 	
 	/**
