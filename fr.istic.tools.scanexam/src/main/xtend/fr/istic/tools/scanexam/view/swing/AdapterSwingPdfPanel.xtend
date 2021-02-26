@@ -18,7 +18,7 @@ import org.apache.pdfbox.rendering.PDFRenderer
  * @author Julien Cochet
  */
 class AdapterSwingPdfPanel {
-	
+
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * ATTRIBUTS
@@ -27,40 +27,40 @@ class AdapterSwingPdfPanel {
 	
 	/* Largeur de la fenêtre */
 	protected var int width
-	
+
 	/* Hauteur de la fenêtre */
 	protected var int height
-	
+
 	/* PDF a afficher */
 	protected var Image pdf
-	
+
 	/* Echelle pour l'affichage */
 	protected var int scale
-	
+
 	/* Point d'origine sur l'axe X */
 	protected var int originX
-	
+
 	/* Point d'origine sur l'axe Y */
 	protected var int originY
-	
+
 	/* Indique si la mise à l'échelle se base sur la largueur ou non  */
 	protected var boolean scaleOnWidth
-	
+
 	/* Vue */
 	protected var Optional<JPanel> view
-	
+
 	/* Dernier point cliqué par l'utilisateur */
 	protected var Optional<Point> lastClickPoint
-	
+
 	/* Handler pour les événements liés à la souris */
 	protected var MouseAdapter mouseHandler
-	
-	
+
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * CONSTRUCTEUR
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
 	/** 
 	 * Constructeur
 	 * @param width Largeur de la fenêtre
@@ -97,7 +97,6 @@ class AdapterSwingPdfPanel {
 			}
 		}
 	}
-
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -141,7 +140,6 @@ class AdapterSwingPdfPanel {
 		}
 	}
 
-
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * GETTERS
@@ -151,7 +149,7 @@ class AdapterSwingPdfPanel {
 	def Image getPdf() {
 		return pdf
 	}
-	
+
 	def int getScale() {
 		return scale
 	}
@@ -168,7 +166,6 @@ class AdapterSwingPdfPanel {
 		return mouseHandler
 	}
 
-
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * SETTERS
@@ -176,29 +173,34 @@ class AdapterSwingPdfPanel {
 	// ----------------------------------------------------------------------------------------------------
 	
 	def void setPDF(InputStream pdfInput, int pageindex) {
-		try {
-			var PDDocument document = PDDocument::load(pdfInput)
-			var PDFRenderer renderer = new PDFRenderer(document)
-			var BufferedImage img = renderer.renderImageWithDPI(pageindex, 300)
-			document.close()
-			pdf = img
-			repaint()
-		} catch (IOException e) {
-			e.printStackTrace()
+		if (pdfInput !== null) {
+			try {
+				var PDDocument document = PDDocument::load(pdfInput)
+				var PDFRenderer renderer = new PDFRenderer(document)
+				var BufferedImage img = renderer.renderImageWithDPI(pageindex, 300)
+				document.close()
+				pdf = img
+				setScaleOnWidth(scaleOnWidth)
+				repaint()
+			} catch (IOException e) {
+				e.printStackTrace()
+			}
 		}
 	}
-	
+
 	def void setScaleOnWidth(boolean scaleOnWidth) {
-		this.scaleOnWidth = scaleOnWidth
-		if (this.scaleOnWidth) {
-			scale = (pdf.getWidth(null) / width) + 1
-		} else {
-			scale = (pdf.getHeight(null) / height) + 1
+		if(pdf !== null) {
+			this.scaleOnWidth = scaleOnWidth
+			if (this.scaleOnWidth) {
+				scale = (pdf.getWidth(null) / width) + 1
+			} else {
+				scale = (pdf.getHeight(null) / height) + 1
+			}
 		}
 	}
-	
+
 	def void setView(JPanel view) {
 		this.view = Optional::of(view)
 	}
-	
+
 }

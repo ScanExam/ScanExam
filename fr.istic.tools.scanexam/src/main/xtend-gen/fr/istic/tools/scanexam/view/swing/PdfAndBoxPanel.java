@@ -7,6 +7,7 @@ import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.List;
 import javax.swing.JPanel;
@@ -15,7 +16,7 @@ import javax.swing.JPanel;
 public class PdfAndBoxPanel extends JPanel {
   public AdapterSwingPdfAndBoxPanel adapter;
   
-  public AdapterSwingBox selectionPresenter;
+  public AdapterSwingBox adapterBox;
   
   /**
    * Largeur du panel
@@ -44,22 +45,26 @@ public class PdfAndBoxPanel extends JPanel {
   
   public PdfAndBoxPanel(final AdapterSwingPdfAndBoxPanel adapter) {
     this.adapter = adapter;
-    int _width = this.adapter.getPdf().getWidth(this);
-    int _scale = this.adapter.getScale();
-    int _divide = (_width / _scale);
-    this.width = _divide;
-    int _height = this.adapter.getPdf().getHeight(this);
-    int _scale_1 = this.adapter.getScale();
-    int _divide_1 = (_height / _scale_1);
-    this.height = _divide_1;
+    Image _pdf = this.adapter.getPdf();
+    boolean _tripleNotEquals = (_pdf != null);
+    if (_tripleNotEquals) {
+      int _width = this.adapter.getPdf().getWidth(this);
+      int _scale = this.adapter.getScale();
+      int _divide = (_width / _scale);
+      this.width = _divide;
+      int _height = this.adapter.getPdf().getHeight(this);
+      int _scale_1 = this.adapter.getScale();
+      int _divide_1 = (_height / _scale_1);
+      this.height = _divide_1;
+    }
     this.adapter.setView(this);
-    this.selectionPresenter = this.adapter.getSelectionController();
-    this.selectionPresenter.getSelectionBoxes().setPanel(this);
+    this.adapterBox = this.adapter.getAdapterBox();
+    this.adapterBox.getSelectionBoxes().setPanel(this);
     this.addMouseWheelListener(this.adapter.getMouseHandler());
     this.addMouseListener(this.adapter.getMouseHandler());
     this.addMouseMotionListener(this.adapter.getMouseHandler());
-    this.addMouseListener(this.selectionPresenter.getMouseHandler());
-    this.addMouseMotionListener(this.selectionPresenter.getMouseHandler());
+    this.addMouseListener(this.adapterBox.getMouseHandler());
+    this.addMouseMotionListener(this.adapterBox.getMouseHandler());
   }
   
   /**
@@ -68,19 +73,23 @@ public class PdfAndBoxPanel extends JPanel {
   @Override
   protected void paintComponent(final Graphics g) {
     super.paintComponent(g);
-    int _width = this.adapter.getPdf().getWidth(this);
-    int _scale = this.adapter.getScale();
-    int _divide = (_width / _scale);
-    this.width = _divide;
-    int _height = this.adapter.getPdf().getHeight(this);
-    int _scale_1 = this.adapter.getScale();
-    int _divide_1 = (_height / _scale_1);
-    this.height = _divide_1;
-    g.drawImage(this.adapter.getPdf(), this.adapter.getOriginX(), this.adapter.getOriginY(), this.width, this.height, this);
+    Image _pdf = this.adapter.getPdf();
+    boolean _tripleNotEquals = (_pdf != null);
+    if (_tripleNotEquals) {
+      int _width = this.adapter.getPdf().getWidth(this);
+      int _scale = this.adapter.getScale();
+      int _divide = (_width / _scale);
+      this.width = _divide;
+      int _height = this.adapter.getPdf().getHeight(this);
+      int _scale_1 = this.adapter.getScale();
+      int _divide_1 = (_height / _scale_1);
+      this.height = _divide_1;
+      g.drawImage(this.adapter.getPdf(), this.adapter.getOriginX(), this.adapter.getOriginY(), this.width, this.height, this);
+    }
     Graphics _create = g.create();
     Graphics2D g2d = ((Graphics2D) _create);
-    this.paintSelectionBoxes(g2d, this.selectionPresenter.getSelectionBoxes());
-    this.paintBoxesTitle(g2d, this.selectionPresenter.getSelectionBoxes());
+    this.paintSelectionBoxes(g2d, this.adapterBox.getSelectionBoxes());
+    this.paintBoxesTitle(g2d, this.adapterBox.getSelectionBoxes());
     g2d.dispose();
   }
   
@@ -129,18 +138,18 @@ public class PdfAndBoxPanel extends JPanel {
    * @param boxes Boîtes de sélection auquelles ajouter des titres
    */
   public void paintBoxesTitle(final Graphics2D g2d, final BoxList boxes) {
-    double _minWidth = this.selectionPresenter.getMinWidth();
+    double _minWidth = this.adapterBox.getMinWidth();
     double _divide = (_minWidth / this.width);
-    double _titleHeight = this.selectionPresenter.getTitleHeight();
+    double _titleHeight = this.adapterBox.getTitleHeight();
     double _divide_1 = (_titleHeight / this.height);
-    double _titleHeight_1 = this.selectionPresenter.getTitleHeight();
+    double _titleHeight_1 = this.adapterBox.getTitleHeight();
     double _divide_2 = (_titleHeight_1 / this.height);
     BoxList boxesTitle = new BoxList(_divide, _divide_1, (-1.0), _divide_2);
-    double _minWidth_1 = this.selectionPresenter.getMinWidth();
+    double _minWidth_1 = this.adapterBox.getMinWidth();
     double _divide_3 = (_minWidth_1 / this.width);
     int _scale = this.adapter.getScale();
     double _divide_4 = (_divide_3 / _scale);
-    double _minHeight = this.selectionPresenter.getMinHeight();
+    double _minHeight = this.adapterBox.getMinHeight();
     double _divide_5 = (_minHeight / this.height);
     boxesTitle.updateBounds(_divide_4, _divide_5, (-1.0), (-1.0));
     List<Box> _list = boxes.getList();
@@ -153,12 +162,12 @@ public class PdfAndBoxPanel extends JPanel {
       double _plus = (_x + _divide_6);
       double _y = box.getY();
       int _originY = this.adapter.getOriginY();
-      double _titleHeight_2 = this.selectionPresenter.getTitleHeight();
+      double _titleHeight_2 = this.adapterBox.getTitleHeight();
       double _minus_1 = (_originY - _titleHeight_2);
       double _divide_7 = (_minus_1 / this.height);
       double _plus_1 = (_y + _divide_7);
       double _width_1 = box.getWidth();
-      double _titleHeight_3 = this.selectionPresenter.getTitleHeight();
+      double _titleHeight_3 = this.adapterBox.getTitleHeight();
       double _divide_8 = (_titleHeight_3 / this.height);
       boxesTitle.addBox(_plus, _plus_1, _width_1, _divide_8, box.getTitle());
     }
@@ -174,17 +183,17 @@ public class PdfAndBoxPanel extends JPanel {
         Rectangle crtRec = this.convertBoxToRectangle(box_2);
         g2d.draw(crtRec);
         String _title = box_2.getTitle();
-        double _titleHeight_4 = this.selectionPresenter.getTitleHeight();
+        double _titleHeight_4 = this.adapterBox.getTitleHeight();
         double _divide_9 = (_titleHeight_4 / 4);
         int _plus_2 = (crtRec.x + ((int) _divide_9));
-        double _titleHeight_5 = this.selectionPresenter.getTitleHeight();
+        double _titleHeight_5 = this.adapterBox.getTitleHeight();
         double _divide_10 = (_titleHeight_5 / 1.5);
         int _plus_3 = (crtRec.y + ((int) _divide_10));
         g2d.drawString(_title, _plus_2, _plus_3);
-        double _titleHeight_6 = this.selectionPresenter.getTitleHeight();
+        double _titleHeight_6 = this.adapterBox.getTitleHeight();
         double _divide_11 = (_titleHeight_6 / 2);
         int _minus_2 = ((crtRec.x + crtRec.width) - ((int) _divide_11));
-        double _titleHeight_7 = this.selectionPresenter.getTitleHeight();
+        double _titleHeight_7 = this.adapterBox.getTitleHeight();
         double _divide_12 = (_titleHeight_7 / 1.5);
         int _plus_4 = (crtRec.y + ((int) _divide_12));
         g2d.drawString("x", _minus_2, _plus_4);

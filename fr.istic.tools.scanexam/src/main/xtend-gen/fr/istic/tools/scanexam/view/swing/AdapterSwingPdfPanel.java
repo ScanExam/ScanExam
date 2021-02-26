@@ -181,35 +181,40 @@ public class AdapterSwingPdfPanel {
    * SETTERS
    */
   public void setPDF(final InputStream pdfInput, final int pageindex) {
-    try {
-      PDDocument document = PDDocument.load(pdfInput);
-      PDFRenderer renderer = new PDFRenderer(document);
-      BufferedImage img = renderer.renderImageWithDPI(pageindex, 300);
-      document.close();
-      this.pdf = img;
-      this.repaint();
-    } catch (final Throwable _t) {
-      if (_t instanceof IOException) {
-        final IOException e = (IOException)_t;
-        e.printStackTrace();
-      } else {
-        throw Exceptions.sneakyThrow(_t);
+    if ((pdfInput != null)) {
+      try {
+        PDDocument document = PDDocument.load(pdfInput);
+        PDFRenderer renderer = new PDFRenderer(document);
+        BufferedImage img = renderer.renderImageWithDPI(pageindex, 300);
+        document.close();
+        this.pdf = img;
+        this.setScaleOnWidth(this.scaleOnWidth);
+        this.repaint();
+      } catch (final Throwable _t) {
+        if (_t instanceof IOException) {
+          final IOException e = (IOException)_t;
+          e.printStackTrace();
+        } else {
+          throw Exceptions.sneakyThrow(_t);
+        }
       }
     }
   }
   
   public void setScaleOnWidth(final boolean scaleOnWidth) {
-    this.scaleOnWidth = scaleOnWidth;
-    if (this.scaleOnWidth) {
-      int _width = this.pdf.getWidth(null);
-      int _divide = (_width / this.width);
-      int _plus = (_divide + 1);
-      this.scale = _plus;
-    } else {
-      int _height = this.pdf.getHeight(null);
-      int _divide_1 = (_height / this.height);
-      int _plus_1 = (_divide_1 + 1);
-      this.scale = _plus_1;
+    if ((this.pdf != null)) {
+      this.scaleOnWidth = scaleOnWidth;
+      if (this.scaleOnWidth) {
+        int _width = this.pdf.getWidth(null);
+        int _divide = (_width / this.width);
+        int _plus = (_divide + 1);
+        this.scale = _plus;
+      } else {
+        int _height = this.pdf.getHeight(null);
+        int _divide_1 = (_height / this.height);
+        int _plus_1 = (_divide_1 + 1);
+        this.scale = _plus_1;
+      }
     }
   }
   

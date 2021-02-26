@@ -44,16 +44,10 @@ class GraduationViewSwing {
 	var JMenuBar menuBar
 	/* Menu fichier de la bare de menu de la fenêtre */
 	var JMenu mnFile
-	/* Item fermer du menu ficher */
-	var JMenuItem mntmClose
-	/* Menu édition de la bare de menu de la fenêtre */
-	var JMenu mnEdit
-	/* Item supprimer du menu édition */
-	var JMenuItem mntmDelete
-	/* Menu aide de la bare de menu de la fenêtre */
-	var JMenu mnHelp
-	/* Item à propos du menu aide */
-	var JMenuItem mntmAbout
+	/* Bouton pour charger un examen */
+	var JMenuItem mnItemLoad
+	/* Bouton pour charger de session */
+	var JMenuItem mnItemSession
 
 	/* Panel des boutons principaux */
 	var JPanel pnlMainBtn
@@ -157,20 +151,11 @@ class GraduationViewSwing {
 		mnFile = new JMenu("File")
 		menuBar.add(mnFile)
 
-		mntmClose = new JMenuItem("Close")
-		mnFile.add(mntmClose)
+		mnItemLoad = new JMenuItem("Load")
+		mnFile.add(mnItemLoad)
 
-		mnEdit = new JMenu("Edit")
-		menuBar.add(mnEdit)
-
-		mntmDelete = new JMenuItem("Delete")
-		mnEdit.add(mntmDelete)
-
-		mnHelp = new JMenu("Help")
-		menuBar.add(mnHelp)
-
-		mntmAbout = new JMenuItem("About")
-		mnHelp.add(mntmAbout)
+		mnItemSession = new JMenuItem("Change session")
+		mnFile.add(mnItemSession)
 
 		window.getContentPane().setLayout(new BorderLayout(0, 0))
 		pnlMainBtn = new JPanel()
@@ -326,8 +311,25 @@ class GraduationViewSwing {
 	 * GETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
 	def JFrame getWindow() {
 		return window;
+	}
+	
+	/**
+	 * Envoie le bouton de chargement de pdf
+	 * @return mnItemLoad
+	 */
+	def JMenuItem getMnItemLoad() {
+		return mnItemLoad;
+	}
+	
+	/**
+	 * Envoie le bouton de changement de session
+	 * @return mnItemSession
+	 */
+	def JMenuItem getMnItemSession() {
+		return mnItemSession;
 	}
 
 }

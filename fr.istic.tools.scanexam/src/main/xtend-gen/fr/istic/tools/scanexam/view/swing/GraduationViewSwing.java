@@ -53,29 +53,14 @@ public class GraduationViewSwing {
   private JMenu mnFile;
   
   /**
-   * Item fermer du menu ficher
+   * Bouton pour charger un examen
    */
-  private JMenuItem mntmClose;
+  private JMenuItem mnItemLoad;
   
   /**
-   * Menu édition de la bare de menu de la fenêtre
+   * Bouton pour charger de session
    */
-  private JMenu mnEdit;
-  
-  /**
-   * Item supprimer du menu édition
-   */
-  private JMenuItem mntmDelete;
-  
-  /**
-   * Menu aide de la bare de menu de la fenêtre
-   */
-  private JMenu mnHelp;
-  
-  /**
-   * Item à propos du menu aide
-   */
-  private JMenuItem mntmAbout;
+  private JMenuItem mnItemSession;
   
   /**
    * Panel des boutons principaux
@@ -272,21 +257,12 @@ public class GraduationViewSwing {
     JMenu _jMenu = new JMenu("File");
     this.mnFile = _jMenu;
     this.menuBar.add(this.mnFile);
-    JMenuItem _jMenuItem = new JMenuItem("Close");
-    this.mntmClose = _jMenuItem;
-    this.mnFile.add(this.mntmClose);
-    JMenu _jMenu_1 = new JMenu("Edit");
-    this.mnEdit = _jMenu_1;
-    this.menuBar.add(this.mnEdit);
-    JMenuItem _jMenuItem_1 = new JMenuItem("Delete");
-    this.mntmDelete = _jMenuItem_1;
-    this.mnEdit.add(this.mntmDelete);
-    JMenu _jMenu_2 = new JMenu("Help");
-    this.mnHelp = _jMenu_2;
-    this.menuBar.add(this.mnHelp);
-    JMenuItem _jMenuItem_2 = new JMenuItem("About");
-    this.mntmAbout = _jMenuItem_2;
-    this.mnHelp.add(this.mntmAbout);
+    JMenuItem _jMenuItem = new JMenuItem("Load");
+    this.mnItemLoad = _jMenuItem;
+    this.mnFile.add(this.mnItemLoad);
+    JMenuItem _jMenuItem_1 = new JMenuItem("Change session");
+    this.mnItemSession = _jMenuItem_1;
+    this.mnFile.add(this.mnItemSession);
     Container _contentPane = this.window.getContentPane();
     BorderLayout _borderLayout = new BorderLayout(0, 0);
     _contentPane.setLayout(_borderLayout);
@@ -451,5 +427,21 @@ public class GraduationViewSwing {
    */
   public JFrame getWindow() {
     return this.window;
+  }
+  
+  /**
+   * Envoie le bouton de chargement de pdf
+   * @return mnItemLoad
+   */
+  public JMenuItem getMnItemLoad() {
+    return this.mnItemLoad;
+  }
+  
+  /**
+   * Envoie le bouton de changement de session
+   * @return mnItemSession
+   */
+  public JMenuItem getMnItemSession() {
+    return this.mnItemSession;
   }
 }

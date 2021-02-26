@@ -11,7 +11,7 @@ import javax.swing.JPanel
 class PdfAndBoxPanel extends JPanel {
 	
 	public var AdapterSwingPdfAndBoxPanel adapter
-	public var AdapterSwingBox selectionPresenter
+	public var AdapterSwingBox adapterBox
 	
 	/* Largeur du panel */
 	public var int width
@@ -28,19 +28,21 @@ class PdfAndBoxPanel extends JPanel {
 	new(AdapterSwingPdfAndBoxPanel adapter) {
 		this.adapter = adapter
 		
-		width = this.adapter.getPdf().getWidth(this) / this.adapter.getScale()
-		height = this.adapter.getPdf().getHeight(this) / this.adapter.getScale()
+		if(this.adapter.getPdf() !== null) {
+			width = this.adapter.getPdf().getWidth(this) / this.adapter.getScale()
+			height = this.adapter.getPdf().getHeight(this) / this.adapter.getScale()
+		}
 		this.adapter.setView(this)
         
-		this.selectionPresenter = this.adapter.selectionController
-		this.selectionPresenter.getSelectionBoxes().setPanel(this)
+		this.adapterBox = this.adapter.getAdapterBox
+		this.adapterBox.getSelectionBoxes().setPanel(this)
         
         addMouseWheelListener(this.adapter.getMouseHandler())
         addMouseListener(this.adapter.getMouseHandler())
         addMouseMotionListener(this.adapter.getMouseHandler())
         
-        addMouseListener(selectionPresenter.getMouseHandler())
-        addMouseMotionListener(selectionPresenter.getMouseHandler())
+        addMouseListener(adapterBox.getMouseHandler())
+        addMouseMotionListener(adapterBox.getMouseHandler())
 	}
 	
 	/**
@@ -49,14 +51,15 @@ class PdfAndBoxPanel extends JPanel {
 	override protected void paintComponent(Graphics g) {
 		super.paintComponent(g)
 	
-		width = adapter.getPdf().getWidth(this) / adapter.getScale()
-		height = adapter.getPdf().getHeight(this) / adapter.getScale()
-	        
-	    g.drawImage(adapter.getPdf(), adapter.getOriginX(), adapter.getOriginY(), width, height, this)
-		
+		if(this.adapter.getPdf() !== null) {
+			width = adapter.getPdf().getWidth(this) / adapter.getScale()
+			height = adapter.getPdf().getHeight(this) / adapter.getScale()
+		        
+		    g.drawImage(adapter.getPdf(), adapter.getOriginX(), adapter.getOriginY(), width, height, this)
+		}
 	    var Graphics2D g2d = g.create() as Graphics2D
-	    paintSelectionBoxes(g2d, selectionPresenter.getSelectionBoxes())
-	    paintBoxesTitle(g2d, selectionPresenter.getSelectionBoxes())
+	    paintSelectionBoxes(g2d, adapterBox.getSelectionBoxes())
+	    paintBoxesTitle(g2d, adapterBox.getSelectionBoxes())
 	        
 	    g2d.dispose();
 	}
@@ -91,10 +94,10 @@ class PdfAndBoxPanel extends JPanel {
 	 */
 	def void paintBoxesTitle(Graphics2D g2d, BoxList boxes) {
 		// Création d'un list de boîtes de titre
-	    var BoxList boxesTitle = new BoxList(selectionPresenter.getMinWidth() / width, selectionPresenter.getTitleHeight() / height, -1.0, selectionPresenter.getTitleHeight() / height)
-		boxesTitle.updateBounds(selectionPresenter.getMinWidth() / width / adapter.getScale(), selectionPresenter.getMinHeight() / height, -1.0, -1.0)
+	    var BoxList boxesTitle = new BoxList(adapterBox.getMinWidth() / width, adapterBox.getTitleHeight() / height, -1.0, adapterBox.getTitleHeight() / height)
+		boxesTitle.updateBounds(adapterBox.getMinWidth() / width / adapter.getScale(), adapterBox.getMinHeight() / height, -1.0, -1.0)
 		for (Box box : boxes.getList()) {
-			boxesTitle.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - selectionPresenter.getTitleHeight()) / height), box.getWidth(), selectionPresenter.getTitleHeight() / height, box.getTitle())
+			boxesTitle.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - adapterBox.getTitleHeight()) / height), box.getWidth(), adapterBox.getTitleHeight() / height, box.getTitle())
 		}
 	        
 	    // Coloration de l'intérieur des titres
@@ -108,8 +111,8 @@ class PdfAndBoxPanel extends JPanel {
 	    for (Box box : boxesTitle.getList()) {
 	        var Rectangle crtRec = convertBoxToRectangle(box)
 	        g2d.draw(crtRec)
-	        g2d.drawString(box.getTitle(), crtRec.x + (selectionPresenter.getTitleHeight() / 4) as int, crtRec.y + (selectionPresenter.getTitleHeight() / 1.5) as int)
-	        g2d.drawString("x", crtRec.x + crtRec.width - (selectionPresenter.getTitleHeight() / 2) as int, crtRec.y + (selectionPresenter.getTitleHeight() / 1.5) as int)
+	        g2d.drawString(box.getTitle(), crtRec.x + (adapterBox.getTitleHeight() / 4) as int, crtRec.y + (adapterBox.getTitleHeight() / 1.5) as int)
+	        g2d.drawString("x", crtRec.x + crtRec.width - (adapterBox.getTitleHeight() / 2) as int, crtRec.y + (adapterBox.getTitleHeight() / 1.5) as int)
 	    }
 	}
 	    

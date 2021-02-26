@@ -14,8 +14,10 @@ class PdfPanel extends JPanel {
 	new(AdapterSwingPdfPanel pdfPresenter) {
 		this.adapter = pdfPresenter
 		
-		width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
-		height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
+		if(this.adapter.getPdf() !== null) {
+			width = pdfPresenter.getPdf().getWidth(this) / pdfPresenter.getScale()
+			height = pdfPresenter.getPdf().getHeight(this) / pdfPresenter.getScale()
+		}
 		pdfPresenter.setView(this)
         
         addMouseWheelListener(pdfPresenter.getMouseHandler())
@@ -29,10 +31,12 @@ class PdfPanel extends JPanel {
 	override protected void paintComponent(Graphics g) {
 		super.paintComponent(g)
 	
-		width = adapter.getPdf().getWidth(this) / adapter.getScale()
-		height = adapter.getPdf().getHeight(this) / adapter.getScale()
+		if(this.adapter.getPdf() !== null) {
+			width = adapter.getPdf().getWidth(this) / adapter.getScale()
+			height = adapter.getPdf().getHeight(this) / adapter.getScale()
 	        
-	    g.drawImage(adapter.getPdf(), adapter.getOriginX(), adapter.getOriginY(), width, height, this)
+	    	g.drawImage(adapter.getPdf(), adapter.getOriginX(), adapter.getOriginY(), width, height, this)
+	    }
 	}
 	
 }

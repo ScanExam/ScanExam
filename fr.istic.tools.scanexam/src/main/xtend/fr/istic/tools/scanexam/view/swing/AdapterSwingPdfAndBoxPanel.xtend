@@ -19,8 +19,8 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/* Controlleur des boîtes de sélection */
-	var AdapterSwingBox selectionController
+	/* Adaptateur des boîtes de sélection */
+	var AdapterSwingBox adapterBox
 	
 	/* Objet contenant les boîtes de sélection */
 	var BoxList selectionBoxes
@@ -41,9 +41,13 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	new(int width, int height, InputStream pdfInput, BoxList selectionBoxes) {
 		super(width, height, pdfInput)
 		this.selectionBoxes = selectionBoxes
-		var int selectWidth = pdf.getWidth(null)
-		var int selectHeight = pdf.getHeight(null)
-		selectionController = new AdapterSwingBox(selectWidth, selectHeight, scale, originX, originY, selectionBoxes)
+		if(pdfInput !== null) {
+			var int selectWidth = pdf.getWidth(null)
+			var int selectHeight = pdf.getHeight(null)
+			adapterBox = new AdapterSwingBox(selectWidth, selectHeight, scale, originX, originY, selectionBoxes)
+		} else {
+			adapterBox = new AdapterSwingBox(width, height, scale, originX, originY, selectionBoxes)
+		}
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -61,8 +65,8 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 			var Point dragPoint = e.getPoint()
 			originX += (dragPoint.x - lastClickPoint.get().getX()) as int
 			originY += (dragPoint.y - lastClickPoint.get().getY()) as int
-			selectionController.setOriginX(originX)
-			selectionController.setOriginY(originY)
+			adapterBox.setOriginX(originX)
+			adapterBox.setOriginY(originY)
 			repaint()
 			lastClickPoint = Optional::of(dragPoint)
 		}
@@ -78,7 +82,7 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 		} else {
 			scale += value
 		}
-		selectionController.setScale(scale)
+		adapterBox.setScale(scale)
 		repaint()
 	}
 
@@ -88,8 +92,8 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	def AdapterSwingBox getSelectionController() {
-		return selectionController
+	def AdapterSwingBox getAdapterBox() {
+		return adapterBox
 	}
 	
 	def BoxList getSelectionBoxes() {
@@ -104,7 +108,16 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	
 	override void setView(JPanel view) {
 		this.view = Optional::of(view)
-		selectionController.setView(this.view.get())
+		adapterBox.setView(this.view.get())
+	}
+	
+	override void setScaleOnWidth(boolean scaleOnWidth) {
+		if(pdf !== null) {
+			super.setScaleOnWidth(scaleOnWidth)
+			adapterBox.setWindowWidth(pdf.getWidth(this.view.get()))
+			adapterBox.setWindowHeight(pdf.getHeight(this.view.get()))
+			incrScale(0)
+		}
 	}
 	
 }

@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 @SuppressWarnings("all")
 public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
   /**
-   * Controlleur des boîtes de sélection
+   * Adaptateur des boîtes de sélection
    */
-  private AdapterSwingBox selectionController;
+  private AdapterSwingBox adapterBox;
   
   /**
    * Objet contenant les boîtes de sélection
@@ -35,10 +35,15 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
   public AdapterSwingPdfAndBoxPanel(final int width, final int height, final InputStream pdfInput, final BoxList selectionBoxes) {
     super(width, height, pdfInput);
     this.selectionBoxes = selectionBoxes;
-    int selectWidth = this.pdf.getWidth(null);
-    int selectHeight = this.pdf.getHeight(null);
-    AdapterSwingBox _adapterSwingBox = new AdapterSwingBox(selectWidth, selectHeight, this.scale, this.originX, this.originY, selectionBoxes);
-    this.selectionController = _adapterSwingBox;
+    if ((pdfInput != null)) {
+      int selectWidth = this.pdf.getWidth(null);
+      int selectHeight = this.pdf.getHeight(null);
+      AdapterSwingBox _adapterSwingBox = new AdapterSwingBox(selectWidth, selectHeight, this.scale, this.originX, this.originY, selectionBoxes);
+      this.adapterBox = _adapterSwingBox;
+    } else {
+      AdapterSwingBox _adapterSwingBox_1 = new AdapterSwingBox(width, height, this.scale, this.originX, this.originY, selectionBoxes);
+      this.adapterBox = _adapterSwingBox_1;
+    }
   }
   
   /**
@@ -58,8 +63,8 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
       double _y = this.lastClickPoint.get().getY();
       double _minus_1 = (dragPoint.y - _y);
       this.originY = (_originY + ((int) _minus_1));
-      this.selectionController.setOriginX(this.originX);
-      this.selectionController.setOriginY(this.originY);
+      this.adapterBox.setOriginX(this.originX);
+      this.adapterBox.setOriginY(this.originY);
       this.repaint();
       this.lastClickPoint = Optional.<Point>of(dragPoint);
     }
@@ -77,15 +82,15 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
       int _scale = this.scale;
       this.scale = (_scale + value);
     }
-    this.selectionController.setScale(this.scale);
+    this.adapterBox.setScale(this.scale);
     this.repaint();
   }
   
   /**
    * GETTERS
    */
-  public AdapterSwingBox getSelectionController() {
-    return this.selectionController;
+  public AdapterSwingBox getAdapterBox() {
+    return this.adapterBox;
   }
   
   public BoxList getSelectionBoxes() {
@@ -98,6 +103,16 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
   @Override
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);
-    this.selectionController.setView(this.view.get());
+    this.adapterBox.setView(this.view.get());
+  }
+  
+  @Override
+  public void setScaleOnWidth(final boolean scaleOnWidth) {
+    if ((this.pdf != null)) {
+      super.setScaleOnWidth(scaleOnWidth);
+      this.adapterBox.setWindowWidth(this.pdf.getWidth(this.view.get()));
+      this.adapterBox.setWindowHeight(this.pdf.getHeight(this.view.get()));
+      this.incrScale(0);
+    }
   }
 }

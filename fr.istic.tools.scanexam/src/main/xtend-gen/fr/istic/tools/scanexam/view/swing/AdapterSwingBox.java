@@ -241,4 +241,12 @@ public class AdapterSwingBox extends PresenterBox {
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);
   }
+  
+  public void setWindowWidth(final int width) {
+    this.windowWidth = width;
+  }
+  
+  public void setWindowHeight(final int height) {
+    this.windowHeight = height;
+  }
 }

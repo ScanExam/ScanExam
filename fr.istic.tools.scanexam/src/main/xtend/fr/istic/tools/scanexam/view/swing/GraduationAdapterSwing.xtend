@@ -2,8 +2,6 @@ package fr.istic.tools.scanexam.view.swing
 
 import fr.istic.tools.scanexam.box.BoxList
 import fr.istic.tools.scanexam.presenter.EditorPresenter
-import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.EditorAdapter
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
@@ -12,12 +10,14 @@ import java.io.IOException
 import java.io.InputStream
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
+import fr.istic.tools.scanexam.view.GraduationAdapter
+import fr.istic.tools.scanexam.presenter.GraduationPresenter
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
  * @author Julien Cochet
  */
-class EditorAdapterSwing implements EditorAdapter {
+class GraduationAdapterSwing implements GraduationAdapter {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -25,14 +25,14 @@ class EditorAdapterSwing implements EditorAdapter {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/* Presenter de la création d'exman */
-	var EditorPresenter editorPresenter
+	/* Presenter de la correction d'exman */
+	var GraduationPresenter graduationPresenter
 	
 	/* Vue de la création d'exman */
-	var EditorViewSwing view
+	var GraduationViewSwing view
 	
 	/* Présentateur du pdf */
-	var AdapterSwingPdfAndBoxPanel adapterPdfAndBox	
+	var AdapterSwingPdfPanel adapterPdf	
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -46,8 +46,8 @@ class EditorAdapterSwing implements EditorAdapter {
 	new() {
 		var InputStream pdfInput = null//ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf")
 		
-		adapterPdfAndBox = new AdapterSwingPdfAndBoxPanel(1280, 720, pdfInput, new BoxList())
-		view = new EditorViewSwing(adapterPdfAndBox)
+		adapterPdf = new AdapterSwingPdfPanel(1280, 720, pdfInput)
+		view = new GraduationViewSwing(adapterPdf)
 		addActionListeners()
 		
 		view.getWindow().setVisible(true)
@@ -57,12 +57,6 @@ class EditorAdapterSwing implements EditorAdapter {
 	 * Ajoute les action listeners aux boutons de la vue
 	 */
 	def private void addActionListeners() {
-		view.getMnItemSession().addActionListener(new ActionListener() {
-			override actionPerformed(ActionEvent e) {
-				print("koukou")
-			}
-	    });
-	    
 		view.getMnItemLoad().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				openFile()
@@ -91,7 +85,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	        
 	        
 			var InputStream pdfInput = new FileInputStream(path);
-			adapterPdfAndBox.setPDF(pdfInput, 0)
+			adapterPdf.setPDF(pdfInput, 0)
 			/*
 			pdfFileSelected = new File(path)
 	        println(pdfFileSelected)
@@ -99,8 +93,24 @@ class EditorAdapterSwing implements EditorAdapter {
 	    }
 	}
 	
-	override setPresenter(EditorPresenter presenter) {
-		editorPresenter = presenter
+	override questionNames() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override nextQuestion() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override previousQuestion() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override thisQuestion(int index) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override setPresenter(GraduationPresenter presenter) {
+		graduationPresenter = presenter
 	}
 	
 }
