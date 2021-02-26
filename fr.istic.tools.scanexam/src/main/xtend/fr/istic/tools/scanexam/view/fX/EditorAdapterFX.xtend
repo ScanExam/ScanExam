@@ -2,9 +2,7 @@ package fr.istic.tools.scanexam.view.fX
 
 import fr.istic.tools.scanexam.presenter.EditorPresenter
 import fr.istic.tools.scanexam.view.EditorAdapter
-import javafx.scene.image.Image
-import java.io.File
-import java.io.InputStream
+
 
 class EditorAdapterFX implements EditorAdapter {
 	
@@ -15,17 +13,9 @@ class EditorAdapterFX implements EditorAdapter {
 	 {
 		this.presenter = presenter
 	}
+
 	
-	//tells the pdf presenter to load the pdf pointer by file
-	def void loadPdf(File file) 
-	{ 
-		presenter.create(file)
-	}
-	
-	def Image pdfPage(int index) { //fech pdf from presenter and converts to javafx object 
-		var stream = presenter.getCurrentPdfPage()
-		return new Image(stream)
-	}
+
 	
 	def void addBox(Box box) 
 	{ //adds a box to the model via the presenter

@@ -6,10 +6,14 @@ import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -80,7 +84,7 @@ public class ExamEditionService extends Service {
         ExamSingleton.instance = creationTemplate.get().getExam();
         String _pdfPath = creationTemplate.get().getPdfPath();
         final File pdfFile = new File(_pdfPath);
-        this.setDocument(PDDocument.load(pdfFile));
+        final PDDocument document = PDDocument.load(pdfFile);
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -109,12 +113,19 @@ public class ExamEditionService extends Service {
   
   public void create(final File file) {
     try {
-      this.setDocument(PDDocument.load(file));
+      ArrayList<BufferedImage> _arrayList = new ArrayList<BufferedImage>();
+      this.pages = _arrayList;
+      final PDDocument document = PDDocument.load(file);
       ExamSingleton.instance = CoreFactory.eINSTANCE.createExam();
-      int _size = IterableExtensions.size(this.getDocument().getPages());
+      final PDFRenderer renderer = new PDFRenderer(document);
+      int _size = IterableExtensions.size(document.getPages());
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
       for (final Integer i : _doubleDotLessThan) {
-        ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());
+        {
+          final BufferedImage bufferedImage = renderer.renderImageWithDPI((i).intValue(), 300, ImageType.RGB);
+          this.pages.add(bufferedImage);
+          ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());
+        }
       }
       this.currentPdfPath = file.getAbsolutePath();
     } catch (Throwable _e) {

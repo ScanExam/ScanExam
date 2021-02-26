@@ -14,8 +14,11 @@ import javafx.stage.FileChooser
 import java.util.Arrays
 import javafx.stage.FileChooser.ExtensionFilter
 import java.io.File
-import java.awt.event.ActionEvent
-import java.awt.Event
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import javax.imageio.ImageIO
+import java.io.InputStream
+import javafx.embed.swing.SwingFXUtils
 
 class ControllerFXCreator {
 
@@ -130,7 +133,7 @@ class ControllerFXCreator {
 			mouseOriginX = e.screenX
 			mouseOriginY = e.screenY
 			var source = e.source as Node
-			println(source)
+
 			objectOriginX = source.layoutX
 			objectOriginY = source.layoutY
 		}
@@ -213,9 +216,9 @@ class ControllerFXCreator {
 	
 	def renderDocument()
 	{
-		
-		
-		pdfView.image = new Image(editor.presenter.getCurrentPdfPage);
+		val bufferedImage = editor.presenter.currentPdfPage
+		val image = SwingFXUtils.toFXImage(bufferedImage,null);
+		pdfView.image = image;
 	}
 	
 	

@@ -3,10 +3,9 @@ package fr.istic.tools.scanexam.services;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
-import java.io.InputStream;
-import org.apache.pdfbox.pdmodel.PDDocument;
+import java.awt.image.BufferedImage;
+import java.util.List;
 import org.eclipse.xtend.lib.annotations.Accessors;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
@@ -15,7 +14,7 @@ public abstract class Service {
    * Pdf chargé
    */
   @Accessors
-  private PDDocument document;
+  protected List<BufferedImage> pages;
   
   /**
    * Index de la page courante
@@ -38,12 +37,8 @@ public abstract class Service {
     return ExamSingleton.instance.getName();
   }
   
-  public InputStream getCurrentPdfPage() {
-    try {
-      return this.document.getPage(this.pageIndex).getContents();
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+  public BufferedImage getCurrentPdfPage() {
+    return this.pages.get(this.pageIndex);
   }
   
   protected Page getCurrentPage() {
@@ -64,11 +59,11 @@ public abstract class Service {
   public abstract void open(final String xmiFile);
   
   @Pure
-  public PDDocument getDocument() {
-    return this.document;
+  public List<BufferedImage> getPages() {
+    return this.pages;
   }
   
-  public void setDocument(final PDDocument document) {
-    this.document = document;
+  public void setPages(final List<BufferedImage> pages) {
+    this.pages = pages;
   }
 }

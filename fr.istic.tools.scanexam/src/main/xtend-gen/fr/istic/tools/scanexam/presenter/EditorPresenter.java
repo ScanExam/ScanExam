@@ -6,8 +6,8 @@ import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.view.Adapter;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.InputStream;
 import java.util.Objects;
 
 /**
@@ -38,13 +38,6 @@ public class EditorPresenter implements Presenter {
     this.service = service;
     Objects.<Adapter<EditorPresenter>>requireNonNull(adapter);
     this.adapter = adapter;
-  }
-  
-  /**
-   * @return API session
-   */
-  public ExamEditionService getSessionAPI() {
-    return this.service;
   }
   
   /**
@@ -127,7 +120,7 @@ public class EditorPresenter implements Presenter {
     return this.editorPresenter;
   }
   
-  public InputStream getCurrentPdfPage() {
+  public BufferedImage getCurrentPdfPage() {
     return this.service.getCurrentPdfPage();
   }
   

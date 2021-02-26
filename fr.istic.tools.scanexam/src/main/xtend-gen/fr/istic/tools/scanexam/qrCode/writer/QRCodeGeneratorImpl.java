@@ -144,24 +144,28 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   public void createThread(final int nbCopie, final PDDocument docSujetMaitre, final int nbPage) {
     try {
       final ExecutorService service = Executors.newFixedThreadPool(4);
-      final CountDownLatch LatchThreads = new CountDownLatch(4);
       final CountDownLatch LatchMain = new CountDownLatch(1);
       if ((nbCopie <= 4)) {
+        final CountDownLatch LatchThreads = new CountDownLatch(1);
         QRThreadWriter _qRThreadWriter = new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, 1, nbPage, LatchThreads, LatchMain);
         service.execute(_qRThreadWriter);
+        LatchMain.countDown();
+        LatchThreads.await();
+        service.shutdown();
       } else {
-        QRThreadWriter _qRThreadWriter_1 = new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage, LatchThreads, LatchMain);
+        final CountDownLatch LatchThreads_1 = new CountDownLatch(4);
+        QRThreadWriter _qRThreadWriter_1 = new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage, LatchThreads_1, LatchMain);
         service.execute(_qRThreadWriter_1);
-        QRThreadWriter _qRThreadWriter_2 = new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, 2, nbPage, LatchThreads, LatchMain);
+        QRThreadWriter _qRThreadWriter_2 = new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, 2, nbPage, LatchThreads_1, LatchMain);
         service.execute(_qRThreadWriter_2);
-        QRThreadWriter _qRThreadWriter_3 = new QRThreadWriter(this, (nbCopie / 2), (3 * (nbCopie / 4)), docSujetMaitre, 3, nbPage, LatchThreads, LatchMain);
+        QRThreadWriter _qRThreadWriter_3 = new QRThreadWriter(this, (nbCopie / 2), (3 * (nbCopie / 4)), docSujetMaitre, 3, nbPage, LatchThreads_1, LatchMain);
         service.execute(_qRThreadWriter_3);
-        QRThreadWriter _qRThreadWriter_4 = new QRThreadWriter(this, ((3 * nbCopie) / 4), nbCopie, docSujetMaitre, 4, nbPage, LatchThreads, LatchMain);
+        QRThreadWriter _qRThreadWriter_4 = new QRThreadWriter(this, ((3 * nbCopie) / 4), nbCopie, docSujetMaitre, 4, nbPage, LatchThreads_1, LatchMain);
         service.execute(_qRThreadWriter_4);
+        LatchMain.countDown();
+        LatchThreads_1.await();
+        service.shutdown();
       }
-      LatchMain.countDown();
-      LatchThreads.await();
-      service.shutdown();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -219,7 +223,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
     try {
       final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
       final String input = "./pfo_example.pdf";
-      gen.createAllExamCopies(input, 5);
+      gen.createAllExamCopies(input, 3);
       final String in = "./pfo_Inserted.pdf";
       final File f = new File(in);
       final PDDocument doc = PDDocument.load(f);

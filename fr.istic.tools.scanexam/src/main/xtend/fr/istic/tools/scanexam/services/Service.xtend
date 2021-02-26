@@ -4,14 +4,16 @@ package fr.istic.tools.scanexam.services
 import fr.istic.tools.scanexam.core.QuestionZone
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
-
+import org.apache.pdfbox.rendering.PDFRenderer
+import java.util.List
+import java.awt.image.BufferedImage
 
 abstract class Service 
 {
 	/**
 	 * Pdf chargé
 	 */
-	@Accessors PDDocument document
+	 @Accessors protected List<BufferedImage> pages
 	
 	/**
 	 * Index de la page courante
@@ -38,7 +40,7 @@ abstract class Service
 	
 	def getCurrentPdfPage()
 	{
-		document.getPage(pageIndex).contents
+		pages.get(pageIndex)
 	}
 	protected def getCurrentPage()
 	{

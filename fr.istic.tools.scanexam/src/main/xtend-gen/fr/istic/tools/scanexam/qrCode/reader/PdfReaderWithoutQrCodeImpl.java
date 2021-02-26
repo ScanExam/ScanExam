@@ -7,7 +7,6 @@ import fr.istic.tools.scanexam.qrCode.reader.Page;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCode;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeThread;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +23,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
@@ -239,16 +239,16 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
       {
         final Set<Copie> _converted_temp_1 = (Set<Copie>)temp;
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
-        final List<Integer> pages = new ArrayList<Integer>();
+        final int[] pagesArray = new int[this.nbPagesInSheet];
         final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
         int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
         ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
         for (final Integer j : _doubleDotLessThan_1) {
           final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
           final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
-          pages.add((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject(), Integer.valueOf((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF()));
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        res.add(dF.createStudentSheet(index, pages));
+        res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
       }
     }
     return res;
@@ -267,16 +267,17 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
       {
         final Set<Copie> _converted_temp_1 = (Set<Copie>)temp;
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
-        final List<Integer> pages = new ArrayList<Integer>();
+        final int[] pagesArray = new int[this.nbPagesInSheet];
         final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
         int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
         ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
         for (final Integer j : _doubleDotLessThan_1) {
           final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
           final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
-          pages.add((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject(), Integer.valueOf((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF()));
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        res.add(dF.createStudentSheet(index, pages));
+        InputOutput.<String>println(((List<Integer>)Conversions.doWrapArray(pagesArray)).toString());
+        res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
       }
     }
     return res;

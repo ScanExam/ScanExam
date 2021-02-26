@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.presenter
 import java.io.InputStream
 import java.io.File
 import java.util.Objects
+import fr.istic.tools.scanexam.services.Service
 
 /** 
  * Controlleur du pdf
@@ -35,7 +36,7 @@ abstract class PresenterPdf {
 	/* InputStream du pdf */
 	protected InputStream pdfInput
 	
-
+	private Service service;
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * CONSTRUCTEUR
@@ -112,8 +113,8 @@ abstract class PresenterPdf {
 	 */
 	def void loadPDF(File file) {
 		Objects.requireNonNull(file)
-		//check if file.path is in pdf format ?
-		editorPresenter.getSessionAPI().create(file)
+		//check if file.path is in pdf format ? //FIXME
+		//editorPresenter.getSessionAPI().create(file)
 	}
 	
 	/**
@@ -124,7 +125,7 @@ abstract class PresenterPdf {
      * @author Benjamin Danlos
 	 */
 	def getPage(int i){
-		var pdf = editorPresenter.getSessionAPI().document
+		/*var pdf = editorPresenter.getSessionAPI().document //FIXME
 		//if pdf === null ?
 	 	//check if i is in the number of pages of the document
 	 	if(i<0){
@@ -133,7 +134,7 @@ abstract class PresenterPdf {
 	 	if(pdf.getNumberOfPages() < i){
 	 		throw new IllegalArgumentException("i can't be greater than the number of pages in the document (" + i + ")")
 	 	}
-	 	pdf.getPage(i)
+	 	pdf.getPage(i) */
 	}
 	
 	/*def InputStream getPage(int index) {
@@ -146,7 +147,7 @@ abstract class PresenterPdf {
 	 */
 	def getPages(){
 		//if pdf === null ?
-		editorPresenter.getSessionAPI().document.getPages()
+		// editorPresenter.getService().document.getPages() //FIXME
 	}
 	
 }

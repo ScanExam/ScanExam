@@ -34,13 +34,7 @@ class EditorPresenter implements Presenter
 		
 	}
 
-	/**
-	 * @return API session 
-	 */
-	def getSessionAPI(){
-		service
-	}
-	
+
 	/**
 	 * setter for the PresenterQRCode attribute
 	 * @param {@link PresenterQRCode} pres instance of the presenter (not null) 

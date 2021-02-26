@@ -2,12 +2,10 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.presenter.GraduationPresenter;
+import fr.istic.tools.scanexam.services.Service;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageTree;
 
 /**
  * Controlleur du pdf
@@ -41,6 +39,8 @@ public abstract class PresenterPdf {
    * InputStream du pdf
    */
   protected InputStream pdfInput;
+  
+  private Service service;
   
   /**
    * Constructor
@@ -121,7 +121,6 @@ public abstract class PresenterPdf {
    */
   public void loadPDF(final File file) {
     Objects.<File>requireNonNull(file);
-    this.editorPresenter.getSessionAPI().create(file);
   }
   
   /**
@@ -131,21 +130,8 @@ public abstract class PresenterPdf {
    * @return {@link PDPage} page of the document
    * @author Benjamin Danlos
    */
-  public PDPage getPage(final int i) {
-    PDPage _xblockexpression = null;
-    {
-      PDDocument pdf = this.editorPresenter.getSessionAPI().getDocument();
-      if ((i < 0)) {
-        throw new IllegalArgumentException((("i can\'t be negative(" + Integer.valueOf(i)) + ")"));
-      }
-      int _numberOfPages = pdf.getNumberOfPages();
-      boolean _lessThan = (_numberOfPages < i);
-      if (_lessThan) {
-        throw new IllegalArgumentException((("i can\'t be greater than the number of pages in the document (" + Integer.valueOf(i)) + ")"));
-      }
-      _xblockexpression = pdf.getPage(i);
-    }
-    return _xblockexpression;
+  public Object getPage(final int i) {
+    return null;
   }
   
   /**
@@ -153,7 +139,7 @@ public abstract class PresenterPdf {
    * @return {@link PDPageTree} the pages of the document
    * @author Benjamin Danlos
    */
-  public PDPageTree getPages() {
-    return this.editorPresenter.getSessionAPI().getDocument().getPages();
+  public Object getPages() {
+    return null;
   }
 }

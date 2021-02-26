@@ -1,17 +1,24 @@
 package fr.istic.tools.scanexam.services
 
+import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.Question
-import java.io.File
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage
-import org.apache.pdfbox.pdmodel.PDDocument
-import fr.istic.tools.scanexam.core.CoreFactory
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.Optional
-import java.io.InputStream
+import javax.imageio.ImageIO
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.rendering.ImageType
+import org.apache.pdfbox.rendering.PDFRenderer
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+
+import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import java.util.ArrayList
+import java.awt.image.BufferedImage
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -70,7 +77,9 @@ class ExamEditionService extends Service // TODO : renommer
 			ExamSingleton.instance = creationTemplate.get().exam
 			
 			val pdfFile = new File(creationTemplate.get().pdfPath)
-			document = PDDocument.load(pdfFile)
+			val document = PDDocument.load(pdfFile)
+			
+			// todo
 		}	
 		
 	}
@@ -98,15 +107,24 @@ class ExamEditionService extends Service // TODO : renommer
 	}
 	def void create(File file)
 	{
-		document = PDDocument.load(file)
+		pages = new ArrayList<BufferedImage>();
+		
+		val document = PDDocument.load(file)
 		
 		ExamSingleton.instance =  CoreFactory.eINSTANCE.createExam()
 		
+	
+		val renderer =  new PDFRenderer(document);
+		
 		for (i : 0 ..< document.pages.size())
 		{
+			val bufferedImage = renderer.renderImageWithDPI(i, 300, ImageType.RGB);
+			pages.add(bufferedImage);                   	
+ 
     		ExamSingleton.instance.pages.add(CoreFactory.eINSTANCE.createPage());
 		}
-		
+			
+			
 	    currentPdfPath = file.absolutePath
 	}
 	

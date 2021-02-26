@@ -3,24 +3,25 @@ package fr.istic.tools.scanexam.view.fX;
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.view.fX.Box;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class ControllerFXCreator {
@@ -149,7 +150,6 @@ public class ControllerFXCreator {
       this.mouseOriginY = e.getScreenY();
       Object _source = e.getSource();
       Node source = ((Node) _source);
-      InputOutput.<Node>println(source);
       this.objectOriginX = source.getLayoutX();
       this.objectOriginY = source.getLayoutY();
     }
@@ -261,9 +261,9 @@ public class ControllerFXCreator {
   }
   
   public void renderDocument() {
-    InputStream _currentPdfPage = this.editor.getPresenter().getCurrentPdfPage();
-    Image _image = new Image(_currentPdfPage);
-    this.pdfView.setImage(_image);
+    final BufferedImage bufferedImage = this.editor.getPresenter().getCurrentPdfPage();
+    final WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+    this.pdfView.setImage(image);
   }
   
   public void displayPDF(final Image pdf) {
