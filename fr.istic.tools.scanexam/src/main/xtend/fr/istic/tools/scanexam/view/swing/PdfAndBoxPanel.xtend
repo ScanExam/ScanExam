@@ -6,18 +6,11 @@ import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Rectangle
-import javax.swing.JPanel
 
-class PdfAndBoxPanel extends JPanel {
+class PdfAndBoxPanel extends PdfPanel {
 	
-	public var AdapterSwingPdfAndBoxPanel adapter
+	/* Adaptateur swing du gestionnaire de boîtes de sélection */
 	public var AdapterSwingBox adapterBox
-	
-	/* Largeur du panel */
-	public var int width
-	/* Hauteur du panel */
-	public var int height
-	
 	/* Couleur de l'intérieur des boîtes */
 	val Color selectionColor = new Color(255, 255, 255, 64)
 	/* Couleur de l'intérieur des titres */
@@ -26,23 +19,15 @@ class PdfAndBoxPanel extends JPanel {
 	val Color outLineColor = Color.BLACK
 		
 	new(AdapterSwingPdfAndBoxPanel adapter) {
-		this.adapter = adapter
+		super(adapter)
 		
-		if(this.adapter.getPdf() !== null) {
-			width = this.adapter.getPdf().getWidth(this) / this.adapter.getScale()
-			height = this.adapter.getPdf().getHeight(this) / this.adapter.getScale()
-		}
 		this.adapter.setView(this)
         
-		this.adapterBox = this.adapter.getAdapterBox
+		this.adapterBox = adapter.getAdapterBox()
 		this.adapterBox.getSelectionBoxes().setPanel(this)
         
-        addMouseWheelListener(this.adapter.getMouseHandler())
-        addMouseListener(this.adapter.getMouseHandler())
-        addMouseMotionListener(this.adapter.getMouseHandler())
-        
-        addMouseListener(adapterBox.getMouseHandler())
-        addMouseMotionListener(adapterBox.getMouseHandler())
+        addMouseListener(this.adapterBox.getMouseHandler())
+        addMouseMotionListener(this.adapterBox.getMouseHandler())
 	}
 	
 	/**
@@ -51,12 +36,6 @@ class PdfAndBoxPanel extends JPanel {
 	override protected void paintComponent(Graphics g) {
 		super.paintComponent(g)
 	
-		if(this.adapter.getPdf() !== null) {
-			width = adapter.getPdf().getWidth(this) / adapter.getScale()
-			height = adapter.getPdf().getHeight(this) / adapter.getScale()
-		        
-		    g.drawImage(adapter.getPdf(), adapter.getOriginX(), adapter.getOriginY(), width, height, this)
-		}
 	    var Graphics2D g2d = g.create() as Graphics2D
 	    paintSelectionBoxes(g2d, adapterBox.getSelectionBoxes())
 	    paintBoxesTitle(g2d, adapterBox.getSelectionBoxes())
