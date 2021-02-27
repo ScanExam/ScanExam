@@ -99,6 +99,10 @@ class EditorPresenter implements Presenter
 	{
 		return service.getCurrentPdfPage
 	}
+	
+	def choosePdfPage(int pageNumber) {
+		
+	}
 	def create(File file)
 	{
 		 service.create(file);

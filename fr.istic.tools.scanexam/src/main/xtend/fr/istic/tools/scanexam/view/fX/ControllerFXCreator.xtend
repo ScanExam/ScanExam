@@ -1,24 +1,24 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.view.fX.Box.BoxType
+import java.io.File
+import java.util.Arrays
+import java.util.LinkedList
+import javafx.embed.swing.SwingFXUtils
 import javafx.fxml.FXML
 import javafx.scene.Cursor
 import javafx.scene.Node
+import javafx.scene.control.ListView
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
+import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
-import org.apache.logging.log4j.LogManager
 import javafx.stage.FileChooser
-import java.util.Arrays
 import javafx.stage.FileChooser.ExtensionFilter
-import java.io.File
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import javax.imageio.ImageIO
-import java.io.InputStream
-import javafx.embed.swing.SwingFXUtils
+import org.apache.logging.log4j.LogManager
+import javafx.scene.control.ChoiceBox
 
 class ControllerFXCreator {
 
@@ -29,6 +29,18 @@ class ControllerFXCreator {
 	
 	@FXML
 	ImageView pdfView;
+	
+	@FXML
+	ListView<HBox> questionList;
+	
+	@FXML
+	ChoiceBox templateChoice;
+	
+	@FXML
+	ChoiceBox pdfChoice;
+	
+	@FXML
+	ChoiceBox pageChoice;
 	
 	var logger = LogManager.logger
 	enum SelectedTool {
@@ -88,6 +100,8 @@ class ControllerFXCreator {
 	var mouseOriginY = 0d;
 	var objectOriginX = 0d;
 	var objectOriginY = 0d;
+	
+	var boxes = new LinkedList<Box>();
 	Box currentRectangle = null;
 	def void CreateBox(MouseEvent e){
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { //TODO add type checks
@@ -121,6 +135,9 @@ class ControllerFXCreator {
 			
 			
 		}
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			addBox(currentRectangle);
+		}
 	}
 	
 	
@@ -136,11 +153,16 @@ class ControllerFXCreator {
 
 			objectOriginX = source.layoutX
 			objectOriginY = source.layoutY
+			
+			mainPane.cursor = Cursor.CLOSED_HAND
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 			var source = e.source as Node
 			source.layoutX = objectOriginX + (e.screenX - mouseOriginX)
 			source.layoutY = objectOriginY + (e.screenY - mouseOriginY)
+		}
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			mainPane.cursor = Cursor.OPEN_HAND
 		}
 	}
 
@@ -156,23 +178,23 @@ class ControllerFXCreator {
 		}
 	}
 	
-	var currentTool = SelectedTool.MOVE_TOOL;
+	var currentTool = SelectedTool.MOVE_TOOL
 	def void setToMoveTool(){
 		mainPane.cursor = Cursor.OPEN_HAND
-		currentTool = SelectedTool.MOVE_TOOL;
+		currentTool = SelectedTool.MOVE_TOOL
 	}
 	def void setToQuestionAreaTool(){
 		mainPane.cursor = Cursor.DEFAULT
-		currentTool = SelectedTool.QUESTION_AREA;
+		currentTool = SelectedTool.QUESTION_AREA
 	}
 	def void setToIDAreaTool(){
 		mainPane.cursor = Cursor.DEFAULT
-		currentTool = SelectedTool.ID_AREA;
+		currentTool = SelectedTool.ID_AREA
 	}
 	
 	def void setToQRAreaTool(){
 		mainPane.cursor = Cursor.DEFAULT
-		currentTool = SelectedTool.QR_AREA;
+		currentTool = SelectedTool.QR_AREA
 	}
 	
 	def Box createBox(double x,double y){
@@ -190,6 +212,16 @@ class ControllerFXCreator {
 				
 			}
 		}
+	}
+	
+	def addBox(Box box){
+		editor.addBox(box);
+		questionList.items.add(box.boxItem)
+		boxes.add(box);
+	}
+	
+	def removeBox(Box box) {
+		editor.removeBox(box);
 	}
 	
 	@FXML
@@ -213,22 +245,37 @@ class ControllerFXCreator {
 		
 		
 	}
-	
+	/**
+	 * initialise the choicebox containing all the page numbers of the pdf
+	 * to call whenever we load a new pdf into the editor
+	 */
+	def initPageSelection(){
+		pageChoice.items.clear
+	}
+	/**
+	 * feches the current buffered image in the presenter representing the pdf and converts it and loads into the imageview
+	 */
 	def renderDocument()
 	{
 		val bufferedImage = editor.presenter.currentPdfPage
-		val image = SwingFXUtils.toFXImage(bufferedImage,null);
-		pdfView.image = image;
+		val image = SwingFXUtils.toFXImage(bufferedImage,null)
+		pdfView.image = image
+	}
+	/**
+	 * changes the selected page to load and then renders it
+	 */
+	def selectPage(int pageNumber) {
+		editor.presenter.choosePdfPage(pageNumber);
+		renderDocument();
 	}
 	
 	
-	
 	def displayPDF(Image pdf) {
-		pdfView.setImage(pdf);
+		pdfView.setImage(pdf)
 	}
 	
 	
 	def void setEditorAdapterFX(EditorAdapterFX editor) {
-		this.editor = editor;
+		this.editor = editor
 	}
 }

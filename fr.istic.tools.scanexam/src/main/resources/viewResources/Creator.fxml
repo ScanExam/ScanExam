@@ -11,6 +11,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -25,9 +27,11 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onCreateClick" text="New Template" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" text="Save" />
                   <MenuItem mnemonicParsing="false" text="Load" />
-                  <MenuItem mnemonicParsing="false"  onAction="#onCreateClick"  text="Create New Thing" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
@@ -55,13 +59,17 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="150.0" spacing="5.0">
                <children>
-                  <Label text="Selected Thing :" />
+                  <Label text="Selected Template(xmi)" />
                   <ChoiceBox prefWidth="150.0" />
                   <Separator prefWidth="200.0" />
-                  <Label text="Selected Blank Exam :" />
+                  <Label text="Linked PDF" />
+                  <ChoiceBox prefWidth="150.0" />
+                  <Label text="Page " />
                   <ChoiceBox prefWidth="150.0" />
                   <Separator prefWidth="200.0" />
-                  <ListView prefHeight="200.0" prefWidth="200.0" />
+                  <Label text="Template name :" />
+                  <TextField />
+                  <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" />
                </children>
                <HBox.margin>
                   <Insets />
@@ -74,7 +82,7 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
+                        <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
                            <children>
                               <ImageView fx:id="pdfView" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                                  <image>
