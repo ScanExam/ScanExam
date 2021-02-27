@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.Optional;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -61,15 +60,13 @@ public abstract class Service {
   
   /**
    * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
-   * @return un BufferedImage correspondant la page suivante, null si aucune page ne suit la courante
    */
-  public abstract Optional<BufferedImage> nextPage();
+  public abstract void nextPage();
   
   /**
    * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
-   * @return un BufferedImage correspondant la page suivante, null si aucune page ne précède la courante
    */
-  public abstract Optional<BufferedImage> previousPage();
+  public abstract void previousPage();
   
   /**
    * @return le nombre de page du PDF courant

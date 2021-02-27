@@ -1,13 +1,9 @@
 package fr.istic.tools.scanexam.services
 
-
 import fr.istic.tools.scanexam.core.QuestionZone
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.eclipse.xtend.lib.annotations.Accessors
-import org.apache.pdfbox.rendering.PDFRenderer
-import java.util.List
 import java.awt.image.BufferedImage
-import java.util.Optional
+import java.util.List
+import org.eclipse.xtend.lib.annotations.Accessors
 
 abstract class Service 
 {
@@ -63,15 +59,13 @@ abstract class Service
 	
 	/**
 	 * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
-	 * @return un BufferedImage correspondant la page suivante, null si aucune page ne suit la courante
 	 */
-	def Optional<BufferedImage> nextPage()
+	def void nextPage()
 	
 	/**
 	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
-	 * @return un BufferedImage correspondant la page suivante, null si aucune page ne précède la courante
 	 */
-	def Optional<BufferedImage> previousPage()
+	def void previousPage()
 
 	/**
 	 * @return le nombre de page du PDF courant
