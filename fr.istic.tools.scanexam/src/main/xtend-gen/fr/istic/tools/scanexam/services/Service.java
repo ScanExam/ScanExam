@@ -74,8 +74,15 @@ public abstract class Service {
   /**
    * @return le nombre de page du PDF courant
    */
-  public int getPageNumger() {
+  public int getPageNumber() {
     return this.pages.size();
+  }
+  
+  /**
+   * @return le numéro de la page courante dans le PDF courant
+   */
+  public int getCurrentPageNumber() {
+    return this.pageIndex;
   }
   
   @Pure

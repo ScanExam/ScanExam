@@ -76,10 +76,15 @@ abstract class Service
 	/**
 	 * @return le nombre de page du PDF courant
 	 */
-	def int getPageNumger() {
+	def int getPageNumber() {
 		return pages.size
 	}
 	
-
+	/**
+	 * @return le numéro de la page courante dans le PDF courant
+	 */
+	def getCurrentPageNumber() {
+		return pageIndex;
+	}
 
 }

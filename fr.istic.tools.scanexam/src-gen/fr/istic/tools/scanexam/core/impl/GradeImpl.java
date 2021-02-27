@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -37,7 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	/**
-	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' containment reference list.
+	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getEntries()
@@ -82,7 +83,7 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 */
 	public EList<GradeEntry> getEntries() {
 		if (entries == null) {
-			entries = new EObjectContainmentEList<GradeEntry>(GradeEntry.class, this, CorePackage.GRADE__ENTRIES);
+			entries = new EObjectResolvingEList<GradeEntry>(GradeEntry.class, this, CorePackage.GRADE__ENTRIES);
 		}
 		return entries;
 	}
@@ -107,8 +108,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case CorePackage.GRADE__ENTRIES:
-				return ((InternalEList<?>)getEntries()).basicRemove(otherEnd, msgs);
 			case CorePackage.GRADE__COMMENTS:
 				return ((InternalEList<?>)getComments()).basicRemove(otherEnd, msgs);
 		}

@@ -25,13 +25,13 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Grade extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Entries</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Entries</b></em>' reference list.
 	 * The list contents are of type {@link fr.istic.tools.scanexam.core.GradeEntry}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Entries</em>' containment reference list.
+	 * @return the value of the '<em>Entries</em>' reference list.
 	 * @see fr.istic.tools.scanexam.core.CorePackage#getGrade_Entries()
-	 * @model containment="true"
+	 * @model
 	 * @generated
 	 */
 	EList<GradeEntry> getEntries();
