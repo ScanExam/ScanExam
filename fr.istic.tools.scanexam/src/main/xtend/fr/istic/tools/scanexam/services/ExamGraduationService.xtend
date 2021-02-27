@@ -24,4 +24,12 @@ class ExamGraduationService extends Service
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
+	override nextPage() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	override previousPage() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
 }

@@ -128,4 +128,20 @@ class ExamEditionService extends Service // TODO : renommer
 	    currentPdfPath = file.absolutePath
 	}
 	
+	override nextPage() {
+		if(pageIndex < pages.size) {
+			pageIndex++
+			Optional.of(getCurrentPdfPage)
+		} else
+			Optional.empty
+	}
+	
+	override previousPage() {
+		if(pageIndex > 0) {
+			pageIndex--
+			Optional.of(getCurrentPdfPage)
+		} else
+			Optional.empty
+	}
+	
 }

@@ -7,6 +7,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import org.apache.pdfbox.rendering.PDFRenderer
 import java.util.List
 import java.awt.image.BufferedImage
+import java.util.Optional
 
 abstract class Service 
 {
@@ -18,7 +19,7 @@ abstract class Service
 	/**
 	 * Index de la page courante
 	 */
-	int pageIndex 
+	protected int pageIndex 
 	
 	/**
 	 * @return Identifiant de l'examen
@@ -58,7 +59,27 @@ abstract class Service
 	
 	def void save(String path)
 	
-	def void open(String xmiFile);
+	def void open(String xmiFile)
+	
+	/**
+	 * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
+	 * @return un BufferedImage correspondant la page suivante, null si aucune page ne suit la courante
+	 */
+	def Optional<BufferedImage> nextPage()
+	
+	/**
+	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+	 * @return un BufferedImage correspondant la page suivante, null si aucune page ne précède la courante
+	 */
+	def Optional<BufferedImage> previousPage()
+
+	/**
+	 * @return le nombre de page du PDF courant
+	 */
+	def int getPageNumger() {
+		return pages.size
+	}
+	
 
 
 }

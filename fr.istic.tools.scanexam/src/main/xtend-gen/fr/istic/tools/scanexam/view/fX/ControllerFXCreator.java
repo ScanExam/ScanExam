@@ -6,6 +6,7 @@ import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -13,11 +14,14 @@ import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
@@ -42,6 +46,18 @@ public class ControllerFXCreator {
   
   @FXML
   private ImageView pdfView;
+  
+  @FXML
+  private ListView<HBox> questionList;
+  
+  @FXML
+  private ChoiceBox templateChoice;
+  
+  @FXML
+  private ChoiceBox pdfChoice;
+  
+  @FXML
+  private ChoiceBox pageChoice;
   
   private Logger logger = LogManager.getLogger();
   
@@ -102,6 +118,8 @@ public class ControllerFXCreator {
   
   private double objectOriginY = 0d;
   
+  private LinkedList<Box> boxes = new LinkedList<Box>();
+  
   private Box currentRectangle = null;
   
   public void CreateBox(final MouseEvent e) {
@@ -140,6 +158,11 @@ public class ControllerFXCreator {
         this.currentRectangle.setY(_minus_1);
       }
     }
+    EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
+    boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
+    if (_equals_2) {
+      this.addBox(this.currentRectangle);
+    }
   }
   
   public void MoveImage(final MouseEvent e) {
@@ -152,6 +175,7 @@ public class ControllerFXCreator {
       Node source = ((Node) _source);
       this.objectOriginX = source.getLayoutX();
       this.objectOriginY = source.getLayoutY();
+      this.mainPane.setCursor(Cursor.CLOSED_HAND);
     }
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
@@ -166,6 +190,11 @@ public class ControllerFXCreator {
       double _minus_1 = (_screenY - this.mouseOriginY);
       double _plus_1 = (this.objectOriginY + _minus_1);
       source_1.setLayoutY(_plus_1);
+    }
+    EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
+    boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
+    if (_equals_2) {
+      this.mainPane.setCursor(Cursor.OPEN_HAND);
     }
   }
   
@@ -238,6 +267,20 @@ public class ControllerFXCreator {
     return _switchResult;
   }
   
+  public boolean addBox(final Box box) {
+    boolean _xblockexpression = false;
+    {
+      this.editor.addBox(box);
+      this.questionList.getItems().add(box.boxItem());
+      _xblockexpression = this.boxes.add(box);
+    }
+    return _xblockexpression;
+  }
+  
+  public void removeBox(final Box box) {
+    this.editor.removeBox(box);
+  }
+  
   @FXML
   public void onCreateClick() {
     FileChooser fileChooser = new FileChooser();
@@ -260,10 +303,29 @@ public class ControllerFXCreator {
     }
   }
   
+  /**
+   * initialise the choicebox containing all the page numbers of the pdf
+   * to call whenever we load a new pdf into the editor
+   */
+  public void initPageSelection() {
+    this.pageChoice.getItems().clear();
+  }
+  
+  /**
+   * feches the current buffered image in the presenter representing the pdf and converts it and loads into the imageview
+   */
   public void renderDocument() {
     final BufferedImage bufferedImage = this.editor.getPresenter().getCurrentPdfPage();
     final WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
     this.pdfView.setImage(image);
+  }
+  
+  /**
+   * changes the selected page to load and then renders it
+   */
+  public void selectPage(final int pageNumber) {
+    this.editor.getPresenter().choosePdfPage(pageNumber);
+    this.renderDocument();
   }
   
   public void displayPDF(final Image pdf) {

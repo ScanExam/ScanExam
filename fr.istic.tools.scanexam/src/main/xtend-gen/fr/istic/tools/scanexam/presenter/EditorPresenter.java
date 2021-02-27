@@ -124,6 +124,10 @@ public class EditorPresenter implements Presenter {
     return this.service.getCurrentPdfPage();
   }
   
+  public Object choosePdfPage(final int pageNumber) {
+    return null;
+  }
+  
   public void create(final File file) {
     this.service.create(file);
   }

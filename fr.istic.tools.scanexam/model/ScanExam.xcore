@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.utils.Pair
 
 type Pair<T1,T2> wraps Pair
 
+
 class QuestionZone {
 	float x
 	float y
@@ -52,7 +53,7 @@ class HandwritingComment {
 }
 
 class Grade {
-	contains GradeEntry[] entries
+	refers GradeEntry[] entries
 	contains Comment[] comments
 }
 

@@ -5,6 +5,7 @@ import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Optional;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -19,7 +20,7 @@ public abstract class Service {
   /**
    * Index de la page courante
    */
-  private int pageIndex;
+  protected int pageIndex;
   
   /**
    * @return Identifiant de l'examen
@@ -57,6 +58,25 @@ public abstract class Service {
   public abstract void save(final String path);
   
   public abstract void open(final String xmiFile);
+  
+  /**
+   * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
+   * @return un BufferedImage correspondant la page suivante, null si aucune page ne suit la courante
+   */
+  public abstract Optional<BufferedImage> nextPage();
+  
+  /**
+   * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+   * @return un BufferedImage correspondant la page suivante, null si aucune page ne précède la courante
+   */
+  public abstract Optional<BufferedImage> previousPage();
+  
+  /**
+   * @return le nombre de page du PDF courant
+   */
+  public int getPageNumger() {
+    return this.pages.size();
+  }
   
   @Pure
   public List<BufferedImage> getPages() {

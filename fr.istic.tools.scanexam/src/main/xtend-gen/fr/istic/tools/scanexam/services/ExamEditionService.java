@@ -132,4 +132,38 @@ public class ExamEditionService extends Service {
       throw Exceptions.sneakyThrow(_e);
     }
   }
+  
+  @Override
+  public Optional<BufferedImage> nextPage() {
+    Optional<BufferedImage> _xifexpression = null;
+    int _size = this.pages.size();
+    boolean _lessThan = (this.pageIndex < _size);
+    if (_lessThan) {
+      Optional<BufferedImage> _xblockexpression = null;
+      {
+        this.pageIndex++;
+        _xblockexpression = Optional.<BufferedImage>of(this.getCurrentPdfPage());
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      _xifexpression = Optional.<BufferedImage>empty();
+    }
+    return _xifexpression;
+  }
+  
+  @Override
+  public Optional<BufferedImage> previousPage() {
+    Optional<BufferedImage> _xifexpression = null;
+    if ((this.pageIndex > 0)) {
+      Optional<BufferedImage> _xblockexpression = null;
+      {
+        this.pageIndex--;
+        _xblockexpression = Optional.<BufferedImage>of(this.getCurrentPdfPage());
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      _xifexpression = Optional.<BufferedImage>empty();
+    }
+    return _xifexpression;
+  }
 }
