@@ -118,7 +118,7 @@ class ExamEditionService extends Service // TODO : renommer
 	}
 
 	override nextPage() {
-		if (pageIndex < pages.size) {
+		if (pageIndex + 1 < pages.size) {
 			pageIndex++
 		}
 

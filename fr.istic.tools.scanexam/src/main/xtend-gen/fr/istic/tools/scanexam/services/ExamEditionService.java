@@ -136,7 +136,7 @@ public class ExamEditionService extends Service {
   @Override
   public void nextPage() {
     int _size = this.pages.size();
-    boolean _lessThan = (this.pageIndex < _size);
+    boolean _lessThan = ((this.pageIndex + 1) < _size);
     if (_lessThan) {
       this.pageIndex++;
     }
