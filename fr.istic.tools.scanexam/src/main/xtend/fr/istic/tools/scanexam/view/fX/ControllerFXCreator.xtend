@@ -19,6 +19,7 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import javafx.scene.control.ChoiceBox
+import javafx.event.EventHandler
 
 class ControllerFXCreator {
 
@@ -34,13 +35,7 @@ class ControllerFXCreator {
 	ListView<HBox> questionList;
 	
 	@FXML
-	ChoiceBox templateChoice;
-	
-	@FXML
-	ChoiceBox pdfChoice;
-	
-	@FXML
-	ChoiceBox pageChoice;
+	ChoiceBox<Integer> pageChoice;
 	
 	var logger = LogManager.logger
 	enum SelectedTool {
@@ -75,7 +70,15 @@ class ControllerFXCreator {
 		setToMoveTool
 	}
 	
+	@FXML 
+	def void nextPagePressed(){
+		nextPage
+	}
 	
+	@FXML
+	def void previousPagePressed(){
+		previousPage
+	}	
 	@FXML 
 	def void mainMouseEvent(MouseEvent e) {
 		chooseMouseAction(e);
@@ -109,7 +112,13 @@ class ControllerFXCreator {
 			mouseOriginY = e.y
 			var source = e.source as Pane
 			currentRectangle = createBox(e.x,e.y);
+			currentRectangle.listViewBox.addEventFilter(MouseEvent.MOUSE_CLICKED,new EventHandler<MouseEvent>() {
 			
+			override handle(MouseEvent event) {
+				highlightBox((event.source as ListViewBox).parentBox);
+			}
+			
+		})
 			source.children.add(currentRectangle);
 			logger.debug("Created Box")
 		}
@@ -143,7 +152,9 @@ class ControllerFXCreator {
 	
 	
 	
-	
+	/**
+	 * Used to move around the image in the parent pane
+	 */
 	def void MoveImage(MouseEvent e) {
 
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { //TODO add type checks
@@ -165,7 +176,11 @@ class ControllerFXCreator {
 			mainPane.cursor = Cursor.OPEN_HAND
 		}
 	}
-
+	/**
+	 * Used to zoom in and out the pdf image
+	 * 
+	 * Using the scale allows the children of the pane to also scale accordingly
+	 */
 	@FXML
 	def void ZoomImage(ScrollEvent e) {
 		var source = e.source as Node
@@ -178,6 +193,10 @@ class ControllerFXCreator {
 		}
 	}
 	
+	
+	/**
+	 * Setters for the current tool selected
+	 */
 	var currentTool = SelectedTool.MOVE_TOOL
 	def void setToMoveTool(){
 		mainPane.cursor = Cursor.OPEN_HAND
@@ -197,10 +216,14 @@ class ControllerFXCreator {
 		currentTool = SelectedTool.QR_AREA
 	}
 	
+	/**
+	 * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
+	 */
+	var questionCounter = 1;
 	def Box createBox(double x,double y){
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box(BoxType.QUESTION,x,y);
+				new Box("Question "+ questionCounter++,editor.presenter.currentPdfPageNumber,BoxType.QUESTION,x,y);
 			}
 			case ID_AREA: {
 				new Box(BoxType.ID,x,y);
@@ -214,16 +237,38 @@ class ControllerFXCreator {
 		}
 	}
 	
+	/**
+	 * notifies the rest of the program to the addition of a new box
+	 * 
+	 * Called when we finish creating a new box (Mouse release)
+	 */
 	def addBox(Box box){
 		editor.addBox(box);
-		questionList.items.add(box.boxItem)
+		questionList.items.add(box.listViewBox)
 		boxes.add(box);
 	}
 	
+	def renameBox(Box box){
+		
+	}
+	
+	def moveBox(Box box){
+		
+	}
+	
+	def resizeBox(Box box){
+		
+	}
+	/**
+	 * notifies the rest of the program to the removal of a box
+	 */
 	def removeBox(Box box) {
 		editor.removeBox(box);
 	}
 	
+	/**
+	 * load a new pdf to start the creation of a new template
+	 */
 	@FXML
 	def onCreateClick()
 	{
@@ -265,15 +310,46 @@ class ControllerFXCreator {
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		editor.presenter.choosePdfPage(pageNumber);
+		 editor.presenter.choosePdfPage(pageNumber);
 		renderDocument();
 	}
 	
-	
-	def displayPDF(Image pdf) {
-		pdfView.setImage(pdf)
+	/**
+	 * goes to the next page of the current pdf
+	 */
+	def nextPage(){
+		editor.presenter.nextPdfPage();
+		renderDocument
+		showOnlyPage(editor.presenter.currentPdfPageNumber);
 	}
 	
+	def previousPage(){
+		editor.presenter.previousPdfPage();
+		renderDocument
+		showOnlyPage(editor.presenter.currentPdfPageNumber);
+	}
+	
+	def showOnlyPage(int page) {
+		for (Box b : boxes) {
+			if (b.pageNumber == page) {
+				b.visible = true;
+	
+			}else {
+				b.visible = false;
+			}
+		}
+	}
+	/**
+	 * Highlights the Box box, called when we click on a box on the listview
+	 */
+	Box highlightedBox = null;
+	def highlightBox(Box box) {
+		if (highlightedBox !== null) {
+			highlightedBox.focus = false;
+		}
+		highlightedBox = box;
+		highlightedBox.focus = true
+	}
 	
 	def void setEditorAdapterFX(EditorAdapterFX editor) {
 		this.editor = editor

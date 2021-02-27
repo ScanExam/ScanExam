@@ -10,9 +10,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -59,17 +57,17 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="150.0" spacing="5.0">
                <children>
-                  <Label text="Selected Template(xmi)" />
-                  <ChoiceBox prefWidth="150.0" />
-                  <Separator prefWidth="200.0" />
-                  <Label text="Linked PDF" />
-                  <ChoiceBox prefWidth="150.0" />
+                  <Label text="Questions :" />
+                  <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <Label text="Page " />
                   <ChoiceBox prefWidth="150.0" />
-                  <Separator prefWidth="200.0" />
-                  <Label text="Template name :" />
-                  <TextField />
-                  <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" />
+                  <HBox>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#previousPagePressed" text="prev" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#nextPagePressed" text="next" />
+                     </children>
+                  </HBox>
                </children>
                <HBox.margin>
                   <Insets />
