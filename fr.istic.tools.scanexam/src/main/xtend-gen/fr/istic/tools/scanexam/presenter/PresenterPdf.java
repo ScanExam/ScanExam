@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
-import fr.istic.tools.scanexam.presenter.GraduationPresenter;
+import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.io.File;
 import java.io.InputStream;
@@ -13,18 +12,12 @@ import javafx.scene.image.WritableImage;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public abstract class PresenterPdf {
+public class PresenterPdf {
   /**
    * presenter used for the edition of an exam
    * @author Benjamin Danlos
    */
-  private EditorPresenter editorPresenter;
-  
-  /**
-   * presenter used for the graduation of student sheets of an exam
-   * @author Benjamin Danlos
-   */
-  private GraduationPresenter graduationPresenter;
+  private Presenter presenter;
   
   /**
    * Association with the model via the Service API
@@ -53,57 +46,34 @@ public abstract class PresenterPdf {
    * @param {@link GraduationPresenter} (not null)
    * Constructs a PDFPresenter object.
    */
-  public PresenterPdf(final EditorPresenter presE, final GraduationPresenter presG) {
-    Objects.<EditorPresenter>requireNonNull(presE);
-    Objects.<GraduationPresenter>requireNonNull(presG);
-    this.editorPresenter = presE;
-    this.graduationPresenter = presG;
+  public PresenterPdf(final ExamEditionService s, final Presenter p) {
+    Objects.<ExamEditionService>requireNonNull(s);
+    Objects.<Presenter>requireNonNull(p);
+    this.service = s;
+    this.presenter = p;
   }
   
   /**
-   * set {@link EditorPresenter} for the association
-   * @param {@link EditorPresenter} presenter to make the association with
+   * set {@link Presenter} for the association
+   * @param {@link Presenter} presenter to make the association with
    * @author Benjamin Danlos
    */
-  public EditorPresenter setEditorPresenter(final EditorPresenter p) {
-    EditorPresenter _xblockexpression = null;
+  public Presenter setPresenter(final Presenter p) {
+    Presenter _xblockexpression = null;
     {
-      Objects.<EditorPresenter>requireNonNull(p);
-      _xblockexpression = this.editorPresenter = p;
+      Objects.<Presenter>requireNonNull(p);
+      _xblockexpression = this.presenter = p;
     }
     return _xblockexpression;
   }
   
   /**
-   * set {@link GraduationPresenter} for the association
-   * @param {@link GraduationPresenter} presenter to make the association with
+   * returns the current presenter associated
+   * @return {@link Presenter}
    * @author Benjamin Danlos
    */
-  public GraduationPresenter setGraduationPresenter(final GraduationPresenter p) {
-    GraduationPresenter _xblockexpression = null;
-    {
-      Objects.<GraduationPresenter>requireNonNull(p);
-      _xblockexpression = this.graduationPresenter = p;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * returns the current editor presenter associated
-   * @return {@link EditorPresenter}
-   * @author Benjamin Danlos
-   */
-  public EditorPresenter getEditorPresenter() {
-    return this.editorPresenter;
-  }
-  
-  /**
-   * returns the current graduation presenter associated
-   * @return {@link GraduationPresenter}
-   * @author Benjamin Danlos
-   */
-  public GraduationPresenter getGraduationPresenter() {
-    return this.graduationPresenter;
+  public Presenter getPresenter() {
+    return this.presenter;
   }
   
   /**

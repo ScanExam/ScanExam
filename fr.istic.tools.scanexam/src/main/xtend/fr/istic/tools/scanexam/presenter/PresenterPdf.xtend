@@ -9,23 +9,18 @@ import fr.istic.tools.scanexam.services.ExamEditionService
  * Controlleur du pdf
  * @author Julien Cochet
  */
-abstract class PresenterPdf {
+class PresenterPdf {
 	/**
 	 * presenter used for the edition of an exam
 	 * @author Benjamin Danlos
 	 */
-	EditorPresenter editorPresenter
+	Presenter presenter
 	
-	/**
-	 * presenter used for the graduation of student sheets of an exam
-	 * @author Benjamin Danlos
-	 */
-	GraduationPresenter graduationPresenter
 	
 	/**
 	 * Association with the model via the Service API
 	 */
-	private ExamEditionService service;
+	ExamEditionService service;
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * ATTRIBUTS
@@ -53,48 +48,31 @@ abstract class PresenterPdf {
 	 * @param {@link GraduationPresenter} (not null)
 	 * Constructs a PDFPresenter object.
 	 */
-    new(EditorPresenter presE, GraduationPresenter presG){
-    	Objects.requireNonNull(presE)
-    	Objects.requireNonNull(presG)
-    	this.editorPresenter = presE
-    	this.graduationPresenter = presG
+    new(ExamEditionService s, Presenter p){
+    	Objects.requireNonNull(s)
+    	Objects.requireNonNull(p)
+    	this.service = s
+    	this.presenter = p
     }
     /**
-     * set {@link EditorPresenter} for the association 
-     * @param {@link EditorPresenter} presenter to make the association with
+     * set {@link Presenter} for the association 
+     * @param {@link Presenter} presenter to make the association with
      * @author Benjamin Danlos
      */
-    def setEditorPresenter(EditorPresenter p){
+    def setPresenter(Presenter p){
     	Objects.requireNonNull(p)
-    	this.editorPresenter = p
+    	this.presenter = p
     }
     
     /**
-     * set {@link GraduationPresenter} for the association 
-     * @param {@link GraduationPresenter} presenter to make the association with
+     * returns the current presenter associated
+     * @return {@link Presenter}
      * @author Benjamin Danlos
      */
-    def setGraduationPresenter(GraduationPresenter p){
-    	Objects.requireNonNull(p)
-    	this.graduationPresenter = p
-    }
-    /**
-     * returns the current editor presenter associated
-     * @return {@link EditorPresenter}
-     * @author Benjamin Danlos
-     */
-    def getEditorPresenter(){
-    	this.editorPresenter
+    def getPresenter(){
+    	this.presenter
     }
     
-    /**
-     * returns the current graduation presenter associated
-     * @return {@link GraduationPresenter}
-     * @author Benjamin Danlos
-     */
-    def getGraduationPresenter(){
-    	this.graduationPresenter
-    }
     
     /** 
 	 * Constructeur
