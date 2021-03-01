@@ -333,13 +333,14 @@ class ControllerFXCreator {
 		var fitH = pdfView.fitHeight
 		if (image.height > image.width) {//calculates the actual image coordinates
 			maxY = fitH
-			maxX = (image.width / image.height) *  fitW 
+			maxX = (pdfView.image.width / pdfView.image.height) *  fitW 
 		}
 		else {
-			maxY = (image.height / image.width) * fitH 
+			maxY = (pdfView.image.height / pdfView.image.width) * fitH 
 			maxX = fitW
 		}
-		
+		logger.warn(maxX)
+		logger.warn(maxY)
 	
 		
 	}

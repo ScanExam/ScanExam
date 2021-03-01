@@ -19,12 +19,12 @@ class EditorAdapterFX implements EditorAdapter {
 	
 	def void addBox(Box box) 
 	{
-		
+		box.boxId = presenter.presenterQuestionZone.createQuestion(box.x,box.y,box.height,box.width)
 	}
 	
 	def void removeBox(Box box) 
-	{ //removes a box from the model via the presenter
-		
+	{ 
+		presenter.presenterQuestionZone.removeQuestion(box.boxId);
 	}
 	
 	def void updateBox(Box box) {//updates a box in the model via the presenter

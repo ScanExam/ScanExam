@@ -85,7 +85,7 @@
                         <Label fx:id="introLabel" style="-fx-text-fill: GREY;" text="Load PDF in file menu" />
                         <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage">
                            <children>
-                              <ImageView fx:id="pdfView" fitHeight="1000.0" fitWidth="1000.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fx:id="pdfView" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
                            </children>
                            <opaqueInsets>
                               <Insets />

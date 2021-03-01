@@ -33,7 +33,7 @@ class EditorPresenter implements Presenter
 		this.adapter = adapter
 		
 		presPdf = new PresenterPdf(service, this)
-		
+		presQuestionZone =  new PresenterQuestionZone(service,this)
 	}
 
 

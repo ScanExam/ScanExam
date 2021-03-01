@@ -12,7 +12,7 @@ class Box extends Rectangle {
 	
 		new(String name ,int page ,BoxType type,double x, double y) {
 			super(x,y,0,0);
-			id = newID();
+			boxId = newID();
 			this.page = page
 			this.name = name
 			this.type = type
@@ -43,7 +43,7 @@ class Box extends Rectangle {
 		ListViewBox listViewBox;
 		BoxType type;
 		String name;
-		int id;
+		int boxId;
 		int page;
 		
 		
@@ -58,8 +58,12 @@ class Box extends Rectangle {
 		def getType(){
 			type
 		}
-		def getID(){
-			id
+		def getBoxId(){
+			boxId
+		}
+		
+		def setBoxId(int id){
+			this.boxId = id
 		}
 		
 		def void setFocus(boolean b) {
