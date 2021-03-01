@@ -69,13 +69,13 @@ public class ExamEditionServiceTest
 	}
 
 
-	@SuppressWarnings("null")
+	@SuppressWarnings({ "null", "static-access" })
 	@Test
 	@DisplayName("Test - ajoute d'une question")
 	void addQuestionTest() 
 	{
 		//ouverture du fichier
-		session.open("src/test/resources/resources_service/sampleNoExiste.xmi");
+		session.load("src/test/resources/resources_service/sampleExiste.xmi");
 
 		//Creation d'une question
 		Question newQuestion = null;
@@ -94,20 +94,20 @@ public class ExamEditionServiceTest
 
 		assertNull(session.getQuestionZone(7));
 
-		//Ajoute de la question //FIXME
-		// session.addQuestion(newQuestion);
+		//Ajoute de la question
+		session.addQuestion(newQuestion);
 
 		assertNotNull(session.getQuestionZone(7));
 	}
 
 
-	@SuppressWarnings("null")
+	@SuppressWarnings({ "null", "static-access" })
 	@Test
 	@DisplayName("Test - suppression d'une question")
 	void removeQuestionTest() 
 	{
 		//ouverture du fichier
-		session.open("src/test/resources/resources_service/sampleNoExiste.xmi");
+		session.load("src/test/resources/resources_service/sampleExiste.xmi");
 
 		//Creation d'une question
 		Question newQuestion = null;
@@ -123,7 +123,7 @@ public class ExamEditionServiceTest
 		newQuestion.setZone(questionZone);
 		newQuestion.setGradeScale(null);
 
-		//session.addQuestion(newQuestion); //FIXME
+		session.addQuestion(newQuestion);
 
 		assertNotNull(session.getQuestionZone(7));
 
@@ -132,12 +132,13 @@ public class ExamEditionServiceTest
 		assertNull(session.getQuestionZone(7));
 	}
 
+	@SuppressWarnings("static-access")
 	@Test
 	@DisplayName("Test - navigation a la page suivante")
 	void nextPageTest() 
 	{
 		//ouverture du fichier
-		session.open("src/test/resources/resources_service/sampleNoExiste.xmi");
+		session.load("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = session.getCurrentPageNumber();
 		session.nextPage();
@@ -151,12 +152,13 @@ public class ExamEditionServiceTest
 	}
 
 
+	@SuppressWarnings("static-access")
 	@Test
 	@DisplayName("Test - navigation a la page précédente")
 	void previousPageTest() 
 	{
 		//ouverture du fichier
-		session.open("src/test/resources/resources_service/sampleNoExiste.xmi");
+		session.load("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = session.getCurrentPageNumber();
 		session.previousPage();
@@ -175,7 +177,7 @@ public class ExamEditionServiceTest
 	void loadTest() 
 	{
 		//Ouverture du fichier
-		session.load("src/test/resources/resources_service/pfo_example.pdf");
+		session.load("src/test/resources/resources_service/sampleExiste.xmi");
 
 		assertEquals(session.getPageNumber(), 6);
 	}
@@ -187,7 +189,7 @@ public class ExamEditionServiceTest
 	void loadTestRobustesse() 
 	{
 		//load d'un fichier qui n'existe pas
-		Assertions.assertThrows(FileNotFoundException.class, () -> session.load("src/test/resources/resources_service/NoExiste.pdf"));
+		Assertions.assertThrows(FileNotFoundException.class, () -> session.load("src/test/resources/resources_service/NoExiste.xmi"));
 	}
 
 	@SuppressWarnings({ "null", "static-access" })
@@ -210,14 +212,14 @@ public class ExamEditionServiceTest
 		newQuestion.setZone(questionZone);
 		newQuestion.setGradeScale(null);
 
-		//session.addQuestion(newQuestion); //FIXME
+		session.addQuestion(newQuestion);
 
 		assertNull(session.getQuestionZone(7));
 
-		session.save("src/test/resources/resources_service/pfo_example.pdf");
-		
-		session.load("src/test/resources/resources_service/pfo_example.pdf");
-		
+		session.save("src/test/resources/resources_service/sampleExiste.xmi");
+
+		session.load("src/test/resources/resources_service/sampleExiste.xmi");
+
 		//Verification que le changement est toujours d'actualiter
 		assertNull(session.getQuestionZone(7));
 	}
