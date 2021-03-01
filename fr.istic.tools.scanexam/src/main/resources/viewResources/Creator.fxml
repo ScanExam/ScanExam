@@ -18,13 +18,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.ControllerFXCreator">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1280.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.ControllerFXCreator">
    <children>
       <MenuBar>
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#onCreateClick" text="New Template" />
+                  <MenuItem mnemonicParsing="false" onAction="#newTemplatePressed" text="New Template" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" text="Save" />
                   <MenuItem mnemonicParsing="false" text="Load" />
@@ -63,7 +63,10 @@
                   <HBox>
                      <children>
                         <Button mnemonicParsing="false" onAction="#previousPagePressed" text="prev" />
-                        <Pane HBox.hgrow="ALWAYS" />
+                        <Pane HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" />
+                           </children></Pane>
                         <Button mnemonicParsing="false" onAction="#nextPagePressed" text="next" />
                      </children>
                   </HBox>
@@ -82,7 +85,7 @@
                         <Label fx:id="introLabel" style="-fx-text-fill: GREY;" text="Load PDF in file menu" />
                         <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage">
                            <children>
-                              <ImageView fx:id="pdfView" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fx:id="pdfView" fitHeight="1000.0" fitWidth="1000.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
                            </children>
                            <opaqueInsets>
                               <Insets />
@@ -96,6 +99,9 @@
                </cursor>
             </ScrollPane>
          </children>
+         <padding>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </padding>
       </HBox>
       <HBox>
          <children>
