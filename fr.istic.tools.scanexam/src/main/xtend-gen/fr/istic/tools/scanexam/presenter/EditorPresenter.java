@@ -2,12 +2,11 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.view.Adapter;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Objects;
 
 /**
@@ -28,6 +27,8 @@ public class EditorPresenter implements Presenter {
   private PresenterMarkingScheme presMarkingScheme;
   
   private EditorPresenter editorPresenter;
+  
+  private PresenterPdf presPdf;
   
   private ExamEditionService service;
   
@@ -120,30 +121,16 @@ public class EditorPresenter implements Presenter {
     return this.editorPresenter;
   }
   
-  public BufferedImage getCurrentPdfPage() {
-    return this.service.getCurrentPdfPage();
+  public PresenterPdf setPresenterPdf(final PresenterPdf pres) {
+    PresenterPdf _xblockexpression = null;
+    {
+      Objects.<PresenterPdf>requireNonNull(pres);
+      _xblockexpression = this.presPdf = pres;
+    }
+    return _xblockexpression;
   }
   
-  public void choosePdfPage(final int pageNumber) {
-  }
-  
-  public void nextPdfPage() {
-    this.service.nextPage();
-  }
-  
-  public void previousPdfPage() {
-    this.service.previousPage();
-  }
-  
-  public int getTotalPdfPageNumber() {
-    return this.service.getPageNumber();
-  }
-  
-  public int getCurrentPdfPageNumber() {
-    return this.service.getCurrentPageNumber();
-  }
-  
-  public void create(final File file) {
-    this.service.create(file);
+  public PresenterPdf getPresenterPdf() {
+    return this.presPdf;
   }
 }

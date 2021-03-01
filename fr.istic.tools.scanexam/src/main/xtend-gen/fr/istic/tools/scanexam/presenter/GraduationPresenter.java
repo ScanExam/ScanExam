@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
 import fr.istic.tools.scanexam.view.Adapter;
@@ -26,6 +27,8 @@ public class GraduationPresenter implements Presenter {
   private PresenterMarkingScheme presMarkingScheme;
   
   private GraduationPresenter graduationPresenter;
+  
+  private PresenterPdf presPdf;
   
   private ExamGraduationService service;
   
@@ -138,5 +141,18 @@ public class GraduationPresenter implements Presenter {
    */
   public int getPreviousQuestion(final int question) {
     return this.presQuestion.getPreviousQuestion(question);
+  }
+  
+  public PresenterPdf setPresenterPdf(final PresenterPdf pres) {
+    PresenterPdf _xblockexpression = null;
+    {
+      Objects.<PresenterPdf>requireNonNull(pres);
+      _xblockexpression = this.presPdf = pres;
+    }
+    return _xblockexpression;
+  }
+  
+  public PresenterPdf getPresenterPdf() {
+    return this.presPdf;
   }
 }

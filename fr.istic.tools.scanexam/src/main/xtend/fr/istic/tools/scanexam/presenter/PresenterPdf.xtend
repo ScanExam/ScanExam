@@ -3,7 +3,7 @@ package fr.istic.tools.scanexam.presenter
 import java.io.InputStream
 import java.io.File
 import java.util.Objects
-import fr.istic.tools.scanexam.services.Service
+import fr.istic.tools.scanexam.services.ExamEditionService
 
 /** 
  * Controlleur du pdf
@@ -21,6 +21,11 @@ abstract class PresenterPdf {
 	 * @author Benjamin Danlos
 	 */
 	GraduationPresenter graduationPresenter
+	
+	/**
+	 * Association with the model via the Service API
+	 */
+	private ExamEditionService service;
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * ATTRIBUTS
@@ -35,8 +40,6 @@ abstract class PresenterPdf {
 	
 	/* InputStream du pdf */
 	protected InputStream pdfInput
-	
-	private Service service;
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * CONSTRUCTEUR
@@ -150,4 +153,31 @@ abstract class PresenterPdf {
 		// editorPresenter.getService().document.getPages() //FIXME
 	}
 	
+	
+	def getCurrentPdfPage()
+	{
+		return service.getCurrentPdfPage
+	}
+	
+	def void choosePdfPage(int pageNumber) {
+		
+	}
+	def void nextPdfPage(){
+		service.nextPage
+	}
+	def void previousPdfPage(){
+		service.previousPage
+	}
+	
+	def int getTotalPdfPageNumber(){
+		service.pageNumber
+	}
+	def int getCurrentPdfPageNumber(){
+		service.currentPageNumber
+	}
+	
+	def create(File file)
+	{
+		service.create(file);
+	}
 }

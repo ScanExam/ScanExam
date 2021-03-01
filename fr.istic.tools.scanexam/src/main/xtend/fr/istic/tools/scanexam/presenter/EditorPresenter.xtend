@@ -21,6 +21,7 @@ class EditorPresenter implements Presenter
 	PresenterQuestionZone presQuestionZone
 	PresenterMarkingScheme presMarkingScheme
 	EditorPresenter editorPresenter
+	PresenterPdf presPdf
 	ExamEditionService service
 	Adapter<EditorPresenter> adapter
 	
@@ -95,31 +96,12 @@ class EditorPresenter implements Presenter
 		editorPresenter
 	}
 	
-	def getCurrentPdfPage()
-	{
-		return service.getCurrentPdfPage
+	def setPresenterPdf(PresenterPdf pres){
+		Objects.requireNonNull(pres)
+		presPdf = pres
 	}
-	
-	def void choosePdfPage(int pageNumber) {
-		
-	}
-	def void nextPdfPage(){
-		service.nextPage
-	}
-	def void previousPdfPage(){
-		service.previousPage
-	}
-	
-	def int getTotalPdfPageNumber(){
-		service.pageNumber
-	}
-	def int getCurrentPdfPageNumber(){
-		service.currentPageNumber
-	}
-	
-	def create(File file)
-	{
-		 service.create(file);
+	def getPresenterPdf(){
+		presPdf
 	}
 	
 	
