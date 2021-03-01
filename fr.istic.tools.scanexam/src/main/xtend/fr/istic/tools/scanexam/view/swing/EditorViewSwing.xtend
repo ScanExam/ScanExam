@@ -295,13 +295,22 @@ class EditorViewSwing {
 		return btnNext
 	}
 	
+	def JComboBox<Integer> getCmbBxPage() {
+		return cmbBxPage
+	}
+	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	def void setLblNumPage(int numPage) {
-		lblNumPage.text = numPage.toString
+	/**
+	 * Met à jour le numéro de page affiché
+	 * @param crtPage page actuelle
+	 */
+	def void setCurrentPage(int crtPage) {
+		lblNumPage.text = (crtPage + 1).toString
 	}
+	
 }

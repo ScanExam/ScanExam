@@ -10,10 +10,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 /**
  * Controlleur swing de la fenêtre de création d'examen
@@ -71,7 +73,6 @@ public class EditorAdapterSwing implements EditorAdapter {
       public void actionPerformed(final ActionEvent e) {
         try {
           EditorAdapterSwing.this.openFile();
-          EditorAdapterSwing.this.view.setLblNumPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);
         }
@@ -89,7 +90,7 @@ public class EditorAdapterSwing implements EditorAdapter {
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().previousPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
-        EditorAdapterSwing.this.view.setLblNumPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
+        EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
       }
     });
     JButton _btnNext = this.view.getBtnNext();
@@ -98,7 +99,7 @@ public class EditorAdapterSwing implements EditorAdapter {
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().nextPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
-        EditorAdapterSwing.this.view.setLblNumPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
+        EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
       }
     });
   }
@@ -121,6 +122,22 @@ public class EditorAdapterSwing implements EditorAdapter {
         File selectedFile = fc.getSelectedFile();
         this.editorPresenter.create(selectedFile);
         this.adapterPdfAndBox.refreshPdf();
+        this.view.getCmbBxPage().removeAll();
+        int _totalPdfPageNumber = this.editorPresenter.getTotalPdfPageNumber();
+        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(1, _totalPdfPageNumber, true);
+        for (final Integer i : _doubleDotLessThan) {
+          this.view.getCmbBxPage().addItem(i);
+        }
+        JComboBox<Integer> _cmbBxPage = this.view.getCmbBxPage();
+        _cmbBxPage.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(final ActionEvent e) {
+            EditorAdapterSwing.this.getPresenter().goToPage(EditorAdapterSwing.this.view.getCmbBxPage().getSelectedIndex());
+            EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
+            EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
+          }
+        });
+        this.view.setCurrentPage(this.getPresenter().getCurrentPdfPageNumber());
       }
     }
   }

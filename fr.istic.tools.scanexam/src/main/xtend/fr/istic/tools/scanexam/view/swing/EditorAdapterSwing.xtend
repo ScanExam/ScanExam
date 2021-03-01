@@ -70,7 +70,6 @@ class EditorAdapterSwing implements EditorAdapter {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "load" est cliqué
 				openFile()
-	        	view.lblNumPage = presenter.currentPdfPageNumber
 			}
 	    });
 	    
@@ -86,7 +85,7 @@ class EditorAdapterSwing implements EditorAdapter {
 				//Actions lorsque le bouton "question précédente" est cliqué
 				presenter.previousPdfPage()
 	        	adapterPdfAndBox.refreshPdf()
-	        	view.lblNumPage = presenter.currentPdfPageNumber
+	        	view.setCurrentPage(presenter.currentPdfPageNumber)
 			}
 	    });
 	    
@@ -95,7 +94,7 @@ class EditorAdapterSwing implements EditorAdapter {
 				//Actions lorsque le bouton "question suivante" est cliqué
 				presenter.nextPdfPage()
 	        	adapterPdfAndBox.refreshPdf()
-	        	view.lblNumPage = presenter.currentPdfPageNumber
+	        	view.setCurrentPage(presenter.currentPdfPageNumber)
 			}
 	    });
 	    
@@ -118,8 +117,24 @@ class EditorAdapterSwing implements EditorAdapter {
 	    } else if (result == JFileChooser.APPROVE_OPTION) {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
+	        // Envoie du pdf au service
 	        editorPresenter.create(selectedFile)
+	        // Mise à jour du pdf affiché
 	        adapterPdfAndBox.refreshPdf()
+	        // Mise à jour de la liste des pages
+			view.cmbBxPage.removeAll
+			for (i : 1 ..< editorPresenter.totalPdfPageNumber) {
+				view.cmbBxPage.addItem(i)
+			}
+			view.cmbBxPage.addActionListener(new ActionListener() {
+				override actionPerformed(ActionEvent e) {
+					presenter.goToPage(view.cmbBxPage.selectedIndex)
+		        	adapterPdfAndBox.refreshPdf()
+	        		view.setCurrentPage(presenter.currentPdfPageNumber)
+				}
+			});
+	        // Mise à jour du numéro de page
+	        view.setCurrentPage(presenter.currentPdfPageNumber)
 	    }
 	}
 	

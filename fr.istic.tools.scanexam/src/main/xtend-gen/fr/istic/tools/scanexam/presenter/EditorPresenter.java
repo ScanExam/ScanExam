@@ -44,6 +44,8 @@ public class EditorPresenter implements Presenter {
     this.adapter = adapter;
     PresenterPdf _presenterPdf = new PresenterPdf(service, this);
     this.presPdf = _presenterPdf;
+    PresenterQuestionZone _presenterQuestionZone = new PresenterQuestionZone(service, this);
+    this.presQuestionZone = _presenterQuestionZone;
   }
   
   /**
@@ -140,6 +142,10 @@ public class EditorPresenter implements Presenter {
   
   public void previousPdfPage() {
     this.service.previousPage();
+  }
+  
+  public void goToPage(final int page) {
+    this.service.goToPage(page);
   }
   
   public int getTotalPdfPageNumber() {

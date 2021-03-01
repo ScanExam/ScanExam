@@ -112,6 +112,10 @@ class EditorPresenter implements Presenter
 		service.previousPage
 	}
 	
+	def void goToPage(int page) {
+		service.goToPage(page)
+	}
+	
 	def int getTotalPdfPageNumber(){
 		service.pageNumber
 	}

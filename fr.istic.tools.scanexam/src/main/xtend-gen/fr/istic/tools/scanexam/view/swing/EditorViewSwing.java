@@ -346,10 +346,15 @@ public class EditorViewSwing {
     return this.btnNext;
   }
   
+  public JComboBox<Integer> getCmbBxPage() {
+    return this.cmbBxPage;
+  }
+  
   /**
-   * SETTERS
+   * Met à jour le numéro de page affiché
+   * @param crtPage page actuelle
    */
-  public void setLblNumPage(final int numPage) {
-    this.lblNumPage.setText(Integer.valueOf(numPage).toString());
+  public void setCurrentPage(final int crtPage) {
+    this.lblNumPage.setText(Integer.valueOf((crtPage + 1)).toString());
   }
 }

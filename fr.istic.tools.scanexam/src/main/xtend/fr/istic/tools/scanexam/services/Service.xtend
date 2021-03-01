@@ -70,6 +70,16 @@ abstract class Service
 		 	pageIndex--;
 		 }
 	}
+	
+	/**
+	 * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
+	 * @param page Numéro de page où se rendre
+	 */
+	def goToPage(int page) {
+		if(page >= 0 && page < document.pages.size) {
+			pageIndex = page
+		}
+	}
 
 
 	/**

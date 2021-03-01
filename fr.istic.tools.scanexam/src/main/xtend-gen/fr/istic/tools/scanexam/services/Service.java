@@ -86,6 +86,18 @@ public abstract class Service {
   }
   
   /**
+   * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
+   * @param page Numéro de page où se rendre
+   */
+  public int goToPage(final int page) {
+    int _xifexpression = (int) 0;
+    if (((page >= 0) && (page < IterableExtensions.size(this.document.getPages())))) {
+      _xifexpression = this.pageIndex = page;
+    }
+    return _xifexpression;
+  }
+  
+  /**
    * @return le nombre de page du PDF courant
    */
   protected Page getCurrentPage() {
