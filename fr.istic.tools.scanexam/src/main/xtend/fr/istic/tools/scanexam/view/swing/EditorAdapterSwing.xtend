@@ -52,6 +52,13 @@ class EditorAdapterSwing implements EditorAdapter {
 	 * Ajoute les action listeners aux boutons de la vue
 	 */
 	def private void addActionListeners() {
+		view.getMnItemNew().addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				//Actions lorsque le bouton "create" est cliqué
+				
+			}
+	    });
+	    
 		view.getMnItemSave().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "save" est cliqué
@@ -66,23 +73,9 @@ class EditorAdapterSwing implements EditorAdapter {
 			}
 	    });
 	    
-		view.getMnItemCreate().addActionListener(new ActionListener() {
-			override actionPerformed(ActionEvent e) {
-				//Actions lorsque le bouton "create" est cliqué
-				
-			}
-	    });
-	    
 		view.getMnItemClose().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "close" est cliqué
-				
-			}
-	    });
-	    
-		view.getMnItemSession().addActionListener(new ActionListener() {
-			override actionPerformed(ActionEvent e) {
-				//Actions lorsque le bouton "session" est cliqué
 				
 			}
 	    });

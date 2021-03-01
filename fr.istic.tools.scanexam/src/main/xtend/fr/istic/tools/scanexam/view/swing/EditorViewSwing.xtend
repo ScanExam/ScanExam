@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.swing
 
-import fr.istic.tools.scanexam.config.LanguageManager
 import java.awt.BorderLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -17,6 +16,8 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
+
+import static fr.istic.tools.scanexam.config.LanguageManager.*
 
 /** 
  * Vue swing de la fenêtre de création d'examen
@@ -45,26 +46,29 @@ class EditorViewSwing {
 	/* Menu fichier de la bare de menu de la fenêtre */
 	var JMenu mnFile
 	
+	/* Bouton pour créer un examen */
+	var JMenuItem mnItemNew
+	
 	/* Bouton pour sauver un examen */
 	var JMenuItem mnItemSave
 	
 	/* Bouton pour charger un examen */
 	var JMenuItem mnItemLoad
 	
-	/* Bouton pour créer un examen */
-	var JMenuItem mnItemCreate
-	
 	/* Bouton pour fermer un examen */
 	var JMenuItem mnItemClose
-	
-	/* Bouton pour charger de session */
-	var JMenuItem mnItemSession
 
 	/* Menu édition de la bare de menu de la fenêtre */
 	var JMenu mnEdit 
 
+	/* Bouton de suppression */
+	var JMenuItem mnItemDelete
+
 	/* Menu aide de la bare de menu de la fenêtre */
 	var JMenu mnHelp
+	
+	/* Bouton "A propos" */
+	var JMenuItem mnItemAbout
 
 	/* Panel des boutons principaux */
 	var JPanel pnlButtons
@@ -118,35 +122,45 @@ class EditorViewSwing {
 	 * Initialise la fenêtre
 	 */
 	def private void initialize() {
-		window = new JFrame(LanguageManager.translate("title.ScanExam"))
+		window = new JFrame(translate("scanexam"))
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 		
 		menuBar = new JMenuBar()
 		window.setJMenuBar(menuBar)
 		
-		mnFile = new JMenu("File")
+		mnFile = new JMenu(translate("menu.file"))
 		
-		mnItemSave = new JMenuItem("Save")
+		mnItemNew = new JMenuItem(translate("menu.file.new"))
+	    mnFile.add(mnItemNew)
+	    
+	    mnFile.addSeparator()
+	    
+		mnItemSave = new JMenuItem(translate("menu.file.save"))
 	    mnFile.add(mnItemSave)
 	    
-		mnItemLoad = new JMenuItem("Load")
+		mnItemLoad = new JMenuItem(translate("menu.file.load"))
 	    mnFile.add(mnItemLoad)
 	    
-		mnItemCreate = new JMenuItem("Create")
-	    mnFile.add(mnItemCreate)
+	    mnFile.addSeparator()
 	    
-		mnItemClose = new JMenuItem("Close")
+		mnItemClose = new JMenuItem(translate("menu.file.close"))
 	    mnFile.add(mnItemClose)
 	    
-		mnItemSession = new JMenuItem("Change session")
-	    mnFile.add(mnItemSession)
 		menuBar.add(mnFile)
 		
-		mnEdit = new JMenu("Edit")
+		mnEdit = new JMenu(translate("menu.edit"))
+		
+		mnItemDelete = new JMenuItem(translate("menu.edit.delete"))
+	    mnEdit.add(mnItemDelete)
+	    
 		menuBar.add(mnEdit)
 		
-		mnHelp = new JMenu("Help")
+		mnHelp = new JMenu(translate("menu.help"))
+		
+		mnItemAbout = new JMenuItem(translate("menu.help.about"))
+	    mnHelp.add(mnItemAbout)
+	    
 		menuBar.add(mnHelp)
 		
 		contentPane = new JPanel()
@@ -240,6 +254,10 @@ class EditorViewSwing {
 		return window;
 	}
 	
+	def JMenuItem getMnItemNew() {
+		return mnItemNew;
+	}
+	
 	def JMenuItem getMnItemSave() {
 		return mnItemSave;
 	}
@@ -252,21 +270,8 @@ class EditorViewSwing {
 		return mnItemLoad;
 	}
 	
-	def JMenuItem getMnItemCreate() {
-		return mnItemCreate;
-	}
-	
-	
 	def JMenuItem getMnItemClose() {
 		return mnItemSave;
-	}
-	
-	/**
-	 * Envoie le bouton de changement de session
-	 * @return mnItemSession
-	 */
-	def JMenuItem getMnItemSession() {
-		return mnItemSession;
 	}
 
 }

@@ -55,6 +55,11 @@ public class EditorViewSwing {
   private JMenu mnFile;
   
   /**
+   * Bouton pour créer un examen
+   */
+  private JMenuItem mnItemNew;
+  
+  /**
    * Bouton pour sauver un examen
    */
   private JMenuItem mnItemSave;
@@ -65,19 +70,9 @@ public class EditorViewSwing {
   private JMenuItem mnItemLoad;
   
   /**
-   * Bouton pour créer un examen
-   */
-  private JMenuItem mnItemCreate;
-  
-  /**
    * Bouton pour fermer un examen
    */
   private JMenuItem mnItemClose;
-  
-  /**
-   * Bouton pour charger de session
-   */
-  private JMenuItem mnItemSession;
   
   /**
    * Menu édition de la bare de menu de la fenêtre
@@ -85,9 +80,19 @@ public class EditorViewSwing {
   private JMenu mnEdit;
   
   /**
+   * Bouton de suppression
+   */
+  private JMenuItem mnItemDelete;
+  
+  /**
    * Menu aide de la bare de menu de la fenêtre
    */
   private JMenu mnHelp;
+  
+  /**
+   * Bouton "A propos"
+   */
+  private JMenuItem mnItemAbout;
   
   /**
    * Panel des boutons principaux
@@ -156,7 +161,7 @@ public class EditorViewSwing {
    * Initialise la fenêtre
    */
   private void initialize() {
-    String _translate = LanguageManager.translate("title.ScanExam");
+    String _translate = LanguageManager.translate("scanexam");
     JFrame _jFrame = new JFrame(_translate);
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
@@ -164,29 +169,43 @@ public class EditorViewSwing {
     JMenuBar _jMenuBar = new JMenuBar();
     this.menuBar = _jMenuBar;
     this.window.setJMenuBar(this.menuBar);
-    JMenu _jMenu = new JMenu("File");
+    String _translate_1 = LanguageManager.translate("menu.file");
+    JMenu _jMenu = new JMenu(_translate_1);
     this.mnFile = _jMenu;
-    JMenuItem _jMenuItem = new JMenuItem("Save");
-    this.mnItemSave = _jMenuItem;
+    String _translate_2 = LanguageManager.translate("menu.file.new");
+    JMenuItem _jMenuItem = new JMenuItem(_translate_2);
+    this.mnItemNew = _jMenuItem;
+    this.mnFile.add(this.mnItemNew);
+    this.mnFile.addSeparator();
+    String _translate_3 = LanguageManager.translate("menu.file.save");
+    JMenuItem _jMenuItem_1 = new JMenuItem(_translate_3);
+    this.mnItemSave = _jMenuItem_1;
     this.mnFile.add(this.mnItemSave);
-    JMenuItem _jMenuItem_1 = new JMenuItem("Load");
-    this.mnItemLoad = _jMenuItem_1;
+    String _translate_4 = LanguageManager.translate("menu.file.load");
+    JMenuItem _jMenuItem_2 = new JMenuItem(_translate_4);
+    this.mnItemLoad = _jMenuItem_2;
     this.mnFile.add(this.mnItemLoad);
-    JMenuItem _jMenuItem_2 = new JMenuItem("Create");
-    this.mnItemCreate = _jMenuItem_2;
-    this.mnFile.add(this.mnItemCreate);
-    JMenuItem _jMenuItem_3 = new JMenuItem("Close");
+    this.mnFile.addSeparator();
+    String _translate_5 = LanguageManager.translate("menu.file.close");
+    JMenuItem _jMenuItem_3 = new JMenuItem(_translate_5);
     this.mnItemClose = _jMenuItem_3;
     this.mnFile.add(this.mnItemClose);
-    JMenuItem _jMenuItem_4 = new JMenuItem("Change session");
-    this.mnItemSession = _jMenuItem_4;
-    this.mnFile.add(this.mnItemSession);
     this.menuBar.add(this.mnFile);
-    JMenu _jMenu_1 = new JMenu("Edit");
+    String _translate_6 = LanguageManager.translate("menu.edit");
+    JMenu _jMenu_1 = new JMenu(_translate_6);
     this.mnEdit = _jMenu_1;
+    String _translate_7 = LanguageManager.translate("menu.edit.delete");
+    JMenuItem _jMenuItem_4 = new JMenuItem(_translate_7);
+    this.mnItemDelete = _jMenuItem_4;
+    this.mnEdit.add(this.mnItemDelete);
     this.menuBar.add(this.mnEdit);
-    JMenu _jMenu_2 = new JMenu("Help");
+    String _translate_8 = LanguageManager.translate("menu.help");
+    JMenu _jMenu_2 = new JMenu(_translate_8);
     this.mnHelp = _jMenu_2;
+    String _translate_9 = LanguageManager.translate("menu.help.about");
+    JMenuItem _jMenuItem_5 = new JMenuItem(_translate_9);
+    this.mnItemAbout = _jMenuItem_5;
+    this.mnHelp.add(this.mnItemAbout);
     this.menuBar.add(this.mnHelp);
     JPanel _jPanel = new JPanel();
     this.contentPane = _jPanel;
@@ -273,6 +292,10 @@ public class EditorViewSwing {
     return this.window;
   }
   
+  public JMenuItem getMnItemNew() {
+    return this.mnItemNew;
+  }
+  
   public JMenuItem getMnItemSave() {
     return this.mnItemSave;
   }
@@ -285,19 +308,7 @@ public class EditorViewSwing {
     return this.mnItemLoad;
   }
   
-  public JMenuItem getMnItemCreate() {
-    return this.mnItemCreate;
-  }
-  
   public JMenuItem getMnItemClose() {
     return this.mnItemSave;
-  }
-  
-  /**
-   * Envoie le bouton de changement de session
-   * @return mnItemSession
-   */
-  public JMenuItem getMnItemSession() {
-    return this.mnItemSession;
   }
 }

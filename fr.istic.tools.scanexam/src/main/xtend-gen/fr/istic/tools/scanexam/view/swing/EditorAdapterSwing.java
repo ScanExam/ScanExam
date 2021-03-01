@@ -52,6 +52,12 @@ public class EditorAdapterSwing implements EditorAdapter {
    * Ajoute les action listeners aux boutons de la vue
    */
   private void addActionListeners() {
+    JMenuItem _mnItemNew = this.view.getMnItemNew();
+    _mnItemNew.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+      }
+    });
     JMenuItem _mnItemSave = this.view.getMnItemSave();
     _mnItemSave.addActionListener(new ActionListener() {
       @Override
@@ -69,20 +75,8 @@ public class EditorAdapterSwing implements EditorAdapter {
         }
       }
     });
-    JMenuItem _mnItemCreate = this.view.getMnItemCreate();
-    _mnItemCreate.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-      }
-    });
     JMenuItem _mnItemClose = this.view.getMnItemClose();
     _mnItemClose.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-      }
-    });
-    JMenuItem _mnItemSession = this.view.getMnItemSession();
-    _mnItemSession.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
       }
