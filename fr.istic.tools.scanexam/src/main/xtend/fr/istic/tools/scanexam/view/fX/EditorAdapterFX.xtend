@@ -18,7 +18,7 @@ class EditorAdapterFX implements EditorAdapter {
 
 	
 	def void addBox(Box box) 
-	{ //adds a box to the model via the presenter
+	{
 		
 	}
 	
@@ -37,7 +37,6 @@ class EditorAdapterFX implements EditorAdapter {
 	
 	override getPresenter()
 	{
-		presenter
 	}
 	
 }
