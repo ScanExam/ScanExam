@@ -26,7 +26,7 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#newTemplatePressed" text="New Template" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" text="Save" />
+              <MenuItem mnemonicParsing="false" onAction="#saveTemplatePressed" text="Save" />
                   <MenuItem mnemonicParsing="false" text="Load" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Close" />
@@ -54,7 +54,7 @@
       </ToolBar>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox prefHeight="200.0" prefWidth="150.0" spacing="5.0">
+            <VBox minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" spacing="5.0">
                <children>
                   <Label text="Questions :" />
                   <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />

@@ -20,6 +20,7 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import javafx.embed.swing.SwingFXUtils
+import javafx.event.ActionEvent
 
 class ControllerFXCreator {
 	
@@ -94,6 +95,11 @@ class ControllerFXCreator {
 	@FXML
 	def void newTemplatePressed(){
 		loadPdf();
+	}
+	
+	@FXML
+	def void saveTemplatePressed(){
+		saveTemplate();
 	}
 	@FXML
 	def void previousPagePressed(){
@@ -267,7 +273,31 @@ class ControllerFXCreator {
 	 */
 	def addBox(Box box){
 		editor.addBox(box);
-		questionList.items.add(box.listViewBox)
+		var lb = box.listViewBox;
+		lb.upAction = new EventHandler<ActionEvent>(){
+			
+			override handle(ActionEvent event) {
+				
+			}
+			
+		}
+		lb.downAction = new EventHandler<ActionEvent>(){
+			
+			override handle(ActionEvent event) {
+				
+			}
+			
+		}
+		lb.removeAction = new EventHandler<ActionEvent>(){
+			 
+			override handle(ActionEvent event) {
+				removeBox(box);
+				logger.warn("trying to remove " + box)
+			}
+			
+		}
+		
+		questionList.items.add(lb)
 		boxes.add(box);
 	}
 	
@@ -286,7 +316,10 @@ class ControllerFXCreator {
 	 * notifies the rest of the program to the removal of a box
 	 */
 	def removeBox(Box box) {
-		editor.removeBox(box);
+		questionList.items.remove(box.listViewBox)
+		mainPane.children.remove(box)
+		boxes.remove(box)
+		//editor.removeBox(box);
 	}
 	
 	/**
@@ -311,6 +344,23 @@ class ControllerFXCreator {
 		}
 		
 		
+	}
+	
+	
+	def saveTemplate(){
+		var fileChooser = new FileChooser();
+		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files",Arrays.asList("*.xmi")));
+		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Documents");
+		var file = fileChooser.showSaveDialog(mainPane.scene.window)
+		
+		if (file !== null) 
+		{
+			editor.presenter.save(file.path);
+		}
+		else 
+		{
+			logger.warn("File not chosen")
+		}
 	}
 	/**
 	 * initialise the choicebox containing all the page numbers of the pdf

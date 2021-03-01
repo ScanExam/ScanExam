@@ -129,5 +129,9 @@ class EditorPresenter implements Presenter
 		service.document
 	}
 	
+	def save(String path){
+		service.save(path)
+	}
+	
 	
 }
