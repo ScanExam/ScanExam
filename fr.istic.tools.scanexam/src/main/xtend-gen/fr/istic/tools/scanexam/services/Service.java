@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
@@ -103,6 +104,8 @@ public abstract class Service {
   public abstract void save(final String path);
   
   public abstract void open(final String xmiFile);
+  
+  public abstract void create(final File file);
   
   public int getPageNumber() {
     return IterableExtensions.size(this.document.getPages());

@@ -1,15 +1,12 @@
 package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.core.QuestionZone
-import java.awt.image.BufferedImage
-import java.util.List
-import org.eclipse.xtend.lib.annotations.Accessors
+import java.io.File
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.rendering.ImageType
-import javafx.embed.swing.SwingFXUtils
-import org.apache.pdfbox.rendering.PDFRenderer
-import java.util.ArrayList
 import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.rendering.ImageType
+import org.apache.pdfbox.rendering.PDFRenderer
+import org.eclipse.xtend.lib.annotations.Accessors
 
 abstract class Service 
 {
@@ -96,6 +93,7 @@ abstract class Service
 	
 	def void open(String xmiFile)
 	
+	def void create(File file)
 	
 	def int getPageNumber() {
 		return document.pages.size

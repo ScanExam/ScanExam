@@ -1,18 +1,13 @@
 package fr.istic.tools.scanexam.view.swing;
 
+import fr.istic.tools.scanexam.presenter.Presenter;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
 import javax.swing.JPanel;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 
 /**
  * Classe pour offrir plus d'options à un PdfPanel (zoom, déplacement à la souris)
@@ -29,6 +24,11 @@ public class AdapterSwingPdfPanel {
    * Hauteur de la fenêtre
    */
   protected int height;
+  
+  /**
+   * Presenter gerant le pdf
+   */
+  protected Presenter presenterPdf;
   
   /**
    * PDF a afficher
@@ -74,12 +74,13 @@ public class AdapterSwingPdfPanel {
    * Constructeur
    * @param width Largeur de la fenêtre
    * @param height Hauteur de la fenêtre
-   * @param pdfInput InputStream du pdf
+   * @param presenterPdf Présenter gérant le pdf
    */
-  public AdapterSwingPdfPanel(final int width, final int height, final InputStream pdfInput) {
+  public AdapterSwingPdfPanel(final int width, final int height, final Presenter presenterPdf) {
     this.width = width;
     this.height = height;
-    this.setPDF(pdfInput, 0);
+    this.presenterPdf = presenterPdf;
+    this.refreshPdf();
     this.setScaleOnWidth(false);
     this.originX = 0;
     this.originY = 0;
@@ -108,6 +109,38 @@ public class AdapterSwingPdfPanel {
         AdapterSwingPdfPanel.this.incrScale(e.getWheelRotation());
       }
     };
+  }
+  
+  /**
+   * Met à jour le pdf à afficher
+   */
+  public void refreshPdf() {
+    if (((this.presenterPdf != null) && (this.presenterPdf.getCurrentPdfPage() != null))) {
+      this.pdf = this.presenterPdf.getCurrentPdfPage();
+      this.setScaleOnWidth(this.scaleOnWidth);
+      this.repaint();
+    }
+  }
+  
+  /**
+   * Met à jour le mode de mise à l'échelle
+   * @param scaleOnWidth Booléen indiquant si l'échelle est calculé par rapport à la largueur
+   */
+  public void setScaleOnWidth(final boolean scaleOnWidth) {
+    if ((this.pdf != null)) {
+      this.scaleOnWidth = scaleOnWidth;
+      if (this.scaleOnWidth) {
+        int _width = this.pdf.getWidth(null);
+        int _divide = (_width / this.width);
+        int _plus = (_divide + 1);
+        this.scale = _plus;
+      } else {
+        int _height = this.pdf.getHeight(null);
+        int _divide_1 = (_height / this.height);
+        int _plus_1 = (_divide_1 + 1);
+        this.scale = _plus_1;
+      }
+    }
   }
   
   /**
@@ -180,42 +213,8 @@ public class AdapterSwingPdfPanel {
   /**
    * SETTERS
    */
-  public void setPDF(final InputStream pdfInput, final int pageindex) {
-    if ((pdfInput != null)) {
-      try {
-        PDDocument document = PDDocument.load(pdfInput);
-        PDFRenderer renderer = new PDFRenderer(document);
-        BufferedImage img = renderer.renderImageWithDPI(pageindex, 300);
-        document.close();
-        this.pdf = img;
-        this.setScaleOnWidth(this.scaleOnWidth);
-        this.repaint();
-      } catch (final Throwable _t) {
-        if (_t instanceof IOException) {
-          final IOException e = (IOException)_t;
-          e.printStackTrace();
-        } else {
-          throw Exceptions.sneakyThrow(_t);
-        }
-      }
-    }
-  }
-  
-  public void setScaleOnWidth(final boolean scaleOnWidth) {
-    if ((this.pdf != null)) {
-      this.scaleOnWidth = scaleOnWidth;
-      if (this.scaleOnWidth) {
-        int _width = this.pdf.getWidth(null);
-        int _divide = (_width / this.width);
-        int _plus = (_divide + 1);
-        this.scale = _plus;
-      } else {
-        int _height = this.pdf.getHeight(null);
-        int _divide_1 = (_height / this.height);
-        int _plus_1 = (_divide_1 + 1);
-        this.scale = _plus_1;
-      }
-    }
+  public void setPresenterPdf(final Presenter presenterPdf) {
+    this.presenterPdf = presenterPdf;
   }
   
   public void setView(final JPanel view) {

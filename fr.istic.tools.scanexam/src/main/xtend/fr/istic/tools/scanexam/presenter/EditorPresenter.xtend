@@ -2,9 +2,8 @@ package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.services.ExamEditionService
 import fr.istic.tools.scanexam.view.Adapter
-import java.util.Objects
 import java.io.File
-import java.io.InputStream
+import java.util.Objects
 
 /**
  * Class defining the presenter for the exam creation view(s)
@@ -98,7 +97,7 @@ class EditorPresenter implements Presenter
 		editorPresenter
 	}
 	
-	def getCurrentPdfPage()
+	override getCurrentPdfPage()
 	{
 		return service.getCurrentPdfPage
 	}
@@ -120,7 +119,7 @@ class EditorPresenter implements Presenter
 		service.currentPageNumber
 	}
 	
-	def create(File file)
+	override create(File file)
 	{
 		 service.create(file);
 	}

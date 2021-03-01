@@ -1,9 +1,9 @@
 package fr.istic.tools.scanexam.view.swing
 
 import fr.istic.tools.scanexam.box.BoxList
+import fr.istic.tools.scanexam.presenter.Presenter
 import java.awt.Point
 import java.awt.event.MouseEvent
-import java.io.InputStream
 import java.util.Optional
 import javax.swing.JPanel
 
@@ -35,13 +35,13 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	 * Constructeur
 	 * @param width Largeur de la fenêtre
 	 * @param height Hauteur de la fenêtre
-	 * @param pdfInput InputStream du pdf
+	 * @param presenterPdf Présenter gérant le pdf
 	 * @param selectionBoxes Objet contenant les boîtes de sélection
 	 */
-	new(int width, int height, InputStream pdfInput, BoxList selectionBoxes) {
-		super(width, height, pdfInput)
+	new(int width, int height, Presenter presenterPdf, BoxList selectionBoxes) {
+		super(width, height, presenterPdf)
 		this.selectionBoxes = selectionBoxes
-		if(pdfInput !== null) {
+		if(pdf !== null) {
 			var int selectWidth = pdf.getWidth(null)
 			var int selectHeight = pdf.getHeight(null)
 			adapterBox = new AdapterSwingBox(selectWidth, selectHeight, scale, originX, originY, selectionBoxes)

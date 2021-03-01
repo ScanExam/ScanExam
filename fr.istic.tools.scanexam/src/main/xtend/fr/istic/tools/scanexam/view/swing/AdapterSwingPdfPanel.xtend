@@ -1,17 +1,13 @@
 package fr.istic.tools.scanexam.view.swing
 
+import fr.istic.tools.scanexam.presenter.Presenter
 import java.awt.Image
 import java.awt.Point
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
-import java.awt.image.BufferedImage
-import java.io.IOException
-import java.io.InputStream
 import java.util.Optional
 import javax.swing.JPanel
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.rendering.PDFRenderer
 
 /** 
  * Classe pour offrir plus d'options à un PdfPanel (zoom, déplacement à la souris)
@@ -31,6 +27,9 @@ class AdapterSwingPdfPanel {
 	/* Hauteur de la fenêtre */
 	protected var int height
 
+	/* Presenter gerant le pdf */
+	protected var Presenter presenterPdf
+	
 	/* PDF a afficher */
 	protected var Image pdf
 
@@ -65,12 +64,13 @@ class AdapterSwingPdfPanel {
 	 * Constructeur
 	 * @param width Largeur de la fenêtre
 	 * @param height Hauteur de la fenêtre
-	 * @param pdfInput InputStream du pdf
+	 * @param presenterPdf Présenter gérant le pdf
 	 */
-	new(int width, int height, InputStream pdfInput) {
+	new(int width, int height, Presenter presenterPdf) {
 		this.width = width
 		this.height = height
-		setPDF(pdfInput, 0)
+		this.presenterPdf = presenterPdf
+		refreshPdf()
 		setScaleOnWidth(false)
 		originX = 0
 		originY = 0
@@ -103,6 +103,32 @@ class AdapterSwingPdfPanel {
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	/**
+	 * Met à jour le pdf à afficher
+	 */
+	def void refreshPdf() {
+		if(presenterPdf !== null && presenterPdf.currentPdfPage !== null) {
+			pdf = presenterPdf.currentPdfPage
+			setScaleOnWidth(scaleOnWidth)
+			repaint()
+		}
+	}
+
+	/**
+	 * Met à jour le mode de mise à l'échelle
+	 * @param scaleOnWidth Booléen indiquant si l'échelle est calculé par rapport à la largueur
+	 */
+	def void setScaleOnWidth(boolean scaleOnWidth) {
+		if(pdf !== null) {
+			this.scaleOnWidth = scaleOnWidth
+			if (this.scaleOnWidth) {
+				scale = (pdf.getWidth(null) / width) + 1
+			} else {
+				scale = (pdf.getHeight(null) / height) + 1
+			}
+		}
+	}
 	
 	/** 
 	 * Déplacement de le contenu
@@ -172,33 +198,10 @@ class AdapterSwingPdfPanel {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	def void setPDF(InputStream pdfInput, int pageindex) {
-		if (pdfInput !== null) {
-			try {
-				var PDDocument document = PDDocument::load(pdfInput)
-				var PDFRenderer renderer = new PDFRenderer(document)
-				var BufferedImage img = renderer.renderImageWithDPI(pageindex, 300)
-				document.close()
-				pdf = img
-				setScaleOnWidth(scaleOnWidth)
-				repaint()
-			} catch (IOException e) {
-				e.printStackTrace()
-			}
-		}
+	def void setPresenterPdf(Presenter presenterPdf) {
+		this.presenterPdf = presenterPdf
 	}
-
-	def void setScaleOnWidth(boolean scaleOnWidth) {
-		if(pdf !== null) {
-			this.scaleOnWidth = scaleOnWidth
-			if (this.scaleOnWidth) {
-				scale = (pdf.getWidth(null) / width) + 1
-			} else {
-				scale = (pdf.getHeight(null) / height) + 1
-			}
-		}
-	}
-
+	
 	def void setView(JPanel view) {
 		this.view = Optional::of(view)
 	}

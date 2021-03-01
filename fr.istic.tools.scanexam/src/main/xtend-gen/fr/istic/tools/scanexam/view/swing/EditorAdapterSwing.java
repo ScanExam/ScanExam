@@ -8,9 +8,7 @@ import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -41,9 +39,8 @@ public class EditorAdapterSwing implements EditorAdapter {
    * Constructeur
    */
   public EditorAdapterSwing() {
-    InputStream pdfInput = null;
     BoxList _boxList = new BoxList();
-    AdapterSwingPdfAndBoxPanel _adapterSwingPdfAndBoxPanel = new AdapterSwingPdfAndBoxPanel(1280, 720, pdfInput, _boxList);
+    AdapterSwingPdfAndBoxPanel _adapterSwingPdfAndBoxPanel = new AdapterSwingPdfAndBoxPanel(1280, 720, this.editorPresenter, _boxList);
     this.adapterPdfAndBox = _adapterSwingPdfAndBoxPanel;
     EditorViewSwing _editorViewSwing = new EditorViewSwing(this.adapterPdfAndBox);
     this.view = _editorViewSwing;
@@ -108,9 +105,8 @@ public class EditorAdapterSwing implements EditorAdapter {
     } else {
       if ((result == JFileChooser.APPROVE_OPTION)) {
         File selectedFile = fc.getSelectedFile();
-        String path = selectedFile.getAbsolutePath();
-        InputStream pdfInput = new FileInputStream(path);
-        this.adapterPdfAndBox.setPDF(pdfInput, 0);
+        this.editorPresenter.create(selectedFile);
+        this.adapterPdfAndBox.refreshPdf();
       }
     }
   }
@@ -118,6 +114,7 @@ public class EditorAdapterSwing implements EditorAdapter {
   @Override
   public void setPresenter(final EditorPresenter presenter) {
     this.editorPresenter = presenter;
+    this.adapterPdfAndBox.presenterPdf = presenter;
   }
   
   @Override

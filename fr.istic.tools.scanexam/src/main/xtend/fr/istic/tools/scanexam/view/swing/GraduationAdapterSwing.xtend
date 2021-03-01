@@ -1,17 +1,13 @@
 package fr.istic.tools.scanexam.view.swing
 
-import fr.istic.tools.scanexam.box.BoxList
-import fr.istic.tools.scanexam.presenter.EditorPresenter
+import fr.istic.tools.scanexam.presenter.GraduationPresenter
+import fr.istic.tools.scanexam.view.GraduationAdapter
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
-import java.io.InputStream
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
-import fr.istic.tools.scanexam.view.GraduationAdapter
-import fr.istic.tools.scanexam.presenter.GraduationPresenter
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
@@ -44,9 +40,7 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	 * Constructeur
 	 */
 	new() {
-		var InputStream pdfInput = null//ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf")
-		
-		adapterPdf = new AdapterSwingPdfPanel(1280, 720, pdfInput)
+		adapterPdf = new AdapterSwingPdfPanel(1280, 720, graduationPresenter)
 		view = new GraduationViewSwing(adapterPdf)
 		addActionListeners()
 		
@@ -81,15 +75,7 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	    } else if (result == JFileChooser.APPROVE_OPTION) {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
-	        var path = selectedFile.getAbsolutePath()
-	        
-	        
-			var InputStream pdfInput = new FileInputStream(path);
-			adapterPdf.setPDF(pdfInput, 0)
-			/*
-			pdfFileSelected = new File(path)
-	        println(pdfFileSelected)
-	        */
+	        graduationPresenter.create(selectedFile)
 	    }
 	}
 	
@@ -111,6 +97,7 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	
 	override setPresenter(GraduationPresenter presenter) {
 		graduationPresenter = presenter
+		adapterPdf.presenterPdf = presenter
 	}
 	
 	override getPresenter() {

@@ -2,14 +2,11 @@ package fr.istic.tools.scanexam.view.swing
 
 import fr.istic.tools.scanexam.box.BoxList
 import fr.istic.tools.scanexam.presenter.EditorPresenter
-import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.EditorAdapter
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
-import java.io.InputStream
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
@@ -44,9 +41,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	 * Constructeur
 	 */
 	new() {
-		var InputStream pdfInput = null//ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf")
-		
-		adapterPdfAndBox = new AdapterSwingPdfAndBoxPanel(1280, 720, pdfInput, new BoxList())
+		adapterPdfAndBox = new AdapterSwingPdfAndBoxPanel(1280, 720, editorPresenter, new BoxList())
 		view = new EditorViewSwing(adapterPdfAndBox)
 		addActionListeners()
 		
@@ -111,20 +106,14 @@ class EditorAdapterSwing implements EditorAdapter {
 	    } else if (result == JFileChooser.APPROVE_OPTION) {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
-	        var path = selectedFile.getAbsolutePath()
-	        
-	        
-			var InputStream pdfInput = new FileInputStream(path);
-			adapterPdfAndBox.setPDF(pdfInput, 0)
-			/*
-			pdfFileSelected = new File(path)
-	        println(pdfFileSelected)
-	        */
+	        editorPresenter.create(selectedFile)
+	        adapterPdfAndBox.refreshPdf
 	    }
 	}
 	
 	override setPresenter(EditorPresenter presenter) {
 		editorPresenter = presenter
+		adapterPdfAndBox.presenterPdf = presenter
 	}
 	
 	override getPresenter() {

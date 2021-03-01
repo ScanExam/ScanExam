@@ -7,6 +7,8 @@ import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
 import fr.istic.tools.scanexam.view.Adapter;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Objects;
 
 /**
@@ -154,5 +156,15 @@ public class GraduationPresenter implements Presenter {
   
   public PresenterPdf getPresenterPdf() {
     return this.presPdf;
+  }
+  
+  @Override
+  public BufferedImage getCurrentPdfPage() {
+    return this.service.getCurrentPdfPage();
+  }
+  
+  @Override
+  public void create(final File file) {
+    this.service.create(file);
   }
 }

@@ -7,9 +7,7 @@ import fr.istic.tools.scanexam.view.swing.GraduationViewSwing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -41,8 +39,7 @@ public class GraduationAdapterSwing implements GraduationAdapter {
    * Constructeur
    */
   public GraduationAdapterSwing() {
-    InputStream pdfInput = null;
-    AdapterSwingPdfPanel _adapterSwingPdfPanel = new AdapterSwingPdfPanel(1280, 720, pdfInput);
+    AdapterSwingPdfPanel _adapterSwingPdfPanel = new AdapterSwingPdfPanel(1280, 720, this.graduationPresenter);
     this.adapterPdf = _adapterSwingPdfPanel;
     GraduationViewSwing _graduationViewSwing = new GraduationViewSwing(this.adapterPdf);
     this.view = _graduationViewSwing;
@@ -83,9 +80,7 @@ public class GraduationAdapterSwing implements GraduationAdapter {
     } else {
       if ((result == JFileChooser.APPROVE_OPTION)) {
         File selectedFile = fc.getSelectedFile();
-        String path = selectedFile.getAbsolutePath();
-        InputStream pdfInput = new FileInputStream(path);
-        this.adapterPdf.setPDF(pdfInput, 0);
+        this.graduationPresenter.create(selectedFile);
       }
     }
   }
@@ -113,6 +108,7 @@ public class GraduationAdapterSwing implements GraduationAdapter {
   @Override
   public void setPresenter(final GraduationPresenter presenter) {
     this.graduationPresenter = presenter;
+    this.adapterPdf.presenterPdf = presenter;
   }
   
   @Override

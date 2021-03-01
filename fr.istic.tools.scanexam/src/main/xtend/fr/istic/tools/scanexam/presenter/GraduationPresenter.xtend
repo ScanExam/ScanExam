@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.services.ExamGraduationService
 import fr.istic.tools.scanexam.view.Adapter
+import java.io.File
 import java.util.Objects
 
 /**
@@ -126,4 +127,15 @@ class GraduationPresenter implements Presenter
 	def getPresenterPdf(){
 		presPdf
 	}
+	
+	override getCurrentPdfPage() {
+		return service.getCurrentPdfPage
+	}
+	
+	override void create(File file)
+	{
+		 service.create(file);
+	}
+	
+	
 }

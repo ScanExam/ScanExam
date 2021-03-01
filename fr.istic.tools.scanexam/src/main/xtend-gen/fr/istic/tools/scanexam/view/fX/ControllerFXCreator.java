@@ -43,6 +43,16 @@ public class ControllerFXCreator {
   
   private EditorAdapterFX editor;
   
+  public void setEditorAdapterFX(final EditorAdapterFX editor) {
+    this.editor = editor;
+  }
+  
+  private double maxX;
+  
+  private double maxY;
+  
+  private Logger logger = LogManager.getLogger();
+  
   @FXML
   private Pane mainPane;
   
@@ -58,11 +68,8 @@ public class ControllerFXCreator {
   @FXML
   private Label introLabel;
   
-  private double maxX;
-  
-  private double maxY;
-  
-  private Logger logger = LogManager.getLogger();
+  @FXML
+  private Label pageNumberLabel;
   
   @FXML
   public void pressed() {
@@ -91,6 +98,11 @@ public class ControllerFXCreator {
   @FXML
   public void nextPagePressed() {
     this.nextPage();
+  }
+  
+  @FXML
+  public void newTemplatePressed() {
+    this.loadPdf();
   }
   
   @FXML
@@ -136,8 +148,8 @@ public class ControllerFXCreator {
   private Box currentRectangle = null;
   
   public void CreateBox(final MouseEvent e) {
-    double mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS, Math.min(e.getX(), this.maxX));
-    double mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS, Math.min(e.getY(), this.maxY));
+    double mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS, Math.min(e.getX(), (this.maxX - FXSettings.BOX_BORDER_THICKNESS)));
+    double mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS, Math.min(e.getY(), (this.maxY - FXSettings.BOX_BORDER_THICKNESS)));
     EventType<? extends MouseEvent> _eventType = e.getEventType();
     boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
     if (_equals) {
@@ -344,8 +356,7 @@ public class ControllerFXCreator {
   /**
    * load a new pdf to start the creation of a new template
    */
-  @FXML
-  public Double onCreateClick() {
+  public Double loadPdf() {
     double _xblockexpression = (double) 0;
     {
       FileChooser fileChooser = new FileChooser();
@@ -390,6 +401,12 @@ public class ControllerFXCreator {
   public double renderDocument() {
     double _xblockexpression = (double) 0;
     {
+      int _currentPdfPageNumber = this.editor.getPresenter().getCurrentPdfPageNumber();
+      int _plus = (_currentPdfPageNumber + 1);
+      String _plus_1 = (Integer.valueOf(_plus) + "/");
+      int _totalPdfPageNumber = this.editor.getPresenter().getTotalPdfPageNumber();
+      String _plus_2 = (_plus_1 + Integer.valueOf(_totalPdfPageNumber));
+      this.pageNumberLabel.setText(_plus_2);
       this.introLabel.setVisible(false);
       final BufferedImage image = this.editor.getPresenter().getCurrentPdfPage();
       this.pdfView.setImage(SwingFXUtils.toFXImage(image, null));
@@ -417,9 +434,8 @@ public class ControllerFXCreator {
           int _width_1 = image.getWidth();
           int _divide = (_height_1 / _width_1);
           double _multiply = (_divide * fitH);
-          double _minus = (_multiply - FXSettings.BOX_BORDER_THICKNESS);
-          this.maxY = _minus;
-          _xblockexpression_2 = this.maxX = (fitW - FXSettings.BOX_BORDER_THICKNESS);
+          this.maxY = _multiply;
+          _xblockexpression_2 = this.maxX = fitW;
         }
         _xifexpression = _xblockexpression_2;
       }
@@ -478,9 +494,5 @@ public class ControllerFXCreator {
     }
     this.highlightedBox = box;
     this.highlightedBox.setFocus(true);
-  }
-  
-  public void setEditorAdapterFX(final EditorAdapterFX editor) {
-    this.editor = editor;
   }
 }
