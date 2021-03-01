@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
@@ -32,6 +33,8 @@ public class EditorPresenter implements Presenter {
   
   private ExamEditionService service;
   
+  private PresenterPdf presPdf;
+  
   private Adapter<EditorPresenter> adapter;
   
   public EditorPresenter(final Adapter<EditorPresenter> adapter, final ExamEditionService service) {
@@ -39,6 +42,8 @@ public class EditorPresenter implements Presenter {
     this.service = service;
     Objects.<Adapter<EditorPresenter>>requireNonNull(adapter);
     this.adapter = adapter;
+    PresenterPdf _presenterPdf = new PresenterPdf(service, this);
+    this.presPdf = _presenterPdf;
   }
   
   /**

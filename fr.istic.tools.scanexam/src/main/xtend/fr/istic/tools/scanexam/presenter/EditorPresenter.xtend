@@ -22,6 +22,7 @@ class EditorPresenter implements Presenter
 	PresenterMarkingScheme presMarkingScheme
 	EditorPresenter editorPresenter
 	ExamEditionService service
+	PresenterPdf presPdf
 	Adapter<EditorPresenter> adapter
 	
 	new(Adapter<EditorPresenter> adapter,ExamEditionService service) 
@@ -31,6 +32,8 @@ class EditorPresenter implements Presenter
 		
 		Objects.requireNonNull(adapter)
 		this.adapter = adapter
+		
+		presPdf = new PresenterPdf(service, this)
 		
 	}
 
