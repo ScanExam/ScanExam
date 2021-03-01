@@ -37,6 +37,7 @@ class EditorAdapterFX implements EditorAdapter {
 	
 	override getPresenter()
 	{
+		presenter;
 	}
 	
 }

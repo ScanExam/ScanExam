@@ -9,6 +9,7 @@ import fr.istic.tools.scanexam.view.Adapter;
 import java.io.File;
 import java.util.Objects;
 import javafx.scene.image.WritableImage;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * Class defining the presenter for the exam creation view(s)
@@ -121,16 +122,7 @@ public class EditorPresenter implements Presenter {
   }
   
   public WritableImage getCurrentPdfPage() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field renderer is undefined"
-      + "\nThe method or field i is undefined"
-      + "\nThe method or field ImageType is undefined"
-      + "\nThe method or field pages is undefined"
-      + "\nThe method or field SwingFXUtils is undefined"
-      + "\nrenderImageWithDPI cannot be resolved"
-      + "\nRGB cannot be resolved"
-      + "\nadd cannot be resolved"
-      + "\ntoFXImage cannot be resolved");
+    return this.service.getCurrentPdfPage();
   }
   
   public void choosePdfPage(final int pageNumber) {
@@ -154,5 +146,9 @@ public class EditorPresenter implements Presenter {
   
   public void create(final File file) {
     this.service.create(file);
+  }
+  
+  public PDDocument getDocument() {
+    return this.service.getDocument();
   }
 }

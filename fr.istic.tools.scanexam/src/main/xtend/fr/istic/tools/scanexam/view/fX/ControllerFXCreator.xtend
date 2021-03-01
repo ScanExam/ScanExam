@@ -232,7 +232,7 @@ class ControllerFXCreator {
 	def Box createBox(double x,double y){
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box("Question "+ questionCounter++,editor.presenter.presenterPdf.currentPdfPageNumber,BoxType.QUESTION,x,y);
+				new Box("Question "+ questionCounter++,editor.presenter.currentPdfPageNumber,BoxType.QUESTION,x,y);
 			}
 			case ID_AREA: {
 				new Box(BoxType.ID,x,y);
@@ -289,7 +289,7 @@ class ControllerFXCreator {
 		
 		if (file !== null) 
 		{
-			editor.presenter.presenterPdf.create(file);
+			editor.presenter.create(file);
 			renderDocument();
 		}
 		else 
@@ -312,8 +312,7 @@ class ControllerFXCreator {
 	def renderDocument()
 	{
 		introLabel.visible = false
-		val bufferedImage = editor.presenter.presenterPdf.currentPdfPage
-		val image = SwingFXUtils.toFXImage(bufferedImage,null)
+		val image = editor.presenter.currentPdfPage
 		pdfView.image = image
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight
@@ -333,7 +332,7 @@ class ControllerFXCreator {
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		 editor.presenter.presenterPdf.choosePdfPage(pageNumber);
+		 editor.presenter.choosePdfPage(pageNumber);
 		renderDocument();
 	}
 	
@@ -341,15 +340,15 @@ class ControllerFXCreator {
 	 * goes to the next page of the current pdf
 	 */
 	def nextPage(){
-		editor.presenter.presenterPdf.nextPdfPage();
+		editor.presenter.nextPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.presenterPdf.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.currentPdfPageNumber);
 	}
 	
 	def previousPage(){
-		editor.presenter.presenterPdf.previousPdfPage();
+		editor.presenter.previousPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.presenterPdf.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.currentPdfPageNumber);
 	}
 	
 	def showOnlyPage(int page) {

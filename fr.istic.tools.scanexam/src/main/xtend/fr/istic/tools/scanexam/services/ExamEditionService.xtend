@@ -115,7 +115,8 @@ class ExamEditionService extends Service // TODO : renommer
 		return Optional.ofNullable(resource.getContents().get(0) as CreationTemplate)
 	}
 
-	def void create(File file) {
+	def void create(File file) 
+	{
 		 
 
 		document = PDDocument.load(file)
