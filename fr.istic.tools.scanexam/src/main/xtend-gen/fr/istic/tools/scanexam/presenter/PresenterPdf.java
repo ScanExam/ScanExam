@@ -2,7 +2,8 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.presenter.GraduationPresenter;
-import fr.istic.tools.scanexam.services.Service;
+import fr.istic.tools.scanexam.services.ExamEditionService;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
@@ -26,6 +27,11 @@ public abstract class PresenterPdf {
   private GraduationPresenter graduationPresenter;
   
   /**
+   * Association with the model via the Service API
+   */
+  private ExamEditionService service;
+  
+  /**
    * Largeur de la fenêtre
    */
   protected int width;
@@ -39,8 +45,6 @@ public abstract class PresenterPdf {
    * InputStream du pdf
    */
   protected InputStream pdfInput;
-  
-  private Service service;
   
   /**
    * Constructor
@@ -141,5 +145,32 @@ public abstract class PresenterPdf {
    */
   public Object getPages() {
     return null;
+  }
+  
+  public BufferedImage getCurrentPdfPage() {
+    return this.service.getCurrentPdfPage();
+  }
+  
+  public void choosePdfPage(final int pageNumber) {
+  }
+  
+  public void nextPdfPage() {
+    this.service.nextPage();
+  }
+  
+  public void previousPdfPage() {
+    this.service.previousPage();
+  }
+  
+  public int getTotalPdfPageNumber() {
+    return this.service.getPageNumber();
+  }
+  
+  public int getCurrentPdfPageNumber() {
+    return this.service.getCurrentPageNumber();
+  }
+  
+  public void create(final File file) {
+    this.service.create(file);
   }
 }

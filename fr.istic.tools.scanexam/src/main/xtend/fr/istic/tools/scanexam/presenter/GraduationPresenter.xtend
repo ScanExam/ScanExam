@@ -19,6 +19,7 @@ class GraduationPresenter implements Presenter
 	PresenterCopy presCopy
 	PresenterMarkingScheme presMarkingScheme
 	GraduationPresenter graduationPresenter;
+	PresenterPdf presPdf
 	ExamGraduationService service;
 	
 	Adapter<GraduationPresenter> adapter;
@@ -115,5 +116,14 @@ class GraduationPresenter implements Presenter
 	 */
 	def getPreviousQuestion(int question){
 		presQuestion.getPreviousQuestion(question)
+	}
+	
+	
+	def setPresenterPdf(PresenterPdf pres){
+		Objects.requireNonNull(pres)
+		presPdf = pres
+	}
+	def getPresenterPdf(){
+		presPdf
 	}
 }
