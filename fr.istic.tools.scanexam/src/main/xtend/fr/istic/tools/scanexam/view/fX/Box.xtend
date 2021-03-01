@@ -19,7 +19,7 @@ class Box extends Rectangle {
 			listViewBox = new ListViewBox(name,this);
 			setFill(Color.rgb(200, 200, 200, 0.2));
 			setStroke(Color.BLACK);
-			setStrokeWidth(3);
+			setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
 			
 		}
 		new(int page ,BoxType type,double x, double y) {

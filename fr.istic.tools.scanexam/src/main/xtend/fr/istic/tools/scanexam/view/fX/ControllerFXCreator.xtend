@@ -20,6 +20,7 @@ import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import javafx.scene.control.ChoiceBox
 import javafx.event.EventHandler
+import javafx.scene.control.Label
 
 class ControllerFXCreator {
 
@@ -36,6 +37,12 @@ class ControllerFXCreator {
 	
 	@FXML
 	ChoiceBox<Integer> pageChoice;
+	
+	@FXML 
+	Label introLabel;
+	
+	double maxX;
+	double maxY;
 	
 	var logger = LogManager.logger
 	enum SelectedTool {
@@ -107,11 +114,13 @@ class ControllerFXCreator {
 	var boxes = new LinkedList<Box>();
 	Box currentRectangle = null;
 	def void CreateBox(MouseEvent e){
+		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.x,maxX));
+		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.y,maxY));
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { //TODO add type checks
-			mouseOriginX = e.x
-			mouseOriginY = e.y
+			mouseOriginX = mousePositionX
+			mouseOriginY = mousePositionY
 			var source = e.source as Pane
-			currentRectangle = createBox(e.x,e.y);
+			currentRectangle = createBox(mousePositionX,mousePositionY);
 			currentRectangle.listViewBox.addEventFilter(MouseEvent.MOUSE_CLICKED,new EventHandler<MouseEvent>() {
 			
 			override handle(MouseEvent event) {
@@ -124,8 +133,8 @@ class ControllerFXCreator {
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 			
-			var xDelta = e.x - mouseOriginX;
-			var yDelta =  e.y - mouseOriginY;
+			var xDelta = mousePositionX - mouseOriginX;
+			var yDelta = mousePositionY - mouseOriginY;
 			if (xDelta > 0 ) {
 				currentRectangle.width = xDelta;
 			}
@@ -302,9 +311,23 @@ class ControllerFXCreator {
 	 */
 	def renderDocument()
 	{
+		introLabel.visible = false
 		val bufferedImage = editor.presenter.currentPdfPage
 		val image = SwingFXUtils.toFXImage(bufferedImage,null)
 		pdfView.image = image
+		var fitW = pdfView.fitWidth
+		var fitH = pdfView.fitHeight
+		if (image.height > image.width) {
+			maxY = fitH
+			maxX = (image.width / image.height) *  fitW
+		}
+		else {
+			maxY = (image.height / image.width) * fitH - FXSettings.BOX_BORDER_THICKNESS
+			maxX = fitW - FXSettings.BOX_BORDER_THICKNESS
+		}
+		
+	
+		
 	}
 	/**
 	 * changes the selected page to load and then renders it
