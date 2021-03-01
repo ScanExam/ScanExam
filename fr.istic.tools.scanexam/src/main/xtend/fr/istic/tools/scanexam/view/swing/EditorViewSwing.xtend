@@ -1,20 +1,16 @@
 package fr.istic.tools.scanexam.view.swing
 
 import java.awt.BorderLayout
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
-import java.awt.Insets
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JFrame
 import javax.swing.JLabel
+import javax.swing.JList
 import javax.swing.JMenu
 import javax.swing.JMenuBar
 import javax.swing.JMenuItem
 import javax.swing.JPanel
-import javax.swing.JSplitPane
-import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
 import static fr.istic.tools.scanexam.config.LanguageManager.*
@@ -38,7 +34,7 @@ class EditorViewSwing {
 	var JFrame window
 	
 	/* Panel père */
-	var JPanel contentPane
+	var JPanel pnlMain
 	
 	/* Barre de menu de la fenêtre */
 	var JMenuBar menuBar
@@ -81,24 +77,39 @@ class EditorViewSwing {
 
 	/* Bouton "QR" */
 	var JButton btnQrArea
-
-	/* Panel gauche */
-	var JPanel pnlLeft
-
-	/* Label de sélection */
-	var JLabel lblThing
-
-	/* ComboBox de box thing */
-	var JComboBox<String> cmbBxThing
-
-	/* Label de sélection d'examen vide */
-	var JLabel lblBlankExam
-
-	/* ComboBox d'examen vide */
-	var JComboBox<String> cmbBxBlankExam
 	
-	/* Panel principal à gauche */
-	var JPanel pnlLeftMain
+	/* Bouton de mouvement de caméra */
+	var JButton btnMoveCam
+	
+	/* Panel de navigation entre les questions */
+	var JPanel pnlQst
+	
+	/* Label "Questions :" */
+	var JLabel lblQst
+	
+	/* Liste des questions */
+	var JList<String> listQst
+	
+	/* Panel pour les pages */
+	var JPanel pnlPage
+	
+	/* Label "Pages :" */
+	var JLabel lblPage
+	
+	/* Liste des pages */
+	var JComboBox<Integer> cmbBxPage
+	
+	/* Panel de navigation entre les pages*/
+	var JPanel pnlNavPage
+	
+	/* Bouton page précédente */
+	var JButton btnPrev
+	
+	/* Numéro de la page actuelle */
+	var JLabel lblNumpage
+	
+	/* Bouton page suivante */
+	var JButton btnNext
 	
 	/* Panel principal présentant la copie */
 	var JPanel pnlPdf
@@ -163,13 +174,13 @@ class EditorViewSwing {
 	    
 		menuBar.add(mnHelp)
 		
-		contentPane = new JPanel()
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5))
-		window. setContentPane(contentPane)
-		contentPane.setLayout(new BorderLayout(0, 0))
+		pnlMain = new JPanel()
+		pnlMain.setBorder(new EmptyBorder(5, 5, 5, 5))
+		window. setContentPane(pnlMain)
+		pnlMain.setLayout(new BorderLayout(0, 0))
 		
 		pnlButtons = new JPanel()
-		contentPane.add(pnlButtons, BorderLayout::NORTH)
+		pnlMain.add(pnlButtons, BorderLayout::NORTH)
 		pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout::X_AXIS))
 		
 		btnQuestionArea = new JButton("Question area")
@@ -181,62 +192,44 @@ class EditorViewSwing {
 		btnQrArea = new JButton("QR area")
 		pnlButtons.add(btnQrArea)
 		
-		var JSplitPane splitPane = new JSplitPane()
-		splitPane.setOrientation(JSplitPane::VERTICAL_SPLIT)
-		contentPane.add(splitPane, BorderLayout::WEST)
+		btnMoveCam = new JButton("Move Camera")
+		pnlButtons.add(btnMoveCam)
 		
-		pnlLeft = new JPanel()
-		splitPane.setLeftComponent(pnlLeft)
+		pnlQst = new JPanel()
+		pnlMain.add(pnlQst, BorderLayout.WEST)
+		pnlQst.setLayout(new BorderLayout(0, 0))
 		
-		var GridBagLayout gblPnlLeft = new GridBagLayout()
-		gblPnlLeft.columnWidths = (#[100, 0] as int[])
-		gblPnlLeft.rowHeights = (#[0, 0, 0, 22, 0] as int[])
-		gblPnlLeft.columnWeights = (#[0.0, Double::MIN_VALUE] as double[])
-		gblPnlLeft.rowWeights = (#[0.0, 0.0, 0.0, 0.0, Double::MIN_VALUE] as double[])
-		pnlLeft.setLayout(gblPnlLeft)
+		lblQst = new JLabel("Questions:")
+		pnlQst.add(lblQst, BorderLayout.NORTH)
 		
-		lblThing = new JLabel("Selected Thing :")
-		lblThing.setHorizontalAlignment(SwingConstants::LEFT)
+		listQst = new JList()
+		pnlQst.add(listQst, BorderLayout.CENTER)
 		
-		var GridBagConstraints gbcPnlLeft = new GridBagConstraints()
-		gbcPnlLeft.fill = GridBagConstraints::BOTH
-		gbcPnlLeft.insets = new Insets(0, 0, 5, 0)
-		gbcPnlLeft.gridx = 0
-		gbcPnlLeft.gridy = 0
-		pnlLeft.add(lblThing, gbcPnlLeft)
+		pnlPage = new JPanel()
+		pnlQst.add(pnlPage, BorderLayout.SOUTH)
+		pnlPage.setLayout(new BorderLayout(0, 0))
 		
-		cmbBxThing = new JComboBox()
+		lblPage = new JLabel("Pages :")
+		pnlPage.add(lblPage, BorderLayout.NORTH)
 		
-		var GridBagConstraints gbcCmbBxThing = new GridBagConstraints()
-		gbcCmbBxThing.fill = GridBagConstraints::BOTH
-		gbcCmbBxThing.insets = new Insets(0, 0, 5, 0)
-		gbcCmbBxThing.gridx = 0
-		gbcCmbBxThing.gridy = 1
-		pnlLeft.add(cmbBxThing, gbcCmbBxThing)
+		cmbBxPage = new JComboBox()
+		pnlPage.add(cmbBxPage, BorderLayout.CENTER)
 		
-		lblBlankExam = new JLabel("Selected Blank Exam :")
-		lblBlankExam.setHorizontalAlignment(SwingConstants::LEFT)
+		pnlNavPage = new JPanel()
+		pnlPage.add(pnlNavPage, BorderLayout.SOUTH)
+		pnlNavPage.setLayout(new BorderLayout(0, 0))
 		
-		var GridBagConstraints gbcLblBlankExam = new GridBagConstraints()
-		gbcLblBlankExam.fill = GridBagConstraints::BOTH
-		gbcLblBlankExam.insets = new Insets(0, 0, 5, 0)
-		gbcLblBlankExam.gridx = 0
-		gbcLblBlankExam.gridy = 2
-		pnlLeft.add(lblBlankExam, gbcLblBlankExam)
+		btnPrev = new JButton("Prev")
+		pnlNavPage.add(btnPrev, BorderLayout.WEST)
 		
-		cmbBxBlankExam = new JComboBox()
+		lblNumpage = new JLabel("numPage")
+		pnlNavPage.add(lblNumpage, BorderLayout.CENTER)
 		
-		var GridBagConstraints gbcCmbBxBlankExam = new GridBagConstraints()
-		gbcCmbBxBlankExam.fill = GridBagConstraints::BOTH
-		gbcCmbBxBlankExam.gridx = 0
-		gbcCmbBxBlankExam.gridy = 3
-		pnlLeft.add(cmbBxBlankExam, gbcCmbBxBlankExam)
-		
-		pnlLeftMain = new JPanel()
-		splitPane.setRightComponent(pnlLeftMain)
+		btnNext = new JButton("Next")
+		pnlNavPage.add(btnNext, BorderLayout.EAST)
 		
 		pnlPdf = new PdfAndBoxPanel(this.adapterPdfAndBoxPanel)
-		contentPane.add(pnlPdf, BorderLayout::CENTER)
+		pnlMain.add(pnlPdf, BorderLayout::CENTER)
 	}
 	
 
@@ -262,16 +255,44 @@ class EditorViewSwing {
 		return mnItemSave;
 	}
 	
-	/**
-	 * Envoie le bouton de chargement de pdf
-	 * @return mnItemLoad
-	 */
 	def JMenuItem getMnItemLoad() {
 		return mnItemLoad;
 	}
 	
 	def JMenuItem getMnItemClose() {
-		return mnItemSave;
+		return mnItemClose;
 	}
-
+	
+	def JMenuItem getMnItemDelete() {
+		return mnItemDelete;
+	}
+	
+	def JMenuItem getMnItemAbout() {
+		return mnItemAbout;
+	}
+	
+	def JButton getBtnQuestionArea() {
+		return btnQuestionArea
+	}
+	
+	def JButton getBtnIdArea() {
+		return btnIdArea
+	}
+	
+	def JButton getBtnQrArea() {
+		return btnQrArea
+	}
+	
+	def JButton getBtnMoveCam() {
+		return btnMoveCam
+	}
+	
+	def JButton getBtnPrev() {
+		return btnPrev
+	}
+	
+	def JButton getBtnNext() {
+		return btnNext
+	}
+	
 }

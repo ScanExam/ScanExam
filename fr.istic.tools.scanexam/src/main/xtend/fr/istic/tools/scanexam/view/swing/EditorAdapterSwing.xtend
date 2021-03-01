@@ -80,6 +80,22 @@ class EditorAdapterSwing implements EditorAdapter {
 			}
 	    });
 	    
+		view.getBtnPrev().addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				//Actions lorsque le bouton "question précédente" est cliqué
+				presenter.previousPdfPage()
+	        	adapterPdfAndBox.refreshPdf()
+			}
+	    });
+	    
+		view.getBtnNext().addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				//Actions lorsque le bouton "question suivante" est cliqué
+				presenter.nextPdfPage()
+	        	adapterPdfAndBox.refreshPdf()
+			}
+	    });
+	    
 	}
 	
 	/**
@@ -100,7 +116,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
 	        editorPresenter.create(selectedFile)
-	        adapterPdfAndBox.refreshPdf
+	        adapterPdfAndBox.refreshPdf()
 	    }
 	}
 	
@@ -110,7 +126,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	}
 	
 	override getPresenter() {
-		presenter
+		editorPresenter
 	}
 	
 }

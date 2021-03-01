@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -81,6 +82,22 @@ public class EditorAdapterSwing implements EditorAdapter {
       public void actionPerformed(final ActionEvent e) {
       }
     });
+    JButton _btnPrev = this.view.getBtnPrev();
+    _btnPrev.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        EditorAdapterSwing.this.getPresenter().previousPdfPage();
+        EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
+      }
+    });
+    JButton _btnNext = this.view.getBtnNext();
+    _btnNext.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        EditorAdapterSwing.this.getPresenter().nextPdfPage();
+        EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
+      }
+    });
   }
   
   /**
@@ -113,6 +130,6 @@ public class EditorAdapterSwing implements EditorAdapter {
   
   @Override
   public EditorPresenter getPresenter() {
-    return this.getPresenter();
+    return this.editorPresenter;
   }
 }

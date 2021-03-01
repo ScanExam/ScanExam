@@ -4,24 +4,17 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
 import fr.istic.tools.scanexam.view.swing.PdfAndBoxPanel;
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.Collections;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import org.eclipse.xtext.xbase.lib.Conversions;
 
 /**
  * Vue swing de la fenêtre de création d'examen
@@ -42,7 +35,7 @@ public class EditorViewSwing {
   /**
    * Panel père
    */
-  private JPanel contentPane;
+  private JPanel pnlMain;
   
   /**
    * Barre de menu de la fenêtre
@@ -115,34 +108,59 @@ public class EditorViewSwing {
   private JButton btnQrArea;
   
   /**
-   * Panel gauche
+   * Bouton de mouvement de caméra
    */
-  private JPanel pnlLeft;
+  private JButton btnMoveCam;
   
   /**
-   * Label de sélection
+   * Panel de navigation entre les questions
    */
-  private JLabel lblThing;
+  private JPanel pnlQst;
   
   /**
-   * ComboBox de box thing
+   * Label "Questions :"
    */
-  private JComboBox<String> cmbBxThing;
+  private JLabel lblQst;
   
   /**
-   * Label de sélection d'examen vide
+   * Liste des questions
    */
-  private JLabel lblBlankExam;
+  private JList<String> listQst;
   
   /**
-   * ComboBox d'examen vide
+   * Panel pour les pages
    */
-  private JComboBox<String> cmbBxBlankExam;
+  private JPanel pnlPage;
   
   /**
-   * Panel principal à gauche
+   * Label "Pages :"
    */
-  private JPanel pnlLeftMain;
+  private JLabel lblPage;
+  
+  /**
+   * Liste des pages
+   */
+  private JComboBox<Integer> cmbBxPage;
+  
+  /**
+   * Panel de navigation entre les pages
+   */
+  private JPanel pnlNavPage;
+  
+  /**
+   * Bouton page précédente
+   */
+  private JButton btnPrev;
+  
+  /**
+   * Numéro de la page actuelle
+   */
+  private JLabel lblNumpage;
+  
+  /**
+   * Bouton page suivante
+   */
+  private JButton btnNext;
   
   /**
    * Panel principal présentant la copie
@@ -208,15 +226,15 @@ public class EditorViewSwing {
     this.mnHelp.add(this.mnItemAbout);
     this.menuBar.add(this.mnHelp);
     JPanel _jPanel = new JPanel();
-    this.contentPane = _jPanel;
+    this.pnlMain = _jPanel;
     EmptyBorder _emptyBorder = new EmptyBorder(5, 5, 5, 5);
-    this.contentPane.setBorder(_emptyBorder);
-    this.window.setContentPane(this.contentPane);
+    this.pnlMain.setBorder(_emptyBorder);
+    this.window.setContentPane(this.pnlMain);
     BorderLayout _borderLayout = new BorderLayout(0, 0);
-    this.contentPane.setLayout(_borderLayout);
+    this.pnlMain.setLayout(_borderLayout);
     JPanel _jPanel_1 = new JPanel();
     this.pnlButtons = _jPanel_1;
-    this.contentPane.add(this.pnlButtons, BorderLayout.NORTH);
+    this.pnlMain.add(this.pnlButtons, BorderLayout.NORTH);
     BoxLayout _boxLayout = new BoxLayout(this.pnlButtons, BoxLayout.X_AXIS);
     this.pnlButtons.setLayout(_boxLayout);
     JButton _jButton = new JButton("Question area");
@@ -228,60 +246,48 @@ public class EditorViewSwing {
     JButton _jButton_2 = new JButton("QR area");
     this.btnQrArea = _jButton_2;
     this.pnlButtons.add(this.btnQrArea);
-    JSplitPane splitPane = new JSplitPane();
-    splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-    this.contentPane.add(splitPane, BorderLayout.WEST);
+    JButton _jButton_3 = new JButton("Move Camera");
+    this.btnMoveCam = _jButton_3;
+    this.pnlButtons.add(this.btnMoveCam);
     JPanel _jPanel_2 = new JPanel();
-    this.pnlLeft = _jPanel_2;
-    splitPane.setLeftComponent(this.pnlLeft);
-    GridBagLayout gblPnlLeft = new GridBagLayout();
-    gblPnlLeft.columnWidths = ((int[]) ((int[])Conversions.unwrapArray(Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(100), Integer.valueOf(0))), int.class)));
-    gblPnlLeft.rowHeights = ((int[]) ((int[])Conversions.unwrapArray(Collections.<Integer>unmodifiableList(CollectionLiterals.<Integer>newArrayList(Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(22), Integer.valueOf(0))), int.class)));
-    gblPnlLeft.columnWeights = ((double[]) ((double[])Conversions.unwrapArray(Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf(0.0), Double.valueOf(Double.MIN_VALUE))), double.class)));
-    gblPnlLeft.rowWeights = ((double[]) ((double[])Conversions.unwrapArray(Collections.<Double>unmodifiableList(CollectionLiterals.<Double>newArrayList(Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(Double.MIN_VALUE))), double.class)));
-    this.pnlLeft.setLayout(gblPnlLeft);
-    JLabel _jLabel = new JLabel("Selected Thing :");
-    this.lblThing = _jLabel;
-    this.lblThing.setHorizontalAlignment(SwingConstants.LEFT);
-    GridBagConstraints gbcPnlLeft = new GridBagConstraints();
-    gbcPnlLeft.fill = GridBagConstraints.BOTH;
-    Insets _insets = new Insets(0, 0, 5, 0);
-    gbcPnlLeft.insets = _insets;
-    gbcPnlLeft.gridx = 0;
-    gbcPnlLeft.gridy = 0;
-    this.pnlLeft.add(this.lblThing, gbcPnlLeft);
-    JComboBox<String> _jComboBox = new JComboBox<String>();
-    this.cmbBxThing = _jComboBox;
-    GridBagConstraints gbcCmbBxThing = new GridBagConstraints();
-    gbcCmbBxThing.fill = GridBagConstraints.BOTH;
-    Insets _insets_1 = new Insets(0, 0, 5, 0);
-    gbcCmbBxThing.insets = _insets_1;
-    gbcCmbBxThing.gridx = 0;
-    gbcCmbBxThing.gridy = 1;
-    this.pnlLeft.add(this.cmbBxThing, gbcCmbBxThing);
-    JLabel _jLabel_1 = new JLabel("Selected Blank Exam :");
-    this.lblBlankExam = _jLabel_1;
-    this.lblBlankExam.setHorizontalAlignment(SwingConstants.LEFT);
-    GridBagConstraints gbcLblBlankExam = new GridBagConstraints();
-    gbcLblBlankExam.fill = GridBagConstraints.BOTH;
-    Insets _insets_2 = new Insets(0, 0, 5, 0);
-    gbcLblBlankExam.insets = _insets_2;
-    gbcLblBlankExam.gridx = 0;
-    gbcLblBlankExam.gridy = 2;
-    this.pnlLeft.add(this.lblBlankExam, gbcLblBlankExam);
-    JComboBox<String> _jComboBox_1 = new JComboBox<String>();
-    this.cmbBxBlankExam = _jComboBox_1;
-    GridBagConstraints gbcCmbBxBlankExam = new GridBagConstraints();
-    gbcCmbBxBlankExam.fill = GridBagConstraints.BOTH;
-    gbcCmbBxBlankExam.gridx = 0;
-    gbcCmbBxBlankExam.gridy = 3;
-    this.pnlLeft.add(this.cmbBxBlankExam, gbcCmbBxBlankExam);
+    this.pnlQst = _jPanel_2;
+    this.pnlMain.add(this.pnlQst, BorderLayout.WEST);
+    BorderLayout _borderLayout_1 = new BorderLayout(0, 0);
+    this.pnlQst.setLayout(_borderLayout_1);
+    JLabel _jLabel = new JLabel("Questions:");
+    this.lblQst = _jLabel;
+    this.pnlQst.add(this.lblQst, BorderLayout.NORTH);
+    JList<String> _jList = new JList<String>();
+    this.listQst = _jList;
+    this.pnlQst.add(this.listQst, BorderLayout.CENTER);
     JPanel _jPanel_3 = new JPanel();
-    this.pnlLeftMain = _jPanel_3;
-    splitPane.setRightComponent(this.pnlLeftMain);
+    this.pnlPage = _jPanel_3;
+    this.pnlQst.add(this.pnlPage, BorderLayout.SOUTH);
+    BorderLayout _borderLayout_2 = new BorderLayout(0, 0);
+    this.pnlPage.setLayout(_borderLayout_2);
+    JLabel _jLabel_1 = new JLabel("Pages :");
+    this.lblPage = _jLabel_1;
+    this.pnlPage.add(this.lblPage, BorderLayout.NORTH);
+    JComboBox<Integer> _jComboBox = new JComboBox<Integer>();
+    this.cmbBxPage = _jComboBox;
+    this.pnlPage.add(this.cmbBxPage, BorderLayout.CENTER);
+    JPanel _jPanel_4 = new JPanel();
+    this.pnlNavPage = _jPanel_4;
+    this.pnlPage.add(this.pnlNavPage, BorderLayout.SOUTH);
+    BorderLayout _borderLayout_3 = new BorderLayout(0, 0);
+    this.pnlNavPage.setLayout(_borderLayout_3);
+    JButton _jButton_4 = new JButton("Prev");
+    this.btnPrev = _jButton_4;
+    this.pnlNavPage.add(this.btnPrev, BorderLayout.WEST);
+    JLabel _jLabel_2 = new JLabel("numPage");
+    this.lblNumpage = _jLabel_2;
+    this.pnlNavPage.add(this.lblNumpage, BorderLayout.CENTER);
+    JButton _jButton_5 = new JButton("Next");
+    this.btnNext = _jButton_5;
+    this.pnlNavPage.add(this.btnNext, BorderLayout.EAST);
     PdfAndBoxPanel _pdfAndBoxPanel = new PdfAndBoxPanel(this.adapterPdfAndBoxPanel);
     this.pnlPdf = _pdfAndBoxPanel;
-    this.contentPane.add(this.pnlPdf, BorderLayout.CENTER);
+    this.pnlMain.add(this.pnlPdf, BorderLayout.CENTER);
   }
   
   /**
@@ -300,15 +306,43 @@ public class EditorViewSwing {
     return this.mnItemSave;
   }
   
-  /**
-   * Envoie le bouton de chargement de pdf
-   * @return mnItemLoad
-   */
   public JMenuItem getMnItemLoad() {
     return this.mnItemLoad;
   }
   
   public JMenuItem getMnItemClose() {
-    return this.mnItemSave;
+    return this.mnItemClose;
+  }
+  
+  public JMenuItem getMnItemDelete() {
+    return this.mnItemDelete;
+  }
+  
+  public JMenuItem getMnItemAbout() {
+    return this.mnItemAbout;
+  }
+  
+  public JButton getBtnQuestionArea() {
+    return this.btnQuestionArea;
+  }
+  
+  public JButton getBtnIdArea() {
+    return this.btnIdArea;
+  }
+  
+  public JButton getBtnQrArea() {
+    return this.btnQrArea;
+  }
+  
+  public JButton getBtnMoveCam() {
+    return this.btnMoveCam;
+  }
+  
+  public JButton getBtnPrev() {
+    return this.btnPrev;
+  }
+  
+  public JButton getBtnNext() {
+    return this.btnNext;
   }
 }
