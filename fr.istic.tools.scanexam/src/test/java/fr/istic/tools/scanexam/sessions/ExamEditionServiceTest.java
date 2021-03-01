@@ -94,8 +94,8 @@ public class ExamEditionServiceTest
 
 		assertNull(session.getQuestionZone(7));
 
-		//Ajoute de la question
-		session.addQuestion(newQuestion);
+		//Ajoute de la question //FIXME
+		// session.addQuestion(newQuestion);
 
 		assertNotNull(session.getQuestionZone(7));
 	}
@@ -123,7 +123,7 @@ public class ExamEditionServiceTest
 		newQuestion.setZone(questionZone);
 		newQuestion.setGradeScale(null);
 
-		session.addQuestion(newQuestion);
+		//session.addQuestion(newQuestion); //FIXME
 
 		assertNotNull(session.getQuestionZone(7));
 
@@ -210,7 +210,7 @@ public class ExamEditionServiceTest
 		newQuestion.setZone(questionZone);
 		newQuestion.setGradeScale(null);
 
-		session.addQuestion(newQuestion);
+		//session.addQuestion(newQuestion); //FIXME
 
 		assertNull(session.getQuestionZone(7));
 

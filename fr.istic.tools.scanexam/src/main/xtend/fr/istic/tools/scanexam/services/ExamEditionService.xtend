@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import fr.istic.tools.scanexam.core.templates.TemplatesFactory
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -30,26 +31,38 @@ class ExamEditionService extends Service // TODO : renommer
 	CreationTemplate template;
 
 	String currentPdfPath;
-
+	
+	int questionId;
+	
 	/**
 	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
 	 * @param q Une Question
 	 * @param r Un Rectangle
 	 * @author degas
 	 */
-	def void addQuestion(Question q) {
-		getCurrentPage().questions.add(q);
+	def int createQuestion(float x,float y,float heigth,float width) 
+	{
+		val question = CoreFactory.eINSTANCE.createQuestion();
+		question.id = questionId;
+		question.zone = CoreFactory.eINSTANCE.createQuestionZone();
+		questionId++;
+		currentPage.questions.add(question.id,question);
+		return questionId;
+	}
+	def updateQuestion(int id,float x,float y,float heigth,float width)
+	{
+		val question = currentPage.questions.get(id);
+		question.zone.x = x
+		question.zone.y = y 
+		question.zone.width = width
+		question.zone.heigth = heigth
+	}
+	
+	def removeQuestion(int id)
+	{
+		currentPage.questions.remove(id);
 	}
 
-	/**
-	 * Supprime une question
-	 * @param index Index de la question à supprimer
-	 * 
-	 * @author degas
-	 */
-	def void removeQuestion(int index) {
-		getCurrentPage().questions.remove(index);
-	}
 
 	override save(String path) {
 		template.pdfPath = this.currentPdfPath

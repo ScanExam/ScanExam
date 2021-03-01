@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 import fr.istic.tools.scanexam.services.ExamSingleton;
@@ -36,24 +37,37 @@ public class ExamEditionService extends Service {
   
   private String currentPdfPath;
   
+  private int questionId;
+  
   /**
    * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
    * @param q Une Question
    * @param r Un Rectangle
    * @author degas
    */
-  public void addQuestion(final Question q) {
-    this.getCurrentPage().getQuestions().add(q);
+  public int createQuestion(final float x, final float y, final float heigth, final float width) {
+    final Question question = CoreFactory.eINSTANCE.createQuestion();
+    question.setId(this.questionId);
+    question.setZone(CoreFactory.eINSTANCE.createQuestionZone());
+    this.questionId++;
+    this.getCurrentPage().getQuestions().add(question.getId(), question);
+    return this.questionId;
   }
   
-  /**
-   * Supprime une question
-   * @param index Index de la question à supprimer
-   * 
-   * @author degas
-   */
-  public void removeQuestion(final int index) {
-    this.getCurrentPage().getQuestions().remove(index);
+  public void updateQuestion(final int id, final float x, final float y, final float heigth, final float width) {
+    final Question question = this.getCurrentPage().getQuestions().get(id);
+    QuestionZone _zone = question.getZone();
+    _zone.setX(x);
+    QuestionZone _zone_1 = question.getZone();
+    _zone_1.setY(y);
+    QuestionZone _zone_2 = question.getZone();
+    _zone_2.setWidth(width);
+    QuestionZone _zone_3 = question.getZone();
+    _zone_3.setHeigth(heigth);
+  }
+  
+  public Question removeQuestion(final int id) {
+    return this.getCurrentPage().getQuestions().remove(id);
   }
   
   @Override

@@ -124,8 +124,23 @@ public class EditorPresenter implements Presenter {
     return this.service.getCurrentPdfPage();
   }
   
-  public Object choosePdfPage(final int pageNumber) {
-    return null;
+  public void choosePdfPage(final int pageNumber) {
+  }
+  
+  public void nextPdfPage() {
+    this.service.nextPage();
+  }
+  
+  public void previousPdfPage() {
+    this.service.previousPage();
+  }
+  
+  public int getTotalPdfPageNumber() {
+    return this.service.getPageNumber();
+  }
+  
+  public int getCurrentPdfPageNumber() {
+    return this.service.getCurrentPageNumber();
   }
   
   public void create(final File file) {

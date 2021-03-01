@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.view.fX;
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.view.fX.Box;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import fr.istic.tools.scanexam.view.fX.ListViewBox;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
@@ -10,13 +11,13 @@ import java.util.LinkedList;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
@@ -51,13 +52,7 @@ public class ControllerFXCreator {
   private ListView<HBox> questionList;
   
   @FXML
-  private ChoiceBox templateChoice;
-  
-  @FXML
-  private ChoiceBox pdfChoice;
-  
-  @FXML
-  private ChoiceBox pageChoice;
+  private ChoiceBox<Integer> pageChoice;
   
   private Logger logger = LogManager.getLogger();
   
@@ -83,6 +78,16 @@ public class ControllerFXCreator {
   @FXML
   public void movePressed() {
     this.setToMoveTool();
+  }
+  
+  @FXML
+  public void nextPagePressed() {
+    this.nextPage();
+  }
+  
+  @FXML
+  public void previousPagePressed() {
+    this.previousPage();
   }
   
   @FXML
@@ -131,6 +136,14 @@ public class ControllerFXCreator {
       Object _source = e.getSource();
       Pane source = ((Pane) _source);
       this.currentRectangle = this.createBox(e.getX(), e.getY());
+      ListViewBox _listViewBox = this.currentRectangle.getListViewBox();
+      _listViewBox.<MouseEvent>addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(final MouseEvent event) {
+          Object _source = event.getSource();
+          ControllerFXCreator.this.highlightBox(((ListViewBox) _source).getParentBox());
+        }
+      });
       source.getChildren().add(this.currentRectangle);
       this.logger.debug("Created Box");
     }
@@ -165,6 +178,9 @@ public class ControllerFXCreator {
     }
   }
   
+  /**
+   * Used to move around the image in the parent pane
+   */
   public void MoveImage(final MouseEvent e) {
     EventType<? extends MouseEvent> _eventType = e.getEventType();
     boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
@@ -198,6 +214,11 @@ public class ControllerFXCreator {
     }
   }
   
+  /**
+   * Used to zoom in and out the pdf image
+   * 
+   * Using the scale allows the children of the pane to also scale accordingly
+   */
   @FXML
   public void ZoomImage(final ScrollEvent e) {
     Object _source = e.getSource();
@@ -221,6 +242,9 @@ public class ControllerFXCreator {
     }
   }
   
+  /**
+   * Setters for the current tool selected
+   */
   private ControllerFXCreator.SelectedTool currentTool = ControllerFXCreator.SelectedTool.MOVE_TOOL;
   
   public void setToMoveTool() {
@@ -243,13 +267,21 @@ public class ControllerFXCreator {
     this.currentTool = ControllerFXCreator.SelectedTool.QR_AREA;
   }
   
+  /**
+   * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
+   */
+  private int questionCounter = 1;
+  
   public Box createBox(final double x, final double y) {
     Box _switchResult = null;
     final ControllerFXCreator.SelectedTool currentTool = this.currentTool;
     if (currentTool != null) {
       switch (currentTool) {
         case QUESTION_AREA:
-          _switchResult = new Box(Box.BoxType.QUESTION, x, y);
+          int _plusPlus = this.questionCounter++;
+          String _plus = ("Question " + Integer.valueOf(_plusPlus));
+          int _currentPdfPageNumber = this.editor.getPresenter().getCurrentPdfPageNumber();
+          _switchResult = new Box(_plus, _currentPdfPageNumber, Box.BoxType.QUESTION, x, y);
           break;
         case ID_AREA:
           _switchResult = new Box(Box.BoxType.ID, x, y);
@@ -267,20 +299,43 @@ public class ControllerFXCreator {
     return _switchResult;
   }
   
+  /**
+   * notifies the rest of the program to the addition of a new box
+   * 
+   * Called when we finish creating a new box (Mouse release)
+   */
   public boolean addBox(final Box box) {
     boolean _xblockexpression = false;
     {
       this.editor.addBox(box);
-      this.questionList.getItems().add(box.boxItem());
+      this.questionList.getItems().add(box.getListViewBox());
       _xblockexpression = this.boxes.add(box);
     }
     return _xblockexpression;
   }
   
+  public Object renameBox(final Box box) {
+    return null;
+  }
+  
+  public Object moveBox(final Box box) {
+    return null;
+  }
+  
+  public Object resizeBox(final Box box) {
+    return null;
+  }
+  
+  /**
+   * notifies the rest of the program to the removal of a box
+   */
   public void removeBox(final Box box) {
     this.editor.removeBox(box);
   }
   
+  /**
+   * load a new pdf to start the creation of a new template
+   */
   @FXML
   public void onCreateClick() {
     FileChooser fileChooser = new FileChooser();
@@ -328,8 +383,44 @@ public class ControllerFXCreator {
     this.renderDocument();
   }
   
-  public void displayPDF(final Image pdf) {
-    this.pdfView.setImage(pdf);
+  /**
+   * goes to the next page of the current pdf
+   */
+  public void nextPage() {
+    this.editor.getPresenter().nextPdfPage();
+    this.renderDocument();
+    this.showOnlyPage(this.editor.getPresenter().getCurrentPdfPageNumber());
+  }
+  
+  public void previousPage() {
+    this.editor.getPresenter().previousPdfPage();
+    this.renderDocument();
+    this.showOnlyPage(this.editor.getPresenter().getCurrentPdfPageNumber());
+  }
+  
+  public void showOnlyPage(final int page) {
+    for (final Box b : this.boxes) {
+      int _pageNumber = b.getPageNumber();
+      boolean _equals = (_pageNumber == page);
+      if (_equals) {
+        b.setVisible(true);
+      } else {
+        b.setVisible(false);
+      }
+    }
+  }
+  
+  /**
+   * Highlights the Box box, called when we click on a box on the listview
+   */
+  private Box highlightedBox = null;
+  
+  public void highlightBox(final Box box) {
+    if ((this.highlightedBox != null)) {
+      this.highlightedBox.setFocus(false);
+    }
+    this.highlightedBox = box;
+    this.highlightedBox.setFocus(true);
   }
   
   public void setEditorAdapterFX(final EditorAdapterFX editor) {

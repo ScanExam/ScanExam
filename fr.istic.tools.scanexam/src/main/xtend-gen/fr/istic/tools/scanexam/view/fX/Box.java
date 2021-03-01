@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fX;
 
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import fr.istic.tools.scanexam.view.fX.ListViewBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -15,54 +14,68 @@ public class Box extends Rectangle {
     QR;
   }
   
-  public Box(final Box.BoxType type) {
-    super(0, 0, 0, 0);
-    this.name = "box";
-    this.type = type;
-    this.setFill(Color.rgb(200, 200, 200, 0.2));
-    this.setStroke(Color.BLACK);
-    this.setStrokeWidth(1);
-  }
+  private static int ID = 0;
   
-  public Box(final Box.BoxType type, final double x, final double y) {
-    super(x, y, 0, 0);
-    this.name = "box";
-    this.type = type;
-    this.setFill(Color.rgb(200, 200, 200, 0.2));
-    this.setStroke(Color.BLACK);
-    this.setStrokeWidth(1);
-  }
-  
-  public Box(final int page, final Box.BoxType type, final double x, final double y) {
-    super(x, y, 0, 0);
-    this.name = "box";
-    this.type = type;
-    this.setFill(Color.rgb(200, 200, 200, 0.2));
-    this.setStroke(Color.BLACK);
-    this.setStrokeWidth(1);
+  public static int newID() {
+    return Box.ID++;
   }
   
   public Box(final String name, final int page, final Box.BoxType type, final double x, final double y) {
     super(x, y, 0, 0);
-    this.name = "name";
+    this.id = Box.newID();
+    this.page = page;
+    this.name = name;
     this.type = type;
+    ListViewBox _listViewBox = new ListViewBox(name, this);
+    this.listViewBox = _listViewBox;
     this.setFill(Color.rgb(200, 200, 200, 0.2));
     this.setStroke(Color.BLACK);
-    this.setStrokeWidth(1);
+    this.setStrokeWidth(3);
   }
   
-  public HBox boxItem() {
-    HBox container = new HBox();
-    TextField field = new TextField();
-    container.getChildren().add(field);
-    field.setEditable(false);
-    field.setText(this.name);
-    return container;
+  public Box(final int page, final Box.BoxType type, final double x, final double y) {
+    this("box", page, type, x, y);
   }
+  
+  public Box(final Box.BoxType type, final double x, final double y) {
+    this(0, type, x, y);
+  }
+  
+  public Box(final Box.BoxType type) {
+    this(type, 0, 0);
+  }
+  
+  private ListViewBox listViewBox;
   
   private Box.BoxType type;
   
   private String name;
   
+  private int id;
+  
   private int page;
+  
+  public ListViewBox getListViewBox() {
+    return this.listViewBox;
+  }
+  
+  public int getPageNumber() {
+    return this.page;
+  }
+  
+  public Box.BoxType getType() {
+    return this.type;
+  }
+  
+  public int getID() {
+    return this.id;
+  }
+  
+  public void setFocus(final boolean b) {
+    if (b) {
+      this.setStroke(Color.web("#0093ff"));
+    } else {
+      this.setStroke(Color.BLACK);
+    }
+  }
 }
