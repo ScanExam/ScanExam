@@ -49,6 +49,14 @@ public class ExamEditionService extends Service {
     final Question question = CoreFactory.eINSTANCE.createQuestion();
     question.setId(this.questionId);
     question.setZone(CoreFactory.eINSTANCE.createQuestionZone());
+    QuestionZone _zone = question.getZone();
+    _zone.setX(x);
+    QuestionZone _zone_1 = question.getZone();
+    _zone_1.setY(y);
+    QuestionZone _zone_2 = question.getZone();
+    _zone_2.setWidth(width);
+    QuestionZone _zone_3 = question.getZone();
+    _zone_3.setHeigth(heigth);
     this.questionId++;
     this.getCurrentPage().getQuestions().add(question.getId(), question);
     return this.questionId;

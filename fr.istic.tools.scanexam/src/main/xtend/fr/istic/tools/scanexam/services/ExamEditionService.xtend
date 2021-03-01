@@ -45,6 +45,10 @@ class ExamEditionService extends Service // TODO : renommer
 		val question = CoreFactory.eINSTANCE.createQuestion();
 		question.id = questionId;
 		question.zone = CoreFactory.eINSTANCE.createQuestionZone();
+		question.zone.x = x
+		question.zone.y = y 
+		question.zone.width = width
+		question.zone.heigth = heigth
 		questionId++;
 		currentPage.questions.add(question.id,question);
 		return questionId;
