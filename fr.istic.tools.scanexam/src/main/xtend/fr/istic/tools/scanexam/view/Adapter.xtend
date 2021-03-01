@@ -11,6 +11,4 @@ interface Adapter<T extends Presenter> {
 	def void setPresenter(T presenter);
 	
 	def T getPresenter();
-	
-	
 }

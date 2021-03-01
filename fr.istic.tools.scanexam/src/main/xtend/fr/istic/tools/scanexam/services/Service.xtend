@@ -8,6 +8,8 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.ImageType
 import javafx.embed.swing.SwingFXUtils
 import org.apache.pdfbox.rendering.PDFRenderer
+import java.util.ArrayList
+import org.apache.pdfbox.pdmodel.PDPage
 
 abstract class Service 
 {
@@ -15,7 +17,7 @@ abstract class Service
 	 * Pdf chargé
 	 */
 	 @Accessors protected PDDocument document;
-	
+
 	/**
 	 * Index de la page courante
 	 */
@@ -41,11 +43,41 @@ abstract class Service
 	
 	def getCurrentPdfPage()
 	{
+		pageToImage(document.pages.get(pageIndex));
+	}
+	
+	def pageToImage(PDPage page)
+	{
 		val renderer = new PDFRenderer(document);
 		val bufferedImage = renderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
-		val image = SwingFXUtils.toFXImage(bufferedImage,null)
-		return image
+		bufferedImage
 	}
+	/**
+	 * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
+	 */
+	def nextPage() 
+	{
+		if (pageIndex + 1 < document.pages.size) 
+		{
+			pageIndex++
+		}
+
+	}
+	/**
+	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+	 */
+	def previousPage() 
+	{
+		 if (pageIndex > 0) 
+		 {
+		 	pageIndex--;
+		 }
+	}
+
+
+	/**
+	 * @return le nombre de page du PDF courant
+	 */
 	protected def getCurrentPage()
 	{
 		return ExamSingleton.getPage(pageIndex);
@@ -64,19 +96,7 @@ abstract class Service
 	
 	def void open(String xmiFile)
 	
-	/**
-	 * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
-	 */
-	def void nextPage()
 	
-	/**
-	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
-	 */
-	def void previousPage()
-
-	/**
-	 * @return le nombre de page du PDF courant
-	 */
 	def int getPageNumber() {
 		return document.pages.size
 	}

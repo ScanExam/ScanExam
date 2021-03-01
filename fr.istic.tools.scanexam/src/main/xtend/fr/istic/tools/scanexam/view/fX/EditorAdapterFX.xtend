@@ -10,10 +10,10 @@ class EditorAdapterFX implements EditorAdapter {
 	ControllerFXCreator controller;
 	
 	override setPresenter(EditorPresenter presenter)
-	 {
+	{
 		this.presenter = presenter
 	}
-
+	
 	
 
 	

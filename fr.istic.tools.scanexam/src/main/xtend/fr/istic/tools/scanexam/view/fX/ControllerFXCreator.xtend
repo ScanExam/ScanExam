@@ -4,12 +4,13 @@ import fr.istic.tools.scanexam.view.fX.Box.BoxType
 import java.io.File
 import java.util.Arrays
 import java.util.LinkedList
-import javafx.embed.swing.SwingFXUtils
+import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.Cursor
 import javafx.scene.Node
+import javafx.scene.control.ChoiceBox
+import javafx.scene.control.Label
 import javafx.scene.control.ListView
-import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
@@ -18,14 +19,30 @@ import javafx.scene.layout.Pane
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import javafx.scene.control.ChoiceBox
-import javafx.event.EventHandler
-import javafx.scene.control.Label
+import javafx.embed.swing.SwingFXUtils
 
 class ControllerFXCreator {
-
+	
 	EditorAdapterFX editor;
 	
+	def void setEditorAdapterFX(EditorAdapterFX editor) {
+		this.editor = editor
+	}
+	
+	double maxX;
+	double maxY;
+	
+	var logger = LogManager.logger
+	
+	enum SelectedTool {
+		QUESTION_AREA,
+		ID_AREA,
+		QR_AREA,
+		MOVE_TOOL
+		
+	}
+
+	//** FXML TAGS **//	
 	@FXML
 	Pane mainPane;
 	
@@ -41,17 +58,10 @@ class ControllerFXCreator {
 	@FXML 
 	Label introLabel;
 	
-	double maxX;
-	double maxY;
+	@FXML
+	Label pageNumberLabel;
 	
-	var logger = LogManager.logger
-	enum SelectedTool {
-		QUESTION_AREA,
-		ID_AREA,
-		QR_AREA,
-		MOVE_TOOL
-		
-	}
+	
 	
 
 	@FXML 
@@ -81,7 +91,10 @@ class ControllerFXCreator {
 	def void nextPagePressed(){
 		nextPage
 	}
-	
+	@FXML
+	def void newTemplatePressed(){
+		loadPdf();
+	}
 	@FXML
 	def void previousPagePressed(){
 		previousPage
@@ -106,6 +119,7 @@ class ControllerFXCreator {
 			}
 		}
 	}
+	
 	var mouseOriginX = 0d;
 	var mouseOriginY = 0d;
 	var objectOriginX = 0d;
@@ -114,8 +128,8 @@ class ControllerFXCreator {
 	var boxes = new LinkedList<Box>();
 	Box currentRectangle = null;
 	def void CreateBox(MouseEvent e){
-		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.x,maxX));
-		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.y,maxY));
+		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.x,maxX- FXSettings.BOX_BORDER_THICKNESS));
+		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.y,maxY- FXSettings.BOX_BORDER_THICKNESS));
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { //TODO add type checks
 			mouseOriginX = mousePositionX
 			mouseOriginY = mousePositionY
@@ -278,8 +292,7 @@ class ControllerFXCreator {
 	/**
 	 * load a new pdf to start the creation of a new template
 	 */
-	@FXML
-	def onCreateClick()
+	def loadPdf()
 	{
 		
 		var fileChooser = new FileChooser();
@@ -311,18 +324,20 @@ class ControllerFXCreator {
 	 */
 	def renderDocument()
 	{
+		
+		pageNumberLabel.text = editor.presenter.currentPdfPageNumber+1 + "/" + editor.presenter.totalPdfPageNumber
 		introLabel.visible = false
 		val image = editor.presenter.currentPdfPage
-		pdfView.image = image
+		pdfView.image = SwingFXUtils.toFXImage(image,null);
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight
-		if (image.height > image.width) {
+		if (image.height > image.width) {//calculates the actual image coordinates
 			maxY = fitH
-			maxX = (image.width / image.height) *  fitW
+			maxX = (image.width / image.height) *  fitW 
 		}
 		else {
-			maxY = (image.height / image.width) * fitH - FXSettings.BOX_BORDER_THICKNESS
-			maxX = fitW - FXSettings.BOX_BORDER_THICKNESS
+			maxY = (image.height / image.width) * fitH 
+			maxX = fitW
 		}
 		
 	
@@ -373,7 +388,5 @@ class ControllerFXCreator {
 		highlightedBox.focus = true
 	}
 	
-	def void setEditorAdapterFX(EditorAdapterFX editor) {
-		this.editor = editor
-	}
+	
 }

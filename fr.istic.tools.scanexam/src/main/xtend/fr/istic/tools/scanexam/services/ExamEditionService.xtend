@@ -1,23 +1,17 @@
 package fr.istic.tools.scanexam.services
-
 import fr.istic.tools.scanexam.core.CoreFactory
-import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage
-import java.awt.image.BufferedImage
 import java.io.File
-import java.util.ArrayList
 import java.util.Optional
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.rendering.ImageType
-import org.apache.pdfbox.rendering.PDFRenderer
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
-
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import fr.istic.tools.scanexam.core.templates.TemplatesFactory
+import java.io.ByteArrayOutputStream
+import java.io.ByteArrayInputStream
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -29,8 +23,6 @@ import fr.istic.tools.scanexam.core.templates.TemplatesFactory
 class ExamEditionService extends Service // TODO : renommer
 {
 	CreationTemplate template;
-
-	String currentPdfPath;
 	
 	int questionId;
 	
@@ -53,23 +45,38 @@ class ExamEditionService extends Service // TODO : renommer
 		currentPage.questions.add(question.id,question);
 		return questionId;
 	}
-	def updateQuestion(int id,float x,float y,float heigth,float width)
+	def rescaleQuestion(int id,float heigth,float width)
+	{
+		val question = currentPage.questions.get(id);
+		question.zone.width = width
+		question.zone.heigth = heigth
+	}
+	def moveQuestion(int id,float x,float y)
 	{
 		val question = currentPage.questions.get(id);
 		question.zone.x = x
 		question.zone.y = y 
-		question.zone.width = width
-		question.zone.heigth = heigth
 	}
 	
+	def renameQuestion(int id,String name)
+	{
+		val question = currentPage.questions.get(id);
+		question.name = name
+	}
 	def removeQuestion(int id)
 	{
 		currentPage.questions.remove(id);
 	}
-
+	
 
 	override save(String path) {
-		template.pdfPath = this.currentPdfPath
+		
+		
+		val outputStream = new ByteArrayOutputStream();
+		document.save(outputStream);
+		template.document.addAll(outputStream.toByteArray());
+		outputStream.close();
+		
 		template.exam = ExamSingleton.instance
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -81,22 +88,22 @@ class ExamEditionService extends Service // TODO : renommer
 		resource.save(null);
 	}
 
-	override open(String xmiPath) {
-		val creationTemplate = load(xmiPath)
+	override open(String xmiPath) 
+	{
+		val creationTemplate = loadTemplate(xmiPath)
 
-		if (creationTemplate.present) {
+		if (creationTemplate.present) 
+		{
 			this.template = creationTemplate.get()
 			ExamSingleton.instance = creationTemplate.get().exam
+			val inputStream = new ByteArrayInputStream(creationTemplate.get().document);
+			document = PDDocument.load(inputStream)
 
-			val pdfFile = new File(creationTemplate.get().pdfPath)
-			val document = PDDocument.load(pdfFile)
-
-		// todo
 		}
 
 	}
 
-	def static Optional<CreationTemplate> load(String path) {
+	def static Optional<CreationTemplate> loadTemplate(String path) {
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
@@ -117,8 +124,6 @@ class ExamEditionService extends Service // TODO : renommer
 
 	def void create(File file) 
 	{
-		 
-
 		document = PDDocument.load(file)
 
 		ExamSingleton.instance = CoreFactory.eINSTANCE.createExam()
@@ -129,25 +134,8 @@ class ExamEditionService extends Service // TODO : renommer
 			
 			ExamSingleton.instance.pages.add(CoreFactory.eINSTANCE.createPage());
 		}
-
-		currentPdfPath = file.absolutePath
 	}
 
-	override nextPage() 
-	{
-		if (pageIndex + 1 < document.pages.size) 
-		{
-			pageIndex++
-		}
-
-	}
-
-	override previousPage() 
-	{
-		if (pageIndex > 0) 
-		{
-			pageIndex--
-		}
-	}
+	
 
 }

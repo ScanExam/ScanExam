@@ -4,9 +4,8 @@ import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.WritableImage;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtend.lib.annotations.Accessors;
@@ -43,17 +42,51 @@ public abstract class Service {
     return ExamSingleton.instance.getName();
   }
   
-  public WritableImage getCurrentPdfPage() {
+  public BufferedImage getCurrentPdfPage() {
+    return this.pageToImage(this.document.getPages().get(this.pageIndex));
+  }
+  
+  public BufferedImage pageToImage(final PDPage page) {
     try {
-      final PDFRenderer renderer = new PDFRenderer(this.document);
-      final BufferedImage bufferedImage = renderer.renderImageWithDPI(this.pageIndex, 300, ImageType.RGB);
-      final WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
-      return image;
+      BufferedImage _xblockexpression = null;
+      {
+        final PDFRenderer renderer = new PDFRenderer(this.document);
+        final BufferedImage bufferedImage = renderer.renderImageWithDPI(this.pageIndex, 300, ImageType.RGB);
+        _xblockexpression = bufferedImage;
+      }
+      return _xblockexpression;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
+  /**
+   * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
+   */
+  public int nextPage() {
+    int _xifexpression = (int) 0;
+    int _size = IterableExtensions.size(this.document.getPages());
+    boolean _lessThan = ((this.pageIndex + 1) < _size);
+    if (_lessThan) {
+      _xifexpression = this.pageIndex++;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+   */
+  public int previousPage() {
+    int _xifexpression = (int) 0;
+    if ((this.pageIndex > 0)) {
+      _xifexpression = this.pageIndex--;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * @return le nombre de page du PDF courant
+   */
   protected Page getCurrentPage() {
     return ExamSingleton.getPage(this.pageIndex);
   }
@@ -71,19 +104,6 @@ public abstract class Service {
   
   public abstract void open(final String xmiFile);
   
-  /**
-   * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
-   */
-  public abstract void nextPage();
-  
-  /**
-   * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
-   */
-  public abstract void previousPage();
-  
-  /**
-   * @return le nombre de page du PDF courant
-   */
   public int getPageNumber() {
     return IterableExtensions.size(this.document.getPages());
   }
