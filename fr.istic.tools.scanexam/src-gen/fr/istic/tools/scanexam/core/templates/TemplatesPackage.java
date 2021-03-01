@@ -113,13 +113,13 @@ public interface TemplatesPackage extends EPackage {
 	int CREATION_TEMPLATE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Pdf Path</b></em>' attribute.
+	 * The feature id for the '<em><b>Document</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CREATION_TEMPLATE__PDF_PATH = 0;
+	int CREATION_TEMPLATE__DOCUMENT = 0;
 
 	/**
 	 * The feature id for the '<em><b>Exam</b></em>' attribute.
@@ -202,15 +202,15 @@ public interface TemplatesPackage extends EPackage {
 	EClass getCreationTemplate();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getPdfPath <em>Pdf Path</em>}'.
+	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getDocument <em>Document</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Pdf Path</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getPdfPath()
+	 * @return the meta object for the attribute list '<em>Document</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getDocument()
 	 * @see #getCreationTemplate()
 	 * @generated
 	 */
-	EAttribute getCreationTemplate_PdfPath();
+	EAttribute getCreationTemplate_Document();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}'.
@@ -294,12 +294,12 @@ public interface TemplatesPackage extends EPackage {
 		EClass CREATION_TEMPLATE = eINSTANCE.getCreationTemplate();
 
 		/**
-		 * The meta object literal for the '<em><b>Pdf Path</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Document</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CREATION_TEMPLATE__PDF_PATH = eINSTANCE.getCreationTemplate_PdfPath();
+		EAttribute CREATION_TEMPLATE__DOCUMENT = eINSTANCE.getCreationTemplate_Document();
 
 		/**
 		 * The meta object literal for the '<em><b>Exam</b></em>' attribute feature.

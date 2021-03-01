@@ -7,12 +7,18 @@ import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,7 +28,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getPdfPath <em>Pdf Path</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getDocument <em>Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getExam <em>Exam</em>}</li>
  * </ul>
  *
@@ -30,24 +36,14 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  */
 public class CreationTemplateImpl extends MinimalEObjectImpl.Container implements CreationTemplate {
 	/**
-	 * The default value of the '{@link #getPdfPath() <em>Pdf Path</em>}' attribute.
+	 * The cached value of the '{@link #getDocument() <em>Document</em>}' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPdfPath()
+	 * @see #getDocument()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PDF_PATH_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getPdfPath() <em>Pdf Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPdfPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String pdfPath = PDF_PATH_EDEFAULT;
+	protected EList<Byte> document;
 
 	/**
 	 * The default value of the '{@link #getExam() <em>Exam</em>}' attribute.
@@ -93,20 +89,11 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getPdfPath() {
-		return pdfPath;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setPdfPath(String newPdfPath) {
-		String oldPdfPath = pdfPath;
-		pdfPath = newPdfPath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__PDF_PATH, oldPdfPath, pdfPath));
+	public EList<Byte> getDocument() {
+		if (document == null) {
+			document = new EDataTypeEList<Byte>(Byte.class, this, TemplatesPackage.CREATION_TEMPLATE__DOCUMENT);
+		}
+		return document;
 	}
 
 	/**
@@ -138,8 +125,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
-				return getPdfPath();
+			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
+				return getDocument();
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return getExam();
 		}
@@ -151,11 +138,13 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
-				setPdfPath((String)newValue);
+			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
+				getDocument().clear();
+				getDocument().addAll((Collection<? extends Byte>)newValue);
 				return;
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam((Exam)newValue);
@@ -172,8 +161,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
-				setPdfPath(PDF_PATH_EDEFAULT);
+			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
+				getDocument().clear();
 				return;
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam(EXAM_EDEFAULT);
@@ -190,8 +179,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__PDF_PATH:
-				return PDF_PATH_EDEFAULT == null ? pdfPath != null : !PDF_PATH_EDEFAULT.equals(pdfPath);
+			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
+				return document != null && !document.isEmpty();
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return EXAM_EDEFAULT == null ? exam != null : !EXAM_EDEFAULT.equals(exam);
 		}
@@ -208,8 +197,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (pdfPath: ");
-		result.append(pdfPath);
+		result.append(" (document: ");
+		result.append(document);
 		result.append(", exam: ");
 		result.append(exam);
 		result.append(')');

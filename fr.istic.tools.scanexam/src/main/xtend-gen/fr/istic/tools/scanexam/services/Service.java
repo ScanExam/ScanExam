@@ -78,9 +78,7 @@ public abstract class Service {
    */
   public int previousPage() {
     int _xifexpression = (int) 0;
-    int _size = IterableExtensions.size(this.document.getPages());
-    boolean _lessThan = ((this.pageIndex + 1) < _size);
-    if (_lessThan) {
+    if ((this.pageIndex > 0)) {
       _xifexpression = this.pageIndex--;
     }
     return _xifexpression;

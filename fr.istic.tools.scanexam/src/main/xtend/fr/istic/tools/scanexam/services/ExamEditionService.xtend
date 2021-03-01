@@ -18,6 +18,9 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory
+import java.io.ByteArrayOutputStream
+import java.util.Collections
+import java.io.ByteArrayInputStream
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -53,23 +56,38 @@ class ExamEditionService extends Service // TODO : renommer
 		currentPage.questions.add(question.id,question);
 		return questionId;
 	}
-	def updateQuestion(int id,float x,float y,float heigth,float width)
+	def rescaleQuestion(int id,float heigth,float width)
+	{
+		val question = currentPage.questions.get(id);
+		question.zone.width = width
+		question.zone.heigth = heigth
+	}
+	def moveQuestion(int id,float x,float y)
 	{
 		val question = currentPage.questions.get(id);
 		question.zone.x = x
 		question.zone.y = y 
-		question.zone.width = width
-		question.zone.heigth = heigth
 	}
 	
+	def renameQuestion(int id,String name)
+	{
+		val question = currentPage.questions.get(id);
+		question.name = name
+	}
 	def removeQuestion(int id)
 	{
 		currentPage.questions.remove(id);
 	}
-
+	
 
 	override save(String path) {
-		template.pdfPath = this.currentPdfPath //TODO (pdf serialisé)
+		
+		
+		val outputStream = new ByteArrayOutputStream();
+		document.save(outputStream);
+		template.document.addAll(outputStream.toByteArray());
+		outputStream.close();
+		
 		template.exam = ExamSingleton.instance
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -85,14 +103,13 @@ class ExamEditionService extends Service // TODO : renommer
 	{
 		val creationTemplate = loadTemplate(xmiPath)
 
-		if (creationTemplate.present) {
+		if (creationTemplate.present) 
+		{
 			this.template = creationTemplate.get()
 			ExamSingleton.instance = creationTemplate.get().exam
+			val inputStream = new ByteArrayInputStream(creationTemplate.get().document);
+			document = PDDocument.load(inputStream)
 
-			val pdfFile = new File(creationTemplate.get().pdfPath)
-			val document = PDDocument.load(pdfFile)
-
-		// todo
 		}
 
 	}
@@ -118,6 +135,7 @@ class ExamEditionService extends Service // TODO : renommer
 
 	def void create(File file) 
 	{
+	
 		document = PDDocument.load(file)
 
 		ExamSingleton.instance = CoreFactory.eINSTANCE.createExam()

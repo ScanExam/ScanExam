@@ -150,7 +150,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getCreationTemplate_PdfPath() {
+	public EAttribute getCreationTemplate_Document() {
 		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -205,7 +205,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__EXAM);
 
 		creationTemplateEClass = createEClass(CREATION_TEMPLATE);
-		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__PDF_PATH);
+		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__DOCUMENT);
 		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__EXAM);
 
 		// Create data types
@@ -250,7 +250,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		initEAttribute(getCorrectionTemplate_Exam(), this.getExam(), "exam", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(creationTemplateEClass, CreationTemplate.class, "CreationTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getCreationTemplate_PdfPath(), theEcorePackage.getEString(), "pdfPath", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCreationTemplate_Document(), theEcorePackage.getEByte(), "document", null, 0, -1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCreationTemplate_Exam(), this.getExam(), "exam", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types

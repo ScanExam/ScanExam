@@ -50,7 +50,6 @@ abstract class Service
 	{
 		val renderer = new PDFRenderer(document);
 		val bufferedImage = renderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
-	//	val image = SwingFXUtils.toFXImage(bufferedImage,null)
 		bufferedImage
 	}
 	/**
@@ -69,7 +68,7 @@ abstract class Service
 	 */
 	def previousPage() 
 	{
-		 if (pageIndex + 1 < document.pages.size) 
+		 if (pageIndex > 0) 
 		 {
 		 	pageIndex--;
 		 }

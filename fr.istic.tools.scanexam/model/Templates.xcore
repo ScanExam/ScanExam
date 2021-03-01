@@ -9,7 +9,7 @@ class CorrectionTemplate
 }
 class CreationTemplate 
 {
-	 String pdfPath
+	 byte[] document
 	 Exam exam
 }
 
