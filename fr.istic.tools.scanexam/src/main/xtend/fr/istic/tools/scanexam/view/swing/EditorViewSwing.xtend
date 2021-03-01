@@ -106,7 +106,7 @@ class EditorViewSwing {
 	var JButton btnPrev
 	
 	/* Numéro de la page actuelle */
-	var JLabel lblNumpage
+	var JLabel lblNumPage
 	
 	/* Bouton page suivante */
 	var JButton btnNext
@@ -222,8 +222,8 @@ class EditorViewSwing {
 		btnPrev = new JButton("Prev")
 		pnlNavPage.add(btnPrev, BorderLayout.WEST)
 		
-		lblNumpage = new JLabel("numPage")
-		pnlNavPage.add(lblNumpage, BorderLayout.CENTER)
+		lblNumPage = new JLabel(".")
+		pnlNavPage.add(lblNumPage, BorderLayout.CENTER)
 		
 		btnNext = new JButton("Next")
 		pnlNavPage.add(btnNext, BorderLayout.EAST)
@@ -295,4 +295,13 @@ class EditorViewSwing {
 		return btnNext
 	}
 	
+	// ----------------------------------------------------------------------------------------------------
+	/** 
+	 * SETTERS
+	 */
+	// ----------------------------------------------------------------------------------------------------
+	
+	def void setLblNumPage(int numPage) {
+		lblNumPage.text = numPage.toString
+	}
 }

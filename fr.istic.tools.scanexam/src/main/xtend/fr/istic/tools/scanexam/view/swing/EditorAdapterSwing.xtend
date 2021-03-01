@@ -70,6 +70,7 @@ class EditorAdapterSwing implements EditorAdapter {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "load" est cliqué
 				openFile()
+	        	view.lblNumPage = presenter.currentPdfPageNumber
 			}
 	    });
 	    
@@ -85,6 +86,7 @@ class EditorAdapterSwing implements EditorAdapter {
 				//Actions lorsque le bouton "question précédente" est cliqué
 				presenter.previousPdfPage()
 	        	adapterPdfAndBox.refreshPdf()
+	        	view.lblNumPage = presenter.currentPdfPageNumber
 			}
 	    });
 	    
@@ -93,6 +95,7 @@ class EditorAdapterSwing implements EditorAdapter {
 				//Actions lorsque le bouton "question suivante" est cliqué
 				presenter.nextPdfPage()
 	        	adapterPdfAndBox.refreshPdf()
+	        	view.lblNumPage = presenter.currentPdfPageNumber
 			}
 	    });
 	    

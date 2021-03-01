@@ -71,6 +71,7 @@ public class EditorAdapterSwing implements EditorAdapter {
       public void actionPerformed(final ActionEvent e) {
         try {
           EditorAdapterSwing.this.openFile();
+          EditorAdapterSwing.this.view.setLblNumPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);
         }
@@ -88,6 +89,7 @@ public class EditorAdapterSwing implements EditorAdapter {
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().previousPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
+        EditorAdapterSwing.this.view.setLblNumPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
       }
     });
     JButton _btnNext = this.view.getBtnNext();
@@ -96,6 +98,7 @@ public class EditorAdapterSwing implements EditorAdapter {
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().nextPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
+        EditorAdapterSwing.this.view.setLblNumPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
       }
     });
   }

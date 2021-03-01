@@ -155,7 +155,7 @@ public class EditorViewSwing {
   /**
    * Numéro de la page actuelle
    */
-  private JLabel lblNumpage;
+  private JLabel lblNumPage;
   
   /**
    * Bouton page suivante
@@ -279,9 +279,9 @@ public class EditorViewSwing {
     JButton _jButton_4 = new JButton("Prev");
     this.btnPrev = _jButton_4;
     this.pnlNavPage.add(this.btnPrev, BorderLayout.WEST);
-    JLabel _jLabel_2 = new JLabel("numPage");
-    this.lblNumpage = _jLabel_2;
-    this.pnlNavPage.add(this.lblNumpage, BorderLayout.CENTER);
+    JLabel _jLabel_2 = new JLabel(".");
+    this.lblNumPage = _jLabel_2;
+    this.pnlNavPage.add(this.lblNumPage, BorderLayout.CENTER);
     JButton _jButton_5 = new JButton("Next");
     this.btnNext = _jButton_5;
     this.pnlNavPage.add(this.btnNext, BorderLayout.EAST);
@@ -344,5 +344,12 @@ public class EditorViewSwing {
   
   public JButton getBtnNext() {
     return this.btnNext;
+  }
+  
+  /**
+   * SETTERS
+   */
+  public void setLblNumPage(final int numPage) {
+    this.lblNumPage.setText(Integer.valueOf(numPage).toString());
   }
 }
