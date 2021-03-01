@@ -97,6 +97,13 @@ class EditorPresenter implements Presenter
 	
 	def getCurrentPdfPage()
 	{
+			val bufferedImage = renderer.renderImageWithDPI(i, 300, ImageType.RGB);
+			pages.add(bufferedImage);
+		
+		
+		
+		val image = SwingFXUtils.toFXImage(bufferedImage,null)
+		
 		return service.getCurrentPdfPage
 	}
 	

@@ -6,9 +6,9 @@ import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.view.Adapter;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Objects;
+import javafx.scene.image.WritableImage;
 
 /**
  * Class defining the presenter for the exam creation view(s)
@@ -120,8 +120,17 @@ public class EditorPresenter implements Presenter {
     return this.editorPresenter;
   }
   
-  public BufferedImage getCurrentPdfPage() {
-    return this.service.getCurrentPdfPage();
+  public WritableImage getCurrentPdfPage() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field renderer is undefined"
+      + "\nThe method or field i is undefined"
+      + "\nThe method or field ImageType is undefined"
+      + "\nThe method or field pages is undefined"
+      + "\nThe method or field SwingFXUtils is undefined"
+      + "\nrenderImageWithDPI cannot be resolved"
+      + "\nRGB cannot be resolved"
+      + "\nadd cannot be resolved"
+      + "\ntoFXImage cannot be resolved");
   }
   
   public void choosePdfPage(final int pageNumber) {

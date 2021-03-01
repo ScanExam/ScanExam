@@ -312,8 +312,10 @@ class ControllerFXCreator {
 	def renderDocument()
 	{
 		introLabel.visible = false
-		val bufferedImage = editor.presenter.currentPdfPage
-		val image = SwingFXUtils.toFXImage(bufferedImage,null)
+		val image = editor.presenter.currentPdfPage
+		
+		
+	
 		pdfView.image = image
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight

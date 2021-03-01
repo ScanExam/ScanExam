@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fX;
 
+import fr.istic.tools.scanexam.view.fX.FXSettings;
 import fr.istic.tools.scanexam.view.fX.ListViewBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -30,7 +31,7 @@ public class Box extends Rectangle {
     this.listViewBox = _listViewBox;
     this.setFill(Color.rgb(200, 200, 200, 0.2));
     this.setStroke(Color.BLACK);
-    this.setStrokeWidth(3);
+    this.setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
   }
   
   public Box(final int page, final Box.BoxType type, final double x, final double y) {

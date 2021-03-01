@@ -7,14 +7,10 @@ import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.ImageType;
-import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -135,19 +131,12 @@ public class ExamEditionService extends Service {
   
   public void create(final File file) {
     try {
-      ArrayList<BufferedImage> _arrayList = new ArrayList<BufferedImage>();
-      this.pages = _arrayList;
-      final PDDocument document = PDDocument.load(file);
+      this.document = PDDocument.load(file);
       ExamSingleton.instance = CoreFactory.eINSTANCE.createExam();
-      final PDFRenderer renderer = new PDFRenderer(document);
-      int _size = IterableExtensions.size(document.getPages());
+      int _size = IterableExtensions.size(this.document.getPages());
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
       for (final Integer i : _doubleDotLessThan) {
-        {
-          final BufferedImage bufferedImage = renderer.renderImageWithDPI((i).intValue(), 300, ImageType.RGB);
-          this.pages.add(bufferedImage);
-          ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());
-        }
+        ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());
       }
       this.currentPdfPath = file.getAbsolutePath();
     } catch (Throwable _e) {
@@ -157,7 +146,7 @@ public class ExamEditionService extends Service {
   
   @Override
   public void nextPage() {
-    int _size = this.pages.size();
+    int _size = IterableExtensions.size(this.document.getPages());
     boolean _lessThan = ((this.pageIndex + 1) < _size);
     if (_lessThan) {
       this.pageIndex++;

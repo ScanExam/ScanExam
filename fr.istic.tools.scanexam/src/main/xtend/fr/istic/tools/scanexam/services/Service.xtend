@@ -4,13 +4,17 @@ import fr.istic.tools.scanexam.core.QuestionZone
 import java.awt.image.BufferedImage
 import java.util.List
 import org.eclipse.xtend.lib.annotations.Accessors
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.rendering.ImageType
+import javafx.embed.swing.SwingFXUtils
+import org.apache.pdfbox.rendering.PDFRenderer
 
 abstract class Service 
 {
 	/**
 	 * Pdf chargé
 	 */
-	 @Accessors protected List<BufferedImage> pages
+	 @Accessors protected PDDocument document;
 	
 	/**
 	 * Index de la page courante
@@ -37,7 +41,10 @@ abstract class Service
 	
 	def getCurrentPdfPage()
 	{
-		pages.get(pageIndex)
+		val renderer = new PDFRenderer(document);
+		val bufferedImage = renderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
+		val image = SwingFXUtils.toFXImage(bufferedImage,null)
+		return image
 	}
 	protected def getCurrentPage()
 	{
@@ -71,7 +78,7 @@ abstract class Service
 	 * @return le nombre de page du PDF courant
 	 */
 	def int getPageNumber() {
-		return pages.size
+		return document.pages.size
 	}
 	
 	/**

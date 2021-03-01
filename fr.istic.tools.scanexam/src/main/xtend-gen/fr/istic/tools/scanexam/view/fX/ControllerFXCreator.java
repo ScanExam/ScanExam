@@ -3,20 +3,20 @@ package fr.istic.tools.scanexam.view.fX;
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.view.fX.Box;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import fr.istic.tools.scanexam.view.fX.FXSettings;
 import fr.istic.tools.scanexam.view.fX.ListViewBox;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -53,6 +53,13 @@ public class ControllerFXCreator {
   
   @FXML
   private ChoiceBox<Integer> pageChoice;
+  
+  @FXML
+  private Label introLabel;
+  
+  private double maxX;
+  
+  private double maxY;
   
   private Logger logger = LogManager.getLogger();
   
@@ -128,14 +135,16 @@ public class ControllerFXCreator {
   private Box currentRectangle = null;
   
   public void CreateBox(final MouseEvent e) {
+    double mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS, Math.min(e.getX(), this.maxX));
+    double mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS, Math.min(e.getY(), this.maxY));
     EventType<? extends MouseEvent> _eventType = e.getEventType();
     boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
     if (_equals) {
-      this.mouseOriginX = e.getX();
-      this.mouseOriginY = e.getY();
+      this.mouseOriginX = mousePositionX;
+      this.mouseOriginY = mousePositionY;
       Object _source = e.getSource();
       Pane source = ((Pane) _source);
-      this.currentRectangle = this.createBox(e.getX(), e.getY());
+      this.currentRectangle = this.createBox(mousePositionX, mousePositionY);
       ListViewBox _listViewBox = this.currentRectangle.getListViewBox();
       _listViewBox.<MouseEvent>addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
         @Override
@@ -150,10 +159,8 @@ public class ControllerFXCreator {
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
     if (_equals_1) {
-      double _x = e.getX();
-      double xDelta = (_x - this.mouseOriginX);
-      double _y = e.getY();
-      double yDelta = (_y - this.mouseOriginY);
+      double xDelta = (mousePositionX - this.mouseOriginX);
+      double yDelta = (mousePositionY - this.mouseOriginY);
       if ((xDelta > 0)) {
         this.currentRectangle.setWidth(xDelta);
       } else {
@@ -337,25 +344,35 @@ public class ControllerFXCreator {
    * load a new pdf to start the creation of a new template
    */
   @FXML
-  public void onCreateClick() {
-    FileChooser fileChooser = new FileChooser();
-    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    List<String> _asList = Arrays.<String>asList("*.pdf");
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
-    _extensionFilters.add(_extensionFilter);
-    String _property = System.getProperty("user.home");
-    String _property_1 = System.getProperty("file.separator");
-    String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + "Documents");
-    File _file = new File(_plus_1);
-    fileChooser.setInitialDirectory(_file);
-    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-    if ((file != null)) {
-      this.editor.getPresenter().create(file);
-      this.renderDocument();
-    } else {
-      this.logger.warn("File not chosen");
+  public Double onCreateClick() {
+    double _xblockexpression = (double) 0;
+    {
+      FileChooser fileChooser = new FileChooser();
+      ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+      List<String> _asList = Arrays.<String>asList("*.pdf");
+      FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
+      _extensionFilters.add(_extensionFilter);
+      String _property = System.getProperty("user.home");
+      String _property_1 = System.getProperty("file.separator");
+      String _plus = (_property + _property_1);
+      String _plus_1 = (_plus + "Documents");
+      File _file = new File(_plus_1);
+      fileChooser.setInitialDirectory(_file);
+      File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
+      double _xifexpression = (double) 0;
+      if ((file != null)) {
+        double _xblockexpression_1 = (double) 0;
+        {
+          this.editor.getPresenter().create(file);
+          _xblockexpression_1 = this.renderDocument();
+        }
+        _xifexpression = _xblockexpression_1;
+      } else {
+        this.logger.warn("File not chosen");
+      }
+      _xblockexpression = _xifexpression;
     }
+    return Double.valueOf(_xblockexpression);
   }
   
   /**
@@ -369,18 +386,57 @@ public class ControllerFXCreator {
   /**
    * feches the current buffered image in the presenter representing the pdf and converts it and loads into the imageview
    */
-  public void renderDocument() {
-    final BufferedImage bufferedImage = this.editor.getPresenter().getCurrentPdfPage();
-    final WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
-    this.pdfView.setImage(image);
+  public double renderDocument() {
+    double _xblockexpression = (double) 0;
+    {
+      this.introLabel.setVisible(false);
+      final WritableImage image = this.editor.getPresenter().getCurrentPdfPage();
+      this.pdfView.setImage(image);
+      double fitW = this.pdfView.getFitWidth();
+      double fitH = this.pdfView.getFitHeight();
+      double _xifexpression = (double) 0;
+      double _height = image.getHeight();
+      double _width = image.getWidth();
+      boolean _greaterThan = (_height > _width);
+      if (_greaterThan) {
+        double _xblockexpression_1 = (double) 0;
+        {
+          this.maxY = fitH;
+          double _width_1 = image.getWidth();
+          double _height_1 = image.getHeight();
+          double _divide = (_width_1 / _height_1);
+          double _multiply = (_divide * fitW);
+          _xblockexpression_1 = this.maxX = _multiply;
+        }
+        _xifexpression = _xblockexpression_1;
+      } else {
+        double _xblockexpression_2 = (double) 0;
+        {
+          double _height_1 = image.getHeight();
+          double _width_1 = image.getWidth();
+          double _divide = (_height_1 / _width_1);
+          double _multiply = (_divide * fitH);
+          double _minus = (_multiply - FXSettings.BOX_BORDER_THICKNESS);
+          this.maxY = _minus;
+          _xblockexpression_2 = this.maxX = (fitW - FXSettings.BOX_BORDER_THICKNESS);
+        }
+        _xifexpression = _xblockexpression_2;
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
   }
   
   /**
    * changes the selected page to load and then renders it
    */
-  public void selectPage(final int pageNumber) {
-    this.editor.getPresenter().choosePdfPage(pageNumber);
-    this.renderDocument();
+  public double selectPage(final int pageNumber) {
+    double _xblockexpression = (double) 0;
+    {
+      this.editor.getPresenter().choosePdfPage(pageNumber);
+      _xblockexpression = this.renderDocument();
+    }
+    return _xblockexpression;
   }
   
   /**

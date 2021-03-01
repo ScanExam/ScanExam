@@ -116,33 +116,35 @@ class ExamEditionService extends Service // TODO : renommer
 	}
 
 	def void create(File file) {
-		pages = new ArrayList<BufferedImage>();
+		 
 
-		val document = PDDocument.load(file)
+		document = PDDocument.load(file)
 
 		ExamSingleton.instance = CoreFactory.eINSTANCE.createExam()
 
-		val renderer = new PDFRenderer(document);
-
-		for (i : 0 ..< document.pages.size()) {
-			val bufferedImage = renderer.renderImageWithDPI(i, 300, ImageType.RGB);
-			pages.add(bufferedImage);
-
+		 
+		for (i : 0 ..< document.pages.size()) 
+		{
+			
 			ExamSingleton.instance.pages.add(CoreFactory.eINSTANCE.createPage());
 		}
 
 		currentPdfPath = file.absolutePath
 	}
 
-	override nextPage() {
-		if (pageIndex + 1 < pages.size) {
+	override nextPage() 
+	{
+		if (pageIndex + 1 < document.pages.size) 
+		{
 			pageIndex++
 		}
 
 	}
 
-	override previousPage() {
-		if (pageIndex > 0) {
+	override previousPage() 
+	{
+		if (pageIndex > 0) 
+		{
 			pageIndex--
 		}
 	}

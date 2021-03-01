@@ -4,8 +4,14 @@ import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
-import java.util.List;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.WritableImage;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtend.lib.annotations.Accessors;
+import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
@@ -14,7 +20,7 @@ public abstract class Service {
    * Pdf chargé
    */
   @Accessors
-  protected List<BufferedImage> pages;
+  protected PDDocument document;
   
   /**
    * Index de la page courante
@@ -37,8 +43,15 @@ public abstract class Service {
     return ExamSingleton.instance.getName();
   }
   
-  public BufferedImage getCurrentPdfPage() {
-    return this.pages.get(this.pageIndex);
+  public WritableImage getCurrentPdfPage() {
+    try {
+      final PDFRenderer renderer = new PDFRenderer(this.document);
+      final BufferedImage bufferedImage = renderer.renderImageWithDPI(this.pageIndex, 300, ImageType.RGB);
+      final WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+      return image;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   protected Page getCurrentPage() {
@@ -72,7 +85,7 @@ public abstract class Service {
    * @return le nombre de page du PDF courant
    */
   public int getPageNumber() {
-    return this.pages.size();
+    return IterableExtensions.size(this.document.getPages());
   }
   
   /**
@@ -83,11 +96,11 @@ public abstract class Service {
   }
   
   @Pure
-  public List<BufferedImage> getPages() {
-    return this.pages;
+  public PDDocument getDocument() {
+    return this.document;
   }
   
-  public void setPages(final List<BufferedImage> pages) {
-    this.pages = pages;
+  public void setDocument(final PDDocument document) {
+    this.document = document;
   }
 }
