@@ -1,20 +1,21 @@
 package fr.istic.tools.scanexam.sessions;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
-import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 
 public class ExamEditionServiceTest 
@@ -69,76 +70,45 @@ public class ExamEditionServiceTest
 	}
 
 
-	@SuppressWarnings({ "null", "static-access" })
 	@Test
 	@DisplayName("Test - ajoute d'une question")
 	void addQuestionTest() 
 	{
 		//ouverture du fichier
-		session.load("src/test/resources/resources_service/sampleExiste.xmi");
-
-		//Creation d'une question
-		Question newQuestion = null;
-		newQuestion.setId(7);
-		newQuestion.setName("TestQuestion");
-
-		QuestionZone questionZone = null;
-		questionZone.setHeigth(2);
-		questionZone.setWidth(2);;
-		questionZone.setX(2);;
-		questionZone.setY(2);;
-
-		newQuestion.setZone(questionZone);
-		newQuestion.setGradeScale(null);
-
+		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		assertNull(session.getQuestionZone(7));
 
 		//Ajoute de la question
-		session.addQuestion(newQuestion);
+		final int id = session.createQuestion(2, 2, 2, 2);
 
-		assertNotNull(session.getQuestionZone(7));
+		assertNotNull(session.getQuestionZone(id));
 	}
 
 
-	@SuppressWarnings({ "null", "static-access" })
 	@Test
 	@DisplayName("Test - suppression d'une question")
 	void removeQuestionTest() 
 	{
 		//ouverture du fichier
-		session.load("src/test/resources/resources_service/sampleExiste.xmi");
+		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		//Creation d'une question
-		Question newQuestion = null;
-		newQuestion.setId(7);
-		newQuestion.setName("TestQuestion");
+		final int id = session.createQuestion(2, 2, 2, 2);
 
-		QuestionZone questionZone = null;
-		questionZone.setHeigth(2);
-		questionZone.setWidth(2);;
-		questionZone.setX(2);;
-		questionZone.setY(2);;
+		assertNotNull(session.getQuestionZone(id));
 
-		newQuestion.setZone(questionZone);
-		newQuestion.setGradeScale(null);
+		session.removeQuestion(id);
 
-		session.addQuestion(newQuestion);
-
-		assertNotNull(session.getQuestionZone(7));
-
-		session.removeQuestion(7);
-
-		assertNull(session.getQuestionZone(7));
+		assertNull(session.getQuestionZone(id));
 	}
 
-	@SuppressWarnings("static-access")
 	@Test
 	@DisplayName("Test - navigation a la page suivante")
 	void nextPageTest() 
 	{
 		//ouverture du fichier
-		session.load("src/test/resources/resources_service/sampleExiste.xmi");
+		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = session.getCurrentPageNumber();
 		session.nextPage();
@@ -152,13 +122,12 @@ public class ExamEditionServiceTest
 	}
 
 
-	@SuppressWarnings("static-access")
 	@Test
 	@DisplayName("Test - navigation a la page précédente")
 	void previousPageTest() 
 	{
 		//ouverture du fichier
-		session.load("src/test/resources/resources_service/sampleExiste.xmi");
+		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = session.getCurrentPageNumber();
 		session.previousPage();
@@ -171,56 +140,39 @@ public class ExamEditionServiceTest
 		}
 	}
 
-	@SuppressWarnings("static-access")
 	@Test
 	@DisplayName("Test - chargement d'un fichier")
 	void loadTest() 
 	{
 		//Ouverture du fichier
-		session.load("src/test/resources/resources_service/sampleExiste.xmi");
+		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		assertEquals(session.getPageNumber(), 6);
 	}
 
 
-	@SuppressWarnings("static-access")
 	@Test
 	@DisplayName("Test - chargement d'un fichier qui n'existe pas")
 	void loadTestRobustesse() 
 	{
 		//load d'un fichier qui n'existe pas
-		Assertions.assertThrows(FileNotFoundException.class, () -> session.load("src/test/resources/resources_service/NoExiste.xmi"));
+		Assertions.assertThrows(FileNotFoundException.class, () -> ExamEditionService.loadTemplate("src/test/resources/resources_service/NoExiste.xmi"));
 	}
 
-	@SuppressWarnings({ "null", "static-access" })
 	@Test
 	@DisplayName("Test - Sauvegarde d'un fichier")
 	void saveTest() 
 	{
 
-		//ajoute d'une question
-		Question newQuestion = null;
-		newQuestion.setId(7);
-		newQuestion.setName("TestQuestion");
+		final int id = session.createQuestion(2, 2, 2, 2);
 
-		QuestionZone questionZone = null;
-		questionZone.setHeigth(2);
-		questionZone.setWidth(2);;
-		questionZone.setX(2);;
-		questionZone.setY(2);;
-
-		newQuestion.setZone(questionZone);
-		newQuestion.setGradeScale(null);
-
-		session.addQuestion(newQuestion);
-
-		assertNull(session.getQuestionZone(7));
+		assertNull(session.getQuestionZone(id));
 
 		session.save("src/test/resources/resources_service/sampleExiste.xmi");
 
-		session.load("src/test/resources/resources_service/sampleExiste.xmi");
+		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		//Verification que le changement est toujours d'actualiter
-		assertNull(session.getQuestionZone(7));
+		assertNull(session.getQuestionZone(id));
 	}
 }
