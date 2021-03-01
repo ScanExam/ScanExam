@@ -36,8 +36,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 public class ExamEditionService extends Service {
   private CreationTemplate template;
   
-  private String currentPdfPath;
-  
   private int questionId;
   
   /**
@@ -155,7 +153,6 @@ public class ExamEditionService extends Service {
       for (final Integer i : _doubleDotLessThan) {
         ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());
       }
-      this.currentPdfPath = file.getAbsolutePath();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
