@@ -95,7 +95,7 @@ public class ExamEditionService extends Service {
   @Override
   public void open(final String xmiPath) {
     try {
-      final Optional<CreationTemplate> creationTemplate = ExamEditionService.load(xmiPath);
+      final Optional<CreationTemplate> creationTemplate = ExamEditionService.loadTemplate(xmiPath);
       boolean _isPresent = creationTemplate.isPresent();
       if (_isPresent) {
         this.template = creationTemplate.get();
@@ -109,7 +109,7 @@ public class ExamEditionService extends Service {
     }
   }
   
-  public static Optional<CreationTemplate> load(final String path) {
+  public static Optional<CreationTemplate> loadTemplate(final String path) {
     final ResourceSetImpl resourceSet = new ResourceSetImpl();
     final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
     final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
@@ -141,22 +141,6 @@ public class ExamEditionService extends Service {
       this.currentPdfPath = file.getAbsolutePath();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  @Override
-  public void nextPage() {
-    int _size = IterableExtensions.size(this.document.getPages());
-    boolean _lessThan = ((this.pageIndex + 1) < _size);
-    if (_lessThan) {
-      this.pageIndex++;
-    }
-  }
-  
-  @Override
-  public void previousPage() {
-    if ((this.pageIndex > 0)) {
-      this.pageIndex--;
     }
   }
 }

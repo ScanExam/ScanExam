@@ -69,7 +69,7 @@ class ExamEditionService extends Service // TODO : renommer
 
 
 	override save(String path) {
-		template.pdfPath = this.currentPdfPath
+		template.pdfPath = this.currentPdfPath //TODO (pdf serialisé)
 		template.exam = ExamSingleton.instance
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -81,8 +81,9 @@ class ExamEditionService extends Service // TODO : renommer
 		resource.save(null);
 	}
 
-	override open(String xmiPath) {
-		val creationTemplate = load(xmiPath)
+	override open(String xmiPath) 
+	{
+		val creationTemplate = loadTemplate(xmiPath)
 
 		if (creationTemplate.present) {
 			this.template = creationTemplate.get()
@@ -96,7 +97,7 @@ class ExamEditionService extends Service // TODO : renommer
 
 	}
 
-	def static Optional<CreationTemplate> load(String path) {
+	def static Optional<CreationTemplate> loadTemplate(String path) {
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
@@ -117,8 +118,6 @@ class ExamEditionService extends Service // TODO : renommer
 
 	def void create(File file) 
 	{
-		 
-
 		document = PDDocument.load(file)
 
 		ExamSingleton.instance = CoreFactory.eINSTANCE.createExam()
@@ -133,21 +132,6 @@ class ExamEditionService extends Service // TODO : renommer
 		currentPdfPath = file.absolutePath
 	}
 
-	override nextPage() 
-	{
-		if (pageIndex + 1 < document.pages.size) 
-		{
-			pageIndex++
-		}
-
-	}
-
-	override previousPage() 
-	{
-		if (pageIndex > 0) 
-		{
-			pageIndex--
-		}
-	}
+	
 
 }

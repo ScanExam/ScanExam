@@ -6,9 +6,9 @@ import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.view.Adapter;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Objects;
-import javafx.scene.image.WritableImage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
@@ -121,7 +121,7 @@ public class EditorPresenter implements Presenter {
     return this.editorPresenter;
   }
   
-  public WritableImage getCurrentPdfPage() {
+  public BufferedImage getCurrentPdfPage() {
     return this.service.getCurrentPdfPage();
   }
   

@@ -313,7 +313,7 @@ class ControllerFXCreator {
 	{
 		introLabel.visible = false
 		val image = editor.presenter.currentPdfPage
-		pdfView.image = image
+		pdfView.image = SwingFXUtils.toFXImage(image,null);
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight
 		if (image.height > image.width) {

@@ -5,11 +5,13 @@ import fr.istic.tools.scanexam.view.fX.Box;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.FXSettings;
 import fr.istic.tools.scanexam.view.fX.ListViewBox;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -19,7 +21,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
@@ -390,21 +391,21 @@ public class ControllerFXCreator {
     double _xblockexpression = (double) 0;
     {
       this.introLabel.setVisible(false);
-      final WritableImage image = this.editor.getPresenter().getCurrentPdfPage();
-      this.pdfView.setImage(image);
+      final BufferedImage image = this.editor.getPresenter().getCurrentPdfPage();
+      this.pdfView.setImage(SwingFXUtils.toFXImage(image, null));
       double fitW = this.pdfView.getFitWidth();
       double fitH = this.pdfView.getFitHeight();
       double _xifexpression = (double) 0;
-      double _height = image.getHeight();
-      double _width = image.getWidth();
+      int _height = image.getHeight();
+      int _width = image.getWidth();
       boolean _greaterThan = (_height > _width);
       if (_greaterThan) {
         double _xblockexpression_1 = (double) 0;
         {
           this.maxY = fitH;
-          double _width_1 = image.getWidth();
-          double _height_1 = image.getHeight();
-          double _divide = (_width_1 / _height_1);
+          int _width_1 = image.getWidth();
+          int _height_1 = image.getHeight();
+          int _divide = (_width_1 / _height_1);
           double _multiply = (_divide * fitW);
           _xblockexpression_1 = this.maxX = _multiply;
         }
@@ -412,9 +413,9 @@ public class ControllerFXCreator {
       } else {
         double _xblockexpression_2 = (double) 0;
         {
-          double _height_1 = image.getHeight();
-          double _width_1 = image.getWidth();
-          double _divide = (_height_1 / _width_1);
+          int _height_1 = image.getHeight();
+          int _width_1 = image.getWidth();
+          int _divide = (_height_1 / _width_1);
           double _multiply = (_divide * fitH);
           double _minus = (_multiply - FXSettings.BOX_BORDER_THICKNESS);
           this.maxY = _minus;

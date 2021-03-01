@@ -3,10 +3,10 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.presenter.GraduationPresenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
-import javafx.scene.image.WritableImage;
 
 /**
  * Controlleur du pdf
@@ -147,7 +147,7 @@ public abstract class PresenterPdf {
     return null;
   }
   
-  public WritableImage getCurrentPdfPage() {
+  public BufferedImage getCurrentPdfPage() {
     return this.service.getCurrentPdfPage();
   }
   
