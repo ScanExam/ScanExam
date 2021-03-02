@@ -46,6 +46,8 @@ public class EditorPresenter implements Presenter {
     this.presPdf = _presenterPdf;
     PresenterQuestionZone _presenterQuestionZone = new PresenterQuestionZone(service, this);
     this.presQuestionZone = _presenterQuestionZone;
+    PresenterMarkingScheme _presenterMarkingScheme = new PresenterMarkingScheme(service, this);
+    this.presMarkingScheme = _presenterMarkingScheme;
   }
   
   /**
@@ -128,7 +130,6 @@ public class EditorPresenter implements Presenter {
     return this.editorPresenter;
   }
   
-  @Override
   public BufferedImage getCurrentPdfPage() {
     return this.service.getCurrentPdfPage();
   }
@@ -156,12 +157,15 @@ public class EditorPresenter implements Presenter {
     return this.service.getCurrentPageNumber();
   }
   
-  @Override
   public void create(final File file) {
     this.service.create(file);
   }
   
   public PDDocument getDocument() {
     return this.service.getDocument();
+  }
+  
+  public void save(final String path) {
+    this.service.save(path);
   }
 }

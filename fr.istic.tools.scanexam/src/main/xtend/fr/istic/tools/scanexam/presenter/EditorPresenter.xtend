@@ -34,6 +34,7 @@ class EditorPresenter implements Presenter
 		
 		presPdf = new PresenterPdf(service, this)
 		presQuestionZone =  new PresenterQuestionZone(service,this)
+		presMarkingScheme = new PresenterMarkingScheme(service, this)
 	}
 
 
