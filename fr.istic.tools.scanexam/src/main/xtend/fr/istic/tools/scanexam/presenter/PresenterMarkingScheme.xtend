@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
 import java.util.Objects
+import fr.istic.tools.scanexam.services.ExamEditionService
 
 /**
  * Class to manage an exam marking scheme (french : barème)
@@ -10,40 +11,36 @@ class PresenterMarkingScheme {
 	/**
 	 * Presenter for the creation view
 	 */
-	EditorPresenter presenterCreation
-	/**
-	 * Presenter for the correction view
-	 */
-	GraduationPresenter presenterCorrection
+	Presenter presenter
+	ExamEditionService service
 	
 	/**
-	 * setter for the PresenterVueCreation attribute
-	 * @param {@link PresenterVueCreation} pres instance of the presenter (not null) 
+	 * Constructor
+	 * Constructs a Presenter manipulating the grading schele with the modele
+	 * @param {@link ExamEditionService} s : the Service API linked with the model
+	 * @param {@link Presenter} p : a Presenter used by the view 
+	 * @author Benjamin Danlos
 	 */
-	def setPresenterVueCreation(EditorPresenter pres){
-		Objects.requireNonNull(pres)
-		presenterCreation = pres
+	new(ExamEditionService s, Presenter p){
+		Objects.requireNonNull(s)
+		Objects.requireNonNull(p)
+		presenter = p
+		service = s
 	}
 	/**
-	 * @return current {@link PresenterVueCreation} 
+	 * setter for the Presenter attribute
+	 * @param {@link Presenter} p : instance of the presenter (not null) 
 	 */
-	def getPresenterVueCreation(){
-		presenterCreation
+	def setPresenterVueCreation(Presenter pres){
+		Objects.requireNonNull(pres)
+		presenter = pres
+	}
+	/**
+	 * @return current {@link Presenter} 
+	 */
+	def getPresenter(){
+		presenter
 	}
 	
-	/**
-	 * setter for the PresenterVueCorrection attribute
-	 * @param {@link PresenterVueCorrection} pres instance of the presenter (not null) 
-	 */
-	def setPresenterVueCorrection(GraduationPresenter pres){
-		Objects.requireNonNull(pres)
-		presenterCorrection = pres
-	}
-	/**
-	 * @return current {@link PresenterVueCreation} 
-	 */
-	def getPresenterVueCorrection(){
-		presenterCorrection
-	}
 	
 }

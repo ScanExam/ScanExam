@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
-import fr.istic.tools.scanexam.presenter.GraduationPresenter;
+import fr.istic.tools.scanexam.presenter.Presenter;
+import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.util.Objects;
 
 /**
@@ -13,50 +13,41 @@ public class PresenterMarkingScheme {
   /**
    * Presenter for the creation view
    */
-  private EditorPresenter presenterCreation;
+  private Presenter presenter;
+  
+  private ExamEditionService service;
   
   /**
-   * Presenter for the correction view
+   * Constructor
+   * Constructs a Presenter manipulating the grading schele with the modele
+   * @param {@link ExamEditionService} s : the Service API linked with the model
+   * @param {@link Presenter} p : a Presenter used by the view
+   * @author Benjamin Danlos
    */
-  private GraduationPresenter presenterCorrection;
+  public PresenterMarkingScheme(final ExamEditionService s, final Presenter p) {
+    Objects.<ExamEditionService>requireNonNull(s);
+    Objects.<Presenter>requireNonNull(p);
+    this.presenter = p;
+    this.service = s;
+  }
   
   /**
-   * setter for the PresenterVueCreation attribute
-   * @param {@link PresenterVueCreation} pres instance of the presenter (not null)
+   * setter for the Presenter attribute
+   * @param {@link Presenter} p : instance of the presenter (not null)
    */
-  public EditorPresenter setPresenterVueCreation(final EditorPresenter pres) {
-    EditorPresenter _xblockexpression = null;
+  public Presenter setPresenterVueCreation(final Presenter pres) {
+    Presenter _xblockexpression = null;
     {
-      Objects.<EditorPresenter>requireNonNull(pres);
-      _xblockexpression = this.presenterCreation = pres;
+      Objects.<Presenter>requireNonNull(pres);
+      _xblockexpression = this.presenter = pres;
     }
     return _xblockexpression;
   }
   
   /**
-   * @return current {@link PresenterVueCreation}
+   * @return current {@link Presenter}
    */
-  public EditorPresenter getPresenterVueCreation() {
-    return this.presenterCreation;
-  }
-  
-  /**
-   * setter for the PresenterVueCorrection attribute
-   * @param {@link PresenterVueCorrection} pres instance of the presenter (not null)
-   */
-  public GraduationPresenter setPresenterVueCorrection(final GraduationPresenter pres) {
-    GraduationPresenter _xblockexpression = null;
-    {
-      Objects.<GraduationPresenter>requireNonNull(pres);
-      _xblockexpression = this.presenterCorrection = pres;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * @return current {@link PresenterVueCreation}
-   */
-  public GraduationPresenter getPresenterVueCorrection() {
-    return this.presenterCorrection;
+  public Presenter getPresenter() {
+    return this.presenter;
   }
 }
