@@ -12,10 +12,12 @@ class PresenterQuestionZone {
 	/**
 	 * Presenter for the creation view
 	 */
-	EditorPresenter presenter
+	EditorPresenter presenter 
 	ExamEditionService service
 	
 	new(ExamEditionService s , EditorPresenter p) {
+		Objects.requireNonNull(s)
+		Objects.requireNonNull(p)
 		service = s
 		presenter = p
 	}
@@ -49,6 +51,17 @@ class PresenterQuestionZone {
 	
 	def void resizeQuestion(int ID, double height, double width) {		
 		service.rescaleQuestion(ID,height as float,height as float)
+	}
+	
+	/**
+	 * changes the x and y coordinates of the {@link Question} identified by the id
+	 * @param int id : the unique ID of question
+	 * @param float x : new x position
+	 * @param float y : new y position
+	 * @author : Benjamin Danlos
+	 */
+	def moveQuestion(int id, float x, float y){
+		service.moveQuestion(id,x,y)
 	}
 	
 }
