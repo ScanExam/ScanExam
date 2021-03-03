@@ -5,23 +5,36 @@ import javafx.scene.layout.HBox
 import javafx.scene.control.Button
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.scene.layout.VBox
+import javafx.scene.image.ImageView
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import javafx.scene.image.Image
 
-class ListViewBox extends HBox{
+class ListViewBox extends VBox{
 	new(String text,Box parent) {
 		super()
+		top = new HBox();
+		bottom = new HBox();
 		this.id = parent.boxId;
 		this.parent = parent
-		var field = new TextField(text);
+		field = new TextField(text);
 		field.maxWidth =  75;
-		this.children.add(field);
+		this.children.add(top);
+		this.children.add(bottom)
+		top.children.add(field);
 		makeButtons();
 		
 	}
+	TextField field;
+	HBox top;
+	HBox bottom;
 	int id;
 	Box parent;
 	Button up;
 	Button down;
 	Button rm;
+	Button resize;
+	Button move;
 	def getParentBox(){
 		parent
 	}
@@ -31,12 +44,20 @@ class ListViewBox extends HBox{
 	}
 	
 	def makeButtons(){
-		up = new Button("up");
-		down = new Button("down");
+		up = new Button("");
+		down = new Button("");
 		rm = new Button("remove");
-		this.children.add(up);
-		this.children.add(down);
-		this.children.add(rm);
+		resize = new Button("resize")
+		move = new Button("move")
+		var upImage = new Image(ResourcesUtils.getInputStreamResource("/viewResources/upArrow.png"),FXSettings.BUTTON_ICON_SIZE,FXSettings.BUTTON_ICON_SIZE,true,true)
+		up.graphic = new ImageView(upImage)
+		top.children.add(0,up)
+		var downImage = new Image(ResourcesUtils.getInputStreamResource("/viewResources/downArrow.png"),FXSettings.BUTTON_ICON_SIZE,FXSettings.BUTTON_ICON_SIZE,true,true)
+		down.graphic = new ImageView(downImage)
+		bottom.children.add(down);
+		bottom.children.add(rm);
+		bottom.children.add(resize);
+		bottom.children.add(move);
 	}
 	def void setUpAction(EventHandler<ActionEvent> handler) {
 		up.onAction = handler
@@ -46,6 +67,17 @@ class ListViewBox extends HBox{
 	}
 	def void setRemoveAction(EventHandler<ActionEvent> handler) {
 		rm.onAction = handler
+	}
+	
+	def void setTextCommit(EventHandler<ActionEvent> hander){
+		field.onAction = hander
+	}
+	
+	def void setMoveAction(EventHandler<ActionEvent> hander){
+		move.onAction = hander
+	}
+	def void setResizeAction(EventHandler<ActionEvent> hander){
+		resize.onAction = hander
 	}
 	
 	

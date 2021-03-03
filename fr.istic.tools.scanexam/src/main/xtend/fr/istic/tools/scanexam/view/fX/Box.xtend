@@ -47,6 +47,7 @@ class Box extends Rectangle {
 		int page;
 		
 		
+		
 		def getListViewBox(){
 			listViewBox
 		}

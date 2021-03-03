@@ -21,6 +21,7 @@ import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
+import javafx.scene.layout.VBox
 
 class ControllerFXCreator {
 	
@@ -39,7 +40,9 @@ class ControllerFXCreator {
 		QUESTION_AREA,
 		ID_AREA,
 		QR_AREA,
-		MOVE_TOOL
+		MOVE_CAMERA_TOOL,
+		MOVE_TOOL,
+		RESIZE_TOOL
 		
 	}
 
@@ -51,7 +54,7 @@ class ControllerFXCreator {
 	ImageView pdfView;
 	
 	@FXML
-	ListView<HBox> questionList;
+	ListView<VBox> questionList;
 	
 	@FXML
 	ChoiceBox<Integer> pageChoice;
@@ -85,7 +88,7 @@ class ControllerFXCreator {
 	}
 	@FXML 
 	def void movePressed(){
-		setToMoveTool
+		setToMoveCameraTool
 	}
 	
 	@FXML 
@@ -121,6 +124,12 @@ class ControllerFXCreator {
 			case QR_AREA: {
 			}
 			case MOVE_TOOL: {
+				
+			}
+			case RESIZE_TOOL: {
+				resizeBox(e)
+			}
+			case MOVE_CAMERA_TOOL: {
 				MoveImage(e);
 			}
 		}
@@ -178,6 +187,27 @@ class ControllerFXCreator {
 		}
 	}
 	
+	def void moveBox(MouseEvent e ) {
+		
+	}
+	
+	def void resizeBox(MouseEvent e) {
+		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.x,maxX- FXSettings.BOX_BORDER_THICKNESS));
+		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.y,maxY- FXSettings.BOX_BORDER_THICKNESS));
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
+			mouseOriginX = currentRectangle.width 
+			mouseOriginY = currentRectangle.height 
+		}
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+			currentRectangle.width = mouseOriginX - ((mouseOriginX + currentRectangle.x) - mousePositionX)
+			currentRectangle.height = mouseOriginY - ((mouseOriginY + currentRectangle.y) - mousePositionY)
+		}
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			resizeBox(currentRectangle)
+		}
+	}
+	
+	
 	
 	
 	
@@ -226,10 +256,10 @@ class ControllerFXCreator {
 	/**
 	 * Setters for the current tool selected
 	 */
-	var currentTool = SelectedTool.MOVE_TOOL
-	def void setToMoveTool(){
+	var currentTool = SelectedTool.MOVE_CAMERA_TOOL
+	def void setToMoveCameraTool(){
 		mainPane.cursor = Cursor.OPEN_HAND
-		currentTool = SelectedTool.MOVE_TOOL
+		currentTool = SelectedTool.MOVE_CAMERA_TOOL
 	}
 	def void setToQuestionAreaTool(){
 		mainPane.cursor = Cursor.DEFAULT
@@ -243,6 +273,16 @@ class ControllerFXCreator {
 	def void setToQRAreaTool(){
 		mainPane.cursor = Cursor.DEFAULT
 		currentTool = SelectedTool.QR_AREA
+	}
+	
+	def void setToMoveTool(){
+		mainPane.cursor = Cursor.DEFAULT
+		currentTool = SelectedTool.MOVE_TOOL
+	}
+	
+	def void setToResizeTool(){
+		mainPane.cursor = Cursor.DEFAULT
+		currentTool = SelectedTool.RESIZE_TOOL
 	}
 	
 	/**
@@ -260,7 +300,7 @@ class ControllerFXCreator {
 			case QR_AREA: {
 				new Box(BoxType.QR,x,y);
 			}
-			case MOVE_TOOL: {
+			case MOVE_CAMERA_TOOL: {
 				
 			}
 		}
@@ -292,10 +332,32 @@ class ControllerFXCreator {
 			 
 			override handle(ActionEvent event) {
 				removeBox(box);
-				logger.warn("trying to remove " + box)
 			}
 			
 		}
+		
+		lb.textCommit =  new EventHandler<ActionEvent>(){
+			 
+			override handle(ActionEvent event) {
+				renameBox(box)
+			}
+			
+		}
+		lb.moveAction = new EventHandler<ActionEvent>(){
+			 
+			override handle(ActionEvent event) {
+			}
+			
+		}
+		lb.resizeAction = new EventHandler<ActionEvent>(){
+			 
+			override handle(ActionEvent event) {
+				setToResizeTool
+				currentRectangle = box
+			}
+			
+		}
+		
 		
 		questionList.items.add(lb)
 		boxes.add(box);
@@ -310,7 +372,7 @@ class ControllerFXCreator {
 	}
 	
 	def resizeBox(Box box){
-		
+		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId, box.height, box.width);
 	}
 	/**
 	 * notifies the rest of the program to the removal of a box

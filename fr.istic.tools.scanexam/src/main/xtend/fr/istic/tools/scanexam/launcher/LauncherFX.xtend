@@ -8,6 +8,7 @@ import javafx.stage.Stage
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
 import fr.istic.tools.scanexam.presenter.PresenterBindings
 import fr.istic.tools.scanexam.view.fX.ControllerFXCreator
+import javafx.scene.image.Image
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -37,6 +38,7 @@ class LauncherFX extends Application implements Launcher {
 			primaryStage.setScene(new Scene(root, 1280, 720));
 			primaryStage.setMinHeight(720);
 			primaryStage.setMinWidth(720);
+			primaryStage.icons.add(new Image(ResourcesUtils.getInputStreamResource("/logo.png")));
 			primaryStage.show();
 	}
 	static EditorAdapterFX edit; 
