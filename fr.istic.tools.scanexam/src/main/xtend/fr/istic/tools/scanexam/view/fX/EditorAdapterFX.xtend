@@ -15,8 +15,6 @@ class EditorAdapterFX implements EditorAdapter {
 	}
 	
 	
-
-	
 	def void addBox(Box box) 
 	{
 		box.boxId = presenter.presenterQuestionZone.createQuestion(box.x,box.y,box.height,box.width)
@@ -39,5 +37,7 @@ class EditorAdapterFX implements EditorAdapter {
 	{
 		presenter;
 	}
+	
+	
 	
 }

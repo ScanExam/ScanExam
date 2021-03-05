@@ -65,9 +65,6 @@ class ControllerFXCreator {
 	@FXML
 	Label pageNumberLabel;
 	
-	
-	
-
 	@FXML 
 	def void pressed(){
 		
@@ -424,6 +421,24 @@ class ControllerFXCreator {
 			logger.warn("File not chosen")
 		}
 	}
+	
+	def loadTemplate(){
+		var fileChooser = new FileChooser();
+		fileChooser.extensionFilters.add(new ExtensionFilter("XMI Files",Arrays.asList("*.xmi")));
+		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Documents");
+		var file = fileChooser.showOpenDialog(mainPane.scene.window)
+		
+		if (file !== null) 
+		{
+			editor.presenter.load(file.path);
+			renderDocument();
+		}
+		else 
+		{
+			logger.warn("File not chosen")
+		}
+	}
+		
 	/**
 	 * initialise the choicebox containing all the page numbers of the pdf
 	 * to call whenever we load a new pdf into the editor
@@ -500,6 +515,7 @@ class ControllerFXCreator {
 		highlightedBox = box;
 		highlightedBox.focus = true
 	}
+	
 	
 	
 }
