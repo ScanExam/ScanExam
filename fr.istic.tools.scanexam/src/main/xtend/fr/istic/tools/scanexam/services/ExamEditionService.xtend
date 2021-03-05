@@ -90,11 +90,13 @@ class ExamEditionService extends Service // TODO : renommer
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
 		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
+		
+		resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
 		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
 	
 			
 		val resource = resourceSet.createResource(URI.createFileURI(path))
+		
 		resource.getContents().add(template);
 		resource.save(null);
 	}
@@ -109,9 +111,9 @@ class ExamEditionService extends Service // TODO : renommer
 			ExamSingleton.instance = creationTemplate.get().exam
 			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
 			document = PDDocument.load(decoded)
-
+			return true
 		}
-
+		return false
 	}
 
 	def static Optional<CreationTemplate> loadTemplate(String path) {
@@ -129,8 +131,15 @@ class ExamEditionService extends Service // TODO : renommer
 		} catch (Throwable ex) {
 			return Optional.empty;
 		}
-
-		return Optional.ofNullable(resource.getContents().get(0) as CreationTemplate)
+		
+		val template = resource.getContents().get(0);
+		
+		if (!(template instanceof CreationTemplate))
+		{
+			return Optional.empty;
+		}
+		
+		return Optional.ofNullable(template as CreationTemplate)
 	}
 
 	override void create(File file) 

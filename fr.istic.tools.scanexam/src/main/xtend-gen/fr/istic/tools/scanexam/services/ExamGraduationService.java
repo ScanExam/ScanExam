@@ -27,7 +27,7 @@ public class ExamGraduationService extends Service {
   }
   
   @Override
-  public void open(final String xmiFile) {
+  public boolean open(final String xmiFile) {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
   

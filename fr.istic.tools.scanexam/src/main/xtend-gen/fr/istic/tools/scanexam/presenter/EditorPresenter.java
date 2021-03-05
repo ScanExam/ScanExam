@@ -172,8 +172,8 @@ public class EditorPresenter implements Presenter {
     this.service.save(path);
   }
   
-  public void load(final String path) {
-    this.service.open(path);
+  public boolean load(final String path) {
+    return this.service.open(path);
   }
   
   public void close() {
