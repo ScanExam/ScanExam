@@ -133,7 +133,7 @@ class EditorViewSwing {
 	 * Initialise la fenêtre
 	 */
 	def private void initialize() {
-		window = new JFrame(translate("scanexam"))
+		window = new JFrame(translate("title.scanexam"))
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 		
