@@ -9,15 +9,18 @@ import fr.istic.tools.scanexam.core.Page;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -76,7 +79,7 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getPages() <em>Pages</em>}' reference list.
+	 * The cached value of the '{@link #getPages() <em>Pages</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPages()
@@ -153,9 +156,23 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 */
 	public EList<Page> getPages() {
 		if (pages == null) {
-			pages = new EObjectResolvingEList<Page>(Page.class, this, CorePackage.EXAM__PAGES);
+			pages = new EObjectContainmentEList<Page>(Page.class, this, CorePackage.EXAM__PAGES);
 		}
 		return pages;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case CorePackage.EXAM__PAGES:
+				return ((InternalEList<?>)getPages()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

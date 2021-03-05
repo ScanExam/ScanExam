@@ -42,7 +42,7 @@ class Page
 class Exam {
 	int ^id
 	String name
-	refers Page[] pages
+	contains Page[] pages
 }
 
 class Comment {

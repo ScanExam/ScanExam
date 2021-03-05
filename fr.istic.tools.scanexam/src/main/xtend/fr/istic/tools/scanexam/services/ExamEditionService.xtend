@@ -81,21 +81,18 @@ class ExamEditionService extends Service // TODO : renommer
 		val outputStream = new ByteArrayOutputStream();
 		document.save(outputStream);
 		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
-	//	template.encodedDocument = new String(encoded);
+		template.encodedDocument = new String(encoded);
 		outputStream.close();
 
 		template.exam = ExamSingleton.instance
 
-		
-		
-		
-		
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
 		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
+			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
 		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-		resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
+	
 			
 		val resource = resourceSet.createResource(URI.createFileURI(path))
 		resource.getContents().add(template);

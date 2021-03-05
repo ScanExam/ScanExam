@@ -92,14 +92,16 @@ public class ExamEditionService extends Service {
       final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       this.document.save(outputStream);
       final byte[] encoded = Base64.getEncoder().encode(outputStream.toByteArray());
+      String _string = new String(encoded);
+      this.template.setEncodedDocument(_string);
       outputStream.close();
       this.template.setExam(ExamSingleton.instance);
       final ResourceSetImpl resourceSet = new ResourceSetImpl();
       final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
       final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
       _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl);
-      resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
       resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
+      resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
       final Resource resource = resourceSet.createResource(URI.createFileURI(path));
       resource.getContents().add(this.template);
       resource.save(null);

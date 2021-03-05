@@ -353,7 +353,7 @@ public interface CorePackage extends EPackage {
 	int EXAM__NAME = 1;
 
 	/**
-	 * The feature id for the '<em><b>Pages</b></em>' reference list.
+	 * The feature id for the '<em><b>Pages</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -867,10 +867,10 @@ public interface CorePackage extends EPackage {
 	EAttribute getExam_Name();
 
 	/**
-	 * Returns the meta object for the reference list '{@link fr.istic.tools.scanexam.core.Exam#getPages <em>Pages</em>}'.
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.Exam#getPages <em>Pages</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Pages</em>'.
+	 * @return the meta object for the containment reference list '<em>Pages</em>'.
 	 * @see fr.istic.tools.scanexam.core.Exam#getPages()
 	 * @see #getExam()
 	 * @generated
@@ -1248,7 +1248,7 @@ public interface CorePackage extends EPackage {
 		EAttribute EXAM__NAME = eINSTANCE.getExam_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Pages</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Pages</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
