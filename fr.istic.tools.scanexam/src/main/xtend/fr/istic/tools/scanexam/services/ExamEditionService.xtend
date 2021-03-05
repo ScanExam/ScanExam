@@ -42,9 +42,8 @@ class ExamEditionService extends Service // TODO : renommer
 		question.zone.y = y 
 		question.zone.width = width
 		question.zone.heigth = heigth
-		questionId++;
 		currentPage.questions.add(question.id,question);
-		return questionId;
+		return questionId++;
 	}
 	def rescaleQuestion(int id,float heigth,float width)
 	{
