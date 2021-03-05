@@ -130,6 +130,7 @@ public class EditorPresenter implements Presenter {
     return this.editorPresenter;
   }
   
+  @Override
   public BufferedImage getCurrentPdfPage() {
     return this.service.getCurrentPdfPage();
   }
@@ -157,6 +158,7 @@ public class EditorPresenter implements Presenter {
     return this.service.getCurrentPageNumber();
   }
   
+  @Override
   public void create(final File file) {
     this.service.create(file);
   }

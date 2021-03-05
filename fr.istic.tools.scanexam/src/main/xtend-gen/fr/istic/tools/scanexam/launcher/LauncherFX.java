@@ -5,10 +5,13 @@ import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fX.ControllerFXCreator;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import java.io.InputStream;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
@@ -42,6 +45,10 @@ public class LauncherFX extends Application implements Launcher {
     primaryStage.setScene(_scene);
     primaryStage.setMinHeight(720);
     primaryStage.setMinWidth(720);
+    ObservableList<Image> _icons = primaryStage.getIcons();
+    InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("/logo.png");
+    Image _image = new Image(_inputStreamResource);
+    _icons.add(_image);
     primaryStage.show();
   }
   

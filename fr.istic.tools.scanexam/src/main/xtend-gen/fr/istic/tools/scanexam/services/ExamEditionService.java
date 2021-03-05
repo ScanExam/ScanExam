@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
+import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
@@ -147,6 +148,7 @@ public class ExamEditionService extends Service {
   @Override
   public void create(final File file) {
     try {
+      this.template = TemplatesFactory.eINSTANCE.createCreationTemplate();
       this.document = PDDocument.load(file);
       ExamSingleton.instance = CoreFactory.eINSTANCE.createExam();
       int _size = IterableExtensions.size(this.document.getPages());

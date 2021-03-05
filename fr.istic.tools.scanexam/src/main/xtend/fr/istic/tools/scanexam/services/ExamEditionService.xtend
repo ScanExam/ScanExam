@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
+import fr.istic.tools.scanexam.core.templates.TemplatesFactory
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -124,6 +125,7 @@ class ExamEditionService extends Service // TODO : renommer
 
 	override void create(File file) 
 	{
+		template = TemplatesFactory.eINSTANCE.createCreationTemplate
 		document = PDDocument.load(file)
 
 		ExamSingleton.instance = CoreFactory.eINSTANCE.createExam()
