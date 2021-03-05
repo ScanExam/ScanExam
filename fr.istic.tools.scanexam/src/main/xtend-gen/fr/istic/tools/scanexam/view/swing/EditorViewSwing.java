@@ -179,7 +179,7 @@ public class EditorViewSwing {
    * Initialise la fenêtre
    */
   private void initialize() {
-    String _translate = LanguageManager.translate("scanexam");
+    String _translate = LanguageManager.translate("title.scanexam");
     JFrame _jFrame = new JFrame(_translate);
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
