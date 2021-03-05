@@ -113,13 +113,13 @@ public interface TemplatesPackage extends EPackage {
 	int CREATION_TEMPLATE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Document</b></em>' attribute list.
+	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CREATION_TEMPLATE__DOCUMENT = 0;
+	int CREATION_TEMPLATE__ENCODED_DOCUMENT = 0;
 
 	/**
 	 * The feature id for the '<em><b>Exam</b></em>' attribute.
@@ -202,15 +202,15 @@ public interface TemplatesPackage extends EPackage {
 	EClass getCreationTemplate();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getDocument <em>Document</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument <em>Encoded Document</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Document</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getDocument()
+	 * @return the meta object for the attribute '<em>Encoded Document</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument()
 	 * @see #getCreationTemplate()
 	 * @generated
 	 */
-	EAttribute getCreationTemplate_Document();
+	EAttribute getCreationTemplate_EncodedDocument();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}'.
@@ -294,12 +294,12 @@ public interface TemplatesPackage extends EPackage {
 		EClass CREATION_TEMPLATE = eINSTANCE.getCreationTemplate();
 
 		/**
-		 * The meta object literal for the '<em><b>Document</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CREATION_TEMPLATE__DOCUMENT = eINSTANCE.getCreationTemplate_Document();
+		EAttribute CREATION_TEMPLATE__ENCODED_DOCUMENT = eINSTANCE.getCreationTemplate_EncodedDocument();
 
 		/**
 		 * The meta object literal for the '<em><b>Exam</b></em>' attribute feature.

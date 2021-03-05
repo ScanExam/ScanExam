@@ -7,18 +7,12 @@ import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +22,7 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getDocument <em>Document</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getExam <em>Exam</em>}</li>
  * </ul>
  *
@@ -36,14 +30,24 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  */
 public class CreationTemplateImpl extends MinimalEObjectImpl.Container implements CreationTemplate {
 	/**
-	 * The cached value of the '{@link #getDocument() <em>Document</em>}' attribute list.
+	 * The default value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDocument()
+	 * @see #getEncodedDocument()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Byte> document;
+	protected static final String ENCODED_DOCUMENT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEncodedDocument()
+	 * @generated
+	 * @ordered
+	 */
+	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getExam() <em>Exam</em>}' attribute.
@@ -89,11 +93,20 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Byte> getDocument() {
-		if (document == null) {
-			document = new EDataTypeEList<Byte>(Byte.class, this, TemplatesPackage.CREATION_TEMPLATE__DOCUMENT);
-		}
-		return document;
+	public String getEncodedDocument() {
+		return encodedDocument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEncodedDocument(String newEncodedDocument) {
+		String oldEncodedDocument = encodedDocument;
+		encodedDocument = newEncodedDocument;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT, oldEncodedDocument, encodedDocument));
 	}
 
 	/**
@@ -125,8 +138,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
-				return getDocument();
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				return getEncodedDocument();
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return getExam();
 		}
@@ -138,13 +151,11 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
-				getDocument().clear();
-				getDocument().addAll((Collection<? extends Byte>)newValue);
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument((String)newValue);
 				return;
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam((Exam)newValue);
@@ -161,8 +172,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
-				getDocument().clear();
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam(EXAM_EDEFAULT);
@@ -179,8 +190,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__DOCUMENT:
-				return document != null && !document.isEmpty();
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return EXAM_EDEFAULT == null ? exam != null : !EXAM_EDEFAULT.equals(exam);
 		}
@@ -197,8 +208,8 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (document: ");
-		result.append(document);
+		result.append(" (encodedDocument: ");
+		result.append(encodedDocument);
 		result.append(", exam: ");
 		result.append(exam);
 		result.append(')');

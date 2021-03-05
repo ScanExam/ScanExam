@@ -70,13 +70,13 @@ public interface Exam extends EObject {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Pages</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Pages</b></em>' reference list.
 	 * The list contents are of type {@link fr.istic.tools.scanexam.core.Page}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pages</em>' containment reference list.
+	 * @return the value of the '<em>Pages</em>' reference list.
 	 * @see fr.istic.tools.scanexam.core.CorePackage#getExam_Pages()
-	 * @model containment="true"
+	 * @model
 	 * @generated
 	 */
 	EList<Page> getPages();
