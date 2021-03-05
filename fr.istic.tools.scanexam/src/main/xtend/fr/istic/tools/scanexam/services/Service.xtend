@@ -101,7 +101,7 @@ abstract class Service
 	
 	def void save(String path)
 	
-	def void open(String xmiFile)
+	def boolean open(String xmiFile)
 	
 	def void create(File file)
 	
