@@ -120,7 +120,8 @@ class EditorPresenter implements Presenter
 	def int getTotalPdfPageNumber(){
 		service.pageNumber
 	}
-	def int getCurrentPdfPageNumber(){
+	
+	override int getCurrentPdfPageNumber(){
 		service.currentPageNumber
 	}
 	

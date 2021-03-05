@@ -23,7 +23,7 @@ public class Box extends Rectangle {
   
   public Box(final String name, final int page, final Box.BoxType type, final double x, final double y) {
     super(x, y, 0, 0);
-    this.id = Box.newID();
+    this.boxId = Box.newID();
     this.page = page;
     this.name = name;
     this.type = type;
@@ -52,7 +52,7 @@ public class Box extends Rectangle {
   
   private String name;
   
-  private int id;
+  private int boxId;
   
   private int page;
   
@@ -68,8 +68,12 @@ public class Box extends Rectangle {
     return this.type;
   }
   
-  public int getID() {
-    return this.id;
+  public int getBoxId() {
+    return this.boxId;
+  }
+  
+  public int setBoxId(final int id) {
+    return this.boxId = id;
   }
   
   public void setFocus(final boolean b) {

@@ -12,4 +12,6 @@ public interface Presenter {
   void create(final File file);
   
   BufferedImage getCurrentPdfPage();
+  
+  int getCurrentPdfPageNumber();
 }

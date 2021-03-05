@@ -164,6 +164,11 @@ public class GraduationPresenter implements Presenter {
   }
   
   @Override
+  public int getCurrentPdfPageNumber() {
+    return this.service.getCurrentPageNumber();
+  }
+  
+  @Override
   public void create(final File file) {
     this.service.create(file);
   }

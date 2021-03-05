@@ -13,4 +13,6 @@ interface Presenter {
 	
 	def BufferedImage getCurrentPdfPage()
 	
+	def int getCurrentPdfPageNumber()
+	
 }

@@ -69,19 +69,24 @@ public class PdfAndBoxPanel extends PdfPanel {
     BoxList paintedBoxes = new BoxList(_minWidth, _minHeight, _maxWidth, _maxHeight);
     List<Box> _list = boxes.getList();
     for (final Box box : _list) {
-      double _x = box.getX();
-      int _originX = this.adapter.getOriginX();
-      double _width = box.getWidth();
-      double _minus = (_originX - _width);
-      double _divide = (_minus / this.width);
-      double _plus = (_x + _divide);
-      double _y = box.getY();
-      int _originY = this.adapter.getOriginY();
-      double _height = box.getHeight();
-      double _minus_1 = (_originY - _height);
-      double _divide_1 = (_minus_1 / this.height);
-      double _plus_1 = (_y + _divide_1);
-      paintedBoxes.addBox(_plus, _plus_1, box.getWidth(), box.getHeight(), box.getTitle());
+      int _nbPage = box.getNbPage();
+      int _currentPdfPageNumber = this.adapter.presenterPdf.getCurrentPdfPageNumber();
+      boolean _equals = (_nbPage == _currentPdfPageNumber);
+      if (_equals) {
+        double _x = box.getX();
+        int _originX = this.adapter.getOriginX();
+        double _width = box.getWidth();
+        double _minus = (_originX - _width);
+        double _divide = (_minus / this.width);
+        double _plus = (_x + _divide);
+        double _y = box.getY();
+        int _originY = this.adapter.getOriginY();
+        double _height = box.getHeight();
+        double _minus_1 = (_originY - _height);
+        double _divide_1 = (_minus_1 / this.height);
+        double _plus_1 = (_y + _divide_1);
+        paintedBoxes.addBox(_plus, _plus_1, box.getWidth(), box.getHeight(), box.getTitle());
+      }
     }
     List<Box> _list_1 = paintedBoxes.getList();
     for (final Box paintedBox : _list_1) {
@@ -116,22 +121,27 @@ public class PdfAndBoxPanel extends PdfPanel {
     boxesTitle.updateBounds(_divide_4, _divide_5, (-1.0), (-1.0));
     List<Box> _list = boxes.getList();
     for (final Box box : _list) {
-      double _x = box.getX();
-      int _originX = this.adapter.getOriginX();
-      double _width = box.getWidth();
-      double _minus = (_originX - _width);
-      double _divide_6 = (_minus / this.width);
-      double _plus = (_x + _divide_6);
-      double _y = box.getY();
-      int _originY = this.adapter.getOriginY();
-      double _titleHeight_2 = this.adapterBox.getTitleHeight();
-      double _minus_1 = (_originY - _titleHeight_2);
-      double _divide_7 = (_minus_1 / this.height);
-      double _plus_1 = (_y + _divide_7);
-      double _width_1 = box.getWidth();
-      double _titleHeight_3 = this.adapterBox.getTitleHeight();
-      double _divide_8 = (_titleHeight_3 / this.height);
-      boxesTitle.addBox(_plus, _plus_1, _width_1, _divide_8, box.getTitle());
+      int _nbPage = box.getNbPage();
+      int _currentPdfPageNumber = this.adapter.presenterPdf.getCurrentPdfPageNumber();
+      boolean _equals = (_nbPage == _currentPdfPageNumber);
+      if (_equals) {
+        double _x = box.getX();
+        int _originX = this.adapter.getOriginX();
+        double _width = box.getWidth();
+        double _minus = (_originX - _width);
+        double _divide_6 = (_minus / this.width);
+        double _plus = (_x + _divide_6);
+        double _y = box.getY();
+        int _originY = this.adapter.getOriginY();
+        double _titleHeight_2 = this.adapterBox.getTitleHeight();
+        double _minus_1 = (_originY - _titleHeight_2);
+        double _divide_7 = (_minus_1 / this.height);
+        double _plus_1 = (_y + _divide_7);
+        double _width_1 = box.getWidth();
+        double _titleHeight_3 = this.adapterBox.getTitleHeight();
+        double _divide_8 = (_titleHeight_3 / this.height);
+        boxesTitle.addBox(_plus, _plus_1, _width_1, _divide_8, box.getTitle());
+      }
     }
     g2d.setColor(this.titleColor);
     List<Box> _list_1 = boxesTitle.getList();

@@ -132,6 +132,10 @@ class GraduationPresenter implements Presenter
 		return service.getCurrentPdfPage
 	}
 	
+	override int getCurrentPdfPageNumber(){
+		service.currentPageNumber
+	}
+	
 	override void create(File file)
 	{
 		 service.create(file);

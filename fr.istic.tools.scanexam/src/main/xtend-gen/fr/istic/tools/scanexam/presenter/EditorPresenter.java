@@ -154,6 +154,7 @@ public class EditorPresenter implements Presenter {
     return this.service.getPageNumber();
   }
   
+  @Override
   public int getCurrentPdfPageNumber() {
     return this.service.getCurrentPageNumber();
   }
@@ -169,5 +170,13 @@ public class EditorPresenter implements Presenter {
   
   public void save(final String path) {
     this.service.save(path);
+  }
+  
+  public void load(final String path) {
+    this.service.open(path);
+  }
+  
+  public void close() {
+    System.exit(0);
   }
 }

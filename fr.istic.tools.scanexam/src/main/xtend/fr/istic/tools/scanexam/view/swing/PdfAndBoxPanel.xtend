@@ -53,7 +53,9 @@ class PdfAndBoxPanel extends PdfPanel {
 	    g2d.setColor(selectionColor);
 	    var BoxList paintedBoxes = new BoxList(boxes.getMinWidth(), boxes.getMinHeight(), boxes.getMaxWidth(), boxes.getMaxHeight())
 	    for (Box box : boxes.getList()) {
-			paintedBoxes.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - box.getHeight()) / height), box.getWidth(), box.getHeight(), box.getTitle())
+	    	if(box.getNbPage() == adapter.presenterPdf.currentPdfPageNumber) {
+	    		paintedBoxes.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - box.getHeight()) / height), box.getWidth(), box.getHeight(), box.getTitle())
+	    	}
 		}
 	    for (Box paintedBox : paintedBoxes.getList()) {
 	        g2d.fill(convertBoxToRectangle(paintedBox))
@@ -76,7 +78,9 @@ class PdfAndBoxPanel extends PdfPanel {
 	    var BoxList boxesTitle = new BoxList(adapterBox.getMinWidth() / width, adapterBox.getTitleHeight() / height, -1.0, adapterBox.getTitleHeight() / height)
 		boxesTitle.updateBounds(adapterBox.getMinWidth() / width / adapter.getScale(), adapterBox.getMinHeight() / height, -1.0, -1.0)
 		for (Box box : boxes.getList()) {
-			boxesTitle.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - adapterBox.getTitleHeight()) / height), box.getWidth(), adapterBox.getTitleHeight() / height, box.getTitle())
+			if(box.getNbPage() == adapter.presenterPdf.currentPdfPageNumber) {
+				boxesTitle.addBox(box.getX() + ((adapter.getOriginX() - box.getWidth()) / width), box.getY() + ((adapter.getOriginY() - adapterBox.getTitleHeight()) / height), box.getWidth(), adapterBox.getTitleHeight() / height, box.getTitle())
+			}
 		}
 	        
 	    // Coloration de l'intérieur des titres

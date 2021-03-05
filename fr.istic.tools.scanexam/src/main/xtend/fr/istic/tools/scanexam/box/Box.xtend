@@ -7,36 +7,36 @@ package fr.istic.tools.scanexam.box
 class Box {
 	
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/*
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	// Coordonnée X de la boîte
+	/* Coordonnée X de la boîte */ 
 	double x
-	// Coordonnée Y de la boîte
+	/* Coordonnée Y de la boîte */ 
 	double y
-	// Largueur de la boîte
+	/* Largueur de la boîte */ 
 	double width
-	// Hauteur de la boîte
+	/* Hauteur de la boîte */ 
 	double height
-	// Titre de la boîte
+	/* Titre de la boîte */ 
 	String title
-	// Indentifiant de la boîte
+	/* Indentifiant de la boîte (-1 par défaut) */ 
 	int id
-	// Largueur minimum de la boîte (ne peux pas être négatif)
+	/* Largueur minimum de la boîte (ne peux pas être négatif) */ 
 	double minWidth
-	// Hauteur minimum de la boîte (ne peux pas être négatif)
+	/* Hauteur minimum de la boîte (ne peux pas être négatif) */ 
 	double minHeight
-	// Largueur maximum de la boîte (-1 = pas de maximum)
+	/* Largueur maximum de la boîte (-1 = pas de maximum) */ 
 	double maxWidth
-	// Hauteur maximum de la boîte (-1 = pas de maximum)
+	/* Hauteur maximum de la boîte (-1 = pas de maximum) */ 
 	double maxHeight
-	// Numero de page de la box
+	/* Numero de page de la box*/ 
 	int nbPage
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/*
 	 * CONSTRUCTEURS
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -83,10 +83,11 @@ class Box {
 		this.setHeight(height)
 		this.setTitle(title)
 		this.setId(-1)
+		this.setNbPage(-1)
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/*
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -113,7 +114,7 @@ class Box {
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * GETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -162,12 +163,8 @@ class Box {
 		return nbPage
 	}
 
-	def void setNbPage(int nbPage) {
-		this.nbPage = nbPage
-	}
-
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -254,6 +251,10 @@ class Box {
 		if (this.maxHeight >= 0.0 && height > this.maxHeight) {
 			height = maxHeight
 		}
+	}
+
+	def void setNbPage(int nbPage) {
+		this.nbPage = nbPage
 	}
 	
 }

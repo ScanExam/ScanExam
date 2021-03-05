@@ -7,28 +7,58 @@ package fr.istic.tools.scanexam.box;
 @SuppressWarnings("all")
 public class Box {
   /**
-   * ATTRIBUTS
+   * Coordonnée X de la boîte
    */
   private double x;
   
+  /**
+   * Coordonnée Y de la boîte
+   */
   private double y;
   
+  /**
+   * Largueur de la boîte
+   */
   private double width;
   
+  /**
+   * Hauteur de la boîte
+   */
   private double height;
   
+  /**
+   * Titre de la boîte
+   */
   private String title;
   
+  /**
+   * Indentifiant de la boîte (-1 par défaut)
+   */
   private int id;
   
+  /**
+   * Largueur minimum de la boîte (ne peux pas être négatif)
+   */
   private double minWidth;
   
+  /**
+   * Hauteur minimum de la boîte (ne peux pas être négatif)
+   */
   private double minHeight;
   
+  /**
+   * Largueur maximum de la boîte (-1 = pas de maximum)
+   */
   private double maxWidth;
   
+  /**
+   * Hauteur maximum de la boîte (-1 = pas de maximum)
+   */
   private double maxHeight;
   
+  /**
+   * Numero de page de la box
+   */
   private int nbPage;
   
   /**
@@ -73,6 +103,7 @@ public class Box {
     this.setHeight(height);
     this.setTitle(title);
     this.setId((-1));
+    this.setNbPage((-1));
   }
   
   /**
@@ -145,10 +176,6 @@ public class Box {
   
   public int getNbPage() {
     return this.nbPage;
-  }
-  
-  public void setNbPage(final int nbPage) {
-    this.nbPage = nbPage;
   }
   
   /**
@@ -236,5 +263,9 @@ public class Box {
     if (((this.maxHeight >= 0.0) && (this.height > this.maxHeight))) {
       this.height = maxHeight;
     }
+  }
+  
+  public void setNbPage(final int nbPage) {
+    this.nbPage = nbPage;
   }
 }

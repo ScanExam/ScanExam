@@ -19,7 +19,7 @@ abstract class AdapterBox {
 	/**
 	 * Présenter gérant l'édition de l'examen
 	 */
-	var PresenterQuestionZone presenter
+	var PresenterQuestionZone presenterQst
 	
 	/** 
 	 * Largeur de la fenêtre 
@@ -98,8 +98,10 @@ abstract class AdapterBox {
 	 */
 	def protected void createBox(double x, double y) {
 		selectionBoxes.addBox(x, y, "Qst " + selectionBoxes.size().toString)
-		val int id = presenter.createQuestion(x, y, minHeight, minWidth)
-		selectionBoxes.getBox(selectionBoxes.size() - 1).setId(id)
+		val Box createdBox = selectionBoxes.getBox(selectionBoxes.size() - 1)
+		val int id = presenterQst.createQuestion(x, y, minHeight, minWidth)
+		createdBox.setId(id)
+		createdBox.setNbPage(presenterQst.getPresenterVueCreation().currentPdfPageNumber)
 	}
 
 	/** 
@@ -112,7 +114,7 @@ abstract class AdapterBox {
 	 */
 	def protected void resizeBox(Box box, double x, double y, double width, double height) {
 		selectionBoxes.updateBox(box, x, y, width, height)
-		presenter.resizeQuestion(box.id, height, width)
+		presenterQst.resizeQuestion(box.id, height, width)
 	}
 
 	/** 
@@ -123,7 +125,7 @@ abstract class AdapterBox {
 	 */
 	def protected void moveBox(Box box, double x, double y) {
 		box.updateCoordinates(x, y)
-		presenter.moveQuestion(box.id, x as float, y as float)
+		presenterQst.moveQuestion(box.id, x as float, y as float)
 	}
 
 	/** 
@@ -132,7 +134,7 @@ abstract class AdapterBox {
 	 */
 	def protected void deleteBox(Box box) {
 		selectionBoxes.removeBox(box)
-		presenter.removeQuestion(box.id)
+		presenterQst.removeQuestion(box.id)
 	}
 
 
@@ -166,7 +168,7 @@ abstract class AdapterBox {
 	// ----------------------------------------------------------------------------------------------------
 	
 	def void setPresenter(PresenterQuestionZone presenter) {
-		this.presenter = presenter
+		this.presenterQst = presenter
 	}
 	
 	def void setScale(int scale) {

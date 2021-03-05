@@ -13,7 +13,7 @@ public abstract class AdapterBox {
   /**
    * Présenter gérant l'édition de l'examen
    */
-  private PresenterQuestionZone presenter;
+  private PresenterQuestionZone presenterQst;
   
   /**
    * Largeur de la fenêtre
@@ -91,10 +91,12 @@ public abstract class AdapterBox {
     String _string = Integer.valueOf(this.selectionBoxes.size()).toString();
     String _plus = ("Qst " + _string);
     this.selectionBoxes.addBox(x, y, _plus);
-    final int id = this.presenter.createQuestion(x, y, this.minHeight, this.minWidth);
     int _size = this.selectionBoxes.size();
     int _minus = (_size - 1);
-    this.selectionBoxes.getBox(_minus).setId(id);
+    final Box createdBox = this.selectionBoxes.getBox(_minus);
+    final int id = this.presenterQst.createQuestion(x, y, this.minHeight, this.minWidth);
+    createdBox.setId(id);
+    createdBox.setNbPage(this.presenterQst.getPresenterVueCreation().getCurrentPdfPageNumber());
   }
   
   /**
@@ -107,7 +109,7 @@ public abstract class AdapterBox {
    */
   protected void resizeBox(final Box box, final double x, final double y, final double width, final double height) {
     this.selectionBoxes.updateBox(box, x, y, width, height);
-    this.presenter.resizeQuestion(box.getId(), height, width);
+    this.presenterQst.resizeQuestion(box.getId(), height, width);
   }
   
   /**
@@ -118,7 +120,7 @@ public abstract class AdapterBox {
    */
   protected void moveBox(final Box box, final double x, final double y) {
     box.updateCoordinates(x, y);
-    this.presenter.moveQuestion(box.getId(), ((float) x), ((float) y));
+    this.presenterQst.moveQuestion(box.getId(), ((float) x), ((float) y));
   }
   
   /**
@@ -127,7 +129,7 @@ public abstract class AdapterBox {
    */
   protected void deleteBox(final Box box) {
     this.selectionBoxes.removeBox(box);
-    this.presenter.removeQuestion(box.getId());
+    this.presenterQst.removeQuestion(box.getId());
   }
   
   /**
@@ -153,7 +155,7 @@ public abstract class AdapterBox {
    * SETTERS
    */
   public void setPresenter(final PresenterQuestionZone presenter) {
-    this.presenter = presenter;
+    this.presenterQst = presenter;
   }
   
   public void setScale(final int scale) {
