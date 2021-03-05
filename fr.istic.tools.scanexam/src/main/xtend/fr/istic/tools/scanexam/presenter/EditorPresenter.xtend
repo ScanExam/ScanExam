@@ -138,5 +138,13 @@ class EditorPresenter implements Presenter
 		service.save(path)
 	}
 	
+	def load(String path) {
+		service.open(path)
+	}
+	
+	def close() {
+		System.exit(0)
+	}
+	
 	
 }

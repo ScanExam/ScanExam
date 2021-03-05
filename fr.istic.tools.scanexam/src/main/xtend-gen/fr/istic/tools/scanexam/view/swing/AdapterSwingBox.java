@@ -2,8 +2,8 @@ package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.box.BoxList;
-import fr.istic.tools.scanexam.presenter.PresenterBox;
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
+import fr.istic.tools.scanexam.view.AdapterBox;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,7 +16,7 @@ import javax.swing.JPanel;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class AdapterSwingBox extends PresenterBox {
+public class AdapterSwingBox extends AdapterBox {
   /**
    * Dernière boîte sélectionné par l'utilisateur
    */

@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.box.BoxList;
 import fr.istic.tools.scanexam.presenter.Presenter;
+import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
 import java.awt.Point;
@@ -100,6 +101,10 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
   /**
    * SETTERS
    */
+  public void setPresenterQst(final PresenterQuestionZone presenterQst) {
+    this.adapterBox.setPresenter(presenterQst);
+  }
+  
   @Override
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);

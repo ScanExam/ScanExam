@@ -19,6 +19,8 @@ public class Box {
   
   private String title;
   
+  private int id;
+  
   private double minWidth;
   
   private double minHeight;
@@ -33,15 +35,7 @@ public class Box {
    * Constructeur par défaut
    */
   public Box() {
-    this.setMinWidth((-1.0));
-    this.setMinHeight((-1.0));
-    this.setMaxWidth((-1.0));
-    this.setMaxHeight((-1.0));
-    this.setX(0.0);
-    this.setY(0.0);
-    this.setWidth(0.0);
-    this.setHeight(0.0);
-    this.setTitle("");
+    this(0.0, 0.0, 0.0, 0.0, "");
   }
   
   /**
@@ -53,15 +47,7 @@ public class Box {
    * @param title Titre de la boîte
    */
   public Box(final double x, final double y, final double width, final double height, final String title) {
-    this.setMinWidth((-1.0));
-    this.setMinHeight((-1.0));
-    this.setMaxWidth((-1.0));
-    this.setMaxHeight((-1.0));
-    this.setX(x);
-    this.setY(y);
-    this.setWidth(width);
-    this.setHeight(height);
-    this.setTitle(title);
+    this(x, y, width, height, title, (-1.0), (-1.0), (-1.0), (-1.0));
   }
   
   /**
@@ -86,6 +72,7 @@ public class Box {
     this.setWidth(width);
     this.setHeight(height);
     this.setTitle(title);
+    this.setId((-1));
   }
   
   /**
@@ -134,6 +121,10 @@ public class Box {
   
   public String getTitle() {
     return this.title;
+  }
+  
+  public int getId() {
+    return this.id;
   }
   
   public double getMinWidth() {
@@ -197,6 +188,10 @@ public class Box {
   
   public void setTitle(final String title) {
     this.title = title;
+  }
+  
+  public void setId(final int id) {
+    this.id = id;
   }
   
   public void setMinWidth(final double minWidth) {

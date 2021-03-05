@@ -6,6 +6,7 @@ import java.awt.Point
 import java.awt.event.MouseEvent
 import java.util.Optional
 import javax.swing.JPanel
+import fr.istic.tools.scanexam.presenter.PresenterQuestionZone
 
 /** 
  * Controlleur Swing du pdf avec swing
@@ -105,6 +106,10 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	def void setPresenterQst(PresenterQuestionZone presenterQst) {
+		adapterBox.setPresenter(presenterQst)
+	}
 	
 	override void setView(JPanel view) {
 		this.view = Optional::of(view)

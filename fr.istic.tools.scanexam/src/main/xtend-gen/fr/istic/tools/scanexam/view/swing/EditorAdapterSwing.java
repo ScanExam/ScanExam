@@ -59,12 +59,22 @@ public class EditorAdapterSwing implements EditorAdapter {
     _mnItemNew.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
+        try {
+          EditorAdapterSwing.this.openPdf();
+        } catch (Throwable _e) {
+          throw Exceptions.sneakyThrow(_e);
+        }
       }
     });
     JMenuItem _mnItemSave = this.view.getMnItemSave();
     _mnItemSave.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
+        try {
+          EditorAdapterSwing.this.saveXmi();
+        } catch (Throwable _e) {
+          throw Exceptions.sneakyThrow(_e);
+        }
       }
     });
     JMenuItem _mnItemLoad = this.view.getMnItemLoad();
@@ -72,7 +82,7 @@ public class EditorAdapterSwing implements EditorAdapter {
       @Override
       public void actionPerformed(final ActionEvent e) {
         try {
-          EditorAdapterSwing.this.openFile();
+          EditorAdapterSwing.this.loadXmi();
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);
         }
@@ -82,6 +92,7 @@ public class EditorAdapterSwing implements EditorAdapter {
     _mnItemClose.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
+        EditorAdapterSwing.this.getPresenter().close();
       }
     });
     JButton _btnPrev = this.view.getBtnPrev();
@@ -107,7 +118,7 @@ public class EditorAdapterSwing implements EditorAdapter {
   /**
    * Ouvre un fichier pdf
    */
-  public void openFile() throws IOException, ClassNotFoundException {
+  public void openPdf() throws IOException, ClassNotFoundException {
     FileNameExtensionFilter filter = new FileNameExtensionFilter("Pdf file(.pdf)", "pdf");
     JFileChooser fc = new JFileChooser();
     fc.setDialogTitle("Open your file");
@@ -142,10 +153,44 @@ public class EditorAdapterSwing implements EditorAdapter {
     }
   }
   
+  /**
+   * Sauvegarde le fichier
+   */
+  public void saveXmi() throws IOException, ClassNotFoundException {
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("Xmi file(.xmi)", "xmi");
+    JFileChooser fc = new JFileChooser();
+    fc.setDialogTitle("Save your file");
+    File _file = new File(".");
+    fc.setCurrentDirectory(_file);
+    fc.setFileFilter(filter);
+    int ret = fc.showSaveDialog(null);
+    if ((ret == JFileChooser.APPROVE_OPTION)) {
+      this.getPresenter().save(fc.getSelectedFile().getPath());
+    }
+  }
+  
+  /**
+   * Charge le fichier
+   */
+  public void loadXmi() throws IOException, ClassNotFoundException {
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("Xmi file(.xmi)", "xmi");
+    JFileChooser fc = new JFileChooser();
+    fc.setDialogTitle("Load your file");
+    File _file = new File(".");
+    fc.setCurrentDirectory(_file);
+    fc.setFileFilter(filter);
+    int ret = fc.showSaveDialog(null);
+    if ((ret == JFileChooser.APPROVE_OPTION)) {
+      this.getPresenter();
+      this.getPresenter().load(fc.getSelectedFile().getPath());
+    }
+  }
+  
   @Override
   public void setPresenter(final EditorPresenter presenter) {
     this.editorPresenter = presenter;
     this.adapterPdfAndBox.presenterPdf = presenter;
+    this.adapterPdfAndBox.setPresenterQst(presenter.getPresenterQuestionZone());
   }
   
   @Override

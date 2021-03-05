@@ -55,28 +55,28 @@ class EditorAdapterSwing implements EditorAdapter {
 		view.getMnItemNew().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "create" est cliqué
-				
+				openPdf()
 			}
 	    });
 	    
 		view.getMnItemSave().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "save" est cliqué
-				
+				saveXmi()
 			}
 	    });
 	    
 		view.getMnItemLoad().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "load" est cliqué
-				openFile()
+				loadXmi();
 			}
 	    });
 	    
 		view.getMnItemClose().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "close" est cliqué
-				
+				presenter.close
 			}
 	    });
 	    
@@ -103,7 +103,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	/**
 	 * Ouvre un fichier pdf
 	 */
-	def void openFile() throws IOException, ClassNotFoundException {
+	def void openPdf() throws IOException, ClassNotFoundException {
 	    var FileNameExtensionFilter filter = new FileNameExtensionFilter("Pdf file(.pdf)", "pdf")
 	    var JFileChooser fc = new JFileChooser()
 	    fc.setDialogTitle("Open your file")
@@ -117,10 +117,13 @@ class EditorAdapterSwing implements EditorAdapter {
 	    } else if (result == JFileChooser.APPROVE_OPTION) {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
+	        
 	        // Envoie du pdf au service
 	        editorPresenter.create(selectedFile)
+	        
 	        // Mise à jour du pdf affiché
 	        adapterPdfAndBox.refreshPdf()
+	        
 	        // Mise à jour de la liste des pages
 			view.cmbBxPage.removeAll
 			for (i : 1 ..< editorPresenter.totalPdfPageNumber) {
@@ -133,14 +136,49 @@ class EditorAdapterSwing implements EditorAdapter {
 	        		view.setCurrentPage(presenter.currentPdfPageNumber)
 				}
 			});
+			
 	        // Mise à jour du numéro de page
 	        view.setCurrentPage(presenter.currentPdfPageNumber)
 	    }
 	}
 	
+	/**
+	 * Sauvegarde le fichier
+	 */
+	def void saveXmi() throws IOException, ClassNotFoundException {
+	    var FileNameExtensionFilter filter = new FileNameExtensionFilter("Xmi file(.xmi)", "xmi")
+		var JFileChooser fc = new JFileChooser()
+	    fc.setDialogTitle("Save your file")
+	    fc.setCurrentDirectory(new File("."))
+	    fc.setFileFilter(filter)
+	    
+        var int ret = fc.showSaveDialog(null)
+        if(ret == JFileChooser.APPROVE_OPTION) { // validation
+            presenter.save(fc.getSelectedFile().path)
+        } 
+	}
+	
+	/**
+	 * Charge le fichier
+	 */
+	def void loadXmi() throws IOException, ClassNotFoundException {
+	    var FileNameExtensionFilter filter = new FileNameExtensionFilter("Xmi file(.xmi)", "xmi")
+		var JFileChooser fc = new JFileChooser()
+	    fc.setDialogTitle("Load your file")
+	    fc.setCurrentDirectory(new File("."))
+	    fc.setFileFilter(filter)
+	    
+        var int ret = fc.showSaveDialog(null)
+        if(ret == JFileChooser.APPROVE_OPTION) { // validation
+        	presenter
+            presenter.load(fc.getSelectedFile().path)
+        } 
+	}
+	
 	override setPresenter(EditorPresenter presenter) {
 		editorPresenter = presenter
 		adapterPdfAndBox.presenterPdf = presenter
+		adapterPdfAndBox.presenterQst = presenter.presenterQuestionZone
 	}
 	
 	override getPresenter() {

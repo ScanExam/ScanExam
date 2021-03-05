@@ -1,19 +1,26 @@
-package fr.istic.tools.scanexam.presenter
+package fr.istic.tools.scanexam.view
 
-import fr.istic.tools.scanexam.box.BoxList
 import fr.istic.tools.scanexam.box.Box
+import fr.istic.tools.scanexam.box.BoxList
+import fr.istic.tools.scanexam.presenter.PresenterQuestionZone
 
 /** 
  * Permet de dessiner des boîtes de sélection
  * @author Julien Cochet
  */
-abstract class PresenterBox {
+abstract class AdapterBox {
 	
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	/**
+	 * Présenter gérant l'édition de l'examen
+	 */
+	var PresenterQuestionZone presenter
+	
 	/** 
 	 * Largeur de la fenêtre 
 	 */
@@ -52,7 +59,7 @@ abstract class PresenterBox {
 	protected final int titleHeight = 32
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * CONSTRUCTEUR
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -78,7 +85,7 @@ abstract class PresenterBox {
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -91,6 +98,8 @@ abstract class PresenterBox {
 	 */
 	def protected void createBox(double x, double y) {
 		selectionBoxes.addBox(x, y, "Qst " + selectionBoxes.size().toString)
+		val int id = presenter.createQuestion(x, y, minHeight, minWidth)
+		selectionBoxes.getBox(selectionBoxes.size() - 1).setId(id)
 	}
 
 	/** 
@@ -103,6 +112,7 @@ abstract class PresenterBox {
 	 */
 	def protected void resizeBox(Box box, double x, double y, double width, double height) {
 		selectionBoxes.updateBox(box, x, y, width, height)
+		presenter.resizeQuestion(box.id, height, width)
 	}
 
 	/** 
@@ -113,6 +123,7 @@ abstract class PresenterBox {
 	 */
 	def protected void moveBox(Box box, double x, double y) {
 		box.updateCoordinates(x, y)
+		presenter.moveQuestion(box.id, x as float, y as float)
 	}
 
 	/** 
@@ -121,11 +132,12 @@ abstract class PresenterBox {
 	 */
 	def protected void deleteBox(Box box) {
 		selectionBoxes.removeBox(box)
+		presenter.removeQuestion(box.id)
 	}
 
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/*
 	 * GETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -148,10 +160,14 @@ abstract class PresenterBox {
 
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
+	def void setPresenter(PresenterQuestionZone presenter) {
+		this.presenter = presenter
+	}
 	
 	def void setScale(int scale) {
 		this.scale = scale

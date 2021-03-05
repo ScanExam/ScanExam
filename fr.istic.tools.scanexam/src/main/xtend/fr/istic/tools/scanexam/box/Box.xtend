@@ -22,6 +22,8 @@ class Box {
 	double height
 	// Titre de la boîte
 	String title
+	// Indentifiant de la boîte
+	int id
 	// Largueur minimum de la boîte (ne peux pas être négatif)
 	double minWidth
 	// Hauteur minimum de la boîte (ne peux pas être négatif)
@@ -43,15 +45,7 @@ class Box {
 	 * Constructeur par défaut
 	 */
 	new() {
-		this.setMinWidth(-1.0)
-		this.setMinHeight(-1.0)
-		this.setMaxWidth(-1.0)
-		this.setMaxHeight(-1.0)
-		this.setX(0.0)
-		this.setY(0.0)
-		this.setWidth(0.0)
-		this.setHeight(0.0)
-		this.setTitle("")
+		this(0.0, 0.0, 0.0, 0.0, "")
 	}
 
 	/** 
@@ -63,15 +57,7 @@ class Box {
 	 * @param title Titre de la boîte
 	 */
 	new(double x, double y, double width, double height, String title) {
-		this.setMinWidth(-1.0)
-		this.setMinHeight(-1.0)
-		this.setMaxWidth(-1.0)
-		this.setMaxHeight(-1.0)
-		this.setX(x)
-		this.setY(y)
-		this.setWidth(width)
-		this.setHeight(height)
-		this.setTitle(title)
+		this(x, y, width, height, title, -1.0, -1.0, -1.0, -1.0)
 	}
 
 	/** 
@@ -86,8 +72,7 @@ class Box {
 	 * @param maxWidth Largueur maximum de la boîte
 	 * @param maxHeight Hauteur maximum de la boîte
 	 */
-	new(double x, double y, double width, double height, String title, double minWidth, double minHeight,
-		double maxWidth, double maxHeight) {
+	new(double x, double y, double width, double height, String title, double minWidth, double minHeight, double maxWidth, double maxHeight) {
 		this.setMinWidth(minWidth)
 		this.setMinHeight(minHeight)
 		this.setMaxWidth(maxWidth)
@@ -97,6 +82,7 @@ class Box {
 		this.setWidth(width)
 		this.setHeight(height)
 		this.setTitle(title)
+		this.setId(-1)
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -150,6 +136,10 @@ class Box {
 
 	def String getTitle() {
 		return title
+	}
+
+	def int getId() {
+		return id
 	}
 
 	def double getMinWidth() {
@@ -216,6 +206,10 @@ class Box {
 
 	def void setTitle(String title) {
 		this.title = title
+	}
+
+	def void setId(int id) {
+		this.id = id
 	}
 
 	def void setMinWidth(double minWidth) {
