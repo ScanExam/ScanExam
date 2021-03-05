@@ -9,9 +9,8 @@ class Box extends Rectangle {
 		static def int newID(){
 			ID++;
 		}
-	
-		new(String name ,int page ,BoxType type,double x, double y) {
-			super(x,y,0,0);
+		new(String name ,int page ,BoxType type,double x, double y,double h, double w) {
+			super(x,y,h,w);
 			boxId = newID();
 			this.page = page
 			this.name = name
@@ -20,6 +19,11 @@ class Box extends Rectangle {
 			setFill(Color.rgb(200, 200, 200, 0.2));
 			setStroke(Color.BLACK);
 			setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
+			
+		}
+	
+		new(String name ,int page ,BoxType type,double x, double y) {
+			this(name,page,type,x,y,0,0);
 			
 		}
 		new(int page ,BoxType type,double x, double y) {
@@ -61,6 +65,12 @@ class Box extends Rectangle {
 		}
 		def getBoxId(){
 			boxId
+		}
+		def getName(){
+			name
+		}
+		def setName(String name){
+			this.name = name
 		}
 		
 		def setBoxId(int id){

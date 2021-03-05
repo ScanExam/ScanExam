@@ -2,6 +2,8 @@ package fr.istic.tools.scanexam.presenter
 
 import java.util.Objects
 import fr.istic.tools.scanexam.services.ExamEditionService
+import fr.istic.tools.scanexam.core.Question
+import java.util.ArrayList
 
 /**
  * Class to manage conversions of the view's questions 
@@ -63,5 +65,74 @@ class PresenterQuestionZone {
 	def moveQuestion(int id, float x, float y){
 		service.moveQuestion(id,x,y)
 	}
+	
+	
+	
+	
+	
+	/* --LOADING NEW TEMPLATE--  */
+	
+	int questionToLoad = -1;
+	int questionToLoadPage =  -1;
+	/**
+	 * Loads the next question into questionToLoad
+	 * if there is a new question, return true,
+	 * else return false
+	 */
+	def boolean loadNextQuestion(){
+		//TODO get a list of questions from the model
+		// the list will be a list of list of questions : List1<List2<Question>>
+		//List1 represents a list of pages, and list2 is a list of all the questions of a certain page
+		var pages = new ArrayList<ArrayList<Question>>()
+		
+		if (questionToLoad == -1) {
+			questionToLoadPage = 0
+			questionToLoad = 0
+		} else {
+			questionToLoad++
+			if (questionToLoad >= pages.get(questionToLoadPage).size) {
+			questionToLoadPage++;
+			questionToLoad = 0
+			}
+		}
+		
+		
+		
+		
+		
+		false;
+	}
+	/* 
+	def double currentQuestionX(){
+		questionToLoad.zone.x
+	}
+	
+	def double currentQuestionY(){
+		questionToLoad.zone.y
+	}
+	
+	def double currentQuestionHeight(){
+		questionToLoad.zone.heigth
+	}
+	
+	def double currentQuestionWidth(){
+		questionToLoad.zone.width
+	}
+	
+	def String currentQuestionName(){
+		questionToLoad.name
+	}
+	
+	def int currentQuestionId(){
+		questionToLoad.id
+	}
+	
+	def int currentQuestionPage(){
+		questionToLoadPage
+	}*/
+	
+	/* -----------------------  */
+	
+		
 	
 }
