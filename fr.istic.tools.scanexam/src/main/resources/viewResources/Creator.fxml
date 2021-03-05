@@ -22,52 +22,52 @@
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="%menu.file">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#newTemplatePressed" text="New Template" />
+                  <MenuItem mnemonicParsing="false" onAction="#newTemplatePressed" text="%menu.file.new" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#saveTemplatePressed" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Load" />
+              <MenuItem mnemonicParsing="false" onAction="#saveTemplatePressed" text="%menu.file.save" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadTemplatePressed" text="%menu.file.load" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="%menu.file.close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="%menu.edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" text="%menu.edit.delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="%menu.help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" text="%menu.help.about" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
       <ToolBar>
         <items>
-          <Button mnemonicParsing="false" onAction="#questionAreaPressed" text="Question area" />
-            <Button fx:id="iDAreaPressed" mnemonicParsing="false" text="ID area" />
-            <Button mnemonicParsing="false" onAction="#qRArearessed" text="QR area" />
-            <Button mnemonicParsing="false" onAction="#movePressed" text="Move Camera" />
+          <Button mnemonicParsing="false" onAction="#questionAreaPressed" text="%button.createQuestion" />
+            <Button fx:id="iDAreaPressed" mnemonicParsing="false" text="%button.IDarea" />
+            <Button mnemonicParsing="false" onAction="#qRArearessed" text="%button.QRarea" />
+            <Button mnemonicParsing="false" onAction="#movePressed" text="%button.moveCamera" />
         </items>
       </ToolBar>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
             <VBox minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" spacing="5.0">
                <children>
-                  <Label text="Questions :" />
+                  <Label text="%label.questions" />
                   <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <Label text="Page " />
+                  <Label text="%label.pages" />
                   <ChoiceBox prefWidth="150.0" />
                   <HBox>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#previousPagePressed" text="prev" />
+                        <Button mnemonicParsing="false" onAction="#previousPagePressed" text="%button.previousQuestion" />
                         <Pane HBox.hgrow="ALWAYS">
                            <children>
                               <Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" />
                            </children></Pane>
-                        <Button mnemonicParsing="false" onAction="#nextPagePressed" text="next" />
+                        <Button mnemonicParsing="false" onAction="#nextPagePressed" text="%button.nextQuestion" />
                      </children>
                   </HBox>
                </children>
@@ -82,7 +82,7 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <Label fx:id="introLabel" style="-fx-text-fill: GREY;" text="Load PDF in file menu" />
+                        <Label fx:id="introLabel" style="-fx-text-fill: GREY;" text="%label.instructions" />
                         <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage">
                            <children>
                               <ImageView fx:id="pdfView" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />

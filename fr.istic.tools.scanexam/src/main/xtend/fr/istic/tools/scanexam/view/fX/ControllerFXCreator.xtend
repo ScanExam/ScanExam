@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager
 import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
 import javafx.scene.layout.VBox
+import javafx.scene.control.TextField
 
 class ControllerFXCreator {
 	
@@ -101,6 +102,11 @@ class ControllerFXCreator {
 	def void saveTemplatePressed(){
 		saveTemplate();
 	}
+	@FXML
+	def void loadTemplatePressed(){
+		loadTemplate();
+	}
+	
 	@FXML
 	def void previousPagePressed(){
 		previousPage
@@ -240,7 +246,7 @@ class ControllerFXCreator {
 	@FXML
 	def void ZoomImage(ScrollEvent e) {
 		var source = e.source as Node
-		if (e.deltaY > 0) {
+		if (e.deltaY < 0) {
 			source.scaleX = source.scaleX * 0.95
 			source.scaleY = source.scaleY * 0.95
 		} else {
@@ -336,13 +342,15 @@ class ControllerFXCreator {
 		lb.textCommit =  new EventHandler<ActionEvent>(){
 			 
 			override handle(ActionEvent event) {
-				renameBox(box)
+				renameBox(box,(event.source as TextField).text)
 			}
 			
 		}
 		lb.moveAction = new EventHandler<ActionEvent>(){
 			 
 			override handle(ActionEvent event) {
+				setToMoveTool
+				currentRectangle = box
 			}
 			
 		}
@@ -360,8 +368,9 @@ class ControllerFXCreator {
 		boxes.add(box);
 	}
 	
-	def renameBox(Box box){
-		
+	def renameBox(Box box,String newName){
+		box.name = newName
+		editor.presenter.presenterQuestionZone.renameQuestion(box.boxId,box.name)
 	}
 	
 	def moveBox(Box box){
@@ -378,7 +387,7 @@ class ControllerFXCreator {
 		questionList.items.remove(box.listViewBox)
 		mainPane.children.remove(box)
 		boxes.remove(box)
-		//editor.removeBox(box);
+		editor.removeBox(box);
 	}
 	
 	/**
@@ -431,12 +440,27 @@ class ControllerFXCreator {
 		if (file !== null) 
 		{
 			editor.presenter.load(file.path);
+			loadBoxes();
 			renderDocument();
 		}
 		else 
 		{
 			logger.warn("File not chosen")
 		}
+	}
+	
+	def loadBoxes(){
+		/*while (editor.presenter.presenterQuestionZone.loadNextQuestion) {
+			var box = new Box(editor.presenter.presenterQuestionZone.currentQuestionName,
+			editor.presenter.presenterQuestionZone.currentQuestionPage,
+			BoxType.QUESTION,
+			editor.presenter.presenterQuestionZone.currentQuestionX,
+			editor.presenter.presenterQuestionZone.currentQuestionY,
+			editor.presenter.presenterQuestionZone.currentQuestionHeight,
+			editor.presenter.presenterQuestionZone.currentQuestionWidth
+			);
+			addBox(box);
+		}*/
 	}
 		
 	/**

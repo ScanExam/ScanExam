@@ -9,6 +9,9 @@ import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
 import fr.istic.tools.scanexam.presenter.PresenterBindings
 import fr.istic.tools.scanexam.view.fX.ControllerFXCreator
 import javafx.scene.image.Image
+import java.util.ResourceBundle
+import java.util.Locale
+import fr.istic.tools.scanexam.config.LanguageManager
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -30,6 +33,7 @@ class LauncherFX extends Application implements Launcher {
 	override start(Stage primaryStage) throws Exception {
 			println("started App");
 			val loader = new FXMLLoader();
+			loader.setResources(LanguageManager.currentBundle);
 			val root = loader.load(ResourcesUtils.getInputStreamResource("/viewResources/Creator.fxml"));
 			var controller = (loader.controller as ControllerFXCreator);
 			controller.editorAdapterFX = edit;
