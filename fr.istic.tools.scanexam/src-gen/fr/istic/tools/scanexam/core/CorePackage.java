@@ -298,7 +298,7 @@ public interface CorePackage extends EPackage {
 	int PAGE__ID = 0;
 
 	/**
-	 * The feature id for the '<em><b>Questions</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Questions</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -610,6 +610,16 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '<em>Map</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.Map
+	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getMap()
+	 * @generated
+	 */
+	int MAP = 11;
+
+	/**
 	 * The meta object id for the '<em>Pair</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -617,7 +627,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPair()
 	 * @generated
 	 */
-	int PAIR = 11;
+	int PAIR = 12;
 
 
 	/**
@@ -814,15 +824,15 @@ public interface CorePackage extends EPackage {
 	EAttribute getPage_Id();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.Page#getQuestions <em>Questions</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Page#getQuestions <em>Questions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Questions</em>'.
+	 * @return the meta object for the attribute '<em>Questions</em>'.
 	 * @see fr.istic.tools.scanexam.core.Page#getQuestions()
 	 * @see #getPage()
 	 * @generated
 	 */
-	EReference getPage_Questions();
+	EAttribute getPage_Questions();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Exam <em>Exam</em>}'.
@@ -1003,6 +1013,17 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getStudentSheet_Grades();
+
+	/**
+	 * Returns the meta object for data type '{@link java.util.Map <em>Map</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Map</em>'.
+	 * @see java.util.Map
+	 * @model instanceClass="java.util.Map" typeParameters="T1 T2"
+	 * @generated
+	 */
+	EDataType getMap();
 
 	/**
 	 * Returns the meta object for data type '{@link fr.istic.tools.scanexam.utils.Pair <em>Pair</em>}'.
@@ -1193,12 +1214,12 @@ public interface CorePackage extends EPackage {
 		EAttribute PAGE__ID = eINSTANCE.getPage_Id();
 
 		/**
-		 * The meta object literal for the '<em><b>Questions</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Questions</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PAGE__QUESTIONS = eINSTANCE.getPage_Questions();
+		EAttribute PAGE__QUESTIONS = eINSTANCE.getPage_Questions();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.ExamImpl <em>Exam</em>}' class.
@@ -1347,6 +1368,16 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EReference STUDENT_SHEET__GRADES = eINSTANCE.getStudentSheet_Grades();
+
+		/**
+		 * The meta object literal for the '<em>Map</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.Map
+		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getMap()
+		 * @generated
+		 */
+		EDataType MAP = eINSTANCE.getMap();
 
 		/**
 		 * The meta object literal for the '<em>Pair</em>' data type.

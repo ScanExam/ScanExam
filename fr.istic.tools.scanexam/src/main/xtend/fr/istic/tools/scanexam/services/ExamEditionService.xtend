@@ -13,6 +13,13 @@ import static fr.istic.tools.scanexam.services.ExamSingleton.*
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory
+import java.util.Base64
+import fr.istic.tools.scanexam.core.CorePackage
+import java.util.Map
+import fr.istic.tools.scanexam.core.Question
+import java.util.HashMap
+import java.util.ArrayList
+import org.eclipse.emf.common.util.EList
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -42,7 +49,7 @@ class ExamEditionService extends Service // TODO : renommer
 		question.zone.y = y 
 		question.zone.width = width
 		question.zone.heigth = heigth
-		currentPage.questions.add(question.id,question);
+		currentPage.questions.put(question.id,question);
 		return questionId++;
 	}
 	def rescaleQuestion(int id,float heigth,float width)
@@ -71,18 +78,22 @@ class ExamEditionService extends Service // TODO : renommer
 
 	override save(String path) {
 		
-		
 		val outputStream = new ByteArrayOutputStream();
 		document.save(outputStream);
-		template.document.addAll(outputStream.toByteArray());
+		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
+		template.encodedDocument = new String(encoded);
 		outputStream.close();
-		
+
 		template.exam = ExamSingleton.instance
+
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
 		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
+			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
 		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
+	
+			
 		val resource = resourceSet.createResource(URI.createFileURI(path))
 		resource.getContents().add(template);
 		resource.save(null);
@@ -96,8 +107,8 @@ class ExamEditionService extends Service // TODO : renommer
 		{
 			this.template = creationTemplate.get()
 			ExamSingleton.instance = creationTemplate.get().exam
-			val inputStream = new ByteArrayInputStream(creationTemplate.get().document);
-			document = PDDocument.load(inputStream)
+			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
+			document = PDDocument.load(decoded)
 
 		}
 
@@ -129,11 +140,11 @@ class ExamEditionService extends Service // TODO : renommer
 
 		ExamSingleton.instance = CoreFactory.eINSTANCE.createExam()
 
-		 
 		for (i : 0 ..< document.pages.size()) 
 		{
-			
-			ExamSingleton.instance.pages.add(CoreFactory.eINSTANCE.createPage());
+			val page = CoreFactory.eINSTANCE.createPage()
+			page.questions = new HashMap<Integer,Question>();
+			ExamSingleton.instance.pages.add(page);
 		}
 	}
 

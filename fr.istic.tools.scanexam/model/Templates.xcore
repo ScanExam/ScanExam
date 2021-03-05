@@ -9,7 +9,7 @@ class CorrectionTemplate
 }
 class CreationTemplate 
 {
-	 byte[] document
+	 String encodedDocument
 	 Exam exam
 }
 

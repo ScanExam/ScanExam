@@ -17,9 +17,11 @@ public class EditorAdapterFX implements EditorAdapter {
   }
   
   public void addBox(final Box box) {
+    box.setBoxId(this.presenter.getPresenterQuestionZone().createQuestion(box.getX(), box.getY(), box.getHeight(), box.getWidth()));
   }
   
   public void removeBox(final Box box) {
+    this.presenter.getPresenterQuestionZone().removeQuestion(box.getBoxId());
   }
   
   public void updateBox(final Box box) {

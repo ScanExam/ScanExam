@@ -3,8 +3,8 @@ package fr.istic.tools.scanexam.services;
 import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * A revoir ?
@@ -20,7 +20,7 @@ public final class ExamSingleton {
    * @author degas
    */
   public static Question getQuestion(final int pageId, final int questionid) {
-    return ExamSingleton.instance.getPages().get(pageId).getQuestions().get(questionid);
+    return ExamSingleton.instance.getPages().get(pageId).getQuestions().get(Integer.valueOf(questionid));
   }
   
   /**
@@ -28,8 +28,8 @@ public final class ExamSingleton {
    * @return List<Question>
    * @author degas
    */
-  public static List<Question> getQuestions(final int pageId) {
-    return Collections.<Question>unmodifiableList(ExamSingleton.instance.getPages().get(pageId).getQuestions());
+  public static Collection<Question> getQuestions(final int pageId) {
+    return Collections.<Question>unmodifiableCollection(ExamSingleton.instance.getPages().get(pageId).getQuestions().values());
   }
   
   public static Page getPage(final int pageId) {

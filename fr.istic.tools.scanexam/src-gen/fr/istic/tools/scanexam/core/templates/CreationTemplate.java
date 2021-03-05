@@ -4,8 +4,6 @@ package fr.istic.tools.scanexam.core.templates;
 
 import fr.istic.tools.scanexam.core.Exam;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -17,7 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getDocument <em>Document</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}</li>
  * </ul>
  *
@@ -27,16 +25,26 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface CreationTemplate extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Document</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.Byte}.
+	 * Returns the value of the '<em><b>Encoded Document</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Document</em>' attribute list.
-	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCreationTemplate_Document()
+	 * @return the value of the '<em>Encoded Document</em>' attribute.
+	 * @see #setEncodedDocument(String)
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCreationTemplate_EncodedDocument()
 	 * @model unique="false"
 	 * @generated
 	 */
-	EList<Byte> getDocument();
+	String getEncodedDocument();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument <em>Encoded Document</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Encoded Document</em>' attribute.
+	 * @see #getEncodedDocument()
+	 * @generated
+	 */
+	void setEncodedDocument(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Exam</b></em>' attribute.

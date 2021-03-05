@@ -5,6 +5,7 @@ import fr.istic.tools.scanexam.core.Question
 import java.util.List
 import java.util.Collections
 import fr.istic.tools.scanexam.core.Page
+import java.util.Collection
 
 /**
  * A revoir ?
@@ -27,9 +28,9 @@ final class ExamSingleton
 	 * @return List<Question>
 	 * @author degas
 	 */
-	static def List<Question> getQuestions(int pageId)
+	static def Collection<Question> getQuestions(int pageId)
 	{
-		return Collections.unmodifiableList(instance.pages.get(pageId).questions);
+		return Collections.unmodifiableCollection(instance.pages.get(pageId).questions.values);
 	}
 	
 	static def Page getPage(int pageId)

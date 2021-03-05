@@ -6,21 +6,14 @@ import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 
-import java.util.Collection;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -58,14 +51,14 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 	protected int id = ID_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getQuestions() <em>Questions</em>}' containment reference list.
+	 * The cached value of the '{@link #getQuestions() <em>Questions</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getQuestions()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Question> questions;
+	protected Map<Integer, Question> questions;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -112,10 +105,7 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Question> getQuestions() {
-		if (questions == null) {
-			questions = new EObjectContainmentEList<Question>(Question.class, this, CorePackage.PAGE__QUESTIONS);
-		}
+	public Map<Integer, Question> getQuestions() {
 		return questions;
 	}
 
@@ -124,13 +114,11 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case CorePackage.PAGE__QUESTIONS:
-				return ((InternalEList<?>)getQuestions()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
+	public void setQuestions(Map<Integer, Question> newQuestions) {
+		Map<Integer, Question> oldQuestions = questions;
+		questions = newQuestions;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.PAGE__QUESTIONS, oldQuestions, questions));
 	}
 
 	/**
@@ -162,8 +150,7 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 				setId((Integer)newValue);
 				return;
 			case CorePackage.PAGE__QUESTIONS:
-				getQuestions().clear();
-				getQuestions().addAll((Collection<? extends Question>)newValue);
+				setQuestions((Map<Integer, Question>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -181,7 +168,7 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 				setId(ID_EDEFAULT);
 				return;
 			case CorePackage.PAGE__QUESTIONS:
-				getQuestions().clear();
+				setQuestions((Map<Integer, Question>)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -198,7 +185,7 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 			case CorePackage.PAGE__ID:
 				return id != ID_EDEFAULT;
 			case CorePackage.PAGE__QUESTIONS:
-				return questions != null && !questions.isEmpty();
+				return questions != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -215,6 +202,8 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: ");
 		result.append(id);
+		result.append(", questions: ");
+		result.append(questions);
 		result.append(')');
 		return result.toString();
 	}
