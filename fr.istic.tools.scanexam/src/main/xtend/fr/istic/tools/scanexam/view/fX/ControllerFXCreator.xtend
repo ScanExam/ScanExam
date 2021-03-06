@@ -23,6 +23,7 @@ import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
 import javafx.scene.layout.VBox
 import javafx.scene.control.TextField
+import javafx.scene.input.MouseButton
 
 class ControllerFXCreator {
 	
@@ -112,28 +113,34 @@ class ControllerFXCreator {
 		previousPage
 	}	
 	@FXML 
-	def void mainMouseEvent(MouseEvent e) {
+	def void mainMouseEvent(MouseEvent e) { // check if rightclick or not, maybe add to choose mouse actuioin
+		if (e.button == MouseButton.SECONDARY) {
+			logger.warn("right")
+			moveImage(e)
+		}else {
+			logger.warn("left")
 		chooseMouseAction(e);
+		}
 	}
 	
 	
 	def void chooseMouseAction(MouseEvent e) {
 		switch currentTool {
 			case QUESTION_AREA: {
-				CreateBox(e);
+				createBox(e);
 			}
 			case ID_AREA: {
 			}
 			case QR_AREA: {
 			}
 			case MOVE_TOOL: {
-				
+				moveBox(e)
 			}
 			case RESIZE_TOOL: {
 				resizeBox(e)
 			}
 			case MOVE_CAMERA_TOOL: {
-				MoveImage(e);
+				moveImage(e);
 			}
 		}
 	}
@@ -145,7 +152,7 @@ class ControllerFXCreator {
 	
 	var boxes = new LinkedList<Box>();
 	Box currentRectangle = null;
-	def void CreateBox(MouseEvent e){
+	def void createBox(MouseEvent e){
 		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.x,maxX- FXSettings.BOX_BORDER_THICKNESS));
 		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.y,maxY- FXSettings.BOX_BORDER_THICKNESS));
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { //TODO add type checks
@@ -191,19 +198,30 @@ class ControllerFXCreator {
 	}
 	
 	def void moveBox(MouseEvent e ) {
+		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.x,maxX- FXSettings.BOX_BORDER_THICKNESS));
+		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.y,maxY- FXSettings.BOX_BORDER_THICKNESS));
 		
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
+		
+		}
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+			currentRectangle.x = Math.min(mousePositionX,maxX-FXSettings.BOX_BORDER_THICKNESS-currentRectangle.width)
+			currentRectangle.y = Math.min(mousePositionY,maxY-FXSettings.BOX_BORDER_THICKNESS-currentRectangle.height)
+		}
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			
+		}
 	}
 	
 	def void resizeBox(MouseEvent e) {
 		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.x,maxX- FXSettings.BOX_BORDER_THICKNESS));
 		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,Math.min(e.y,maxY- FXSettings.BOX_BORDER_THICKNESS));
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
-			mouseOriginX = currentRectangle.width 
-			mouseOriginY = currentRectangle.height 
+			
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.width = mouseOriginX - ((mouseOriginX + currentRectangle.x) - mousePositionX)
-			currentRectangle.height = mouseOriginY - ((mouseOriginY + currentRectangle.y) - mousePositionY)
+			currentRectangle.width = Math.abs(currentRectangle.x - mousePositionX)
+			currentRectangle.height =  Math.abs(currentRectangle.y - mousePositionY)
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			resizeBox(currentRectangle)
@@ -217,7 +235,7 @@ class ControllerFXCreator {
 	/**
 	 * Used to move around the image in the parent pane
 	 */
-	def void MoveImage(MouseEvent e) {
+	def void moveImage(MouseEvent e) {
 
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { //TODO add type checks
 			mouseOriginX = e.screenX
@@ -370,6 +388,7 @@ class ControllerFXCreator {
 	
 	def renameBox(Box box,String newName){
 		box.name = newName
+		box.listViewBox.labelText = newName
 		editor.presenter.presenterQuestionZone.renameQuestion(box.boxId,box.name)
 	}
 	
@@ -450,7 +469,8 @@ class ControllerFXCreator {
 	}
 	
 	def loadBoxes(){
-		/*while (editor.presenter.presenterQuestionZone.loadNextQuestion) {
+		editor.presenter.presenterQuestionZone.initLoading
+		while (editor.presenter.presenterQuestionZone.loadNextQuestion) {
 			var box = new Box(editor.presenter.presenterQuestionZone.currentQuestionName,
 			editor.presenter.presenterQuestionZone.currentQuestionPage,
 			BoxType.QUESTION,
@@ -460,7 +480,7 @@ class ControllerFXCreator {
 			editor.presenter.presenterQuestionZone.currentQuestionWidth
 			);
 			addBox(box);
-		}*/
+		}
 	}
 		
 	/**
@@ -489,11 +509,7 @@ class ControllerFXCreator {
 		else {
 			maxY = (pdfView.image.height / pdfView.image.width) * fitH 
 			maxX = fitW
-		}
-		logger.warn(maxX)
-		logger.warn(maxY)
-	
-		
+		}	
 	}
 	/**
 	 * changes the selected page to load and then renders it

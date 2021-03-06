@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.image.ImageView
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import javafx.scene.image.Image
+import javafx.scene.control.Label
 
 class ListViewBox extends VBox{
 	new(String text,Box parent) {
@@ -19,12 +20,16 @@ class ListViewBox extends VBox{
 		this.parent = parent
 		field = new TextField(text);
 		field.maxWidth =  75;
+		nameLabel = new Label(text);
 		this.children.add(top);
 		this.children.add(bottom)
-		top.children.add(field);
+		
+		top.children.add(nameLabel)
+		top.children.add(field)
 		makeButtons();
 		
 	}
+	Label nameLabel;
 	TextField field;
 	HBox top;
 	HBox bottom;
@@ -78,6 +83,10 @@ class ListViewBox extends VBox{
 	}
 	def void setResizeAction(EventHandler<ActionEvent> hander){
 		resize.onAction = hander
+	}
+	
+	def void setLabelText(String text) {
+		nameLabel.text = text
 	}
 	
 	
