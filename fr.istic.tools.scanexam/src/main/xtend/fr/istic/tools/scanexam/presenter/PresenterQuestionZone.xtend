@@ -63,8 +63,8 @@ class PresenterQuestionZone {
 	 * @param float y : new y position
 	 * @author : Benjamin Danlos
 	 */
-	def moveQuestion(int id, float x, float y){
-		service.moveQuestion(id,x,y)
+	def moveQuestion(int id, double x, double y){
+		service.moveQuestion(id,x as float,y as float)
 	}
 	
 	

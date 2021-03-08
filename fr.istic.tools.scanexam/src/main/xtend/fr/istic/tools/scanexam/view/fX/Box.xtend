@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fX
 
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
+import java.lang.LiveStackFrame.PrimitiveSlot
 
 class Box extends Rectangle {
 	
@@ -13,7 +14,6 @@ class Box extends Rectangle {
 			super(x,y,h,w);
 			boxId = newID();
 			this.page = page
-			this.name = name
 			this.type = type
 			listViewBox = new ListViewBox(name,this);
 			setFill(Color.rgb(200, 200, 200, 0.2));
@@ -46,7 +46,6 @@ class Box extends Rectangle {
 		
 		ListViewBox listViewBox;
 		BoxType type;
-		String name;
 		int boxId;
 		int page;
 		
@@ -66,12 +65,10 @@ class Box extends Rectangle {
 		def getBoxId(){
 			boxId
 		}
-		def getName(){
-			name
+		def String getName(){
+			listViewBox.name
 		}
-		def setName(String name){
-			this.name = name
-		}
+			
 		
 		def setBoxId(int id){
 			this.boxId = id

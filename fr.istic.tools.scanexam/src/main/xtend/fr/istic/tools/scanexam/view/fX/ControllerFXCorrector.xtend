@@ -28,7 +28,7 @@ import org.apache.logging.log4j.LogManager
  * Class used by the JavaFX library as a controller for the view. 
  * @author Benjamin Danlos
  */
-class ControllerFX {
+class ControllerFXCorrector {
 
 	static val logger = LogManager.logger
 	/**
@@ -361,7 +361,7 @@ class ControllerFX {
 	
 	static class StudentItem extends Label {
 		int id;
-		new(int s,ControllerFX c) {
+		new(int s,ControllerFXCorrector c) {
 			super("Student: " + s)
 			id = s;
 		}
