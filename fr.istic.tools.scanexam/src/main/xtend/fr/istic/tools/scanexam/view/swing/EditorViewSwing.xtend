@@ -1,7 +1,10 @@
 package fr.istic.tools.scanexam.view.swing
 
 import java.awt.BorderLayout
+import java.awt.event.AdjustmentEvent
+import java.awt.event.AdjustmentListener
 import javax.swing.BoxLayout
+import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JFrame
@@ -11,6 +14,8 @@ import javax.swing.JMenu
 import javax.swing.JMenuBar
 import javax.swing.JMenuItem
 import javax.swing.JPanel
+import javax.swing.JScrollBar
+import javax.swing.JScrollPane
 import javax.swing.border.EmptyBorder
 
 import static fr.istic.tools.scanexam.config.LanguageManager.*
@@ -88,7 +93,10 @@ class EditorViewSwing {
 	var JLabel lblQst
 	
 	/* Liste des questions */
-	var JList<String> listQst
+	var JList<QuestionEditionPanel> listQst
+	
+	/* Listes des panel de question */
+	var DefaultListModel<QuestionEditionPanel> qstModel
 	
 	/* Panel pour les pages */
 	var JPanel pnlPage
@@ -127,6 +135,7 @@ class EditorViewSwing {
 	new(AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel) {
 		this.adapterPdfAndBoxPanel = adapterPdfAndBoxPanel
 		initialize()
+		this.adapterPdfAndBoxPanel.getAdapterBox().setQstModel(qstModel)
 	}
 
 	/** 
@@ -176,7 +185,7 @@ class EditorViewSwing {
 		
 		pnlMain = new JPanel()
 		pnlMain.setBorder(new EmptyBorder(5, 5, 5, 5))
-		window. setContentPane(pnlMain)
+		window.setContentPane(pnlMain)
 		pnlMain.setLayout(new BorderLayout(0, 0))
 		
 		pnlButtons = new JPanel()
@@ -202,7 +211,7 @@ class EditorViewSwing {
 		lblQst = new JLabel("Questions:")
 		pnlQst.add(lblQst, BorderLayout.NORTH)
 		
-		listQst = new JList()
+		listQstInitialization()
 		pnlQst.add(listQst, BorderLayout.CENTER)
 		
 		pnlPage = new JPanel()
@@ -232,6 +241,24 @@ class EditorViewSwing {
 		pnlMain.add(pnlPdf, BorderLayout::CENTER)
 	}
 	
+	/**
+	 * Initialise la liste affichant les questions
+	 */
+	def void listQstInitialization() {
+        qstModel = new DefaultListModel
+        listQst = new JList(qstModel)
+        listQst.setSelectedIndex(-1)
+
+        listQst.setCellRenderer(new QuestionsListRenderer)
+        val JScrollPane scroll1 = new JScrollPane(listQst)
+        val JScrollBar scrollBar = scroll1.getVerticalScrollBar
+        scrollBar.addAdjustmentListener(new AdjustmentListener {
+            override void adjustmentValueChanged(AdjustmentEvent e) {
+                println("JScrollBar's current value = " + scrollBar.getValue())
+            }
+        })
+        pnlQst.add(scroll1);
+	}
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 

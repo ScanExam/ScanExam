@@ -3,8 +3,13 @@ package fr.istic.tools.scanexam.view.swing;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
 import fr.istic.tools.scanexam.view.swing.PdfAndBoxPanel;
+import fr.istic.tools.scanexam.view.swing.QuestionEditionPanel;
+import fr.istic.tools.scanexam.view.swing.QuestionsListRenderer;
 import java.awt.BorderLayout;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -14,7 +19,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Vue swing de la fenêtre de création d'examen
@@ -125,7 +133,12 @@ public class EditorViewSwing {
   /**
    * Liste des questions
    */
-  private JList<String> listQst;
+  private JList<QuestionEditionPanel> listQst;
+  
+  /**
+   * Listes des panel de question
+   */
+  private DefaultListModel<QuestionEditionPanel> qstModel;
   
   /**
    * Panel pour les pages
@@ -173,6 +186,7 @@ public class EditorViewSwing {
   public EditorViewSwing(final AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel) {
     this.adapterPdfAndBoxPanel = adapterPdfAndBoxPanel;
     this.initialize();
+    this.adapterPdfAndBoxPanel.getAdapterBox().setQstModel(this.qstModel);
   }
   
   /**
@@ -257,8 +271,7 @@ public class EditorViewSwing {
     JLabel _jLabel = new JLabel("Questions:");
     this.lblQst = _jLabel;
     this.pnlQst.add(this.lblQst, BorderLayout.NORTH);
-    JList<String> _jList = new JList<String>();
-    this.listQst = _jList;
+    this.listQstInitialization();
     this.pnlQst.add(this.listQst, BorderLayout.CENTER);
     JPanel _jPanel_3 = new JPanel();
     this.pnlPage = _jPanel_3;
@@ -288,6 +301,30 @@ public class EditorViewSwing {
     PdfAndBoxPanel _pdfAndBoxPanel = new PdfAndBoxPanel(this.adapterPdfAndBoxPanel);
     this.pnlPdf = _pdfAndBoxPanel;
     this.pnlMain.add(this.pnlPdf, BorderLayout.CENTER);
+  }
+  
+  /**
+   * Initialise la liste affichant les questions
+   */
+  public void listQstInitialization() {
+    DefaultListModel<QuestionEditionPanel> _defaultListModel = new DefaultListModel<QuestionEditionPanel>();
+    this.qstModel = _defaultListModel;
+    JList<QuestionEditionPanel> _jList = new JList<QuestionEditionPanel>(this.qstModel);
+    this.listQst = _jList;
+    this.listQst.setSelectedIndex((-1));
+    QuestionsListRenderer _questionsListRenderer = new QuestionsListRenderer();
+    this.listQst.setCellRenderer(_questionsListRenderer);
+    final JScrollPane scroll1 = new JScrollPane(this.listQst);
+    final JScrollBar scrollBar = scroll1.getVerticalScrollBar();
+    scrollBar.addAdjustmentListener(new AdjustmentListener() {
+      @Override
+      public void adjustmentValueChanged(final AdjustmentEvent e) {
+        int _value = scrollBar.getValue();
+        String _plus = ("JScrollBar\'s current value = " + Integer.valueOf(_value));
+        InputOutput.<String>println(_plus);
+      }
+    });
+    this.pnlQst.add(scroll1);
   }
   
   /**
