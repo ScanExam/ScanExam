@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.view.fX;
 
-import fr.istic.tools.scanexam.core.Question
+
 import java.io.File
 import java.io.IOException
 import java.util.ArrayList
@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.core.Question
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -414,13 +415,7 @@ class ControllerFXCorrector {
 	}
 	
 	def void initTests() {
-		setKeybinds
-		var mock = new MockFXAdapter();
-		corrector = mock;
-		mock.controller = this;
-		mock.setQuestions
-		
-		
+		setKeybinds		
 	}
 	
 	def void initQuestionNames(List<String> names) { //TODO complete, called on load of a new exam template
