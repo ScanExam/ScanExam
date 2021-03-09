@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.view.fX;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
+import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -184,12 +186,22 @@ public class ControllerFXCorrector {
   @FXML
   public ImageView imview;
   
+  @FXML
+  public Spinner<Double> gradeSpinner;
+  
+  @FXML
+  public Spinner<Double> totalGradeSpinner;
+  
+  @FXML
   public ScrollPane scrollMain;
   
+  @FXML
   public ScrollPane scrollBis;
   
+  @FXML
   public VBox studentDetails;
   
+  @FXML
   public VBox questionDetails;
   
   /**
@@ -354,6 +366,19 @@ public class ControllerFXCorrector {
     InputOutput.<String>println("Previous student method");
   }
   
+  /**
+   * Called when a grade update button is pressed
+   */
+  @FXML
+  public void saveGradeButtonPressed() {
+    Double _value = this.gradeSpinner.getValue();
+    String _plus = ("save Grade method : " + _value);
+    String _plus_1 = (_plus + "/");
+    Double _value_1 = this.totalGradeSpinner.getValue();
+    String _plus_2 = (_plus_1 + _value_1);
+    InputOutput.<String>println(_plus_2);
+  }
+  
   @FXML
   public void addBaremeList() {
   }
@@ -465,8 +490,10 @@ public class ControllerFXCorrector {
   }
   
   public void initTests() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method controller(ControllerFXCorrector) is undefined for the type MockFXAdapter");
+    this.setKeybinds();
+    MockFXAdapter mock = new MockFXAdapter();
+    this.corrector = mock;
+    mock.setQuestions();
   }
   
   public void initQuestionNames(final List<String> names) {
