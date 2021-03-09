@@ -111,7 +111,7 @@ public class ExamEditionService extends Service {
   }
   
   @Override
-  public void open(final String xmiPath) {
+  public boolean open(final String xmiPath) {
     try {
       final Optional<CreationTemplate> creationTemplate = ExamEditionService.loadTemplate(xmiPath);
       boolean _isPresent = creationTemplate.isPresent();
@@ -120,7 +120,9 @@ public class ExamEditionService extends Service {
         ExamSingleton.instance = creationTemplate.get().getExam();
         final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
         this.document = PDDocument.load(decoded);
+        return true;
       }
+      return false;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -142,8 +144,11 @@ public class ExamEditionService extends Service {
         throw Exceptions.sneakyThrow(_t);
       }
     }
-    EObject _get = resource.getContents().get(0);
-    return Optional.<CreationTemplate>ofNullable(((CreationTemplate) _get));
+    final EObject template = resource.getContents().get(0);
+    if ((!(template instanceof CreationTemplate))) {
+      return Optional.<CreationTemplate>empty();
+    }
+    return Optional.<CreationTemplate>ofNullable(((CreationTemplate) template));
   }
   
   @Override

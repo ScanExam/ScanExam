@@ -46,6 +46,13 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	private EDataType examEDataType = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType studentSheetEDataType = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -123,7 +130,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getCorrectionTemplate_PdfPath() {
+	public EAttribute getCorrectionTemplate_EncodedDocument() {
 		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -134,6 +141,15 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 */
 	public EAttribute getCorrectionTemplate_Exam() {
 		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCorrectionTemplate_Studentsheets() {
+		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -177,6 +193,15 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EDataType getStudentSheet() {
+		return studentSheetEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TemplatesFactory getTemplatesFactory() {
 		return (TemplatesFactory)getEFactoryInstance();
 	}
@@ -201,8 +226,9 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 
 		// Create classes and their features
 		correctionTemplateEClass = createEClass(CORRECTION_TEMPLATE);
-		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__PDF_PATH);
+		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__ENCODED_DOCUMENT);
 		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__EXAM);
+		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__STUDENTSHEETS);
 
 		creationTemplateEClass = createEClass(CREATION_TEMPLATE);
 		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__ENCODED_DOCUMENT);
@@ -210,6 +236,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 
 		// Create data types
 		examEDataType = createEDataType(EXAM);
+		studentSheetEDataType = createEDataType(STUDENT_SHEET);
 	}
 
 	/**
@@ -246,8 +273,9 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(correctionTemplateEClass, CorrectionTemplate.class, "CorrectionTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getCorrectionTemplate_PdfPath(), theEcorePackage.getEString(), "pdfPath", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCorrectionTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCorrectionTemplate_Exam(), this.getExam(), "exam", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCorrectionTemplate_Studentsheets(), this.getStudentSheet(), "studentsheets", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(creationTemplateEClass, CreationTemplate.class, "CreationTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCreationTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -255,6 +283,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 
 		// Initialize data types
 		initEDataType(examEDataType, Exam.class, "Exam", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(studentSheetEDataType, Exam.class, "StudentSheet", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

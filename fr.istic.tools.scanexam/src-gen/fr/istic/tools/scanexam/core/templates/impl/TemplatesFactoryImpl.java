@@ -76,6 +76,8 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 		switch (eDataType.getClassifierID()) {
 			case TemplatesPackage.EXAM:
 				return createExamFromString(eDataType, initialValue);
+			case TemplatesPackage.STUDENT_SHEET:
+				return createStudentSheetFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -91,6 +93,8 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 		switch (eDataType.getClassifierID()) {
 			case TemplatesPackage.EXAM:
 				return convertExamToString(eDataType, instanceValue);
+			case TemplatesPackage.STUDENT_SHEET:
+				return convertStudentSheetToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -131,6 +135,24 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 	 * @generated
 	 */
 	public String convertExamToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Exam createStudentSheetFromString(EDataType eDataType, String initialValue) {
+		return (Exam)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertStudentSheetToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

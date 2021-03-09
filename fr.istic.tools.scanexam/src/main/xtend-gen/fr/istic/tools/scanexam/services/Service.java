@@ -115,7 +115,7 @@ public abstract class Service {
   
   public abstract void save(final String path);
   
-  public abstract void open(final String xmiFile);
+  public abstract boolean open(final String xmiFile);
   
   public abstract void create(final File file);
   

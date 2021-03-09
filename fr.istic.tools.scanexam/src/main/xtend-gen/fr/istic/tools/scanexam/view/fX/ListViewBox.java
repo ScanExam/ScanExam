@@ -1,16 +1,16 @@
 package fr.istic.tools.scanexam.view.fX;
 
-import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fX.Box;
-import fr.istic.tools.scanexam.view.fX.FXSettings;
-import java.io.InputStream;
+import fr.istic.tools.scanexam.view.fX.NumberTextField;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 @SuppressWarnings("all")
@@ -20,21 +20,46 @@ public class ListViewBox extends VBox {
     HBox _hBox = new HBox();
     this.top = _hBox;
     HBox _hBox_1 = new HBox();
-    this.bottom = _hBox_1;
+    this.middle = _hBox_1;
+    HBox _hBox_2 = new HBox();
+    this.bottom = _hBox_2;
     this.id = parent.getBoxId();
     this.parent = parent;
     TextField _textField = new TextField(text);
     this.field = _textField;
     this.field.setMaxWidth(75);
-    this.getChildren().add(this.top);
-    this.getChildren().add(this.bottom);
-    this.top.getChildren().add(this.field);
+    this.field.setVisible(false);
+    Label _label = new Label(text);
+    this.nameLabel = _label;
+    this.nameLabel.setMinWidth(100);
+    NumberTextField _numberTextField = new NumberTextField();
+    this.numberField = _numberTextField;
+    this.numberField.setText("0");
+    this.numberField.setVisible(false);
+    Label _label_1 = new Label("0");
+    this.pointsLabel = _label_1;
+    this.pointsLabel.setMinWidth(100);
+    Pane p = new Pane();
+    Pane p2 = new Pane();
+    this.getChildren().addAll(this.top, this.middle, this.bottom);
+    this.top.getChildren().addAll(p);
+    this.middle.getChildren().addAll(p2);
+    p.getChildren().addAll(this.field, this.nameLabel);
+    p2.getChildren().addAll(this.numberField, this.pointsLabel);
     this.makeButtons();
   }
   
+  private Label nameLabel;
+  
+  private Label pointsLabel;
+  
   private TextField field;
   
+  private NumberTextField numberField;
+  
   private HBox top;
+  
+  private HBox middle;
   
   private HBox bottom;
   
@@ -63,26 +88,12 @@ public class ListViewBox extends VBox {
   public boolean makeButtons() {
     boolean _xblockexpression = false;
     {
-      Button _button = new Button("");
-      this.up = _button;
-      Button _button_1 = new Button("");
-      this.down = _button_1;
-      Button _button_2 = new Button("remove");
-      this.rm = _button_2;
-      Button _button_3 = new Button("resize");
-      this.resize = _button_3;
-      Button _button_4 = new Button("move");
-      this.move = _button_4;
-      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("/viewResources/upArrow.png");
-      Image upImage = new Image(_inputStreamResource, FXSettings.BUTTON_ICON_SIZE, FXSettings.BUTTON_ICON_SIZE, true, true);
-      ImageView _imageView = new ImageView(upImage);
-      this.up.setGraphic(_imageView);
-      this.top.getChildren().add(0, this.up);
-      InputStream _inputStreamResource_1 = ResourcesUtils.getInputStreamResource("/viewResources/downArrow.png");
-      Image downImage = new Image(_inputStreamResource_1, FXSettings.BUTTON_ICON_SIZE, FXSettings.BUTTON_ICON_SIZE, true, true);
-      ImageView _imageView_1 = new ImageView(downImage);
-      this.down.setGraphic(_imageView_1);
-      this.bottom.getChildren().add(this.down);
+      Button _button = new Button("remove");
+      this.rm = _button;
+      Button _button_1 = new Button("resize");
+      this.resize = _button_1;
+      Button _button_2 = new Button("move");
+      this.move = _button_2;
       this.bottom.getChildren().add(this.rm);
       this.bottom.getChildren().add(this.resize);
       _xblockexpression = this.bottom.getChildren().add(this.move);
@@ -102,8 +113,28 @@ public class ListViewBox extends VBox {
     this.rm.setOnAction(handler);
   }
   
-  public void setTextCommit(final EventHandler<ActionEvent> hander) {
-    this.field.setOnAction(hander);
+  public void setTextCommit(final EventHandler<ActionEvent> handler) {
+    this.field.setOnAction(handler);
+  }
+  
+  public void setPointsCommit(final EventHandler<ActionEvent> handler) {
+    this.numberField.setOnAction(handler);
+  }
+  
+  public void setRenameOption(final EventHandler<ActionEvent> handler) {
+    ContextMenu menu = new ContextMenu();
+    MenuItem renameMenu = new MenuItem("Rename");
+    renameMenu.setOnAction(handler);
+    menu.getItems().add(renameMenu);
+    this.nameLabel.setContextMenu(menu);
+  }
+  
+  public void setChangePoints(final EventHandler<ActionEvent> handler) {
+    ContextMenu menu = new ContextMenu();
+    MenuItem renameMenu = new MenuItem("Change Points");
+    renameMenu.setOnAction(handler);
+    menu.getItems().add(renameMenu);
+    this.pointsLabel.setContextMenu(menu);
   }
   
   public void setMoveAction(final EventHandler<ActionEvent> hander) {
@@ -112,5 +143,35 @@ public class ListViewBox extends VBox {
   
   public void setResizeAction(final EventHandler<ActionEvent> hander) {
     this.resize.setOnAction(hander);
+  }
+  
+  public void setLabelText(final String text) {
+    this.nameLabel.setText(text);
+  }
+  
+  public void setPointsText(final String text) {
+    this.pointsLabel.setText(text);
+  }
+  
+  public String getName() {
+    return this.field.getText();
+  }
+  
+  public void toggleRenaming() {
+    boolean _isVisible = this.field.isVisible();
+    boolean _not = (!_isVisible);
+    this.field.setVisible(_not);
+    boolean _isVisible_1 = this.nameLabel.isVisible();
+    boolean _not_1 = (!_isVisible_1);
+    this.nameLabel.setVisible(_not_1);
+  }
+  
+  public void togglePointChange() {
+    boolean _isVisible = this.numberField.isVisible();
+    boolean _not = (!_isVisible);
+    this.numberField.setVisible(_not);
+    boolean _isVisible_1 = this.pointsLabel.isVisible();
+    boolean _not_1 = (!_isVisible_1);
+    this.pointsLabel.setVisible(_not_1);
   }
 }

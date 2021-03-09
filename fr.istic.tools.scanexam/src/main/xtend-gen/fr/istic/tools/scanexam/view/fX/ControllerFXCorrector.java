@@ -3,7 +3,6 @@ package fr.istic.tools.scanexam.view.fX;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
-import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * @author Benjamin Danlos
  */
 @SuppressWarnings("all")
-public class ControllerFX {
+public class ControllerFXCorrector {
   public static class QuestionDetails {
     private int id;
     
@@ -99,7 +98,7 @@ public class ControllerFX {
   public static class StudentItem extends Label {
     private int id;
     
-    public StudentItem(final int s, final ControllerFX c) {
+    public StudentItem(final int s, final ControllerFXCorrector c) {
       super(("Student: " + Integer.valueOf(s)));
       this.id = s;
     }
@@ -381,7 +380,7 @@ public class ControllerFX {
     this.imview.setViewport(null);
   }
   
-  private ControllerFX.QuestionDetails currentQuestion;
+  private ControllerFXCorrector.QuestionDetails currentQuestion;
   
   public void binds(final Node n) {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
@@ -401,11 +400,11 @@ public class ControllerFX {
             this.prevStudentPressed();
             break;
           default:
-            ControllerFX.logger.warn("Key not supported.");
+            ControllerFXCorrector.logger.warn("Key not supported.");
             break;
         }
       } else {
-        ControllerFX.logger.warn("Key not supported.");
+        ControllerFXCorrector.logger.warn("Key not supported.");
       }
       event.consume();
     };
@@ -431,11 +430,11 @@ public class ControllerFX {
             this.prevStudentPressed();
             break;
           default:
-            ControllerFX.logger.warn("Key not supported.");
+            ControllerFXCorrector.logger.warn("Key not supported.");
             break;
         }
       } else {
-        ControllerFX.logger.warn("Key not supported.");
+        ControllerFXCorrector.logger.warn("Key not supported.");
       }
       event.consume();
     };
@@ -461,16 +460,13 @@ public class ControllerFX {
     if (_notEquals) {
       this.corrector.loadFile(file);
     } else {
-      ControllerFX.logger.warn("File not chosen");
+      ControllerFXCorrector.logger.warn("File not chosen");
     }
   }
   
   public void initTests() {
-    this.setKeybinds();
-    MockFXAdapter mock = new MockFXAdapter();
-    this.corrector = mock;
-    mock.controller = this;
-    mock.setQuestions();
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method controller(ControllerFXCorrector) is undefined for the type MockFXAdapter");
   }
   
   public void initQuestionNames(final List<String> names) {
@@ -496,7 +492,7 @@ public class ControllerFX {
   
   public void showQuestion(final Question question) {
     String _name = question.getName();
-    ControllerFX.QuestionDetails _questionDetails = new ControllerFX.QuestionDetails(_name);
+    ControllerFXCorrector.QuestionDetails _questionDetails = new ControllerFXCorrector.QuestionDetails(_name);
     this.currentQuestion = _questionDetails;
     this.currentQuestion.x = question.getZone().getX();
     this.currentQuestion.y = question.getZone().getY();

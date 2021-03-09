@@ -1,9 +1,10 @@
 package fr.istic.tools.scanexam.launcher;
 
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fX.ControllerFXCreator;
+import fr.istic.tools.scanexam.view.fX.ControllerFXEditor;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import java.io.InputStream;
 import javafx.application.Application;
@@ -13,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -33,11 +33,11 @@ public class LauncherFX extends Application implements Launcher {
    */
   @Override
   public void start(final Stage primaryStage) throws Exception {
-    InputOutput.<String>println("started App");
     final FXMLLoader loader = new FXMLLoader();
-    final Parent root = loader.<Parent>load(ResourcesUtils.getInputStreamResource("/viewResources/Creator.fxml"));
+    loader.setResources(LanguageManager.getCurrentBundle());
+    final Parent root = loader.<Parent>load(ResourcesUtils.getInputStreamResource("/viewResources/EditorUI.fxml"));
     Object _controller = loader.<Object>getController();
-    ControllerFXCreator controller = ((ControllerFXCreator) _controller);
+    ControllerFXEditor controller = ((ControllerFXEditor) _controller);
     controller.setEditorAdapterFX(LauncherFX.edit);
     LauncherFX.edit.setControllerFXCreator(controller);
     primaryStage.setTitle("Corrector GUI - ScanExam");
