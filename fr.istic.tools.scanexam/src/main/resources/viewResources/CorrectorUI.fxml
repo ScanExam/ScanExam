@@ -204,13 +204,13 @@
                      <children>
                         <HBox prefHeight="0.0" prefWidth="140.0">
                            <children>
-                              <Spinner fx:id="gradeSpinner" min="0" max="10" initialValue="0" amountToStepBy="0.1" editable="true"/>
+                              <Spinner fx:id="gradeSpinner" min="0" max="20" initialValue="0" amountToStepBy="0.1" editable="true"/>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="  /" wrappingWidth="32.23828125">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Text>
-                              <Spinner fx:id="totalGradeSpinner" min="0" max="10" initialValue="0" amountToStepBy="0.1" editable="true"/>
+                              <Spinner fx:id="totalGradeSpinner" min="0" max="20" initialValue="0" amountToStepBy="0.1" editable="true"/>
                            </children>
                         </HBox>
                         <Button onAction="#saveGradeButtonPressed" mnemonicParsing="false" prefHeight="25.0" prefWidth="145.0" text="Sauvegarder" />
