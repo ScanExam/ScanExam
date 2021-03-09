@@ -19,6 +19,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.text.Text?>
 
 <VBox minHeight="720.0" minWidth="720.0" prefHeight="540.0" prefWidth="938.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.ControllerFXCorrector">
   <children>
@@ -198,6 +200,25 @@
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />
                      </VBox.margin>
+                     <children>
+                        <HBox prefHeight="0.0" prefWidth="140.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Note :" wrappingWidth="32.23828125" />
+                              <Spinner min="0" max="10" initialValue="0" amountToStepBy="0.1" editable="true"/>
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Separator>
+                        <HBox prefHeight="0.0" prefWidth="140.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Note max :" />
+                              <Spinner min="0" max="10" initialValue="0" amountToStepBy="0.1" editable="true"/>
+                           </children>
+                        </HBox>
+                     </children>
                   </VBox>
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
                      <children>
