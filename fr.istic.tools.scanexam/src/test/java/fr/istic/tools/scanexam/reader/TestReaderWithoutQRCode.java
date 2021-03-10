@@ -22,7 +22,7 @@ class TestReaderWithoutQRCode {
 
 	PdfReader readerGood;
 	PdfReader readerDirty;
-	int nbPages = 8;
+	int nbPages = 7;
 	int nbCopies = 3;
 
 	@BeforeEach
@@ -59,23 +59,24 @@ class TestReaderWithoutQRCode {
 	@DisplayName("Test getNbPagesPdf dans un pdf incomplet")
 	void getNbPagesPdfTestDirty() {
 		assertTrue(readerDirty.readPDf());
-		assertEquals(nbCopies * nbPages -1 ,readerDirty.getNbPagesPdf());
+		assertEquals(nbCopies * nbPages - 1, readerDirty.getNbPagesPdf());
 	}
 
 	@Test
 	@DisplayName("Test getNbPagesTraitee")
 	void getNbPagesTraiteePdfTest() {
-		assertEquals(0,readerGood.getNbPagesTreated());
+		assertEquals(0, readerGood.getNbPagesTreated());
 		assertTrue(readerGood.readPDf());
-		assertEquals(nbCopies * nbPages,readerGood.getNbPagesTreated());
+		assertEquals(nbCopies * nbPages, readerGood.getNbPagesTreated());
 	}
 
 	@Test
 	@DisplayName("Test du renvoi de la structure au format de l'API quand toutes les pages sont là")
-	void getCompleteStundentSheetsTestDirty() {
+	void getCompleteStudentSheetsTestGood() {
 		assertEquals(true, readerGood.readPDf());
+		
 		DataFactory dF = new DataFactory();
-		Set<StudentSheet> collection = new HashSet<>();
+		List<StudentSheet> collection = new ArrayList<>();
 		
 		
 		for(int i = 0; i<nbCopies; i++) {
@@ -84,17 +85,36 @@ class TestReaderWithoutQRCode {
 				pages.add((i * nbPages)+j);
 				
 			}
-			System.out.println(pages.toString());
+			//System.out.println(pages.toString());
 			collection.add(dF.createStudentSheet(i, pages));
 		}
+		List<StudentSheet> arr = new ArrayList<>(readerGood.getCompleteStudentSheets());
+		System.out.println(collection.toString());
+		System.out.println(arr.toString()+"\n\n");
 		
+		assertEquals(true, collection.containsAll(arr));
 		
-		assertEquals(collection, readerGood.getCompleteStudentSheets());
+		boolean bool = true;
+		
+		for(StudentSheet std : arr){
+			try{
+				StudentSheet commeTuVeux = collection.get(std.getId());
+				//vérifier que toutes les pages sont la 
+				bool &= true;
+				
+			}catch(IndexOutOfBoundsException e ) {
+				bool &= false;
+			}
+			
+			
+		}
+		
+		//TODO faire un deuxieme for
 	}
-	
+
 	@Test
 	@DisplayName("Test du renvoi de la structure au format de l'API quand il manque une page")
 	void getUncompleteStundentSheetsTestDirty() {
-		// yolo
+		//TODO a finir  
 	}
 }
