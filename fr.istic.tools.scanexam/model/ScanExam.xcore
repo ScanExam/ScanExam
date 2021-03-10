@@ -64,6 +64,7 @@ class Grade {
 
 class StudentSheet {
 	int ^id
+	String studentName
 	int[] posPage
 	contains Grade[] grades
 	
