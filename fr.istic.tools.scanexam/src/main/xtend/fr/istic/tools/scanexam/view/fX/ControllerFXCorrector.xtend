@@ -25,6 +25,7 @@ import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import fr.istic.tools.scanexam.core.Question
 import javafx.scene.control.Spinner
+import fr.istic.tools.scanexam.launcher.LauncherFX
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -37,24 +38,9 @@ class ControllerFXCorrector {
 	 * High level Controllers to access the Presenters
 	 */
 	GraduationAdapterFX corrector;
-	EditorAdapterFX editor;
 
-	/**
-	 * setter for the ControllerVueCreation attribute
-	 * @param {@link ControllerVueCreation} controller instance of ControllerVueCreation (not null) 
-	 */
-	def setAdapterEditor(EditorAdapterFX edit) {
-		Objects.requireNonNull(edit)
-		editor = edit
-	}
-
-	/**
-	 * @return current {@link ControllerVueCreation} 
-	 */
-	def getAdapterEditor() {
-		editor
-	}
-
+	
+	
 	/**
 	 * setter for the ControllerVueCorrection attribute
 	 * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null) 
@@ -106,6 +92,13 @@ class ControllerFXCorrector {
 	public Spinner<Double> gradeSpinner;
 	@FXML
 	public Spinner<Double> totalGradeSpinner;
+	
+	
+	
+	@FXML
+	def void swapToEditorPressed(){
+		LauncherFX.swapToEditor
+	}
 
 	// ***********************//
 	// ***** UI CONTROLS *****//
@@ -419,7 +412,7 @@ class ControllerFXCorrector {
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files",Arrays.asList("*.xmi")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Documents");
 		var file = fileChooser.showOpenDialog(imagePane.scene.window)
-		if (file != null) {
+		if (file !== null) {
 			corrector.loadFile(file);
 		}
 		else {
