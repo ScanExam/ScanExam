@@ -30,6 +30,7 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	/* Présentateur du pdf */
 	var AdapterSwingPdfPanel adapterPdf	
 	
+	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * METHODES
@@ -55,7 +56,13 @@ class GraduationAdapterSwing implements GraduationAdapter {
 			override actionPerformed(ActionEvent e) {
 				openFile()
 			}
-	    });
+	    })
+	    
+	    view.getBtnDown().addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				view.showContentDown()
+			}
+		})
 	}
 	
 	/**
