@@ -100,6 +100,10 @@ class ExamGraduationService extends Service
 			currentSheetIndex--
 	}
 	
+	def getCurrentQuestion()
+	{
+		return currentPage.questions.findFirst[x | x.id == currentQuestionIndex];
+	}
 	def nextQuestion()
 	{
 		if (currentQuestionIndex + 1 < currentPage.questions.size)

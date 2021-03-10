@@ -14,10 +14,8 @@ import java.io.File;
 import java.util.Base64;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
@@ -69,27 +67,6 @@ public class ExamEditionService extends Service {
     _zone.setX(x);
     QuestionZone _zone_1 = question.getZone();
     _zone_1.setY(y);
-  }
-  
-  private Question getQuestion(final int id) {
-    final Function1<Question, Boolean> _function = (Question question) -> {
-      int _id = question.getId();
-      return Boolean.valueOf((_id == id));
-    };
-    return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
-  }
-  
-  public void renameQuestion(final int id, final String name) {
-    final Question question = this.getQuestion(id);
-    question.setName(name);
-  }
-  
-  public EList<Question> getQuestionAtPage(final int pageIndex) {
-    return ExamSingleton.getPage(pageIndex).getQuestions();
-  }
-  
-  public Question removeQuestion(final int id) {
-    return this.getCurrentPage().getQuestions().remove(id);
   }
   
   @Override

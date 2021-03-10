@@ -64,23 +64,7 @@ class ExamEditionService extends Service // TODO : renommer
 		question.zone.x = x
 		question.zone.y = y 
 	}
-	private def Question getQuestion(int id)
-	{
-		currentPage.questions.findFirst[question | question.id == id]
-	}
-	def renameQuestion(int id,String name)
-	{
-		val question = getQuestion(id)
-		question.name = name
-	}
-	def getQuestionAtPage(int pageIndex)
-	{
-		ExamSingleton.getPage(pageIndex).questions
-	}
-	def removeQuestion(int id)
-	{
-		currentPage.questions.remove(id);
-	}
+	
 	
 
 	override save(String path) {
