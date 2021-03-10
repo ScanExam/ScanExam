@@ -15,10 +15,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
 public class ExamGraduationService extends Service {
@@ -26,6 +28,7 @@ public class ExamGraduationService extends Service {
   
   private int currentQuestionIndex;
   
+  @Accessors
   private Collection<StudentSheet> studentSheets;
   
   private CreationTemplate creationTemplate;
@@ -183,5 +186,14 @@ public class ExamGraduationService extends Service {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  @Pure
+  public Collection<StudentSheet> getStudentSheets() {
+    return this.studentSheets;
+  }
+  
+  public void setStudentSheets(final Collection<StudentSheet> studentSheets) {
+    this.studentSheets = studentSheets;
   }
 }

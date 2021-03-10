@@ -14,6 +14,7 @@ import java.util.Collection
 import org.apache.pdfbox.pdmodel.PDDocument
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class ExamGraduationService extends Service
 {
@@ -21,7 +22,7 @@ class ExamGraduationService extends Service
 	 
 	int currentQuestionIndex;
 	
-	Collection<StudentSheet> studentSheets;
+	@Accessors Collection<StudentSheet> studentSheets;
 	
 	CreationTemplate creationTemplate;
 	
