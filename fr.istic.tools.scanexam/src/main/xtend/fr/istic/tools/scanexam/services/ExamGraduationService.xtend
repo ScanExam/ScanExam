@@ -31,7 +31,7 @@ class ExamGraduationService extends Service
 	
 	override save(String path) 
 	{
-		// TODO
+		// TODO (sauvegarde le XMI de correction)
 	}
 	
 	
@@ -68,7 +68,8 @@ class ExamGraduationService extends Service
 	/**
 	 * Liste des identifiants des etudiants
 	 */
-	def studentsList (){
+	def studentsList ()
+	{
 		var tab = new ArrayList();
 		for(var i =0; i<studentSheets.size-1;i++){
 			tab.add(studentSheets.get(i).id)
@@ -76,7 +77,8 @@ class ExamGraduationService extends Service
 		tab
 	}
 	
-	def numberOfQuestions (){
+	def numberOfQuestions ()
+	{
 		var nbQuestion =0
 		for (var i = 0 ; i < document.pages.size-1; i++){
 			nbQuestion += creationTemplate.exam.pages.get(i).questions.size
@@ -88,7 +90,8 @@ class ExamGraduationService extends Service
 	/**
 	 * Ajoute d'un etudiant
 	 */
-	 def addStudents (int id){
+	 def addStudents (int id)
+	 {
 	 	val newStudent = CoreFactory.eINSTANCE.createStudentSheet;
 	 	newStudent.id = id
 	 	//TODO
@@ -100,7 +103,8 @@ class ExamGraduationService extends Service
 	/**
 	 * Passe au prochaine etudiant dans les StudentSheet
 	 */
-	def nextStudent() {
+	def nextStudent() 
+	{
 		if (currentSheetIndex+1 < studentSheets.size)
 			currentSheetIndex++
 	}
@@ -108,17 +112,20 @@ class ExamGraduationService extends Service
 	/**
 	 * Passe au etudiant précédent dans les StudentSheet
 	 */
-	def previousStudent() {
+	def previousStudent() 
+	{
 		if (currentSheetIndex > 0)
 			currentSheetIndex--
 	}
 	
-	def nextQuestion(){
+	def nextQuestion()
+	{
 		if (currentQuestionIndex + 1 < currentPage.questions.size)
 			currentQuestionIndex++
 	}
 	
-	def previousQuestion() {
+	def previousQuestion() 
+	{
 		if (currentQuestionIndex > 0)
 			currentQuestionIndex--
 	}

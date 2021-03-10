@@ -165,4 +165,10 @@ public class GraduationPresenter implements Presenter {
   public void create(final File file) {
     this.service.create(file);
   }
+  
+  public void openEditionTemplate(final String path) {
+  }
+  
+  public void openCorrectionPdf(final String path) {
+  }
 }

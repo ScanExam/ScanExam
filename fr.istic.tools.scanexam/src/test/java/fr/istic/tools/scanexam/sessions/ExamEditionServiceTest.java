@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import fr.istic.tools.scanexam.io.TemplateIO;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 
 public class ExamEditionServiceTest 
@@ -75,7 +76,7 @@ public class ExamEditionServiceTest
 	void addQuestionTest() 
 	{
 		//ouverture du fichier
-		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		assertNull(session.getQuestionZone(7));
 
@@ -91,7 +92,7 @@ public class ExamEditionServiceTest
 	void removeQuestionTest() 
 	{
 		//ouverture du fichier
-		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		//Creation d'une question
 		final int id = session.createQuestion(2, 2, 2, 2);
@@ -108,7 +109,7 @@ public class ExamEditionServiceTest
 	void nextPageTest() 
 	{
 		//ouverture du fichier
-		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = session.getCurrentPageNumber();
 		session.nextPage();
@@ -127,7 +128,7 @@ public class ExamEditionServiceTest
 	void previousPageTest() 
 	{
 		//ouverture du fichier
-		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = session.getCurrentPageNumber();
 		session.previousPage();
@@ -145,7 +146,7 @@ public class ExamEditionServiceTest
 	void loadTest() 
 	{
 		//Ouverture du fichier
-		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		assertEquals(session.getPageNumber(), 6);
 	}
@@ -156,7 +157,7 @@ public class ExamEditionServiceTest
 	void loadTestRobustesse() 
 	{
 		//load d'un fichier qui n'existe pas
-		Assertions.assertThrows(FileNotFoundException.class, () -> ExamEditionService.loadTemplate("src/test/resources/resources_service/NoExiste.xmi"));
+		Assertions.assertThrows(FileNotFoundException.class, () -> TemplateIO.loadCreationTemplate("src/test/resources/resources_service/NoExiste.xmi"));
 	}
 
 	@Test
@@ -170,7 +171,7 @@ public class ExamEditionServiceTest
 
 		session.save("src/test/resources/resources_service/sampleExiste.xmi");
 
-		ExamEditionService.loadTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		//Verification que le changement est toujours d'actualiter
 		assertNull(session.getQuestionZone(id));

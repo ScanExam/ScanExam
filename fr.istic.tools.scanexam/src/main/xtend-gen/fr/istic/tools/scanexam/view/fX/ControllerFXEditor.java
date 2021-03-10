@@ -218,6 +218,7 @@ public class ControllerFXEditor {
         }
       });
       source.getChildren().add(this.currentRectangle);
+      source.getChildren().add(this.currentRectangle.getText());
     }
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
@@ -457,6 +458,9 @@ public class ControllerFXEditor {
       lb.setRemoveAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
+          String _name = box.getName();
+          String _plus = ("Remove " + _name);
+          System.out.println(_plus);
           ControllerFXEditor.this.removeBox(box);
         }
       });
@@ -503,6 +507,7 @@ public class ControllerFXEditor {
         }
       });
       this.questionList.getItems().add(lb);
+      System.out.println(this.mainPane.getChildren());
       _xblockexpression = this.boxes.add(box);
     }
     return _xblockexpression;
@@ -527,6 +532,7 @@ public class ControllerFXEditor {
    */
   public void removeBox(final Box box) {
     this.questionList.getItems().remove(box.getListViewBox());
+    this.mainPane.getChildren().remove(box.getText());
     this.mainPane.getChildren().remove(box);
     this.boxes.remove(box);
     this.editor.removeBox(box);
@@ -630,17 +636,17 @@ public class ControllerFXEditor {
   }
   
   public void loadBoxes() {
-    this.editor.getPresenter().getPresenterQuestionZone().initLoading();
-    while (this.editor.getPresenter().getPresenterQuestionZone().loadNextQuestion()) {
+    LinkedList<Integer> ids = this.editor.getPresenter().getPresenterQuestionZone().initLoading();
+    for (final int i : ids) {
       {
-        String _currentQuestionName = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionName();
-        int _currentQuestionPage = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionPage();
-        double _currentQuestionX = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionX();
-        double _currentQuestionY = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionY();
-        double _currentQuestionHeight = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionHeight();
-        double _currentQuestionWidth = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionWidth();
-        Box box = new Box(_currentQuestionName, _currentQuestionPage, 
-          Box.BoxType.QUESTION, _currentQuestionX, _currentQuestionY, _currentQuestionHeight, _currentQuestionWidth);
+        String _questionName = this.editor.getPresenter().getPresenterQuestionZone().questionName(i);
+        int _questionPage = this.editor.getPresenter().getPresenterQuestionZone().questionPage(i);
+        double _questionX = this.editor.getPresenter().getPresenterQuestionZone().questionX(i);
+        double _questionY = this.editor.getPresenter().getPresenterQuestionZone().questionY(i);
+        double _questionHeight = this.editor.getPresenter().getPresenterQuestionZone().questionHeight(i);
+        double _questionWidth = this.editor.getPresenter().getPresenterQuestionZone().questionWidth(i);
+        Box box = new Box(_questionName, _questionPage, 
+          Box.BoxType.QUESTION, _questionX, _questionY, _questionHeight, _questionWidth);
         this.addBox(box);
       }
     }
