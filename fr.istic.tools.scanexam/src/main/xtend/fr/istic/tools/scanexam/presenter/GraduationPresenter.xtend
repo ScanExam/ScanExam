@@ -34,15 +34,6 @@ class GraduationPresenter implements Presenter
 		this.adapter = adapter
 		
 	}
-
-
-	/**
-	 * @return API session 
-	 */
-	def getServiceAPI(){
-		service
-	}
-	
 	
 	/**
 	 * setter for the PresenterQuestion attribute
