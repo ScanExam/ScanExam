@@ -74,6 +74,9 @@ public class PresenterQuestionZone {
     this.service.moveQuestion(id, ((float) x), ((float) y));
   }
   
+  public void changeQuestionWorth(final int id, final int worth) {
+  }
+  
   /**
    * --LOADING NEW TEMPLATE--
    */
@@ -132,5 +135,9 @@ public class PresenterQuestionZone {
   
   public int currentQuestionPage() {
     return (this.pageNumbers.get(this.questionToLoadIndex)).intValue();
+  }
+  
+  public int currentQuestionWorth() {
+    return 0;
   }
 }
