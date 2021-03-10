@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.core.Page;
+import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
@@ -8,8 +9,10 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -82,6 +85,27 @@ public abstract class Service {
       _xifexpression = this.pageIndex--;
     }
     return _xifexpression;
+  }
+  
+  public Question getQuestion(final int id) {
+    final Function1<Question, Boolean> _function = (Question question) -> {
+      int _id = question.getId();
+      return Boolean.valueOf((_id == id));
+    };
+    return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
+  }
+  
+  public void renameQuestion(final int id, final String name) {
+    final Question question = this.getQuestion(id);
+    question.setName(name);
+  }
+  
+  public EList<Question> getQuestionAtPage(final int pageIndex) {
+    return ExamSingleton.getPage(pageIndex).getQuestions();
+  }
+  
+  public Question removeQuestion(final int id) {
+    return this.getCurrentPage().getQuestions().remove(id);
   }
   
   /**
