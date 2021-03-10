@@ -9,12 +9,11 @@ import fr.istic.tools.scanexam.io.TemplateIO
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import java.io.File
 import java.io.FileInputStream
-import java.util.ArrayList
 import java.util.Collection
 import org.apache.pdfbox.pdmodel.PDDocument
+import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import org.eclipse.xtend.lib.annotations.Accessors
 
 class ExamGraduationService extends Service
 {

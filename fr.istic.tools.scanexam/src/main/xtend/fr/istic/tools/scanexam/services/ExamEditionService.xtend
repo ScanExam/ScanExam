@@ -73,6 +73,10 @@ class ExamEditionService extends Service // TODO : renommer
 		val question = getQuestion(id)
 		question.name = name
 	}
+	def getQuestionAtPage(int pageIndex)
+	{
+		ExamSingleton.getPage(pageIndex).questions
+	}
 	def removeQuestion(int id)
 	{
 		currentPage.questions.remove(id);
@@ -91,7 +95,7 @@ class ExamEditionService extends Service // TODO : renommer
 
 		TemplateIO.save(path,template);
 	}
-
+	
 	def boolean open(String xmiPath) 
 	{
 		val creationTemplate = TemplateIO.loadCreationTemplate(xmiPath)
