@@ -3,6 +3,7 @@
 package fr.istic.tools.scanexam.core.templates.impl;
 
 import fr.istic.tools.scanexam.core.Exam;
+import fr.istic.tools.scanexam.core.StudentSheet;
 
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
@@ -283,7 +284,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 
 		// Initialize data types
 		initEDataType(examEDataType, Exam.class, "Exam", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(studentSheetEDataType, Exam.class, "StudentSheet", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(studentSheetEDataType, StudentSheet.class, "StudentSheet", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

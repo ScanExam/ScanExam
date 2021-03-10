@@ -3,6 +3,7 @@
 package fr.istic.tools.scanexam.core.templates;
 
 import fr.istic.tools.scanexam.core.Exam;
+import fr.istic.tools.scanexam.core.StudentSheet;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -73,7 +74,7 @@ public interface CorrectionTemplate extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Studentsheets</b></em>' attribute list.
-	 * The list contents are of type {@link fr.istic.tools.scanexam.core.Exam}.
+	 * The list contents are of type {@link fr.istic.tools.scanexam.core.StudentSheet}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Studentsheets</em>' attribute list.
@@ -81,6 +82,6 @@ public interface CorrectionTemplate extends EObject {
 	 * @model unique="false" dataType="fr.istic.tools.scanexam.core.templates.StudentSheet"
 	 * @generated
 	 */
-	EList<Exam> getStudentsheets();
+	EList<StudentSheet> getStudentsheets();
 
 } // CorrectionTemplate

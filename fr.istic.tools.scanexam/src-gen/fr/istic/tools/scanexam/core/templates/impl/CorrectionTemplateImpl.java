@@ -3,6 +3,7 @@
 package fr.istic.tools.scanexam.core.templates.impl;
 
 import fr.istic.tools.scanexam.core.Exam;
+import fr.istic.tools.scanexam.core.StudentSheet;
 
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
@@ -84,7 +85,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Exam> studentsheets;
+	protected EList<StudentSheet> studentsheets;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -152,9 +153,9 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Exam> getStudentsheets() {
+	public EList<StudentSheet> getStudentsheets() {
 		if (studentsheets == null) {
-			studentsheets = new EDataTypeEList<Exam>(Exam.class, this, TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS);
+			studentsheets = new EDataTypeEList<StudentSheet>(StudentSheet.class, this, TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS);
 		}
 		return studentsheets;
 	}
@@ -194,7 +195,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
-				getStudentsheets().addAll((Collection<? extends Exam>)newValue);
+				getStudentsheets().addAll((Collection<? extends StudentSheet>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

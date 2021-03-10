@@ -171,7 +171,7 @@ public interface TemplatesPackage extends EPackage {
 	 * The meta object id for the '<em>Student Sheet</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see fr.istic.tools.scanexam.core.Exam
+	 * @see fr.istic.tools.scanexam.core.StudentSheet
 	 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getStudentSheet()
 	 * @generated
 	 */
@@ -265,12 +265,12 @@ public interface TemplatesPackage extends EPackage {
 	EDataType getExam();
 
 	/**
-	 * Returns the meta object for data type '{@link fr.istic.tools.scanexam.core.Exam <em>Student Sheet</em>}'.
+	 * Returns the meta object for data type '{@link fr.istic.tools.scanexam.core.StudentSheet <em>Student Sheet</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Student Sheet</em>'.
-	 * @see fr.istic.tools.scanexam.core.Exam
-	 * @model instanceClass="fr.istic.tools.scanexam.core.Exam"
+	 * @see fr.istic.tools.scanexam.core.StudentSheet
+	 * @model instanceClass="fr.istic.tools.scanexam.core.StudentSheet"
 	 * @generated
 	 */
 	EDataType getStudentSheet();
@@ -372,7 +372,7 @@ public interface TemplatesPackage extends EPackage {
 		 * The meta object literal for the '<em>Student Sheet</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see fr.istic.tools.scanexam.core.Exam
+		 * @see fr.istic.tools.scanexam.core.StudentSheet
 		 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getStudentSheet()
 		 * @generated
 		 */

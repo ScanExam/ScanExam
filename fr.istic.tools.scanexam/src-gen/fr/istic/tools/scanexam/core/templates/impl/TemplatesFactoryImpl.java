@@ -3,6 +3,7 @@
 package fr.istic.tools.scanexam.core.templates.impl;
 
 import fr.istic.tools.scanexam.core.Exam;
+import fr.istic.tools.scanexam.core.StudentSheet;
 
 import fr.istic.tools.scanexam.core.templates.*;
 
@@ -143,8 +144,8 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Exam createStudentSheetFromString(EDataType eDataType, String initialValue) {
-		return (Exam)super.createFromString(eDataType, initialValue);
+	public StudentSheet createStudentSheetFromString(EDataType eDataType, String initialValue) {
+		return (StudentSheet)super.createFromString(eDataType, initialValue);
 	}
 
 	/**

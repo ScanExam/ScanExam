@@ -161,8 +161,13 @@ public class ListViewBox extends VBox {
     boolean _isVisible = this.field.isVisible();
     boolean _not = (!_isVisible);
     this.field.setVisible(_not);
-    boolean _isVisible_1 = this.nameLabel.isVisible();
-    boolean _not_1 = (!_isVisible_1);
+    boolean _isVisible_1 = this.field.isVisible();
+    if (_isVisible_1) {
+      this.field.requestFocus();
+    }
+    this.field.selectAll();
+    boolean _isVisible_2 = this.nameLabel.isVisible();
+    boolean _not_1 = (!_isVisible_2);
     this.nameLabel.setVisible(_not_1);
   }
   
@@ -170,8 +175,13 @@ public class ListViewBox extends VBox {
     boolean _isVisible = this.numberField.isVisible();
     boolean _not = (!_isVisible);
     this.numberField.setVisible(_not);
-    boolean _isVisible_1 = this.pointsLabel.isVisible();
-    boolean _not_1 = (!_isVisible_1);
+    boolean _isVisible_1 = this.numberField.isVisible();
+    if (_isVisible_1) {
+      this.numberField.requestFocus();
+    }
+    this.numberField.selectAll();
+    boolean _isVisible_2 = this.pointsLabel.isVisible();
+    boolean _not_1 = (!_isVisible_2);
     this.pointsLabel.setVisible(_not_1);
   }
 }

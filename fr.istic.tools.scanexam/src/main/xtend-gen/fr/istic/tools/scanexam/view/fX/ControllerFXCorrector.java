@@ -1,9 +1,8 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
-import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -113,28 +112,6 @@ public class ControllerFXCorrector {
    */
   private GraduationAdapterFX corrector;
   
-  private EditorAdapterFX editor;
-  
-  /**
-   * setter for the ControllerVueCreation attribute
-   * @param {@link ControllerVueCreation} controller instance of ControllerVueCreation (not null)
-   */
-  public EditorAdapterFX setAdapterEditor(final EditorAdapterFX edit) {
-    EditorAdapterFX _xblockexpression = null;
-    {
-      Objects.<EditorAdapterFX>requireNonNull(edit);
-      _xblockexpression = this.editor = edit;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * @return current {@link ControllerVueCreation}
-   */
-  public EditorAdapterFX getAdapterEditor() {
-    return this.editor;
-  }
-  
   /**
    * setter for the ControllerVueCorrection attribute
    * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null)
@@ -187,12 +164,6 @@ public class ControllerFXCorrector {
   public ImageView imview;
   
   @FXML
-  public Spinner<Double> gradeSpinner;
-  
-  @FXML
-  public Spinner<Double> totalGradeSpinner;
-  
-  @FXML
   public ScrollPane scrollMain;
   
   @FXML
@@ -203,6 +174,17 @@ public class ControllerFXCorrector {
   
   @FXML
   public VBox questionDetails;
+  
+  @FXML
+  public Spinner<Double> gradeSpinner;
+  
+  @FXML
+  public Spinner<Double> totalGradeSpinner;
+  
+  @FXML
+  public void swapToEditorPressed() {
+    LauncherFX.swapToEditor();
+  }
   
   /**
    * Toggles the visibility of the bottom window
@@ -481,8 +463,7 @@ public class ControllerFXCorrector {
     File _file = new File(_plus_1);
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showOpenDialog(this.imagePane.getScene().getWindow());
-    boolean _notEquals = (!com.google.common.base.Objects.equal(file, null));
-    if (_notEquals) {
+    if ((file != null)) {
       this.corrector.loadFile(file);
     } else {
       ControllerFXCorrector.logger.warn("File not chosen");
@@ -491,9 +472,6 @@ public class ControllerFXCorrector {
   
   public void initTests() {
     this.setKeybinds();
-    MockFXAdapter mock = new MockFXAdapter();
-    this.corrector = mock;
-    mock.setQuestions();
   }
   
   public void initQuestionNames(final List<String> names) {

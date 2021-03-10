@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fX;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.view.fX.Box;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.FXSettings;
@@ -137,6 +138,7 @@ public class ControllerFXEditor {
   
   @FXML
   public void switchToCorrectorPressed() {
+    LauncherFX.swapToGraduator();
   }
   
   @FXML
@@ -216,7 +218,6 @@ public class ControllerFXEditor {
         }
       });
       source.getChildren().add(this.currentRectangle);
-      this.logger.debug("Created Box");
     }
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
@@ -524,22 +525,19 @@ public class ControllerFXEditor {
   /**
    * notifies the rest of the program to the removal of a box
    */
-  public ControllerFXEditor.SelectedTool removeBox(final Box box) {
-    ControllerFXEditor.SelectedTool _xblockexpression = null;
-    {
-      this.questionList.getItems().remove(box.getListViewBox());
-      this.mainPane.getChildren().remove(box);
-      this.boxes.remove(box);
-      this.editor.removeBox(box);
-      _xblockexpression = this.currentTool = ControllerFXEditor.SelectedTool.NO_TOOL;
-    }
-    return _xblockexpression;
+  public void removeBox(final Box box) {
+    this.questionList.getItems().remove(box.getListViewBox());
+    this.mainPane.getChildren().remove(box);
+    this.boxes.remove(box);
+    this.editor.removeBox(box);
+    this.setToNoTool();
   }
   
   public void changePoints(final Box box, final String points) {
     ListViewBox _listViewBox = box.getListViewBox();
     _listViewBox.setPointsText(points);
     int number = Integer.parseInt(points);
+    this.editor.getPresenter().getPresenterQuestionZone().changeQuestionWorth(box.getBoxId(), number);
   }
   
   /**
@@ -699,13 +697,10 @@ public class ControllerFXEditor {
   /**
    * changes the selected page to load and then renders it
    */
-  public boolean selectPage(final int pageNumber) {
-    boolean _xblockexpression = false;
-    {
-      this.editor.getPresenter().choosePdfPage(pageNumber);
-      _xblockexpression = this.renderDocument();
-    }
-    return _xblockexpression;
+  public void selectPage(final int pageNumber) {
+    this.editor.getPresenter().choosePdfPage(pageNumber);
+    this.renderDocument();
+    this.showOnlyPage(this.editor.getPresenter().getCurrentPdfPageNumber());
   }
   
   /**

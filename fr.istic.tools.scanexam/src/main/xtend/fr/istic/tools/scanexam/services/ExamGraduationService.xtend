@@ -1,25 +1,23 @@
 package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.core.CoreFactory
+import fr.istic.tools.scanexam.core.CorePackage
+import fr.istic.tools.scanexam.core.Grade
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.Base64
+import java.util.Optional
 import java.util.Set
 import org.apache.pdfbox.pdmodel.PDDocument
-import java.util.Optional
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import java.io.ByteArrayOutputStream
-import java.util.Base64
-import fr.istic.tools.scanexam.core.CorePackage
-import org.eclipse.emf.common.util.EList
-import fr.istic.tools.scanexam.core.Exam
-import fr.istic.tools.scanexam.core.Grade
-import java.util.Arrays
 
 class ExamGraduationService extends Service
 {
@@ -46,7 +44,7 @@ class ExamGraduationService extends Service
 		template.exam = ExamSingleton.instance
 		
 		  //TODO
-          template.studentsheets.addAll(Arrays.asList(studentSheets)) 
+          template.studentsheets.addAll(studentSheets) 
 		
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -73,7 +71,7 @@ class ExamGraduationService extends Service
             ExamSingleton.instance = correctionTemplate.get().exam
             
             //TODO
-            template.studentsheets.addAll(Arrays.asList(studentSheets)) 
+            template.studentsheets.addAll(studentSheets) 
             
             val decoded = Base64.getDecoder().decode(correctionTemplate.get().encodedDocument);
             document = PDDocument.load(decoded)
@@ -117,18 +115,6 @@ class ExamGraduationService extends Service
 		if (currentSheetIndex > 0)
 			currentSheetIndex--
 			studentSheets.get(0).posPage;
-	}
-	
-	
-	override nextPage() {
-		if (pageIndex + 1 < document.pages.size)
-			pageIndex++
-	}
-	
-	
-	override previousPage() {
-		if (pageIndex > 0)
-			pageIndex--
 	}
 	
 	def nextQuestion(){
