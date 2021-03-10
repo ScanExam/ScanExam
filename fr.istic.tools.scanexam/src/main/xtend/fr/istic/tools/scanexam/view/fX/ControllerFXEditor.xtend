@@ -198,17 +198,17 @@ class ControllerFXEditor {
 			var xDelta = mousePositionX - mouseOriginX;
 			var yDelta = mousePositionY - mouseOriginY;
 			if (xDelta > 0) {
-				currentRectangle.width = xDelta;
+				currentRectangle.width(xDelta)
 			} else {
-				currentRectangle.width = Math.abs(xDelta);
-				currentRectangle.x = mouseOriginX - Math.abs(xDelta);
+				currentRectangle.width(Math.abs(xDelta))
+				currentRectangle.x(mouseOriginX - Math.abs(xDelta))
 			}
 
 			if (yDelta > 0) {
-				currentRectangle.height = yDelta;
+				currentRectangle.height(yDelta)
 			} else {
-				currentRectangle.height = Math.abs(yDelta);
-				currentRectangle.y = mouseOriginY - Math.abs(yDelta);
+				currentRectangle.height(Math.abs(yDelta))
+				currentRectangle.y(mouseOriginY - Math.abs(yDelta))
 
 			}
 
@@ -227,10 +227,10 @@ class ControllerFXEditor {
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.x = Math.min(mousePositionX,
-				maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width)
-			currentRectangle.y = Math.min(mousePositionY,
-				maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height)
+			currentRectangle.x(Math.min(mousePositionX,
+				maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+			currentRectangle.y(Math.min(mousePositionY,
+				maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 		}
@@ -245,8 +245,8 @@ class ControllerFXEditor {
 			
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.width = Math.abs(currentRectangle.x - mousePositionX)
-			currentRectangle.height = Math.abs(currentRectangle.y - mousePositionY)
+			currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
+			currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			resizeBox(currentRectangle)
@@ -372,6 +372,7 @@ class ControllerFXEditor {
 	 */
 	def addBox(Box box) {
 		editor.addBox(box);
+		renameBox(box,box.name)//TODO fix
 		var lb = box.listViewBox;
 		/*lb.upAction = new EventHandler<ActionEvent>() {
 
@@ -544,20 +545,28 @@ class ControllerFXEditor {
 			);
 			addBox(box);
 		}*/
-		var ids = editor.presenter.presenterQuestionZone.initLoading
-		for (int i:ids) {
-			var box = new Box(
-				editor.presenter.presenterQuestionZone.questionName(i),
-				editor.presenter.presenterQuestionZone.questionPage(i),
-				BoxType.QUESTION,
-				editor.presenter.presenterQuestionZone.questionX(i),
-				editor.presenter.presenterQuestionZone.questionY(i),
-				editor.presenter.presenterQuestionZone.questionHeight(i),
-				editor.presenter.presenterQuestionZone.questionWidth(i)
-			)
-			addBox(box)
+		
+		for (var p = 0;p < editor.presenter.totalPdfPageNumber;p++) {
+			var ids = editor.presenter.presenterQuestionZone.initLoading(p)
+			for (int i:ids) {
+				var box = new Box(
+					editor.presenter.presenterQuestionZone.questionName(i),
+					p,
+					BoxType.QUESTION,
+					editor.presenter.presenterQuestionZone.questionX(i),
+					editor.presenter.presenterQuestionZone.questionY(i),
+					editor.presenter.presenterQuestionZone.questionHeight(i),
+					editor.presenter.presenterQuestionZone.questionWidth(i)
+				)
+				addBox(box)
+				boxes.add(box)
+				mainPane.children.add(box)
+			}
 		}
+		
+		showOnlyPage(0)
 	}
+	
 
 	/**
 	 * initialise the choicebox containing all the page numbers of the pdf

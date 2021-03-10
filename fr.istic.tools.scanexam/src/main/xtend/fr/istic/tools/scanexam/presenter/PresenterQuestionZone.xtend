@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.services.ExamEditionService
 import java.util.LinkedList
 import java.util.Objects
+import java.util.List
 
 /**
  * Class to manage conversions of the view's questions 
@@ -75,9 +76,8 @@ class PresenterQuestionZone {
 	
 	/* --LOADING NEW TEMPLATE--  */
 	
-	def LinkedList<Integer> initLoading(){
-		pageNumbers = new LinkedList<Integer>() // replace method that give a list of questions
-		questions = new LinkedList<Question>() //replace with method that gives a list of pages corresponding to questions at same index
+	def LinkedList<Integer> initLoading(int pageNumber){
+		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
 		var ids = new LinkedList<Integer>();
 		for (Question q : questions) {
 			ids.add(q.id)
@@ -85,8 +85,7 @@ class PresenterQuestionZone {
 		ids
 	}
 	
-	LinkedList<Integer> pageNumbers
-	LinkedList<Question> questions
+	List<Question> questions
 	/**
 	 * Loads the next question into questionToLoad
 	 * if there is a new question, return true,
@@ -119,6 +118,7 @@ class PresenterQuestionZone {
 		for (Question q : questions) {
 			if (q.id == id) {
 				result = q.zone.heigth
+				print("h = " + result)
 			}
 		}
 		result
@@ -129,6 +129,7 @@ class PresenterQuestionZone {
 		for (Question q : questions) {
 			if (q.id == id) {
 				result = q.zone.width
+				print("w = " + result)
 			}
 		}
 		result
@@ -145,15 +146,7 @@ class PresenterQuestionZone {
 	}
 	
 	
-	def int questionPage(int id){
-		var result = -1;
-		for (Question q : questions) {
-			if (q.id == id) {
-				result = pageNumbers.get(questions.indexOf(q));
-			}
-		}
-		result
-	}
+
 	
 	def int questionWorth(int id){
 		0

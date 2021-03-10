@@ -23,6 +23,7 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import java.util.LinkedList
+import javafx.embed.swing.SwingFXUtils
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -361,7 +362,7 @@ class ControllerFXCorrector {
 			"Documents");
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 		if (file !== null) {
-			corrector.presenter.openCorrectionPdf(file.path);
+			corrector.presenter.openEditionTemplate(file.path)
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -376,6 +377,7 @@ class ControllerFXCorrector {
 		if (file !== null) {
 			corrector.presenter.openCorrectionPdf(file.path);
 			renderCorrectedCopy();
+			renderStudentCopy();
 			loadQuestions();
 			loadStudents();
 		} else {
@@ -399,21 +401,28 @@ class ControllerFXCorrector {
 		}
 	}
 	
-
+	
 	def void loadQuestions(){
 		//var ids = corrector.presenter.presenterCopy.getQuestionIds()
-		var ids = new LinkedList<Integer>();
-		for (int i : ids) {
-			var item = new QuestionItem();
-			
-			rightList.items.add(item);
+		for (var p = 0;p < 1;p++) {
+			var ids = corrector.presenter.initLoading(p)
+			for (int i:ids) {
+				var question = new QuestionItem();
+				question.x = corrector.presenter.questionX(i);
+				question.y = corrector.presenter.questionY(i);
+				question.h = corrector.presenter.questionHeight(i);
+				question.w = corrector.presenter.questionWidth(i);
+				question.questionId = i
+				question.name = corrector.presenter.questionName(i);
+				rightList.items.add(question);
+			}
 		}
 	}
 	
 	def void loadStudents(){
-		//var ids = corrector.presenter.presenterCopy.getStudentIds() 
+		var ids = corrector.presenter.studentIds
 		//TODO link to service
-		var ids = new LinkedList<Integer>();
+		//var ids = new LinkedList<Integer>();
 		for (int i : ids) {
 			leftList.items.add(new StudentItem(i))
 		}
@@ -423,8 +432,10 @@ class ControllerFXCorrector {
 	
 	//---NAVIGATION---//
 	
-	def void renderStudentCopy(){
-		
+	def void renderStudentCopy(){		
+		var image = corrector.presenter.currentPdfPage
+		imview.image = SwingFXUtils.toFXImage(image, null);
+		pdfLoaded = true;
 	}
 	
 	def void renderCorrectedCopy(){
@@ -479,10 +490,16 @@ class ControllerFXCorrector {
 	
 	//---PAGE OPERATIONS---//
 	def void nextPage() {
+		corrector.presenter.nextPdfPage
+		renderCorrectedCopy
 	}
 	def void previousPage(){
+		corrector.presenter.previousPdfPage
+		renderCorrectedCopy
 	}
 	def void selectPage(int pageNumber) {
+		corrector.presenter.goToPage(pageNumber)
+		renderCorrectedCopy
 	}
 	//---------------------//
 }

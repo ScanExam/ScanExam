@@ -152,4 +152,8 @@ class ListViewBox extends VBox{
 		pointsLabel.visible = !pointsLabel.visible;
 	}
 	
+	def Label getNameLabel(){
+		return nameLabel
+	}
+	
 }
