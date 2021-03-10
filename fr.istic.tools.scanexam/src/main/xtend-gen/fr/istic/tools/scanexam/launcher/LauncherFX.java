@@ -39,8 +39,8 @@ public class LauncherFX extends Application implements Launcher {
     final FXMLLoader graduatorLoader = new FXMLLoader();
     editorLoader.setResources(LanguageManager.getCurrentBundle());
     graduatorLoader.setResources(LanguageManager.getCurrentBundle());
-    final Parent editorRoot = editorLoader.<Parent>load(ResourcesUtils.getInputStreamResource("/viewResources/EditorUI.fxml"));
-    final Parent graduatorRoot = graduatorLoader.<Parent>load(ResourcesUtils.getInputStreamResource("/viewResources/CorrectorUI.fxml"));
+    final Parent editorRoot = editorLoader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
+    final Parent graduatorRoot = graduatorLoader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
     Object _controller = editorLoader.<Object>getController();
     final ControllerFXEditor controllerEditor = ((ControllerFXEditor) _controller);
     Object _controller_1 = graduatorLoader.<Object>getController();
@@ -59,7 +59,7 @@ public class LauncherFX extends Application implements Launcher {
     primaryStage.setMinHeight(720);
     primaryStage.setMinWidth(720);
     ObservableList<Image> _icons = primaryStage.getIcons();
-    InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("/logo.png");
+    InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
     Image _image = new Image(_inputStreamResource);
     _icons.add(_image);
     primaryStage.show();

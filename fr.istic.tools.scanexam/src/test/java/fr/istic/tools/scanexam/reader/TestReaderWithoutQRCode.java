@@ -26,11 +26,11 @@ class TestReaderWithoutQRCode {
 
 	@BeforeEach
 	void init() {
-		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Inserted.pdf");
+		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("QRCode/pfo_Inserted.pdf");
 		if (inStreamGood != null)
 			readerGood = new PdfReaderWithoutQrCodeImpl(inStreamGood, nbPages, nbCopies);
 
-		InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("/QRCode/pfo_Dirty.pdf");
+		InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("QRCode/pfo_Dirty.pdf");
 		if (inStreamDirty != null)
 			readerDirty = new PdfReaderWithoutQrCodeImpl(inStreamDirty, nbPages, nbCopies);
 	}

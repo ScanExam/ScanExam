@@ -46,7 +46,7 @@ class SendMailTls {
 	    val props = new Properties()
 	    
 	    //Lecture du fichier config
-	    val file = ResourcesUtils.getInputStreamResource("/mailing/configMailFile.properties")
+	    val file = ResourcesUtils.getInputStreamResource("mailing/configMailFile.properties")
 	    
 	    props.load(file)
 	    file.close()

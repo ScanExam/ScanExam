@@ -43,7 +43,7 @@ public class SendMailTls {
       Objects.<String>requireNonNull(messageMail, "Erreur : Le message du mail ne doit pas etre Null");
       Objects.<String>requireNonNull(pieceJointe, "Erreur : La piece Jointe du mail ne doit pas etre Null");
       final Properties props = new Properties();
-      final InputStream file = ResourcesUtils.getInputStreamResource("/mailing/configMailFile.properties");
+      final InputStream file = ResourcesUtils.getInputStreamResource("mailing/configMailFile.properties");
       props.load(file);
       file.close();
       boolean _contains = sender.contains("@");
