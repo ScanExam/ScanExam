@@ -10,12 +10,12 @@ import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -103,7 +103,68 @@ public class ExamGraduationService extends Service {
     return Optional.<CorrectionTemplate>ofNullable(((CorrectionTemplate) template));
   }
   
-  public int nextSheet() {
+  /**
+   * Liste des identifiants des etudiants
+   */
+  public ArrayList<Integer> studentsList() {
+    ArrayList<Integer> _xblockexpression = null;
+    {
+      ArrayList<Integer> tab = new ArrayList<Integer>();
+      for (int i = 0; (i < (this.studentSheets.size() - 1)); i++) {
+        tab.add(Integer.valueOf((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[i]).getId()));
+      }
+      _xblockexpression = tab;
+    }
+    return _xblockexpression;
+  }
+  
+  public int numberOfQuestions() {
+    int _xblockexpression = (int) 0;
+    {
+      int nbQuestion = 0;
+      for (int i = 0; (i < (IterableExtensions.size(this.document.getPages()) - 1)); i++) {
+        int _nbQuestion = nbQuestion;
+        int _size = this.template.getExam().getPages().get(i).getQuestions().size();
+        nbQuestion = (_nbQuestion + _size);
+      }
+      _xblockexpression = nbQuestion;
+    }
+    return _xblockexpression;
+  }
+  
+  public int indexOfQuestions(final int indexpage, final int indexquestion) {
+    int _xblockexpression = (int) 0;
+    {
+      int indexQuestion = 0;
+      for (int i = 0; (i < (indexpage - 1)); i++) {
+        int _indexQuestion = indexQuestion;
+        int _size = this.template.getExam().getPages().get(i).getQuestions().size();
+        indexQuestion = (_indexQuestion + _size);
+      }
+      int _indexQuestion = indexQuestion;
+      indexQuestion = (_indexQuestion + indexquestion);
+      _xblockexpression = indexQuestion;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * Ajoute d'un etudiant
+   */
+  public boolean addStudents(final int id) {
+    boolean _xblockexpression = false;
+    {
+      final StudentSheet newStudent = CoreFactory.eINSTANCE.createStudentSheet();
+      newStudent.setId(id);
+      _xblockexpression = this.studentSheets.add(newStudent);
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * Passe au prochaine etudiant dans les StudentSheet
+   */
+  public int nextStudent() {
     int _xifexpression = (int) 0;
     int _size = this.studentSheets.size();
     boolean _lessThan = ((this.currentSheetIndex + 1) < _size);
@@ -113,15 +174,15 @@ public class ExamGraduationService extends Service {
     return _xifexpression;
   }
   
-  public EList<Integer> previousSheet() {
-    EList<Integer> _xblockexpression = null;
-    {
-      if ((this.currentSheetIndex > 0)) {
-        this.currentSheetIndex--;
-      }
-      _xblockexpression = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[0]).getPosPage();
+  /**
+   * Passe au etudiant précédent dans les StudentSheet
+   */
+  public int previousStudent() {
+    int _xifexpression = (int) 0;
+    if ((this.currentSheetIndex > 0)) {
+      _xifexpression = this.currentSheetIndex--;
     }
-    return _xblockexpression;
+    return _xifexpression;
   }
   
   public int nextQuestion() {
@@ -142,13 +203,11 @@ public class ExamGraduationService extends Service {
     return _xifexpression;
   }
   
-  public Grade setGrade(final Grade grade) {
-    Grade _xblockexpression = null;
-    {
-      final int position = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getPosPage().indexOf(Integer.valueOf(this.currentQuestionIndex));
-      _xblockexpression = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().set(position, grade);
-    }
-    return _xblockexpression;
+  /**
+   * Ajoute la note a la question courante
+   */
+  public Grade setGrade(final Grade note) {
+    return (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().set(this.indexOfQuestions(this.pageIndex, this.currentQuestionIndex), note);
   }
   
   @Override

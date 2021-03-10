@@ -18,13 +18,13 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import java.util.ArrayList
 
 class ExamGraduationService extends Service
 {
 	int currentSheetIndex;
 	 
 	int currentQuestionIndex;
-	
 	
 	Set<StudentSheet> studentSheets;
 	
@@ -40,11 +40,9 @@ class ExamGraduationService extends Service
 		template.encodedDocument = new String(encodedDoc);
 		outputStream.close();
 		
-		
 		template.exam = ExamSingleton.instance
 		
-		  //TODO
-          template.studentsheets.addAll(studentSheets) 
+        template.studentsheets.addAll(studentSheets) 
 		
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -53,7 +51,6 @@ class ExamGraduationService extends Service
 			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
 		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
 	
-			
 		val resource = resourceSet.createResource(URI.createFileURI(path))
 		resource.getContents().add(template);
 		resource.save(null);
@@ -70,7 +67,7 @@ class ExamGraduationService extends Service
             
             ExamSingleton.instance = correctionTemplate.get().exam
             
-            //TODO
+            
             template.studentsheets.addAll(studentSheets) 
             
             val decoded = Base64.getDecoder().decode(correctionTemplate.get().encodedDocument);
@@ -104,17 +101,59 @@ class ExamGraduationService extends Service
         return Optional.ofNullable(template as CorrectionTemplate)
     }
 	
+	/**
+	 * Liste des identifiants des etudiants
+	 */
+	def studentsList (){
+		var tab = new ArrayList();
+		for(var i =0; i<studentSheets.size-1;i++){
+			tab.add(studentSheets.get(i).id)
+		}
+		tab
+	}
 	
-	def nextSheet() {
+	def numberOfQuestions (){
+		var nbQuestion =0
+		for (var i = 0 ; i < document.pages.size-1; i++){
+			nbQuestion += template.exam.pages.get(i).questions.size
+		}
+		nbQuestion
+	}
+	
+	def indexOfQuestions (int indexpage , int indexquestion){
+		var indexQuestion =0
+		for (var i = 0 ; i < indexpage-1 ; i++){
+			indexQuestion += template.exam.pages.get(i).questions.size
+		}
+		indexQuestion += indexquestion
+		indexQuestion
+	}
+	
+	/**
+	 * Ajoute d'un etudiant
+	 */
+	 def addStudents (int id){
+	 	val newStudent = CoreFactory.eINSTANCE.createStudentSheet;
+	 	newStudent.id = id
+	 	//newStudent.posPage= new int [numberOfQuestions()]
+	 	//newStudent.grades = new Grade [numberOfQuestions()]
+	 	studentSheets.add(newStudent)
+	 }
+	
+	/**
+	 * Passe au prochaine etudiant dans les StudentSheet
+	 */
+	def nextStudent() {
 		if (currentSheetIndex+1 < studentSheets.size)
 			currentSheetIndex++
 	}
 	
-	
-	def previousSheet() {
+	/**
+	 * Passe au etudiant précédent dans les StudentSheet
+	 */
+	def previousStudent() {
 		if (currentSheetIndex > 0)
 			currentSheetIndex--
-			studentSheets.get(0).posPage;
 	}
 	
 	def nextQuestion(){
@@ -127,10 +166,13 @@ class ExamGraduationService extends Service
 			currentQuestionIndex--
 	}
 	
-	def setGrade (Grade grade){
-		val position = studentSheets.get(currentSheetIndex).posPage.indexOf(currentQuestionIndex);
-		studentSheets.get(currentSheetIndex).grades.set(position, grade);
+	/**
+	 * Ajoute la note a la question courante
+	 */
+	def setGrade (Grade note){
+		studentSheets.get(currentSheetIndex).grades.set(indexOfQuestions(pageIndex,currentQuestionIndex), note);
 	}
+	
 	
 	override void create(File file) 
 	{
