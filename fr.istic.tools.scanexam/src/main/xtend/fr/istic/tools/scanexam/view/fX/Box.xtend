@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.view.fX
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import java.lang.LiveStackFrame.PrimitiveSlot
+import javafx.scene.text.Text
 
 class Box extends Rectangle {
 	
@@ -19,6 +20,7 @@ class Box extends Rectangle {
 			setFill(Color.rgb(200, 200, 200, 0.2));
 			setStroke(Color.BLACK);
 			setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
+			this.text = new Text(x,y-5,name);
 			
 		}
 	
@@ -48,8 +50,13 @@ class Box extends Rectangle {
 		BoxType type;
 		int boxId;
 		int page;
+	
+		Text text
 		
 		
+		def getText(){
+			text
+		}
 		
 		def getListViewBox(){
 			listViewBox

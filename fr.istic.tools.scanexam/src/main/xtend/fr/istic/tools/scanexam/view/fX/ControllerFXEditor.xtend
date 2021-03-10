@@ -25,6 +25,7 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import fr.istic.tools.scanexam.launcher.LauncherFX
+import javafx.scene.text.Text
 
 class ControllerFXEditor {
 
@@ -188,7 +189,10 @@ class ControllerFXEditor {
 				}
 
 			})
+			
 			source.children.add(currentRectangle);
+			source.children.add(currentRectangle.getText());
+
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 
@@ -385,6 +389,7 @@ class ControllerFXEditor {
 		lb.removeAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
+				System.out.println("Remove "+box.getName());
 				removeBox(box);
 			}
 
@@ -437,7 +442,9 @@ class ControllerFXEditor {
 			}
 
 		}
-		questionList.items.add(lb)
+		questionList.items.add(lb);
+
+		System.out.println(mainPane.getChildren());
 		boxes.add(box);
 	}
 
@@ -460,6 +467,7 @@ class ControllerFXEditor {
 	 */
 	def removeBox(Box box) {
 		questionList.items.remove(box.listViewBox)
+		mainPane.children.remove(box.getText());
 		mainPane.children.remove(box)
 		boxes.remove(box)
 		editor.removeBox(box);

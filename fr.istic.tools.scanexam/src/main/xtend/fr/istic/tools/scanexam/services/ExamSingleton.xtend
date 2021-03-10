@@ -1,11 +1,10 @@
 package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.core.Exam
-import fr.istic.tools.scanexam.core.Question
-import java.util.List
-import java.util.Collections
 import fr.istic.tools.scanexam.core.Page
+import fr.istic.tools.scanexam.core.Question
 import java.util.Collection
+import java.util.Collections
 
 /**
  * A revoir ?
