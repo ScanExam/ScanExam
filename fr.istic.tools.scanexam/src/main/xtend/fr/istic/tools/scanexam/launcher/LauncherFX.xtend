@@ -44,6 +44,7 @@ class LauncherFX extends Application implements Launcher {
 			val controllerEditor = (editorLoader.controller as ControllerFXEditor);
 			val controllerGraduator = (graduatorLoader.controller as ControllerFXCorrector);
 			
+		
 			controllerEditor.editorAdapterFX = edit;
 			edit.controllerFXCreator =  controllerEditor;
 			
@@ -53,6 +54,8 @@ class LauncherFX extends Application implements Launcher {
 			
 			val editorScene = new Scene(editorRoot, 1280, 720) ;
 			val graduatorScene = new Scene(graduatorRoot, 1280, 720);
+			
+			
 			
 			pStage = primaryStage;
 			eScene = editorScene

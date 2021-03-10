@@ -132,5 +132,12 @@ class GraduationPresenter implements Presenter
 		 service.create(file);
 	}
 	
+	def void openEditionTemplate(String path){
+		
+	}
+	
+	def void openCorrectionPdf(String path){
+		
+	}
 	
 }

@@ -89,5 +89,6 @@ class Box extends Rectangle {
 				setStroke(Color.BLACK);
 			}
 		}
+		
 
 	}
