@@ -22,7 +22,7 @@ public class ResourcesUtils {
    * @throw NullPointerException si <b>relativePath</b> est null
    */
   public static InputStream getInputStreamResource(final String relativePath) {
-    return ResourcesUtils.class.getResourceAsStream(relativePath);
+    return ResourcesUtils.class.getClassLoader().getResourceAsStream(relativePath);
   }
   
   /**
