@@ -2,7 +2,7 @@
 package fr.istic.tools.scanexam.core.templates
 
 type Exam wraps fr.istic.tools.scanexam.core.Exam
-type StudentSheet wraps fr.istic.tools.scanexam.core.Exam
+type StudentSheet wraps fr.istic.tools.scanexam.core.StudentSheet
 
 class CorrectionTemplate 
 {

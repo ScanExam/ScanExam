@@ -3,7 +3,6 @@ package fr.istic.tools.scanexam.view.fX;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
-import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -187,12 +186,6 @@ public class ControllerFXCorrector {
   public ImageView imview;
   
   @FXML
-  public Spinner<Double> gradeSpinner;
-  
-  @FXML
-  public Spinner<Double> totalGradeSpinner;
-  
-  @FXML
   public ScrollPane scrollMain;
   
   @FXML
@@ -203,6 +196,12 @@ public class ControllerFXCorrector {
   
   @FXML
   public VBox questionDetails;
+  
+  @FXML
+  public Spinner<Double> gradeSpinner;
+  
+  @FXML
+  public Spinner<Double> totalGradeSpinner;
   
   /**
    * Toggles the visibility of the bottom window
@@ -491,9 +490,6 @@ public class ControllerFXCorrector {
   
   public void initTests() {
     this.setKeybinds();
-    MockFXAdapter mock = new MockFXAdapter();
-    this.corrector = mock;
-    mock.setQuestions();
   }
   
   public void initQuestionNames(final List<String> names) {

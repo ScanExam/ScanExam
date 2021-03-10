@@ -1,9 +1,7 @@
 package fr.istic.tools.scanexam.services;
 
-import com.google.common.collect.Iterables;
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.CorePackage;
-import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
@@ -12,7 +10,6 @@ import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
@@ -49,7 +46,7 @@ public class ExamGraduationService extends Service {
       this.template.setEncodedDocument(_string);
       outputStream.close();
       this.template.setExam(ExamSingleton.instance);
-      Iterables.<Exam>addAll(this.template.getStudentsheets(), Arrays.<Exam>asList(this.studentSheets));
+      this.template.getStudentsheets().addAll(this.studentSheets);
       final ResourceSetImpl resourceSet = new ResourceSetImpl();
       final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
       final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
@@ -72,7 +69,7 @@ public class ExamGraduationService extends Service {
       if (_isPresent) {
         this.template = correctionTemplate.get();
         ExamSingleton.instance = correctionTemplate.get().getExam();
-        Iterables.<Exam>addAll(this.template.getStudentsheets(), Arrays.<Exam>asList(this.studentSheets));
+        this.template.getStudentsheets().addAll(this.studentSheets);
         final byte[] decoded = Base64.getDecoder().decode(correctionTemplate.get().getEncodedDocument());
         this.document = PDDocument.load(decoded);
         return true;
@@ -125,26 +122,6 @@ public class ExamGraduationService extends Service {
       _xblockexpression = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[0]).getPosPage();
     }
     return _xblockexpression;
-  }
-  
-  @Override
-  public int nextPage() {
-    int _xifexpression = (int) 0;
-    int _size = IterableExtensions.size(this.document.getPages());
-    boolean _lessThan = ((this.pageIndex + 1) < _size);
-    if (_lessThan) {
-      _xifexpression = this.pageIndex++;
-    }
-    return _xifexpression;
-  }
-  
-  @Override
-  public int previousPage() {
-    int _xifexpression = (int) 0;
-    if ((this.pageIndex > 0)) {
-      _xifexpression = this.pageIndex--;
-    }
-    return _xifexpression;
   }
   
   public int nextQuestion() {
