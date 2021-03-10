@@ -66,18 +66,6 @@ class ExamGraduationService extends Service
 	
 	
 	
-	/**
-	 * Liste des identifiants des etudiants
-	 */
-	def studentsList ()
-	{
-		var tab = new ArrayList();
-		for(var i =0; i<studentSheets.size-1;i++){
-			tab.add(studentSheets.get(i).id)
-		}
-		tab
-	}
-	
 	def numberOfQuestions ()
 	{
 		var nbQuestion =0
@@ -87,19 +75,13 @@ class ExamGraduationService extends Service
 		nbQuestion
 	}
 	
+	def int getAbsolutePageNumber(int studentId,int offset)
+	{
+		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(0);
+		return pageId  + offset;
+	}
 	
-	/**
-	 * Ajoute d'un etudiant
-	 */
-	 def addStudents (int id)
-	 {
-	 	val newStudent = CoreFactory.eINSTANCE.createStudentSheet;
-	 	newStudent.id = id
-	 	//TODO
-	 	//newStudent.posPage= new int [numberOfQuestions()]
-	 	//newStudent.grades = new Grade [numberOfQuestions()]
-	 	studentSheets.add(newStudent)
-	 }
+	
 	
 	/**
 	 * Passe au prochaine etudiant dans les StudentSheet

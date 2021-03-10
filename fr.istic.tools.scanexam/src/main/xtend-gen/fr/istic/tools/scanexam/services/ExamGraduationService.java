@@ -11,7 +11,6 @@ import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -19,6 +18,7 @@ import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -67,21 +67,6 @@ public class ExamGraduationService extends Service {
     }
   }
   
-  /**
-   * Liste des identifiants des etudiants
-   */
-  public ArrayList<Integer> studentsList() {
-    ArrayList<Integer> _xblockexpression = null;
-    {
-      ArrayList<Integer> tab = new ArrayList<Integer>();
-      for (int i = 0; (i < (this.studentSheets.size() - 1)); i++) {
-        tab.add(Integer.valueOf((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[i]).getId()));
-      }
-      _xblockexpression = tab;
-    }
-    return _xblockexpression;
-  }
-  
   public int numberOfQuestions() {
     int _xblockexpression = (int) 0;
     {
@@ -96,17 +81,13 @@ public class ExamGraduationService extends Service {
     return _xblockexpression;
   }
   
-  /**
-   * Ajoute d'un etudiant
-   */
-  public boolean addStudents(final int id) {
-    boolean _xblockexpression = false;
-    {
-      final StudentSheet newStudent = CoreFactory.eINSTANCE.createStudentSheet();
-      newStudent.setId(id);
-      _xblockexpression = this.studentSheets.add(newStudent);
-    }
-    return _xblockexpression;
+  public int getAbsolutePageNumber(final int studentId, final int offset) {
+    final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
+      int _id = x.getId();
+      return Boolean.valueOf((_id == studentId));
+    };
+    final Integer pageId = IterableExtensions.<StudentSheet>findFirst(this.studentSheets, _function).getPosPage().get(0);
+    return ((pageId).intValue() + offset);
   }
   
   /**
