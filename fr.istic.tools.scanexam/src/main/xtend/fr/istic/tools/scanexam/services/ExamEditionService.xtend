@@ -1,25 +1,23 @@
 package fr.istic.tools.scanexam.services
+
 import fr.istic.tools.scanexam.core.CoreFactory
+import fr.istic.tools.scanexam.core.CorePackage
+import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
+import fr.istic.tools.scanexam.core.templates.TemplatesFactory
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.Base64
+import java.util.HashMap
 import java.util.Optional
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import java.io.ByteArrayOutputStream
-import java.io.ByteArrayInputStream
-import fr.istic.tools.scanexam.core.templates.TemplatesFactory
-import java.util.Base64
-import fr.istic.tools.scanexam.core.CorePackage
-import java.util.Map
-import fr.istic.tools.scanexam.core.Question
-import java.util.HashMap
-import java.util.ArrayList
-import org.eclipse.emf.common.util.EList
 
 /*
  * Representer l'état courant de l'interface graphique

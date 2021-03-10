@@ -207,6 +207,12 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		val DataFactory dF = new DataFactory()
 
 		temp = uncompleteCopies
+		
+		var Set<Copie> temp2 = new HashSet<Copie>()
+		temp2 = completeCopies
+		
+		println(temp2.toString)
+		println(temp.toString)
 
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
@@ -215,7 +221,6 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
 				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-			println(pagesArray.toString)
 			res.add(dF.createStudentSheet(index, pagesArray))
 		}
 		return res

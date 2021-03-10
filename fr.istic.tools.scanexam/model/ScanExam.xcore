@@ -7,6 +7,7 @@ type Map<T1,T2> wraps java.util.Map
 type Pair<T1,T2> wraps fr.istic.tools.scanexam.utils.Pair
 
 
+
 class QuestionZone 
 {
 	float x
@@ -33,18 +34,16 @@ class GradeEntry
 	float step
 	String header
 }
-class Page 
-{
-	int ^id
-	Map<Integer,Question> questions
-}
-
 class Exam {
 	int ^id
 	String name
 	contains Page[] pages
 }
-
+class Page 
+{
+	int ^id
+	Map<Integer,Question> questions
+}
 class Comment {
 	float x
 	float y

@@ -107,7 +107,7 @@ class LanguageManager {
 		currentLocale = newLocale === null ? Locale.^default : newLocale
 		if(!currentLocale.equals(language))
 			logger.info('''«language.displayName» is not supported, fallback to «currentLocale.displayName».''')
-		currentBundle = ResourceBundle.getBundle(path + prefixFileName, currentLocale)
+		currentBundle = ResourceBundle.getBundle(path + prefixFileName, currentLocale, typeof(ResourcesUtils).classLoader)
 		logger.info('''Change language to «currentLocale.displayName».''')
 	}
 	

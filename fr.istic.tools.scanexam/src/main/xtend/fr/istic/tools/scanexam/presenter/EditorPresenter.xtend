@@ -139,8 +139,8 @@ class EditorPresenter implements Presenter
 		service.save(path)
 	}
 	
-	def load(String path) {
-		service.open(path)
+	def boolean load(String path) {
+		return service.open(path)
 	}
 	
 	def close() {

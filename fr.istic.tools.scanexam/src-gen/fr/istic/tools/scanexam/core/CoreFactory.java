@@ -58,15 +58,6 @@ public interface CoreFactory extends EFactory {
 	GradeEntry createGradeEntry();
 
 	/**
-	 * Returns a new object of class '<em>Page</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Page</em>'.
-	 * @generated
-	 */
-	Page createPage();
-
-	/**
 	 * Returns a new object of class '<em>Exam</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -74,6 +65,15 @@ public interface CoreFactory extends EFactory {
 	 * @generated
 	 */
 	Exam createExam();
+
+	/**
+	 * Returns a new object of class '<em>Page</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Page</em>'.
+	 * @generated
+	 */
+	Page createPage();
 
 	/**
 	 * Returns a new object of class '<em>Comment</em>'.

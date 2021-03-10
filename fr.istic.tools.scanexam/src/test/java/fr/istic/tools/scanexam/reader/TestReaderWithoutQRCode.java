@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +22,7 @@ class TestReaderWithoutQRCode {
 	PdfReader readerDirty;
 	int nbPages = 7;
 	int nbCopies = 3;
+	
 
 	@BeforeEach
 	void init() {
@@ -71,7 +70,7 @@ class TestReaderWithoutQRCode {
 	}
 
 	@Test
-	@DisplayName("Test du renvoi de la structure au format de l'API quand toutes les pages sont là")
+	@DisplayName("Test du renvoi de la structure des copies complètes au format de l'API quand toutes les pages sont là")
 	void getCompleteStudentSheetsTestGood() {
 		assertEquals(true, readerGood.readPDf());
 		
@@ -85,36 +84,67 @@ class TestReaderWithoutQRCode {
 				pages.add((i * nbPages)+j);
 				
 			}
-			//System.out.println(pages.toString());
 			collection.add(dF.createStudentSheet(i, pages));
 		}
-		List<StudentSheet> arr = new ArrayList<>(readerGood.getCompleteStudentSheets());
-		System.out.println(collection.toString());
-		System.out.println(arr.toString()+"\n\n");
-		
-		assertEquals(true, collection.containsAll(arr));
+		List<StudentSheet> arr = new ArrayList<>(readerGood.getCompleteStudentSheets());		
 		
 		boolean bool = true;
 		
-		for(StudentSheet std : arr){
+		for(StudentSheet stdSh : arr){
 			try{
-				StudentSheet commeTuVeux = collection.get(std.getId());
-				//vérifier que toutes les pages sont la 
-				bool &= true;
+				StudentSheet temp = collection.get(stdSh.getId());
+				
+				bool &= stdSh.getPosPage().containsAll(temp.getPosPage());
+				bool &= temp.getPosPage().containsAll(stdSh.getPosPage());
 				
 			}catch(IndexOutOfBoundsException e ) {
 				bool &= false;
 			}
-			
-			
 		}
 		
-		//TODO faire un deuxieme for
+		bool &= arr.size() == collection.size();
+		
+		assertEquals(true, bool);
 	}
 
 	@Test
-	@DisplayName("Test du renvoi de la structure au format de l'API quand il manque une page")
-	void getUncompleteStundentSheetsTestDirty() {
-		//TODO a finir  
+	@DisplayName("Test du renvoi de la structure des copies complètes au format de l'API quand il manque une page")
+	void getCompleteStundentSheetsTestDirty() {
+		assertEquals(true, readerDirty.readPDf());
+		
+		DataFactory dF = new DataFactory();
+		List<StudentSheet> collection = new ArrayList<>();
+		
+		
+		for(int i = 0; i<nbCopies; i++) {
+			List<Integer> pages = new ArrayList<>();
+			for(int j = 0; j < nbPages; j++) {
+				pages.add((i * nbPages)+j);
+				
+			}
+
+			collection.add(dF.createStudentSheet(i, pages));
+		}
+		List<StudentSheet> arr = new ArrayList<>(readerDirty.getCompleteStudentSheets());		
+		
+		
+		boolean bool = true;
+		
+		for(StudentSheet stdSh : arr){
+			try{
+				StudentSheet temp = collection.get(stdSh.getId());
+				
+				bool &= stdSh.getPosPage().containsAll(temp.getPosPage());
+				bool &= temp.getPosPage().containsAll(stdSh.getPosPage());
+				
+			}catch(IndexOutOfBoundsException e ) {
+				bool &= false;
+			}
+		}
+		
+		bool &= arr.size() == collection.size();
+		assertEquals(false, bool);
 	}
+	
+	//les copies incomplètes ne peuvent pas être testées car on a pas de notion d'ordre sans QRCodes
 }
