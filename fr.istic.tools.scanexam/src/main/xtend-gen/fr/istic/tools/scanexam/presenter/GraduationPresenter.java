@@ -44,13 +44,6 @@ public class GraduationPresenter implements Presenter {
   }
   
   /**
-   * @return API session
-   */
-  public ExamGraduationService getServiceAPI() {
-    return this.service;
-  }
-  
-  /**
    * setter for the PresenterQuestion attribute
    * @param {@link PresenterQuestion} pres instance of the presenter (not null)
    */
@@ -158,17 +151,14 @@ public class GraduationPresenter implements Presenter {
     return this.presPdf;
   }
   
-  @Override
   public BufferedImage getCurrentPdfPage() {
     return this.service.getCurrentPdfPage();
   }
   
-  @Override
   public int getCurrentPdfPageNumber() {
     return this.service.getCurrentPageNumber();
   }
   
-  @Override
   public void create(final File file) {
     this.service.create(file);
   }
