@@ -120,14 +120,6 @@ class ExamGraduationService extends Service
 		nbQuestion
 	}
 	
-	def indexOfQuestions (int indexpage , int indexquestion){
-		var indexQuestion =0
-		for (var i = 0 ; i < indexpage-1 ; i++){
-			indexQuestion += template.exam.pages.get(i).questions.size
-		}
-		indexQuestion += indexquestion
-		indexQuestion
-	}
 	
 	/**
 	 * Ajoute d'un etudiant
@@ -135,6 +127,7 @@ class ExamGraduationService extends Service
 	 def addStudents (int id){
 	 	val newStudent = CoreFactory.eINSTANCE.createStudentSheet;
 	 	newStudent.id = id
+	 	//TODO
 	 	//newStudent.posPage= new int [numberOfQuestions()]
 	 	//newStudent.grades = new Grade [numberOfQuestions()]
 	 	studentSheets.add(newStudent)
@@ -164,6 +157,15 @@ class ExamGraduationService extends Service
 	def previousQuestion() {
 		if (currentQuestionIndex > 0)
 			currentQuestionIndex--
+	}
+	
+	def indexOfQuestions (int indexpage , int indexquestion){
+		var indexQuestion =0
+		for (var i = 0 ; i < indexpage-1 ; i++){
+			indexQuestion += template.exam.pages.get(i).questions.size
+		}
+		indexQuestion += indexquestion
+		indexQuestion
 	}
 	
 	/**

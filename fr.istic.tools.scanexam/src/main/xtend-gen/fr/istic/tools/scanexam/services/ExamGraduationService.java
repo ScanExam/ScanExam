@@ -132,22 +132,6 @@ public class ExamGraduationService extends Service {
     return _xblockexpression;
   }
   
-  public int indexOfQuestions(final int indexpage, final int indexquestion) {
-    int _xblockexpression = (int) 0;
-    {
-      int indexQuestion = 0;
-      for (int i = 0; (i < (indexpage - 1)); i++) {
-        int _indexQuestion = indexQuestion;
-        int _size = this.template.getExam().getPages().get(i).getQuestions().size();
-        indexQuestion = (_indexQuestion + _size);
-      }
-      int _indexQuestion = indexQuestion;
-      indexQuestion = (_indexQuestion + indexquestion);
-      _xblockexpression = indexQuestion;
-    }
-    return _xblockexpression;
-  }
-  
   /**
    * Ajoute d'un etudiant
    */
@@ -201,6 +185,22 @@ public class ExamGraduationService extends Service {
       _xifexpression = this.currentQuestionIndex--;
     }
     return _xifexpression;
+  }
+  
+  public int indexOfQuestions(final int indexpage, final int indexquestion) {
+    int _xblockexpression = (int) 0;
+    {
+      int indexQuestion = 0;
+      for (int i = 0; (i < (indexpage - 1)); i++) {
+        int _indexQuestion = indexQuestion;
+        int _size = this.template.getExam().getPages().get(i).getQuestions().size();
+        indexQuestion = (_indexQuestion + _size);
+      }
+      int _indexQuestion = indexQuestion;
+      indexQuestion = (_indexQuestion + indexquestion);
+      _xblockexpression = indexQuestion;
+    }
+    return _xblockexpression;
   }
   
   /**
