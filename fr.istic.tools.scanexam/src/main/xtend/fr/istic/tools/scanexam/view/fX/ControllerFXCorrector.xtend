@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.view.fX;
 
-import fr.istic.tools.scanexam.core.Question
+
 import java.io.File
 import java.io.IOException
 import java.util.ArrayList
@@ -23,6 +23,8 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.core.Question
+import javafx.scene.control.Spinner
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -92,14 +94,18 @@ class ControllerFXCorrector {
 	public ListView<Label> rightList;
 	@FXML
 	public ImageView imview;
-
+	@FXML
 	public ScrollPane scrollMain;
-
+	@FXML
 	public ScrollPane scrollBis;
-	
+	@FXML
 	public VBox studentDetails;
-	
+	@FXML
 	public VBox questionDetails;
+	@FXML
+	public Spinner<Double> gradeSpinner;
+	@FXML
+	public Spinner<Double> totalGradeSpinner;
 
 	// ***********************//
 	// ***** UI CONTROLS *****//
@@ -280,6 +286,14 @@ class ControllerFXCorrector {
 	def void prevStudentPressed() {
 		println("Previous student method");
 	}
+	
+	/**
+	 * Called when a grade update button is pressed
+	 */
+	@FXML
+	def void saveGradeButtonPressed() {
+		println("save Grade method : "+gradeSpinner.getValue()+"/"+totalGradeSpinner.getValue);
+	}
 
 	@FXML
 	def void addBaremeList() {
@@ -414,13 +428,7 @@ class ControllerFXCorrector {
 	}
 	
 	def void initTests() {
-		setKeybinds
-		var mock = new MockFXAdapter();
-		corrector = mock;
-		mock.controller = this;
-		mock.setQuestions
-		
-		
+		setKeybinds		
 	}
 	
 	def void initQuestionNames(List<String> names) { //TODO complete, called on load of a new exam template

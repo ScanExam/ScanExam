@@ -4,11 +4,13 @@ import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.box.BoxList;
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
 import fr.istic.tools.scanexam.view.AdapterBox;
+import fr.istic.tools.scanexam.view.swing.QuestionEditionPanel;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Optional;
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 
 /**
@@ -43,13 +45,17 @@ public class AdapterSwingBox extends AdapterBox {
   private Optional<JPanel> view;
   
   /**
+   * Liste des panel des questions
+   */
+  private DefaultListModel<QuestionEditionPanel> qstModel;
+  
+  /**
    * Constructeur
    * @param windowWidth Largeur de la fenêtre
    * @param windowHeight Hauteur de la fenêtre
    * @param scale Echelle pour l'affichage
    * @param originX Point d'origine sur l'axe X
    * @param originY Point d'origine sur l'axe Y
-   * @param selectionBoxes Boîtes de sélection
    */
   public AdapterSwingBox(final int windowWidth, final int windowHeight, final int scale, final int originX, final int originY, final BoxList selectionBoxes) {
     super(windowWidth, windowHeight, scale, originX, originY, selectionBoxes);
@@ -154,6 +160,7 @@ public class AdapterSwingBox extends AdapterBox {
     int _size = this.selectionBoxes.size();
     int _minus_2 = (_size - 1);
     this.lastBoxSelected = this.selectionBoxes.getBox(_minus_2);
+    this.addQstToList(this.lastBoxSelected);
     this.repaint();
   }
   
@@ -229,6 +236,17 @@ public class AdapterSwingBox extends AdapterBox {
   }
   
   /**
+   * Ajoute une question à la liste visuelle des questions
+   * @param Box Boîte lié à la question
+   */
+  public void addQstToList(final Box box) {
+    if ((this.qstModel != null)) {
+      QuestionEditionPanel _questionEditionPanel = new QuestionEditionPanel(box);
+      this.qstModel.addElement(_questionEditionPanel);
+    }
+  }
+  
+  /**
    * GETTERS
    */
   public MouseAdapter getMouseHandler() {
@@ -248,5 +266,9 @@ public class AdapterSwingBox extends AdapterBox {
   
   public void setWindowHeight(final int height) {
     this.windowHeight = height;
+  }
+  
+  public void setQstModel(final DefaultListModel<QuestionEditionPanel> qstModel) {
+    this.qstModel = qstModel;
   }
 }
