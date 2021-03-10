@@ -172,7 +172,7 @@ public class LanguageManager {
       _builder.append(".");
       LanguageManager.logger.info(_builder);
     }
-    LanguageManager.currentBundle = ResourceBundle.getBundle((LanguageManager.path + LanguageManager.prefixFileName), LanguageManager.currentLocale);
+    LanguageManager.currentBundle = ResourceBundle.getBundle((LanguageManager.path + LanguageManager.prefixFileName), LanguageManager.currentLocale, ResourcesUtils.class.getClassLoader());
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("Change language to ");
     String _displayName_2 = LanguageManager.currentLocale.getDisplayName();
