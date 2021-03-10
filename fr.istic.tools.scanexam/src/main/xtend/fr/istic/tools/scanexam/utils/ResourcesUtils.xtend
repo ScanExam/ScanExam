@@ -20,7 +20,7 @@ class ResourcesUtils {
 	 * @throw NullPointerException si <b>relativePath</b> est null
 	 */
 	static def InputStream getInputStreamResource(String relativePath) {
-		typeof(ResourcesUtils).getResourceAsStream(relativePath)
+		typeof(ResourcesUtils).classLoader.getResourceAsStream(relativePath)
 	}
 	
 	/**
