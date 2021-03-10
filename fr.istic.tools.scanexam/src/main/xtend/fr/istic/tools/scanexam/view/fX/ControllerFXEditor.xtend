@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.launcher.LauncherFX
 import fr.istic.tools.scanexam.view.fX.Box.BoxType
 import java.io.File
 import java.util.Arrays
@@ -24,8 +25,6 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.launcher.LauncherFX
-import javafx.scene.text.Text
 
 class ControllerFXEditor {
 
@@ -532,7 +531,7 @@ class ControllerFXEditor {
 	}
 
 	def loadBoxes() {
-		editor.presenter.presenterQuestionZone.initLoading
+		/*editor.presenter.presenterQuestionZone.initLoading
 		while (editor.presenter.presenterQuestionZone.loadNextQuestion) {
 			var box = new Box(
 				editor.presenter.presenterQuestionZone.currentQuestionName,
@@ -544,6 +543,19 @@ class ControllerFXEditor {
 				editor.presenter.presenterQuestionZone.currentQuestionWidth
 			);
 			addBox(box);
+		}*/
+		var ids = editor.presenter.presenterQuestionZone.initLoading
+		for (int i:ids) {
+			var box = new Box(
+				editor.presenter.presenterQuestionZone.questionName(i),
+				editor.presenter.presenterQuestionZone.questionPage(i),
+				BoxType.QUESTION,
+				editor.presenter.presenterQuestionZone.questionX(i),
+				editor.presenter.presenterQuestionZone.questionY(i),
+				editor.presenter.presenterQuestionZone.questionHeight(i),
+				editor.presenter.presenterQuestionZone.questionWidth(i)
+			)
+			addBox(box)
 		}
 	}
 

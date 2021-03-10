@@ -121,7 +121,7 @@
                      <content>
                         <AnchorPane fx:id="parentPane">
                            <children>
-                              <Pane fx:id="imagePane" onMouseDragged="#MoveImage" onMousePressed="#MoveImage" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
+                              <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
                                  <children>
                                     <ImageView fx:id="imview" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -146,7 +146,7 @@
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <Pane onMouseDragged="#MoveImage" onMousePressed="#MoveImage" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
+                                    <Pane onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onScroll="#mainMouseEvent" style="-fx-background-color: GREEN;">
                                        <children>
                                           <ImageView fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                                              <image>
