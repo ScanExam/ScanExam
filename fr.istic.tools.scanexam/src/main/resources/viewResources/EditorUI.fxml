@@ -61,7 +61,7 @@
                   <Label text="%label.questions" />
                   <ListView fx:id="questionList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <Label text="%label.pages" />
-                  <ChoiceBox prefWidth="150.0" />
+                  <ChoiceBox fx:id="pageChoice" prefWidth="150.0" />
                   <HBox>
                      <children>
                         <Button mnemonicParsing="false" onAction="#previousPagePressed" text="%button.previousQuestion" />
