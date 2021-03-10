@@ -3,6 +3,9 @@
 package fr.istic.tools.scanexam.core.templates;
 
 import fr.istic.tools.scanexam.core.Exam;
+import fr.istic.tools.scanexam.core.StudentSheet;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -15,8 +18,9 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getPdfPath <em>Pdf Path</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getExam <em>Exam</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentsheets <em>Studentsheets</em>}</li>
  * </ul>
  *
  * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate()
@@ -25,26 +29,26 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface CorrectionTemplate extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Pdf Path</b></em>' attribute.
+	 * Returns the value of the '<em><b>Encoded Document</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pdf Path</em>' attribute.
-	 * @see #setPdfPath(String)
-	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate_PdfPath()
+	 * @return the value of the '<em>Encoded Document</em>' attribute.
+	 * @see #setEncodedDocument(String)
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate_EncodedDocument()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getPdfPath();
+	String getEncodedDocument();
 
 	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getPdfPath <em>Pdf Path</em>}' attribute.
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Pdf Path</em>' attribute.
-	 * @see #getPdfPath()
+	 * @param value the new value of the '<em>Encoded Document</em>' attribute.
+	 * @see #getEncodedDocument()
 	 * @generated
 	 */
-	void setPdfPath(String value);
+	void setEncodedDocument(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Exam</b></em>' attribute.
@@ -67,5 +71,17 @@ public interface CorrectionTemplate extends EObject {
 	 * @generated
 	 */
 	void setExam(Exam value);
+
+	/**
+	 * Returns the value of the '<em><b>Studentsheets</b></em>' attribute list.
+	 * The list contents are of type {@link fr.istic.tools.scanexam.core.StudentSheet}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Studentsheets</em>' attribute list.
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate_Studentsheets()
+	 * @model unique="false" dataType="fr.istic.tools.scanexam.core.templates.StudentSheet"
+	 * @generated
+	 */
+	EList<StudentSheet> getStudentsheets();
 
 } // CorrectionTemplate

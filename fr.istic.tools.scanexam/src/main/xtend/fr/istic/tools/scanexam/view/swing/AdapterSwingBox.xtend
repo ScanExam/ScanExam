@@ -8,6 +8,7 @@ import java.awt.Point
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Optional
+import javax.swing.DefaultListModel
 import javax.swing.JPanel
 
 /** 
@@ -17,34 +18,32 @@ import javax.swing.JPanel
 class AdapterSwingBox extends AdapterBox {
 	
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/** 
-	 * Dernière boîte sélectionné par l'utilisateur 
-	 */
+	/*Dernière boîte sélectionné par l'utilisateur */
 	Box lastBoxSelected
-	/** 
-	 * Indique si la croix d'une boîte à été cliquée 
-	 */
+	
+	/* Indique si la croix d'une boîte à été cliquée */
 	boolean crossCliked
-	/** 
-	 * Handler pour les événements liés à la souris 
-	 */
+	
+	/* Handler pour les événements liés à la souris */
 	MouseAdapter mouseHandler
-	/** 
-	 * Dernier point cliqué par l'utilisateur 
-	 */
+	
+	/* Dernier point cliqué par l'utilisateur */
 	Optional<Point> lastClickPoint
-	/** 
-	 * Vue 
-	 */
+	
+	/*Vue */
 	Optional<JPanel> view
+	
+	/* Liste des panel des questions */
+	DefaultListModel<QuestionEditionPanel> qstModel
+	
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/*
 	 * CONSTRUCTEUR
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -55,7 +54,6 @@ class AdapterSwingBox extends AdapterBox {
 	 * @param scale Echelle pour l'affichage
 	 * @param originX Point d'origine sur l'axe X
 	 * @param originY Point d'origine sur l'axe Y
-	 * @param selectionBoxes Boîtes de sélection
 	 */
 	new(int windowWidth, int windowHeight, int scale, int originX, int originY, BoxList selectionBoxes) {
 		super(windowWidth, windowHeight, scale, originX, originY, selectionBoxes)
@@ -101,7 +99,7 @@ class AdapterSwingBox extends AdapterBox {
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -138,6 +136,7 @@ class AdapterSwingBox extends AdapterBox {
 		var double y = ((lastClickPoint.get().getY() - originY) / windowHeight) * scale
 		createBox(x, y)
 		lastBoxSelected = selectionBoxes.getBox(selectionBoxes.size() - 1)
+		addQstToList(lastBoxSelected)
 		repaint()
 	}
 
@@ -191,18 +190,29 @@ class AdapterSwingBox extends AdapterBox {
 			view.get().repaint()
 		}
 	}
+	
+	/**
+	 * Ajoute une question à la liste visuelle des questions
+	 * @param Box Boîte lié à la question
+	 */
+	def void addQstToList(Box box) {
+		if(qstModel !== null) {
+			qstModel.addElement(new QuestionEditionPanel(box))
+		}
+	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * GETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
 	def MouseAdapter getMouseHandler() {
 		return mouseHandler
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -217,5 +227,9 @@ class AdapterSwingBox extends AdapterBox {
 	
 	def void setWindowHeight(int height) {
 		this.windowHeight = height
+	}
+	
+	def void setQstModel(DefaultListModel<QuestionEditionPanel> qstModel) {
+		this.qstModel = qstModel
 	}
 }

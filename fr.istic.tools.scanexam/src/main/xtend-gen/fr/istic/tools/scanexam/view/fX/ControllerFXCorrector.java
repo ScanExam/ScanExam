@@ -1,9 +1,8 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
+import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
-import fr.istic.tools.scanexam.view.fX.MockFXAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -38,7 +38,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  * @author Benjamin Danlos
  */
 @SuppressWarnings("all")
-public class ControllerFX {
+public class ControllerFXCorrector {
   public static class QuestionDetails {
     private int id;
     
@@ -99,7 +99,7 @@ public class ControllerFX {
   public static class StudentItem extends Label {
     private int id;
     
-    public StudentItem(final int s, final ControllerFX c) {
+    public StudentItem(final int s, final ControllerFXCorrector c) {
       super(("Student: " + Integer.valueOf(s)));
       this.id = s;
     }
@@ -111,28 +111,6 @@ public class ControllerFX {
    * High level Controllers to access the Presenters
    */
   private GraduationAdapterFX corrector;
-  
-  private EditorAdapterFX editor;
-  
-  /**
-   * setter for the ControllerVueCreation attribute
-   * @param {@link ControllerVueCreation} controller instance of ControllerVueCreation (not null)
-   */
-  public EditorAdapterFX setAdapterEditor(final EditorAdapterFX edit) {
-    EditorAdapterFX _xblockexpression = null;
-    {
-      Objects.<EditorAdapterFX>requireNonNull(edit);
-      _xblockexpression = this.editor = edit;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * @return current {@link ControllerVueCreation}
-   */
-  public EditorAdapterFX getAdapterEditor() {
-    return this.editor;
-  }
   
   /**
    * setter for the ControllerVueCorrection attribute
@@ -185,13 +163,28 @@ public class ControllerFX {
   @FXML
   public ImageView imview;
   
+  @FXML
   public ScrollPane scrollMain;
   
+  @FXML
   public ScrollPane scrollBis;
   
+  @FXML
   public VBox studentDetails;
   
+  @FXML
   public VBox questionDetails;
+  
+  @FXML
+  public Spinner<Double> gradeSpinner;
+  
+  @FXML
+  public Spinner<Double> totalGradeSpinner;
+  
+  @FXML
+  public void swapToEditorPressed() {
+    LauncherFX.swapToEditor();
+  }
   
   /**
    * Toggles the visibility of the bottom window
@@ -355,6 +348,19 @@ public class ControllerFX {
     InputOutput.<String>println("Previous student method");
   }
   
+  /**
+   * Called when a grade update button is pressed
+   */
+  @FXML
+  public void saveGradeButtonPressed() {
+    Double _value = this.gradeSpinner.getValue();
+    String _plus = ("save Grade method : " + _value);
+    String _plus_1 = (_plus + "/");
+    Double _value_1 = this.totalGradeSpinner.getValue();
+    String _plus_2 = (_plus_1 + _value_1);
+    InputOutput.<String>println(_plus_2);
+  }
+  
   @FXML
   public void addBaremeList() {
   }
@@ -381,7 +387,7 @@ public class ControllerFX {
     this.imview.setViewport(null);
   }
   
-  private ControllerFX.QuestionDetails currentQuestion;
+  private ControllerFXCorrector.QuestionDetails currentQuestion;
   
   public void binds(final Node n) {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
@@ -401,11 +407,11 @@ public class ControllerFX {
             this.prevStudentPressed();
             break;
           default:
-            ControllerFX.logger.warn("Key not supported.");
+            ControllerFXCorrector.logger.warn("Key not supported.");
             break;
         }
       } else {
-        ControllerFX.logger.warn("Key not supported.");
+        ControllerFXCorrector.logger.warn("Key not supported.");
       }
       event.consume();
     };
@@ -431,11 +437,11 @@ public class ControllerFX {
             this.prevStudentPressed();
             break;
           default:
-            ControllerFX.logger.warn("Key not supported.");
+            ControllerFXCorrector.logger.warn("Key not supported.");
             break;
         }
       } else {
-        ControllerFX.logger.warn("Key not supported.");
+        ControllerFXCorrector.logger.warn("Key not supported.");
       }
       event.consume();
     };
@@ -457,20 +463,15 @@ public class ControllerFX {
     File _file = new File(_plus_1);
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showOpenDialog(this.imagePane.getScene().getWindow());
-    boolean _notEquals = (!com.google.common.base.Objects.equal(file, null));
-    if (_notEquals) {
+    if ((file != null)) {
       this.corrector.loadFile(file);
     } else {
-      ControllerFX.logger.warn("File not chosen");
+      ControllerFXCorrector.logger.warn("File not chosen");
     }
   }
   
   public void initTests() {
     this.setKeybinds();
-    MockFXAdapter mock = new MockFXAdapter();
-    this.corrector = mock;
-    mock.controller = this;
-    mock.setQuestions();
   }
   
   public void initQuestionNames(final List<String> names) {
@@ -496,7 +497,7 @@ public class ControllerFX {
   
   public void showQuestion(final Question question) {
     String _name = question.getName();
-    ControllerFX.QuestionDetails _questionDetails = new ControllerFX.QuestionDetails(_name);
+    ControllerFXCorrector.QuestionDetails _questionDetails = new ControllerFXCorrector.QuestionDetails(_name);
     this.currentQuestion = _questionDetails;
     this.currentQuestion.x = question.getZone().getX();
     this.currentQuestion.y = question.getZone().getY();

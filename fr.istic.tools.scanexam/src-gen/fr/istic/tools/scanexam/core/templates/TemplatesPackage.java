@@ -67,13 +67,13 @@ public interface TemplatesPackage extends EPackage {
 	int CORRECTION_TEMPLATE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Pdf Path</b></em>' attribute.
+	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE__PDF_PATH = 0;
+	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 0;
 
 	/**
 	 * The feature id for the '<em><b>Exam</b></em>' attribute.
@@ -85,13 +85,22 @@ public interface TemplatesPackage extends EPackage {
 	int CORRECTION_TEMPLATE__EXAM = 1;
 
 	/**
+	 * The feature id for the '<em><b>Studentsheets</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CORRECTION_TEMPLATE__STUDENTSHEETS = 2;
+
+	/**
 	 * The number of structural features of the '<em>Correction Template</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE_FEATURE_COUNT = 2;
+	int CORRECTION_TEMPLATE_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Correction Template</em>' class.
@@ -158,6 +167,16 @@ public interface TemplatesPackage extends EPackage {
 	 */
 	int EXAM = 2;
 
+	/**
+	 * The meta object id for the '<em>Student Sheet</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.istic.tools.scanexam.core.StudentSheet
+	 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getStudentSheet()
+	 * @generated
+	 */
+	int STUDENT_SHEET = 3;
+
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate <em>Correction Template</em>}'.
@@ -170,15 +189,15 @@ public interface TemplatesPackage extends EPackage {
 	EClass getCorrectionTemplate();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getPdfPath <em>Pdf Path</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Pdf Path</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getPdfPath()
+	 * @return the meta object for the attribute '<em>Encoded Document</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument()
 	 * @see #getCorrectionTemplate()
 	 * @generated
 	 */
-	EAttribute getCorrectionTemplate_PdfPath();
+	EAttribute getCorrectionTemplate_EncodedDocument();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getExam <em>Exam</em>}'.
@@ -190,6 +209,17 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getCorrectionTemplate_Exam();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentsheets <em>Studentsheets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Studentsheets</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentsheets()
+	 * @see #getCorrectionTemplate()
+	 * @generated
+	 */
+	EAttribute getCorrectionTemplate_Studentsheets();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate <em>Creation Template</em>}'.
@@ -235,6 +265,17 @@ public interface TemplatesPackage extends EPackage {
 	EDataType getExam();
 
 	/**
+	 * Returns the meta object for data type '{@link fr.istic.tools.scanexam.core.StudentSheet <em>Student Sheet</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Student Sheet</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet
+	 * @model instanceClass="fr.istic.tools.scanexam.core.StudentSheet"
+	 * @generated
+	 */
+	EDataType getStudentSheet();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -268,12 +309,12 @@ public interface TemplatesPackage extends EPackage {
 		EClass CORRECTION_TEMPLATE = eINSTANCE.getCorrectionTemplate();
 
 		/**
-		 * The meta object literal for the '<em><b>Pdf Path</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CORRECTION_TEMPLATE__PDF_PATH = eINSTANCE.getCorrectionTemplate_PdfPath();
+		EAttribute CORRECTION_TEMPLATE__ENCODED_DOCUMENT = eINSTANCE.getCorrectionTemplate_EncodedDocument();
 
 		/**
 		 * The meta object literal for the '<em><b>Exam</b></em>' attribute feature.
@@ -282,6 +323,14 @@ public interface TemplatesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CORRECTION_TEMPLATE__EXAM = eINSTANCE.getCorrectionTemplate_Exam();
+
+		/**
+		 * The meta object literal for the '<em><b>Studentsheets</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CORRECTION_TEMPLATE__STUDENTSHEETS = eINSTANCE.getCorrectionTemplate_Studentsheets();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl <em>Creation Template</em>}' class.
@@ -318,6 +367,16 @@ public interface TemplatesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType EXAM = eINSTANCE.getExam();
+
+		/**
+		 * The meta object literal for the '<em>Student Sheet</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.istic.tools.scanexam.core.StudentSheet
+		 * @see fr.istic.tools.scanexam.core.templates.impl.TemplatesPackageImpl#getStudentSheet()
+		 * @generated
+		 */
+		EDataType STUDENT_SHEET = eINSTANCE.getStudentSheet();
 
 	}
 

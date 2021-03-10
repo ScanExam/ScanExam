@@ -1,9 +1,9 @@
 package fr.istic.tools.scanexam.presenter
 
-import java.util.Objects
-import fr.istic.tools.scanexam.services.ExamEditionService
 import fr.istic.tools.scanexam.core.Question
-import java.util.ArrayList
+import fr.istic.tools.scanexam.services.ExamEditionService
+import java.util.LinkedList
+import java.util.Objects
 
 /**
  * Class to manage conversions of the view's questions 
@@ -62,74 +62,78 @@ class PresenterQuestionZone {
 	 * @param float y : new y position
 	 * @author : Benjamin Danlos
 	 */
-	def moveQuestion(int id, float x, float y){
-		service.moveQuestion(id,x,y)
+	def void moveQuestion(int id, double x, double y){
+		service.moveQuestion(id,x as float,y as float)
 	}
 	
+	def void changeQuestionWorth(int id,int worth) {
+		//service.
+	}
 	
 	
 	
 	
 	/* --LOADING NEW TEMPLATE--  */
 	
-	int questionToLoad = -1;
-	int questionToLoadPage =  -1;
+	def void initLoading(){
+		pageNumbers = new LinkedList<Integer>() // replace method that give a list of questions
+		questions = new LinkedList<Question>() //replace with method that gives a list of pages corresponding to questions at same index
+		questionToLoadIndex = -1;
+	}
+	
+	LinkedList<Integer> pageNumbers
+	LinkedList<Question> questions
+	int questionToLoadIndex;
 	/**
 	 * Loads the next question into questionToLoad
 	 * if there is a new question, return true,
 	 * else return false
 	 */
+	 
+
 	def boolean loadNextQuestion(){
 		//TODO get a list of questions from the model
-		// the list will be a list of list of questions : List1<List2<Question>>
-		//List1 represents a list of pages, and list2 is a list of all the questions of a certain page
-		var pages = new ArrayList<ArrayList<Question>>()
-		
-		if (questionToLoad == -1) {
-			questionToLoadPage = 0
-			questionToLoad = 0
-		} else {
-			questionToLoad++
-			if (questionToLoad >= pages.get(questionToLoadPage).size) {
-			questionToLoadPage++;
-			questionToLoad = 0
-			}
+		// questions will be the list of questions
+		// pageNumbers is a list representing the page number of the questikns at the corresponding index
+		// 
+		questionToLoadIndex++;
+		if (questionToLoadIndex >= questions.size) {
+			return false;
 		}
-		
-		
-		
-		
-		
-		false;
+		return true
 	}
-	/* 
+	
 	def double currentQuestionX(){
-		questionToLoad.zone.x
+		questions.get(questionToLoadIndex).zone.x
 	}
 	
 	def double currentQuestionY(){
-		questionToLoad.zone.y
+		questions.get(questionToLoadIndex).zone.y
 	}
 	
 	def double currentQuestionHeight(){
-		questionToLoad.zone.heigth
+		questions.get(questionToLoadIndex).zone.heigth
 	}
 	
 	def double currentQuestionWidth(){
-		questionToLoad.zone.width
+		questions.get(questionToLoadIndex).zone.width
 	}
 	
 	def String currentQuestionName(){
-		questionToLoad.name
+		questions.get(questionToLoadIndex).name
 	}
 	
 	def int currentQuestionId(){
-		questionToLoad.id
+		questions.get(questionToLoadIndex).id
 	}
 	
 	def int currentQuestionPage(){
-		questionToLoadPage
-	}*/
+		pageNumbers.get(questionToLoadIndex)
+	}
+	
+	def int currentQuestionWorth(){
+		0
+	}
 	
 	/* -----------------------  */
 	

@@ -1,7 +1,9 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
+import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -68,7 +70,74 @@ public class PresenterQuestionZone {
    * @param float y : new y position
    * @author : Benjamin Danlos
    */
-  public void moveQuestion(final int id, final float x, final float y) {
-    this.service.moveQuestion(id, x, y);
+  public void moveQuestion(final int id, final double x, final double y) {
+    this.service.moveQuestion(id, ((float) x), ((float) y));
+  }
+  
+  public void changeQuestionWorth(final int id, final int worth) {
+  }
+  
+  /**
+   * --LOADING NEW TEMPLATE--
+   */
+  public void initLoading() {
+    LinkedList<Integer> _linkedList = new LinkedList<Integer>();
+    this.pageNumbers = _linkedList;
+    LinkedList<Question> _linkedList_1 = new LinkedList<Question>();
+    this.questions = _linkedList_1;
+    this.questionToLoadIndex = (-1);
+  }
+  
+  private LinkedList<Integer> pageNumbers;
+  
+  private LinkedList<Question> questions;
+  
+  private int questionToLoadIndex;
+  
+  /**
+   * Loads the next question into questionToLoad
+   * if there is a new question, return true,
+   * else return false
+   */
+  public boolean loadNextQuestion() {
+    this.questionToLoadIndex++;
+    int _size = this.questions.size();
+    boolean _greaterEqualsThan = (this.questionToLoadIndex >= _size);
+    if (_greaterEqualsThan) {
+      return false;
+    }
+    return true;
+  }
+  
+  public double currentQuestionX() {
+    return this.questions.get(this.questionToLoadIndex).getZone().getX();
+  }
+  
+  public double currentQuestionY() {
+    return this.questions.get(this.questionToLoadIndex).getZone().getY();
+  }
+  
+  public double currentQuestionHeight() {
+    return this.questions.get(this.questionToLoadIndex).getZone().getHeigth();
+  }
+  
+  public double currentQuestionWidth() {
+    return this.questions.get(this.questionToLoadIndex).getZone().getWidth();
+  }
+  
+  public String currentQuestionName() {
+    return this.questions.get(this.questionToLoadIndex).getName();
+  }
+  
+  public int currentQuestionId() {
+    return this.questions.get(this.questionToLoadIndex).getId();
+  }
+  
+  public int currentQuestionPage() {
+    return (this.pageNumbers.get(this.questionToLoadIndex)).intValue();
+  }
+  
+  public int currentQuestionWorth() {
+    return 0;
   }
 }

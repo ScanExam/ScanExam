@@ -44,13 +44,6 @@ public class GraduationPresenter implements Presenter {
   }
   
   /**
-   * @return API session
-   */
-  public ExamGraduationService getServiceAPI() {
-    return this.service;
-  }
-  
-  /**
    * setter for the PresenterQuestion attribute
    * @param {@link PresenterQuestion} pres instance of the presenter (not null)
    */

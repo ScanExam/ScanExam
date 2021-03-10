@@ -7,7 +7,7 @@ import fr.istic.tools.scanexam.view.EditorAdapter
 class EditorAdapterFX implements EditorAdapter {
 	
 	EditorPresenter presenter;
-	ControllerFXCreator controller;
+	ControllerFXEditor controller;
 	
 	override setPresenter(EditorPresenter presenter)
 	{
@@ -29,7 +29,7 @@ class EditorAdapterFX implements EditorAdapter {
 		
 	}
 	
-	def void setControllerFXCreator(ControllerFXCreator controller) {
+	def void setControllerFXCreator(ControllerFXEditor controller) {
 		this.controller = controller;
 	}
 	

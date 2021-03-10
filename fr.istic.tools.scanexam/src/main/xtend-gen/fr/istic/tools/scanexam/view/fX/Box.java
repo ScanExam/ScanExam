@@ -21,17 +21,20 @@ public class Box extends Rectangle {
     return Box.ID++;
   }
   
-  public Box(final String name, final int page, final Box.BoxType type, final double x, final double y) {
-    super(x, y, 0, 0);
+  public Box(final String name, final int page, final Box.BoxType type, final double x, final double y, final double h, final double w) {
+    super(x, y, h, w);
     this.boxId = Box.newID();
     this.page = page;
-    this.name = name;
     this.type = type;
     ListViewBox _listViewBox = new ListViewBox(name, this);
     this.listViewBox = _listViewBox;
     this.setFill(Color.rgb(200, 200, 200, 0.2));
     this.setStroke(Color.BLACK);
     this.setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
+  }
+  
+  public Box(final String name, final int page, final Box.BoxType type, final double x, final double y) {
+    this(name, page, type, x, y, 0, 0);
   }
   
   public Box(final int page, final Box.BoxType type, final double x, final double y) {
@@ -49,8 +52,6 @@ public class Box extends Rectangle {
   private ListViewBox listViewBox;
   
   private Box.BoxType type;
-  
-  private String name;
   
   private int boxId;
   
@@ -70,6 +71,10 @@ public class Box extends Rectangle {
   
   public int getBoxId() {
     return this.boxId;
+  }
+  
+  public String getName() {
+    return this.listViewBox.getName();
   }
   
   public int setBoxId(final int id) {

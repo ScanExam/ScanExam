@@ -1,25 +1,23 @@
 package fr.istic.tools.scanexam.services
+
 import fr.istic.tools.scanexam.core.CoreFactory
+import fr.istic.tools.scanexam.core.CorePackage
+import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
+import fr.istic.tools.scanexam.core.templates.TemplatesFactory
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.Base64
+import java.util.HashMap
 import java.util.Optional
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import java.io.ByteArrayOutputStream
-import java.io.ByteArrayInputStream
-import fr.istic.tools.scanexam.core.templates.TemplatesFactory
-import java.util.Base64
-import fr.istic.tools.scanexam.core.CorePackage
-import java.util.Map
-import fr.istic.tools.scanexam.core.Question
-import java.util.HashMap
-import java.util.ArrayList
-import org.eclipse.emf.common.util.EList
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -90,13 +88,11 @@ class ExamEditionService extends Service // TODO : renommer
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
 		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-		
-		resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
+			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
 		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
 	
 			
 		val resource = resourceSet.createResource(URI.createFileURI(path))
-		
 		resource.getContents().add(template);
 		resource.save(null);
 	}
@@ -105,42 +101,42 @@ class ExamEditionService extends Service // TODO : renommer
 	{
 		val creationTemplate = loadTemplate(xmiPath)
 
-		if (creationTemplate.present) 
-		{
-			this.template = creationTemplate.get()
-			ExamSingleton.instance = creationTemplate.get().exam
-			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
-			document = PDDocument.load(decoded)
-			return true
-		}
-		return false
+        if (creationTemplate.present) 
+        {
+            this.template = creationTemplate.get()
+            ExamSingleton.instance = creationTemplate.get().exam
+            val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
+            document = PDDocument.load(decoded)
+            return true
+        }
+        return false
 	}
 
 	def static Optional<CreationTemplate> loadTemplate(String path) {
-		val resourceSet = new ResourceSetImpl();
-		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
+        val resourceSet = new ResourceSetImpl();
+        val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+        val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
+        _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
 
-		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
+        resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
 
-		var Resource resource = null;
+        var Resource resource = null;
 
-		try {
-			resource = resourceSet.getResource(URI.createFileURI(path), true)
-		} catch (Throwable ex) {
-			return Optional.empty;
-		}
-		
-		val template = resource.getContents().get(0);
-		
-		if (!(template instanceof CreationTemplate))
-		{
-			return Optional.empty;
-		}
-		
-		return Optional.ofNullable(template as CreationTemplate)
-	}
+        try {
+            resource = resourceSet.getResource(URI.createFileURI(path), true)
+        } catch (Throwable ex) {
+            return Optional.empty;
+        }
+        
+        val template = resource.getContents().get(0);
+        
+        if (!(template instanceof CreationTemplate))
+        {
+            return Optional.empty;
+        }
+        
+        return Optional.ofNullable(template as CreationTemplate)
+    }
 
 	override void create(File file) 
 	{

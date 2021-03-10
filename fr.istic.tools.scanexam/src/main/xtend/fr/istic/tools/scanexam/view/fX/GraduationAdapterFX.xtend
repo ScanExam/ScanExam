@@ -8,6 +8,11 @@ import fr.istic.tools.scanexam.core.Question
 class GraduationAdapterFX implements GraduationAdapter {
 	
 	GraduationPresenter presenter;
+	ControllerFXCorrector corrector;
+	
+	def void setController(ControllerFXCorrector controller){
+		corrector = controller
+	}
 	def void loadFile(File file) {
 		
 	}

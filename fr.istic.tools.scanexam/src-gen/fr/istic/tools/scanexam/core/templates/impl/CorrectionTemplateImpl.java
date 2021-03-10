@@ -3,16 +3,23 @@
 package fr.istic.tools.scanexam.core.templates.impl;
 
 import fr.istic.tools.scanexam.core.Exam;
+import fr.istic.tools.scanexam.core.StudentSheet;
 
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,32 +29,33 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getPdfPath <em>Pdf Path</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getExam <em>Exam</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentsheets <em>Studentsheets</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container implements CorrectionTemplate {
 	/**
-	 * The default value of the '{@link #getPdfPath() <em>Pdf Path</em>}' attribute.
+	 * The default value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPdfPath()
+	 * @see #getEncodedDocument()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PDF_PATH_EDEFAULT = null;
+	protected static final String ENCODED_DOCUMENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPdfPath() <em>Pdf Path</em>}' attribute.
+	 * The cached value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPdfPath()
+	 * @see #getEncodedDocument()
 	 * @generated
 	 * @ordered
 	 */
-	protected String pdfPath = PDF_PATH_EDEFAULT;
+	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getExam() <em>Exam</em>}' attribute.
@@ -68,6 +76,16 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected Exam exam = EXAM_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getStudentsheets() <em>Studentsheets</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStudentsheets()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StudentSheet> studentsheets;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -93,8 +111,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getPdfPath() {
-		return pdfPath;
+	public String getEncodedDocument() {
+		return encodedDocument;
 	}
 
 	/**
@@ -102,11 +120,11 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setPdfPath(String newPdfPath) {
-		String oldPdfPath = pdfPath;
-		pdfPath = newPdfPath;
+	public void setEncodedDocument(String newEncodedDocument) {
+		String oldEncodedDocument = encodedDocument;
+		encodedDocument = newEncodedDocument;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__PDF_PATH, oldPdfPath, pdfPath));
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT, oldEncodedDocument, encodedDocument));
 	}
 
 	/**
@@ -135,13 +153,27 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<StudentSheet> getStudentsheets() {
+		if (studentsheets == null) {
+			studentsheets = new EDataTypeEList<StudentSheet>(StudentSheet.class, this, TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS);
+		}
+		return studentsheets;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__PDF_PATH:
-				return getPdfPath();
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				return getEncodedDocument();
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				return getExam();
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
+				return getStudentsheets();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -151,14 +183,19 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__PDF_PATH:
-				setPdfPath((String)newValue);
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument((String)newValue);
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				setExam((Exam)newValue);
+				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
+				getStudentsheets().clear();
+				getStudentsheets().addAll((Collection<? extends StudentSheet>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -172,11 +209,14 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__PDF_PATH:
-				setPdfPath(PDF_PATH_EDEFAULT);
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				setExam(EXAM_EDEFAULT);
+				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
+				getStudentsheets().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -190,10 +230,12 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__PDF_PATH:
-				return PDF_PATH_EDEFAULT == null ? pdfPath != null : !PDF_PATH_EDEFAULT.equals(pdfPath);
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				return EXAM_EDEFAULT == null ? exam != null : !EXAM_EDEFAULT.equals(exam);
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
+				return studentsheets != null && !studentsheets.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -208,10 +250,12 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (pdfPath: ");
-		result.append(pdfPath);
+		result.append(" (encodedDocument: ");
+		result.append(encodedDocument);
 		result.append(", exam: ");
 		result.append(exam);
+		result.append(", studentsheets: ");
+		result.append(studentsheets);
 		result.append(')');
 		return result.toString();
 	}

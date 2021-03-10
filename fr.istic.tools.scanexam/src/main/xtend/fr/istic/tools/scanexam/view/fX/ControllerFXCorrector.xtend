@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.view.fX;
 
-import fr.istic.tools.scanexam.core.Question
+
 import java.io.File
 import java.io.IOException
 import java.util.ArrayList
@@ -23,36 +23,24 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.core.Question
+import javafx.scene.control.Spinner
+import fr.istic.tools.scanexam.launcher.LauncherFX
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
  * @author Benjamin Danlos
  */
-class ControllerFX {
+class ControllerFXCorrector {
 
 	static val logger = LogManager.logger
 	/**
 	 * High level Controllers to access the Presenters
 	 */
 	GraduationAdapterFX corrector;
-	EditorAdapterFX editor;
 
-	/**
-	 * setter for the ControllerVueCreation attribute
-	 * @param {@link ControllerVueCreation} controller instance of ControllerVueCreation (not null) 
-	 */
-	def setAdapterEditor(EditorAdapterFX edit) {
-		Objects.requireNonNull(edit)
-		editor = edit
-	}
-
-	/**
-	 * @return current {@link ControllerVueCreation} 
-	 */
-	def getAdapterEditor() {
-		editor
-	}
-
+	
+	
 	/**
 	 * setter for the ControllerVueCorrection attribute
 	 * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null) 
@@ -92,14 +80,25 @@ class ControllerFX {
 	public ListView<Label> rightList;
 	@FXML
 	public ImageView imview;
-
+	@FXML
 	public ScrollPane scrollMain;
-
+	@FXML
 	public ScrollPane scrollBis;
-	
+	@FXML
 	public VBox studentDetails;
-	
+	@FXML
 	public VBox questionDetails;
+	@FXML
+	public Spinner<Double> gradeSpinner;
+	@FXML
+	public Spinner<Double> totalGradeSpinner;
+	
+	
+	
+	@FXML
+	def void swapToEditorPressed(){
+		LauncherFX.swapToEditor
+	}
 
 	// ***********************//
 	// ***** UI CONTROLS *****//
@@ -280,6 +279,14 @@ class ControllerFX {
 	def void prevStudentPressed() {
 		println("Previous student method");
 	}
+	
+	/**
+	 * Called when a grade update button is pressed
+	 */
+	@FXML
+	def void saveGradeButtonPressed() {
+		println("save Grade method : "+gradeSpinner.getValue()+"/"+totalGradeSpinner.getValue);
+	}
 
 	@FXML
 	def void addBaremeList() {
@@ -361,7 +368,7 @@ class ControllerFX {
 	
 	static class StudentItem extends Label {
 		int id;
-		new(int s,ControllerFX c) {
+		new(int s,ControllerFXCorrector c) {
 			super("Student: " + s)
 			id = s;
 		}
@@ -405,7 +412,7 @@ class ControllerFX {
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files",Arrays.asList("*.xmi")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Documents");
 		var file = fileChooser.showOpenDialog(imagePane.scene.window)
-		if (file != null) {
+		if (file !== null) {
 			corrector.loadFile(file);
 		}
 		else {
@@ -414,13 +421,7 @@ class ControllerFX {
 	}
 	
 	def void initTests() {
-		setKeybinds
-		var mock = new MockFXAdapter();
-		corrector = mock;
-		mock.controller = this;
-		mock.setQuestions
-		
-		
+		setKeybinds		
 	}
 	
 	def void initQuestionNames(List<String> names) { //TODO complete, called on load of a new exam template
