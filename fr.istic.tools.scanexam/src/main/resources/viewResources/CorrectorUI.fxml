@@ -47,11 +47,7 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#initTests" text="Init Tests" />
-            </items>
-          </Menu>
+          <Menu mnemonicParsing="false" text="Help" />
         </menus>
       </MenuBar>
       <HBox>
