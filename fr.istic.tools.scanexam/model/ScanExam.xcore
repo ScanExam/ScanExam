@@ -42,7 +42,7 @@ class Exam {
 class Page 
 {
 	int ^id
-	Map<Integer,Question> questions
+	contains Question[] questions
 }
 class Comment {
 	float x
@@ -67,6 +67,4 @@ class StudentSheet {
 	String studentName
 	int[] posPage
 	contains Grade[] grades
-	
-	
 }

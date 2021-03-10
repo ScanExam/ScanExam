@@ -1,24 +1,19 @@
 package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.core.CoreFactory
-import fr.istic.tools.scanexam.core.CorePackage
 import fr.istic.tools.scanexam.core.Grade
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
-import fr.istic.tools.scanexam.core.templates.TemplatesPackage
-import java.io.ByteArrayOutputStream
+import fr.istic.tools.scanexam.core.templates.CreationTemplate
+import fr.istic.tools.scanexam.io.TemplateIO
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import java.io.File
-import java.util.Base64
-import java.util.Optional
-import java.util.Set
+import java.io.FileInputStream
+import java.util.ArrayList
+import java.util.Collection
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import java.util.ArrayList
 
 class ExamGraduationService extends Service
 {
@@ -26,80 +21,49 @@ class ExamGraduationService extends Service
 	 
 	int currentQuestionIndex;
 	
-	Set<StudentSheet> studentSheets;
+	Collection<StudentSheet> studentSheets;
 	
-	CorrectionTemplate template;
+	CreationTemplate creationTemplate;
+	
+	CorrectionTemplate correctionTemplate;
 	
 	//Set<StudentSheet> visibleSheets;
 	
 	override save(String path) 
 	{
-		val outputStream = new ByteArrayOutputStream();
-		document.save(outputStream);
-		val encodedDoc = Base64.getEncoder().encode(outputStream.toByteArray());
-		template.encodedDocument = new String(encodedDoc);
-		outputStream.close();
-		
-		template.exam = ExamSingleton.instance
-		
-        template.studentsheets.addAll(studentSheets) 
-		
-		val resourceSet = new ResourceSetImpl();
-		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
-		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
-		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-	
-		val resource = resourceSet.createResource(URI.createFileURI(path))
-		resource.getContents().add(template);
-		resource.save(null);
+		// TODO
 	}
 	
 	
-	override open(String xmiFile) 
+	def boolean openCreationTemplate(String xmiFile) 
 	{
-		val correctionTemplate = loadTemplate(xmiFile)
+		val editionTemplate = TemplateIO.loadCreationTemplate(xmiFile) 
 		
-		 if (correctionTemplate.present) 
+		if (editionTemplate.present) 
         {
-            this.template = correctionTemplate.get()
+            this.creationTemplate = editionTemplate.get()
             
-            ExamSingleton.instance = correctionTemplate.get().exam
-            
-            
-            template.studentsheets.addAll(studentSheets) 
-            
-            val decoded = Base64.getDecoder().decode(correctionTemplate.get().encodedDocument);
-            document = PDDocument.load(decoded)
-            
+            ExamSingleton.instance = editionTemplate.get().exam
+
             return true
         }
 		return false
 	}
 	
+	def boolean openCorrectionPdf(String path)
+	{
+        document = PDDocument.load(new File(path))
+        
+        val stream =new FileInputStream(new File(path))
+        val pdfReader = new PdfReaderWithoutQrCodeImpl(stream,ExamSingleton.instance.pages.size,3); // TODO
+        pdfReader.readPDf();
+        studentSheets = pdfReader.completeStudentSheets
+      
+        stream.close();
+        return true
+	}
 	
-	def static Optional<CorrectionTemplate> loadTemplate(String path) {
-        val resourceSet = new ResourceSetImpl();
-        val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-        val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-        _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-
-        resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-
-        var Resource resource = null;
-        try {
-            resource = resourceSet.getResource(URI.createFileURI(path), true)
-        } catch (Throwable ex) {
-            return Optional.empty;
-        }
-        val template = resource.getContents().get(0);
-        if (!(template instanceof CorrectionTemplate))
-        {
-            return Optional.empty;
-        }
-        return Optional.ofNullable(template as CorrectionTemplate)
-    }
+	
 	
 	/**
 	 * Liste des identifiants des etudiants
@@ -115,7 +79,7 @@ class ExamGraduationService extends Service
 	def numberOfQuestions (){
 		var nbQuestion =0
 		for (var i = 0 ; i < document.pages.size-1; i++){
-			nbQuestion += template.exam.pages.get(i).questions.size
+			nbQuestion += creationTemplate.exam.pages.get(i).questions.size
 		}
 		nbQuestion
 	}
@@ -162,7 +126,7 @@ class ExamGraduationService extends Service
 	def indexOfQuestions (int indexpage , int indexquestion){
 		var indexQuestion =0
 		for (var i = 0 ; i < indexpage-1 ; i++){
-			indexQuestion += template.exam.pages.get(i).questions.size
+			indexQuestion += creationTemplate.exam.pages.get(i).questions.size
 		}
 		indexQuestion += indexquestion
 		indexQuestion
@@ -176,7 +140,7 @@ class ExamGraduationService extends Service
 	}
 	
 	
-	override void create(File file) 
+	def void create(File file) 
 	{
 		document = PDDocument.load(file)
 

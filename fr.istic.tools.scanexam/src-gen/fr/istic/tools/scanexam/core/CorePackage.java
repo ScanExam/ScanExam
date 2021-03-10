@@ -353,7 +353,7 @@ public interface CorePackage extends EPackage {
 	int PAGE__ID = 0;
 
 	/**
-	 * The feature id for the '<em><b>Questions</b></em>' attribute.
+	 * The feature id for the '<em><b>Questions</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -574,13 +574,22 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET__ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Student Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET__STUDENT_NAME = 1;
+
+	/**
 	 * The feature id for the '<em><b>Pos Page</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET__POS_PAGE = 1;
+	int STUDENT_SHEET__POS_PAGE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Grades</b></em>' containment reference list.
@@ -589,7 +598,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET__GRADES = 2;
+	int STUDENT_SHEET__GRADES = 3;
 
 	/**
 	 * The number of structural features of the '<em>Student Sheet</em>' class.
@@ -598,7 +607,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_FEATURE_COUNT = 3;
+	int STUDENT_SHEET_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Student Sheet</em>' class.
@@ -867,15 +876,15 @@ public interface CorePackage extends EPackage {
 	EAttribute getPage_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Page#getQuestions <em>Questions</em>}'.
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.Page#getQuestions <em>Questions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Questions</em>'.
+	 * @return the meta object for the containment reference list '<em>Questions</em>'.
 	 * @see fr.istic.tools.scanexam.core.Page#getQuestions()
 	 * @see #getPage()
 	 * @generated
 	 */
-	EAttribute getPage_Questions();
+	EReference getPage_Questions();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Comment <em>Comment</em>}'.
@@ -991,6 +1000,17 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getStudentSheet_Id();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentName <em>Student Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Student Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#getStudentName()
+	 * @see #getStudentSheet()
+	 * @generated
+	 */
+	EAttribute getStudentSheet_StudentName();
 
 	/**
 	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.StudentSheet#getPosPage <em>Pos Page</em>}'.
@@ -1248,12 +1268,12 @@ public interface CorePackage extends EPackage {
 		EAttribute PAGE__ID = eINSTANCE.getPage_Id();
 
 		/**
-		 * The meta object literal for the '<em><b>Questions</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Questions</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PAGE__QUESTIONS = eINSTANCE.getPage_Questions();
+		EReference PAGE__QUESTIONS = eINSTANCE.getPage_Questions();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.CommentImpl <em>Comment</em>}' class.
@@ -1352,6 +1372,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STUDENT_SHEET__ID = eINSTANCE.getStudentSheet_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Student Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_SHEET__STUDENT_NAME = eINSTANCE.getStudentSheet_StudentName();
 
 		/**
 		 * The meta object literal for the '<em><b>Pos Page</b></em>' attribute list feature.

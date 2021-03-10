@@ -260,6 +260,10 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
     Set<Copie> temp = new HashSet<Copie>();
     final DataFactory dF = new DataFactory();
     temp = this.getUncompleteCopies();
+    Set<Copie> temp2 = new HashSet<Copie>();
+    temp2 = this.getCompleteCopies();
+    InputOutput.<String>println(temp2.toString());
+    InputOutput.<String>println(temp.toString());
     final Set<Copie> _converted_temp = (Set<Copie>)temp;
     int _length = ((Object[])Conversions.unwrapArray(_converted_temp, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
@@ -276,7 +280,6 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
           final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
           pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        InputOutput.<String>println(((List<Integer>)Conversions.doWrapArray(pagesArray)).toString());
         res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
       }
     }

@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getId <em>Id</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentName <em>Student Name</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getPosPage <em>Pos Page</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getGrades <em>Grades</em>}</li>
  * </ul>
@@ -46,6 +47,28 @@ public interface StudentSheet extends EObject {
 	 * @generated
 	 */
 	void setId(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Student Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Student Name</em>' attribute.
+	 * @see #setStudentName(String)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getStudentSheet_StudentName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getStudentName();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentName <em>Student Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Student Name</em>' attribute.
+	 * @see #getStudentName()
+	 * @generated
+	 */
+	void setStudentName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Pos Page</b></em>' attribute list.

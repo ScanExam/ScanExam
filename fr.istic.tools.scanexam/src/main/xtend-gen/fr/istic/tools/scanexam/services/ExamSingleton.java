@@ -20,7 +20,7 @@ public final class ExamSingleton {
    * @author degas
    */
   public static Question getQuestion(final int pageId, final int questionid) {
-    return ExamSingleton.instance.getPages().get(pageId).getQuestions().get(Integer.valueOf(questionid));
+    return ExamSingleton.instance.getPages().get(pageId).getQuestions().get(questionid);
   }
   
   /**
@@ -29,7 +29,7 @@ public final class ExamSingleton {
    * @author degas
    */
   public static Collection<Question> getQuestions(final int pageId) {
-    return Collections.<Question>unmodifiableCollection(ExamSingleton.instance.getPages().get(pageId).getQuestions().values());
+    return Collections.<Question>unmodifiableCollection(ExamSingleton.instance.getPages().get(pageId).getQuestions());
   }
   
   public static Page getPage(final int pageId) {

@@ -1,17 +1,17 @@
 
 package fr.istic.tools.scanexam.core.templates
 
-type Exam wraps fr.istic.tools.scanexam.core.Exam
-type StudentSheet wraps fr.istic.tools.scanexam.core.StudentSheet
-
+import fr.istic.tools.scanexam.core.Exam
+import fr.istic.tools.scanexam.core.StudentSheet
+ 
 class CorrectionTemplate 
 {
 	 String encodedDocument
-	 Exam exam
-	 StudentSheet[] studentsheets
+	 contains Exam exam
+	 contains StudentSheet[] studentsheets
 }
 class CreationTemplate 
 {
 	 String encodedDocument
-	 Exam exam
+	 contains Exam exam
 }

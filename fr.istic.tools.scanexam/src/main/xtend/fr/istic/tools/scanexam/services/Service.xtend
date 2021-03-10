@@ -100,10 +100,7 @@ abstract class Service
 	
 	
 	def void save(String path)
-	
-	def boolean open(String xmiFile)
-	
-	def void create(File file)
+
 	
 	def int getPageNumber() {
 		return document.pages.size

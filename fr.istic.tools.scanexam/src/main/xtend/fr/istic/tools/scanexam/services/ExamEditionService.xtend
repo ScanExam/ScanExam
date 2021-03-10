@@ -18,6 +18,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import fr.istic.tools.scanexam.io.TemplateIO
+import java.util.ArrayList
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -47,7 +49,7 @@ class ExamEditionService extends Service // TODO : renommer
 		question.zone.y = y 
 		question.zone.width = width
 		question.zone.heigth = heigth
-		currentPage.questions.put(question.id,question);
+		currentPage.questions.add(question);
 		return questionId++;
 	}
 	def rescaleQuestion(int id,float heigth,float width)
@@ -58,14 +60,17 @@ class ExamEditionService extends Service // TODO : renommer
 	}
 	def moveQuestion(int id,float x,float y)
 	{
-		val question = currentPage.questions.get(id);
+		val question = getQuestion(id)
 		question.zone.x = x
 		question.zone.y = y 
 	}
-	
+	private def Question getQuestion(int id)
+	{
+		currentPage.questions.findFirst[question | question.id == id]
+	}
 	def renameQuestion(int id,String name)
 	{
-		val question = currentPage.questions.get(id);
+		val question = getQuestion(id)
 		question.name = name
 	}
 	def removeQuestion(int id)
@@ -84,22 +89,12 @@ class ExamEditionService extends Service // TODO : renommer
 
 		template.exam = ExamSingleton.instance
 
-		val resourceSet = new ResourceSetImpl();
-		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
-		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
-		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-	
-			
-		val resource = resourceSet.createResource(URI.createFileURI(path))
-		resource.getContents().add(template);
-		resource.save(null);
+		TemplateIO.save(path,template);
 	}
 
-	override open(String xmiPath) 
+	def boolean open(String xmiPath) 
 	{
-		val creationTemplate = loadTemplate(xmiPath)
+		val creationTemplate = TemplateIO.loadCreationTemplate(xmiPath)
 
         if (creationTemplate.present) 
         {
@@ -112,33 +107,8 @@ class ExamEditionService extends Service // TODO : renommer
         return false
 	}
 
-	def static Optional<CreationTemplate> loadTemplate(String path) {
-        val resourceSet = new ResourceSetImpl();
-        val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-        val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-        _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-
-        resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-
-        var Resource resource = null;
-
-        try {
-            resource = resourceSet.getResource(URI.createFileURI(path), true)
-        } catch (Throwable ex) {
-            return Optional.empty;
-        }
-        
-        val template = resource.getContents().get(0);
-        
-        if (!(template instanceof CreationTemplate))
-        {
-            return Optional.empty;
-        }
-        
-        return Optional.ofNullable(template as CreationTemplate)
-    }
-
-	override void create(File file) 
+	
+	def void create(File file) 
 	{
 		template = TemplatesFactory.eINSTANCE.createCreationTemplate
 		document = PDDocument.load(file)
@@ -148,7 +118,7 @@ class ExamEditionService extends Service // TODO : renommer
 		for (i : 0 ..< document.pages.size()) 
 		{
 			val page = CoreFactory.eINSTANCE.createPage()
-			page.questions = new HashMap<Integer,Question>();
+		
 			ExamSingleton.instance.pages.add(page);
 		}
 	}

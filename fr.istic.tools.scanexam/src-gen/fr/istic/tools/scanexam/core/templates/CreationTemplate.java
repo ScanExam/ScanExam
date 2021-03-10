@@ -47,22 +47,22 @@ public interface CreationTemplate extends EObject {
 	void setEncodedDocument(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Exam</b></em>' attribute.
+	 * Returns the value of the '<em><b>Exam</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Exam</em>' attribute.
+	 * @return the value of the '<em>Exam</em>' containment reference.
 	 * @see #setExam(Exam)
 	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCreationTemplate_Exam()
-	 * @model unique="false" dataType="fr.istic.tools.scanexam.core.templates.Exam"
+	 * @model containment="true"
 	 * @generated
 	 */
 	Exam getExam();
 
 	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}' attribute.
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Exam</em>' attribute.
+	 * @param value the new value of the '<em>Exam</em>' containment reference.
 	 * @see #getExam()
 	 * @generated
 	 */

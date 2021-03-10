@@ -23,7 +23,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -396,8 +395,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPage_Questions() {
-		return (EAttribute)pageEClass.getEStructuralFeatures().get(1);
+	public EReference getPage_Questions() {
+		return (EReference)pageEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -504,7 +503,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStudentSheet_PosPage() {
+	public EAttribute getStudentSheet_StudentName() {
 		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -513,8 +512,17 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getStudentSheet_PosPage() {
+		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getStudentSheet_Grades() {
-		return (EReference)studentSheetEClass.getEStructuralFeatures().get(2);
+		return (EReference)studentSheetEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -590,7 +598,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		pageEClass = createEClass(PAGE);
 		createEAttribute(pageEClass, PAGE__ID);
-		createEAttribute(pageEClass, PAGE__QUESTIONS);
+		createEReference(pageEClass, PAGE__QUESTIONS);
 
 		commentEClass = createEClass(COMMENT);
 		createEAttribute(commentEClass, COMMENT__X);
@@ -607,6 +615,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		studentSheetEClass = createEClass(STUDENT_SHEET);
 		createEAttribute(studentSheetEClass, STUDENT_SHEET__ID);
+		createEAttribute(studentSheetEClass, STUDENT_SHEET__STUDENT_NAME);
 		createEAttribute(studentSheetEClass, STUDENT_SHEET__POS_PAGE);
 		createEReference(studentSheetEClass, STUDENT_SHEET__GRADES);
 
@@ -680,12 +689,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		initEClass(pageEClass, Page.class, "Page", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPage_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		EGenericType g1 = createEGenericType(this.getMap());
-		EGenericType g2 = createEGenericType(theEcorePackage.getEIntegerObject());
-		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType(this.getQuestion());
-		g1.getETypeArguments().add(g2);
-		initEAttribute(getPage_Questions(), g1, "questions", null, 0, 1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPage_Questions(), this.getQuestion(), null, "questions", null, 0, -1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getComment_X(), theEcorePackage.getEFloat(), "x", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -703,6 +707,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		initEClass(studentSheetEClass, StudentSheet.class, "StudentSheet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStudentSheet_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentSheet_StudentName(), theEcorePackage.getEString(), "studentName", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStudentSheet_PosPage(), theEcorePackage.getEInt(), "posPage", null, 0, -1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStudentSheet_Grades(), this.getGrade(), null, "grades", null, 0, -1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

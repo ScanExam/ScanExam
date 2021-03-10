@@ -1,26 +1,20 @@
 package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.core.CoreFactory;
-import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
-import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
+import fr.istic.tools.scanexam.core.templates.CreationTemplate;
+import fr.istic.tools.scanexam.io.TemplateIO;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
@@ -32,75 +26,42 @@ public class ExamGraduationService extends Service {
   
   private int currentQuestionIndex;
   
-  private Set<StudentSheet> studentSheets;
+  private Collection<StudentSheet> studentSheets;
   
-  private CorrectionTemplate template;
+  private CreationTemplate creationTemplate;
+  
+  private CorrectionTemplate correctionTemplate;
   
   @Override
   public void save(final String path) {
+  }
+  
+  public boolean openCreationTemplate(final String xmiFile) {
+    final Optional<CreationTemplate> editionTemplate = TemplateIO.loadCreationTemplate(xmiFile);
+    boolean _isPresent = editionTemplate.isPresent();
+    if (_isPresent) {
+      this.creationTemplate = editionTemplate.get();
+      ExamSingleton.instance = editionTemplate.get().getExam();
+      return true;
+    }
+    return false;
+  }
+  
+  public boolean openCorrectionPdf(final String path) {
     try {
-      final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      this.document.save(outputStream);
-      final byte[] encodedDoc = Base64.getEncoder().encode(outputStream.toByteArray());
-      String _string = new String(encodedDoc);
-      this.template.setEncodedDocument(_string);
-      outputStream.close();
-      this.template.setExam(ExamSingleton.instance);
-      this.template.getStudentsheets().addAll(this.studentSheets);
-      final ResourceSetImpl resourceSet = new ResourceSetImpl();
-      final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
-      final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-      _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl);
-      resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
-      resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-      final Resource resource = resourceSet.createResource(URI.createFileURI(path));
-      resource.getContents().add(this.template);
-      resource.save(null);
+      File _file = new File(path);
+      this.document = PDDocument.load(_file);
+      File _file_1 = new File(path);
+      final FileInputStream stream = new FileInputStream(_file_1);
+      int _size = ExamSingleton.instance.getPages().size();
+      final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(stream, _size, 3);
+      pdfReader.readPDf();
+      this.studentSheets = pdfReader.getCompleteStudentSheets();
+      stream.close();
+      return true;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
-  }
-  
-  @Override
-  public boolean open(final String xmiFile) {
-    try {
-      final Optional<CorrectionTemplate> correctionTemplate = ExamGraduationService.loadTemplate(xmiFile);
-      boolean _isPresent = correctionTemplate.isPresent();
-      if (_isPresent) {
-        this.template = correctionTemplate.get();
-        ExamSingleton.instance = correctionTemplate.get().getExam();
-        this.template.getStudentsheets().addAll(this.studentSheets);
-        final byte[] decoded = Base64.getDecoder().decode(correctionTemplate.get().getEncodedDocument());
-        this.document = PDDocument.load(decoded);
-        return true;
-      }
-      return false;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  public static Optional<CorrectionTemplate> loadTemplate(final String path) {
-    final ResourceSetImpl resourceSet = new ResourceSetImpl();
-    final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
-    final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-    _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl);
-    resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-    Resource resource = null;
-    try {
-      resource = resourceSet.getResource(URI.createFileURI(path), true);
-    } catch (final Throwable _t) {
-      if (_t instanceof Throwable) {
-        return Optional.<CorrectionTemplate>empty();
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
-    final EObject template = resource.getContents().get(0);
-    if ((!(template instanceof CorrectionTemplate))) {
-      return Optional.<CorrectionTemplate>empty();
-    }
-    return Optional.<CorrectionTemplate>ofNullable(((CorrectionTemplate) template));
   }
   
   /**
@@ -124,7 +85,7 @@ public class ExamGraduationService extends Service {
       int nbQuestion = 0;
       for (int i = 0; (i < (IterableExtensions.size(this.document.getPages()) - 1)); i++) {
         int _nbQuestion = nbQuestion;
-        int _size = this.template.getExam().getPages().get(i).getQuestions().size();
+        int _size = this.creationTemplate.getExam().getPages().get(i).getQuestions().size();
         nbQuestion = (_nbQuestion + _size);
       }
       _xblockexpression = nbQuestion;
@@ -193,7 +154,7 @@ public class ExamGraduationService extends Service {
       int indexQuestion = 0;
       for (int i = 0; (i < (indexpage - 1)); i++) {
         int _indexQuestion = indexQuestion;
-        int _size = this.template.getExam().getPages().get(i).getQuestions().size();
+        int _size = this.creationTemplate.getExam().getPages().get(i).getQuestions().size();
         indexQuestion = (_indexQuestion + _size);
       }
       int _indexQuestion = indexQuestion;
@@ -210,7 +171,6 @@ public class ExamGraduationService extends Service {
     return (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().set(this.indexOfQuestions(this.pageIndex, this.currentQuestionIndex), note);
   }
   
-  @Override
   public void create(final File file) {
     try {
       this.document = PDDocument.load(file);

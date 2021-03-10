@@ -29,7 +29,7 @@ final class ExamSingleton
 	 */
 	static def Collection<Question> getQuestions(int pageId)
 	{
-		return Collections.unmodifiableCollection(instance.pages.get(pageId).questions.values);
+		return Collections.unmodifiableCollection(instance.pages.get(pageId).questions);
 	}
 	
 	static def Page getPage(int pageId)
