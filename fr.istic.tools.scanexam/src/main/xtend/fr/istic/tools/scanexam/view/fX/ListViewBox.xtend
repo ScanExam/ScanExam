@@ -1,19 +1,15 @@
 package fr.istic.tools.scanexam.view.fX
 
-import javafx.scene.control.TextField
-import javafx.scene.layout.HBox
-import javafx.scene.control.Button
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
-import javafx.scene.layout.VBox
-import javafx.scene.image.ImageView
-import fr.istic.tools.scanexam.utils.ResourcesUtils
-import javafx.scene.image.Image
-import javafx.scene.control.Label
+import javafx.scene.control.Button
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.Label
 import javafx.scene.control.MenuItem
+import javafx.scene.control.TextField
+import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
-import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
 
 class ListViewBox extends VBox{
 	new(String text,Box parent) {
@@ -145,10 +141,14 @@ class ListViewBox extends VBox{
 	
 	def void toggleRenaming(){
 		field.visible = !field.visible;
+		if (field.visible) field.requestFocus();
+		field.selectAll();
 		nameLabel.visible = !nameLabel.visible;
 	}
 	def void togglePointChange(){
 		numberField.visible = !numberField.visible;
+		if (numberField.visible) numberField.requestFocus();
+		numberField.selectAll();
 		pointsLabel.visible = !pointsLabel.visible;
 	}
 	

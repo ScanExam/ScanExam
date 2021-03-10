@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.launcher.LauncherFX
 
 class ControllerFXEditor {
 
@@ -123,6 +124,7 @@ class ControllerFXEditor {
 
 	@FXML
 	def void switchToCorrectorPressed() {
+		LauncherFX.swapToGraduator
 	}
 
 	@FXML
@@ -187,7 +189,6 @@ class ControllerFXEditor {
 
 			})
 			source.children.add(currentRectangle);
-			logger.debug("Created Box")
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 
@@ -462,13 +463,13 @@ class ControllerFXEditor {
 		mainPane.children.remove(box)
 		boxes.remove(box)
 		editor.removeBox(box);
-		currentTool = SelectedTool.NO_TOOL
+		setToNoTool
 	}
 	
 	def changePoints(Box box,String points) {
 		box.listViewBox.pointsText = points
 		var number = Integer.parseInt(points);
-		
+		editor.presenter.presenterQuestionZone.changeQuestionWorth(box.boxId,number);
 	}
 
 	// ------------//
@@ -573,6 +574,7 @@ class ControllerFXEditor {
 	def selectPage(int pageNumber) {
 		editor.presenter.choosePdfPage(pageNumber);
 		renderDocument();
+		showOnlyPage(editor.presenter.currentPdfPageNumber);
 	}
 
 	/**

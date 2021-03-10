@@ -29,7 +29,7 @@
               <MenuItem mnemonicParsing="false" onAction="#saveTemplatePressed" text="%menu.file.save" />
                   <MenuItem mnemonicParsing="false" onAction="#loadTemplatePressed" text="%menu.file.load" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="%menu.file.switchToCorrector" />
+                  <MenuItem mnemonicParsing="false" onAction="#switchToCorrectorPressed" text="%menu.file.switchToCorrector" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="%menu.file.close" />
             </items>

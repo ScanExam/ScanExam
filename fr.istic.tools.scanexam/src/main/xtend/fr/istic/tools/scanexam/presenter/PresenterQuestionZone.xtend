@@ -1,10 +1,9 @@
 package fr.istic.tools.scanexam.presenter
 
-import java.util.Objects
-import fr.istic.tools.scanexam.services.ExamEditionService
 import fr.istic.tools.scanexam.core.Question
-import java.util.ArrayList
+import fr.istic.tools.scanexam.services.ExamEditionService
 import java.util.LinkedList
+import java.util.Objects
 
 /**
  * Class to manage conversions of the view's questions 
@@ -63,10 +62,13 @@ class PresenterQuestionZone {
 	 * @param float y : new y position
 	 * @author : Benjamin Danlos
 	 */
-	def moveQuestion(int id, double x, double y){
+	def void moveQuestion(int id, double x, double y){
 		service.moveQuestion(id,x as float,y as float)
 	}
 	
+	def void changeQuestionWorth(int id,int worth) {
+		//service.
+	}
 	
 	
 	
@@ -88,6 +90,7 @@ class PresenterQuestionZone {
 	 * else return false
 	 */
 	 
+
 	def boolean loadNextQuestion(){
 		//TODO get a list of questions from the model
 		// questions will be the list of questions
@@ -126,6 +129,10 @@ class PresenterQuestionZone {
 	
 	def int currentQuestionPage(){
 		pageNumbers.get(questionToLoadIndex)
+	}
+	
+	def int currentQuestionWorth(){
+		0
 	}
 	
 	/* -----------------------  */
