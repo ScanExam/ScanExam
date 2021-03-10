@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Grade;
+import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
@@ -112,6 +113,14 @@ public class ExamGraduationService extends Service {
       _xifexpression = this.currentSheetIndex--;
     }
     return _xifexpression;
+  }
+  
+  public Question getCurrentQuestion() {
+    final Function1<Question, Boolean> _function = (Question x) -> {
+      int _id = x.getId();
+      return Boolean.valueOf((_id == this.currentQuestionIndex));
+    };
+    return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
   }
   
   public int nextQuestion() {
