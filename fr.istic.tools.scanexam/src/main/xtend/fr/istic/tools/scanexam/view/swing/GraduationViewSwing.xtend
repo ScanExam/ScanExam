@@ -119,11 +119,12 @@ class GraduationViewSwing {
 	var JButton btnDown
 	/* Panel d'énoncé d'une question */
 	var JPanel pnlContentDown
-	/* Panel d'énoncé d'une question */
-	var boolean contentDown
 
 	var JSplitPane mainSplitPane
-
+	
+	/* Panel d'énoncé d'une question */
+		var boolean contentDown
+		
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * METHODES
@@ -133,6 +134,7 @@ class GraduationViewSwing {
 	 * Constructeur
 	 */
 	new(AdapterSwingPdfPanel pdfPresenter) {
+		contentDown = false
 		this.pdfPresenter = pdfPresenter
 		initialize()
 	}
@@ -253,17 +255,12 @@ class GraduationViewSwing {
 
 		btnDown = new JButton("▲")
 
-		btnDown.addActionListener(new ActionListener() {
-			override actionPerformed(ActionEvent e) {
-				showContentDown()
-			}
-		})
+		
 
 		// pnlContentDown = new JPanel();
 		var InputStream inputContentDown = ResourcesUtils.getInputStreamResource("/logo.png")
 		pnlContentDown = new ImagePanel(inputContentDown)
 		pnlContentDown.setPreferredSize(new Dimension(pnlContentDown.getSize().width, 180))
-		contentDown = false
 
 		// to resize the correction 
 		mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JPanel(), pnlContentDown);
@@ -291,21 +288,6 @@ class GraduationViewSwing {
 		spltPnQst.setRightComponent(btnNextQst)
 	}
 
-	/** 
-	 * Ouvre ou ferme l'énoncé d'une question
-	 */
-	def void showContentDown() {
-		if (contentDown) {
-			pnlDown.remove(mainSplitPane)
-			btnDown.setText("▲")
-			contentDown = false
-		} else {
-			pnlDown.add(mainSplitPane, BorderLayout.CENTER)
-			btnDown.setText("▼")
-			contentDown = true
-		}
-	}
-
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * GETTERS
@@ -331,5 +313,27 @@ class GraduationViewSwing {
 	def JMenuItem getMnItemSession() {
 		return mnItemSession;
 	}
+	
+	def JButton getBtnDown() {
+		return btnDown
+	}
+	
+	def JPanel getPnlDown() {
+		return pnlDown
+	}
 
+	/** 
+	 * Ouvre ou ferme l'énoncé d'une question
+	 */
+	def void showContentDown() {
+		if (contentDown) {
+			pnlDown.remove(mainSplitPane)
+			btnDown.setText("▲")
+			contentDown = false
+		} else {
+			pnlDown.add(mainSplitPane, BorderLayout.CENTER)
+			btnDown.setText("▼")
+			contentDown = true
+		}
+	}
 }
