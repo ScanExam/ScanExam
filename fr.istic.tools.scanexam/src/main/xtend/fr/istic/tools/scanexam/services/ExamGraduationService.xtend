@@ -34,7 +34,20 @@ class ExamGraduationService extends Service
 		// TODO (sauvegarde le XMI de correction)
 	}
 	
-	
+	def boolean openCorrectionTemplate(String xmiFile)
+	{
+		val correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile) 
+		
+		if (correctionTemplate.present) 
+        {
+            this.correctionTemplate = correctionTemplate.get()
+            
+            ExamSingleton.instance = correctionTemplate.get().exam
+
+            return true
+        }
+		return false
+	}
 	def boolean openCreationTemplate(String xmiFile) 
 	{
 		val editionTemplate = TemplateIO.loadCreationTemplate(xmiFile) 

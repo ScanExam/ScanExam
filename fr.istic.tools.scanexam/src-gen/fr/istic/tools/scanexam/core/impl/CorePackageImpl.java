@@ -296,17 +296,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getGradeScale_Weigth() {
-		return (EAttribute)gradeScaleEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getGradeScale_Steps() {
-		return (EReference)gradeScaleEClass.getEStructuralFeatures().get(1);
+		return (EReference)gradeScaleEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -584,7 +575,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEReference(questionEClass, QUESTION__ZONE);
 
 		gradeScaleEClass = createEClass(GRADE_SCALE);
-		createEAttribute(gradeScaleEClass, GRADE_SCALE__WEIGTH);
 		createEReference(gradeScaleEClass, GRADE_SCALE__STEPS);
 
 		gradeEntryEClass = createEClass(GRADE_ENTRY);
@@ -675,7 +665,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEReference(getQuestion_Zone(), this.getQuestionZone(), null, "zone", null, 0, 1, Question.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(gradeScaleEClass, GradeScale.class, "GradeScale", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getGradeScale_Weigth(), theEcorePackage.getEFloat(), "weigth", null, 0, 1, GradeScale.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGradeScale_Steps(), this.getGradeEntry(), null, "steps", null, 0, -1, GradeScale.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(gradeEntryEClass, GradeEntry.class, "GradeEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

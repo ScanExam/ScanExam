@@ -74,6 +74,9 @@ public class ControllerFXCorrector {
   private boolean botShow = false;
   
   @FXML
+  public VBox root;
+  
+  @FXML
   public Pane topPane;
   
   @FXML
@@ -175,7 +178,7 @@ public class ControllerFXCorrector {
   @FXML
   public void nextQuestionPressed() {
     InputOutput.<String>println("Next question method");
-    this.corrector.nextQuestion();
+    this.nextQuestion();
   }
   
   /**
@@ -184,7 +187,7 @@ public class ControllerFXCorrector {
   @FXML
   public void prevQuestionPressed() {
     InputOutput.<String>println("Previous question method");
-    this.corrector.previousQuestion();
+    this.previousQuestion();
   }
   
   /**
@@ -193,6 +196,7 @@ public class ControllerFXCorrector {
   @FXML
   public void nextStudentPressed() {
     InputOutput.<String>println("Next student method");
+    this.nextStudent();
   }
   
   /**
@@ -201,6 +205,7 @@ public class ControllerFXCorrector {
   @FXML
   public void prevStudentPressed() {
     InputOutput.<String>println("Previous student method");
+    this.previousStudent();
   }
   
   /**
@@ -236,11 +241,11 @@ public class ControllerFXCorrector {
   
   private QuestionItem currentQuestion;
   
-  private int currentQuestionIndex;
+  private int currentQuestionIndex = 0;
   
   private StudentItem currentStudent;
   
-  private int currentStudentIndex;
+  private int currentStudentIndex = 0;
   
   public void chooseMouseAction(final MouseEvent e) {
     MouseButton _button = e.getButton();
@@ -363,7 +368,9 @@ public class ControllerFXCorrector {
   }
   
   public void init() {
-    this.setKeybinds();
+    this.binds(this.root);
+    this.binds(this.scrollMain);
+    this.binds(this.scrollBis);
   }
   
   public void binds(final Node n) {
@@ -503,7 +510,7 @@ public class ControllerFXCorrector {
   }
   
   public void loadQuestions() {
-    for (int p = 0; (p < 1); p++) {
+    for (int p = 0; (p < this.corrector.getPresenter().getTemplatePageAmount()); p++) {
       {
         LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
         for (final int i : ids) {
@@ -542,32 +549,58 @@ public class ControllerFXCorrector {
   
   public void nextStudent() {
     this.currentStudentIndex++;
-    this.currentStudent = this.leftList.getItems().get(this.currentStudentIndex);
+    int _size = this.leftList.getItems().size();
+    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
+    if (_greaterEqualsThan) {
+      this.currentQuestionIndex = 0;
+    }
+    this.setSelectedStudent();
   }
   
   public void previousStudent() {
     this.currentStudentIndex--;
-    this.currentStudent = this.leftList.getItems().get(this.currentStudentIndex);
+    if ((this.currentStudentIndex < 0)) {
+      this.currentStudentIndex = this.leftList.getItems().size();
+    }
+    this.setSelectedStudent();
   }
   
   public void selectStudent(final int index) {
     this.currentStudentIndex = index;
+    this.setSelectedStudent();
+  }
+  
+  public void setSelectedStudent() {
     this.currentStudent = this.leftList.getItems().get(this.currentStudentIndex);
+    this.leftList.getSelectionModel().select(this.currentStudentIndex);
   }
   
   public void nextQuestion() {
     this.currentQuestionIndex++;
-    this.currentQuestion = this.rightList.getItems().get(this.currentQuestionIndex);
+    int _size = this.rightList.getItems().size();
+    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
+    if (_greaterEqualsThan) {
+      this.currentQuestionIndex = 0;
+    }
+    this.setSelectedQuestion();
   }
   
   public void previousQuestion() {
     this.currentQuestionIndex--;
-    this.currentQuestion = this.rightList.getItems().get(this.currentQuestionIndex);
+    if ((this.currentQuestionIndex < 0)) {
+      this.currentQuestionIndex = this.rightList.getItems().size();
+    }
+    this.setSelectedQuestion();
   }
   
   public void selectQuestion(final int index) {
     this.currentQuestionIndex = index;
+    this.setSelectedQuestion();
+  }
+  
+  public void setSelectedQuestion() {
     this.currentQuestion = this.rightList.getItems().get(this.currentQuestionIndex);
+    this.rightList.getSelectionModel().select(this.currentQuestionIndex);
   }
   
   public void setZoomArea(final int x, final int y, final int height, final int width) {

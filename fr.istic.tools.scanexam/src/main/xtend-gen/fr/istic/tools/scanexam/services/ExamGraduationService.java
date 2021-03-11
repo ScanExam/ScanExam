@@ -40,6 +40,17 @@ public class ExamGraduationService extends Service {
   public void save(final String path) {
   }
   
+  public boolean openCorrectionTemplate(final String xmiFile) {
+    final Optional<CorrectionTemplate> correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile);
+    boolean _isPresent = correctionTemplate.isPresent();
+    if (_isPresent) {
+      this.correctionTemplate = correctionTemplate.get();
+      ExamSingleton.instance = correctionTemplate.get().getExam();
+      return true;
+    }
+    return false;
+  }
+  
   public boolean openCreationTemplate(final String xmiFile) {
     final Optional<CreationTemplate> editionTemplate = TemplateIO.loadCreationTemplate(xmiFile);
     boolean _isPresent = editionTemplate.isPresent();

@@ -5,8 +5,6 @@ import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.Question
 import java.util.Collection
 import java.util.Collections
-import org.eclipse.emf.common.util.EList
-import java.util.LinkedList
 
 /**
  * A revoir ?

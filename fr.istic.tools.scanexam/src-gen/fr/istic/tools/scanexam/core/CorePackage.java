@@ -197,22 +197,13 @@ public interface CorePackage extends EPackage {
 	int GRADE_SCALE = 2;
 
 	/**
-	 * The feature id for the '<em><b>Weigth</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GRADE_SCALE__WEIGTH = 0;
-
-	/**
 	 * The feature id for the '<em><b>Steps</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE__STEPS = 1;
+	int GRADE_SCALE__STEPS = 0;
 
 	/**
 	 * The number of structural features of the '<em>Grade Scale</em>' class.
@@ -221,7 +212,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE_FEATURE_COUNT = 2;
+	int GRADE_SCALE_FEATURE_COUNT = 1;
 
 	/**
 	 * The number of operations of the '<em>Grade Scale</em>' class.
@@ -758,17 +749,6 @@ public interface CorePackage extends EPackage {
 	EClass getGradeScale();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeScale#getWeigth <em>Weigth</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Weigth</em>'.
-	 * @see fr.istic.tools.scanexam.core.GradeScale#getWeigth()
-	 * @see #getGradeScale()
-	 * @generated
-	 */
-	EAttribute getGradeScale_Weigth();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.GradeScale#getSteps <em>Steps</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1172,14 +1152,6 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EClass GRADE_SCALE = eINSTANCE.getGradeScale();
-
-		/**
-		 * The meta object literal for the '<em><b>Weigth</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute GRADE_SCALE__WEIGTH = eINSTANCE.getGradeScale_Weigth();
 
 		/**
 		 * The meta object literal for the '<em><b>Steps</b></em>' containment reference list feature.

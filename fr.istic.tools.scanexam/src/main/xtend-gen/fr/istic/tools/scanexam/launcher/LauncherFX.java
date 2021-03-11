@@ -51,6 +51,7 @@ public class LauncherFX extends Application implements Launcher {
     LauncherFX.grad.setController(controllerGraduator);
     final Scene editorScene = new Scene(editorRoot, 1280, 720);
     final Scene graduatorScene = new Scene(graduatorRoot, 1280, 720);
+    controllerGraduator.init();
     LauncherFX.pStage = primaryStage;
     LauncherFX.eScene = editorScene;
     LauncherFX.gScene = graduatorScene;

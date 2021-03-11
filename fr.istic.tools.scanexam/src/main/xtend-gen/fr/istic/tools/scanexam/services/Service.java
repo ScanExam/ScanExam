@@ -108,6 +108,10 @@ public abstract class Service {
     return this.getCurrentPage().getQuestions().remove(id);
   }
   
+  public int getTemplatePageAmount() {
+    return ExamSingleton.getTemplatePageAmount();
+  }
+  
   /**
    * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
    * @param page Numéro de page où se rendre

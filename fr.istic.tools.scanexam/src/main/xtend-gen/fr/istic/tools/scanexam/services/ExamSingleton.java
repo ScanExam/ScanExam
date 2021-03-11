@@ -32,6 +32,10 @@ public final class ExamSingleton {
     return Collections.<Question>unmodifiableCollection(ExamSingleton.instance.getPages().get(pageId).getQuestions());
   }
   
+  public static int getTemplatePageAmount() {
+    return ExamSingleton.instance.getPages().size();
+  }
+  
   public static Page getPage(final int pageId) {
     return ExamSingleton.instance.getPages().get(pageId);
   }

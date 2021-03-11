@@ -26,7 +26,7 @@ class Question
 
 class GradeScale 
 {
-	float weigth
+	// float weigth
 	contains GradeEntry[] steps
 }
 class GradeEntry
