@@ -24,7 +24,7 @@ class GraduationPresenter implements Presenter
 	PresenterCopy presCopy
 	PresenterMarkingScheme presMarkingScheme
 	GraduationPresenter graduationPresenter;
-	PresenterPdf presPdf
+	PresenterPdf presPdf 
 	ExamGraduationService service;
 	
 	Adapter<GraduationPresenter> adapter;
@@ -37,16 +37,11 @@ class GraduationPresenter implements Presenter
 		Objects.requireNonNull(adapter)
 		this.adapter = adapter
 		
+		presPdf = new PresenterPdf(service, this)
+		presQuestion = new PresenterQuestion(service)
 	}
 	
-	/**
-	 * setter for the PresenterQuestion attribute
-	 * @param {@link PresenterQuestion} pres instance of the presenter (not null) 
-	 */
-	def setPresenterQuestion(PresenterQuestion pres){
-		Objects.requireNonNull(pres)
-		presQuestion = pres
-	}
+	
 	/**
 	 * @return current {@link PresenterQuestion} 
 	 */
@@ -54,14 +49,7 @@ class GraduationPresenter implements Presenter
 		presQuestion
 	}
 	
-	/**
-	 * Setter for {@link PresenterCopy} attribute
-	 * @param {@link PresenterCopy} pres an instance (not null)
-	 */
-	def setPresenterCopy(PresenterCopy pres){
-		Objects.requireNonNull(pres)
-		presCopy = pres
-	}
+	
 	/**
 	 * @return current {@link PresenterCopy} 
 	 */
@@ -69,29 +57,15 @@ class GraduationPresenter implements Presenter
 		presCopy
 	}
 	
-	/**
-	 * Setter for {@link PresenterMarkingScheme} attribute
-	 * @param {@link PresenterMarkingScheme} pres an instance (not null)
-	 */
-	def setPresenterMarkingScheme(PresenterMarkingScheme pres){
-		Objects.requireNonNull(pres)
-		presMarkingScheme = pres
-	}
+
 	/**
 	 * @return current {@link PresenterMarkingScheme} 
 	 */
-	def getPresenterMarkingScheme(){
+	override getPresenterMarkingScheme(){
 		presMarkingScheme
 	}
 	
-	/**
-	 * Sets a {@link ControllerVueCorrection} the link with the view
-	 * @param {@link ControllerVueCorrection} contr an instance (not null)
-	 */
-	def setControllerVueCorrection(GraduationPresenter contr){
-		Objects.requireNonNull(contr)
-		graduationPresenter = contr
-	}
+	
 	/**
 	 * @return current {@link ControllerVueCorrection} 
 	 */
@@ -99,6 +73,12 @@ class GraduationPresenter implements Presenter
 		graduationPresenter
 	}
 	
+	override getPresenterPdf(){
+		presPdf
+	}
+	
+	
+	//Fix me : if related to Questions, move to PresenterQuestion and chain with getPresenterQuestion instead
 	/**
 	 * @return next question
 	 */
@@ -115,41 +95,6 @@ class GraduationPresenter implements Presenter
 	}
 	
 	
-	def setPresenterPdf(PresenterPdf pres){
-		Objects.requireNonNull(pres)
-		presPdf = pres
-	}
-	def getPresenterPdf(){
-		presPdf
-	}
-	
-	override getCurrentPdfPage() {
-		return service.getCurrentPdfPage
-	}
-	
-	override int getCurrentPdfPageNumber(){
-		service.currentPageNumber
-	}
-	
-	def int getTotalPages(){
-		service.pageNumber
-	}
-	
-	def void nextPdfPage(){
-		service.nextPage
-	}
-	def void previousPdfPage(){
-		service.previousPage
-	}
-	
-	def void goToPage(int page) {
-		service.goToPage(page)
-	}
-	
-	override void create(File file)
-	{
-		 service.create(file);
-	}
 	
 	def void openEditionTemplate(String path){
 		service.openCreationTemplate(path)
@@ -158,7 +103,6 @@ class GraduationPresenter implements Presenter
 	def void openCorrectionPdf(String path){
 		service.openCorrectionPdf(path)
 	}
-	
 	def LinkedList<Integer> getStudentIds(){
 		var list = service.studentSheets
 		print(list.size)
