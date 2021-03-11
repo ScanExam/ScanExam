@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import javafx.scene.control.Button
 
 class ControllerFXEditor {
 
@@ -212,6 +213,7 @@ class ControllerFXEditor {
 			if (currentRectangle.width > FXSettings.MINIMUM_ZONE_SIZE && currentRectangle.height > FXSettings.MINIMUM_ZONE_SIZE)
 			{
 				addBox(currentRectangle);
+				addBoxModel(currentRectangle);
 			}
 			else
 			{
@@ -413,14 +415,7 @@ class ControllerFXEditor {
 			}
 
 		}
-		lb.pointsCommit = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				changePoints(box, (event.source as TextField).text)
-				box.listViewBox.togglePointChange
-			}
-
-		}
+		
 		lb.moveAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
@@ -452,9 +447,26 @@ class ControllerFXEditor {
 			}
 
 		}
+		
+		lb.addGradeItemAction = new EventHandler<ActionEvent>(){
+			
+			override handle(ActionEvent event) {
+				var item = new GradeItemHBox()
+				addGradeItem(item)
+				box.addGradeItem(item)
+				item.removeGradeItemAction = new EventHandler<ActionEvent>(){
+					
+					override handle(ActionEvent event) {
+						removeGradeItem((event.source as Button).parent as GradeItemHBox)
+						box.removeGradeItem((event.source as Button).parent as GradeItemHBox);
+					}
+				
+				}
+			}
+			
+		}
+		
 		questionList.items.add(lb);
-
-		System.out.println(mainPane.getChildren());
 		boxes.add(box);
 	}
 
@@ -471,11 +483,26 @@ class ControllerFXEditor {
 	def resizeBox(Box box) {
 		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId,convertToRelative(box.height,maxY),convertToRelative(box.width,maxX));
 	}
+	
+	def addGradeItem(GradeItemHBox item) {
+		item.gradeItemId = editor.presenter.addGradeItem(item.gradeItemName,Double.parseDouble(item.gradeItemPoints))
+	}
+	
+	def updateGradeItem(GradeItemHBox item) {
+		editor.presenter.updateGradeItem(item.gradeItemId,item.gradeItemName,Double.parseDouble(item.gradeItemPoints))
+	}
+	
+	def removeGradeItem(GradeItemHBox item) {
+		editor.presenter.removeGradeItem(item.gradeItemId)
+	}
+	
+	
 
 	/**
 	 * notifies the rest of the program to the removal of a box
 	 */
 	def removeBox(Box box) {
+		logger.warn("Removing box " + box)
 		questionList.items.remove(box.listViewBox)
 		mainPane.children.remove(box.getText());
 		mainPane.children.remove(box)
@@ -485,13 +512,10 @@ class ControllerFXEditor {
 	}
 	
 	def changePoints(Box box,String points) {
-		box.listViewBox.pointsText = points
-		var number = Integer.parseInt(points);
-		editor.presenter.presenterQuestionZone.changeQuestionWorth(box.boxId,number);
 	}
 	
 	def addBoxModel(Box box){
-		editor.presenter.presenterQuestionZone.createQuestion(convertToRelative(box.x,maxX),convertToRelative(box.y,maxY),convertToRelative(box.height,maxY),convertToRelative(box.width,maxX))
+		box.boxId = editor.presenter.presenterQuestionZone.createQuestion(convertToRelative(box.x,maxX),convertToRelative(box.y,maxY),convertToRelative(box.height,maxY),convertToRelative(box.width,maxX))
 	}
 
 	// ------------//

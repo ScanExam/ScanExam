@@ -116,6 +116,17 @@ class Box extends Rectangle {
 			setWidth(w);
 		}
 		
+		def addGradeItem(GradeItemHBox toAdd) {
+			listViewBox.addGradeItem(toAdd)
+		}
+		
+		def removeGradeItem(GradeItemHBox toRemove) {
+			listViewBox.removeGradeItem(toRemove)
+		}
+		
+		def getGradeItems(){
+			listViewBox.getGradeItems();
+		}
 		
 
 	}

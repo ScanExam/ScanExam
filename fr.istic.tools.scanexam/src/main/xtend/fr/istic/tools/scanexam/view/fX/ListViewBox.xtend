@@ -10,6 +10,8 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
+import java.util.LinkedList
+import javafx.scene.Node
 
 class ListViewBox extends VBox{
 	new(String text,Box parent) {
@@ -28,24 +30,18 @@ class ListViewBox extends VBox{
 		nameLabel.minWidth = 100;
 		
 		
-		numberField = new NumberTextField();
-		numberField.text = "0"
-		numberField.visible = false;
-		
-		pointsLabel = new Label("0");
-		pointsLabel.minWidth = 100;
+		addGradeItem = new Button("+");
+		gradeItemContainer = new VBox();
 		
 		
 		
 		var p = new Pane();
-		var p2 = new Pane();
 		
 		this.children.addAll(top,middle,bottom)
 		
 		top.children.addAll(p)
-		middle.children.addAll(p2)
+		middle.children.addAll(addGradeItem,gradeItemContainer)
 		p.children.addAll(field,nameLabel)
-		p2.children.addAll(numberField,pointsLabel)
 		makeButtons();
 		
 		
@@ -65,6 +61,8 @@ class ListViewBox extends VBox{
 	Button rm;
 	Button resize;
 	Button move;
+	Button addGradeItem;
+	VBox gradeItemContainer;
 	def getParentBox(){
 		parent
 	}
@@ -103,9 +101,6 @@ class ListViewBox extends VBox{
 		field.onAction = handler
 	}
 	
-	def void setPointsCommit(EventHandler<ActionEvent> handler){
-		numberField.onAction = handler
-	}
 	def void setRenameOption(EventHandler<ActionEvent> handler){
 		var menu = new ContextMenu();
 		var renameMenu = new MenuItem("Rename")
@@ -114,11 +109,15 @@ class ListViewBox extends VBox{
 		nameLabel.contextMenu = menu
 	}
 	def void setChangePoints(EventHandler<ActionEvent> handler){
-		var menu = new ContextMenu();
+		/*var menu = new ContextMenu();
 		var renameMenu = new MenuItem("Change Points")
 		renameMenu.onAction = handler
 		menu.items.add(renameMenu);
-		pointsLabel.contextMenu = menu
+		pointsLabel.contextMenu = menu*/
+	}
+	
+	def void setAddGradeItemAction(EventHandler<ActionEvent> handler) {
+		addGradeItem.onAction = handler
 	}
 	
 	def void setMoveAction(EventHandler<ActionEvent> hander){
@@ -130,9 +129,6 @@ class ListViewBox extends VBox{
 	
 	def void setLabelText(String text) {
 		nameLabel.text = text
-	}
-	def void setPointsText(String text){
-		pointsLabel.text = text
 	}
 	
 	def String getName(){
@@ -155,5 +151,25 @@ class ListViewBox extends VBox{
 	def Label getNameLabel(){
 		return nameLabel
 	}
+	
+	def addGradeItem(GradeItemHBox toAdd) {
+		gradeItemContainer.children.add(toAdd);
+	}
+	
+	def removeGradeItem(GradeItemHBox toRemove) {
+		gradeItemContainer.children.remove(toRemove)
+	}
+	def removeGradeItem(int idToRemove) {
+		
+	}
+	
+	def LinkedList<GradeItemHBox> getGradeItems(){
+		var result = new LinkedList<GradeItemHBox>()
+		for (Node node : gradeItemContainer.children) {
+			result.add(node as GradeItemHBox)
+		}
+		return result
+	}
+	
 	
 }
