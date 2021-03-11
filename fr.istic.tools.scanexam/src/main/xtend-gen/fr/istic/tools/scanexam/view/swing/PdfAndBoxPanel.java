@@ -70,7 +70,7 @@ public class PdfAndBoxPanel extends PdfPanel {
     List<Box> _list = boxes.getList();
     for (final Box box : _list) {
       int _nbPage = box.getNbPage();
-      int _currentPdfPageNumber = this.adapter.presenterPdf.getCurrentPdfPageNumber();
+      int _currentPdfPageNumber = this.adapter.presenterPdf.getPresenterPdf().currentPdfPageNumber();
       boolean _equals = (_nbPage == _currentPdfPageNumber);
       if (_equals) {
         double _x = box.getX();
@@ -122,7 +122,7 @@ public class PdfAndBoxPanel extends PdfPanel {
     List<Box> _list = boxes.getList();
     for (final Box box : _list) {
       int _nbPage = box.getNbPage();
-      int _currentPdfPageNumber = this.adapter.presenterPdf.getCurrentPdfPageNumber();
+      int _currentPdfPageNumber = this.adapter.presenterPdf.getPresenterPdf().currentPdfPageNumber();
       boolean _equals = (_nbPage == _currentPdfPageNumber);
       if (_equals) {
         double _x = box.getX();
