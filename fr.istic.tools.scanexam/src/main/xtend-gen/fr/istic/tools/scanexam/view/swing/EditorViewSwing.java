@@ -71,6 +71,11 @@ public class EditorViewSwing {
   private JMenuItem mnItemLoad;
   
   /**
+   * Bouton pour swap un examen
+   */
+  private JMenuItem mnItemSwap;
+  
+  /**
    * Bouton pour fermer un examen
    */
   private JMenuItem mnItemClose;
@@ -217,26 +222,30 @@ public class EditorViewSwing {
     JMenuItem _jMenuItem_2 = new JMenuItem(_translate_4);
     this.mnItemLoad = _jMenuItem_2;
     this.mnFile.add(this.mnItemLoad);
-    this.mnFile.addSeparator();
-    String _translate_5 = LanguageManager.translate("menu.file.close");
+    String _translate_5 = LanguageManager.translate("menu.file.swap");
     JMenuItem _jMenuItem_3 = new JMenuItem(_translate_5);
-    this.mnItemClose = _jMenuItem_3;
+    this.mnItemSwap = _jMenuItem_3;
+    this.mnFile.add(this.mnItemSwap);
+    this.mnFile.addSeparator();
+    String _translate_6 = LanguageManager.translate("menu.file.close");
+    JMenuItem _jMenuItem_4 = new JMenuItem(_translate_6);
+    this.mnItemClose = _jMenuItem_4;
     this.mnFile.add(this.mnItemClose);
     this.menuBar.add(this.mnFile);
-    String _translate_6 = LanguageManager.translate("menu.edit");
-    JMenu _jMenu_1 = new JMenu(_translate_6);
+    String _translate_7 = LanguageManager.translate("menu.edit");
+    JMenu _jMenu_1 = new JMenu(_translate_7);
     this.mnEdit = _jMenu_1;
-    String _translate_7 = LanguageManager.translate("menu.edit.delete");
-    JMenuItem _jMenuItem_4 = new JMenuItem(_translate_7);
-    this.mnItemDelete = _jMenuItem_4;
+    String _translate_8 = LanguageManager.translate("menu.edit.delete");
+    JMenuItem _jMenuItem_5 = new JMenuItem(_translate_8);
+    this.mnItemDelete = _jMenuItem_5;
     this.mnEdit.add(this.mnItemDelete);
     this.menuBar.add(this.mnEdit);
-    String _translate_8 = LanguageManager.translate("menu.help");
-    JMenu _jMenu_2 = new JMenu(_translate_8);
+    String _translate_9 = LanguageManager.translate("menu.help");
+    JMenu _jMenu_2 = new JMenu(_translate_9);
     this.mnHelp = _jMenu_2;
-    String _translate_9 = LanguageManager.translate("menu.help.about");
-    JMenuItem _jMenuItem_5 = new JMenuItem(_translate_9);
-    this.mnItemAbout = _jMenuItem_5;
+    String _translate_10 = LanguageManager.translate("menu.help.about");
+    JMenuItem _jMenuItem_6 = new JMenuItem(_translate_10);
+    this.mnItemAbout = _jMenuItem_6;
     this.mnHelp.add(this.mnItemAbout);
     this.menuBar.add(this.mnHelp);
     JPanel _jPanel = new JPanel();
@@ -341,6 +350,10 @@ public class EditorViewSwing {
   
   public JMenuItem getMnItemSave() {
     return this.mnItemSave;
+  }
+  
+  public JMenuItem getMnItemSwap() {
+    return this.mnItemSwap;
   }
   
   public JMenuItem getMnItemLoad() {

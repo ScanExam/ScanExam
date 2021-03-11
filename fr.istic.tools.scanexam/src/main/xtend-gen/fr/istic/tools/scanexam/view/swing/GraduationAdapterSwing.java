@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.swing;
 
+import fr.istic.tools.scanexam.launcher.LauncherSwing;
 import fr.istic.tools.scanexam.presenter.GraduationPresenter;
 import fr.istic.tools.scanexam.view.GraduationAdapter;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
@@ -62,6 +63,17 @@ public class GraduationAdapterSwing implements GraduationAdapter {
         }
       }
     });
+    JMenuItem _mnItemSwap = this.view.getMnItemSwap();
+    _mnItemSwap.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        GraduationAdapterSwing.this.swapToEditor();
+      }
+    });
+  }
+  
+  public void swapToEditor() {
+    LauncherSwing.swapToEditor();
   }
   
   /**

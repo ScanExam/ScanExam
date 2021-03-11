@@ -63,6 +63,11 @@ public class GraduationViewSwing {
   private JMenuItem mnItemSession;
   
   /**
+   * Bouton pour swap
+   */
+  private JMenuItem mnItemSwap;
+  
+  /**
    * Panel des boutons principaux
    */
   private JPanel pnlMainBtn;
@@ -234,6 +239,10 @@ public class GraduationViewSwing {
   
   private JSplitPane mainSplitPane;
   
+  private int currentPage = 0;
+  
+  private int totalPage = 20;
+  
   /**
    * Constructeur
    */
@@ -250,7 +259,7 @@ public class GraduationViewSwing {
     JFrame _jFrame = new JFrame(_translate);
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
-    this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     JMenuBar _jMenuBar = new JMenuBar();
     this.menuBar = _jMenuBar;
     this.window.setJMenuBar(this.menuBar);
@@ -263,6 +272,9 @@ public class GraduationViewSwing {
     JMenuItem _jMenuItem_1 = new JMenuItem("Change session");
     this.mnItemSession = _jMenuItem_1;
     this.mnFile.add(this.mnItemSession);
+    JMenuItem _jMenuItem_2 = new JMenuItem("Swap to editor");
+    this.mnItemSwap = _jMenuItem_2;
+    this.mnFile.add(this.mnItemSwap);
     Container _contentPane = this.window.getContentPane();
     BorderLayout _borderLayout = new BorderLayout(0, 0);
     _contentPane.setLayout(_borderLayout);
@@ -339,7 +351,9 @@ public class GraduationViewSwing {
     this.lblCurrentNote.setFont(_font_1);
     this.lblCurrentNote.setHorizontalAlignment(SwingConstants.CENTER);
     this.pnlNote.add(this.lblCurrentNote, BorderLayout.NORTH);
-    JLabel _jLabel_2 = new JLabel("x/20");
+    String _plus = (Integer.valueOf(this.currentPage) + "/");
+    String _plus_1 = (_plus + Integer.valueOf(this.totalPage));
+    JLabel _jLabel_2 = new JLabel(_plus_1);
     this.lblNote = _jLabel_2;
     Font _font_2 = new Font("Arial", Font.PLAIN, 14);
     this.lblNote.setFont(_font_2);
@@ -351,9 +365,35 @@ public class GraduationViewSwing {
     JButton _jButton_13 = new JButton("<<");
     this.btnPrevPaper = _jButton_13;
     this.spltPnPaper.setLeftComponent(this.btnPrevPaper);
+    this.btnPrevPaper.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        if (((GraduationViewSwing.this.currentPage > 0) && (GraduationViewSwing.this.currentPage <= GraduationViewSwing.this.totalPage))) {
+          GraduationViewSwing.this.currentPage--;
+        }
+        String _plus = (Integer.valueOf(GraduationViewSwing.this.currentPage) + "/");
+        String _plus_1 = (_plus + Integer.valueOf(GraduationViewSwing.this.totalPage));
+        GraduationViewSwing.this.lblNote.setText(_plus_1);
+        GraduationViewSwing.this.lblNote.repaint();
+        GraduationViewSwing.this.previousPage();
+      }
+    });
     JButton _jButton_14 = new JButton(">>");
     this.btnNextPaper = _jButton_14;
     this.spltPnPaper.setRightComponent(this.btnNextPaper);
+    this.btnNextPaper.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        if ((GraduationViewSwing.this.currentPage < GraduationViewSwing.this.totalPage)) {
+          GraduationViewSwing.this.currentPage++;
+        }
+        String _plus = (Integer.valueOf(GraduationViewSwing.this.currentPage) + "/");
+        String _plus_1 = (_plus + Integer.valueOf(GraduationViewSwing.this.totalPage));
+        GraduationViewSwing.this.lblNote.setText(_plus_1);
+        GraduationViewSwing.this.lblNote.repaint();
+        GraduationViewSwing.this.nextPage();
+      }
+    });
     PdfPanel _pdfPanel = new PdfPanel(this.pdfPresenter);
     this.pnlPdf = _pdfPanel;
     this.window.getContentPane().add(this.pnlPdf, BorderLayout.CENTER);
@@ -423,6 +463,20 @@ public class GraduationViewSwing {
   }
   
   /**
+   * Naviguer vers previously page
+   */
+  public void previousPage() {
+    this.pdfPresenter.presenterPdf.getPresenterPdf().previousPdfPage();
+  }
+  
+  /**
+   * Naviguer vers next page
+   */
+  public void nextPage() {
+    this.pdfPresenter.presenterPdf.getPresenterPdf().nextPdfPage();
+  }
+  
+  /**
    * GETTERS
    */
   public JFrame getWindow() {
@@ -443,5 +497,9 @@ public class GraduationViewSwing {
    */
   public JMenuItem getMnItemSession() {
     return this.mnItemSession;
+  }
+  
+  public JMenuItem getMnItemSwap() {
+    return this.mnItemSwap;
   }
 }

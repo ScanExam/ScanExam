@@ -21,6 +21,7 @@ import javax.swing.JPanel
 import javax.swing.JSplitPane
 import javax.swing.JTextPane
 import javax.swing.SwingConstants
+import fr.istic.tools.scanexam.launcher.LauncherSwing
 
 /** 
  * Vue swing de la fenêtre de correction d'examen
@@ -48,6 +49,8 @@ class GraduationViewSwing {
 	var JMenuItem mnItemLoad
 	/* Bouton pour charger de session */
 	var JMenuItem mnItemSession
+	/* Bouton pour swap*/
+	var JMenuItem mnItemSwap
 
 	/* Panel des boutons principaux */
 	var JPanel pnlMainBtn
@@ -123,6 +126,11 @@ class GraduationViewSwing {
 	var boolean contentDown
 
 	var JSplitPane mainSplitPane
+	
+	var currentPage = 0;
+	
+	var totalPage = 20;
+	
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -143,7 +151,7 @@ class GraduationViewSwing {
 	def private void initialize() {
 		window = new JFrame(LanguageManager.translate("title.ScanExam"))
 		window.setBounds(100, 100, 1280, 720)
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 
 		menuBar = new JMenuBar()
 		window.setJMenuBar(menuBar)
@@ -156,6 +164,10 @@ class GraduationViewSwing {
 
 		mnItemSession = new JMenuItem("Change session")
 		mnFile.add(mnItemSession)
+		
+		mnItemSwap = new JMenuItem("Swap to editor")
+		mnFile.add(mnItemSwap)
+	
 
 		window.getContentPane().setLayout(new BorderLayout(0, 0))
 		pnlMainBtn = new JPanel()
@@ -228,7 +240,7 @@ class GraduationViewSwing {
 		lblCurrentNote.setHorizontalAlignment(SwingConstants.CENTER)
 		pnlNote.add(lblCurrentNote, BorderLayout.NORTH)
 
-		lblNote = new JLabel("x/20")
+		lblNote = new JLabel(currentPage+"/"+totalPage)
 		lblNote.setFont(new Font("Arial", Font.PLAIN, 14))
 		lblNote.setHorizontalAlignment(SwingConstants.CENTER)
 		pnlNote.add(lblNote, BorderLayout.CENTER)
@@ -238,9 +250,31 @@ class GraduationViewSwing {
 
 		btnPrevPaper = new JButton("<<")
 		spltPnPaper.setLeftComponent(btnPrevPaper)
+		
+		btnPrevPaper.addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				if(currentPage > 0 && currentPage<=totalPage){
+					currentPage--;
+				}
+				lblNote.setText(currentPage+"/"+totalPage);
+				lblNote.repaint()
+				previousPage()		
+				}
+		})
 
 		btnNextPaper = new JButton(">>")
 		spltPnPaper.setRightComponent(btnNextPaper)
+		
+		btnNextPaper.addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				if(currentPage<totalPage){
+					currentPage++;
+				}
+				lblNote.setText(currentPage+"/"+totalPage);
+				lblNote.repaint()
+					nextPage()		
+				}
+		})
 
 		// pnlPdf = new JPanel();
 		pnlPdf = new PdfPanel(this.pdfPresenter)
@@ -305,6 +339,19 @@ class GraduationViewSwing {
 			contentDown = true
 		}
 	}
+	/** 
+	 * Naviguer vers previously page
+	 */
+	def void previousPage(){
+		pdfPresenter.presenterPdf.getPresenterPdf().previousPdfPage;
+	}/** 
+	 * Naviguer vers next page
+	 */
+	
+	def void nextPage(){
+		pdfPresenter.presenterPdf.getPresenterPdf().nextPdfPage;
+	}
+
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -330,6 +377,10 @@ class GraduationViewSwing {
 	 */
 	def JMenuItem getMnItemSession() {
 		return mnItemSession;
+	}
+	
+	def JMenuItem getMnItemSwap() {
+		return mnItemSwap;
 	}
 
 }

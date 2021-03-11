@@ -56,6 +56,9 @@ class EditorViewSwing {
 	/* Bouton pour charger un examen */
 	var JMenuItem mnItemLoad
 	
+	/* Bouton pour swap un examen */
+	var JMenuItem mnItemSwap
+	
 	/* Bouton pour fermer un examen */
 	var JMenuItem mnItemClose
 
@@ -161,6 +164,9 @@ class EditorViewSwing {
 	    
 		mnItemLoad = new JMenuItem(translate("menu.file.load"))
 	    mnFile.add(mnItemLoad)
+	    
+	    mnItemSwap = new JMenuItem(translate("menu.file.swap"))
+	    mnFile.add(mnItemSwap)
 	    
 	    mnFile.addSeparator()
 	    
@@ -280,6 +286,10 @@ class EditorViewSwing {
 	
 	def JMenuItem getMnItemSave() {
 		return mnItemSave;
+	}
+	
+	def JMenuItem getMnItemSwap() {
+		return mnItemSwap;
 	}
 	
 	def JMenuItem getMnItemLoad() {

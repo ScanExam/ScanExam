@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.box.BoxList;
+import fr.istic.tools.scanexam.launcher.LauncherSwing;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.view.EditorAdapter;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
@@ -75,6 +76,13 @@ public class EditorAdapterSwing implements EditorAdapter {
         } catch (Throwable _e) {
           throw Exceptions.sneakyThrow(_e);
         }
+      }
+    });
+    JMenuItem _mnItemSwap = this.view.getMnItemSwap();
+    _mnItemSwap.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        EditorAdapterSwing.this.swapVerGraduation();
       }
     });
     JMenuItem _mnItemLoad = this.view.getMnItemLoad();
@@ -184,6 +192,13 @@ public class EditorAdapterSwing implements EditorAdapter {
       this.getPresenter();
       this.getPresenter().load(fc.getSelectedFile().getPath());
     }
+  }
+  
+  /**
+   * Swap vers graduation
+   */
+  public void swapVerGraduation() {
+    LauncherSwing.swapToGraduator();
   }
   
   @Override
