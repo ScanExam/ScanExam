@@ -31,6 +31,9 @@ class AdapterSwingBox extends AdapterBox {
 	/* Dernier point cliqué par l'utilisateur */
 	Optional<Point> lastClickPoint
 	
+	/* Dernier état */
+	int lastState
+	
 	/*Vue */
 	Optional<JPanel> view
 	
@@ -52,6 +55,7 @@ class AdapterSwingBox extends AdapterBox {
 	 */
 	new(int windowWidth, int windowHeight, int scale, int originX, int originY, BoxList selectionBoxes) {
 		super(windowWidth, windowHeight, scale, originX, originY, selectionBoxes)
+		this.lastState = SelectionStateMachine.getState()
 		this.mouseHandler = new MouseAdapter() {
 			override void mousePressed(MouseEvent e) {
 				// Clic gauche
@@ -59,20 +63,31 @@ class AdapterSwingBox extends AdapterBox {
 					lastClickPoint = Optional::of(e.getPoint())
 					var Optional<Box> pointedBox = checkPoint(e.getPoint())
 					if (!pointedBox.isPresent()) {
-						SelectionStateMachine.setState(SelectionStateMachine.CREATE)
-						createBox(e)
-						SelectionStateMachine.setState(SelectionStateMachine.RESIZE)
-						resizeBox(e, lastBoxSelected)
+						if (SelectionStateMachine.getState() === SelectionStateMachine.CREATE) {
+							lastState = SelectionStateMachine.CREATE
+							createBox(e)
+						}
+						if (SelectionStateMachine.getState() === SelectionStateMachine.RESIZE) {
+							resizeBox(e, lastBoxSelected)
+						}
 					} else {
 						lastBoxSelected = pointedBox.get()
-						SelectionStateMachine.setState(SelectionStateMachine.MOVE)
-						moveBox(e, lastBoxSelected)
+						if (SelectionStateMachine.getState() === SelectionStateMachine.MOVE) {
+							moveBox(e, lastBoxSelected)
+						}
 					}
 				}
 			}
 
 			override void mouseReleased(MouseEvent e) {
-				SelectionStateMachine.setState(SelectionStateMachine.IDLE)
+				if (SelectionStateMachine.getState() === SelectionStateMachine.RESIZE) {
+					if (lastState === SelectionStateMachine.CREATE) {
+						SelectionStateMachine.setState(SelectionStateMachine.CREATE)
+					} else {
+						SelectionStateMachine.setState(SelectionStateMachine.RESIZE)
+					}
+				}
+				lastState = SelectionStateMachine.getState()
 				lastClickPoint = Optional::empty()
 			}
 
@@ -121,6 +136,7 @@ class AdapterSwingBox extends AdapterBox {
 		lastBoxSelected = selectionBoxes.getBox(selectionBoxes.size() - 1)
 		addQstToList(lastBoxSelected)
 		repaint()
+		SelectionStateMachine.setState(SelectionStateMachine.RESIZE)
 	}
 
 	/** 
@@ -215,9 +231,4 @@ class AdapterSwingBox extends AdapterBox {
 	def void setListQst(ListOfQuestionsPanel listQst) {
 		this.listQst = listQst
 	}
-	
-	/*def void setQstModel(DefaultListModel<QuestionEditionPanel> qstModel) {
-		this.qstModel = qstModel
-	}
-	*/
 }

@@ -9,6 +9,7 @@ import fr.istic.tools.scanexam.box.Box
 import static fr.istic.tools.scanexam.config.LanguageManager.*
 import java.awt.event.ActionListener
 import java.awt.event.ActionEvent
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 
 /**
  * Classe pour afficher la liste des questions en swing
@@ -92,14 +93,14 @@ class QuestionPanel extends JPanel {
 		btnMove.addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "déplacer" est cliqué
-				
+				SelectionStateMachine.setState(SelectionStateMachine.MOVE)
 			}
 	    });
 	    
 		btnResize.addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "redimensionner" est cliqué
-				
+				SelectionStateMachine.setState(SelectionStateMachine.RESIZE)
 			}
 	    });
 	}

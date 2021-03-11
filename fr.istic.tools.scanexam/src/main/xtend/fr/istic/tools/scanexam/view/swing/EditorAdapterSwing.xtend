@@ -9,8 +9,8 @@ import java.io.File
 import java.io.IOException
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
-import fr.istic.tools.scanexam.presenter.PresenterBindings
 import fr.istic.tools.scanexam.launcher.LauncherSwing
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
@@ -86,6 +86,20 @@ class EditorAdapterSwing implements EditorAdapter {
 				presenter.close
 			}
 	    });
+	    
+	    view.getBtnQuestionArea().addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				// Actions lorsque le bouton "question area" est cliqué
+				SelectionStateMachine.setState(SelectionStateMachine.CREATE)
+			}
+		});
+
+		view.getBtnMoveCam().addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				// Actions lorsque le bouton "move camera" est cliqué
+				SelectionStateMachine.setState(SelectionStateMachine.IDLE)
+			}
+		});
 	    
 		view.getBtnPrev().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {

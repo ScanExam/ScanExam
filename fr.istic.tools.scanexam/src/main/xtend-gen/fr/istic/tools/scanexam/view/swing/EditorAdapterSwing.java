@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.view.swing;
 import fr.istic.tools.scanexam.box.BoxList;
 import fr.istic.tools.scanexam.launcher.LauncherSwing;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
 import fr.istic.tools.scanexam.view.EditorAdapter;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
 import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
@@ -101,6 +102,20 @@ public class EditorAdapterSwing implements EditorAdapter {
       @Override
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().close();
+      }
+    });
+    JButton _btnQuestionArea = this.view.getBtnQuestionArea();
+    _btnQuestionArea.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        SelectionStateMachine.setState(SelectionStateMachine.CREATE);
+      }
+    });
+    JButton _btnMoveCam = this.view.getBtnMoveCam();
+    _btnMoveCam.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        SelectionStateMachine.setState(SelectionStateMachine.IDLE);
       }
     });
     JButton _btnPrev = this.view.getBtnPrev();
