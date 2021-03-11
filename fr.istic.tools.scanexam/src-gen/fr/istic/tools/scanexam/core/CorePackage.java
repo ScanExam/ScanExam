@@ -601,13 +601,22 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET_FEATURE_COUNT = 4;
 
 	/**
+	 * The operation id for the '<em>Compute Grade</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET___COMPUTE_GRADE = 0;
+
+	/**
 	 * The number of operations of the '<em>Student Sheet</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_OPERATION_COUNT = 0;
+	int STUDENT_SHEET_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '<em>Map</em>' data type.
@@ -1015,6 +1024,16 @@ public interface CorePackage extends EPackage {
 	EReference getStudentSheet_Grades();
 
 	/**
+	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.StudentSheet#computeGrade() <em>Compute Grade</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Compute Grade</em>' operation.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#computeGrade()
+	 * @generated
+	 */
+	EOperation getStudentSheet__ComputeGrade();
+
+	/**
 	 * Returns the meta object for data type '{@link java.util.Map <em>Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1368,6 +1387,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EReference STUDENT_SHEET__GRADES = eINSTANCE.getStudentSheet_Grades();
+
+		/**
+		 * The meta object literal for the '<em><b>Compute Grade</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STUDENT_SHEET___COMPUTE_GRADE = eINSTANCE.getStudentSheet__ComputeGrade();
 
 		/**
 		 * The meta object literal for the '<em>Map</em>' data type.
