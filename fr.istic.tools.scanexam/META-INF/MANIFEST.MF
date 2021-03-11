@@ -30,3 +30,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtend.lib,
  org.eclipse.xtend.lib.macro
 Bundle-ActivationPolicy: lazy
+Multi-Release: true
