@@ -34,7 +34,7 @@ class LauncherSwing implements Launcher {
 	}
 	
 	static def swapToEditor(){
-						PresenterBindings.linkEditorPresenter(edit)
+				PresenterBindings.linkEditorPresenter(edit)
 		
 	}
 	
