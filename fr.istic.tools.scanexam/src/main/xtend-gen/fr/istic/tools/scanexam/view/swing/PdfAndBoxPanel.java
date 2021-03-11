@@ -162,13 +162,6 @@ public class PdfAndBoxPanel extends PdfPanel {
         double _divide_10 = (_titleHeight_5 / 1.5);
         int _plus_3 = (crtRec.y + ((int) _divide_10));
         g2d.drawString(_title, _plus_2, _plus_3);
-        double _titleHeight_6 = this.adapterBox.getTitleHeight();
-        double _divide_11 = (_titleHeight_6 / 2);
-        int _minus_2 = ((crtRec.x + crtRec.width) - ((int) _divide_11));
-        double _titleHeight_7 = this.adapterBox.getTitleHeight();
-        double _divide_12 = (_titleHeight_7 / 1.5);
-        int _plus_4 = (crtRec.y + ((int) _divide_12));
-        g2d.drawString("x", _minus_2, _plus_4);
       }
     }
   }

@@ -95,7 +95,6 @@ class PdfAndBoxPanel extends PdfPanel {
 	        var Rectangle crtRec = convertBoxToRectangle(box)
 	        g2d.draw(crtRec)
 	        g2d.drawString(box.getTitle(), crtRec.x + (adapterBox.getTitleHeight() / 4) as int, crtRec.y + (adapterBox.getTitleHeight() / 1.5) as int)
-	        g2d.drawString("x", crtRec.x + crtRec.width - (adapterBox.getTitleHeight() / 2) as int, crtRec.y + (adapterBox.getTitleHeight() / 1.5) as int)
 	    }
 	}
 	    
