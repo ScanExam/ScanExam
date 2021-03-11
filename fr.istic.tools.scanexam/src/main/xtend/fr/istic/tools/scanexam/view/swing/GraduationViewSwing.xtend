@@ -258,7 +258,7 @@ class GraduationViewSwing {
 		
 
 		// pnlContentDown = new JPanel();
-		var InputStream inputContentDown = ResourcesUtils.getInputStreamResource("/logo.png")
+		var InputStream inputContentDown = ResourcesUtils.getInputStreamResource("logo.png")
 		pnlContentDown = new ImagePanel(inputContentDown)
 		pnlContentDown.setPreferredSize(new Dimension(pnlContentDown.getSize().width, 180))
 

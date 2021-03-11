@@ -8,8 +8,10 @@ import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -50,24 +52,14 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getExam() <em>Exam</em>}' attribute.
+	 * The cached value of the '{@link #getExam() <em>Exam</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getExam()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Exam EXAM_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getExam() <em>Exam</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExam()
-	 * @generated
-	 * @ordered
-	 */
-	protected Exam exam = EXAM_EDEFAULT;
+	protected Exam exam;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -123,11 +115,47 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setExam(Exam newExam) {
+	public NotificationChain basicSetExam(Exam newExam, NotificationChain msgs) {
 		Exam oldExam = exam;
 		exam = newExam;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__EXAM, oldExam, exam));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__EXAM, oldExam, newExam);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setExam(Exam newExam) {
+		if (newExam != exam) {
+			NotificationChain msgs = null;
+			if (exam != null)
+				msgs = ((InternalEObject)exam).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TemplatesPackage.CREATION_TEMPLATE__EXAM, null, msgs);
+			if (newExam != null)
+				msgs = ((InternalEObject)newExam).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TemplatesPackage.CREATION_TEMPLATE__EXAM, null, msgs);
+			msgs = basicSetExam(newExam, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__EXAM, newExam, newExam));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
+				return basicSetExam(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -176,7 +204,7 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
-				setExam(EXAM_EDEFAULT);
+				setExam((Exam)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -193,7 +221,7 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
 				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
-				return EXAM_EDEFAULT == null ? exam != null : !EXAM_EDEFAULT.equals(exam);
+				return exam != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -210,8 +238,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (encodedDocument: ");
 		result.append(encodedDocument);
-		result.append(", exam: ");
-		result.append(exam);
 		result.append(')');
 		return result.toString();
 	}

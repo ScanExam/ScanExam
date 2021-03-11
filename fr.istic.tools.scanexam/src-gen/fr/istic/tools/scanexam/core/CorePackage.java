@@ -197,22 +197,13 @@ public interface CorePackage extends EPackage {
 	int GRADE_SCALE = 2;
 
 	/**
-	 * The feature id for the '<em><b>Weigth</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GRADE_SCALE__WEIGTH = 0;
-
-	/**
 	 * The feature id for the '<em><b>Steps</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE__STEPS = 1;
+	int GRADE_SCALE__STEPS = 0;
 
 	/**
 	 * The number of structural features of the '<em>Grade Scale</em>' class.
@@ -221,7 +212,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE_FEATURE_COUNT = 2;
+	int GRADE_SCALE_FEATURE_COUNT = 1;
 
 	/**
 	 * The number of operations of the '<em>Grade Scale</em>' class.
@@ -279,52 +270,6 @@ public interface CorePackage extends EPackage {
 	int GRADE_ENTRY_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see fr.istic.tools.scanexam.core.impl.PageImpl
-	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPage()
-	 * @generated
-	 */
-	int PAGE = 4;
-
-	/**
-	 * The feature id for the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE__ID = 0;
-
-	/**
-	 * The feature id for the '<em><b>Questions</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE__QUESTIONS = 1;
-
-	/**
-	 * The number of structural features of the '<em>Page</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_FEATURE_COUNT = 2;
-
-	/**
-	 * The number of operations of the '<em>Page</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.ExamImpl <em>Exam</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -332,7 +277,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getExam()
 	 * @generated
 	 */
-	int EXAM = 5;
+	int EXAM = 4;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -378,6 +323,52 @@ public interface CorePackage extends EPackage {
 	 * @ordered
 	 */
 	int EXAM_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.istic.tools.scanexam.core.impl.PageImpl
+	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPage()
+	 * @generated
+	 */
+	int PAGE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE__ID = 0;
+
+	/**
+	 * The feature id for the '<em><b>Questions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE__QUESTIONS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Page</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Page</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.CommentImpl <em>Comment</em>}' class.
@@ -574,13 +565,22 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET__ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Student Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET__STUDENT_NAME = 1;
+
+	/**
 	 * The feature id for the '<em><b>Pos Page</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET__POS_PAGE = 1;
+	int STUDENT_SHEET__POS_PAGE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Grades</b></em>' containment reference list.
@@ -589,7 +589,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET__GRADES = 2;
+	int STUDENT_SHEET__GRADES = 3;
 
 	/**
 	 * The number of structural features of the '<em>Student Sheet</em>' class.
@@ -598,7 +598,16 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_FEATURE_COUNT = 3;
+	int STUDENT_SHEET_FEATURE_COUNT = 4;
+
+	/**
+	 * The operation id for the '<em>Compute Grade</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET___COMPUTE_GRADE = 0;
 
 	/**
 	 * The number of operations of the '<em>Student Sheet</em>' class.
@@ -607,7 +616,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_OPERATION_COUNT = 0;
+	int STUDENT_SHEET_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '<em>Map</em>' data type.
@@ -749,17 +758,6 @@ public interface CorePackage extends EPackage {
 	EClass getGradeScale();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeScale#getWeigth <em>Weigth</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Weigth</em>'.
-	 * @see fr.istic.tools.scanexam.core.GradeScale#getWeigth()
-	 * @see #getGradeScale()
-	 * @generated
-	 */
-	EAttribute getGradeScale_Weigth();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.GradeScale#getSteps <em>Steps</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -803,38 +801,6 @@ public interface CorePackage extends EPackage {
 	EAttribute getGradeEntry_Header();
 
 	/**
-	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Page <em>Page</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Page</em>'.
-	 * @see fr.istic.tools.scanexam.core.Page
-	 * @generated
-	 */
-	EClass getPage();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Page#getId <em>Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see fr.istic.tools.scanexam.core.Page#getId()
-	 * @see #getPage()
-	 * @generated
-	 */
-	EAttribute getPage_Id();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Page#getQuestions <em>Questions</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Questions</em>'.
-	 * @see fr.istic.tools.scanexam.core.Page#getQuestions()
-	 * @see #getPage()
-	 * @generated
-	 */
-	EAttribute getPage_Questions();
-
-	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Exam <em>Exam</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -876,6 +842,38 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getExam_Pages();
+
+	/**
+	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Page <em>Page</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Page</em>'.
+	 * @see fr.istic.tools.scanexam.core.Page
+	 * @generated
+	 */
+	EClass getPage();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Page#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see fr.istic.tools.scanexam.core.Page#getId()
+	 * @see #getPage()
+	 * @generated
+	 */
+	EAttribute getPage_Id();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.Page#getQuestions <em>Questions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Questions</em>'.
+	 * @see fr.istic.tools.scanexam.core.Page#getQuestions()
+	 * @see #getPage()
+	 * @generated
+	 */
+	EReference getPage_Questions();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Comment <em>Comment</em>}'.
@@ -993,6 +991,17 @@ public interface CorePackage extends EPackage {
 	EAttribute getStudentSheet_Id();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentName <em>Student Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Student Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#getStudentName()
+	 * @see #getStudentSheet()
+	 * @generated
+	 */
+	EAttribute getStudentSheet_StudentName();
+
+	/**
 	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.StudentSheet#getPosPage <em>Pos Page</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1013,6 +1022,16 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EReference getStudentSheet_Grades();
+
+	/**
+	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.StudentSheet#computeGrade() <em>Compute Grade</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Compute Grade</em>' operation.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#computeGrade()
+	 * @generated
+	 */
+	EOperation getStudentSheet__ComputeGrade();
 
 	/**
 	 * Returns the meta object for data type '{@link java.util.Map <em>Map</em>}'.
@@ -1154,14 +1173,6 @@ public interface CorePackage extends EPackage {
 		EClass GRADE_SCALE = eINSTANCE.getGradeScale();
 
 		/**
-		 * The meta object literal for the '<em><b>Weigth</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute GRADE_SCALE__WEIGTH = eINSTANCE.getGradeScale_Weigth();
-
-		/**
 		 * The meta object literal for the '<em><b>Steps</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1196,32 +1207,6 @@ public interface CorePackage extends EPackage {
 		EAttribute GRADE_ENTRY__HEADER = eINSTANCE.getGradeEntry_Header();
 
 		/**
-		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see fr.istic.tools.scanexam.core.impl.PageImpl
-		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPage()
-		 * @generated
-		 */
-		EClass PAGE = eINSTANCE.getPage();
-
-		/**
-		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PAGE__ID = eINSTANCE.getPage_Id();
-
-		/**
-		 * The meta object literal for the '<em><b>Questions</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PAGE__QUESTIONS = eINSTANCE.getPage_Questions();
-
-		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.ExamImpl <em>Exam</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1254,6 +1239,32 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EReference EXAM__PAGES = eINSTANCE.getExam_Pages();
+
+		/**
+		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.istic.tools.scanexam.core.impl.PageImpl
+		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPage()
+		 * @generated
+		 */
+		EClass PAGE = eINSTANCE.getPage();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PAGE__ID = eINSTANCE.getPage_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Questions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PAGE__QUESTIONS = eINSTANCE.getPage_Questions();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.CommentImpl <em>Comment</em>}' class.
@@ -1354,6 +1365,14 @@ public interface CorePackage extends EPackage {
 		EAttribute STUDENT_SHEET__ID = eINSTANCE.getStudentSheet_Id();
 
 		/**
+		 * The meta object literal for the '<em><b>Student Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_SHEET__STUDENT_NAME = eINSTANCE.getStudentSheet_StudentName();
+
+		/**
 		 * The meta object literal for the '<em><b>Pos Page</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1368,6 +1387,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EReference STUDENT_SHEET__GRADES = eINSTANCE.getStudentSheet_Grades();
+
+		/**
+		 * The meta object literal for the '<em><b>Compute Grade</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STUDENT_SHEET___COMPUTE_GRADE = eINSTANCE.getStudentSheet__ComputeGrade();
 
 		/**
 		 * The meta object literal for the '<em>Map</em>' data type.

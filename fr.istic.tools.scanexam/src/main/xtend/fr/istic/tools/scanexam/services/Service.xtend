@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.eclipse.xtend.lib.annotations.Accessors
+import fr.istic.tools.scanexam.core.Question
 
 abstract class Service 
 {
@@ -71,6 +72,29 @@ abstract class Service
 		 }
 	}
 	
+	def Question getQuestion(int id)
+	{
+		currentPage.questions.findFirst[question | question.id == id]
+	}
+	def renameQuestion(int id,String name)
+	{
+		val question = getQuestion(id)
+		question.name = name
+	}
+	def getQuestionAtPage(int pageIndex)
+	{
+		ExamSingleton.getPage(pageIndex).questions
+	}
+	def removeQuestion(int id)
+	{
+		currentPage.questions.remove(id);
+	}
+	
+	def getTemplatePageAmount()
+	{
+		ExamSingleton.templatePageAmount
+	}
+	
 	/**
 	 * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
 	 * @param page Numéro de page où se rendre
@@ -100,10 +124,7 @@ abstract class Service
 	
 	
 	def void save(String path)
-	
-	def boolean open(String xmiFile)
-	
-	def void create(File file)
+
 	
 	def int getPageNumber() {
 		return document.pages.size

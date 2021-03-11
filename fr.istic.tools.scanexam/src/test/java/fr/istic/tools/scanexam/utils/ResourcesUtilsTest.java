@@ -27,10 +27,10 @@ public class ResourcesUtilsTest {
 	@Test
 	@DisplayName("getTextResource sur fichiers existants")
 	void getTextResourceTest1() {
-		final String result = ResourcesUtils.getTextResource("/resources_utils/Test1.foo");
+		final String result = ResourcesUtils.getTextResource("resources_utils/Test1.foo");
 		assertEquals("This is\na test", result);
 		
-		final String result2 = ResourcesUtils.getTextResource("/resources_utils/Test2.properties");
+		final String result2 = ResourcesUtils.getTextResource("resources_utils/Test2.properties");
 		assertEquals("foo\nbar", result2);
 	}
 	
@@ -43,19 +43,19 @@ public class ResourcesUtilsTest {
 	@Test
 	@DisplayName("getTextResource sur fichiers non existants")
 	void getTextResourceTest3() {
-		assertNull(ResourcesUtils.getTextResource("/resources_utils/Test3"));
-		assertNull(ResourcesUtils.getTextResource("/Test3"));
+		assertNull(ResourcesUtils.getTextResource("resources_utils/Test3"));
+		assertNull(ResourcesUtils.getTextResource("Test3"));
 	}
 
 	
 	@Test
 	@DisplayName("getInputStreamResource sur fichiers existants")
 	void getInputStreamResourceTest1() {
-		final InputStream result = ResourcesUtils.getInputStreamResource("/resources_utils/Test1.foo");
+		final InputStream result = ResourcesUtils.getInputStreamResource("resources_utils/Test1.foo");
 		assertNotNull(result);
 		assertEquals("This is\na test", readInputStream(result));
 		
-		final InputStream result2 = ResourcesUtils.getInputStreamResource("/resources_utils/Test2.properties");
+		final InputStream result2 = ResourcesUtils.getInputStreamResource("resources_utils/Test2.properties");
 		assertNotNull(result2);
 		assertEquals("foo\nbar", readInputStream(result2));
 	}
@@ -69,15 +69,15 @@ public class ResourcesUtilsTest {
 	@Test
 	@DisplayName("getInputStreamResource sur fichiers non existants")
 	void getInputStreamResourceTest3() {
-		assertNull(ResourcesUtils.getInputStreamResource("/resources_utils/Test3"));
-		assertNull(ResourcesUtils.getInputStreamResource("/Test3"));
+		assertNull(ResourcesUtils.getInputStreamResource("resources_utils/Test3"));
+		assertNull(ResourcesUtils.getInputStreamResource("Test3"));
 	}
 	
 	
 	@Test
 	@DisplayName("getFolderContentNames sur dossier existant")
 	void getFolderContentNamesTest1() {
-		final Collection<String> result = ResourcesUtils.getFolderContentNames("/resources_utils/");
+		final Collection<String> result = ResourcesUtils.getFolderContentNames("resources_utils/");
 		final List<String> expected = Arrays.asList("Test1.foo", "Test2.properties");
 		assertNotNull(result);
 		assertTrue(expected.containsAll(result) && result.containsAll(expected));
@@ -92,6 +92,6 @@ public class ResourcesUtilsTest {
 	@Test
 	@DisplayName("getFolderContentNames sur fichiers non existants")
 	void getFolderContentNamesTest3() {
-		assertNull(ResourcesUtils.getTextResource("/resources_utils/foo"));
+		assertNull(ResourcesUtils.getTextResource("resources_utils/foo"));
 	}
 }

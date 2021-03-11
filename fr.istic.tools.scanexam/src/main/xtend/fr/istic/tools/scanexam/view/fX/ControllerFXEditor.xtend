@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.launcher.LauncherFX
 import fr.istic.tools.scanexam.view.fX.Box.BoxType
 import java.io.File
 import java.util.Arrays
@@ -24,7 +25,6 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.launcher.LauncherFX
 
 class ControllerFXEditor {
 
@@ -188,24 +188,27 @@ class ControllerFXEditor {
 				}
 
 			})
+			
 			source.children.add(currentRectangle);
+			source.children.add(currentRectangle.getText());
+
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 
 			var xDelta = mousePositionX - mouseOriginX;
 			var yDelta = mousePositionY - mouseOriginY;
 			if (xDelta > 0) {
-				currentRectangle.width = xDelta;
+				currentRectangle.width(xDelta)
 			} else {
-				currentRectangle.width = Math.abs(xDelta);
-				currentRectangle.x = mouseOriginX - Math.abs(xDelta);
+				currentRectangle.width(Math.abs(xDelta))
+				currentRectangle.x(mouseOriginX - Math.abs(xDelta))
 			}
 
 			if (yDelta > 0) {
-				currentRectangle.height = yDelta;
+				currentRectangle.height(yDelta)
 			} else {
-				currentRectangle.height = Math.abs(yDelta);
-				currentRectangle.y = mouseOriginY - Math.abs(yDelta);
+				currentRectangle.height(Math.abs(yDelta))
+				currentRectangle.y(mouseOriginY - Math.abs(yDelta))
 
 			}
 
@@ -224,10 +227,10 @@ class ControllerFXEditor {
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.x = Math.min(mousePositionX,
-				maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width)
-			currentRectangle.y = Math.min(mousePositionY,
-				maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height)
+			currentRectangle.x(Math.min(mousePositionX,
+				maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+			currentRectangle.y(Math.min(mousePositionY,
+				maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 		}
@@ -242,8 +245,8 @@ class ControllerFXEditor {
 			
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.width = Math.abs(currentRectangle.x - mousePositionX)
-			currentRectangle.height = Math.abs(currentRectangle.y - mousePositionY)
+			currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
+			currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			resizeBox(currentRectangle)
@@ -349,13 +352,13 @@ class ControllerFXEditor {
 	def Box createBox(double x, double y) {
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box("Question " + questionCounter++, editor.presenter.currentPdfPageNumber, BoxType.QUESTION, x, y);
+				new Box("Question " + questionCounter++, editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
 			}
 			case ID_AREA: {
-				new Box("ID Zone", editor.presenter.currentPdfPageNumber, BoxType.ID, x, y);
+				new Box("ID Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.ID, x, y);
 			}
 			case QR_AREA: {
-				new Box("QR Zone", editor.presenter.currentPdfPageNumber, BoxType.QR, x, y);
+				new Box("QR Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QR, x, y);
 			}
 			default: {
 			}
@@ -369,6 +372,7 @@ class ControllerFXEditor {
 	 */
 	def addBox(Box box) {
 		editor.addBox(box);
+		renameBox(box,box.name)//TODO fix
 		var lb = box.listViewBox;
 		/*lb.upAction = new EventHandler<ActionEvent>() {
 
@@ -385,6 +389,7 @@ class ControllerFXEditor {
 		lb.removeAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
+				System.out.println("Remove "+box.getName());
 				removeBox(box);
 			}
 
@@ -437,7 +442,9 @@ class ControllerFXEditor {
 			}
 
 		}
-		questionList.items.add(lb)
+		questionList.items.add(lb);
+
+		System.out.println(mainPane.getChildren());
 		boxes.add(box);
 	}
 
@@ -460,6 +467,7 @@ class ControllerFXEditor {
 	 */
 	def removeBox(Box box) {
 		questionList.items.remove(box.listViewBox)
+		mainPane.children.remove(box.getText());
 		mainPane.children.remove(box)
 		boxes.remove(box)
 		editor.removeBox(box);
@@ -485,7 +493,7 @@ class ControllerFXEditor {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			editor.presenter.create(file);
+			editor.presenter.getPresenterPdf.create(file);
 			renderDocument();
 		} else {
 			logger.warn("File not chosen")
@@ -524,7 +532,7 @@ class ControllerFXEditor {
 	}
 
 	def loadBoxes() {
-		editor.presenter.presenterQuestionZone.initLoading
+		/*editor.presenter.presenterQuestionZone.initLoading
 		while (editor.presenter.presenterQuestionZone.loadNextQuestion) {
 			var box = new Box(
 				editor.presenter.presenterQuestionZone.currentQuestionName,
@@ -536,8 +544,29 @@ class ControllerFXEditor {
 				editor.presenter.presenterQuestionZone.currentQuestionWidth
 			);
 			addBox(box);
+		}*/
+		
+		for (var p = 0;p < editor.presenter.getPresenterPdf.totalPdfPageNumber;p++) {
+			var ids = editor.presenter.presenterQuestionZone.initLoading(p)
+			for (int i:ids) {
+				var box = new Box(
+					editor.presenter.presenterQuestionZone.questionName(i),
+					p,
+					BoxType.QUESTION,
+					editor.presenter.presenterQuestionZone.questionX(i),
+					editor.presenter.presenterQuestionZone.questionY(i),
+					editor.presenter.presenterQuestionZone.questionHeight(i),
+					editor.presenter.presenterQuestionZone.questionWidth(i)
+				)
+				addBox(box)
+				boxes.add(box)
+				mainPane.children.add(box)
+			}
 		}
+		
+		showOnlyPage(0)
 	}
+	
 
 	/**
 	 * initialise the choicebox containing all the page numbers of the pdf
@@ -552,9 +581,9 @@ class ControllerFXEditor {
 	 */
 	def renderDocument() {
 
-		pageNumberLabel.text = editor.presenter.currentPdfPageNumber + 1 + "/" + editor.presenter.totalPdfPageNumber
+		pageNumberLabel.text = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1 + "/" + editor.presenter.getPresenterPdf.totalPdfPageNumber
 		introLabel.visible = false
-		val image = editor.presenter.currentPdfPage
+		val image = editor.presenter.getPresenterPdf.currentPdfPage
 		pdfView.image = SwingFXUtils.toFXImage(image, null);
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight
@@ -572,24 +601,24 @@ class ControllerFXEditor {
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		editor.presenter.choosePdfPage(pageNumber);
+		editor.presenter.getPresenterPdf.choosePdfPage(pageNumber);
 		renderDocument();
-		showOnlyPage(editor.presenter.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
 	}
 
 	/**
 	 * goes to the next page of the current pdf
 	 */
 	def nextPage() {
-		editor.presenter.nextPdfPage();
+		editor.presenter.getPresenterPdf.nextPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
 	}
 
 	def previousPage() {
-		editor.presenter.previousPdfPage();
+		editor.presenter.getPresenterPdf.previousPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
 	}
 
 	def showOnlyPage(int page) {

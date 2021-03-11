@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.view.fX
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import java.lang.LiveStackFrame.PrimitiveSlot
+import javafx.scene.text.Text
 
 class Box extends Rectangle {
 	
@@ -11,7 +12,7 @@ class Box extends Rectangle {
 			ID++;
 		}
 		new(String name ,int page ,BoxType type,double x, double y,double h, double w) {
-			super(x,y,h,w);
+			super(x,y,w,h);
 			boxId = newID();
 			this.page = page
 			this.type = type
@@ -19,6 +20,9 @@ class Box extends Rectangle {
 			setFill(Color.rgb(200, 200, 200, 0.2));
 			setStroke(Color.BLACK);
 			setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
+			this.text = new Text(x+FXSettings.BOX_TEXT_OFFSET_X,y+FXSettings.BOX_TEXT_OFFSET_Y,name);
+			text.fill = FXSettings.BOX_NORMAL_COLOR
+			text.textProperty.bind(listViewBox.nameLabel.textProperty);
 			
 		}
 	
@@ -48,8 +52,13 @@ class Box extends Rectangle {
 		BoxType type;
 		int boxId;
 		int page;
+	
+		Text text
 		
 		
+		def getText(){
+			text
+		}
 		
 		def getListViewBox(){
 			listViewBox
@@ -76,11 +85,35 @@ class Box extends Rectangle {
 		
 		def void setFocus(boolean b) {
 			if (b) {
-				setStroke(Color.web("#0093ff"));
+				setColor(FXSettings.BOX_HIGHLIGHT_COLOR);
 			}
 			else {
-				setStroke(Color.BLACK);
+				setColor(FXSettings.BOX_NORMAL_COLOR);
 			}
 		}
+		
+		def void setColor(Color color) {
+			stroke = color
+			text.fill = color
+		}
+		
+		def void x(double x) {
+			setX(x);
+			text.x = x+FXSettings.BOX_TEXT_OFFSET_X
+		}
+		def void y(double y) {
+			setY(y);
+			text.y = y+FXSettings.BOX_TEXT_OFFSET_Y
+		}
+		
+		def void height(double h) {
+			setHeight(h)
+		}
+		
+		def void width(double w) {
+			setWidth(w);
+		}
+		
+		
 
 	}

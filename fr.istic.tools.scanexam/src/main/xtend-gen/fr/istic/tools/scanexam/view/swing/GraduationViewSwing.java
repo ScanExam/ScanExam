@@ -372,7 +372,7 @@ public class GraduationViewSwing {
         GraduationViewSwing.this.showContentDown();
       }
     });
-    InputStream inputContentDown = ResourcesUtils.getInputStreamResource("/logo.png");
+    InputStream inputContentDown = ResourcesUtils.getInputStreamResource("logo.png");
     ImagePanel _imagePanel = new ImagePanel(inputContentDown);
     this.pnlContentDown = _imagePanel;
     Dimension _dimension = new Dimension(this.pnlContentDown.getSize().width, 180);

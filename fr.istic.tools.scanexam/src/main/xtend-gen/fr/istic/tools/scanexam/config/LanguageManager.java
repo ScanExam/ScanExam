@@ -30,7 +30,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 public class LanguageManager {
   private static final Logger logger = LogManager.getLogger();
   
-  private static final String path = "langs/";
+  private static String path = "langs/";
   
   private static final String prefixFileName = "ScanExam";
   
@@ -52,6 +52,19 @@ public class LanguageManager {
    * @param language la langue de l'application (peut être null)
    */
   public static void init(@Nullable final Locale language) {
+    LanguageManager.init(language, "langs/");
+  }
+  
+  /**
+   * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté) ou
+   * par le langage en paramètre si celui-ci est spécifié et supporté.
+   * Définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
+   * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code>
+   * @param language la langue de l'application (peut être null)
+   * @param path le chemin d'accès vers le dossier contenant les fichiers langues
+   */
+  private static void init(@Nullable final Locale language, final String path) {
+    LanguageManager.path = path;
     LanguageManager.logger.info("Pre-loading languages...");
     Locale _xifexpression = null;
     if ((language == null)) {
@@ -61,7 +74,7 @@ public class LanguageManager {
     }
     final Locale currentLocal = _xifexpression;
     final String namePattern = (((LanguageManager.prefixFileName + LanguageManager.langCodePattern) + "\\.") + LanguageManager.extFileName);
-    final Collection<String> names = ResourcesUtils.getFolderContentNames(("/" + LanguageManager.path));
+    final Collection<String> names = ResourcesUtils.getFolderContentNames(path);
     final HashSet<String> badFileNames = new HashSet<String>();
     Locale _locale = new Locale("en");
     LanguageManager.locales.add(_locale);

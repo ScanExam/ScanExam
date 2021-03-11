@@ -84,12 +84,12 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 				return createGradeEntryAdapter();
 			}
 			@Override
-			public Adapter casePage(Page object) {
-				return createPageAdapter();
-			}
-			@Override
 			public Adapter caseExam(Exam object) {
 				return createExamAdapter();
+			}
+			@Override
+			public Adapter casePage(Page object) {
+				return createPageAdapter();
 			}
 			@Override
 			public Adapter caseComment(Comment object) {
@@ -188,20 +188,6 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.Page <em>Page</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see fr.istic.tools.scanexam.core.Page
-	 * @generated
-	 */
-	public Adapter createPageAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.Exam <em>Exam</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -212,6 +198,20 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.Page <em>Page</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see fr.istic.tools.scanexam.core.Page
+	 * @generated
+	 */
+	public Adapter createPageAdapter() {
 		return null;
 	}
 

@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.services.ExamEditionService
 import java.util.LinkedList
 import java.util.Objects
+import java.util.List
 
 /**
  * Class to manage conversions of the view's questions 
@@ -75,63 +76,79 @@ class PresenterQuestionZone {
 	
 	/* --LOADING NEW TEMPLATE--  */
 	
-	def void initLoading(){
-		pageNumbers = new LinkedList<Integer>() // replace method that give a list of questions
-		questions = new LinkedList<Question>() //replace with method that gives a list of pages corresponding to questions at same index
-		questionToLoadIndex = -1;
+	def LinkedList<Integer> initLoading(int pageNumber){
+		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
+		var ids = new LinkedList<Integer>();
+		for (Question q : questions) {
+			ids.add(q.id)
+		}
+		ids
 	}
 	
-	LinkedList<Integer> pageNumbers
-	LinkedList<Question> questions
-	int questionToLoadIndex;
+	List<Question> questions
 	/**
 	 * Loads the next question into questionToLoad
 	 * if there is a new question, return true,
 	 * else return false
 	 */
 	 
-
-	def boolean loadNextQuestion(){
-		//TODO get a list of questions from the model
-		// questions will be the list of questions
-		// pageNumbers is a list representing the page number of the questikns at the corresponding index
-		// 
-		questionToLoadIndex++;
-		if (questionToLoadIndex >= questions.size) {
-			return false;
+	
+	def double questionX(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.x
+			}
 		}
-		return true
+		result
 	}
 	
-	def double currentQuestionX(){
-		questions.get(questionToLoadIndex).zone.x
+	def double questionY(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.y
+			}
+		}
+		result
 	}
 	
-	def double currentQuestionY(){
-		questions.get(questionToLoadIndex).zone.y
+	def double questionHeight(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.heigth
+				print("h = " + result)
+			}
+		}
+		result
 	}
 	
-	def double currentQuestionHeight(){
-		questions.get(questionToLoadIndex).zone.heigth
+	def double questionWidth(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.width
+				print("w = " + result)
+			}
+		}
+		result
 	}
 	
-	def double currentQuestionWidth(){
-		questions.get(questionToLoadIndex).zone.width
+	def String questionName(int id){
+		var result = "";
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.name
+			}
+		}
+		result
 	}
 	
-	def String currentQuestionName(){
-		questions.get(questionToLoadIndex).name
-	}
 	
-	def int currentQuestionId(){
-		questions.get(questionToLoadIndex).id
-	}
+
 	
-	def int currentQuestionPage(){
-		pageNumbers.get(questionToLoadIndex)
-	}
-	
-	def int currentQuestionWorth(){
+	def int questionWorth(int id){
 		0
 	}
 	

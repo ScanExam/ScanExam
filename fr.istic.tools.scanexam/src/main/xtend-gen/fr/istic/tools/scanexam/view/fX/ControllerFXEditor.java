@@ -218,6 +218,7 @@ public class ControllerFXEditor {
         }
       });
       source.getChildren().add(this.currentRectangle);
+      source.getChildren().add(this.currentRectangle.getText());
     }
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
@@ -225,20 +226,20 @@ public class ControllerFXEditor {
       double xDelta = (mousePositionX - this.mouseOriginX);
       double yDelta = (mousePositionY - this.mouseOriginY);
       if ((xDelta > 0)) {
-        this.currentRectangle.setWidth(xDelta);
+        this.currentRectangle.width(xDelta);
       } else {
-        this.currentRectangle.setWidth(Math.abs(xDelta));
+        this.currentRectangle.width(Math.abs(xDelta));
         double _abs = Math.abs(xDelta);
         double _minus = (this.mouseOriginX - _abs);
-        this.currentRectangle.setX(_minus);
+        this.currentRectangle.x(_minus);
       }
       if ((yDelta > 0)) {
-        this.currentRectangle.setHeight(yDelta);
+        this.currentRectangle.height(yDelta);
       } else {
-        this.currentRectangle.setHeight(Math.abs(yDelta));
+        this.currentRectangle.height(Math.abs(yDelta));
         double _abs_1 = Math.abs(yDelta);
         double _minus_1 = (this.mouseOriginY - _abs_1);
-        this.currentRectangle.setY(_minus_1);
+        this.currentRectangle.y(_minus_1);
       }
     }
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
@@ -262,10 +263,12 @@ public class ControllerFXEditor {
     if (_equals_1) {
       double _width = this.currentRectangle.getWidth();
       double _minus = ((this.maxX - FXSettings.BOX_BORDER_THICKNESS) - _width);
-      this.currentRectangle.setX(Math.min(mousePositionX, _minus));
+      this.currentRectangle.x(
+        Math.min(mousePositionX, _minus));
       double _height = this.currentRectangle.getHeight();
       double _minus_1 = ((this.maxY - FXSettings.BOX_BORDER_THICKNESS) - _height);
-      this.currentRectangle.setY(Math.min(mousePositionY, _minus_1));
+      this.currentRectangle.y(
+        Math.min(mousePositionY, _minus_1));
     }
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
@@ -287,10 +290,10 @@ public class ControllerFXEditor {
     if (_equals_1) {
       double _x = this.currentRectangle.getX();
       double _minus = (_x - mousePositionX);
-      this.currentRectangle.setWidth(Math.abs(_minus));
+      this.currentRectangle.width(Math.abs(_minus));
       double _y = this.currentRectangle.getY();
       double _minus_1 = (_y - mousePositionY);
-      this.currentRectangle.setHeight(Math.abs(_minus_1));
+      this.currentRectangle.height(Math.abs(_minus_1));
     }
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
@@ -423,15 +426,15 @@ public class ControllerFXEditor {
         case QUESTION_AREA:
           int _plusPlus = this.questionCounter++;
           String _plus = ("Question " + Integer.valueOf(_plusPlus));
-          int _currentPdfPageNumber = this.editor.getPresenter().getCurrentPdfPageNumber();
+          int _currentPdfPageNumber = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
           _switchResult = new Box(_plus, _currentPdfPageNumber, Box.BoxType.QUESTION, x, y);
           break;
         case ID_AREA:
-          int _currentPdfPageNumber_1 = this.editor.getPresenter().getCurrentPdfPageNumber();
+          int _currentPdfPageNumber_1 = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
           _switchResult = new Box("ID Zone", _currentPdfPageNumber_1, Box.BoxType.ID, x, y);
           break;
         case QR_AREA:
-          int _currentPdfPageNumber_2 = this.editor.getPresenter().getCurrentPdfPageNumber();
+          int _currentPdfPageNumber_2 = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
           _switchResult = new Box("QR Zone", _currentPdfPageNumber_2, Box.BoxType.QR, x, y);
           break;
         default:
@@ -453,10 +456,14 @@ public class ControllerFXEditor {
     boolean _xblockexpression = false;
     {
       this.editor.addBox(box);
+      this.renameBox(box, box.getName());
       ListViewBox lb = box.getListViewBox();
       lb.setRemoveAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
+          String _name = box.getName();
+          String _plus = ("Remove " + _name);
+          System.out.println(_plus);
           ControllerFXEditor.this.removeBox(box);
         }
       });
@@ -503,6 +510,7 @@ public class ControllerFXEditor {
         }
       });
       this.questionList.getItems().add(lb);
+      System.out.println(this.mainPane.getChildren());
       _xblockexpression = this.boxes.add(box);
     }
     return _xblockexpression;
@@ -527,6 +535,7 @@ public class ControllerFXEditor {
    */
   public void removeBox(final Box box) {
     this.questionList.getItems().remove(box.getListViewBox());
+    this.mainPane.getChildren().remove(box.getText());
     this.mainPane.getChildren().remove(box);
     this.boxes.remove(box);
     this.editor.removeBox(box);
@@ -563,7 +572,7 @@ public class ControllerFXEditor {
       if ((file != null)) {
         boolean _xblockexpression_1 = false;
         {
-          this.editor.getPresenter().create(file);
+          this.editor.getPresenter().getPresenterPdf().create(file);
           _xblockexpression_1 = this.renderDocument();
         }
         _xifexpression = _xblockexpression_1;
@@ -630,20 +639,26 @@ public class ControllerFXEditor {
   }
   
   public void loadBoxes() {
-    this.editor.getPresenter().getPresenterQuestionZone().initLoading();
-    while (this.editor.getPresenter().getPresenterQuestionZone().loadNextQuestion()) {
+    for (int p = 0; (p < this.editor.getPresenter().getPresenterPdf().totalPdfPageNumber()); p++) {
       {
-        String _currentQuestionName = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionName();
-        int _currentQuestionPage = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionPage();
-        double _currentQuestionX = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionX();
-        double _currentQuestionY = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionY();
-        double _currentQuestionHeight = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionHeight();
-        double _currentQuestionWidth = this.editor.getPresenter().getPresenterQuestionZone().currentQuestionWidth();
-        Box box = new Box(_currentQuestionName, _currentQuestionPage, 
-          Box.BoxType.QUESTION, _currentQuestionX, _currentQuestionY, _currentQuestionHeight, _currentQuestionWidth);
-        this.addBox(box);
+        LinkedList<Integer> ids = this.editor.getPresenter().getPresenterQuestionZone().initLoading(p);
+        for (final int i : ids) {
+          {
+            String _questionName = this.editor.getPresenter().getPresenterQuestionZone().questionName(i);
+            double _questionX = this.editor.getPresenter().getPresenterQuestionZone().questionX(i);
+            double _questionY = this.editor.getPresenter().getPresenterQuestionZone().questionY(i);
+            double _questionHeight = this.editor.getPresenter().getPresenterQuestionZone().questionHeight(i);
+            double _questionWidth = this.editor.getPresenter().getPresenterQuestionZone().questionWidth(i);
+            Box box = new Box(_questionName, p, 
+              Box.BoxType.QUESTION, _questionX, _questionY, _questionHeight, _questionWidth);
+            this.addBox(box);
+            this.boxes.add(box);
+            this.mainPane.getChildren().add(box);
+          }
+        }
       }
     }
+    this.showOnlyPage(0);
   }
   
   /**
@@ -660,14 +675,14 @@ public class ControllerFXEditor {
   public boolean renderDocument() {
     boolean _xblockexpression = false;
     {
-      int _currentPdfPageNumber = this.editor.getPresenter().getCurrentPdfPageNumber();
+      int _currentPdfPageNumber = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
       int _plus = (_currentPdfPageNumber + 1);
       String _plus_1 = (Integer.valueOf(_plus) + "/");
-      int _totalPdfPageNumber = this.editor.getPresenter().getTotalPdfPageNumber();
-      String _plus_2 = (_plus_1 + Integer.valueOf(_totalPdfPageNumber));
+      int _talPdfPageNumber = this.editor.getPresenter().getPresenterPdf().totalPdfPageNumber();
+      String _plus_2 = (_plus_1 + Integer.valueOf(_talPdfPageNumber));
       this.pageNumberLabel.setText(_plus_2);
       this.introLabel.setVisible(false);
-      final BufferedImage image = this.editor.getPresenter().getCurrentPdfPage();
+      final BufferedImage image = this.editor.getPresenter().getPresenterPdf().getCurrentPdfPage();
       this.pdfView.setImage(SwingFXUtils.toFXImage(image, null));
       double fitW = this.pdfView.getFitWidth();
       double fitH = this.pdfView.getFitHeight();
@@ -698,24 +713,24 @@ public class ControllerFXEditor {
    * changes the selected page to load and then renders it
    */
   public void selectPage(final int pageNumber) {
-    this.editor.getPresenter().choosePdfPage(pageNumber);
+    this.editor.getPresenter().getPresenterPdf().choosePdfPage(pageNumber);
     this.renderDocument();
-    this.showOnlyPage(this.editor.getPresenter().getCurrentPdfPageNumber());
+    this.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
   }
   
   /**
    * goes to the next page of the current pdf
    */
   public void nextPage() {
-    this.editor.getPresenter().nextPdfPage();
+    this.editor.getPresenter().getPresenterPdf().nextPdfPage();
     this.renderDocument();
-    this.showOnlyPage(this.editor.getPresenter().getCurrentPdfPageNumber());
+    this.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
   }
   
   public void previousPage() {
-    this.editor.getPresenter().previousPdfPage();
+    this.editor.getPresenter().getPresenterPdf().previousPdfPage();
     this.renderDocument();
-    this.showOnlyPage(this.editor.getPresenter().getCurrentPdfPageNumber());
+    this.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
   }
   
   public void showOnlyPage(final int page) {

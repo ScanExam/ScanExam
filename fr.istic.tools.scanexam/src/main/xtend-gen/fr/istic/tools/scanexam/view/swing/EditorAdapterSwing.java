@@ -99,18 +99,18 @@ public class EditorAdapterSwing implements EditorAdapter {
     _btnPrev.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        EditorAdapterSwing.this.getPresenter().previousPdfPage();
+        EditorAdapterSwing.this.getPresenter().getPresenterPdf().previousPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
-        EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
+        EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getPresenterPdf().currentPdfPageNumber());
       }
     });
     JButton _btnNext = this.view.getBtnNext();
     _btnNext.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
-        EditorAdapterSwing.this.getPresenter().nextPdfPage();
+        EditorAdapterSwing.this.getPresenter().getPresenterPdf().nextPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
-        EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
+        EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getPresenterPdf().currentPdfPageNumber());
       }
     });
   }
@@ -131,11 +131,11 @@ public class EditorAdapterSwing implements EditorAdapter {
     } else {
       if ((result == JFileChooser.APPROVE_OPTION)) {
         File selectedFile = fc.getSelectedFile();
-        this.editorPresenter.create(selectedFile);
+        this.editorPresenter.getPresenterPdf().create(selectedFile);
         this.adapterPdfAndBox.refreshPdf();
         this.view.getCmbBxPage().removeAll();
-        int _totalPdfPageNumber = this.editorPresenter.getTotalPdfPageNumber();
-        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(1, _totalPdfPageNumber, true);
+        int _talPdfPageNumber = this.editorPresenter.getPresenterPdf().totalPdfPageNumber();
+        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(1, _talPdfPageNumber, true);
         for (final Integer i : _doubleDotLessThan) {
           this.view.getCmbBxPage().addItem(i);
         }
@@ -143,12 +143,12 @@ public class EditorAdapterSwing implements EditorAdapter {
         _cmbBxPage.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(final ActionEvent e) {
-            EditorAdapterSwing.this.getPresenter().goToPage(EditorAdapterSwing.this.view.getCmbBxPage().getSelectedIndex());
+            EditorAdapterSwing.this.getPresenter().getPresenterPdf().goToPage(EditorAdapterSwing.this.view.getCmbBxPage().getSelectedIndex());
             EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
-            EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getCurrentPdfPageNumber());
+            EditorAdapterSwing.this.view.setCurrentPage(EditorAdapterSwing.this.getPresenter().getPresenterPdf().currentPdfPageNumber());
           }
         });
-        this.view.setCurrentPage(this.getPresenter().getCurrentPdfPageNumber());
+        this.view.setCurrentPage(this.getPresenter().getPresenterPdf().currentPdfPageNumber());
       }
     }
   }

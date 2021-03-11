@@ -1,21 +1,17 @@
 package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.core.CoreFactory
-import fr.istic.tools.scanexam.core.CorePackage
 import fr.istic.tools.scanexam.core.Grade
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
-import fr.istic.tools.scanexam.core.templates.TemplatesPackage
-import java.io.ByteArrayOutputStream
+import fr.istic.tools.scanexam.core.templates.CreationTemplate
+import fr.istic.tools.scanexam.io.TemplateIO
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import java.io.File
-import java.util.Base64
-import java.util.Optional
-import java.util.Set
+import java.io.FileInputStream
+import java.util.Collection
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
 
@@ -25,114 +21,132 @@ class ExamGraduationService extends Service
 	 
 	int currentQuestionIndex;
 	
+	@Accessors Collection<StudentSheet> studentSheets;
 	
-	Set<StudentSheet> studentSheets;
+	CreationTemplate creationTemplate;
 	
-	CorrectionTemplate template;
+	CorrectionTemplate correctionTemplate;
 	
 	//Set<StudentSheet> visibleSheets;
 	
 	override save(String path) 
 	{
-		val outputStream = new ByteArrayOutputStream();
-		document.save(outputStream);
-		val encodedDoc = Base64.getEncoder().encode(outputStream.toByteArray());
-		template.encodedDocument = new String(encodedDoc);
-		outputStream.close();
-		
-		
-		template.exam = ExamSingleton.instance
-		
-		  //TODO
-          template.studentsheets.addAll(studentSheets) 
-		
-		val resourceSet = new ResourceSetImpl();
-		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
-		_extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-			resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
-		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-	
-			
-		val resource = resourceSet.createResource(URI.createFileURI(path))
-		resource.getContents().add(template);
-		resource.save(null);
+		// TODO (sauvegarde le XMI de correction)
 	}
 	
-	
-	override open(String xmiFile) 
+	def boolean openCorrectionTemplate(String xmiFile)
 	{
-		val correctionTemplate = loadTemplate(xmiFile)
+		val correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile) 
 		
-		 if (correctionTemplate.present) 
+		if (correctionTemplate.present) 
         {
-            this.template = correctionTemplate.get()
+            this.correctionTemplate = correctionTemplate.get()
             
             ExamSingleton.instance = correctionTemplate.get().exam
+
+            return true
+        }
+		return false
+	}
+	def boolean openCreationTemplate(String xmiFile) 
+	{
+		val editionTemplate = TemplateIO.loadCreationTemplate(xmiFile) 
+		
+		if (editionTemplate.present) 
+        {
+            this.creationTemplate = editionTemplate.get()
             
-            //TODO
-            template.studentsheets.addAll(studentSheets) 
-            
-            val decoded = Base64.getDecoder().decode(correctionTemplate.get().encodedDocument);
-            document = PDDocument.load(decoded)
-            
+            ExamSingleton.instance = editionTemplate.get().exam
+
             return true
         }
 		return false
 	}
 	
-	
-	def static Optional<CorrectionTemplate> loadTemplate(String path) {
-        val resourceSet = new ResourceSetImpl();
-        val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-        val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-        _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl)
-
-        resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-
-        var Resource resource = null;
-        try {
-            resource = resourceSet.getResource(URI.createFileURI(path), true)
-        } catch (Throwable ex) {
-            return Optional.empty;
-        }
-        val template = resource.getContents().get(0);
-        if (!(template instanceof CorrectionTemplate))
-        {
-            return Optional.empty;
-        }
-        return Optional.ofNullable(template as CorrectionTemplate)
-    }
+	def boolean openCorrectionPdf(String path)
+	{
+        document = PDDocument.load(new File(path))
+        
+        val stream =new FileInputStream(new File(path))
+        val pdfReader = new PdfReaderWithoutQrCodeImpl(stream,ExamSingleton.instance.pages.size,3); // TODO
+        pdfReader.readPDf();
+        studentSheets = pdfReader.completeStudentSheets
+      
+        stream.close();
+        return true
+	}
 	
 	
-	def nextSheet() {
+	
+	def numberOfQuestions ()
+	{
+		var nbQuestion =0
+		for (var i = 0 ; i < document.pages.size-1; i++){
+			nbQuestion += creationTemplate.exam.pages.get(i).questions.size
+		}
+		nbQuestion
+	}
+	
+	def int getAbsolutePageNumber(int studentId,int offset)
+	{
+		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(0);
+		return pageId  + offset;
+	}
+	
+	
+	
+	/**
+	 * Passe au prochaine etudiant dans les StudentSheet
+	 */
+	def nextStudent() 
+	{
 		if (currentSheetIndex+1 < studentSheets.size)
 			currentSheetIndex++
 	}
 	
-	
-	def previousSheet() {
+	/**
+	 * Passe au etudiant précédent dans les StudentSheet
+	 */
+	def previousStudent() 
+	{
 		if (currentSheetIndex > 0)
 			currentSheetIndex--
-			studentSheets.get(0).posPage;
 	}
 	
-	def nextQuestion(){
+	def getCurrentQuestion()
+	{
+		return currentPage.questions.findFirst[x | x.id == currentQuestionIndex];
+	}
+	def nextQuestion()
+	{
 		if (currentQuestionIndex + 1 < currentPage.questions.size)
 			currentQuestionIndex++
 	}
 	
-	def previousQuestion() {
+	def previousQuestion() 
+	{
 		if (currentQuestionIndex > 0)
 			currentQuestionIndex--
 	}
 	
-	def setGrade (Grade grade){
-		val position = studentSheets.get(currentSheetIndex).posPage.indexOf(currentQuestionIndex);
-		studentSheets.get(currentSheetIndex).grades.set(position, grade);
+	def indexOfQuestions (int indexpage , int indexquestion){
+		var indexQuestion =0
+		for (var i = 0 ; i < indexpage-1 ; i++){
+			indexQuestion += creationTemplate.exam.pages.get(i).questions.size
+		}
+		indexQuestion += indexquestion
+		indexQuestion
 	}
 	
-	override void create(File file) 
+	/**
+	 * Ajoute la note a la question courante
+	 */
+	def setGrade (Grade note){
+		studentSheets.get(currentSheetIndex).grades.set(indexOfQuestions(pageIndex,currentQuestionIndex), note);
+	}
+	
+	
+	def void create(File file) 
 	{
 		document = PDDocument.load(file)
 

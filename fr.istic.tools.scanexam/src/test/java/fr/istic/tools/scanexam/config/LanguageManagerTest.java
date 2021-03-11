@@ -26,7 +26,6 @@ public class LanguageManagerTest {
 	 * Les fonctions getSupportedLocales et getCurrentLanguage seront considérées comme étant fonctionnelles (base de confiance)
 	 */
 	
-
 	@BeforeAll
 	static void init() {
 		Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.OFF);
@@ -50,13 +49,12 @@ public class LanguageManagerTest {
 			e.printStackTrace();
 			return null;
 		}
-		
 	}
 	
 	@Test
 	@DisplayName("init")
 	void initTest() {
-		LanguageManager.init(null);
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		final Collection<Locale> locales = LanguageManager.getSupportedLocales();
 		final Collection<Locale> expected = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, new Locale("es", ""));
 		assertTrue(locales.containsAll(expected) && expected.containsAll(locales));
@@ -68,7 +66,7 @@ public class LanguageManagerTest {
 	@DisplayName("init avec une JVM configurée sur un langage supporté")
 	void initTest2() {
 		Locale.setDefault(new Locale("es", ""));
-		LanguageManager.init(null);
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		final Collection<Locale> locales = LanguageManager.getSupportedLocales();
 		final Collection<Locale> expected = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, new Locale("es", ""));
 		
@@ -81,7 +79,7 @@ public class LanguageManagerTest {
 	@DisplayName("init avec une JVM configurée sur un Locale non supporté mais sur un langage supporté")
 	void initTest3() {
 		Locale.setDefault(new Locale("fr", "CA"));
-		LanguageManager.init(null);
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		final Collection<Locale> locales = LanguageManager.getSupportedLocales();
 		final Collection<Locale> expected = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, new Locale("es", ""));
 		
@@ -94,7 +92,7 @@ public class LanguageManagerTest {
 	@DisplayName("init avec une JVM configurée sur un langage non supporté")
 	void initTest4() {
 		Locale.setDefault(new Locale("de", ""));
-		LanguageManager.init(null);
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		final Collection<Locale> locales = LanguageManager.getSupportedLocales();
 		final Collection<Locale> expected = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, new Locale("es", ""));
 		
@@ -107,35 +105,35 @@ public class LanguageManagerTest {
 	@Test
 	@DisplayName("init sur un langage supporté")
 	void changeTest1() {
-		LanguageManager.init(new Locale("es", ""));
+		jailBreak(LanguageManager.class, "init", new Locale("es", ""), "languages/");
 		assertEquals(new Locale("es", ""), LanguageManager.getCurrentLanguage());
 	}
 	
 	@Test
 	@DisplayName("init sur un Locale non supporté mais sur un langage supporté")
 	void changeTest2() {
-		LanguageManager.init(new Locale("fr", "CA"));
+		jailBreak(LanguageManager.class, "init", new Locale("fr", "CA"), "languages/");
 		assertEquals(new Locale("fr", ""), LanguageManager.getCurrentLanguage());
 	}
 	
 	@Test
 	@DisplayName("init sur un langage non supporté")
 	void changeTest3() {
-		LanguageManager.init(new Locale("de", ""));
+		jailBreak(LanguageManager.class, "init", new Locale("de", ""), "languages/");
 		assertEquals(Locale.ENGLISH, LanguageManager.getCurrentLanguage());
 	}
 	
 	@Test
 	@DisplayName("change sur un langage null (précondition)")
 	void changeTest4() {
-		LanguageManager.init(null);
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		assertThrows(NullPointerException.class, () -> jailBreak(LanguageManager.class, "change", new Object[] {null}));
 	}
 	
 	@Test
 	@DisplayName("translate sur des mots définis") 
 	void translateTest1() {
-		LanguageManager.init(null);
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		assertEquals("pierre", LanguageManager.translate("stone"));
 		assertEquals("jardin", LanguageManager.translate("garden"));
 		assertEquals("raton laveur", LanguageManager.translate("raccoon"));
@@ -144,7 +142,7 @@ public class LanguageManagerTest {
 	@Test
 	@DisplayName("translate sur des mots définis d'une autre langue") 
 	void translateTest2() {
-		LanguageManager.init(new Locale("es", ""));
+		jailBreak(LanguageManager.class, "init", new Locale("es", ""), "languages/");
 		assertEquals("piedra", LanguageManager.translate("stone"));
 		assertEquals("jardín", LanguageManager.translate("garden"));
 		assertEquals("mapache", LanguageManager.translate("raccoon"));
@@ -153,7 +151,7 @@ public class LanguageManagerTest {
 	@Test
 	@DisplayName("translate sur un mot non défini")
 	void translateTest3() {
-		LanguageManager.init(null);
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		assertEquals("oyster", LanguageManager.translate("oyster"));
 	}
 }

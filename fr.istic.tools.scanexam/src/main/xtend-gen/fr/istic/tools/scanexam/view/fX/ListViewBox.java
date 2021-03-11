@@ -184,4 +184,8 @@ public class ListViewBox extends VBox {
     boolean _not_1 = (!_isVisible_2);
     this.pointsLabel.setVisible(_not_1);
   }
+  
+  public Label getNameLabel() {
+    return this.nameLabel;
+  }
 }

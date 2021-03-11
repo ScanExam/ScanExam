@@ -14,6 +14,7 @@ import java.util.stream.Stream
  */
 class ResourcesUtils {
 	
+	
 	/**
 	 * @param relativePath le chemin relatif non null vers la ressource en partant du répertoire <i>src/main/resources</i>
 	 * @return un inputStream si une ressource a bien été trouvée, null sinon
@@ -31,7 +32,6 @@ class ResourcesUtils {
 	static def String getTextResource(String relativePath) {
 		getFileLines(relativePath).map(s | s.collect(Collectors.joining("\n"))).orElse(null)
 	}
-	
 	
 	/**
 	 * @param relativeFolderPath le chemin relatif non null vers le dossier ressource en partant du répertoire <i>src/main/resources</i>

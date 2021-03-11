@@ -1,27 +1,19 @@
 package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.core.CoreFactory;
-import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
-import fr.istic.tools.scanexam.core.templates.TemplatesPackage;
+import fr.istic.tools.scanexam.io.TemplateIO;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -57,12 +49,12 @@ public class ExamEditionService extends Service {
     _zone_2.setWidth(width);
     QuestionZone _zone_3 = question.getZone();
     _zone_3.setHeigth(heigth);
-    this.getCurrentPage().getQuestions().put(Integer.valueOf(question.getId()), question);
+    this.getCurrentPage().getQuestions().add(question);
     return this.questionId++;
   }
   
   public void rescaleQuestion(final int id, final float heigth, final float width) {
-    final Question question = this.getCurrentPage().getQuestions().get(Integer.valueOf(id));
+    final Question question = this.getCurrentPage().getQuestions().get(id);
     QuestionZone _zone = question.getZone();
     _zone.setWidth(width);
     QuestionZone _zone_1 = question.getZone();
@@ -70,20 +62,11 @@ public class ExamEditionService extends Service {
   }
   
   public void moveQuestion(final int id, final float x, final float y) {
-    final Question question = this.getCurrentPage().getQuestions().get(Integer.valueOf(id));
+    final Question question = this.getQuestion(id);
     QuestionZone _zone = question.getZone();
     _zone.setX(x);
     QuestionZone _zone_1 = question.getZone();
     _zone_1.setY(y);
-  }
-  
-  public void renameQuestion(final int id, final String name) {
-    final Question question = this.getCurrentPage().getQuestions().get(Integer.valueOf(id));
-    question.setName(name);
-  }
-  
-  public Question removeQuestion(final int id) {
-    return this.getCurrentPage().getQuestions().remove(Integer.valueOf(id));
   }
   
   @Override
@@ -96,24 +79,15 @@ public class ExamEditionService extends Service {
       this.template.setEncodedDocument(_string);
       outputStream.close();
       this.template.setExam(ExamSingleton.instance);
-      final ResourceSetImpl resourceSet = new ResourceSetImpl();
-      final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
-      final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-      _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl);
-      resourceSet.getPackageRegistry().put(CorePackage.eNS_URI, CorePackage.eINSTANCE);
-      resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-      final Resource resource = resourceSet.createResource(URI.createFileURI(path));
-      resource.getContents().add(this.template);
-      resource.save(null);
+      TemplateIO.save(path, this.template);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
-  @Override
   public boolean open(final String xmiPath) {
     try {
-      final Optional<CreationTemplate> creationTemplate = ExamEditionService.loadTemplate(xmiPath);
+      final Optional<CreationTemplate> creationTemplate = TemplateIO.loadCreationTemplate(xmiPath);
       boolean _isPresent = creationTemplate.isPresent();
       if (_isPresent) {
         this.template = creationTemplate.get();
@@ -128,30 +102,6 @@ public class ExamEditionService extends Service {
     }
   }
   
-  public static Optional<CreationTemplate> loadTemplate(final String path) {
-    final ResourceSetImpl resourceSet = new ResourceSetImpl();
-    final Map<String, Object> _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap();
-    final XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
-    _extensionToFactoryMap.put(Resource.Factory.Registry.DEFAULT_EXTENSION, _xMIResourceFactoryImpl);
-    resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
-    Resource resource = null;
-    try {
-      resource = resourceSet.getResource(URI.createFileURI(path), true);
-    } catch (final Throwable _t) {
-      if (_t instanceof Throwable) {
-        return Optional.<CreationTemplate>empty();
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
-    final EObject template = resource.getContents().get(0);
-    if ((!(template instanceof CreationTemplate))) {
-      return Optional.<CreationTemplate>empty();
-    }
-    return Optional.<CreationTemplate>ofNullable(((CreationTemplate) template));
-  }
-  
-  @Override
   public void create(final File file) {
     try {
       this.template = TemplatesFactory.eINSTANCE.createCreationTemplate();
@@ -162,8 +112,6 @@ public class ExamEditionService extends Service {
       for (final Integer i : _doubleDotLessThan) {
         {
           final Page page = CoreFactory.eINSTANCE.createPage();
-          HashMap<Integer, Question> _hashMap = new HashMap<Integer, Question>();
-          page.setQuestions(_hashMap);
           ExamSingleton.instance.getPages().add(page);
         }
       }

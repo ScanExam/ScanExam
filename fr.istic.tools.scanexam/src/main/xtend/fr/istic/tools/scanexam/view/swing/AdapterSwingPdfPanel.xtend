@@ -108,8 +108,8 @@ class AdapterSwingPdfPanel {
 	 * Met à jour le pdf à afficher
 	 */
 	def void refreshPdf() {
-		if(presenterPdf !== null && presenterPdf.currentPdfPage !== null) {
-			pdf = presenterPdf.currentPdfPage
+		if(presenterPdf !== null && presenterPdf.getPresenterPdf.currentPdfPage !== null) {
+			pdf = presenterPdf.getPresenterPdf.currentPdfPage
 			setScaleOnWidth(scaleOnWidth)
 			repaint()
 		}

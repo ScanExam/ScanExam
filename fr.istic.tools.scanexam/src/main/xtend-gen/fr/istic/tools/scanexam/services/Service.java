@@ -1,16 +1,18 @@
 package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.core.Page;
+import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -85,6 +87,31 @@ public abstract class Service {
     return _xifexpression;
   }
   
+  public Question getQuestion(final int id) {
+    final Function1<Question, Boolean> _function = (Question question) -> {
+      int _id = question.getId();
+      return Boolean.valueOf((_id == id));
+    };
+    return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
+  }
+  
+  public void renameQuestion(final int id, final String name) {
+    final Question question = this.getQuestion(id);
+    question.setName(name);
+  }
+  
+  public EList<Question> getQuestionAtPage(final int pageIndex) {
+    return ExamSingleton.getPage(pageIndex).getQuestions();
+  }
+  
+  public Question removeQuestion(final int id) {
+    return this.getCurrentPage().getQuestions().remove(id);
+  }
+  
+  public int getTemplatePageAmount() {
+    return ExamSingleton.getTemplatePageAmount();
+  }
+  
   /**
    * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
    * @param page Numéro de page où se rendre
@@ -114,10 +141,6 @@ public abstract class Service {
   }
   
   public abstract void save(final String path);
-  
-  public abstract boolean open(final String xmiFile);
-  
-  public abstract void create(final File file);
   
   public int getPageNumber() {
     return IterableExtensions.size(this.document.getPages());

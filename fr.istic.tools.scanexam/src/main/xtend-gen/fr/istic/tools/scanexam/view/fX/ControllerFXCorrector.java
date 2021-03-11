@@ -1,15 +1,18 @@
 package fr.istic.tools.scanexam.view.fX;
 
-import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
+import fr.istic.tools.scanexam.view.fX.QuestionItem;
+import fr.istic.tools.scanexam.view.fX.StudentItem;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -17,13 +20,13 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -39,70 +42,10 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
  */
 @SuppressWarnings("all")
 public class ControllerFXCorrector {
-  public static class QuestionDetails {
-    private int id;
+  public enum SelectedTool {
+    NO_TOOL,
     
-    private String name;
-    
-    private double x;
-    
-    private double y;
-    
-    private double h;
-    
-    private double w;
-    
-    private List<Integer> bareme;
-    
-    public QuestionDetails(final String name) {
-      this.name = name;
-      this.id = 0;
-      this.x = 0;
-      this.y = 0;
-      this.h = 0;
-      this.w = 0;
-      ArrayList<Integer> _arrayList = new ArrayList<Integer>();
-      this.bareme = _arrayList;
-    }
-    
-    public Label getLabel() {
-      return new Label(("Question :" + this.name));
-    }
-    
-    public VBox getDetails() {
-      VBox container = new VBox();
-      ObservableList<Node> _children = container.getChildren();
-      Label _label = new Label(("Question : " + this.name));
-      _children.add(_label);
-      ObservableList<Node> _children_1 = container.getChildren();
-      Label _label_1 = new Label(("ID :" + Integer.valueOf(this.id)));
-      _children_1.add(_label_1);
-      ObservableList<Node> _children_2 = container.getChildren();
-      Label _label_2 = new Label(("x:" + Double.valueOf(this.x)));
-      _children_2.add(_label_2);
-      ObservableList<Node> _children_3 = container.getChildren();
-      Label _label_3 = new Label(("y:" + Double.valueOf(this.y)));
-      _children_3.add(_label_3);
-      ObservableList<Node> _children_4 = container.getChildren();
-      Label _label_4 = new Label(("h:" + Double.valueOf(this.h)));
-      _children_4.add(_label_4);
-      ObservableList<Node> _children_5 = container.getChildren();
-      Label _label_5 = new Label(("w:" + Double.valueOf(this.w)));
-      _children_5.add(_label_5);
-      ObservableList<Node> _children_6 = container.getChildren();
-      Label _label_6 = new Label(("Bareme: " + this.bareme));
-      _children_6.add(_label_6);
-      return container;
-    }
-  }
-  
-  public static class StudentItem extends Label {
-    private int id;
-    
-    public StudentItem(final int s, final ControllerFXCorrector c) {
-      super(("Student: " + Integer.valueOf(s)));
-      this.id = s;
-    }
+    MOVE_CAMERA_TOOL;
   }
   
   private static final Logger logger = LogManager.getLogger();
@@ -131,6 +74,9 @@ public class ControllerFXCorrector {
   private boolean botShow = false;
   
   @FXML
+  public VBox root;
+  
+  @FXML
   public Pane topPane;
   
   @FXML
@@ -149,16 +95,16 @@ public class ControllerFXCorrector {
   public Pane bottomPane;
   
   @FXML
-  public Pane imagePane;
+  public Pane mainPane;
   
   @FXML
   public Pane parentPane;
   
   @FXML
-  public ListView<Label> leftList;
+  public ListView<StudentItem> leftList;
   
   @FXML
-  public ListView<Label> rightList;
+  public ListView<QuestionItem> rightList;
   
   @FXML
   public ImageView imview;
@@ -182,8 +128,144 @@ public class ControllerFXCorrector {
   public Spinner<Double> totalGradeSpinner;
   
   @FXML
+  public Object Pressed() {
+    return null;
+  }
+  
+  /**
+   * Called when a <b>save</b> button is pressed
+   */
+  @FXML
+  public void savePressed() {
+    InputOutput.<String>println("Saving method");
+  }
+  
+  /**
+   * Called when a <b>save a</b> button is pressed
+   */
+  @FXML
+  public void saveAsPressed() {
+    InputOutput.<String>println("Saving as method");
+  }
+  
+  /**
+   * Called when a <b>load</b> button is pressed
+   */
+  @FXML
+  public void loadPressed() {
+    this.load();
+  }
+  
+  /**
+   * Called when a <b>import</b> button is pressed
+   */
+  @FXML
+  public void importPressed() {
+    InputOutput.<String>println("Import method");
+  }
+  
+  /**
+   * Called when a <b>export</b> button is pressed
+   */
+  @FXML
+  public void exportPressed() {
+    InputOutput.<String>println("Export method");
+  }
+  
+  /**
+   * Called when a <b>next question</b> button is pressed
+   */
+  @FXML
+  public void nextQuestionPressed() {
+    InputOutput.<String>println("Next question method");
+    this.nextQuestion();
+  }
+  
+  /**
+   * Called when a <b>previous question pressed</b> button is pressed
+   */
+  @FXML
+  public void prevQuestionPressed() {
+    InputOutput.<String>println("Previous question method");
+    this.previousQuestion();
+  }
+  
+  /**
+   * Called when a <b>next student</b> button is pressed
+   */
+  @FXML
+  public void nextStudentPressed() {
+    InputOutput.<String>println("Next student method");
+    this.nextStudent();
+  }
+  
+  /**
+   * Called when a <b>previous student</b> button is pressed
+   */
+  @FXML
+  public void prevStudentPressed() {
+    InputOutput.<String>println("Previous student method");
+    this.previousStudent();
+  }
+  
+  /**
+   * Called when a grade update button is pressed
+   */
+  @FXML
+  public void saveGradeButtonPressed() {
+    Double _value = this.gradeSpinner.getValue();
+    String _plus = ("save Grade method : " + _value);
+    String _plus_1 = (_plus + "/");
+    Double _value_1 = this.totalGradeSpinner.getValue();
+    String _plus_2 = (_plus_1 + _value_1);
+    InputOutput.<String>println(_plus_2);
+  }
+  
+  @FXML
   public void swapToEditorPressed() {
     LauncherFX.swapToEditor();
+  }
+  
+  @FXML
+  public void mainMouseEvent(final MouseEvent e) {
+    this.chooseMouseAction(e);
+  }
+  
+  private ControllerFXCorrector.SelectedTool currentTool = ControllerFXCorrector.SelectedTool.NO_TOOL;
+  
+  private boolean pdfLoaded = false;
+  
+  private double maxX;
+  
+  private double maxY;
+  
+  private QuestionItem currentQuestion;
+  
+  private int currentQuestionIndex = 0;
+  
+  private StudentItem currentStudent;
+  
+  private int currentStudentIndex = 0;
+  
+  public void chooseMouseAction(final MouseEvent e) {
+    MouseButton _button = e.getButton();
+    boolean _equals = com.google.common.base.Objects.equal(_button, MouseButton.SECONDARY);
+    if (_equals) {
+      this.moveImage(e);
+      return;
+    }
+    final ControllerFXCorrector.SelectedTool currentTool = this.currentTool;
+    if (currentTool != null) {
+      switch (currentTool) {
+        case NO_TOOL:
+          break;
+        case MOVE_CAMERA_TOOL:
+          this.moveImage(e);
+          break;
+        default:
+          break;
+      }
+    }
   }
   
   /**
@@ -221,8 +303,7 @@ public class ControllerFXCorrector {
   
   private double objectOriginY = 0d;
   
-  @FXML
-  public void MoveImage(final MouseEvent e) {
+  public void moveImage(final MouseEvent e) {
     EventType<? extends MouseEvent> _eventType = e.getEventType();
     boolean _equals = com.google.common.base.Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
     if (_equals) {
@@ -273,121 +354,24 @@ public class ControllerFXCorrector {
     }
   }
   
-  /**
-   * Called when a <b>save</b> button is pressed
-   */
-  @FXML
-  public void savePressed() {
-    InputOutput.<String>println("Saving method");
-  }
-  
-  /**
-   * Called when a <b>save a</b> button is pressed
-   */
-  @FXML
-  public void saveAsPressed() {
-    InputOutput.<String>println("Saving as method");
-  }
-  
-  /**
-   * Called when a <b>load</b> button is pressed
-   */
-  @FXML
-  public void loadPressed() {
-    InputOutput.<String>println("Load method");
-    this.chooseFile();
-  }
-  
-  /**
-   * Called when a <b>import</b> button is pressed
-   */
-  @FXML
-  public void importPressed() {
-    InputOutput.<String>println("Import method");
-  }
-  
-  /**
-   * Called when a <b>export</b> button is pressed
-   */
-  @FXML
-  public void exportPressed() {
-    InputOutput.<String>println("Export method");
-  }
-  
-  /**
-   * Called when a <b>next question</b> button is pressed
-   */
-  @FXML
-  public void nextQuestionPressed() {
-    InputOutput.<String>println("Next question method");
-    this.corrector.nextQuestion();
-  }
-  
-  /**
-   * Called when a <b>previous question pressed</b> button is pressed
-   */
-  @FXML
-  public void prevQuestionPressed() {
-    InputOutput.<String>println("Previous question method");
-    this.corrector.previousQuestion();
-  }
-  
-  /**
-   * Called when a <b>next student</b> button is pressed
-   */
-  @FXML
-  public void nextStudentPressed() {
-    InputOutput.<String>println("Next student method");
-  }
-  
-  /**
-   * Called when a <b>previous student</b> button is pressed
-   */
-  @FXML
-  public void prevStudentPressed() {
-    InputOutput.<String>println("Previous student method");
-  }
-  
-  /**
-   * Called when a grade update button is pressed
-   */
-  @FXML
-  public void saveGradeButtonPressed() {
-    Double _value = this.gradeSpinner.getValue();
-    String _plus = ("save Grade method : " + _value);
-    String _plus_1 = (_plus + "/");
-    Double _value_1 = this.totalGradeSpinner.getValue();
-    String _plus_2 = (_plus_1 + _value_1);
-    InputOutput.<String>println(_plus_2);
-  }
-  
-  @FXML
-  public void addBaremeList() {
-  }
-  
-  @FXML
-  public void addQuestionList() {
-  }
-  
   public void zoomTest() {
     this.setZoomArea(0, 0, 100, 200);
   }
   
-  public void setZoomArea(final int x, final int y, final int height, final int width) {
-    Rectangle2D newrect = new Rectangle2D(this.currentQuestion.x, this.currentQuestion.y, this.currentQuestion.w, this.currentQuestion.h);
-    this.imview.setViewport(newrect);
-  }
-  
   @FXML
   public void resetPosition() {
-    this.imagePane.setScaleX(1);
-    this.imagePane.setScaleY(1);
-    this.imagePane.setLayoutX(0);
-    this.imagePane.setLayoutY(0);
+    this.mainPane.setScaleX(1);
+    this.mainPane.setScaleY(1);
+    this.mainPane.setLayoutX(0);
+    this.mainPane.setLayoutY(0);
     this.imview.setViewport(null);
   }
   
-  private ControllerFXCorrector.QuestionDetails currentQuestion;
+  public void init() {
+    this.binds(this.root);
+    this.binds(this.scrollMain);
+    this.binds(this.scrollBis);
+  }
   
   public void binds(final Node n) {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
@@ -419,7 +403,7 @@ public class ControllerFXCorrector {
   }
   
   public void setKeybinds() {
-    Scene s = this.imagePane.getScene();
+    Scene s = this.mainPane.getScene();
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
       KeyCode _code = event.getCode();
       if (_code != null) {
@@ -450,7 +434,16 @@ public class ControllerFXCorrector {
     this.binds(this.scrollBis);
   }
   
-  public void chooseFile() {
+  public void load() {
+    this.loadExam();
+    this.loadStudentPdfs();
+  }
+  
+  /**
+   * Opens a Open dialog box
+   * Used to choose a .xmi file representing a already started Graduation
+   */
+  public void loadExam() {
     FileChooser fileChooser = new FileChooser();
     ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
     List<String> _asList = Arrays.<String>asList("*.xmi");
@@ -459,63 +452,180 @@ public class ControllerFXCorrector {
     String _property = System.getProperty("user.home");
     String _property_1 = System.getProperty("file.separator");
     String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + "Documents");
+    String _plus_1 = (_plus + 
+      "Documents");
     File _file = new File(_plus_1);
     fileChooser.setInitialDirectory(_file);
-    File file = fileChooser.showOpenDialog(this.imagePane.getScene().getWindow());
+    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.corrector.loadFile(file);
+      this.corrector.getPresenter().openEditionTemplate(file.getPath());
     } else {
       ControllerFXCorrector.logger.warn("File not chosen");
     }
   }
   
-  public void initTests() {
-    this.setKeybinds();
-  }
-  
-  public void initQuestionNames(final List<String> names) {
-    this.rightList.getItems().clear();
-    for (final String s : names) {
-      ObservableList<Label> _items = this.rightList.getItems();
-      Label _label = new Label(s);
-      _items.add(_label);
+  public void loadStudentPdfs() {
+    FileChooser fileChooser = new FileChooser();
+    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+    List<String> _asList = Arrays.<String>asList("*.pdf");
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
+    _extensionFilters.add(_extensionFilter);
+    String _property = System.getProperty("user.home");
+    String _property_1 = System.getProperty("file.separator");
+    String _plus = (_property + _property_1);
+    String _plus_1 = (_plus + 
+      "Documents");
+    File _file = new File(_plus_1);
+    fileChooser.setInitialDirectory(_file);
+    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
+    if ((file != null)) {
+      this.corrector.getPresenter().openCorrectionPdf(file.getPath());
+      this.renderCorrectedCopy();
+      this.renderStudentCopy();
+      this.loadQuestions();
+      this.loadStudents();
+    } else {
+      ControllerFXCorrector.logger.warn("File not chosen");
     }
   }
   
-  public void initStudentNames(final List<String> names) {
-    this.leftList.getItems().clear();
-    for (final String s : names) {
-      ObservableList<Label> _items = this.leftList.getItems();
-      Label _label = new Label(s);
-      _items.add(_label);
+  public void saveExam() {
+    FileChooser fileChooser = new FileChooser();
+    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+    List<String> _asList = Arrays.<String>asList("*.xmi");
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XMI files", _asList);
+    _extensionFilters.add(_extensionFilter);
+    String _property = System.getProperty("user.home");
+    String _property_1 = System.getProperty("file.separator");
+    String _plus = (_property + _property_1);
+    String _plus_1 = (_plus + 
+      "Documents");
+    File _file = new File(_plus_1);
+    fileChooser.setInitialDirectory(_file);
+    File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
+    if ((file != null)) {
+    } else {
+      ControllerFXCorrector.logger.warn("File not chosen");
     }
   }
   
-  public void showStudent() {
-  }
-  
-  public void showQuestion(final Question question) {
-    String _name = question.getName();
-    ControllerFXCorrector.QuestionDetails _questionDetails = new ControllerFXCorrector.QuestionDetails(_name);
-    this.currentQuestion = _questionDetails;
-    this.currentQuestion.x = question.getZone().getX();
-    this.currentQuestion.y = question.getZone().getY();
-    this.currentQuestion.h = question.getZone().getHeigth();
-    this.currentQuestion.w = question.getZone().getWidth();
-    this.currentQuestion.id = question.getId();
-    this.questionDetails.getChildren().clear();
-    this.questionDetails.getChildren().add(this.currentQuestion.getDetails());
-    int i = 0;
-    ObservableList<Label> _items = this.rightList.getItems();
-    for (final Label l : _items) {
+  public void loadQuestions() {
+    for (int p = 0; (p < this.corrector.getPresenter().getTemplatePageAmount()); p++) {
       {
-        boolean _equals = l.getText().equals(this.currentQuestion.name);
-        if (_equals) {
-          this.rightList.getSelectionModel().select(i);
+        LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
+        for (final int i : ids) {
+          {
+            QuestionItem question = new QuestionItem();
+            question.setX(this.corrector.getPresenter().questionX(i));
+            question.setY(this.corrector.getPresenter().questionY(i));
+            question.setH(this.corrector.getPresenter().questionHeight(i));
+            question.setW(this.corrector.getPresenter().questionWidth(i));
+            question.setQuestionId(i);
+            question.setName(this.corrector.getPresenter().questionName(i));
+            this.rightList.getItems().add(question);
+          }
         }
-        i++;
       }
     }
+  }
+  
+  public void loadStudents() {
+    LinkedList<Integer> ids = this.corrector.getPresenter().getStudentIds();
+    for (final int i : ids) {
+      ObservableList<StudentItem> _items = this.leftList.getItems();
+      StudentItem _studentItem = new StudentItem(i);
+      _items.add(_studentItem);
+    }
+  }
+  
+  public void renderStudentCopy() {
+    BufferedImage image = this.corrector.getPresenter().getPresenterPdf().getCurrentPdfPage();
+    this.imview.setImage(SwingFXUtils.toFXImage(image, null));
+    this.pdfLoaded = true;
+  }
+  
+  public void renderCorrectedCopy() {
+  }
+  
+  public void nextStudent() {
+    this.currentStudentIndex++;
+    int _size = this.leftList.getItems().size();
+    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
+    if (_greaterEqualsThan) {
+      this.currentQuestionIndex = 0;
+    }
+    this.setSelectedStudent();
+  }
+  
+  public void previousStudent() {
+    this.currentStudentIndex--;
+    if ((this.currentStudentIndex < 0)) {
+      this.currentStudentIndex = this.leftList.getItems().size();
+    }
+    this.setSelectedStudent();
+  }
+  
+  public void selectStudent(final int index) {
+    this.currentStudentIndex = index;
+    this.setSelectedStudent();
+  }
+  
+  public void setSelectedStudent() {
+    this.currentStudent = this.leftList.getItems().get(this.currentStudentIndex);
+    this.leftList.getSelectionModel().select(this.currentStudentIndex);
+  }
+  
+  public void nextQuestion() {
+    this.currentQuestionIndex++;
+    int _size = this.rightList.getItems().size();
+    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
+    if (_greaterEqualsThan) {
+      this.currentQuestionIndex = 0;
+    }
+    this.setSelectedQuestion();
+  }
+  
+  public void previousQuestion() {
+    this.currentQuestionIndex--;
+    if ((this.currentQuestionIndex < 0)) {
+      this.currentQuestionIndex = this.rightList.getItems().size();
+    }
+    this.setSelectedQuestion();
+  }
+  
+  public void selectQuestion(final int index) {
+    this.currentQuestionIndex = index;
+    this.setSelectedQuestion();
+  }
+  
+  public void setSelectedQuestion() {
+    this.currentQuestion = this.rightList.getItems().get(this.currentQuestionIndex);
+    this.rightList.getSelectionModel().select(this.currentQuestionIndex);
+  }
+  
+  public void setZoomArea(final int x, final int y, final int height, final int width) {
+    Rectangle2D _rectangle2D = new Rectangle2D(x, y, height, width);
+    this.imview.setViewport(_rectangle2D);
+  }
+  
+  public void checkPage() {
+  }
+  
+  public void setGrade(final int studentId, final int questionId, final float grade) {
+  }
+  
+  public void nextPage() {
+    this.corrector.getPresenter().getPresenterPdf().nextPdfPage();
+    this.renderCorrectedCopy();
+  }
+  
+  public void previousPage() {
+    this.corrector.getPresenter().getPresenterPdf().previousPdfPage();
+    this.renderCorrectedCopy();
+  }
+  
+  public void selectPage(final int pageNumber) {
+    this.corrector.getPresenter().getPresenterPdf().goToPage(pageNumber);
+    this.renderCorrectedCopy();
   }
 }

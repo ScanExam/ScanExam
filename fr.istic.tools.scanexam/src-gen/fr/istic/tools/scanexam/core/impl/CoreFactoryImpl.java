@@ -65,8 +65,8 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 			case CorePackage.QUESTION: return createQuestion();
 			case CorePackage.GRADE_SCALE: return createGradeScale();
 			case CorePackage.GRADE_ENTRY: return createGradeEntry();
-			case CorePackage.PAGE: return createPage();
 			case CorePackage.EXAM: return createExam();
+			case CorePackage.PAGE: return createPage();
 			case CorePackage.COMMENT: return createComment();
 			case CorePackage.TEXT_COMMENT: return createTextComment();
 			case CorePackage.HANDWRITING_COMMENT: return createHandwritingComment();
@@ -156,9 +156,9 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Page createPage() {
-		PageImpl page = new PageImpl();
-		return page;
+	public Exam createExam() {
+		ExamImpl exam = new ExamImpl();
+		return exam;
 	}
 
 	/**
@@ -166,9 +166,9 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Exam createExam() {
-		ExamImpl exam = new ExamImpl();
-		return exam;
+	public Page createPage() {
+		PageImpl page = new PageImpl();
+		return page;
 	}
 
 	/**

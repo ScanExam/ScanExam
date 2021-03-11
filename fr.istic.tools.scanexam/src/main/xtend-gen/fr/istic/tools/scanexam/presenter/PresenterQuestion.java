@@ -1,19 +1,35 @@
 package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.presenter.GraduationPresenter;
+import fr.istic.tools.scanexam.services.ExamGraduationService;
 import java.util.Objects;
 
 /**
  * CLass representing a presenter of question in
  * an exam to link the view and the model
- * @author Benjamin Danlos
+ * @author Benjamin Danlos, Matthieu Pays
  */
 @SuppressWarnings("all")
 public class PresenterQuestion {
   /**
+   * Association with the model via the Service API
+   */
+  private ExamGraduationService service;
+  
+  /**
    * Presenter for the correction view
    */
   private GraduationPresenter presenterCorrection;
+  
+  /**
+   * Constructor
+   * @param {@link ExamGraduationService} (not null)
+   * Constructs a QuestionPresenter object.
+   */
+  public PresenterQuestion(final ExamGraduationService service) {
+    Objects.<ExamGraduationService>requireNonNull(service);
+    this.service = service;
+  }
   
   /**
    * setter for the PresenterVueCorrection attribute
@@ -33,6 +49,14 @@ public class PresenterQuestion {
    */
   public GraduationPresenter getPresenterVueCorrection() {
     return this.presenterCorrection;
+  }
+  
+  /**
+   * Set the grade for the current question
+   * @param grade to set up
+   */
+  public Object setGrade(final int grade) {
+    return null;
   }
   
   /**

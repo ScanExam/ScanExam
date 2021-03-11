@@ -115,8 +115,8 @@ public class AdapterSwingPdfPanel {
    * Met à jour le pdf à afficher
    */
   public void refreshPdf() {
-    if (((this.presenterPdf != null) && (this.presenterPdf.getCurrentPdfPage() != null))) {
-      this.pdf = this.presenterPdf.getCurrentPdfPage();
+    if (((this.presenterPdf != null) && (this.presenterPdf.getPresenterPdf().getCurrentPdfPage() != null))) {
+      this.pdf = this.presenterPdf.getPresenterPdf().getCurrentPdfPage();
       this.setScaleOnWidth(this.scaleOnWidth);
       this.repaint();
     }

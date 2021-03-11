@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
+import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
 
 /**
  * Interface des presenters
@@ -9,9 +9,7 @@ import java.io.File;
  */
 @SuppressWarnings("all")
 public interface Presenter {
-  void create(final File file);
+  PresenterPdf getPresenterPdf();
   
-  BufferedImage getCurrentPdfPage();
-  
-  int getCurrentPdfPageNumber();
+  PresenterMarkingScheme getPresenterMarkingScheme();
 }

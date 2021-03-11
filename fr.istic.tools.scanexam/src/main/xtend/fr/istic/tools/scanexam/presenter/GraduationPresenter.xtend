@@ -4,6 +4,10 @@ import fr.istic.tools.scanexam.services.ExamGraduationService
 import fr.istic.tools.scanexam.view.Adapter
 import java.io.File
 import java.util.Objects
+import java.util.LinkedList
+import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.core.Question
+import java.util.List
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -20,7 +24,7 @@ class GraduationPresenter implements Presenter
 	PresenterCopy presCopy
 	PresenterMarkingScheme presMarkingScheme
 	GraduationPresenter graduationPresenter;
-	PresenterPdf presPdf
+	PresenterPdf presPdf 
 	ExamGraduationService service;
 	
 	Adapter<GraduationPresenter> adapter;
@@ -33,16 +37,11 @@ class GraduationPresenter implements Presenter
 		Objects.requireNonNull(adapter)
 		this.adapter = adapter
 		
+		presPdf = new PresenterPdf(service, this)
+		presQuestion = new PresenterQuestion(service)
 	}
 	
-	/**
-	 * setter for the PresenterQuestion attribute
-	 * @param {@link PresenterQuestion} pres instance of the presenter (not null) 
-	 */
-	def setPresenterQuestion(PresenterQuestion pres){
-		Objects.requireNonNull(pres)
-		presQuestion = pres
-	}
+	
 	/**
 	 * @return current {@link PresenterQuestion} 
 	 */
@@ -50,14 +49,7 @@ class GraduationPresenter implements Presenter
 		presQuestion
 	}
 	
-	/**
-	 * Setter for {@link PresenterCopy} attribute
-	 * @param {@link PresenterCopy} pres an instance (not null)
-	 */
-	def setPresenterCopy(PresenterCopy pres){
-		Objects.requireNonNull(pres)
-		presCopy = pres
-	}
+	
 	/**
 	 * @return current {@link PresenterCopy} 
 	 */
@@ -65,29 +57,15 @@ class GraduationPresenter implements Presenter
 		presCopy
 	}
 	
-	/**
-	 * Setter for {@link PresenterMarkingScheme} attribute
-	 * @param {@link PresenterMarkingScheme} pres an instance (not null)
-	 */
-	def setPresenterMarkingScheme(PresenterMarkingScheme pres){
-		Objects.requireNonNull(pres)
-		presMarkingScheme = pres
-	}
+
 	/**
 	 * @return current {@link PresenterMarkingScheme} 
 	 */
-	def getPresenterMarkingScheme(){
+	override getPresenterMarkingScheme(){
 		presMarkingScheme
 	}
 	
-	/**
-	 * Sets a {@link ControllerVueCorrection} the link with the view
-	 * @param {@link ControllerVueCorrection} contr an instance (not null)
-	 */
-	def setControllerVueCorrection(GraduationPresenter contr){
-		Objects.requireNonNull(contr)
-		graduationPresenter = contr
-	}
+	
 	/**
 	 * @return current {@link ControllerVueCorrection} 
 	 */
@@ -95,6 +73,12 @@ class GraduationPresenter implements Presenter
 		graduationPresenter
 	}
 	
+	override getPresenterPdf(){
+		presPdf
+	}
+	
+	
+	//Fix me : if related to Questions, move to PresenterQuestion and chain with getPresenterQuestion instead
 	/**
 	 * @return next question
 	 */
@@ -111,26 +95,102 @@ class GraduationPresenter implements Presenter
 	}
 	
 	
-	def setPresenterPdf(PresenterPdf pres){
-		Objects.requireNonNull(pres)
-		presPdf = pres
-	}
-	def getPresenterPdf(){
-		presPdf
+	
+	def void openEditionTemplate(String path){
+		service.openCreationTemplate(path)
 	}
 	
-	override getCurrentPdfPage() {
-		return service.getCurrentPdfPage
+	def void openCorrectionPdf(String path){
+		service.openCorrectionPdf(path)
 	}
-	
-	override int getCurrentPdfPageNumber(){
-		service.currentPageNumber
-	}
-	
-	override void create(File file)
-	{
-		 service.create(file);
+	def LinkedList<Integer> getStudentIds(){
+		var list = service.studentSheets
+		print(list.size)
+		var result = new LinkedList<Integer>()
+		for (StudentSheet s : list) {
+			result.add(s.id);
+		}
+		result
 	}
 	
 	
+	def int getAbsolutePage(int studentId,int pageNumber){
+		service.getAbsolutePageNumber(studentId,pageNumber);
+	}
+	
+	/* --LOADING NEW TEMPLATE--  */
+	
+	def LinkedList<Integer> initLoading(int pageNumber){
+		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
+		var ids = new LinkedList<Integer>();
+		for (Question q : questions) {
+			ids.add(q.id)
+		}
+		ids
+	}
+	
+	def getTemplatePageAmount(){
+		service.templatePageAmount
+	}
+	
+	List<Question> questions
+	/**
+	 * Loads the next question into questionToLoad
+	 * if there is a new question, return true,
+	 * else return false
+	 */
+	 
+	
+	def double questionX(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.x
+			}
+		}
+		result
+	}
+	
+	def double questionY(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.y
+			}
+		}
+		result
+	}
+	
+	def double questionHeight(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.heigth
+				print("h = " + result)
+			}
+		}
+		result
+	}
+	
+	def double questionWidth(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.width
+				print("w = " + result)
+			}
+		}
+		result
+	}
+	
+	def String questionName(int id){
+		var result = "";
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.name
+			}
+		}
+		result
+	}
+
 }

@@ -4,7 +4,9 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Class to manage conversions of the view's questions
@@ -80,64 +82,109 @@ public class PresenterQuestionZone {
   /**
    * --LOADING NEW TEMPLATE--
    */
-  public void initLoading() {
-    LinkedList<Integer> _linkedList = new LinkedList<Integer>();
-    this.pageNumbers = _linkedList;
-    LinkedList<Question> _linkedList_1 = new LinkedList<Question>();
-    this.questions = _linkedList_1;
-    this.questionToLoadIndex = (-1);
+  public LinkedList<Integer> initLoading(final int pageNumber) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      this.questions = this.service.getQuestionAtPage(pageNumber);
+      LinkedList<Integer> ids = new LinkedList<Integer>();
+      for (final Question q : this.questions) {
+        ids.add(Integer.valueOf(q.getId()));
+      }
+      _xblockexpression = ids;
+    }
+    return _xblockexpression;
   }
   
-  private LinkedList<Integer> pageNumbers;
-  
-  private LinkedList<Question> questions;
-  
-  private int questionToLoadIndex;
+  private List<Question> questions;
   
   /**
    * Loads the next question into questionToLoad
    * if there is a new question, return true,
    * else return false
    */
-  public boolean loadNextQuestion() {
-    this.questionToLoadIndex++;
-    int _size = this.questions.size();
-    boolean _greaterEqualsThan = (this.questionToLoadIndex >= _size);
-    if (_greaterEqualsThan) {
-      return false;
+  public double questionX(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getX();
+        }
+      }
+      _xblockexpression = result;
     }
-    return true;
+    return _xblockexpression;
   }
   
-  public double currentQuestionX() {
-    return this.questions.get(this.questionToLoadIndex).getZone().getX();
+  public double questionY(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getY();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
-  public double currentQuestionY() {
-    return this.questions.get(this.questionToLoadIndex).getZone().getY();
+  public double questionHeight(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getHeigth();
+          InputOutput.<String>print(("h = " + Double.valueOf(result)));
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
-  public double currentQuestionHeight() {
-    return this.questions.get(this.questionToLoadIndex).getZone().getHeigth();
+  public double questionWidth(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getWidth();
+          InputOutput.<String>print(("w = " + Double.valueOf(result)));
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
-  public double currentQuestionWidth() {
-    return this.questions.get(this.questionToLoadIndex).getZone().getWidth();
+  public String questionName(final int id) {
+    String _xblockexpression = null;
+    {
+      String result = "";
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getName();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
-  public String currentQuestionName() {
-    return this.questions.get(this.questionToLoadIndex).getName();
-  }
-  
-  public int currentQuestionId() {
-    return this.questions.get(this.questionToLoadIndex).getId();
-  }
-  
-  public int currentQuestionPage() {
-    return (this.pageNumbers.get(this.questionToLoadIndex)).intValue();
-  }
-  
-  public int currentQuestionWorth() {
+  public int questionWorth(final int id) {
     return 0;
   }
 }

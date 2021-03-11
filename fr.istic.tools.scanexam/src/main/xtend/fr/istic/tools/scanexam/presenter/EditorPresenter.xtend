@@ -39,28 +39,13 @@ class EditorPresenter implements Presenter
 
 
 	/**
-	 * setter for the PresenterQRCode attribute
-	 * @param {@link PresenterQRCode} pres instance of the presenter (not null) 
-	 */
-	def setPresenterQRCode(PresenterQRCode pres){
-		Objects.requireNonNull(pres)
-		presQRCode = pres
-	}
-	/**
 	 * @return current {@link PresenterQRCode} 
 	 */
 	def getPresenterQRCode(){
 		presQRCode
 	}
 	
-	/**
-	 * Setter for {@link PresenterQuestionZone} attribute
-	 * @param {@link PresenterQuestionZone} pres an instance (not null)
-	 */
-	def setPresenterQuestionZone(PresenterQuestionZone pres){
-		Objects.requireNonNull(pres)
-		presQuestionZone = pres
-	}
+	
 	/**
 	 * @return current {@link PresenterQuestionZone} 
 	 */
@@ -68,79 +53,26 @@ class EditorPresenter implements Presenter
 		presQuestionZone
 	}
 	
-	/**
-	 * Setter for {@link PresenterMarkingScheme} attribute
-	 * @param {@link PresenterMarkingScheme} pres an instance (not null)
-	 */
-	def setPresenterMarkingScheme(PresenterMarkingScheme pres){
-		Objects.requireNonNull(pres)
-		presMarkingScheme = pres
-	}
+	
 	/**
 	 * @return current {@link PresenterMarkingScheme} 
 	 */
-	def getPresenterMarkingScheme(){
+	override getPresenterMarkingScheme(){
 		presMarkingScheme
 	}
 	
-	/**
-	 * Sets a {@link ControllerVueCreation} the link with the view
-	 * @param {@link ControllerVueCreation} contr an instance (not null)
-	 */
-	def setControllerVueCreation(EditorPresenter contr){
-		Objects.requireNonNull(contr)
-		editorPresenter = contr
-	}
-	/**
-	 * @return current {@link ControllerVueCreation} 
-	 */
-	def getControllerVueCreation(){
-		editorPresenter
+	override getPresenterPdf(){
+		presPdf
 	}
 	
-	override getCurrentPdfPage()
-	{
-		return service.getCurrentPdfPage
-	}
 	
-	def void choosePdfPage(int pageNumber) {
-		
-	}
-	def void nextPdfPage(){
-		service.nextPage
-	}
-	def void previousPdfPage(){
-		service.previousPage
-	}
-	
-	def void goToPage(int page) {
-		service.goToPage(page)
-	}
-	
-	def int getTotalPdfPageNumber(){
-		service.pageNumber
-	}
-	
-	override int getCurrentPdfPageNumber(){
-		service.currentPageNumber
-	}
-	
-	override create(File file)
-	{
-		 service.create(file);
-	}
-	
-	def getDocument() 
-	{
-		service.document
-	}
 	
 	def save(String path){
 		service.save(path)
 	}
 	
-	def load(String path) {
-		service.open(path)
+	def boolean load(String path) {
+		return service.open(path)
 	}
 	
 	def close() {

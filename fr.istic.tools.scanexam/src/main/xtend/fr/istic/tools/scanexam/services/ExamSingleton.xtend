@@ -29,9 +29,13 @@ final class ExamSingleton
 	 */
 	static def Collection<Question> getQuestions(int pageId)
 	{
-		return Collections.unmodifiableCollection(instance.pages.get(pageId).questions.values);
+		return Collections.unmodifiableCollection(instance.pages.get(pageId).questions);
 	}
 	
+	static def int getTemplatePageAmount(){
+		instance.pages.size
+	}
+
 	static def Page getPage(int pageId)
 	{
 		return instance.pages.get(pageId);

@@ -38,12 +38,13 @@ class LauncherFX extends Application implements Launcher {
 			editorLoader.setResources(LanguageManager.currentBundle);
 			graduatorLoader.setResources(LanguageManager.currentBundle);
 			
-			val editorRoot = editorLoader.load(ResourcesUtils.getInputStreamResource("/viewResources/EditorUI.fxml"));
-			val graduatorRoot = graduatorLoader.load(ResourcesUtils.getInputStreamResource("/viewResources/CorrectorUI.fxml"));
+			val editorRoot = editorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
+			val graduatorRoot = graduatorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
 			
 			val controllerEditor = (editorLoader.controller as ControllerFXEditor);
 			val controllerGraduator = (graduatorLoader.controller as ControllerFXCorrector);
 			
+		
 			controllerEditor.editorAdapterFX = edit;
 			edit.controllerFXCreator =  controllerEditor;
 			
@@ -54,6 +55,8 @@ class LauncherFX extends Application implements Launcher {
 			val editorScene = new Scene(editorRoot, 1280, 720) ;
 			val graduatorScene = new Scene(graduatorRoot, 1280, 720);
 			
+			controllerGraduator.init
+			
 			pStage = primaryStage;
 			eScene = editorScene
 			gScene = graduatorScene;
@@ -62,7 +65,7 @@ class LauncherFX extends Application implements Launcher {
 			primaryStage.setScene(editorScene);
 			primaryStage.setMinHeight(720);
 			primaryStage.setMinWidth(720);
-			primaryStage.icons.add(new Image(ResourcesUtils.getInputStreamResource("/logo.png")));
+			primaryStage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 			primaryStage.show();
 	}
 	

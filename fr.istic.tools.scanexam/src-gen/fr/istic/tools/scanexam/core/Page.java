@@ -2,7 +2,7 @@
  */
 package fr.istic.tools.scanexam.core;
 
-import java.util.Map;
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -47,25 +47,15 @@ public interface Page extends EObject {
 	void setId(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Questions</b></em>' attribute.
+	 * Returns the value of the '<em><b>Questions</b></em>' containment reference list.
+	 * The list contents are of type {@link fr.istic.tools.scanexam.core.Question}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Questions</em>' attribute.
-	 * @see #setQuestions(Map)
+	 * @return the value of the '<em>Questions</em>' containment reference list.
 	 * @see fr.istic.tools.scanexam.core.CorePackage#getPage_Questions()
-	 * @model unique="false" dataType="fr.istic.tools.scanexam.core.Map&lt;org.eclipse.emf.ecore.EIntegerObject, fr.istic.tools.scanexam.core.Question&gt;"
+	 * @model containment="true"
 	 * @generated
 	 */
-	Map<Integer, Question> getQuestions();
-
-	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.Page#getQuestions <em>Questions</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Questions</em>' attribute.
-	 * @see #getQuestions()
-	 * @generated
-	 */
-	void setQuestions(Map<Integer, Question> value);
+	EList<Question> getQuestions();
 
 } // Page
