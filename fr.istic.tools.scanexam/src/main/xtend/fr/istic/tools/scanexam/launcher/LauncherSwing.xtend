@@ -18,7 +18,7 @@ class LauncherSwing implements Launcher {
 	// ----------------------------------------------------------------------------------------------------
 	static EditorAdapterSwing edit= new EditorAdapterSwing
 	static GraduationAdapterSwing grad
-	
+	 
 	/** 
 	 * Lancement de l'application Swing
 	 */
