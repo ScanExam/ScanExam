@@ -96,7 +96,7 @@ public abstract class AdapterBox {
     final Box createdBox = this.selectionBoxes.getBox(_minus);
     final int id = this.presenterQst.createQuestion(x, y, this.minHeight, this.minWidth);
     createdBox.setId(id);
-    createdBox.setNbPage(this.presenterQst.getPresenterVueCreation().getCurrentPdfPageNumber());
+    createdBox.setNbPage(this.presenterQst.getPresenterVueCreation().getPresenterPdf().currentPdfPageNumber());
   }
   
   /**

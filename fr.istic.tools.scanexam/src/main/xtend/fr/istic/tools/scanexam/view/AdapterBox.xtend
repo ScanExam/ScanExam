@@ -101,7 +101,7 @@ abstract class AdapterBox {
 		val Box createdBox = selectionBoxes.getBox(selectionBoxes.size() - 1)
 		val int id = presenterQst.createQuestion(x, y, minHeight, minWidth)
 		createdBox.setId(id)
-		createdBox.setNbPage(presenterQst.getPresenterVueCreation().currentPdfPageNumber)
+		createdBox.setNbPage(presenterQst.getPresenterVueCreation().getPresenterPdf.currentPdfPageNumber)
 	}
 
 	/** 
