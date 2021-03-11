@@ -83,18 +83,18 @@ class EditorAdapterSwing implements EditorAdapter {
 		view.getBtnPrev().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "question précédente" est cliqué
-				presenter.previousPdfPage()
+				presenter.getPresenterPdf.previousPdfPage()
 	        	adapterPdfAndBox.refreshPdf()
-	        	view.setCurrentPage(presenter.currentPdfPageNumber)
+	        	view.setCurrentPage(presenter.getPresenterPdf.currentPdfPageNumber)
 			}
 	    });
 	    
 		view.getBtnNext().addActionListener(new ActionListener() {
 			override actionPerformed(ActionEvent e) {
 				//Actions lorsque le bouton "question suivante" est cliqué
-				presenter.nextPdfPage()
+				presenter.getPresenterPdf.nextPdfPage()
 	        	adapterPdfAndBox.refreshPdf()
-	        	view.setCurrentPage(presenter.currentPdfPageNumber)
+	        	view.setCurrentPage(presenter.getPresenterPdf.currentPdfPageNumber)
 			}
 	    });
 	    
@@ -119,26 +119,26 @@ class EditorAdapterSwing implements EditorAdapter {
 	        var File selectedFile = fc.getSelectedFile()
 	        
 	        // Envoie du pdf au service
-	        editorPresenter.create(selectedFile)
+	        editorPresenter.getPresenterPdf.create(selectedFile)
 	        
 	        // Mise à jour du pdf affiché
 	        adapterPdfAndBox.refreshPdf()
 	        
 	        // Mise à jour de la liste des pages
 			view.cmbBxPage.removeAll
-			for (i : 1 ..< editorPresenter.totalPdfPageNumber) {
+			for (i : 1 ..< editorPresenter.getPresenterPdf.totalPdfPageNumber) {
 				view.cmbBxPage.addItem(i)
 			}
 			view.cmbBxPage.addActionListener(new ActionListener() {
 				override actionPerformed(ActionEvent e) {
-					presenter.goToPage(view.cmbBxPage.selectedIndex)
+					presenter.getPresenterPdf.goToPage(view.cmbBxPage.selectedIndex)
 		        	adapterPdfAndBox.refreshPdf()
-	        		view.setCurrentPage(presenter.currentPdfPageNumber)
+	        		view.setCurrentPage(presenter.getPresenterPdf.currentPdfPageNumber)
 				}
 			});
 			
 	        // Mise à jour du numéro de page
-	        view.setCurrentPage(presenter.currentPdfPageNumber)
+	        view.setCurrentPage(presenter.getPresenterPdf.currentPdfPageNumber)
 	    }
 	}
 	
