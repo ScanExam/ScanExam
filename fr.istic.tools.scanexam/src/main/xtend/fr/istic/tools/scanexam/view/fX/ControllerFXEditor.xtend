@@ -352,13 +352,13 @@ class ControllerFXEditor {
 	def Box createBox(double x, double y) {
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box("Question " + questionCounter++, editor.presenter.currentPdfPageNumber, BoxType.QUESTION, x, y);
+				new Box("Question " + questionCounter++, editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
 			}
 			case ID_AREA: {
-				new Box("ID Zone", editor.presenter.currentPdfPageNumber, BoxType.ID, x, y);
+				new Box("ID Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.ID, x, y);
 			}
 			case QR_AREA: {
-				new Box("QR Zone", editor.presenter.currentPdfPageNumber, BoxType.QR, x, y);
+				new Box("QR Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QR, x, y);
 			}
 			default: {
 			}
@@ -493,7 +493,7 @@ class ControllerFXEditor {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			editor.presenter.create(file);
+			editor.presenter.getPresenterPdf.create(file);
 			renderDocument();
 		} else {
 			logger.warn("File not chosen")
@@ -546,7 +546,7 @@ class ControllerFXEditor {
 			addBox(box);
 		}*/
 		
-		for (var p = 0;p < editor.presenter.totalPdfPageNumber;p++) {
+		for (var p = 0;p < editor.presenter.getPresenterPdf.totalPdfPageNumber;p++) {
 			var ids = editor.presenter.presenterQuestionZone.initLoading(p)
 			for (int i:ids) {
 				var box = new Box(
@@ -581,9 +581,9 @@ class ControllerFXEditor {
 	 */
 	def renderDocument() {
 
-		pageNumberLabel.text = editor.presenter.currentPdfPageNumber + 1 + "/" + editor.presenter.totalPdfPageNumber
+		pageNumberLabel.text = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1 + "/" + editor.presenter.getPresenterPdf.totalPdfPageNumber
 		introLabel.visible = false
-		val image = editor.presenter.currentPdfPage
+		val image = editor.presenter.getPresenterPdf.currentPdfPage
 		pdfView.image = SwingFXUtils.toFXImage(image, null);
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight
@@ -601,24 +601,24 @@ class ControllerFXEditor {
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		editor.presenter.choosePdfPage(pageNumber);
+		editor.presenter.getPresenterPdf.choosePdfPage(pageNumber);
 		renderDocument();
-		showOnlyPage(editor.presenter.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
 	}
 
 	/**
 	 * goes to the next page of the current pdf
 	 */
 	def nextPage() {
-		editor.presenter.nextPdfPage();
+		editor.presenter.getPresenterPdf.nextPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
 	}
 
 	def previousPage() {
-		editor.presenter.previousPdfPage();
+		editor.presenter.getPresenterPdf.previousPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.currentPdfPageNumber);
+		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
 	}
 
 	def showOnlyPage(int page) {
