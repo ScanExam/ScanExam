@@ -1,7 +1,9 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.view.fX.FXSettings;
+import fr.istic.tools.scanexam.view.fX.GradeItemHBox;
 import fr.istic.tools.scanexam.view.fX.ListViewBox;
+import java.util.LinkedList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -93,6 +95,11 @@ public class Box extends Rectangle {
     }
   }
   
+  public void isVisible(final boolean b) {
+    this.setVisible(b);
+    this.text.setVisible(b);
+  }
+  
   public void setColor(final Color color) {
     this.setStroke(color);
     this.text.setFill(color);
@@ -114,5 +121,17 @@ public class Box extends Rectangle {
   
   public void width(final double w) {
     this.setWidth(w);
+  }
+  
+  public boolean addGradeItem(final GradeItemHBox toAdd) {
+    return this.listViewBox.addGradeItem(toAdd);
+  }
+  
+  public boolean removeGradeItem(final GradeItemHBox toRemove) {
+    return this.listViewBox.removeGradeItem(toRemove);
+  }
+  
+  public LinkedList<GradeItemHBox> getGradeItems() {
+    return this.listViewBox.getGradeItems();
   }
 }

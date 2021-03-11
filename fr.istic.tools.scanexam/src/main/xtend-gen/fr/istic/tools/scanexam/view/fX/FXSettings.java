@@ -18,4 +18,6 @@ public class FXSettings {
   public static Color BOX_HIGHLIGHT_COLOR = Color.web("#0093ff");
   
   public static Color BOX_NORMAL_COLOR = Color.BLACK;
+  
+  public static int MINIMUM_ZONE_SIZE = 20;
 }
