@@ -433,7 +433,7 @@ class ControllerFXCorrector {
 	//---NAVIGATION---//
 	
 	def void renderStudentCopy(){		
-		var image = corrector.presenter.currentPdfPage
+		var image = corrector.presenter.getPresenterPdf.currentPdfPage
 		imview.image = SwingFXUtils.toFXImage(image, null);
 		pdfLoaded = true;
 	}
@@ -490,15 +490,15 @@ class ControllerFXCorrector {
 	
 	//---PAGE OPERATIONS---//
 	def void nextPage() {
-		corrector.presenter.nextPdfPage
+		corrector.presenter.getPresenterPdf.nextPdfPage
 		renderCorrectedCopy
 	}
 	def void previousPage(){
-		corrector.presenter.previousPdfPage
+		corrector.presenter.getPresenterPdf.previousPdfPage
 		renderCorrectedCopy
 	}
 	def void selectPage(int pageNumber) {
-		corrector.presenter.goToPage(pageNumber)
+		corrector.presenter.getPresenterPdf.goToPage(pageNumber)
 		renderCorrectedCopy
 	}
 	//---------------------//

@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
 import fr.istic.tools.scanexam.view.fX.QuestionItem;
 import fr.istic.tools.scanexam.view.fX.StudentItem;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -449,7 +451,7 @@ public class ControllerFXCorrector {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.corrector.getPresenter().openCorrectionPdf(file.getPath());
+      this.corrector.getPresenter().openEditionTemplate(file.getPath());
     } else {
       ControllerFXCorrector.logger.warn("File not chosen");
     }
@@ -472,6 +474,7 @@ public class ControllerFXCorrector {
     if ((file != null)) {
       this.corrector.getPresenter().openCorrectionPdf(file.getPath());
       this.renderCorrectedCopy();
+      this.renderStudentCopy();
       this.loadQuestions();
       this.loadStudents();
     } else {
@@ -500,17 +503,27 @@ public class ControllerFXCorrector {
   }
   
   public void loadQuestions() {
-    LinkedList<Integer> ids = new LinkedList<Integer>();
-    for (final int i : ids) {
+    for (int p = 0; (p < 1); p++) {
       {
-        QuestionItem item = new QuestionItem();
-        this.rightList.getItems().add(item);
+        LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
+        for (final int i : ids) {
+          {
+            QuestionItem question = new QuestionItem();
+            question.setX(this.corrector.getPresenter().questionX(i));
+            question.setY(this.corrector.getPresenter().questionY(i));
+            question.setH(this.corrector.getPresenter().questionHeight(i));
+            question.setW(this.corrector.getPresenter().questionWidth(i));
+            question.setQuestionId(i);
+            question.setName(this.corrector.getPresenter().questionName(i));
+            this.rightList.getItems().add(question);
+          }
+        }
       }
     }
   }
   
   public void loadStudents() {
-    LinkedList<Integer> ids = new LinkedList<Integer>();
+    LinkedList<Integer> ids = this.corrector.getPresenter().getStudentIds();
     for (final int i : ids) {
       ObservableList<StudentItem> _items = this.leftList.getItems();
       StudentItem _studentItem = new StudentItem(i);
@@ -519,6 +532,9 @@ public class ControllerFXCorrector {
   }
   
   public void renderStudentCopy() {
+    BufferedImage image = this.corrector.getPresenter().getPresenterPdf().getCurrentPdfPage();
+    this.imview.setImage(SwingFXUtils.toFXImage(image, null));
+    this.pdfLoaded = true;
   }
   
   public void renderCorrectedCopy() {
@@ -566,11 +582,17 @@ public class ControllerFXCorrector {
   }
   
   public void nextPage() {
+    this.corrector.getPresenter().getPresenterPdf().nextPdfPage();
+    this.renderCorrectedCopy();
   }
   
   public void previousPage() {
+    this.corrector.getPresenter().getPresenterPdf().previousPdfPage();
+    this.renderCorrectedCopy();
   }
   
   public void selectPage(final int pageNumber) {
+    this.corrector.getPresenter().getPresenterPdf().goToPage(pageNumber);
+    this.renderCorrectedCopy();
   }
 }
