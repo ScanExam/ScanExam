@@ -28,6 +28,8 @@ import org.apache.logging.log4j.LogManager
 
 class ControllerFXEditor {
 
+	final double MINIMUM_ZONE_SIZE =  20
+	
 	EditorAdapterFX editor;
 
 	def void setEditorAdapterFX(EditorAdapterFX editor) {
@@ -213,8 +215,18 @@ class ControllerFXEditor {
 			}
 
 		}
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			addBox(currentRectangle);
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) 
+		{
+			if (currentRectangle.width > MINIMUM_ZONE_SIZE && currentRectangle.height > MINIMUM_ZONE_SIZE)
+			{
+				addBox(currentRectangle);
+			}
+			else
+			{
+				(e.source as Pane).children.remove(currentRectangle);
+				(e.source as Pane).children.remove(currentRectangle.getText());
+			}
+		
 		}
 	}
 
@@ -347,12 +359,11 @@ class ControllerFXEditor {
 	/**
 	 * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
 	 */
-	var questionCounter = 1;
 
 	def Box createBox(double x, double y) {
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box("Question " + questionCounter++, editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
+				new Box("Question " + editor.presenter.getQuestionId(), editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
 			}
 			case ID_AREA: {
 				new Box("ID Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.ID, x, y);

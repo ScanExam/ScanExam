@@ -52,6 +52,8 @@ public class ControllerFXEditor {
     RESIZE_TOOL;
   }
   
+  private final double MINIMUM_ZONE_SIZE = 20;
+  
   private EditorAdapterFX editor;
   
   public void setEditorAdapterFX(final EditorAdapterFX editor) {
@@ -245,7 +247,14 @@ public class ControllerFXEditor {
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
     if (_equals_2) {
-      this.addBox(this.currentRectangle);
+      if (((this.currentRectangle.getWidth() > this.MINIMUM_ZONE_SIZE) && (this.currentRectangle.getHeight() > this.MINIMUM_ZONE_SIZE))) {
+        this.addBox(this.currentRectangle);
+      } else {
+        Object _source_1 = e.getSource();
+        ((Pane) _source_1).getChildren().remove(this.currentRectangle);
+        Object _source_2 = e.getSource();
+        ((Pane) _source_2).getChildren().remove(this.currentRectangle.getText());
+      }
     }
   }
   
@@ -416,16 +425,14 @@ public class ControllerFXEditor {
   /**
    * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
    */
-  private int questionCounter = 1;
-  
   public Box createBox(final double x, final double y) {
     Box _switchResult = null;
     final ControllerFXEditor.SelectedTool currentTool = this.currentTool;
     if (currentTool != null) {
       switch (currentTool) {
         case QUESTION_AREA:
-          int _plusPlus = this.questionCounter++;
-          String _plus = ("Question " + Integer.valueOf(_plusPlus));
+          int _questionId = this.editor.getPresenter().getQuestionId();
+          String _plus = ("Question " + Integer.valueOf(_questionId));
           int _currentPdfPageNumber = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
           _switchResult = new Box(_plus, _currentPdfPageNumber, Box.BoxType.QUESTION, x, y);
           break;

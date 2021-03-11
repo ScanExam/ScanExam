@@ -85,4 +85,8 @@ public class EditorPresenter implements Presenter {
   public void close() {
     System.exit(0);
   }
+  
+  public int getQuestionId() {
+    return this.service.getQuestionId();
+  }
 }
