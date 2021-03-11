@@ -7,10 +7,7 @@ import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.view.Adapter;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Objects;
-import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * Class defining the presenter for the exam creation view(s)
@@ -51,36 +48,10 @@ public class EditorPresenter implements Presenter {
   }
   
   /**
-   * setter for the PresenterQRCode attribute
-   * @param {@link PresenterQRCode} pres instance of the presenter (not null)
-   */
-  public PresenterQRCode setPresenterQRCode(final PresenterQRCode pres) {
-    PresenterQRCode _xblockexpression = null;
-    {
-      Objects.<PresenterQRCode>requireNonNull(pres);
-      _xblockexpression = this.presQRCode = pres;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
    * @return current {@link PresenterQRCode}
    */
   public PresenterQRCode getPresenterQRCode() {
     return this.presQRCode;
-  }
-  
-  /**
-   * Setter for {@link PresenterQuestionZone} attribute
-   * @param {@link PresenterQuestionZone} pres an instance (not null)
-   */
-  public PresenterQuestionZone setPresenterQuestionZone(final PresenterQuestionZone pres) {
-    PresenterQuestionZone _xblockexpression = null;
-    {
-      Objects.<PresenterQuestionZone>requireNonNull(pres);
-      _xblockexpression = this.presQuestionZone = pres;
-    }
-    return _xblockexpression;
   }
   
   /**
@@ -91,81 +62,16 @@ public class EditorPresenter implements Presenter {
   }
   
   /**
-   * Setter for {@link PresenterMarkingScheme} attribute
-   * @param {@link PresenterMarkingScheme} pres an instance (not null)
-   */
-  public PresenterMarkingScheme setPresenterMarkingScheme(final PresenterMarkingScheme pres) {
-    PresenterMarkingScheme _xblockexpression = null;
-    {
-      Objects.<PresenterMarkingScheme>requireNonNull(pres);
-      _xblockexpression = this.presMarkingScheme = pres;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
    * @return current {@link PresenterMarkingScheme}
    */
+  @Override
   public PresenterMarkingScheme getPresenterMarkingScheme() {
     return this.presMarkingScheme;
   }
   
-  /**
-   * Sets a {@link ControllerVueCreation} the link with the view
-   * @param {@link ControllerVueCreation} contr an instance (not null)
-   */
-  public EditorPresenter setControllerVueCreation(final EditorPresenter contr) {
-    EditorPresenter _xblockexpression = null;
-    {
-      Objects.<EditorPresenter>requireNonNull(contr);
-      _xblockexpression = this.editorPresenter = contr;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * @return current {@link ControllerVueCreation}
-   */
-  public EditorPresenter getControllerVueCreation() {
-    return this.editorPresenter;
-  }
-  
   @Override
-  public BufferedImage getCurrentPdfPage() {
-    return this.service.getCurrentPdfPage();
-  }
-  
-  public void choosePdfPage(final int pageNumber) {
-  }
-  
-  public void nextPdfPage() {
-    this.service.nextPage();
-  }
-  
-  public void previousPdfPage() {
-    this.service.previousPage();
-  }
-  
-  public void goToPage(final int page) {
-    this.service.goToPage(page);
-  }
-  
-  public int getTotalPdfPageNumber() {
-    return this.service.getPageNumber();
-  }
-  
-  @Override
-  public int getCurrentPdfPageNumber() {
-    return this.service.getCurrentPageNumber();
-  }
-  
-  @Override
-  public void create(final File file) {
-    this.service.create(file);
-  }
-  
-  public PDDocument getDocument() {
-    return this.service.getDocument();
+  public PresenterPdf getPresenterPdf() {
+    return this.presPdf;
   }
   
   public void save(final String path) {
