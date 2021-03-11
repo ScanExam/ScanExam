@@ -14,9 +14,11 @@ import java.io.File;
 import java.util.Base64;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
  * Representer l'état courant de l'interface graphique
@@ -29,6 +31,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 public class ExamEditionService extends Service {
   private CreationTemplate template;
   
+  @Accessors
   private int questionId;
   
   /**
@@ -118,5 +121,14 @@ public class ExamEditionService extends Service {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  @Pure
+  public int getQuestionId() {
+    return this.questionId;
+  }
+  
+  public void setQuestionId(final int questionId) {
+    this.questionId = questionId;
   }
 }

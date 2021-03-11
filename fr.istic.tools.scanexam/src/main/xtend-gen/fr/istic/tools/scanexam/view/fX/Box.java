@@ -16,15 +16,8 @@ public class Box extends Rectangle {
     QR;
   }
   
-  private static int ID = 0;
-  
-  public static int newID() {
-    return Box.ID++;
-  }
-  
   public Box(final String name, final int page, final Box.BoxType type, final double x, final double y, final double h, final double w) {
     super(x, y, w, h);
-    this.boxId = Box.newID();
     this.page = page;
     this.type = type;
     ListViewBox _listViewBox = new ListViewBox(name, this);
@@ -50,8 +43,8 @@ public class Box extends Rectangle {
     this(0, type, x, y);
   }
   
-  public Box(final Box.BoxType type) {
-    this(type, 0, 0);
+  public Box(final int id, final Box.BoxType type) {
+    this(id, type, 0, 0);
   }
   
   private ListViewBox listViewBox;

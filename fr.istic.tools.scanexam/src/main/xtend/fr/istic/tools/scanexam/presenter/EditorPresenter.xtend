@@ -80,4 +80,12 @@ class EditorPresenter implements Presenter
 	}
 	
 	
+	
+	def getQuestionId() {
+		service.getQuestionId()
+	}
+	
+	
+	
+	
 }

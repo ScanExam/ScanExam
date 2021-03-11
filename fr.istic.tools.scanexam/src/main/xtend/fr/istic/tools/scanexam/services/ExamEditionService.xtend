@@ -10,6 +10,7 @@ import java.util.Base64
 import org.apache.pdfbox.pdmodel.PDDocument
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import org.eclipse.xtend.lib.annotations.Accessors
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -22,7 +23,7 @@ class ExamEditionService extends Service // TODO : renommer
 {
 	CreationTemplate template;
 	
-	int questionId;
+ 	@Accessors int questionId;
 	
 	/**
 	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R

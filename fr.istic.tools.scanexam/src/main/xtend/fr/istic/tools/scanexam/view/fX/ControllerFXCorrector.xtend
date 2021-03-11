@@ -206,11 +206,10 @@ class ControllerFXCorrector {
 	double maxX; //la taille de l'image courrante
 	double maxY;
 	
-	double imageWidth;
-	double imageHeight;
-	
+	QuestionItem currentQuestion;
 	int currentQuestionIndex = 0;
 	
+	StudentItem currentStudent;
 	int currentStudentIndex = 0;
 
 	//-----------------------//
@@ -319,8 +318,8 @@ class ControllerFXCorrector {
 				switch event.code {
 					case KeyCode.RIGHT: nextQuestionPressed
 					case KeyCode.LEFT: prevQuestionPressed
-					case KeyCode.UP: prevStudentPressed
-					case KeyCode.DOWN: nextStudentPressed
+					case KeyCode.UP: nextStudentPressed
+					case KeyCode.DOWN: prevStudentPressed
 					default: logger.warn("Key not supported.")
 				}
 				event.consume
@@ -388,7 +387,6 @@ class ControllerFXCorrector {
 			renderStudentCopy();
 			loadQuestions();
 			loadStudents();
-			
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -422,7 +420,6 @@ class ControllerFXCorrector {
 				question.h = corrector.presenter.questionHeight(i);
 				question.w = corrector.presenter.questionWidth(i);
 				question.questionId = i
-				question.page = p
 				question.name = corrector.presenter.questionName(i);
 				rightList.items.add(question);
 			}
@@ -436,13 +433,6 @@ class ControllerFXCorrector {
 		for (int i : ids) {
 			leftList.items.add(new StudentItem(i))
 		}
-		
-	}
-	
-	def void postLoad(){
-		currentQuestionIndex = 0
-		
-		currentStudentIndex = 0;
 	}
 	
 	//---------------------//
@@ -451,21 +441,8 @@ class ControllerFXCorrector {
 	
 	def void renderStudentCopy(){		
 		var image = corrector.presenter.presenterPdf.currentPdfPage
-		imageWidth = image.width
-		imageHeight = image.height
 		imview.image = SwingFXUtils.toFXImage(image, null);
 		pdfLoaded = true;
-		
-		var fitW = imview.fitWidth
-		var fitH = imview.fitHeight
-		if (image.height > image.width) { // calculates the actual image coordinates
-			maxY = fitH
-			maxX = (imview.image.width / imview.image.height) * fitW
-		} else {
-			maxY = (imview.image.height / imview.image.width) * fitH
-			maxX = fitW
-		}
-		print(maxX + " " + maxY)
 	}
 	
 	def void renderCorrectedCopy(){
@@ -474,15 +451,15 @@ class ControllerFXCorrector {
 	
 	def void nextStudent(){
 		currentStudentIndex++;	
-		if (currentStudentIndex >= leftList.items.size) {
-			currentStudentIndex = 0;
+		if (currentQuestionIndex >= leftList.items.size) {
+			currentQuestionIndex = 0;
 		}
 		setSelectedStudent();
 	}
 	def void previousStudent(){
 		currentStudentIndex--;
 		if (currentStudentIndex < 0){
-			currentStudentIndex = leftList.items.size-1
+			currentStudentIndex = leftList.items.size
 		}
 		setSelectedStudent();
 	}
@@ -492,8 +469,8 @@ class ControllerFXCorrector {
 	}
 	
 	def void setSelectedStudent(){
+		currentStudent = leftList.items.get(currentStudentIndex);
 		leftList.selectionModel.select(currentStudentIndex)
-		display();
 	}
 	
 	def void nextQuestion(){
@@ -506,7 +483,7 @@ class ControllerFXCorrector {
 	def void previousQuestion(){
 		currentQuestionIndex--;
 		if (currentQuestionIndex < 0){
-			currentQuestionIndex = rightList.items.size-1
+			currentQuestionIndex = rightList.items.size
 		}
 		setSelectedQuestion()
 	}
@@ -516,33 +493,18 @@ class ControllerFXCorrector {
 	}
 	
 	def void setSelectedQuestion(){
+		currentQuestion = rightList.items.get(currentQuestionIndex)
 		rightList.selectionModel.select(currentQuestionIndex)
-		display();
-		displayQuestion();
 	}
 	
-	
+	def void setZoomArea(int x, int y, int height, int width) {
+		imview.viewport = new Rectangle2D(x,y,height,width);
+	}
 	//----------------//
 	
-	//---DISPLAYING---//
-	def void display(){
-		var i = corrector.presenter.getAbsolutePage(leftList.items.get(currentStudentIndex).studentId,rightList.items.get(currentQuestionIndex).page)
-		if (!corrector.presenter.presenterPdf.atCorrectPage(i)){
-			logger.warn("changing Page")
-			selectPage(corrector.presenter.getAbsolutePage(leftList.items.get(currentStudentIndex).studentId,rightList.items.get(currentQuestionIndex).page))
-		}
+	def void checkPage() {
+		//TODO check if current question is on the loaded page, if not, we load the correct page
 	}
-	
-	def void setZoomArea(double x, double y,double width ,double height) {
-		imview.viewport = new Rectangle2D(x,y,width,height);
-		
-	}
-	
-	def void displayQuestion(){
-		setZoomArea(rightList.items.get(currentQuestionIndex).x * imageWidth,rightList.items.get(currentQuestionIndex).y * imageHeight,rightList.items.get(currentQuestionIndex).w * imageWidth ,rightList.items.get(currentQuestionIndex).h * imageHeight)
-	}
-	
-	//----------------//
 	
 	
 	//---ACTIONS ON MODEL---//
@@ -558,15 +520,15 @@ class ControllerFXCorrector {
 	//---PAGE OPERATIONS---//
 	def void nextPage() {
 		corrector.presenter.getPresenterPdf.nextPdfPage
-		renderStudentCopy
+		renderCorrectedCopy
 	}
 	def void previousPage(){
 		corrector.presenter.getPresenterPdf.previousPdfPage
-		renderStudentCopy
+		renderCorrectedCopy
 	}
 	def void selectPage(int pageNumber) {
 		corrector.presenter.getPresenterPdf.goToPage(pageNumber)
-		renderStudentCopy
+		renderCorrectedCopy
 	}
 	//---------------------//
 }

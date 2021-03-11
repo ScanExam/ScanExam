@@ -93,10 +93,7 @@ class PresenterPdf {
 	def int currentPdfPageNumber(){
 		service.currentPageNumber
 	}
-	def choosePdfPage(int i){
-		
-	}
-	
+	def choosePdfPage(int i){}
 	
 	def getDocument() 
 	{
@@ -105,10 +102,6 @@ class PresenterPdf {
 	def create(File file){
 		Objects.requireNonNull(file)
 		(service as ExamEditionService).create(file)
-	}
-	
-	def boolean atCorrectPage(int page){
-		return page == service.currentPageNumber
 	}
 	
 }

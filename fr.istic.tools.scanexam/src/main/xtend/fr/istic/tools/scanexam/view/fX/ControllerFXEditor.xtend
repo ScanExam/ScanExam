@@ -28,6 +28,8 @@ import org.apache.logging.log4j.LogManager
 
 class ControllerFXEditor {
 
+	final double MINIMUM_ZONE_SIZE =  20
+	
 	EditorAdapterFX editor;
 
 	def void setEditorAdapterFX(EditorAdapterFX editor) {
@@ -36,10 +38,6 @@ class ControllerFXEditor {
 
 	double maxX;
 	double maxY;
-	
-	double imageX;
-	double imageY;
-	
 	var pdfLoaded = false;
 
 	var logger = LogManager.logger
@@ -175,8 +173,6 @@ class ControllerFXEditor {
 	var boxes = new LinkedList<Box>();
 	Box currentRectangle = null;
 
-
-
 	def void createBox(MouseEvent e) {
 		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,
 			Math.min(e.x, maxX - FXSettings.BOX_BORDER_THICKNESS));
@@ -187,7 +183,13 @@ class ControllerFXEditor {
 			mouseOriginY = mousePositionY
 			var source = e.source as Pane
 			currentRectangle = createBox(mousePositionX, mousePositionY);
-			
+			currentRectangle.listViewBox.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+				override handle(MouseEvent event) {
+					highlightBox((event.source as ListViewBox).parentBox);
+				}
+
+			})
 			
 			source.children.add(currentRectangle);
 			source.children.add(currentRectangle.getText());
@@ -213,9 +215,18 @@ class ControllerFXEditor {
 			}
 
 		}
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			addBoxModel(currentRectangle)
-			addBox(currentRectangle)
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) 
+		{
+			if (currentRectangle.width > MINIMUM_ZONE_SIZE && currentRectangle.height > MINIMUM_ZONE_SIZE)
+			{
+				addBox(currentRectangle);
+			}
+			else
+			{
+				(e.source as Pane).children.remove(currentRectangle);
+				(e.source as Pane).children.remove(currentRectangle.getText());
+			}
+		
 		}
 	}
 
@@ -348,12 +359,11 @@ class ControllerFXEditor {
 	/**
 	 * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
 	 */
-	var questionCounter = 1;
 
 	def Box createBox(double x, double y) {
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box("Question " + questionCounter++, editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
+				new Box("Question " + editor.presenter.getQuestionId(), editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
 			}
 			case ID_AREA: {
 				new Box("ID Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.ID, x, y);
@@ -371,8 +381,9 @@ class ControllerFXEditor {
 	 * 
 	 * Called when we finish creating a new box (Mouse release)
 	 */
-	def addBox(Box box) {	
-		//renameBox(box,box.name)//TODO fix
+	def addBox(Box box) {
+		editor.addBox(box);
+		renameBox(box,box.name)//TODO fix
 		var lb = box.listViewBox;
 		/*lb.upAction = new EventHandler<ActionEvent>() {
 
@@ -386,13 +397,6 @@ class ControllerFXEditor {
 			}
 
 		}*/
-		lb.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-				override handle(MouseEvent event) {
-					highlightBox(box);
-				}
-
-			})
 		lb.removeAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
@@ -462,11 +466,11 @@ class ControllerFXEditor {
 	}
 
 	def moveBox(Box box) {
-		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId,convertToRelative(box.x,maxX),convertToRelative(box.y,maxY));
+		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId, box.x, box.y);
 	}
 
 	def resizeBox(Box box) {
-		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId,convertToRelative(box.height,maxY),convertToRelative(box.width,maxX));
+		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId, box.height, box.width);
 	}
 
 	/**
@@ -531,15 +535,11 @@ class ControllerFXEditor {
 
 		if (file !== null) {
 			editor.presenter.load(file.path);
-			renderDocument();
 			loadBoxes();
+			renderDocument();
 		} else {
 			logger.warn("File not chosen")
 		}
-	}
-	
-	def addBoxModel(Box box){
-		editor.presenter.presenterQuestionZone.createQuestion(convertToRelative(box.x,maxX),convertToRelative(box.y,maxY),convertToRelative(box.height,maxY),convertToRelative(box.width,maxX))
 	}
 
 	def loadBoxes() {
@@ -564,12 +564,13 @@ class ControllerFXEditor {
 					editor.presenter.presenterQuestionZone.questionName(i),
 					p,
 					BoxType.QUESTION,
-					editor.presenter.presenterQuestionZone.questionX(i)*maxX,
-					editor.presenter.presenterQuestionZone.questionY(i)*maxY,
-					editor.presenter.presenterQuestionZone.questionHeight(i)*maxY,
-					editor.presenter.presenterQuestionZone.questionWidth(i)*maxX
+					editor.presenter.presenterQuestionZone.questionX(i),
+					editor.presenter.presenterQuestionZone.questionY(i),
+					editor.presenter.presenterQuestionZone.questionHeight(i),
+					editor.presenter.presenterQuestionZone.questionWidth(i)
 				)
 				addBox(box)
+				boxes.add(box)
 				mainPane.children.add(box)
 			}
 		}
@@ -594,8 +595,6 @@ class ControllerFXEditor {
 		pageNumberLabel.text = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1 + "/" + editor.presenter.getPresenterPdf.totalPdfPageNumber
 		introLabel.visible = false
 		val image = editor.presenter.getPresenterPdf.currentPdfPage
-		imageX = image.width
-		imageY = image.height
 		pdfView.image = SwingFXUtils.toFXImage(image, null);
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight
@@ -606,7 +605,6 @@ class ControllerFXEditor {
 			maxY = (pdfView.image.height / pdfView.image.width) * fitH
 			maxX = fitW
 		}
-		print(maxX + " " + maxY)
 		pdfLoaded = true
 	}
 
@@ -637,9 +635,10 @@ class ControllerFXEditor {
 	def showOnlyPage(int page) {
 		for (Box b : boxes) {
 			if (b.pageNumber == page) {
-				b.isVisible(true)
+				b.visible = true;
+
 			} else {
-				b.isVisible(false)
+				b.visible = false;
 			}
 		}
 	}
@@ -650,17 +649,11 @@ class ControllerFXEditor {
 	Box highlightedBox = null;
 
 	def highlightBox(Box box) {
-		logger.warn(box.x + " " + box.y)
 		if (highlightedBox !== null) {
 			highlightedBox.focus = false;
 		}
 		highlightedBox = box;
 		highlightedBox.focus = true
 	}
-	
-	def double convertToRelative(double relative, double to){
-		return relative/to
-	}
-		
 
 }
