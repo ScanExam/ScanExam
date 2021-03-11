@@ -8,7 +8,6 @@ import java.awt.Point
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Optional
-import javax.swing.DefaultListModel
 import javax.swing.JPanel
 
 /** 
@@ -26,9 +25,6 @@ class AdapterSwingBox extends AdapterBox {
 	/*Dernière boîte sélectionné par l'utilisateur */
 	Box lastBoxSelected
 	
-	/* Indique si la croix d'une boîte à été cliquée */
-	boolean crossCliked
-	
 	/* Handler pour les événements liés à la souris */
 	MouseAdapter mouseHandler
 	
@@ -39,8 +35,7 @@ class AdapterSwingBox extends AdapterBox {
 	Optional<JPanel> view
 	
 	/* Liste des panel des questions */
-	DefaultListModel<QuestionEditionPanel> qstModel
-	
+	ListOfQuestionsPanel listQst
 
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -61,7 +56,6 @@ class AdapterSwingBox extends AdapterBox {
 			override void mousePressed(MouseEvent e) {
 				// Clic gauche
 				if (e.getButton() === 1) {
-					crossCliked = false
 					lastClickPoint = Optional::of(e.getPoint())
 					var Optional<Box> pointedBox = checkPoint(e.getPoint())
 					if (!pointedBox.isPresent()) {
@@ -71,13 +65,8 @@ class AdapterSwingBox extends AdapterBox {
 						resizeBox(e, lastBoxSelected)
 					} else {
 						lastBoxSelected = pointedBox.get()
-						if (!crossCliked) {
-							SelectionStateMachine.setState(SelectionStateMachine.MOVE)
-							moveBox(e, lastBoxSelected)
-						} else {
-							SelectionStateMachine.setState(SelectionStateMachine.DELETE)
-							deleteBox(lastBoxSelected)
-						}
+						SelectionStateMachine.setState(SelectionStateMachine.MOVE)
+						moveBox(e, lastBoxSelected)
 					}
 				}
 			}
@@ -115,12 +104,6 @@ class AdapterSwingBox extends AdapterBox {
 			// On regarde pour chaque boîtes si le point est dans le titre de la boîte
 			if ((x >= box.getX() && x <= (box.getX() + box.getWidth())) &&
 				(y >= (box.getY() - ((titleHeight as double) / windowHeight * scale)) && y <= (box.getY()))) {
-				// Si le point est très à droite, on considère la croix de la boîte cliquée
-				if (x >= (box.getX() + box.getWidth() - ((titleHeight as double) / windowWidth * scale))) {
-					crossCliked = true
-				} else {
-					crossCliked = false
-				}
 				return Optional::of(box)
 			}
 		}
@@ -196,8 +179,8 @@ class AdapterSwingBox extends AdapterBox {
 	 * @param Box Boîte lié à la question
 	 */
 	def void addQstToList(Box box) {
-		if(qstModel !== null) {
-			qstModel.addElement(new QuestionEditionPanel(box))
+		if(listQst !== null) {
+			listQst.addQst(box)
 		}
 	}
 
@@ -229,7 +212,12 @@ class AdapterSwingBox extends AdapterBox {
 		this.windowHeight = height
 	}
 	
-	def void setQstModel(DefaultListModel<QuestionEditionPanel> qstModel) {
+	def void setListQst(ListOfQuestionsPanel listQst) {
+		this.listQst = listQst
+	}
+	
+	/*def void setQstModel(DefaultListModel<QuestionEditionPanel> qstModel) {
 		this.qstModel = qstModel
 	}
+	*/
 }

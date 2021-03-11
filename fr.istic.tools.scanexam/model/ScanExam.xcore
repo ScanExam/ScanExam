@@ -26,7 +26,7 @@ class Question
 
 class GradeScale 
 {
-	float weigth
+	// float weigth
 	contains GradeEntry[] steps
 }
 class GradeEntry
@@ -68,5 +68,17 @@ class StudentSheet {
 	int[] posPage
 	contains Grade[] grades
 	
+	op float computeGrade()
+	{
+		 var result = 0f;
+		 
+		 for (var i = 0 ; i < grades.size ; i++)
+		 {
+		 	 val res = grades.get(i).entries.stream.map(grade | grade.step).reduce[acc,v | v+acc]
+			 result += res.get
+		 }
+		 
+		return result
+	}
 	
 }

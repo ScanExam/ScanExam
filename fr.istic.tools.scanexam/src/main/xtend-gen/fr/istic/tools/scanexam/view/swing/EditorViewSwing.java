@@ -1,28 +1,21 @@
 package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
+import fr.istic.tools.scanexam.view.swing.ListOfQuestionsPanel;
 import fr.istic.tools.scanexam.view.swing.PdfAndBoxPanel;
-import fr.istic.tools.scanexam.view.swing.QuestionEditionPanel;
-import fr.istic.tools.scanexam.view.swing.QuestionsListRenderer;
 import java.awt.BorderLayout;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Vue swing de la fenêtre de création d'examen
@@ -138,12 +131,7 @@ public class EditorViewSwing {
   /**
    * Liste des questions
    */
-  private JList<QuestionEditionPanel> listQst;
-  
-  /**
-   * Listes des panel de question
-   */
-  private DefaultListModel<QuestionEditionPanel> qstModel;
+  private ListOfQuestionsPanel listQst;
   
   /**
    * Panel pour les pages
@@ -191,7 +179,7 @@ public class EditorViewSwing {
   public EditorViewSwing(final AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel) {
     this.adapterPdfAndBoxPanel = adapterPdfAndBoxPanel;
     this.initialize();
-    this.adapterPdfAndBoxPanel.getAdapterBox().setQstModel(this.qstModel);
+    this.adapterPdfAndBoxPanel.getAdapterBox().setListQst(this.listQst);
   }
   
   /**
@@ -260,16 +248,20 @@ public class EditorViewSwing {
     this.pnlMain.add(this.pnlButtons, BorderLayout.NORTH);
     BoxLayout _boxLayout = new BoxLayout(this.pnlButtons, BoxLayout.X_AXIS);
     this.pnlButtons.setLayout(_boxLayout);
-    JButton _jButton = new JButton("Question area");
+    String _translate_10 = LanguageManager.translate("button.createQuestion");
+    JButton _jButton = new JButton(_translate_10);
     this.btnQuestionArea = _jButton;
     this.pnlButtons.add(this.btnQuestionArea);
-    JButton _jButton_1 = new JButton("ID area");
+    String _translate_11 = LanguageManager.translate("button.IDarea");
+    JButton _jButton_1 = new JButton(_translate_11);
     this.btnIdArea = _jButton_1;
     this.pnlButtons.add(this.btnIdArea);
-    JButton _jButton_2 = new JButton("QR area");
+    String _translate_12 = LanguageManager.translate("button.QRarea");
+    JButton _jButton_2 = new JButton(_translate_12);
     this.btnQrArea = _jButton_2;
     this.pnlButtons.add(this.btnQrArea);
-    JButton _jButton_3 = new JButton("Move Camera");
+    String _translate_13 = LanguageManager.translate("button.moveCamera");
+    JButton _jButton_3 = new JButton(_translate_13);
     this.btnMoveCam = _jButton_3;
     this.pnlButtons.add(this.btnMoveCam);
     JPanel _jPanel_2 = new JPanel();
@@ -277,17 +269,21 @@ public class EditorViewSwing {
     this.pnlMain.add(this.pnlQst, BorderLayout.WEST);
     BorderLayout _borderLayout_1 = new BorderLayout(0, 0);
     this.pnlQst.setLayout(_borderLayout_1);
-    JLabel _jLabel = new JLabel("Questions:");
+    String _translate_14 = LanguageManager.translate("label.questions");
+    JLabel _jLabel = new JLabel(_translate_14);
     this.lblQst = _jLabel;
     this.pnlQst.add(this.lblQst, BorderLayout.NORTH);
-    this.listQstInitialization();
+    AdapterSwingBox _adapterBox = this.adapterPdfAndBoxPanel.getAdapterBox();
+    ListOfQuestionsPanel _listOfQuestionsPanel = new ListOfQuestionsPanel(_adapterBox);
+    this.listQst = _listOfQuestionsPanel;
     this.pnlQst.add(this.listQst, BorderLayout.CENTER);
     JPanel _jPanel_3 = new JPanel();
     this.pnlPage = _jPanel_3;
     this.pnlQst.add(this.pnlPage, BorderLayout.SOUTH);
     BorderLayout _borderLayout_2 = new BorderLayout(0, 0);
     this.pnlPage.setLayout(_borderLayout_2);
-    JLabel _jLabel_1 = new JLabel("Pages :");
+    String _translate_15 = LanguageManager.translate("label.pages");
+    JLabel _jLabel_1 = new JLabel(_translate_15);
     this.lblPage = _jLabel_1;
     this.pnlPage.add(this.lblPage, BorderLayout.NORTH);
     JComboBox<Integer> _jComboBox = new JComboBox<Integer>();
@@ -298,42 +294,20 @@ public class EditorViewSwing {
     this.pnlPage.add(this.pnlNavPage, BorderLayout.SOUTH);
     BorderLayout _borderLayout_3 = new BorderLayout(0, 0);
     this.pnlNavPage.setLayout(_borderLayout_3);
-    JButton _jButton_4 = new JButton("Prev");
+    String _translate_16 = LanguageManager.translate("button.previousQuestion");
+    JButton _jButton_4 = new JButton(_translate_16);
     this.btnPrev = _jButton_4;
     this.pnlNavPage.add(this.btnPrev, BorderLayout.WEST);
     JLabel _jLabel_2 = new JLabel(".");
     this.lblNumPage = _jLabel_2;
     this.pnlNavPage.add(this.lblNumPage, BorderLayout.CENTER);
-    JButton _jButton_5 = new JButton("Next");
+    String _translate_17 = LanguageManager.translate("button.nextQuestion");
+    JButton _jButton_5 = new JButton(_translate_17);
     this.btnNext = _jButton_5;
     this.pnlNavPage.add(this.btnNext, BorderLayout.EAST);
     PdfAndBoxPanel _pdfAndBoxPanel = new PdfAndBoxPanel(this.adapterPdfAndBoxPanel);
     this.pnlPdf = _pdfAndBoxPanel;
     this.pnlMain.add(this.pnlPdf, BorderLayout.CENTER);
-  }
-  
-  /**
-   * Initialise la liste affichant les questions
-   */
-  public void listQstInitialization() {
-    DefaultListModel<QuestionEditionPanel> _defaultListModel = new DefaultListModel<QuestionEditionPanel>();
-    this.qstModel = _defaultListModel;
-    JList<QuestionEditionPanel> _jList = new JList<QuestionEditionPanel>(this.qstModel);
-    this.listQst = _jList;
-    this.listQst.setSelectedIndex((-1));
-    QuestionsListRenderer _questionsListRenderer = new QuestionsListRenderer();
-    this.listQst.setCellRenderer(_questionsListRenderer);
-    final JScrollPane scroll1 = new JScrollPane(this.listQst);
-    final JScrollBar scrollBar = scroll1.getVerticalScrollBar();
-    scrollBar.addAdjustmentListener(new AdjustmentListener() {
-      @Override
-      public void adjustmentValueChanged(final AdjustmentEvent e) {
-        int _value = scrollBar.getValue();
-        String _plus = ("JScrollBar\'s current value = " + Integer.valueOf(_value));
-        InputOutput.<String>println(_plus);
-      }
-    });
-    this.pnlQst.add(scroll1);
   }
   
   /**

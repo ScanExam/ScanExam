@@ -197,22 +197,13 @@ public interface CorePackage extends EPackage {
 	int GRADE_SCALE = 2;
 
 	/**
-	 * The feature id for the '<em><b>Weigth</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GRADE_SCALE__WEIGTH = 0;
-
-	/**
 	 * The feature id for the '<em><b>Steps</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE__STEPS = 1;
+	int GRADE_SCALE__STEPS = 0;
 
 	/**
 	 * The number of structural features of the '<em>Grade Scale</em>' class.
@@ -221,7 +212,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE_FEATURE_COUNT = 2;
+	int GRADE_SCALE_FEATURE_COUNT = 1;
 
 	/**
 	 * The number of operations of the '<em>Grade Scale</em>' class.
@@ -610,13 +601,22 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET_FEATURE_COUNT = 4;
 
 	/**
+	 * The operation id for the '<em>Compute Grade</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET___COMPUTE_GRADE = 0;
+
+	/**
 	 * The number of operations of the '<em>Student Sheet</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_OPERATION_COUNT = 0;
+	int STUDENT_SHEET_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '<em>Map</em>' data type.
@@ -756,17 +756,6 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EClass getGradeScale();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeScale#getWeigth <em>Weigth</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Weigth</em>'.
-	 * @see fr.istic.tools.scanexam.core.GradeScale#getWeigth()
-	 * @see #getGradeScale()
-	 * @generated
-	 */
-	EAttribute getGradeScale_Weigth();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.GradeScale#getSteps <em>Steps</em>}'.
@@ -1035,6 +1024,16 @@ public interface CorePackage extends EPackage {
 	EReference getStudentSheet_Grades();
 
 	/**
+	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.StudentSheet#computeGrade() <em>Compute Grade</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Compute Grade</em>' operation.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#computeGrade()
+	 * @generated
+	 */
+	EOperation getStudentSheet__ComputeGrade();
+
+	/**
 	 * Returns the meta object for data type '{@link java.util.Map <em>Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1172,14 +1171,6 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EClass GRADE_SCALE = eINSTANCE.getGradeScale();
-
-		/**
-		 * The meta object literal for the '<em><b>Weigth</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute GRADE_SCALE__WEIGTH = eINSTANCE.getGradeScale_Weigth();
 
 		/**
 		 * The meta object literal for the '<em><b>Steps</b></em>' containment reference list feature.
@@ -1396,6 +1387,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EReference STUDENT_SHEET__GRADES = eINSTANCE.getStudentSheet_Grades();
+
+		/**
+		 * The meta object literal for the '<em><b>Compute Grade</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STUDENT_SHEET___COMPUTE_GRADE = eINSTANCE.getStudentSheet__ComputeGrade();
 
 		/**
 		 * The meta object literal for the '<em>Map</em>' data type.

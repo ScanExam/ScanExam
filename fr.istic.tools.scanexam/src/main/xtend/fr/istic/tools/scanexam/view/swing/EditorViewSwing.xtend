@@ -1,21 +1,15 @@
 package fr.istic.tools.scanexam.view.swing
 
 import java.awt.BorderLayout
-import java.awt.event.AdjustmentEvent
-import java.awt.event.AdjustmentListener
 import javax.swing.BoxLayout
-import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JFrame
 import javax.swing.JLabel
-import javax.swing.JList
 import javax.swing.JMenu
 import javax.swing.JMenuBar
 import javax.swing.JMenuItem
 import javax.swing.JPanel
-import javax.swing.JScrollBar
-import javax.swing.JScrollPane
 import javax.swing.border.EmptyBorder
 
 import static fr.istic.tools.scanexam.config.LanguageManager.*
@@ -96,10 +90,7 @@ class EditorViewSwing {
 	var JLabel lblQst
 	
 	/* Liste des questions */
-	var JList<QuestionEditionPanel> listQst
-	
-	/* Listes des panel de question */
-	var DefaultListModel<QuestionEditionPanel> qstModel
+	var ListOfQuestionsPanel listQst
 	
 	/* Panel pour les pages */
 	var JPanel pnlPage
@@ -138,7 +129,7 @@ class EditorViewSwing {
 	new(AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel) {
 		this.adapterPdfAndBoxPanel = adapterPdfAndBoxPanel
 		initialize()
-		this.adapterPdfAndBoxPanel.getAdapterBox().setQstModel(qstModel)
+		this.adapterPdfAndBoxPanel.getAdapterBox().setListQst(listQst)
 	}
 
 	/** 
@@ -198,33 +189,33 @@ class EditorViewSwing {
 		pnlMain.add(pnlButtons, BorderLayout::NORTH)
 		pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout::X_AXIS))
 		
-		btnQuestionArea = new JButton("Question area")
+		btnQuestionArea = new JButton(translate("button.createQuestion"))
 		pnlButtons.add(btnQuestionArea)
 		
-		btnIdArea = new JButton("ID area")
+		btnIdArea = new JButton(translate("button.IDarea"))
 		pnlButtons.add(btnIdArea)
 		
-		btnQrArea = new JButton("QR area")
+		btnQrArea = new JButton(translate("button.QRarea"))
 		pnlButtons.add(btnQrArea)
 		
-		btnMoveCam = new JButton("Move Camera")
+		btnMoveCam = new JButton(translate("button.moveCamera"))
 		pnlButtons.add(btnMoveCam)
 		
 		pnlQst = new JPanel()
 		pnlMain.add(pnlQst, BorderLayout.WEST)
 		pnlQst.setLayout(new BorderLayout(0, 0))
 		
-		lblQst = new JLabel("Questions:")
+		lblQst = new JLabel(translate("label.questions"))
 		pnlQst.add(lblQst, BorderLayout.NORTH)
 		
-		listQstInitialization()
+		listQst = new ListOfQuestionsPanel(adapterPdfAndBoxPanel.adapterBox)
 		pnlQst.add(listQst, BorderLayout.CENTER)
 		
 		pnlPage = new JPanel()
 		pnlQst.add(pnlPage, BorderLayout.SOUTH)
 		pnlPage.setLayout(new BorderLayout(0, 0))
 		
-		lblPage = new JLabel("Pages :")
+		lblPage = new JLabel(translate("label.pages"))
 		pnlPage.add(lblPage, BorderLayout.NORTH)
 		
 		cmbBxPage = new JComboBox()
@@ -234,36 +225,18 @@ class EditorViewSwing {
 		pnlPage.add(pnlNavPage, BorderLayout.SOUTH)
 		pnlNavPage.setLayout(new BorderLayout(0, 0))
 		
-		btnPrev = new JButton("Prev")
+		btnPrev = new JButton(translate("button.previousQuestion"))
 		pnlNavPage.add(btnPrev, BorderLayout.WEST)
 		
 		lblNumPage = new JLabel(".")
 		pnlNavPage.add(lblNumPage, BorderLayout.CENTER)
 		
-		btnNext = new JButton("Next")
+		btnNext = new JButton(translate("button.nextQuestion"))
 		pnlNavPage.add(btnNext, BorderLayout.EAST)
 		
 		pnlPdf = new PdfAndBoxPanel(this.adapterPdfAndBoxPanel)
+		//pnlPdf = new ImagePanel(ResourcesUtils.getInputStreamResource("/logo.png"))
 		pnlMain.add(pnlPdf, BorderLayout::CENTER)
-	}
-	
-	/**
-	 * Initialise la liste affichant les questions
-	 */
-	def void listQstInitialization() {
-        qstModel = new DefaultListModel
-        listQst = new JList(qstModel)
-        listQst.setSelectedIndex(-1)
-
-        listQst.setCellRenderer(new QuestionsListRenderer)
-        val JScrollPane scroll1 = new JScrollPane(listQst)
-        val JScrollBar scrollBar = scroll1.getVerticalScrollBar
-        scrollBar.addAdjustmentListener(new AdjustmentListener {
-            override void adjustmentValueChanged(AdjustmentEvent e) {
-                println("JScrollBar's current value = " + scrollBar.getValue())
-            }
-        })
-        pnlQst.add(scroll1);
 	}
 
 	// ----------------------------------------------------------------------------------------------------

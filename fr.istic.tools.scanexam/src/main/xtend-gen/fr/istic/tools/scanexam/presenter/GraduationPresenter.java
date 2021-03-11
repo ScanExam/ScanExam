@@ -142,6 +142,10 @@ public class GraduationPresenter implements Presenter {
     return _xblockexpression;
   }
   
+  public int getTemplatePageAmount() {
+    return this.service.getTemplatePageAmount();
+  }
+  
   private List<Question> questions;
   
   /**

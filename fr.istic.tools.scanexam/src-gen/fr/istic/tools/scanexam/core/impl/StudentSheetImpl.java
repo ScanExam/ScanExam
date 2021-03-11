@@ -4,9 +4,16 @@ package fr.istic.tools.scanexam.core.impl;
 
 import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Grade;
+import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.StudentSheet;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
+import java.util.Optional;
+
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -190,6 +197,34 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public float computeGrade() {
+		float result = 0f;
+		for (int i = 0; (i < this.getGrades().size()); i++) {
+			{
+				final Function<GradeEntry, Float> _function = new Function<GradeEntry, Float>() {
+					public Float apply(final GradeEntry grade) {
+						return Float.valueOf(grade.getStep());
+					}
+				};
+				final BinaryOperator<Float> _function_1 = new BinaryOperator<Float>() {
+					public Float apply(final Float acc, final Float v) {
+						return Float.valueOf(((v).floatValue() + (acc).floatValue()));
+					}
+				};
+				final Optional<Float> res = this.getGrades().get(i).getEntries().stream().<Float>map(_function).reduce(_function_1);
+				float _result = result;
+				Float _get = res.get();
+				result = (_result + (_get).floatValue());
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -288,6 +323,20 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 				return grades != null && !grades.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case CorePackage.STUDENT_SHEET___COMPUTE_GRADE:
+				return computeGrade();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

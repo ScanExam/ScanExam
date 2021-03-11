@@ -92,6 +92,11 @@ class Box extends Rectangle {
 			}
 		}
 		
+		def void isVisible(boolean b){
+			this.visible = b;
+			text.visible = b;
+		}
+		
 		def void setColor(Color color) {
 			stroke = color
 			text.fill = color

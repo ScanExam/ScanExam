@@ -4,13 +4,12 @@ import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.box.BoxList;
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
 import fr.istic.tools.scanexam.view.AdapterBox;
-import fr.istic.tools.scanexam.view.swing.QuestionEditionPanel;
+import fr.istic.tools.scanexam.view.swing.ListOfQuestionsPanel;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Optional;
-import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 
 /**
@@ -23,11 +22,6 @@ public class AdapterSwingBox extends AdapterBox {
    * Dernière boîte sélectionné par l'utilisateur
    */
   private Box lastBoxSelected;
-  
-  /**
-   * Indique si la croix d'une boîte à été cliquée
-   */
-  private boolean crossCliked;
   
   /**
    * Handler pour les événements liés à la souris
@@ -47,7 +41,7 @@ public class AdapterSwingBox extends AdapterBox {
   /**
    * Liste des panel des questions
    */
-  private DefaultListModel<QuestionEditionPanel> qstModel;
+  private ListOfQuestionsPanel listQst;
   
   /**
    * Constructeur
@@ -65,7 +59,6 @@ public class AdapterSwingBox extends AdapterBox {
         int _button = e.getButton();
         boolean _tripleEquals = (_button == 1);
         if (_tripleEquals) {
-          AdapterSwingBox.this.crossCliked = false;
           AdapterSwingBox.this.lastClickPoint = Optional.<Point>of(e.getPoint());
           Optional<Box> pointedBox = AdapterSwingBox.this.checkPoint(e.getPoint());
           boolean _isPresent = pointedBox.isPresent();
@@ -77,13 +70,8 @@ public class AdapterSwingBox extends AdapterBox {
             AdapterSwingBox.this.resizeBox(e, AdapterSwingBox.this.lastBoxSelected);
           } else {
             AdapterSwingBox.this.lastBoxSelected = pointedBox.get();
-            if ((!AdapterSwingBox.this.crossCliked)) {
-              SelectionStateMachine.setState(SelectionStateMachine.MOVE);
-              AdapterSwingBox.this.moveBox(e, AdapterSwingBox.this.lastBoxSelected);
-            } else {
-              SelectionStateMachine.setState(SelectionStateMachine.DELETE);
-              AdapterSwingBox.this.deleteBox(AdapterSwingBox.this.lastBoxSelected);
-            }
+            SelectionStateMachine.setState(SelectionStateMachine.MOVE);
+            AdapterSwingBox.this.moveBox(e, AdapterSwingBox.this.lastBoxSelected);
           }
         }
       }
@@ -127,16 +115,6 @@ public class AdapterSwingBox extends AdapterBox {
     List<Box> _list = this.selectionBoxes.getList();
     for (final Box box : _list) {
       if ((((x >= box.getX()) && (x <= (box.getX() + box.getWidth()))) && ((y >= (box.getY() - ((((double) this.titleHeight) / this.windowHeight) * this.scale))) && (y <= box.getY())))) {
-        double _x_1 = box.getX();
-        double _width = box.getWidth();
-        double _plus = (_x_1 + _width);
-        double _minus_2 = (_plus - ((((double) this.titleHeight) / this.windowWidth) * this.scale));
-        boolean _greaterEqualsThan = (x >= _minus_2);
-        if (_greaterEqualsThan) {
-          this.crossCliked = true;
-        } else {
-          this.crossCliked = false;
-        }
         return Optional.<Box>of(box);
       }
     }
@@ -240,9 +218,8 @@ public class AdapterSwingBox extends AdapterBox {
    * @param Box Boîte lié à la question
    */
   public void addQstToList(final Box box) {
-    if ((this.qstModel != null)) {
-      QuestionEditionPanel _questionEditionPanel = new QuestionEditionPanel(box);
-      this.qstModel.addElement(_questionEditionPanel);
+    if ((this.listQst != null)) {
+      this.listQst.addQst(box);
     }
   }
   
@@ -268,7 +245,7 @@ public class AdapterSwingBox extends AdapterBox {
     this.windowHeight = height;
   }
   
-  public void setQstModel(final DefaultListModel<QuestionEditionPanel> qstModel) {
-    this.qstModel = qstModel;
+  public void setListQst(final ListOfQuestionsPanel listQst) {
+    this.listQst = listQst;
   }
 }

@@ -94,4 +94,12 @@ public interface StudentSheet extends EObject {
 	 */
 	EList<Grade> getGrades();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false"
+	 * @generated
+	 */
+	float computeGrade();
+
 } // StudentSheet
