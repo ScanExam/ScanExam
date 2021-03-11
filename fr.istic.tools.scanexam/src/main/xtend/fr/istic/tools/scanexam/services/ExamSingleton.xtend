@@ -5,6 +5,8 @@ import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.Question
 import java.util.Collection
 import java.util.Collections
+import org.eclipse.emf.common.util.EList
+import java.util.LinkedList
 
 /**
  * A revoir ?
@@ -32,6 +34,10 @@ final class ExamSingleton
 		return Collections.unmodifiableCollection(instance.pages.get(pageId).questions);
 	}
 	
+	static def int getTemplatePageAmount(){
+		instance.pages.size
+	}
+
 	static def Page getPage(int pageId)
 	{
 		return instance.pages.get(pageId);
