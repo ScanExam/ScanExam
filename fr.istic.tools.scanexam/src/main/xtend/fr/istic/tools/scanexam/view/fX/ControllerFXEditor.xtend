@@ -36,6 +36,10 @@ class ControllerFXEditor {
 
 	double maxX;
 	double maxY;
+	
+	double imageX;
+	double imageY;
+	
 	var pdfLoaded = false;
 
 	var logger = LogManager.logger
@@ -171,6 +175,8 @@ class ControllerFXEditor {
 	var boxes = new LinkedList<Box>();
 	Box currentRectangle = null;
 
+
+
 	def void createBox(MouseEvent e) {
 		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,
 			Math.min(e.x, maxX - FXSettings.BOX_BORDER_THICKNESS));
@@ -181,13 +187,7 @@ class ControllerFXEditor {
 			mouseOriginY = mousePositionY
 			var source = e.source as Pane
 			currentRectangle = createBox(mousePositionX, mousePositionY);
-			currentRectangle.listViewBox.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-				override handle(MouseEvent event) {
-					highlightBox((event.source as ListViewBox).parentBox);
-				}
-
-			})
+			
 			
 			source.children.add(currentRectangle);
 			source.children.add(currentRectangle.getText());
@@ -214,7 +214,8 @@ class ControllerFXEditor {
 
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			addBox(currentRectangle);
+			addBoxModel(currentRectangle)
+			addBox(currentRectangle)
 		}
 	}
 
@@ -370,9 +371,8 @@ class ControllerFXEditor {
 	 * 
 	 * Called when we finish creating a new box (Mouse release)
 	 */
-	def addBox(Box box) {
-		editor.addBox(box);
-		renameBox(box,box.name)//TODO fix
+	def addBox(Box box) {	
+		//renameBox(box,box.name)//TODO fix
 		var lb = box.listViewBox;
 		/*lb.upAction = new EventHandler<ActionEvent>() {
 
@@ -386,6 +386,13 @@ class ControllerFXEditor {
 			}
 
 		}*/
+		lb.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+				override handle(MouseEvent event) {
+					highlightBox(box);
+				}
+
+			})
 		lb.removeAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
@@ -455,11 +462,11 @@ class ControllerFXEditor {
 	}
 
 	def moveBox(Box box) {
-		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId, box.x, box.y);
+		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId,convertToRelative(box.x,maxX),convertToRelative(box.y,maxY));
 	}
 
 	def resizeBox(Box box) {
-		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId, box.height, box.width);
+		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId,convertToRelative(box.height,maxY),convertToRelative(box.width,maxX));
 	}
 
 	/**
@@ -524,11 +531,15 @@ class ControllerFXEditor {
 
 		if (file !== null) {
 			editor.presenter.load(file.path);
-			loadBoxes();
 			renderDocument();
+			loadBoxes();
 		} else {
 			logger.warn("File not chosen")
 		}
+	}
+	
+	def addBoxModel(Box box){
+		editor.presenter.presenterQuestionZone.createQuestion(convertToRelative(box.x,maxX),convertToRelative(box.y,maxY),convertToRelative(box.height,maxY),convertToRelative(box.width,maxX))
 	}
 
 	def loadBoxes() {
@@ -553,13 +564,12 @@ class ControllerFXEditor {
 					editor.presenter.presenterQuestionZone.questionName(i),
 					p,
 					BoxType.QUESTION,
-					editor.presenter.presenterQuestionZone.questionX(i),
-					editor.presenter.presenterQuestionZone.questionY(i),
-					editor.presenter.presenterQuestionZone.questionHeight(i),
-					editor.presenter.presenterQuestionZone.questionWidth(i)
+					editor.presenter.presenterQuestionZone.questionX(i)*maxX,
+					editor.presenter.presenterQuestionZone.questionY(i)*maxY,
+					editor.presenter.presenterQuestionZone.questionHeight(i)*maxY,
+					editor.presenter.presenterQuestionZone.questionWidth(i)*maxX
 				)
 				addBox(box)
-				boxes.add(box)
 				mainPane.children.add(box)
 			}
 		}
@@ -584,6 +594,8 @@ class ControllerFXEditor {
 		pageNumberLabel.text = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1 + "/" + editor.presenter.getPresenterPdf.totalPdfPageNumber
 		introLabel.visible = false
 		val image = editor.presenter.getPresenterPdf.currentPdfPage
+		imageX = image.width
+		imageY = image.height
 		pdfView.image = SwingFXUtils.toFXImage(image, null);
 		var fitW = pdfView.fitWidth
 		var fitH = pdfView.fitHeight
@@ -594,6 +606,7 @@ class ControllerFXEditor {
 			maxY = (pdfView.image.height / pdfView.image.width) * fitH
 			maxX = fitW
 		}
+		print(maxX + " " + maxY)
 		pdfLoaded = true
 	}
 
@@ -624,10 +637,9 @@ class ControllerFXEditor {
 	def showOnlyPage(int page) {
 		for (Box b : boxes) {
 			if (b.pageNumber == page) {
-				b.visible = true;
-
+				b.isVisible(true)
 			} else {
-				b.visible = false;
+				b.isVisible(false)
 			}
 		}
 	}
@@ -638,11 +650,17 @@ class ControllerFXEditor {
 	Box highlightedBox = null;
 
 	def highlightBox(Box box) {
+		logger.warn(box.x + " " + box.y)
 		if (highlightedBox !== null) {
 			highlightedBox.focus = false;
 		}
 		highlightedBox = box;
 		highlightedBox.focus = true
 	}
+	
+	def double convertToRelative(double relative, double to){
+		return relative/to
+	}
+		
 
 }
