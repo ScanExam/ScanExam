@@ -90,6 +90,11 @@ abstract class Service
 		currentPage.questions.remove(id);
 	}
 	
+	def getTemplatePageAmount()
+	{
+		ExamSingleton.templatePageAmount
+	}
+	
 	/**
 	 * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
 	 * @param page Numéro de page où se rendre
