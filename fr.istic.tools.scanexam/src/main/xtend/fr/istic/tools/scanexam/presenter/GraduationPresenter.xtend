@@ -129,6 +129,10 @@ class GraduationPresenter implements Presenter
 		ids
 	}
 	
+	def getTemplatePageAmount(){
+		service.templatePageAmount
+	}
+	
 	List<Question> questions
 	/**
 	 * Loads the next question into questionToLoad

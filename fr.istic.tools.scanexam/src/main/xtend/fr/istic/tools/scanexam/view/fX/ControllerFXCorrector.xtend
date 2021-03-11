@@ -55,6 +55,8 @@ class ControllerFXCorrector {
 
 	boolean botShow = false;
 	@FXML
+	public VBox root;
+	@FXML
 	public Pane topPane;
 	@FXML
 	public Button topButtonHidden;
@@ -139,7 +141,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void nextQuestionPressed() {
 		println("Next question method");
-		corrector.nextQuestion;
+		nextQuestion
 	}
 
 	/**
@@ -148,7 +150,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void prevQuestionPressed() {
 		println("Previous question method");
-		corrector.previousQuestion
+		previousQuestion
 	}
 
 	/**
@@ -157,6 +159,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void nextStudentPressed() {
 		println("Next student method");
+		nextStudent
 	}
 
 	/**
@@ -165,6 +168,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void prevStudentPressed() {
 		println("Previous student method");
+		previousStudent
 	}
 
 	/**
@@ -203,10 +207,10 @@ class ControllerFXCorrector {
 	double maxY;
 	
 	QuestionItem currentQuestion;
-	int currentQuestionIndex;
+	int currentQuestionIndex = 0;
 	
 	StudentItem currentStudent;
-	int currentStudentIndex;
+	int currentStudentIndex = 0;
 
 	//-----------------------//
 	
@@ -303,7 +307,10 @@ class ControllerFXCorrector {
 	// ---------------------------------//
 	
 	def init(){
-		setKeybinds
+		binds(root);
+		binds(scrollMain);
+		binds(scrollBis);
+		
 	}
 	def void binds(Node n) {
 		n.setOnKeyPressed([ event |
@@ -403,9 +410,9 @@ class ControllerFXCorrector {
 	
 	
 	def void loadQuestions(){
-		//var ids = corrector.presenter.presenterCopy.getQuestionIds()
-		for (var p = 0;p < 1;p++) {
-			var ids = corrector.presenter.initLoading(p)
+
+		for (var p = 0;p < corrector.presenter.templatePageAmount;p++) {
+			var ids = corrector.presenter.initLoading(p);
 			for (int i:ids) {
 				var question = new QuestionItem();
 				question.x = corrector.presenter.questionX(i);
@@ -433,7 +440,7 @@ class ControllerFXCorrector {
 	//---NAVIGATION---//
 	
 	def void renderStudentCopy(){		
-		var image = corrector.presenter.getPresenterPdf.currentPdfPage
+		var image = corrector.presenter.presenterPdf.currentPdfPage
 		imview.image = SwingFXUtils.toFXImage(image, null);
 		pdfLoaded = true;
 	}
@@ -443,29 +450,51 @@ class ControllerFXCorrector {
 	}
 	
 	def void nextStudent(){
-		currentStudentIndex++;
-		currentStudent = leftList.items.get(currentStudentIndex);
+		currentStudentIndex++;	
+		if (currentQuestionIndex >= leftList.items.size) {
+			currentQuestionIndex = 0;
+		}
+		setSelectedStudent();
 	}
 	def void previousStudent(){
 		currentStudentIndex--;
-		currentStudent = leftList.items.get(currentStudentIndex);
+		if (currentStudentIndex < 0){
+			currentStudentIndex = leftList.items.size
+		}
+		setSelectedStudent();
 	}
 	def void selectStudent(int index){
 		currentStudentIndex = index;
+		setSelectedStudent();
+	}
+	
+	def void setSelectedStudent(){
 		currentStudent = leftList.items.get(currentStudentIndex);
+		leftList.selectionModel.select(currentStudentIndex)
 	}
 	
 	def void nextQuestion(){
 		currentQuestionIndex++;
-		currentQuestion = rightList.items.get(currentQuestionIndex);
+		if (currentQuestionIndex >= rightList.items.size) {
+			currentQuestionIndex = 0;
+		}
+		setSelectedQuestion()
 	}
 	def void previousQuestion(){
 		currentQuestionIndex--;
-		currentQuestion = rightList.items.get(currentQuestionIndex);
+		if (currentQuestionIndex < 0){
+			currentQuestionIndex = rightList.items.size
+		}
+		setSelectedQuestion()
 	}
 	def void selectQuestion(int index) {
 		currentQuestionIndex = index;
-		currentQuestion = rightList.items.get(currentQuestionIndex);
+		setSelectedQuestion()
+	}
+	
+	def void setSelectedQuestion(){
+		currentQuestion = rightList.items.get(currentQuestionIndex)
+		rightList.selectionModel.select(currentQuestionIndex)
 	}
 	
 	def void setZoomArea(int x, int y, int height, int width) {
