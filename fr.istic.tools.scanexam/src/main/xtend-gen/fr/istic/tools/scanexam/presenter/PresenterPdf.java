@@ -2,10 +2,12 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
+import fr.istic.tools.scanexam.services.Service;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * Controlleur du pdf
@@ -22,7 +24,7 @@ public class PresenterPdf {
   /**
    * Association with the model via the Service API
    */
-  private ExamEditionService service;
+  private Service service;
   
   /**
    * Largeur de la fenêtre
@@ -46,8 +48,8 @@ public class PresenterPdf {
    * @param {@link GraduationPresenter} (not null)
    * Constructs a PDFPresenter object.
    */
-  public PresenterPdf(final ExamEditionService s, final Presenter p) {
-    Objects.<ExamEditionService>requireNonNull(s);
+  public PresenterPdf(final Service s, final Presenter p) {
+    Objects.<Service>requireNonNull(s);
     Objects.<Presenter>requireNonNull(p);
     this.service = s;
     this.presenter = p;
@@ -80,9 +82,6 @@ public class PresenterPdf {
     return this.service.getCurrentPdfPage();
   }
   
-  public void choosePdfPage(final int pageNumber) {
-  }
-  
   public void nextPdfPage() {
     this.service.nextPage();
   }
@@ -91,15 +90,28 @@ public class PresenterPdf {
     this.service.previousPage();
   }
   
-  public int getTotalPdfPageNumber() {
+  public void goToPage(final int page) {
+    this.service.goToPage(page);
+  }
+  
+  public int totalPdfPageNumber() {
     return this.service.getPageNumber();
   }
   
-  public int getCurrentPdfPageNumber() {
+  public int currentPdfPageNumber() {
     return this.service.getCurrentPageNumber();
   }
   
+  public Object choosePdfPage(final int i) {
+    return null;
+  }
+  
+  public PDDocument getDocument() {
+    return this.service.getDocument();
+  }
+  
   public void create(final File file) {
-    this.service.create(file);
+    Objects.<File>requireNonNull(file);
+    ((ExamEditionService) this.service).create(file);
   }
 }

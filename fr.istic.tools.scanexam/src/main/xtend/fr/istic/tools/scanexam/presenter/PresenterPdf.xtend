@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.presenter
 import java.io.InputStream
 import java.io.File
 import java.util.Objects
+import fr.istic.tools.scanexam.services.Service
 import fr.istic.tools.scanexam.services.ExamEditionService
 
 /** 
@@ -20,7 +21,7 @@ class PresenterPdf {
 	/**
 	 * Association with the model via the Service API
 	 */
-	ExamEditionService service;
+	Service service;
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * ATTRIBUTS
@@ -48,7 +49,7 @@ class PresenterPdf {
 	 * @param {@link GraduationPresenter} (not null)
 	 * Constructs a PDFPresenter object.
 	 */
-    new(ExamEditionService s, Presenter p){
+    new(Service s, Presenter p){
     	Objects.requireNonNull(s)
     	Objects.requireNonNull(p)
     	this.service = s
@@ -73,14 +74,9 @@ class PresenterPdf {
     	this.presenter
     }
     
-  
 	def getCurrentPdfPage()
 	{
 		return service.getCurrentPdfPage
-	}
-	
-	def void choosePdfPage(int pageNumber) {
-		
 	}
 	def void nextPdfPage(){
 		service.nextPage
@@ -88,16 +84,24 @@ class PresenterPdf {
 	def void previousPdfPage(){
 		service.previousPage
 	}
-	
-	def int getTotalPdfPageNumber(){
+	def void goToPage(int page) {
+		service.goToPage(page)
+	}
+	def int totalPdfPageNumber(){
 		service.pageNumber
 	}
-	def int getCurrentPdfPageNumber(){
+	def int currentPdfPageNumber(){
 		service.currentPageNumber
 	}
+	def choosePdfPage(int i){}
 	
-	def create(File file)
+	def getDocument() 
 	{
-		service.create(file);
+		service.document
 	}
+	def create(File file){
+		Objects.requireNonNull(file)
+		(service as ExamEditionService).create(file)
+	}
+	
 }
