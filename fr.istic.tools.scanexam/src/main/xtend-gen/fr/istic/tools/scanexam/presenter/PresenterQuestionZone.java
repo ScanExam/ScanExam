@@ -4,7 +4,9 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Class to manage conversions of the view's questions
@@ -80,13 +82,10 @@ public class PresenterQuestionZone {
   /**
    * --LOADING NEW TEMPLATE--
    */
-  public LinkedList<Integer> initLoading() {
+  public LinkedList<Integer> initLoading(final int pageNumber) {
     LinkedList<Integer> _xblockexpression = null;
     {
-      LinkedList<Integer> _linkedList = new LinkedList<Integer>();
-      this.pageNumbers = _linkedList;
-      LinkedList<Question> _linkedList_1 = new LinkedList<Question>();
-      this.questions = _linkedList_1;
+      this.questions = this.service.getQuestionAtPage(pageNumber);
       LinkedList<Integer> ids = new LinkedList<Integer>();
       for (final Question q : this.questions) {
         ids.add(Integer.valueOf(q.getId()));
@@ -96,9 +95,7 @@ public class PresenterQuestionZone {
     return _xblockexpression;
   }
   
-  private LinkedList<Integer> pageNumbers;
-  
-  private LinkedList<Question> questions;
+  private List<Question> questions;
   
   /**
    * Loads the next question into questionToLoad
@@ -146,6 +143,7 @@ public class PresenterQuestionZone {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getHeigth();
+          InputOutput.<String>print(("h = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;
@@ -162,6 +160,7 @@ public class PresenterQuestionZone {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getWidth();
+          InputOutput.<String>print(("w = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;
@@ -178,22 +177,6 @@ public class PresenterQuestionZone {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getName();
-        }
-      }
-      _xblockexpression = result;
-    }
-    return _xblockexpression;
-  }
-  
-  public int questionPage(final int id) {
-    int _xblockexpression = (int) 0;
-    {
-      int result = (-1);
-      for (final Question q : this.questions) {
-        int _id = q.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          result = (this.pageNumbers.get(this.questions.indexOf(q))).intValue();
         }
       }
       _xblockexpression = result;

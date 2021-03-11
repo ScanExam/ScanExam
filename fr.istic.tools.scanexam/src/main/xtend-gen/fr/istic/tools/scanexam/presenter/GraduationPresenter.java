@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
@@ -7,9 +9,11 @@ import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
 import fr.istic.tools.scanexam.view.Adapter;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -41,19 +45,10 @@ public class GraduationPresenter implements Presenter {
     this.service = service;
     Objects.<Adapter<GraduationPresenter>>requireNonNull(adapter);
     this.adapter = adapter;
-  }
-  
-  /**
-   * setter for the PresenterQuestion attribute
-   * @param {@link PresenterQuestion} pres instance of the presenter (not null)
-   */
-  public PresenterQuestion setPresenterQuestion(final PresenterQuestion pres) {
-    PresenterQuestion _xblockexpression = null;
-    {
-      Objects.<PresenterQuestion>requireNonNull(pres);
-      _xblockexpression = this.presQuestion = pres;
-    }
-    return _xblockexpression;
+    PresenterPdf _presenterPdf = new PresenterPdf(service, this);
+    this.presPdf = _presenterPdf;
+    PresenterQuestion _presenterQuestion = new PresenterQuestion(service);
+    this.presQuestion = _presenterQuestion;
   }
   
   /**
@@ -64,19 +59,6 @@ public class GraduationPresenter implements Presenter {
   }
   
   /**
-   * Setter for {@link PresenterCopy} attribute
-   * @param {@link PresenterCopy} pres an instance (not null)
-   */
-  public PresenterCopy setPresenterCopy(final PresenterCopy pres) {
-    PresenterCopy _xblockexpression = null;
-    {
-      Objects.<PresenterCopy>requireNonNull(pres);
-      _xblockexpression = this.presCopy = pres;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
    * @return current {@link PresenterCopy}
    */
   public PresenterCopy getPresenterCopy() {
@@ -84,36 +66,11 @@ public class GraduationPresenter implements Presenter {
   }
   
   /**
-   * Setter for {@link PresenterMarkingScheme} attribute
-   * @param {@link PresenterMarkingScheme} pres an instance (not null)
-   */
-  public PresenterMarkingScheme setPresenterMarkingScheme(final PresenterMarkingScheme pres) {
-    PresenterMarkingScheme _xblockexpression = null;
-    {
-      Objects.<PresenterMarkingScheme>requireNonNull(pres);
-      _xblockexpression = this.presMarkingScheme = pres;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
    * @return current {@link PresenterMarkingScheme}
    */
+  @Override
   public PresenterMarkingScheme getPresenterMarkingScheme() {
     return this.presMarkingScheme;
-  }
-  
-  /**
-   * Sets a {@link ControllerVueCorrection} the link with the view
-   * @param {@link ControllerVueCorrection} contr an instance (not null)
-   */
-  public GraduationPresenter setControllerVueCorrection(final GraduationPresenter contr) {
-    GraduationPresenter _xblockexpression = null;
-    {
-      Objects.<GraduationPresenter>requireNonNull(contr);
-      _xblockexpression = this.graduationPresenter = contr;
-    }
-    return _xblockexpression;
   }
   
   /**
@@ -121,6 +78,11 @@ public class GraduationPresenter implements Presenter {
    */
   public GraduationPresenter getControllerVueCorrection() {
     return this.graduationPresenter;
+  }
+  
+  @Override
+  public PresenterPdf getPresenterPdf() {
+    return this.presPdf;
   }
   
   /**
@@ -138,37 +100,134 @@ public class GraduationPresenter implements Presenter {
     return this.presQuestion.getPreviousQuestion(question);
   }
   
-  public PresenterPdf setPresenterPdf(final PresenterPdf pres) {
-    PresenterPdf _xblockexpression = null;
+  public void openEditionTemplate(final String path) {
+    this.service.openCreationTemplate(path);
+  }
+  
+  public void openCorrectionPdf(final String path) {
+    this.service.openCorrectionPdf(path);
+  }
+  
+  public LinkedList<Integer> getStudentIds() {
+    LinkedList<Integer> _xblockexpression = null;
     {
-      Objects.<PresenterPdf>requireNonNull(pres);
-      _xblockexpression = this.presPdf = pres;
+      Collection<StudentSheet> list = this.service.getStudentSheets();
+      InputOutput.<Integer>print(Integer.valueOf(list.size()));
+      LinkedList<Integer> result = new LinkedList<Integer>();
+      for (final StudentSheet s : list) {
+        result.add(Integer.valueOf(s.getId()));
+      }
+      _xblockexpression = result;
     }
     return _xblockexpression;
   }
   
-  public PresenterPdf getPresenterPdf() {
-    return this.presPdf;
+  public int getAbsolutePage(final int studentId, final int pageNumber) {
+    return this.service.getAbsolutePageNumber(studentId, pageNumber);
   }
   
-  @Override
-  public BufferedImage getCurrentPdfPage() {
-    return this.service.getCurrentPdfPage();
+  /**
+   * --LOADING NEW TEMPLATE--
+   */
+  public LinkedList<Integer> initLoading(final int pageNumber) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      this.questions = this.service.getQuestionAtPage(pageNumber);
+      LinkedList<Integer> ids = new LinkedList<Integer>();
+      for (final Question q : this.questions) {
+        ids.add(Integer.valueOf(q.getId()));
+      }
+      _xblockexpression = ids;
+    }
+    return _xblockexpression;
   }
   
-  @Override
-  public int getCurrentPdfPageNumber() {
-    return this.service.getCurrentPageNumber();
+  private List<Question> questions;
+  
+  /**
+   * Loads the next question into questionToLoad
+   * if there is a new question, return true,
+   * else return false
+   */
+  public double questionX(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getX();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
-  @Override
-  public void create(final File file) {
-    this.service.create(file);
+  public double questionY(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getY();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
-  public void openEditionTemplate(final String path) {
+  public double questionHeight(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getHeigth();
+          InputOutput.<String>print(("h = " + Double.valueOf(result)));
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
-  public void openCorrectionPdf(final String path) {
+  public double questionWidth(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getWidth();
+          InputOutput.<String>print(("w = " + Double.valueOf(result)));
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public String questionName(final int id) {
+    String _xblockexpression = null;
+    {
+      String result = "";
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getName();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
 }

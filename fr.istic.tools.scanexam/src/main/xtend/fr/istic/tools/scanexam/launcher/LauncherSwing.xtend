@@ -1,8 +1,8 @@
 package fr.istic.tools.scanexam.launcher
 
 import fr.istic.tools.scanexam.presenter.PresenterBindings
-import fr.istic.tools.scanexam.view.swing.EditorAdapterSwing
 import java.awt.EventQueue
+import fr.istic.tools.scanexam.view.swing.GraduationAdapterSwing
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie Swing
@@ -22,7 +22,7 @@ class LauncherSwing implements Launcher {
 	override void launch() {
 		EventQueue.invokeLater([
 			try {
-				PresenterBindings.linkEditorPresenter(new EditorAdapterSwing)
+				PresenterBindings.linkGraduationPresenter(new GraduationAdapterSwing)
 			} catch (Exception e) {
 				e.printStackTrace()
 			}
