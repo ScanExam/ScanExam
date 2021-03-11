@@ -28,7 +28,6 @@ import org.apache.logging.log4j.LogManager
 
 class ControllerFXEditor {
 
-	final double MINIMUM_ZONE_SIZE =  20
 	
 	EditorAdapterFX editor;
 
@@ -183,13 +182,6 @@ class ControllerFXEditor {
 			mouseOriginY = mousePositionY
 			var source = e.source as Pane
 			currentRectangle = createBox(mousePositionX, mousePositionY);
-			currentRectangle.listViewBox.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-				override handle(MouseEvent event) {
-					highlightBox((event.source as ListViewBox).parentBox);
-				}
-
-			})
 			
 			source.children.add(currentRectangle);
 			source.children.add(currentRectangle.getText());
@@ -217,7 +209,7 @@ class ControllerFXEditor {
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) 
 		{
-			if (currentRectangle.width > MINIMUM_ZONE_SIZE && currentRectangle.height > MINIMUM_ZONE_SIZE)
+			if (currentRectangle.width > FXSettings.MINIMUM_ZONE_SIZE && currentRectangle.height > FXSettings.MINIMUM_ZONE_SIZE)
 			{
 				addBox(currentRectangle);
 			}
@@ -382,8 +374,7 @@ class ControllerFXEditor {
 	 * Called when we finish creating a new box (Mouse release)
 	 */
 	def addBox(Box box) {
-		editor.addBox(box);
-		renameBox(box,box.name)//TODO fix
+		//renameBox(box,box.name)//TODO fix
 		var lb = box.listViewBox;
 		/*lb.upAction = new EventHandler<ActionEvent>() {
 
@@ -397,6 +388,14 @@ class ControllerFXEditor {
 			}
 
 		}*/
+		
+		lb.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+				override handle(MouseEvent event) {
+					highlightBox(box);
+				}
+
+			})
 		lb.removeAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
@@ -466,11 +465,11 @@ class ControllerFXEditor {
 	}
 
 	def moveBox(Box box) {
-		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId, box.x, box.y);
+		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId,convertToRelative(box.x,maxX),convertToRelative(box.y,maxY));
 	}
 
 	def resizeBox(Box box) {
-		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId, box.height, box.width);
+		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId,convertToRelative(box.height,maxY),convertToRelative(box.width,maxX));
 	}
 
 	/**
@@ -489,6 +488,10 @@ class ControllerFXEditor {
 		box.listViewBox.pointsText = points
 		var number = Integer.parseInt(points);
 		editor.presenter.presenterQuestionZone.changeQuestionWorth(box.boxId,number);
+	}
+	
+	def addBoxModel(Box box){
+		editor.presenter.presenterQuestionZone.createQuestion(convertToRelative(box.x,maxX),convertToRelative(box.y,maxY),convertToRelative(box.height,maxY),convertToRelative(box.width,maxX))
 	}
 
 	// ------------//
@@ -535,8 +538,8 @@ class ControllerFXEditor {
 
 		if (file !== null) {
 			editor.presenter.load(file.path);
-			loadBoxes();
 			renderDocument();
+			loadBoxes();
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -564,13 +567,12 @@ class ControllerFXEditor {
 					editor.presenter.presenterQuestionZone.questionName(i),
 					p,
 					BoxType.QUESTION,
-					editor.presenter.presenterQuestionZone.questionX(i),
-					editor.presenter.presenterQuestionZone.questionY(i),
-					editor.presenter.presenterQuestionZone.questionHeight(i),
-					editor.presenter.presenterQuestionZone.questionWidth(i)
+					editor.presenter.presenterQuestionZone.questionX(i) * maxX,
+					editor.presenter.presenterQuestionZone.questionY(i) * maxY,
+					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY,
+					editor.presenter.presenterQuestionZone.questionWidth(i) * maxX
 				)
 				addBox(box)
-				boxes.add(box)
 				mainPane.children.add(box)
 			}
 		}
@@ -637,8 +639,10 @@ class ControllerFXEditor {
 			if (b.pageNumber == page) {
 				b.visible = true;
 
+				b.isVisible(true)
 			} else {
 				b.visible = false;
+				b.isVisible(false)
 			}
 		}
 	}
@@ -655,5 +659,7 @@ class ControllerFXEditor {
 		highlightedBox = box;
 		highlightedBox.focus = true
 	}
-
+	def double convertToRelative(double relative, double to){
+		return relative/to
+	}
 }
