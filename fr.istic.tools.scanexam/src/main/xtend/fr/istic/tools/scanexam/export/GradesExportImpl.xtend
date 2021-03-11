@@ -6,6 +6,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import fr.istic.tools.scanexam.services.ExamGraduationService
+import java.io.FileOutputStream
+import java.io.IOException
 
 class GradesExportImpl implements GradesExport {
 	ExamGraduationService service
@@ -14,6 +16,9 @@ class GradesExportImpl implements GradesExport {
 		service = serv
 	}
 	
+	/**
+	 * Methode qui créer un fichier Excel et qui le remplit avec les noms des étudiants et leurs notes
+	 */
 	override exportGrades() {
 		
 		val XSSFWorkbook workbook = new XSSFWorkbook()
@@ -22,15 +27,23 @@ class GradesExportImpl implements GradesExport {
 		var int rowCount = 0
 		
 		for(i : 0 ..< service.studentSheets.size){
+			val Row row = sheet.createRow(rowCount)
 			
+			val Cell cellName = row.createCell(0)
+			cellName.cellValue = service.studentSheets.get(i).studentName
+			
+			val Cell cellGrade = row.createCell(1)
+			cellGrade.cellValue = service.studentSheets.get(i).computeGrade
 		}
 		
-		/*
-		 * Dans l'idée on peut get les StudentSheets depuis le service
-		 * Puis on suppose qu'il existe un .getStudentName et .getStudentGrade
-		 * On créé le fichier excel
-		 * On le remplit
-		 */
+		try{
+			val FileOutputStream outStream = new FileOutputStream(service.examName +".xslx")
+			workbook.write(outStream)
+		}
+		catch(IOException e){
+			e.printStackTrace
+		}
+
 	}
 	
 	
