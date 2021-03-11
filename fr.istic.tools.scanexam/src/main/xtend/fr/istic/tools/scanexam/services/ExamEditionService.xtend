@@ -45,7 +45,7 @@ class ExamEditionService extends Service // TODO : renommer
 	}
 	def rescaleQuestion(int id,float heigth,float width)
 	{
-		val question = currentPage.questions.get(id);
+		val question = getQuestion(id);
 		question.zone.width = width
 		question.zone.heigth = heigth
 	}

@@ -104,8 +104,13 @@ public abstract class Service {
     return ExamSingleton.getPage(pageIndex).getQuestions();
   }
   
-  public Question removeQuestion(final int id) {
-    return this.getCurrentPage().getQuestions().remove(id);
+  public boolean removeQuestion(final int id) {
+    boolean _xblockexpression = false;
+    {
+      final Question question = this.getQuestion(id);
+      _xblockexpression = this.getCurrentPage().getQuestions().remove(question);
+    }
+    return _xblockexpression;
   }
   
   public int getTemplatePageAmount() {

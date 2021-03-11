@@ -57,7 +57,7 @@ public class ExamEditionService extends Service {
   }
   
   public void rescaleQuestion(final int id, final float heigth, final float width) {
-    final Question question = this.getCurrentPage().getQuestions().get(id);
+    final Question question = this.getQuestion(id);
     QuestionZone _zone = question.getZone();
     _zone.setWidth(width);
     QuestionZone _zone_1 = question.getZone();
