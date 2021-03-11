@@ -164,7 +164,7 @@
 							<mainClass>${fully.qualified.main.class}</mainClass>
 						</manifest>
 						<manifestEntries>
-							<Multi-Release>'true'</Multi-Release>
+							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 					</archive>
 					<descriptorRefs>
