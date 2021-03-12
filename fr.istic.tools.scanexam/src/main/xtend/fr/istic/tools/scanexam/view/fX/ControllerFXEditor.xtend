@@ -214,6 +214,7 @@ class ControllerFXEditor {
 			{
 				addBox(currentRectangle);
 				addBoxModel(currentRectangle);
+				renameBox(currentRectangle, String.format(LanguageManager.translate("question.default_name"), currentRectangle.boxId))
 			}
 			else
 			{
@@ -532,7 +533,7 @@ class ControllerFXEditor {
 	 * notifies the rest of the program to the removal of a box
 	 */
 	def removeBox(Box box) {
-		logger.warn("Removing box " + box)
+		logger.info("Removing box " + box)
 		questionList.items.remove(box.listViewBox)
 		mainPane.children.remove(box.getText());
 		mainPane.children.remove(box)

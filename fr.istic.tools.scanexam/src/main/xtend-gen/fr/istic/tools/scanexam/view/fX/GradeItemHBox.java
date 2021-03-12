@@ -15,17 +15,29 @@ import javafx.scene.layout.Pane;
 public class GradeItemHBox extends HBox {
   public GradeItemHBox() {
     super();
-    Pane p = new Pane();
-    this.getChildren().add(p);
+    Pane p1 = new Pane();
+    p1.setMaxWidth(50);
+    Pane p2 = new Pane();
+    p2.setMaxWidth(50);
+    this.getChildren().add(p1);
+    this.getChildren().add(p2);
     Button _button = new Button("-");
     this.remove = _button;
     this.getChildren().add(this.remove);
+    Label _label = new Label("Torchon");
+    this.nameLabel = _label;
+    String _text = this.nameLabel.getText();
+    TextField _textField = new TextField(_text);
+    this.nameTextField = _textField;
+    this.nameTextField.setVisible(false);
+    p1.getChildren().addAll(this.nameLabel, this.nameTextField);
+    Label _label_1 = new Label("0");
+    this.label = _label_1;
     NumberTextField _numberTextField = new NumberTextField();
     this.field = _numberTextField;
+    this.field.setText(this.label.getText());
     this.field.setVisible(false);
-    Label _label = new Label("0");
-    this.label = _label;
-    p.getChildren().addAll(this.field, this.label);
+    p2.getChildren().addAll(this.field, this.label);
   }
   
   private int gradeItemId;
@@ -68,9 +80,8 @@ public class GradeItemHBox extends HBox {
     return this.label.getText();
   }
   
-  public void setGradeItemPoints(final double points) {
-    String _plus = (Double.valueOf(points) + "");
-    this.label.setText(_plus);
+  public void setGradeItemPoints(final String points) {
+    this.label.setText((points + ""));
   }
   
   public void setChangePoints(final EventHandler<ActionEvent> handler) {
@@ -81,7 +92,59 @@ public class GradeItemHBox extends HBox {
     this.label.setContextMenu(menu);
   }
   
+  public void setChangeName(final EventHandler<ActionEvent> handler) {
+    ContextMenu menu = new ContextMenu();
+    MenuItem renameMenu = new MenuItem("Rename");
+    renameMenu.setOnAction(handler);
+    menu.getItems().add(renameMenu);
+    this.nameLabel.setContextMenu(menu);
+  }
+  
+  public void setNameCommit(final EventHandler<ActionEvent> handler) {
+    this.nameTextField.setOnAction(handler);
+  }
+  
+  public void setPointsCommit(final EventHandler<ActionEvent> handler) {
+    this.field.setOnAction(handler);
+  }
+  
   public void setRemoveGradeItemAction(final EventHandler<ActionEvent> handler) {
     this.remove.setOnAction(handler);
+  }
+  
+  public void toggleRenaming() {
+    boolean _isVisible = this.nameTextField.isVisible();
+    boolean _not = (!_isVisible);
+    this.nameTextField.setVisible(_not);
+    boolean _isVisible_1 = this.nameTextField.isVisible();
+    if (_isVisible_1) {
+      this.nameTextField.requestFocus();
+    }
+    this.nameTextField.selectAll();
+    boolean _isVisible_2 = this.nameLabel.isVisible();
+    boolean _not_1 = (!_isVisible_2);
+    this.nameLabel.setVisible(_not_1);
+  }
+  
+  public void togglePointChange() {
+    boolean _isVisible = this.field.isVisible();
+    boolean _not = (!_isVisible);
+    this.field.setVisible(_not);
+    boolean _isVisible_1 = this.field.isVisible();
+    if (_isVisible_1) {
+      this.field.requestFocus();
+    }
+    this.field.selectAll();
+    boolean _isVisible_2 = this.label.isVisible();
+    boolean _not_1 = (!_isVisible_2);
+    this.label.setVisible(_not_1);
+  }
+  
+  public String getPointFieldText() {
+    return this.field.getText();
+  }
+  
+  public String getNameFieldText() {
+    return this.nameTextField.getText();
   }
 }

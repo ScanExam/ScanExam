@@ -72,6 +72,11 @@ public class ExamEditionService extends Service {
     _zone_1.setY(y);
   }
   
+  public void renameQuestion(final int id, final String name) {
+    final Question question = this.getQuestion(id);
+    question.setName(name);
+  }
+  
   @Override
   public void save(final String path) {
     try {

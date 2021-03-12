@@ -95,11 +95,6 @@ public abstract class Service {
     return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
   }
   
-  public void renameQuestion(final int id, final String name) {
-    final Question question = this.getQuestion(id);
-    question.setName(name);
-  }
-  
   public EList<Question> getQuestionAtPage(final int pageIndex) {
     return ExamSingleton.getPage(pageIndex).getQuestions();
   }

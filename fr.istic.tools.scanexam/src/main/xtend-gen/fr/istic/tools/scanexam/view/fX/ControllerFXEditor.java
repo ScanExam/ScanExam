@@ -21,8 +21,6 @@ import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -243,6 +241,7 @@ public class ControllerFXEditor {
       if (((this.currentRectangle.getWidth() > FXSettings.MINIMUM_ZONE_SIZE) && (this.currentRectangle.getHeight() > FXSettings.MINIMUM_ZONE_SIZE))) {
         this.addBox(this.currentRectangle);
         this.addBoxModel(this.currentRectangle);
+        this.renameBox(this.currentRectangle, String.format(LanguageManager.translate("question.default_name"), Integer.valueOf(this.currentRectangle.getBoxId())));
       } else {
         Object _source_1 = e.getSource();
         ((Pane) _source_1).getChildren().remove(this.currentRectangle);
@@ -509,18 +508,40 @@ public class ControllerFXEditor {
       lb.setAddGradeItemAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
-          GradeItemHBox item = new GradeItemHBox();
+          final GradeItemHBox item = new GradeItemHBox();
           ControllerFXEditor.this.addGradeItem(item);
           box.addGradeItem(item);
           item.setRemoveGradeItemAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent event) {
-              Object _source = event.getSource();
-              Parent _parent = ((Button) _source).getParent();
-              ControllerFXEditor.this.removeGradeItem(((GradeItemHBox) _parent));
-              Object _source_1 = event.getSource();
-              Parent _parent_1 = ((Button) _source_1).getParent();
-              box.removeGradeItem(((GradeItemHBox) _parent_1));
+              ControllerFXEditor.this.removeGradeItem(item);
+              box.removeGradeItem(item);
+            }
+          });
+          item.setChangeName(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              item.toggleRenaming();
+            }
+          });
+          item.setChangePoints(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              item.togglePointChange();
+            }
+          });
+          item.setNameCommit(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              ControllerFXEditor.this.updateGradeItem(item);
+              item.toggleRenaming();
+            }
+          });
+          item.setPointsCommit(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              ControllerFXEditor.this.updateGradeItem(item);
+              item.togglePointChange();
             }
           });
         }
@@ -550,7 +571,13 @@ public class ControllerFXEditor {
   }
   
   public Object updateGradeItem(final GradeItemHBox item) {
-    return this.editor.getPresenter().updateGradeItem(item.getGradeItemId(), item.getGradeItemName(), Double.parseDouble(item.getGradeItemPoints()));
+    Object _xblockexpression = null;
+    {
+      item.setGradeItemName(item.getNameFieldText());
+      item.setGradeItemPoints(item.getPointFieldText());
+      _xblockexpression = this.editor.getPresenter().updateGradeItem(item.getGradeItemId(), item.getGradeItemName(), Double.parseDouble(item.getGradeItemPoints()));
+    }
+    return _xblockexpression;
   }
   
   public Object removeGradeItem(final GradeItemHBox item) {
@@ -561,7 +588,7 @@ public class ControllerFXEditor {
    * notifies the rest of the program to the removal of a box
    */
   public void removeBox(final Box box) {
-    this.logger.warn(("Removing box " + box));
+    this.logger.info(("Removing box " + box));
     this.questionList.getItems().remove(box.getListViewBox());
     this.mainPane.getChildren().remove(box.getText());
     this.mainPane.getChildren().remove(box);

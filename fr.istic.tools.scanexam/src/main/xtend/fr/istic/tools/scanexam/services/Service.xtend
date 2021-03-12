@@ -1,13 +1,12 @@
 package fr.istic.tools.scanexam.services
 
+import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.QuestionZone
-import java.io.File
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.eclipse.xtend.lib.annotations.Accessors
-import fr.istic.tools.scanexam.core.Question
 
 abstract class Service 
 {
@@ -76,11 +75,7 @@ abstract class Service
 	{
 		currentPage.questions.findFirst[question | question.id == id]
 	}
-	def renameQuestion(int id,String name)
-	{
-		val question = getQuestion(id)
-		question.name = name
-	}
+	
 	def getQuestionAtPage(int pageIndex)
 	{
 		ExamSingleton.getPage(pageIndex).questions
