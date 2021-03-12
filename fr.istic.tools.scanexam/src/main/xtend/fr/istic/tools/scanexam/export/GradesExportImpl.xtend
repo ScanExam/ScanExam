@@ -25,6 +25,7 @@ class GradesExportImpl implements GradesExport {
 		val XSSFSheet sheet = workbook.createSheet("export_grades")
 		
 		var int rowCount = 0
+		println(service.studentSheets)
 		
 		for(i : 0 ..< service.studentSheets.size){
 			val Row row = sheet.createRow(rowCount)
@@ -39,6 +40,7 @@ class GradesExportImpl implements GradesExport {
 		try{
 			val FileOutputStream outStream = new FileOutputStream(service.examName +".xslx")
 			workbook.write(outStream)
+			
 		}
 		catch(IOException e){
 			e.printStackTrace

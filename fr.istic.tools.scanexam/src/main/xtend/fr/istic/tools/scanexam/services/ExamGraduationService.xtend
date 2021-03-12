@@ -65,14 +65,15 @@ class ExamGraduationService extends Service
 	
 	def boolean openCorrectionPdf(String path)
 	{
+		//TODO a vérifer
         document = PDDocument.load(new File(path))
         
-        val stream =new FileInputStream(new File(path))
-        val pdfReader = new PdfReaderWithoutQrCodeImpl(stream,ExamSingleton.instance.pages.size,3); // TODO
+        //val stream =new FileInputStream(new File(path))
+        val pdfReader = new PdfReaderWithoutQrCodeImpl(document,ExamSingleton.instance.pages.size,3); // TODO
         pdfReader.readPDf();
         studentSheets = pdfReader.completeStudentSheets
-      
-        stream.close();
+      	document.close
+        //stream.close();
         return true
 	}
 	
