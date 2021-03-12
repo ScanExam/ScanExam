@@ -118,7 +118,7 @@ public class ExamEditionService extends Service {
         question.setGradeScale(factory.createGradeScale());
       }
       final GradeScale scale = question.getGradeScale();
-      scale.getSteps().add(factory.createGradeEntry(questionId, desc, point));
+      scale.getSteps().add(factory.createGradeEntry(this.gradeEntryId, desc, point));
       _xblockexpression = this.gradeEntryId++;
     }
     return _xblockexpression;

@@ -92,7 +92,7 @@ class ExamEditionService extends Service // TODO : renommer
 		if(question.gradeScale === null)
 			question.gradeScale = factory.createGradeScale
 		val scale = question.gradeScale
-		scale.steps.add(factory.createGradeEntry(questionId, desc, point))
+		scale.steps.add(factory.createGradeEntry(gradeEntryId, desc, point))
 		gradeEntryId++
 	}
 	
