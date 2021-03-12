@@ -170,6 +170,7 @@ public class ControllerFXCorrector {
   @FXML
   public void exportPressed() {
     InputOutput.<String>println("Export method");
+    this.getAdapterCorrection().getPresenter().exportGrades();
   }
   
   /**

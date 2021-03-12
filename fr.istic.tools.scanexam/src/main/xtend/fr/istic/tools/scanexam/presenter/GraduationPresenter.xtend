@@ -1,13 +1,13 @@
 package fr.istic.tools.scanexam.presenter
 
+import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.export.GradesExportImpl
 import fr.istic.tools.scanexam.services.ExamGraduationService
 import fr.istic.tools.scanexam.view.Adapter
-import java.io.File
-import java.util.Objects
 import java.util.LinkedList
-import fr.istic.tools.scanexam.core.StudentSheet
-import fr.istic.tools.scanexam.core.Question
 import java.util.List
+import java.util.Objects
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -98,6 +98,11 @@ class GraduationPresenter implements Presenter
 	
 	def void openEditionTemplate(String path){
 		service.openCreationTemplate(path)
+	}
+	
+	//XXX À améliorer
+	def void exportGrades() {
+		(new GradesExportImpl(service)).exportGrades
 	}
 	
 	def void openCorrectionPdf(String path){

@@ -127,12 +127,14 @@ class ControllerFXCorrector {
 		println("Import method");
 	}
 
+	//XXX À améliorer
 	/**
 	 * Called when a <b>export</b> button is pressed
 	 */
 	@FXML
 	def void exportPressed() {
 		println("Export method");
+		adapterCorrection.presenter.exportGrades
 	}
 
 	/**
