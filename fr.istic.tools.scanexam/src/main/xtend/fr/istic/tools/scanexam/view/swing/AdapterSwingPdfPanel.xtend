@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.util.Optional
 import javax.swing.JPanel
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 
 /** 
  * Classe pour offrir plus d'options à un PdfPanel (zoom, déplacement à la souris)
@@ -78,8 +79,8 @@ class AdapterSwingPdfPanel {
 		lastClickPoint = Optional::empty()
 		mouseHandler = new MouseAdapter() {
 			override void mousePressed(MouseEvent e) {
-				// Clic molette ou droit
-				if ((e.getButton() === 2) || (e.getButton() === 3)) {
+				// Clic molette ou droit OU cique gauche et état idle
+				if (((e.getButton() === 2) || (e.getButton() === 3)) || ((e.getButton() === 1) && SelectionStateMachine.getState() === SelectionStateMachine.IDLE)) {
 					lastClickPoint = Optional::of(e.getPoint())
 				}
 			}

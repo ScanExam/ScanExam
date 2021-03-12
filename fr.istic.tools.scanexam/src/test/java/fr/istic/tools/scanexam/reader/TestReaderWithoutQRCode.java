@@ -2,10 +2,14 @@ package fr.istic.tools.scanexam.reader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,14 +29,17 @@ class TestReaderWithoutQRCode {
 	
 
 	@BeforeEach
-	void init() {
+	void init() throws IOException {
 		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("QRCode/pfo_Inserted.pdf");
-		if (inStreamGood != null)
-			readerGood = new PdfReaderWithoutQrCodeImpl(inStreamGood, nbPages, nbCopies);
-
+		if (inStreamGood != null) {
+			PDDocument docGood = PDDocument.load(inStreamGood);
+			readerGood = new PdfReaderWithoutQrCodeImpl(docGood, nbPages, nbCopies);
+		}
 		InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("QRCode/pfo_Dirty.pdf");
-		if (inStreamDirty != null)
-			readerDirty = new PdfReaderWithoutQrCodeImpl(inStreamDirty, nbPages, nbCopies);
+		if (inStreamDirty != null) {
+			PDDocument docDirty = PDDocument.load(inStreamDirty);
+			readerDirty = new PdfReaderWithoutQrCodeImpl(docDirty, nbPages, nbCopies);
+			}
 	}
 
 	@Test

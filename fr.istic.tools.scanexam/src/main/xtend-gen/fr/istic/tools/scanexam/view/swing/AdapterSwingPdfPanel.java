@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.presenter.Presenter;
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -89,7 +90,7 @@ public class AdapterSwingPdfPanel {
     this.mouseHandler = new MouseAdapter() {
       @Override
       public void mousePressed(final MouseEvent e) {
-        if (((e.getButton() == 2) || (e.getButton() == 3))) {
+        if ((((e.getButton() == 2) || (e.getButton() == 3)) || ((e.getButton() == 1) && (SelectionStateMachine.getState() == SelectionStateMachine.IDLE)))) {
           AdapterSwingPdfPanel.this.lastClickPoint = Optional.<Point>of(e.getPoint());
         }
       }

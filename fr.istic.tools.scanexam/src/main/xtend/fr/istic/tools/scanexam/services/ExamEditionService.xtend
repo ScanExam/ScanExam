@@ -10,6 +10,7 @@ import java.util.Base64
 import org.apache.pdfbox.pdmodel.PDDocument
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import org.eclipse.xtend.lib.annotations.Accessors
 
 /*
  * Representer l'état courant de l'interface graphique
@@ -22,7 +23,7 @@ class ExamEditionService extends Service // TODO : renommer
 {
 	CreationTemplate template;
 	
-	int questionId;
+ 	@Accessors int questionId;
 	
 	/**
 	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
@@ -42,17 +43,25 @@ class ExamEditionService extends Service // TODO : renommer
 		currentPage.questions.add(question);
 		return questionId++;
 	}
+	
 	def rescaleQuestion(int id,float heigth,float width)
 	{
-		val question = currentPage.questions.get(id);
+		val question = getQuestion(id);
 		question.zone.width = width
 		question.zone.heigth = heigth
 	}
+	
 	def moveQuestion(int id,float x,float y)
 	{
 		val question = getQuestion(id)
 		question.zone.x = x
 		question.zone.y = y 
+	}
+	
+	def renameQuestion(int id,String name)
+	{
+		val question = getQuestion(id)
+		question.name = name
 	}
 	
 	
@@ -80,6 +89,7 @@ class ExamEditionService extends Service // TODO : renommer
             ExamSingleton.instance = creationTemplate.get().exam
             val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
             document = PDDocument.load(decoded)
+            questionId = ExamSingleton.instance.pages.stream.map[page | page.questions.size].reduce[acc, num | acc + num].get + 1
             return true
         }
         return false
@@ -99,6 +109,7 @@ class ExamEditionService extends Service // TODO : renommer
 		
 			ExamSingleton.instance.pages.add(page);
 		}
+		questionId = 0
 	}
 
 	

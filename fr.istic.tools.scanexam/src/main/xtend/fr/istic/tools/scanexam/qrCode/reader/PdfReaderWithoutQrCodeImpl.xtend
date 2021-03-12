@@ -10,7 +10,6 @@ import java.util.stream.Collectors
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
 import java.util.concurrent.CountDownLatch
-import java.io.InputStream
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
@@ -19,11 +18,11 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
-	InputStream inStream
-	int nbPagesInPdf;
+	int nbPagesInPdf
+	PDDocument doc
 
-	new(InputStream inStream, int nbPages, int nbCopies) {
-		this.inStream = inStream
+	new(PDDocument doc, int nbPages, int nbCopies) {
+		this.doc = doc
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
 
@@ -35,11 +34,9 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	 */
 	override readPDf() {
 		try {
-			val PDDocument doc = PDDocument.load(inStream)
 			this.nbPagesInPdf = doc.numberOfPages
 			val PDFRenderer pdf = new PDFRenderer(doc)
 			createThread(doc.numberOfPages, pdf)
-			doc.close
 		} catch (Exception e) {
 			e.printStackTrace
 			return false

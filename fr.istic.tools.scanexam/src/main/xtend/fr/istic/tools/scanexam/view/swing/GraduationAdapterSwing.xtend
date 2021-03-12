@@ -8,6 +8,7 @@ import java.io.File
 import java.io.IOException
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
+import fr.istic.tools.scanexam.launcher.LauncherSwing
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
@@ -63,8 +64,16 @@ class GraduationAdapterSwing implements GraduationAdapter {
 				view.showContentDown()
 			}
 		})
+	    view.getMnItemSwap().addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				swapToEditor()
+			}
+	    });
 	}
-	
+		
+	def void swapToEditor(){
+		LauncherSwing.swapToEditor()
+	}
 	/**
 	 * Ouvre un fichier pdf
 	 */
@@ -82,7 +91,7 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	    } else if (result == JFileChooser.APPROVE_OPTION) {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
-	        graduationPresenter.getPresenterPdf.create(selectedFile)
+	        graduationPresenter.getPresenterPdf().create(selectedFile)
 	    }
 	}
 	

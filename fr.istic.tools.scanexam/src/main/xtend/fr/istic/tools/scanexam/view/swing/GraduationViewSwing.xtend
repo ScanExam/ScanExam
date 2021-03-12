@@ -48,6 +48,8 @@ class GraduationViewSwing {
 	var JMenuItem mnItemLoad
 	/* Bouton pour charger de session */
 	var JMenuItem mnItemSession
+	/* Bouton pour swap*/
+	var JMenuItem mnItemSwap
 
 	/* Panel des boutons principaux */
 	var JPanel pnlMainBtn
@@ -125,6 +127,11 @@ class GraduationViewSwing {
 	/* Panel d'énoncé d'une question */
 		var boolean contentDown
 		
+	var currentPage = 0;
+	
+	var totalPage = 20;
+	
+
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * METHODES
@@ -145,7 +152,7 @@ class GraduationViewSwing {
 	def private void initialize() {
 		window = new JFrame(LanguageManager.translate("title.ScanExam"))
 		window.setBounds(100, 100, 1280, 720)
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 
 		menuBar = new JMenuBar()
 		window.setJMenuBar(menuBar)
@@ -158,6 +165,10 @@ class GraduationViewSwing {
 
 		mnItemSession = new JMenuItem("Change session")
 		mnFile.add(mnItemSession)
+		
+		mnItemSwap = new JMenuItem("Swap to editor")
+		mnFile.add(mnItemSwap)
+	
 
 		window.getContentPane().setLayout(new BorderLayout(0, 0))
 		pnlMainBtn = new JPanel()
@@ -230,7 +241,7 @@ class GraduationViewSwing {
 		lblCurrentNote.setHorizontalAlignment(SwingConstants.CENTER)
 		pnlNote.add(lblCurrentNote, BorderLayout.NORTH)
 
-		lblNote = new JLabel("x/20")
+		lblNote = new JLabel(currentPage+"/"+totalPage)
 		lblNote.setFont(new Font("Arial", Font.PLAIN, 14))
 		lblNote.setHorizontalAlignment(SwingConstants.CENTER)
 		pnlNote.add(lblNote, BorderLayout.CENTER)
@@ -240,9 +251,31 @@ class GraduationViewSwing {
 
 		btnPrevPaper = new JButton("<<")
 		spltPnPaper.setLeftComponent(btnPrevPaper)
+		
+		btnPrevPaper.addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				if(currentPage > 0 && currentPage<=totalPage){
+					currentPage--;
+				}
+				lblNote.setText(currentPage+"/"+totalPage);
+				lblNote.repaint()
+				previousPage()		
+				}
+		})
 
 		btnNextPaper = new JButton(">>")
 		spltPnPaper.setRightComponent(btnNextPaper)
+		
+		btnNextPaper.addActionListener(new ActionListener() {
+			override actionPerformed(ActionEvent e) {
+				if(currentPage<totalPage){
+					currentPage++;
+				}
+				lblNote.setText(currentPage+"/"+totalPage);
+				lblNote.repaint()
+					nextPage()		
+				}
+		})
 
 		// pnlPdf = new JPanel();
 		pnlPdf = new PdfPanel(this.pdfPresenter)
@@ -288,6 +321,34 @@ class GraduationViewSwing {
 		spltPnQst.setRightComponent(btnNextQst)
 	}
 
+	/** 
+	 * Ouvre ou ferme l'énoncé d'une question
+	 */
+	def void showContentDown() {
+		if (contentDown) {
+			pnlDown.remove(mainSplitPane)
+			btnDown.setText("▲")
+			contentDown = false
+		} else {
+			pnlDown.add(mainSplitPane, BorderLayout.CENTER)
+			btnDown.setText("▼")
+			contentDown = true
+		}
+	}
+	/** 
+	 * Naviguer vers previously page
+	 */
+	def void previousPage(){
+		pdfPresenter.presenterPdf.getPresenterPdf().previousPdfPage;
+	}/** 
+	 * Naviguer vers next page
+	 */
+	
+	def void nextPage(){
+		pdfPresenter.presenterPdf.getPresenterPdf().nextPdfPage;
+	}
+
+
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * GETTERS
@@ -320,20 +381,10 @@ class GraduationViewSwing {
 	
 	def JPanel getPnlDown() {
 		return pnlDown
+		
+		}
+	def JMenuItem getMnItemSwap() {
+		return mnItemSwap;
 	}
 
-	/** 
-	 * Ouvre ou ferme l'énoncé d'une question
-	 */
-	def void showContentDown() {
-		if (contentDown) {
-			pnlDown.remove(mainSplitPane)
-			btnDown.setText("▲")
-			contentDown = false
-		} else {
-			pnlDown.add(mainSplitPane, BorderLayout.CENTER)
-			btnDown.setText("▼")
-			contentDown = true
-		}
-	}
 }

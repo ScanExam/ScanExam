@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
 import fr.istic.tools.scanexam.view.swing.ListOfQuestionsPanel;
 import java.awt.event.ActionEvent;
@@ -79,11 +80,13 @@ public class QuestionPanel extends JPanel {
     this.btnMove.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
+        SelectionStateMachine.setState(SelectionStateMachine.MOVE);
       }
     });
     this.btnResize.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
+        SelectionStateMachine.setState(SelectionStateMachine.RESIZE);
       }
     });
   }

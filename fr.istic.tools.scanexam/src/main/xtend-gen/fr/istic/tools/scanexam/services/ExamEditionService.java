@@ -13,10 +13,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
  * Representer l'état courant de l'interface graphique
@@ -29,6 +33,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 public class ExamEditionService extends Service {
   private CreationTemplate template;
   
+  @Accessors
   private int questionId;
   
   /**
@@ -54,7 +59,7 @@ public class ExamEditionService extends Service {
   }
   
   public void rescaleQuestion(final int id, final float heigth, final float width) {
-    final Question question = this.getCurrentPage().getQuestions().get(id);
+    final Question question = this.getQuestion(id);
     QuestionZone _zone = question.getZone();
     _zone.setWidth(width);
     QuestionZone _zone_1 = question.getZone();
@@ -67,6 +72,11 @@ public class ExamEditionService extends Service {
     _zone.setX(x);
     QuestionZone _zone_1 = question.getZone();
     _zone_1.setY(y);
+  }
+  
+  public void renameQuestion(final int id, final String name) {
+    final Question question = this.getQuestion(id);
+    question.setName(name);
   }
   
   @Override
@@ -94,6 +104,15 @@ public class ExamEditionService extends Service {
         ExamSingleton.instance = creationTemplate.get().getExam();
         final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
         this.document = PDDocument.load(decoded);
+        final Function<Page, Integer> _function = (Page page) -> {
+          return Integer.valueOf(page.getQuestions().size());
+        };
+        final BinaryOperator<Integer> _function_1 = (Integer acc, Integer num) -> {
+          return Integer.valueOf(((acc).intValue() + (num).intValue()));
+        };
+        Integer _get = ExamSingleton.instance.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
+        int _plus = ((_get).intValue() + 1);
+        this.questionId = _plus;
         return true;
       }
       return false;
@@ -115,8 +134,18 @@ public class ExamEditionService extends Service {
           ExamSingleton.instance.getPages().add(page);
         }
       }
+      this.questionId = 0;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  @Pure
+  public int getQuestionId() {
+    return this.questionId;
+  }
+  
+  public void setQuestionId(final int questionId) {
+    this.questionId = questionId;
   }
 }

@@ -6,7 +6,6 @@ import fr.istic.tools.scanexam.qrCode.reader.Copie;
 import fr.istic.tools.scanexam.qrCode.reader.Page;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCode;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeThread;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,12 +32,12 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   
   private int nbPagesInSheet;
   
-  private InputStream inStream;
-  
   private int nbPagesInPdf;
   
-  public PdfReaderWithoutQrCodeImpl(final InputStream inStream, final int nbPages, final int nbCopies) {
-    this.inStream = inStream;
+  private PDDocument doc;
+  
+  public PdfReaderWithoutQrCodeImpl(final PDDocument doc, final int nbPages, final int nbCopies) {
+    this.doc = doc;
     this.nbPagesInSheet = nbPages;
     this.nbSheetsTotal = nbCopies;
     HashSet<Copie> _hashSet = new HashSet<Copie>();
@@ -51,11 +50,9 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   @Override
   public boolean readPDf() {
     try {
-      final PDDocument doc = PDDocument.load(this.inStream);
-      this.nbPagesInPdf = doc.getNumberOfPages();
-      final PDFRenderer pdf = new PDFRenderer(doc);
-      this.createThread(doc.getNumberOfPages(), pdf);
-      doc.close();
+      this.nbPagesInPdf = this.doc.getNumberOfPages();
+      final PDFRenderer pdf = new PDFRenderer(this.doc);
+      this.createThread(this.doc.getNumberOfPages(), pdf);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;

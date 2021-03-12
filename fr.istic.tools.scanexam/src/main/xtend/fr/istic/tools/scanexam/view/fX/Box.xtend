@@ -7,13 +7,10 @@ import javafx.scene.text.Text
 
 class Box extends Rectangle {
 	
-		static int ID = 0;
-		static def int newID(){
-			ID++;
-		}
+	
 		new(String name ,int page ,BoxType type,double x, double y,double h, double w) {
 			super(x,y,w,h);
-			boxId = newID();
+
 			this.page = page
 			this.type = type
 			listViewBox = new ListViewBox(name,this);
@@ -26,7 +23,7 @@ class Box extends Rectangle {
 			
 		}
 	
-		new(String name ,int page ,BoxType type,double x, double y) {
+		new(String name,int page ,BoxType type,double x, double y) {
 			this(name,page,type,x,y,0,0);
 			
 		}
@@ -38,8 +35,8 @@ class Box extends Rectangle {
 		new(BoxType type,double x, double y) {
 			this(0,type,x,y);	
 		}
-		new(BoxType type) {
-			this(type,0,0)
+		new(int id,BoxType type) {
+			this(id,type,0,0)
 		}
 		
 		enum BoxType {
@@ -92,6 +89,11 @@ class Box extends Rectangle {
 			}
 		}
 		
+		def void isVisible(boolean b){
+			this.visible = b;
+			text.visible = b;
+		}
+		
 		def void setColor(Color color) {
 			stroke = color
 			text.fill = color
@@ -114,6 +116,17 @@ class Box extends Rectangle {
 			setWidth(w);
 		}
 		
+		def addGradeItem(GradeItemHBox toAdd) {
+			listViewBox.addGradeItem(toAdd)
+		}
+		
+		def removeGradeItem(GradeItemHBox toRemove) {
+			listViewBox.removeGradeItem(toRemove)
+		}
+		
+		def getGradeItems(){
+			listViewBox.getGradeItems();
+		}
 		
 
 	}

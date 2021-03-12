@@ -12,5 +12,5 @@ class FXSettings {
 	public static var BOX_TEXT_OFFSET_Y = 25.0;
 	public static var BOX_HIGHLIGHT_COLOR = Color.web("#0093ff");
 	public static var BOX_NORMAL_COLOR = Color.BLACK;
-	
+	public static var  MINIMUM_ZONE_SIZE =  20
 }

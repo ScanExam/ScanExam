@@ -25,9 +25,11 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import javafx.scene.control.Button
 
 class ControllerFXEditor {
 
+	
 	EditorAdapterFX editor;
 
 	def void setEditorAdapterFX(EditorAdapterFX editor) {
@@ -181,13 +183,6 @@ class ControllerFXEditor {
 			mouseOriginY = mousePositionY
 			var source = e.source as Pane
 			currentRectangle = createBox(mousePositionX, mousePositionY);
-			currentRectangle.listViewBox.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-				override handle(MouseEvent event) {
-					highlightBox((event.source as ListViewBox).parentBox);
-				}
-
-			})
 			
 			source.children.add(currentRectangle);
 			source.children.add(currentRectangle.getText());
@@ -213,8 +208,20 @@ class ControllerFXEditor {
 			}
 
 		}
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			addBox(currentRectangle);
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) 
+		{
+			if (currentRectangle.width > FXSettings.MINIMUM_ZONE_SIZE && currentRectangle.height > FXSettings.MINIMUM_ZONE_SIZE)
+			{
+				addBox(currentRectangle);
+				addBoxModel(currentRectangle);
+				renameBox(currentRectangle, String.format(LanguageManager.translate("question.default_name"), currentRectangle.boxId))
+			}
+			else
+			{
+				(e.source as Pane).children.remove(currentRectangle);
+				(e.source as Pane).children.remove(currentRectangle.getText());
+			}
+		
 		}
 	}
 
@@ -347,12 +354,11 @@ class ControllerFXEditor {
 	/**
 	 * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
 	 */
-	var questionCounter = 1;
 
 	def Box createBox(double x, double y) {
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box("Question " + questionCounter++, editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
+				new Box("Question " + editor.presenter.getQuestionId(), editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
 			}
 			case ID_AREA: {
 				new Box("ID Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.ID, x, y);
@@ -371,8 +377,7 @@ class ControllerFXEditor {
 	 * Called when we finish creating a new box (Mouse release)
 	 */
 	def addBox(Box box) {
-		editor.addBox(box);
-		renameBox(box,box.name)//TODO fix
+		//renameBox(box,box.name)//TODO fix
 		var lb = box.listViewBox;
 		/*lb.upAction = new EventHandler<ActionEvent>() {
 
@@ -386,6 +391,14 @@ class ControllerFXEditor {
 			}
 
 		}*/
+		
+		lb.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+				override handle(MouseEvent event) {
+					highlightBox(box);
+				}
+
+			})
 		lb.removeAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
@@ -403,14 +416,7 @@ class ControllerFXEditor {
 			}
 
 		}
-		lb.pointsCommit = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				changePoints(box, (event.source as TextField).text)
-				box.listViewBox.togglePointChange
-			}
-
-		}
+		
 		lb.moveAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
@@ -442,9 +448,54 @@ class ControllerFXEditor {
 			}
 
 		}
-		questionList.items.add(lb);
+		
+		lb.addGradeItemAction = new EventHandler<ActionEvent>(){
+			
+			override handle(ActionEvent event) {
+				val item = new GradeItemHBox()
+				addGradeItem(item)
+				box.addGradeItem(item)
+				item.removeGradeItemAction = new EventHandler<ActionEvent>(){
+					
+					override handle(ActionEvent event) {
+						removeGradeItem(item)
+						box.removeGradeItem(item);
+					}
+				
+				}
+				item.changeName = new EventHandler<ActionEvent>(){
+					
+					override handle(ActionEvent event) {
+						item.toggleRenaming
+					}
+				}
+				item.changePoints = new EventHandler<ActionEvent>(){
+					
+					override handle(ActionEvent event) {
+						item.togglePointChange
+					}
+				}
+				item.nameCommit = new EventHandler<ActionEvent>() {
 
-		System.out.println(mainPane.getChildren());
+					override handle(ActionEvent event) {
+						updateGradeItem(item)
+						item.toggleRenaming
+					}
+		
+				}
+				item.pointsCommit = new EventHandler<ActionEvent>() {
+
+					override handle(ActionEvent event) {
+						updateGradeItem(item)
+						item.togglePointChange
+					}
+		
+				}
+			}
+			
+		}
+		
+		questionList.items.add(lb);
 		boxes.add(box);
 	}
 
@@ -455,17 +506,34 @@ class ControllerFXEditor {
 	}
 
 	def moveBox(Box box) {
-		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId, box.x, box.y);
+		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId,convertToRelative(box.x,maxX),convertToRelative(box.y,maxY));
 	}
 
 	def resizeBox(Box box) {
-		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId, box.height, box.width);
+		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId,convertToRelative(box.height,maxY),convertToRelative(box.width,maxX));
 	}
+	
+	def addGradeItem(GradeItemHBox item) {
+		item.gradeItemId = editor.presenter.addGradeItem(item.gradeItemName,Double.parseDouble(item.gradeItemPoints))
+	}
+	
+	def updateGradeItem(GradeItemHBox item) {
+		item.gradeItemName = item.nameFieldText
+		item.gradeItemPoints = item.pointFieldText
+		editor.presenter.updateGradeItem(item.gradeItemId,item.gradeItemName,Double.parseDouble(item.gradeItemPoints))
+	}
+	
+	def removeGradeItem(GradeItemHBox item) {
+		editor.presenter.removeGradeItem(item.gradeItemId)
+	}
+	
+	
 
 	/**
 	 * notifies the rest of the program to the removal of a box
 	 */
 	def removeBox(Box box) {
+		logger.info("Removing box " + box)
 		questionList.items.remove(box.listViewBox)
 		mainPane.children.remove(box.getText());
 		mainPane.children.remove(box)
@@ -475,9 +543,10 @@ class ControllerFXEditor {
 	}
 	
 	def changePoints(Box box,String points) {
-		box.listViewBox.pointsText = points
-		var number = Integer.parseInt(points);
-		editor.presenter.presenterQuestionZone.changeQuestionWorth(box.boxId,number);
+	}
+	
+	def addBoxModel(Box box){
+		box.boxId = editor.presenter.presenterQuestionZone.createQuestion(convertToRelative(box.x,maxX),convertToRelative(box.y,maxY),convertToRelative(box.height,maxY),convertToRelative(box.width,maxX))
 	}
 
 	// ------------//
@@ -524,8 +593,8 @@ class ControllerFXEditor {
 
 		if (file !== null) {
 			editor.presenter.load(file.path);
-			loadBoxes();
 			renderDocument();
+			loadBoxes();
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -553,13 +622,12 @@ class ControllerFXEditor {
 					editor.presenter.presenterQuestionZone.questionName(i),
 					p,
 					BoxType.QUESTION,
-					editor.presenter.presenterQuestionZone.questionX(i),
-					editor.presenter.presenterQuestionZone.questionY(i),
-					editor.presenter.presenterQuestionZone.questionHeight(i),
-					editor.presenter.presenterQuestionZone.questionWidth(i)
+					editor.presenter.presenterQuestionZone.questionX(i) * maxX,
+					editor.presenter.presenterQuestionZone.questionY(i) * maxY,
+					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY,
+					editor.presenter.presenterQuestionZone.questionWidth(i) * maxX
 				)
 				addBox(box)
-				boxes.add(box)
 				mainPane.children.add(box)
 			}
 		}
@@ -626,8 +694,10 @@ class ControllerFXEditor {
 			if (b.pageNumber == page) {
 				b.visible = true;
 
+				b.isVisible(true)
 			} else {
 				b.visible = false;
+				b.isVisible(false)
 			}
 		}
 	}
@@ -644,5 +714,7 @@ class ControllerFXEditor {
 		highlightedBox = box;
 		highlightedBox.focus = true
 	}
-
+	def double convertToRelative(double relative, double to){
+		return relative/to
+	}
 }

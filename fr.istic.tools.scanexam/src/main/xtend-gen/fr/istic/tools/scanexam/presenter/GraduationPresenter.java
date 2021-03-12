@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
@@ -102,6 +103,10 @@ public class GraduationPresenter implements Presenter {
   
   public void openEditionTemplate(final String path) {
     this.service.openCreationTemplate(path);
+  }
+  
+  public void exportGrades() {
+    new GradesExportImpl(this.service).exportGrades();
   }
   
   public void openCorrectionPdf(final String path) {

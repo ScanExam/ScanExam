@@ -1,7 +1,9 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.view.fX.FXSettings;
+import fr.istic.tools.scanexam.view.fX.GradeItemHBox;
 import fr.istic.tools.scanexam.view.fX.ListViewBox;
+import java.util.LinkedList;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -16,15 +18,8 @@ public class Box extends Rectangle {
     QR;
   }
   
-  private static int ID = 0;
-  
-  public static int newID() {
-    return Box.ID++;
-  }
-  
   public Box(final String name, final int page, final Box.BoxType type, final double x, final double y, final double h, final double w) {
     super(x, y, w, h);
-    this.boxId = Box.newID();
     this.page = page;
     this.type = type;
     ListViewBox _listViewBox = new ListViewBox(name, this);
@@ -50,8 +45,8 @@ public class Box extends Rectangle {
     this(0, type, x, y);
   }
   
-  public Box(final Box.BoxType type) {
-    this(type, 0, 0);
+  public Box(final int id, final Box.BoxType type) {
+    this(id, type, 0, 0);
   }
   
   private ListViewBox listViewBox;
@@ -100,6 +95,11 @@ public class Box extends Rectangle {
     }
   }
   
+  public void isVisible(final boolean b) {
+    this.setVisible(b);
+    this.text.setVisible(b);
+  }
+  
   public void setColor(final Color color) {
     this.setStroke(color);
     this.text.setFill(color);
@@ -121,5 +121,17 @@ public class Box extends Rectangle {
   
   public void width(final double w) {
     this.setWidth(w);
+  }
+  
+  public boolean addGradeItem(final GradeItemHBox toAdd) {
+    return this.listViewBox.addGradeItem(toAdd);
+  }
+  
+  public boolean removeGradeItem(final GradeItemHBox toRemove) {
+    return this.listViewBox.removeGradeItem(toRemove);
+  }
+  
+  public LinkedList<GradeItemHBox> getGradeItems() {
+    return this.listViewBox.getGradeItems();
   }
 }

@@ -11,7 +11,6 @@ import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.Collection;
 import java.util.Optional;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -66,13 +65,10 @@ public class ExamGraduationService extends Service {
     try {
       File _file = new File(path);
       this.document = PDDocument.load(_file);
-      File _file_1 = new File(path);
-      final FileInputStream stream = new FileInputStream(_file_1);
       int _size = ExamSingleton.instance.getPages().size();
-      final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(stream, _size, 3);
+      final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(this.document, _size, 3);
       pdfReader.readPDf();
       this.studentSheets = pdfReader.getCompleteStudentSheets();
-      stream.close();
       return true;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

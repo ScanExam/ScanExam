@@ -3,6 +3,10 @@ package fr.istic.tools.scanexam.qrCode.reader;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import java.util.Collection;
 
+/**
+ * Lis le pdf passé au constructeur et construit le modèle
+ * @author Romain et Luca
+ */
 @SuppressWarnings("all")
 public interface PdfReader {
   /**

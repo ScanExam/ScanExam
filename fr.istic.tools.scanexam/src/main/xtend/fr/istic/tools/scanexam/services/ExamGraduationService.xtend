@@ -8,7 +8,6 @@ import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.io.TemplateIO
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import java.io.File
-import java.io.FileInputStream
 import java.util.Collection
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -65,14 +64,12 @@ class ExamGraduationService extends Service
 	
 	def boolean openCorrectionPdf(String path)
 	{
+		
         document = PDDocument.load(new File(path))
-        
-        val stream =new FileInputStream(new File(path))
-        val pdfReader = new PdfReaderWithoutQrCodeImpl(stream,ExamSingleton.instance.pages.size,3); // TODO
+        val pdfReader = new PdfReaderWithoutQrCodeImpl(document,ExamSingleton.instance.pages.size,3); // TODO
         pdfReader.readPDf();
         studentSheets = pdfReader.completeStudentSheets
-      
-        stream.close();
+      	
         return true
 	}
 	

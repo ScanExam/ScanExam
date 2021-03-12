@@ -6,6 +6,7 @@ import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.view.fX.Box;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.FXSettings;
+import fr.istic.tools.scanexam.view.fX.GradeItemHBox;
 import fr.istic.tools.scanexam.view.fX.ListViewBox;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -209,14 +210,6 @@ public class ControllerFXEditor {
       Object _source = e.getSource();
       Pane source = ((Pane) _source);
       this.currentRectangle = this.createBox(mousePositionX, mousePositionY);
-      ListViewBox _listViewBox = this.currentRectangle.getListViewBox();
-      _listViewBox.<MouseEvent>addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(final MouseEvent event) {
-          Object _source = event.getSource();
-          ControllerFXEditor.this.highlightBox(((ListViewBox) _source).getParentBox());
-        }
-      });
       source.getChildren().add(this.currentRectangle);
       source.getChildren().add(this.currentRectangle.getText());
     }
@@ -245,7 +238,16 @@ public class ControllerFXEditor {
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
     if (_equals_2) {
-      this.addBox(this.currentRectangle);
+      if (((this.currentRectangle.getWidth() > FXSettings.MINIMUM_ZONE_SIZE) && (this.currentRectangle.getHeight() > FXSettings.MINIMUM_ZONE_SIZE))) {
+        this.addBox(this.currentRectangle);
+        this.addBoxModel(this.currentRectangle);
+        this.renameBox(this.currentRectangle, String.format(LanguageManager.translate("question.default_name"), Integer.valueOf(this.currentRectangle.getBoxId())));
+      } else {
+        Object _source_1 = e.getSource();
+        ((Pane) _source_1).getChildren().remove(this.currentRectangle);
+        Object _source_2 = e.getSource();
+        ((Pane) _source_2).getChildren().remove(this.currentRectangle.getText());
+      }
     }
   }
   
@@ -416,16 +418,14 @@ public class ControllerFXEditor {
   /**
    * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
    */
-  private int questionCounter = 1;
-  
   public Box createBox(final double x, final double y) {
     Box _switchResult = null;
     final ControllerFXEditor.SelectedTool currentTool = this.currentTool;
     if (currentTool != null) {
       switch (currentTool) {
         case QUESTION_AREA:
-          int _plusPlus = this.questionCounter++;
-          String _plus = ("Question " + Integer.valueOf(_plusPlus));
+          int _questionId = this.editor.getPresenter().getQuestionId();
+          String _plus = ("Question " + Integer.valueOf(_questionId));
           int _currentPdfPageNumber = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
           _switchResult = new Box(_plus, _currentPdfPageNumber, Box.BoxType.QUESTION, x, y);
           break;
@@ -455,9 +455,13 @@ public class ControllerFXEditor {
   public boolean addBox(final Box box) {
     boolean _xblockexpression = false;
     {
-      this.editor.addBox(box);
-      this.renameBox(box, box.getName());
       ListViewBox lb = box.getListViewBox();
+      lb.<MouseEvent>addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(final MouseEvent event) {
+          ControllerFXEditor.this.highlightBox(box);
+        }
+      });
       lb.setRemoveAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
@@ -473,14 +477,6 @@ public class ControllerFXEditor {
           Object _source = event.getSource();
           ControllerFXEditor.this.renameBox(box, ((TextField) _source).getText());
           box.getListViewBox().toggleRenaming();
-        }
-      });
-      lb.setPointsCommit(new EventHandler<ActionEvent>() {
-        @Override
-        public void handle(final ActionEvent event) {
-          Object _source = event.getSource();
-          ControllerFXEditor.this.changePoints(box, ((TextField) _source).getText());
-          box.getListViewBox().togglePointChange();
         }
       });
       lb.setMoveAction(new EventHandler<ActionEvent>() {
@@ -509,8 +505,48 @@ public class ControllerFXEditor {
           box.getListViewBox().togglePointChange();
         }
       });
+      lb.setAddGradeItemAction(new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(final ActionEvent event) {
+          final GradeItemHBox item = new GradeItemHBox();
+          ControllerFXEditor.this.addGradeItem(item);
+          box.addGradeItem(item);
+          item.setRemoveGradeItemAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              ControllerFXEditor.this.removeGradeItem(item);
+              box.removeGradeItem(item);
+            }
+          });
+          item.setChangeName(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              item.toggleRenaming();
+            }
+          });
+          item.setChangePoints(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              item.togglePointChange();
+            }
+          });
+          item.setNameCommit(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              ControllerFXEditor.this.updateGradeItem(item);
+              item.toggleRenaming();
+            }
+          });
+          item.setPointsCommit(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent event) {
+              ControllerFXEditor.this.updateGradeItem(item);
+              item.togglePointChange();
+            }
+          });
+        }
+      });
       this.questionList.getItems().add(lb);
-      System.out.println(this.mainPane.getChildren());
       _xblockexpression = this.boxes.add(box);
     }
     return _xblockexpression;
@@ -523,17 +559,36 @@ public class ControllerFXEditor {
   }
   
   public void moveBox(final Box box) {
-    this.editor.getPresenter().getPresenterQuestionZone().moveQuestion(box.getBoxId(), box.getX(), box.getY());
+    this.editor.getPresenter().getPresenterQuestionZone().moveQuestion(box.getBoxId(), this.convertToRelative(box.getX(), this.maxX), this.convertToRelative(box.getY(), this.maxY));
   }
   
   public void resizeBox(final Box box) {
-    this.editor.getPresenter().getPresenterQuestionZone().resizeQuestion(box.getBoxId(), box.getHeight(), box.getWidth());
+    this.editor.getPresenter().getPresenterQuestionZone().resizeQuestion(box.getBoxId(), this.convertToRelative(box.getHeight(), this.maxY), this.convertToRelative(box.getWidth(), this.maxX));
+  }
+  
+  public int addGradeItem(final GradeItemHBox item) {
+    return item.setGradeItemId(this.editor.getPresenter().addGradeItem(item.getGradeItemName(), Double.parseDouble(item.getGradeItemPoints())));
+  }
+  
+  public Object updateGradeItem(final GradeItemHBox item) {
+    Object _xblockexpression = null;
+    {
+      item.setGradeItemName(item.getNameFieldText());
+      item.setGradeItemPoints(item.getPointFieldText());
+      _xblockexpression = this.editor.getPresenter().updateGradeItem(item.getGradeItemId(), item.getGradeItemName(), Double.parseDouble(item.getGradeItemPoints()));
+    }
+    return _xblockexpression;
+  }
+  
+  public Object removeGradeItem(final GradeItemHBox item) {
+    return this.editor.getPresenter().removeGradeItem(item.getGradeItemId());
   }
   
   /**
    * notifies the rest of the program to the removal of a box
    */
   public void removeBox(final Box box) {
+    this.logger.info(("Removing box " + box));
     this.questionList.getItems().remove(box.getListViewBox());
     this.mainPane.getChildren().remove(box.getText());
     this.mainPane.getChildren().remove(box);
@@ -542,11 +597,12 @@ public class ControllerFXEditor {
     this.setToNoTool();
   }
   
-  public void changePoints(final Box box, final String points) {
-    ListViewBox _listViewBox = box.getListViewBox();
-    _listViewBox.setPointsText(points);
-    int number = Integer.parseInt(points);
-    this.editor.getPresenter().getPresenterQuestionZone().changeQuestionWorth(box.getBoxId(), number);
+  public Object changePoints(final Box box, final String points) {
+    return null;
+  }
+  
+  public int addBoxModel(final Box box) {
+    return box.setBoxId(this.editor.getPresenter().getPresenterQuestionZone().createQuestion(this.convertToRelative(box.getX(), this.maxX), this.convertToRelative(box.getY(), this.maxY), this.convertToRelative(box.getHeight(), this.maxY), this.convertToRelative(box.getWidth(), this.maxX)));
   }
   
   /**
@@ -605,37 +661,27 @@ public class ControllerFXEditor {
     }
   }
   
-  public Boolean loadTemplate() {
-    boolean _xblockexpression = false;
-    {
-      FileChooser fileChooser = new FileChooser();
-      ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-      List<String> _asList = Arrays.<String>asList("*.xmi");
-      FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XMI Files", _asList);
-      _extensionFilters.add(_extensionFilter);
-      String _property = System.getProperty("user.home");
-      String _property_1 = System.getProperty("file.separator");
-      String _plus = (_property + _property_1);
-      String _plus_1 = (_plus + 
-        "Documents");
-      File _file = new File(_plus_1);
-      fileChooser.setInitialDirectory(_file);
-      File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-      boolean _xifexpression = false;
-      if ((file != null)) {
-        boolean _xblockexpression_1 = false;
-        {
-          this.editor.getPresenter().load(file.getPath());
-          this.loadBoxes();
-          _xblockexpression_1 = this.renderDocument();
-        }
-        _xifexpression = _xblockexpression_1;
-      } else {
-        this.logger.warn("File not chosen");
-      }
-      _xblockexpression = _xifexpression;
+  public void loadTemplate() {
+    FileChooser fileChooser = new FileChooser();
+    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+    List<String> _asList = Arrays.<String>asList("*.xmi");
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XMI Files", _asList);
+    _extensionFilters.add(_extensionFilter);
+    String _property = System.getProperty("user.home");
+    String _property_1 = System.getProperty("file.separator");
+    String _plus = (_property + _property_1);
+    String _plus_1 = (_plus + 
+      "Documents");
+    File _file = new File(_plus_1);
+    fileChooser.setInitialDirectory(_file);
+    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
+    if ((file != null)) {
+      this.editor.getPresenter().load(file.getPath());
+      this.renderDocument();
+      this.loadBoxes();
+    } else {
+      this.logger.warn("File not chosen");
     }
-    return Boolean.valueOf(_xblockexpression);
   }
   
   public void loadBoxes() {
@@ -646,13 +692,16 @@ public class ControllerFXEditor {
           {
             String _questionName = this.editor.getPresenter().getPresenterQuestionZone().questionName(i);
             double _questionX = this.editor.getPresenter().getPresenterQuestionZone().questionX(i);
+            double _multiply = (_questionX * this.maxX);
             double _questionY = this.editor.getPresenter().getPresenterQuestionZone().questionY(i);
+            double _multiply_1 = (_questionY * this.maxY);
             double _questionHeight = this.editor.getPresenter().getPresenterQuestionZone().questionHeight(i);
+            double _multiply_2 = (_questionHeight * this.maxY);
             double _questionWidth = this.editor.getPresenter().getPresenterQuestionZone().questionWidth(i);
+            double _multiply_3 = (_questionWidth * this.maxX);
             Box box = new Box(_questionName, p, 
-              Box.BoxType.QUESTION, _questionX, _questionY, _questionHeight, _questionWidth);
+              Box.BoxType.QUESTION, _multiply, _multiply_1, _multiply_2, _multiply_3);
             this.addBox(box);
-            this.boxes.add(box);
             this.mainPane.getChildren().add(box);
           }
         }
@@ -739,8 +788,10 @@ public class ControllerFXEditor {
       boolean _equals = (_pageNumber == page);
       if (_equals) {
         b.setVisible(true);
+        b.isVisible(true);
       } else {
         b.setVisible(false);
+        b.isVisible(false);
       }
     }
   }
@@ -756,5 +807,9 @@ public class ControllerFXEditor {
     }
     this.highlightedBox = box;
     this.highlightedBox.setFocus(true);
+  }
+  
+  public double convertToRelative(final double relative, final double to) {
+    return (relative / to);
   }
 }

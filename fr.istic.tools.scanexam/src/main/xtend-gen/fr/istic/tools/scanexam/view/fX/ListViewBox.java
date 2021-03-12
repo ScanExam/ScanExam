@@ -1,9 +1,13 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.view.fX.Box;
+import fr.istic.tools.scanexam.view.fX.GradeItemHBox;
 import fr.istic.tools.scanexam.view.fX.NumberTextField;
+import java.util.LinkedList;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -32,20 +36,15 @@ public class ListViewBox extends VBox {
     Label _label = new Label(text);
     this.nameLabel = _label;
     this.nameLabel.setMinWidth(100);
-    NumberTextField _numberTextField = new NumberTextField();
-    this.numberField = _numberTextField;
-    this.numberField.setText("0");
-    this.numberField.setVisible(false);
-    Label _label_1 = new Label("0");
-    this.pointsLabel = _label_1;
-    this.pointsLabel.setMinWidth(100);
+    Button _button = new Button("+");
+    this.addGradeItem = _button;
+    VBox _vBox = new VBox();
+    this.gradeItemContainer = _vBox;
     Pane p = new Pane();
-    Pane p2 = new Pane();
     this.getChildren().addAll(this.top, this.middle, this.bottom);
     this.top.getChildren().addAll(p);
-    this.middle.getChildren().addAll(p2);
+    this.middle.getChildren().addAll(this.addGradeItem, this.gradeItemContainer);
     p.getChildren().addAll(this.field, this.nameLabel);
-    p2.getChildren().addAll(this.numberField, this.pointsLabel);
     this.makeButtons();
   }
   
@@ -76,6 +75,10 @@ public class ListViewBox extends VBox {
   private Button resize;
   
   private Button move;
+  
+  private Button addGradeItem;
+  
+  private VBox gradeItemContainer;
   
   public Box getParentBox() {
     return this.parent;
@@ -117,10 +120,6 @@ public class ListViewBox extends VBox {
     this.field.setOnAction(handler);
   }
   
-  public void setPointsCommit(final EventHandler<ActionEvent> handler) {
-    this.numberField.setOnAction(handler);
-  }
-  
   public void setRenameOption(final EventHandler<ActionEvent> handler) {
     ContextMenu menu = new ContextMenu();
     MenuItem renameMenu = new MenuItem("Rename");
@@ -130,11 +129,10 @@ public class ListViewBox extends VBox {
   }
   
   public void setChangePoints(final EventHandler<ActionEvent> handler) {
-    ContextMenu menu = new ContextMenu();
-    MenuItem renameMenu = new MenuItem("Change Points");
-    renameMenu.setOnAction(handler);
-    menu.getItems().add(renameMenu);
-    this.pointsLabel.setContextMenu(menu);
+  }
+  
+  public void setAddGradeItemAction(final EventHandler<ActionEvent> handler) {
+    this.addGradeItem.setOnAction(handler);
   }
   
   public void setMoveAction(final EventHandler<ActionEvent> hander) {
@@ -147,10 +145,6 @@ public class ListViewBox extends VBox {
   
   public void setLabelText(final String text) {
     this.nameLabel.setText(text);
-  }
-  
-  public void setPointsText(final String text) {
-    this.pointsLabel.setText(text);
   }
   
   public String getName() {
@@ -187,5 +181,26 @@ public class ListViewBox extends VBox {
   
   public Label getNameLabel() {
     return this.nameLabel;
+  }
+  
+  public boolean addGradeItem(final GradeItemHBox toAdd) {
+    return this.gradeItemContainer.getChildren().add(toAdd);
+  }
+  
+  public boolean removeGradeItem(final GradeItemHBox toRemove) {
+    return this.gradeItemContainer.getChildren().remove(toRemove);
+  }
+  
+  public Object removeGradeItem(final int idToRemove) {
+    return null;
+  }
+  
+  public LinkedList<GradeItemHBox> getGradeItems() {
+    LinkedList<GradeItemHBox> result = new LinkedList<GradeItemHBox>();
+    ObservableList<Node> _children = this.gradeItemContainer.getChildren();
+    for (final Node node : _children) {
+      result.add(((GradeItemHBox) node));
+    }
+    return result;
   }
 }

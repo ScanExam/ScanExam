@@ -34,6 +34,11 @@ public class AdapterSwingBox extends AdapterBox {
   private Optional<Point> lastClickPoint;
   
   /**
+   * Dernier état
+   */
+  private int lastState;
+  
+  /**
    * Vue
    */
   private Optional<JPanel> view;
@@ -53,6 +58,7 @@ public class AdapterSwingBox extends AdapterBox {
    */
   public AdapterSwingBox(final int windowWidth, final int windowHeight, final int scale, final int originX, final int originY, final BoxList selectionBoxes) {
     super(windowWidth, windowHeight, scale, originX, originY, selectionBoxes);
+    this.lastState = SelectionStateMachine.getState();
     this.mouseHandler = new MouseAdapter() {
       @Override
       public void mousePressed(final MouseEvent e) {
@@ -64,21 +70,40 @@ public class AdapterSwingBox extends AdapterBox {
           boolean _isPresent = pointedBox.isPresent();
           boolean _not = (!_isPresent);
           if (_not) {
-            SelectionStateMachine.setState(SelectionStateMachine.CREATE);
-            AdapterSwingBox.this.createBox(e);
-            SelectionStateMachine.setState(SelectionStateMachine.RESIZE);
-            AdapterSwingBox.this.resizeBox(e, AdapterSwingBox.this.lastBoxSelected);
+            int _state = SelectionStateMachine.getState();
+            boolean _tripleEquals_1 = (_state == SelectionStateMachine.CREATE);
+            if (_tripleEquals_1) {
+              AdapterSwingBox.this.lastState = SelectionStateMachine.CREATE;
+              AdapterSwingBox.this.createBox(e);
+            }
+            int _state_1 = SelectionStateMachine.getState();
+            boolean _tripleEquals_2 = (_state_1 == SelectionStateMachine.RESIZE);
+            if (_tripleEquals_2) {
+              AdapterSwingBox.this.resizeBox(e, AdapterSwingBox.this.lastBoxSelected);
+            }
           } else {
             AdapterSwingBox.this.lastBoxSelected = pointedBox.get();
-            SelectionStateMachine.setState(SelectionStateMachine.MOVE);
-            AdapterSwingBox.this.moveBox(e, AdapterSwingBox.this.lastBoxSelected);
+            int _state_2 = SelectionStateMachine.getState();
+            boolean _tripleEquals_3 = (_state_2 == SelectionStateMachine.MOVE);
+            if (_tripleEquals_3) {
+              AdapterSwingBox.this.moveBox(e, AdapterSwingBox.this.lastBoxSelected);
+            }
           }
         }
       }
       
       @Override
       public void mouseReleased(final MouseEvent e) {
-        SelectionStateMachine.setState(SelectionStateMachine.IDLE);
+        int _state = SelectionStateMachine.getState();
+        boolean _tripleEquals = (_state == SelectionStateMachine.RESIZE);
+        if (_tripleEquals) {
+          if ((AdapterSwingBox.this.lastState == SelectionStateMachine.CREATE)) {
+            SelectionStateMachine.setState(SelectionStateMachine.CREATE);
+          } else {
+            SelectionStateMachine.setState(SelectionStateMachine.RESIZE);
+          }
+        }
+        AdapterSwingBox.this.lastState = SelectionStateMachine.getState();
         AdapterSwingBox.this.lastClickPoint = Optional.<Point>empty();
       }
       
@@ -140,6 +165,7 @@ public class AdapterSwingBox extends AdapterBox {
     this.lastBoxSelected = this.selectionBoxes.getBox(_minus_2);
     this.addQstToList(this.lastBoxSelected);
     this.repaint();
+    SelectionStateMachine.setState(SelectionStateMachine.RESIZE);
   }
   
   /**
