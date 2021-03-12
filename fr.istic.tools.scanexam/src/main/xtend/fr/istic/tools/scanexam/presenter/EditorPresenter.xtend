@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.services.ExamEditionService
 import fr.istic.tools.scanexam.view.Adapter
-import java.io.File
 import java.util.Objects
 
 /**
