@@ -88,11 +88,20 @@ public abstract class Service {
   }
   
   public Question getQuestion(final int id) {
-    final Function1<Question, Boolean> _function = (Question question) -> {
-      int _id = question.getId();
-      return Boolean.valueOf((_id == id));
-    };
-    return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
+    EList<Page> _pages = ExamSingleton.instance.getPages();
+    for (final Page page : _pages) {
+      {
+        final Function1<Question, Boolean> _function = (Question question) -> {
+          int _id = question.getId();
+          return Boolean.valueOf((_id == id));
+        };
+        final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
+        if ((question != null)) {
+          return question;
+        }
+      }
+    }
+    return null;
   }
   
   public EList<Question> getQuestionAtPage(final int pageIndex) {
