@@ -213,7 +213,8 @@ public class EditorAdapterSwing implements EditorAdapter {
    * Swap vers graduation
    */
   public void swapVerGraduation() {
-    LauncherSwing.swapToGraduator();
+    this.view.getWindow().setVisible(false);
+    LauncherSwing.swapToGraduator(this.view);
   }
   
   @Override

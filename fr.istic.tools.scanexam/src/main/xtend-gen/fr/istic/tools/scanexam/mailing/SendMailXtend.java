@@ -20,64 +20,64 @@ public class SendMailXtend {
   private static String pieceJointe = "A completer";
   
   public static void main(final String[] arg) {
-    SendMailTls.sendMail(SendMailXtend.getSender(), SendMailXtend.getSenderPassword(), SendMailXtend.getRecipent(), SendMailXtend.getTitle(), SendMailXtend.getMessage(), SendMailXtend.getPieceJointe());
+    SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe);
   }
   
   /**
    * Fonction envoie du mail avec les valeur donnée par les getter
    */
-  public static void sendMailXtend() {
-    SendMailTls.sendMail(SendMailXtend.getSender(), SendMailXtend.getSenderPassword(), SendMailXtend.getRecipent(), SendMailXtend.getTitle(), SendMailXtend.getMessage(), SendMailXtend.getPieceJointe());
+  public void sendMailXtend() {
+    SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe);
   }
   
   /**
    * Liste des getter et setter pour modifier est acceder au parametre
    */
-  public static String getSender() {
+  public String getSender() {
     return SendMailXtend.sender;
   }
   
-  public static String setSender(final String send) {
+  public String setSender(final String send) {
     return SendMailXtend.sender = send;
   }
   
-  public static String getSenderPassword() {
+  public String getSenderPassword() {
     return SendMailXtend.senderPassword;
   }
   
-  public static String setSenderPassword(final String pass) {
+  public String setSenderPassword(final String pass) {
     return SendMailXtend.senderPassword = pass;
   }
   
-  public static String getRecipent() {
+  public String getRecipent() {
     return SendMailXtend.recipient;
   }
   
-  public static String setRecipent(final String recip) {
+  public String setRecipent(final String recip) {
     return SendMailXtend.recipient = recip;
   }
   
-  public static String getTitle() {
+  public String getTitle() {
     return SendMailXtend.titleMail;
   }
   
-  public static String setTitle(final String title) {
+  public String setTitle(final String title) {
     return SendMailXtend.titleMail = title;
   }
   
-  public static String getMessage() {
+  public String getMessage() {
     return SendMailXtend.messageMail;
   }
   
-  public static String setMessage(final String message) {
+  public String setMessage(final String message) {
     return SendMailXtend.messageMail = message;
   }
   
-  public static String getPieceJointe() {
+  public String getPieceJointe() {
     return SendMailXtend.pieceJointe;
   }
   
-  public static String setPieceJointe(final String piece) {
+  public String setPieceJointe(final String piece) {
     return SendMailXtend.pieceJointe = piece;
   }
 }

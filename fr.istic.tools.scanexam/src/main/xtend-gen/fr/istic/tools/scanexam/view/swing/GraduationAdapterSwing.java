@@ -1,9 +1,9 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.launcher.LauncherSwing;
 import fr.istic.tools.scanexam.presenter.GraduationPresenter;
 import fr.istic.tools.scanexam.view.GraduationAdapter;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
+import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
 import fr.istic.tools.scanexam.view.swing.GraduationViewSwing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +21,11 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
  */
 @SuppressWarnings("all")
 public class GraduationAdapterSwing implements GraduationAdapter {
+  /**
+   * View de editor
+   */
+  private EditorViewSwing viewEdit;
+  
   /**
    * Presenter de la correction d'exman
    */
@@ -73,7 +78,8 @@ public class GraduationAdapterSwing implements GraduationAdapter {
   }
   
   public void swapToEditor() {
-    LauncherSwing.swapToEditor();
+    this.view.getWindow().setVisible(false);
+    this.viewEdit.getWindow().setVisible(true);
   }
   
   /**
@@ -95,6 +101,10 @@ public class GraduationAdapterSwing implements GraduationAdapter {
         this.graduationPresenter.getPresenterPdf().create(selectedFile);
       }
     }
+  }
+  
+  public void setViewEditor(final EditorViewSwing view) {
+    this.viewEdit = view;
   }
   
   @Override

@@ -156,7 +156,7 @@ class EditorViewSwing {
 		mnItemLoad = new JMenuItem(translate("menu.file.load"))
 	    mnFile.add(mnItemLoad)
 	    
-	    mnItemSwap = new JMenuItem(translate("menu.file.swap"))
+	    mnItemSwap = new JMenuItem(translate("menu.file.switchToCorrector"))
 	    mnFile.add(mnItemSwap)
 	    
 	    mnFile.addSeparator()

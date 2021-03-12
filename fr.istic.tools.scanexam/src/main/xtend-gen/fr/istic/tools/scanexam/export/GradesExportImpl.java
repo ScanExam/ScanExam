@@ -13,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class GradesExportImpl implements GradesExport {
@@ -24,29 +23,37 @@ public class GradesExportImpl implements GradesExport {
   }
   
   /**
-   * Methode qui créer un fichier Excel et qui le remplit avec les noms des étudiants et leurs notes
+   * Méthode qui créer un fichier Excel et qui le remplit avec les noms des étudiants et leurs notes
    */
   @Override
   public void exportGrades() {
+    this.exportGradesPrivate(this.service.getStudentSheets(), this.service.getExamName());
+  }
+  
+  public void exportGradesPrivate(final Collection<StudentSheet> studentSheets, final String examName) {
     final XSSFWorkbook workbook = new XSSFWorkbook();
     final XSSFSheet sheet = workbook.createSheet("export_grades");
     int rowCount = 0;
-    InputOutput.<Collection<StudentSheet>>println(this.service.getStudentSheets());
-    int _size = this.service.getStudentSheets().size();
+    final Row row1 = sheet.createRow(rowCount);
+    final Cell name = row1.createCell(0);
+    name.setCellValue("Nom");
+    rowCount++;
+    final Cell grade = row1.createCell(1);
+    grade.setCellValue("Note");
+    int _size = studentSheets.size();
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
     for (final Integer i : _doubleDotLessThan) {
       {
         final Row row = sheet.createRow(rowCount);
         final Cell cellName = row.createCell(0);
-        cellName.setCellValue((((StudentSheet[])Conversions.unwrapArray(this.service.getStudentSheets(), StudentSheet.class))[(i).intValue()]).getStudentName());
+        cellName.setCellValue((((StudentSheet[])Conversions.unwrapArray(studentSheets, StudentSheet.class))[(i).intValue()]).getStudentName());
         final Cell cellGrade = row.createCell(1);
-        cellGrade.setCellValue((((StudentSheet[])Conversions.unwrapArray(this.service.getStudentSheets(), StudentSheet.class))[(i).intValue()]).computeGrade());
+        cellGrade.setCellValue((((StudentSheet[])Conversions.unwrapArray(studentSheets, StudentSheet.class))[(i).intValue()]).computeGrade());
+        rowCount++;
       }
     }
     try {
-      String _examName = this.service.getExamName();
-      String _plus = (_examName + ".xslx");
-      final FileOutputStream outStream = new FileOutputStream(_plus);
+      final FileOutputStream outStream = new FileOutputStream((examName + ".xlsx"));
       workbook.write(outStream);
     } catch (final Throwable _t) {
       if (_t instanceof IOException) {

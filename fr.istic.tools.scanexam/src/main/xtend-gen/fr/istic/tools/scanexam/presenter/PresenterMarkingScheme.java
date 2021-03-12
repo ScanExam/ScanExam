@@ -50,4 +50,35 @@ public class PresenterMarkingScheme {
   public Presenter getPresenter() {
     return this.presenter;
   }
+  
+  /**
+   * Ajoute une nouvelle entrée à la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle ajouter l'entrée
+   * @param desc la description de l'entrée
+   * @param point le nombre de point de l'entrée
+   * @return l'ID de l'entrée
+   */
+  public int addEntry(final int questionId, final String desc, final float point) {
+    return this.service.addEntry(questionId, desc, point);
+  }
+  
+  /**
+   * Modifie une entrée de la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle modifier l'entrée
+   * @param gradeEntryId l'ID de l'entrée à modifier
+   * @param desc la nouvelle description de l'entrée
+   * @param point le nouveau nombre de point de l'entrée
+   */
+  public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
+    this.service.modifyEntry(questionId, gradeEntryId, desc, point);
+  }
+  
+  /**
+   * Supprime une entrée de la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle supprimer l'entrée
+   * @param gradeEntryId l'ID de l'entrée à supprimer
+   */
+  public boolean removeEntry(final int questionId, final int gradeEntryId) {
+    return this.service.removeEntry(questionId, gradeEntryId);
+  }
 }

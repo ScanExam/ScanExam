@@ -21,6 +21,8 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	/*View de editor */
+	var EditorViewSwing viewEdit
 	
 	/* Presenter de la correction d'exman */
 	var GraduationPresenter graduationPresenter
@@ -65,7 +67,9 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	}
 		
 	def void swapToEditor(){
-		LauncherSwing.swapToEditor()
+		view.getWindow().setVisible(false)
+		viewEdit.getWindow().setVisible(true) 
+		//LauncherSwing.swapToEditor()
 	}
 	/**
 	 * Ouvre un fichier pdf
@@ -87,6 +91,11 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	        graduationPresenter.getPresenterPdf().create(selectedFile)
 	    }
 	}
+	
+	def void setViewEditor(EditorViewSwing view){
+		this.viewEdit = view
+	}
+	
 	
 	override questionNames() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")

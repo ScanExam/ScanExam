@@ -210,7 +210,7 @@ public class EditorViewSwing {
     JMenuItem _jMenuItem_2 = new JMenuItem(_translate_4);
     this.mnItemLoad = _jMenuItem_2;
     this.mnFile.add(this.mnItemLoad);
-    String _translate_5 = LanguageManager.translate("menu.file.swap");
+    String _translate_5 = LanguageManager.translate("menu.file.switchToCorrector");
     JMenuItem _jMenuItem_3 = new JMenuItem(_translate_5);
     this.mnItemSwap = _jMenuItem_3;
     this.mnFile.add(this.mnItemSwap);
