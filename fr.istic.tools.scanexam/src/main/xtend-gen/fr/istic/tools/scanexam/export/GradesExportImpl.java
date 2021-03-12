@@ -5,6 +5,7 @@ import fr.istic.tools.scanexam.export.GradesExport;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -12,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class GradesExportImpl implements GradesExport {
@@ -29,6 +31,7 @@ public class GradesExportImpl implements GradesExport {
     final XSSFWorkbook workbook = new XSSFWorkbook();
     final XSSFSheet sheet = workbook.createSheet("export_grades");
     int rowCount = 0;
+    InputOutput.<Collection<StudentSheet>>println(this.service.getStudentSheets());
     int _size = this.service.getStudentSheets().size();
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
     for (final Integer i : _doubleDotLessThan) {

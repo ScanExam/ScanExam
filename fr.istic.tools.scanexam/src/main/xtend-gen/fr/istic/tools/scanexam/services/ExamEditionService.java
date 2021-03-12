@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
@@ -77,6 +78,20 @@ public class ExamEditionService extends Service {
   public void renameQuestion(final int id, final String name) {
     final Question question = this.getQuestion(id);
     question.setName(name);
+  }
+  
+  public void removeQuestion(final int id) {
+    EList<Page> _pages = ExamSingleton.instance.getPages();
+    for (final Page page : _pages) {
+      EList<Question> _questions = page.getQuestions();
+      for (final Question question : _questions) {
+        int _id = question.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          page.getQuestions().remove(question);
+        }
+      }
+    }
   }
   
   @Override

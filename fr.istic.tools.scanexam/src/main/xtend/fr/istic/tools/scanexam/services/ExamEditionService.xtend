@@ -64,8 +64,14 @@ class ExamEditionService extends Service // TODO : renommer
 		question.name = name
 	}
 	
+		def removeQuestion(int id)
+	{	
+		for(page: ExamSingleton.instance.pages)
+			for(question: page.questions)
+				if(question.id == id)
+					page.questions.remove(question)
+	}
 	
-
 	override save(String path) {
 		
 		val outputStream = new ByteArrayOutputStream();

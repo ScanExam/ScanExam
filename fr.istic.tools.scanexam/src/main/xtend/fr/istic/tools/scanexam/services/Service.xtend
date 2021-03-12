@@ -80,11 +80,6 @@ abstract class Service
 	{
 		ExamSingleton.getPage(pageIndex).questions
 	}
-	def removeQuestion(int id)
-	{	
-		val question = getQuestion(id);
-		currentPage.questions.remove(question);
-	}
 	
 	def getTemplatePageAmount()
 	{
