@@ -122,6 +122,15 @@ public class ExamGraduationService extends Service {
     return _xifexpression;
   }
   
+  /**
+   * Renomme l'étudiant
+   * @param name le nouveau nom de l'étudiant
+   */
+  public void renameStudent(final String name) {
+    StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
+    _get.setStudentName(name);
+  }
+  
   public Question getCurrentQuestion() {
     final Function1<Question, Boolean> _function = (Question x) -> {
       int _id = x.getId();

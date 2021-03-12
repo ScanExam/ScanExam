@@ -83,21 +83,4 @@ class EditorPresenter implements Presenter
 	def getQuestionId() {
 		service.getQuestionId()
 	}
-	
-	def int addGradeItem(String name,double points) {
-		0 //TODO impl
-	}
-	
-	def updateGradeItem(int gradeItemId,String name,double points) {
-		
-	}
-	
-	def removeGradeItem(int gradeItemId) {
-		
-	}
-	
-	
-	
-	
-	
 }
