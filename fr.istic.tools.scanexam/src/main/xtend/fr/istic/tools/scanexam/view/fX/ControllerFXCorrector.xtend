@@ -450,16 +450,13 @@ class ControllerFXCorrector {
 	}
 	
 	def void nextStudent(){
-		currentStudentIndex++;	
-		if (currentQuestionIndex >= leftList.items.size) {
-			currentQuestionIndex = 0;
-		}
+		currentStudentIndex = (currentStudentIndex + 1) % leftList.items.size;	
 		setSelectedStudent();
 	}
 	def void previousStudent(){
 		currentStudentIndex--;
 		if (currentStudentIndex < 0){
-			currentStudentIndex = leftList.items.size
+			currentStudentIndex = leftList.items.size - 1
 		}
 		setSelectedStudent();
 	}
@@ -474,16 +471,13 @@ class ControllerFXCorrector {
 	}
 	
 	def void nextQuestion(){
-		currentQuestionIndex++;
-		if (currentQuestionIndex >= rightList.items.size) {
-			currentQuestionIndex = 0;
-		}
+		currentQuestionIndex = (currentQuestionIndex + 1) % rightList.items.size;	
 		setSelectedQuestion()
 	}
 	def void previousQuestion(){
 		currentQuestionIndex--;
 		if (currentQuestionIndex < 0){
-			currentQuestionIndex = rightList.items.size
+			currentQuestionIndex = rightList.items.size - 1
 		}
 		setSelectedQuestion()
 	}

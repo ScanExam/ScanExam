@@ -548,19 +548,18 @@ public class ControllerFXCorrector {
   }
   
   public void nextStudent() {
-    this.currentStudentIndex++;
     int _size = this.leftList.getItems().size();
-    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
-    if (_greaterEqualsThan) {
-      this.currentQuestionIndex = 0;
-    }
+    int _modulo = ((this.currentStudentIndex + 1) % _size);
+    this.currentStudentIndex = _modulo;
     this.setSelectedStudent();
   }
   
   public void previousStudent() {
     this.currentStudentIndex--;
     if ((this.currentStudentIndex < 0)) {
-      this.currentStudentIndex = this.leftList.getItems().size();
+      int _size = this.leftList.getItems().size();
+      int _minus = (_size - 1);
+      this.currentStudentIndex = _minus;
     }
     this.setSelectedStudent();
   }
@@ -576,19 +575,18 @@ public class ControllerFXCorrector {
   }
   
   public void nextQuestion() {
-    this.currentQuestionIndex++;
     int _size = this.rightList.getItems().size();
-    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
-    if (_greaterEqualsThan) {
-      this.currentQuestionIndex = 0;
-    }
+    int _modulo = ((this.currentQuestionIndex + 1) % _size);
+    this.currentQuestionIndex = _modulo;
     this.setSelectedQuestion();
   }
   
   public void previousQuestion() {
     this.currentQuestionIndex--;
     if ((this.currentQuestionIndex < 0)) {
-      this.currentQuestionIndex = this.rightList.getItems().size();
+      int _size = this.rightList.getItems().size();
+      int _minus = (_size - 1);
+      this.currentQuestionIndex = _minus;
     }
     this.setSelectedQuestion();
   }
