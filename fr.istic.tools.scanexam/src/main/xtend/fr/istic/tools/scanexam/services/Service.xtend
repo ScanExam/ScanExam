@@ -132,5 +132,4 @@ abstract class Service
 	def getCurrentPageNumber() {
 		return pageIndex;
 	}
-
 }

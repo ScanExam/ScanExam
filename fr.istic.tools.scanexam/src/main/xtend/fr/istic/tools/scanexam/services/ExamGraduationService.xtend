@@ -7,8 +7,10 @@ import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.io.TemplateIO
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
+import fr.istic.tools.scanexam.utils.Tuple3
 import java.io.File
 import java.util.Collection
+import java.util.List
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
 
@@ -143,6 +145,43 @@ class ExamGraduationService extends Service
 		}
 		indexQuestion += indexquestion
 		indexQuestion
+	}
+	
+	/**
+	 * Ajoute une entrée à la note d'une question d'une copie
+	 * @param questionId l'ID de la question à laquelle ajouter l'entrée
+	 * @param l'ID de l'entrée dans l'Examen
+	 */
+	def addGradeEntry(int questionId, int gradeEntryId) {
+		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry | entry.id == gradeEntryId]
+		studentSheets.get(currentSheetIndex).grades.get(questionId).entries.add(gradeEntry)
+	}
+	
+	/**
+	 * Retire une entrée à la note d'une question d'une copie
+	 * @param questionId l'ID de la question à laquelle retirer l'entrée
+	 * @param l'ID de l'entrée dans l'Examen
+	 */
+	def removeGradeEntry(int questionId, int gradeEntryId) {
+		val entries = studentSheets.get(currentSheetIndex).grades.get(questionId).entries
+		val gradeEntry = entries.findFirst[entry | entry.id == gradeEntryId]
+		entries.remove(gradeEntry)
+	}
+	
+    /**
+     * @param l'ID de la question à laquelle récupérer la liste d'entrées
+	 * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
+	 */
+	def List<Integer> getQuestionSelectedGradeEntries(int questionId) {
+		studentSheets.get(currentSheetIndex).grades.get(questionId).entries.map[entry | entry.id]
+	}
+	
+	/**
+     * @param l'ID de la question à laquelle récupérer la liste d'entrées
+	 * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
+	 */
+	def List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(int questionId) {
+		getQuestion(questionId).gradeScale.steps.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
 	}
 	
 	/**

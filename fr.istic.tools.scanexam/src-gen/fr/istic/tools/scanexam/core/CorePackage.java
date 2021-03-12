@@ -4,7 +4,6 @@ package fr.istic.tools.scanexam.core;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -627,26 +626,6 @@ public interface CorePackage extends EPackage {
 	 */
 	int STUDENT_SHEET_OPERATION_COUNT = 1;
 
-	/**
-	 * The meta object id for the '<em>Map</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.util.Map
-	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getMap()
-	 * @generated
-	 */
-	int MAP = 11;
-
-	/**
-	 * The meta object id for the '<em>Pair</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see fr.istic.tools.scanexam.utils.Pair
-	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPair()
-	 * @generated
-	 */
-	int PAIR = 12;
-
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.QuestionZone <em>Question Zone</em>}'.
@@ -1054,28 +1033,6 @@ public interface CorePackage extends EPackage {
 	EOperation getStudentSheet__ComputeGrade();
 
 	/**
-	 * Returns the meta object for data type '{@link java.util.Map <em>Map</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Map</em>'.
-	 * @see java.util.Map
-	 * @model instanceClass="java.util.Map" typeParameters="T1 T2"
-	 * @generated
-	 */
-	EDataType getMap();
-
-	/**
-	 * Returns the meta object for data type '{@link fr.istic.tools.scanexam.utils.Pair <em>Pair</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Pair</em>'.
-	 * @see fr.istic.tools.scanexam.utils.Pair
-	 * @model instanceClass="fr.istic.tools.scanexam.utils.Pair" typeParameters="T1 T2"
-	 * @generated
-	 */
-	EDataType getPair();
-
-	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1423,26 +1380,6 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STUDENT_SHEET___COMPUTE_GRADE = eINSTANCE.getStudentSheet__ComputeGrade();
-
-		/**
-		 * The meta object literal for the '<em>Map</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.util.Map
-		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getMap()
-		 * @generated
-		 */
-		EDataType MAP = eINSTANCE.getMap();
-
-		/**
-		 * The meta object literal for the '<em>Pair</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see fr.istic.tools.scanexam.utils.Pair
-		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPair()
-		 * @generated
-		 */
-		EDataType PAIR = eINSTANCE.getPair();
 
 	}
 
