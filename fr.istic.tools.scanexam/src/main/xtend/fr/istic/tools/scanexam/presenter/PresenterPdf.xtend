@@ -104,4 +104,8 @@ class PresenterPdf {
 		(service as ExamEditionService).create(file)
 	}
 	
+	
+	def boolean atCorrectPage(int page){
+		return page == service.currentPageNumber
+	}
 }
