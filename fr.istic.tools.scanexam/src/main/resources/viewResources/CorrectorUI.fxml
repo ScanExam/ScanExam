@@ -12,7 +12,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -20,8 +19,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <VBox fx:id="root" minHeight="720.0" minWidth="720.0" prefHeight="540.0" prefWidth="938.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.ControllerFXCorrector">
   <children>
@@ -199,25 +196,6 @@
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />
                      </VBox.margin>
-                     <children>
-                        <HBox prefHeight="0.0" prefWidth="140.0">
-                           <children>
-                              <Spinner fx:id="gradeSpinner" amountToStepBy="0.1" editable="true" initialValue="0" max="20" min="0" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="  /" wrappingWidth="32.23828125">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Text>
-                              <Spinner fx:id="totalGradeSpinner" amountToStepBy="0.1" editable="true" initialValue="0" max="20" min="0" />
-                           </children>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#saveGradeButtonPressed" prefHeight="25.0" prefWidth="145.0" text="Sauvegarder" />
-                        <Separator prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets bottom="5.0" top="5.0" />
-                           </VBox.margin>
-                        </Separator>
-                     </children>
                      
                      
                      

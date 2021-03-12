@@ -52,6 +52,7 @@ class ControllerFXCorrector {
 	def getAdapterCorrection() {
 		corrector
 	}
+	Grader grader;
 
 	boolean botShow = false;
 	@FXML
@@ -390,6 +391,7 @@ class ControllerFXCorrector {
 			renderStudentCopy();
 			loadQuestions();
 			loadStudents();
+			postLoad();
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -413,7 +415,8 @@ class ControllerFXCorrector {
 	
 	
 	def void loadQuestions(){
-
+		grader = new Grader();
+		questionDetails.children.add(grader);
 		for (var p = 0;p < corrector.presenter.templatePageAmount;p++) {
 			var ids = corrector.presenter.initLoading(p);
 			for (int i:ids) {
@@ -426,6 +429,9 @@ class ControllerFXCorrector {
 				question.questionId = i
 				question.name = corrector.presenter.questionName(i);
 				rightList.items.add(question);
+				
+				grader.add("test1","1",1,i)
+				grader.add("test1","1",2,i)
 			}
 		}
 	}
@@ -443,7 +449,9 @@ class ControllerFXCorrector {
 		currentQuestionIndex = 0
 		leftList.selectionModel.select(0);
 		rightList.selectionModel.select(0);
-
+		var list = new LinkedList<Integer>()
+		list.add(1)
+		grader.display(rightList.items.get(currentQuestionIndex).questionId,list)
 		currentStudentIndex = 0;
 	}
 	
@@ -466,15 +474,17 @@ class ControllerFXCorrector {
 	def void nextStudent(){
 		currentStudentIndex++;	
 		if (currentStudentIndex >= leftList.items.size) {
-			currentStudentIndex = 0;
+			currentStudentIndex = leftList.items.size-1;
 		}
+		corrector.presenter.presenterQuestion.nextStudent
 		setSelectedStudent();
 	}
 	def void previousStudent(){
 		currentStudentIndex--;
 		if (currentStudentIndex < 0){
-			currentStudentIndex = leftList.items.size-1
+			currentStudentIndex = 0
 		}
+		corrector.presenter.presenterQuestion.previousStudent
 		setSelectedStudent();
 	}
 	def void selectStudent(int index){
@@ -484,21 +494,26 @@ class ControllerFXCorrector {
 
 	def void setSelectedStudent(){
 		leftList.selectionModel.select(currentStudentIndex)
+		var list = new LinkedList<Integer>()
+		list.add(1)
+		grader.display(rightList.items.get(currentQuestionIndex).questionId,list)
 		display();
 	}
 
 	def void nextQuestion(){
 		currentQuestionIndex++;
 		if (currentQuestionIndex >= rightList.items.size) {
-			currentQuestionIndex = 0;
+			currentQuestionIndex = rightList.items.size -1;
 		}
+		//corrector.presenter.presenterQuestion.nextQuestion
 		setSelectedQuestion()
 	}
 	def void previousQuestion(){
 		currentQuestionIndex--;
 		if (currentQuestionIndex < 0){
-			currentQuestionIndex = rightList.items.size-1
+			currentQuestionIndex = 0
 		}
+		//corrector.presenter.presenterQuestion.previousQuestion
 		setSelectedQuestion()
 	}
 	def void selectQuestion(int index) {
