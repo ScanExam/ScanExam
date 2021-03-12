@@ -314,7 +314,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getGradeEntry_Step() {
+	public EAttribute getGradeEntry_Id() {
 		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -323,8 +323,17 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getGradeEntry_Header() {
+	public EAttribute getGradeEntry_Step() {
 		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGradeEntry_Header() {
+		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -587,6 +596,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEReference(gradeScaleEClass, GRADE_SCALE__STEPS);
 
 		gradeEntryEClass = createEClass(GRADE_ENTRY);
+		createEAttribute(gradeEntryEClass, GRADE_ENTRY__ID);
 		createEAttribute(gradeEntryEClass, GRADE_ENTRY__STEP);
 		createEAttribute(gradeEntryEClass, GRADE_ENTRY__HEADER);
 
@@ -678,6 +688,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEReference(getGradeScale_Steps(), this.getGradeEntry(), null, "steps", null, 0, -1, GradeScale.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(gradeEntryEClass, GradeEntry.class, "GradeEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGradeEntry_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, GradeEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getGradeEntry_Step(), theEcorePackage.getEFloat(), "step", null, 0, 1, GradeEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getGradeEntry_Header(), theEcorePackage.getEString(), "header", null, 0, 1, GradeEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

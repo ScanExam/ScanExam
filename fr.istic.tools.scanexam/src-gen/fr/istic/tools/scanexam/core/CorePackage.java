@@ -234,13 +234,22 @@ public interface CorePackage extends EPackage {
 	int GRADE_ENTRY = 3;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GRADE_ENTRY__ID = 0;
+
+	/**
 	 * The feature id for the '<em><b>Step</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_ENTRY__STEP = 0;
+	int GRADE_ENTRY__STEP = 1;
 
 	/**
 	 * The feature id for the '<em><b>Header</b></em>' attribute.
@@ -249,7 +258,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_ENTRY__HEADER = 1;
+	int GRADE_ENTRY__HEADER = 2;
 
 	/**
 	 * The number of structural features of the '<em>Grade Entry</em>' class.
@@ -258,7 +267,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_ENTRY_FEATURE_COUNT = 2;
+	int GRADE_ENTRY_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Grade Entry</em>' class.
@@ -779,6 +788,17 @@ public interface CorePackage extends EPackage {
 	EClass getGradeEntry();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeEntry#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see fr.istic.tools.scanexam.core.GradeEntry#getId()
+	 * @see #getGradeEntry()
+	 * @generated
+	 */
+	EAttribute getGradeEntry_Id();
+
+	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeEntry#getStep <em>Step</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1189,6 +1209,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EClass GRADE_ENTRY = eINSTANCE.getGradeEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GRADE_ENTRY__ID = eINSTANCE.getGradeEntry_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.

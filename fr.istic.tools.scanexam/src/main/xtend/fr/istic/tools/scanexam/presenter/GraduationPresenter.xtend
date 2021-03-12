@@ -77,22 +77,7 @@ class GraduationPresenter implements Presenter
 		presPdf
 	}
 	
-	
-	//Fix me : if related to Questions, move to PresenterQuestion and chain with getPresenterQuestion instead
-	/**
-	 * @return next question
-	 */
-	def getNextQuestion(int question){
-		presQuestion.getNextQuestion(question)
-	}
-	
-	/**
-	 * @param question is the actual question
-	 * @return previous question
-	 */
-	def getPreviousQuestion(int question){
-		presQuestion.getPreviousQuestion(question)
-	}
+
 	
 	
 	

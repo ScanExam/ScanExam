@@ -11,4 +11,11 @@ class StudentItem extends VBox {
 		this.children.add(new Label(studentId + ""));
 	}
 	
+	def setStudentId(int id){
+		studentId = id
+	}
+	def getStudentId(){
+		studentId
+	}
+	
 }

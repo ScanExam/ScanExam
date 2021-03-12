@@ -2,12 +2,12 @@ package fr.istic.tools.scanexam.api
 
 import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.Grade
+import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.GradeScale
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.List
-
 
 /**
  * Factory qui crée des objets de type Data: {@link Rectangle},   {@link StudentSheet},  {@link Grade},  {@link GradeScale}, {@link Question}
@@ -59,6 +59,19 @@ class DataFactory {
 	 */
 	def GradeScale createGradeScale(){
 		CoreFactory.eINSTANCE.createGradeScale
+		
+	}
+	
+	/** 
+	 * @return une instance d'objet de type {@link GradeEntry}
+	 * @author Théo Giraudet
+	 */
+	def GradeEntry createGradeEntry(int id, String desc, float point) {
+		val scale = CoreFactory.eINSTANCE.createGradeEntry
+		scale.id = id
+		scale.header = desc
+		scale.step = point
+		scale
 	}
 	
 	/** Une question contient un identifiant et un {@link GradeScale} 

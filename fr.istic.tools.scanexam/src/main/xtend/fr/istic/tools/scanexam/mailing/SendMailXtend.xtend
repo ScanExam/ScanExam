@@ -30,7 +30,7 @@ class SendMailXtend  {
 	def static void main(String[] arg){
 		
 		//Envoie du mail
-		SendMailTls.sendMail(getSender(), getSenderPassword(), getRecipent(), getTitle(), getMessage(), getPieceJointe())
+		SendMailTls.sendMail(sender, senderPassword , recipient, titleMail, messageMail, pieceJointe)
 	}
 	
 	
@@ -40,8 +40,8 @@ class SendMailXtend  {
 	 * Fonction envoie du mail avec les valeur donnée par les getter
 	 * 
 	 */
-	def static sendMailXtend(){
-		SendMailTls.sendMail(getSender(), getSenderPassword(), getRecipent(), getTitle(), getMessage(), getPieceJointe())
+	def sendMailXtend(){
+		SendMailTls.sendMail(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe)
 	}
 	
 	/**
@@ -50,45 +50,47 @@ class SendMailXtend  {
 	 */
 	
 	
-	def static String getSender(){
+	def String getSender(){
 		return sender
 	}
-	def static String setSender(String send){
+	
+	def String setSender(String send){
 		sender = send
 	}
 	
-	def static String getSenderPassword(){
+	def String getSenderPassword(){
 		return senderPassword
 	}
-	def static String setSenderPassword(String pass){
+	def String setSenderPassword(String pass){
 		senderPassword = pass
 	}
 	
-	def static String getRecipent(){
+	def String getRecipent(){
 		return recipient
 	}
-	def static String setRecipent(String recip){
+	def String setRecipent(String recip){
 		recipient = recip
 	}
 	
-	def static String getTitle(){
+	def String getTitle(){
 		return titleMail
 	}
-	def static String setTitle(String title){
+	def String setTitle(String title){
 		titleMail = title
 	}
 	
-	def static String getMessage(){
+	def String getMessage(){
 		return messageMail
 	}
-	def static String setMessage(String message){
+	def String setMessage(String message){
 		messageMail = message
 	}
 	
-	def static String getPieceJointe(){
+	def String getPieceJointe(){
 		return pieceJointe
 	}
-	def static String setPieceJointe(String piece){
+	
+	def String setPieceJointe(String piece){
 		pieceJointe = piece
 	}
 }

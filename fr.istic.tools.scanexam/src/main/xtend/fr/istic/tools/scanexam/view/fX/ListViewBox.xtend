@@ -75,8 +75,8 @@ class ListViewBox extends VBox{
 		//up = new Button("");
 		//down = new Button("");
 		rm = new Button("remove");
-		resize = new Button("resize")
-		move = new Button("move")
+		resize = new Button("resize");
+		move = new Button("move");
 		//var upImage = new Image(ResourcesUtils.getInputStreamResource("/viewResources/upArrow.png"),FXSettings.BUTTON_ICON_SIZE,FXSettings.BUTTON_ICON_SIZE,true,true)
 		//up.graphic = new ImageView(upImage)
 		//top.children.add(0,up)
@@ -132,7 +132,7 @@ class ListViewBox extends VBox{
 	}
 	
 	def String getName(){
-		field.text
+		nameLabel.text
 	}
 	
 	def void toggleRenaming(){

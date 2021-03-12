@@ -59,15 +59,22 @@ class PresenterQuestion {
 	/**
 	 * @return next question
 	 */
-	def getNextQuestion(int question){
-		return 0;
+	def nextQuestion(){
+		service.nextQuestion
 	}
 	
 	/**
 	 * @param question is the actual question
-	 * @return previous question
 	 */
-	def getPreviousQuestion(int question){
-		return 0;
+	def previousQuestion(){
+		service.previousQuestion
+	}
+	
+	def nextStudent(){
+		service.nextStudent
+	}
+	
+	def previousStudent(){
+		service.previousStudent
 	}
 }

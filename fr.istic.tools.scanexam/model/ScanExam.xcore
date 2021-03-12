@@ -31,6 +31,7 @@ class GradeScale
 }
 class GradeEntry
 {
+	int ^id
 	float step
 	String header
 }

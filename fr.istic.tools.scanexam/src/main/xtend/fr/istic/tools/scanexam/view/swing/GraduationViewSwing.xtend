@@ -150,7 +150,7 @@ class GraduationViewSwing {
 	 * Initialise la fenêtre
 	 */
 	def private void initialize() {
-		window = new JFrame(LanguageManager.translate("title.ScanExam"))
+		window = new JFrame(LanguageManager.translate("title.scanexam"))
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 
@@ -166,7 +166,7 @@ class GraduationViewSwing {
 		mnItemSession = new JMenuItem("Change session")
 		mnFile.add(mnItemSession)
 		
-		mnItemSwap = new JMenuItem("Swap to editor")
+		mnItemSwap = new JMenuItem(LanguageManager.translate("menu.file.switchToEditor"))
 		mnFile.add(mnItemSwap)
 	
 

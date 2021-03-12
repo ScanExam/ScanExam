@@ -201,7 +201,8 @@ class EditorAdapterSwing implements EditorAdapter {
 	 */
 	
 	def void swapVerGraduation(){
-			LauncherSwing.swapToGraduator()
+			view.getWindow().setVisible(false)
+			LauncherSwing.swapToGraduator(view)
 	}
 	
 	

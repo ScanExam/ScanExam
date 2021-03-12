@@ -12,7 +12,7 @@ import javafx.scene.control.TextField
 
 class GradeItemHBox extends HBox {
 		
-		new(){
+		new(int questionId){
 			super();
 			var p1 = new Pane();
 			p1.maxWidth = 50
@@ -20,7 +20,7 @@ class GradeItemHBox extends HBox {
 			p2.maxWidth = 50
 			this.children.add(p1)
 			this.children.add(p2)
-			
+			this.questionId = questionId
 			
 			remove = new Button("-");
 			this.children.add(remove)
@@ -37,7 +37,7 @@ class GradeItemHBox extends HBox {
 			
 			p2.children.addAll(field,label);
 		}
-		
+		int questionId;
 		int gradeItemId;
 		Button remove;
 		NumberTextField field;
@@ -52,6 +52,10 @@ class GradeItemHBox extends HBox {
 		
 		def void setButtonAction(EventHandler<ActionEvent> handler) {
 			remove.onAction = handler
+		}
+		
+		def getGradeQuestionId(){
+			questionId
 		}
 		
 		def getGradeItemId(){

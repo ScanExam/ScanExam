@@ -73,17 +73,17 @@ abstract class Service
 	
 	def Question getQuestion(int id)
 	{
-		currentPage.questions.findFirst[question | question.id == id]
+		for(page: ExamSingleton.instance.pages) {
+			val question = page.questions.findFirst[question | question.id == id]
+			if(question !== null)
+				return question
+		}
+		return null
 	}
 	
 	def getQuestionAtPage(int pageIndex)
 	{
 		ExamSingleton.getPage(pageIndex).questions
-	}
-	def removeQuestion(int id)
-	{	
-		val question = getQuestion(id);
-		currentPage.questions.remove(question);
 	}
 	
 	def getTemplatePageAmount()

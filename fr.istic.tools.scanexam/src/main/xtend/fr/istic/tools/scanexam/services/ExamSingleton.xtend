@@ -40,5 +40,4 @@ final class ExamSingleton
 	{
 		return instance.pages.get(pageId);
 	}
-	
 }

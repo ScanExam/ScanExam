@@ -110,6 +110,15 @@ class ExamGraduationService extends Service
 			currentSheetIndex--
 	}
 	
+	
+	/**
+	 * Renomme l'étudiant
+	 * @param name le nouveau nom de l'étudiant
+	 */
+	def renameStudent(String name) {
+		studentSheets.get(currentSheetIndex).studentName = name
+	}
+	
 	def getCurrentQuestion()
 	{
 		return currentPage.questions.findFirst[x | x.id == currentQuestionIndex];
@@ -125,6 +134,7 @@ class ExamGraduationService extends Service
 		if (currentQuestionIndex > 0)
 			currentQuestionIndex--
 	}
+	
 	
 	def indexOfQuestions (int indexpage , int indexquestion){
 		var indexQuestion =0

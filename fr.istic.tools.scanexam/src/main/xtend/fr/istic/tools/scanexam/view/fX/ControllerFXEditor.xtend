@@ -61,7 +61,7 @@ class ControllerFXEditor {
 	ImageView pdfView;
 
 	@FXML
-	ListView<VBox> questionList;
+	ListView<ListViewBox> questionList;
 
 	@FXML
 	ChoiceBox<Integer> pageChoice;
@@ -74,6 +74,10 @@ class ControllerFXEditor {
 
 	@FXML
 	Label pageNumberLabel;
+	
+	@FXML
+	Button createBoxButton;
+	
 
 	@FXML
 	def void pressed() {
@@ -358,7 +362,7 @@ class ControllerFXEditor {
 	def Box createBox(double x, double y) {
 		switch currentTool {
 			case QUESTION_AREA: {
-				new Box("Question " + editor.presenter.getQuestionId(), editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
+				new Box("Question temp", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
 			}
 			case ID_AREA: {
 				new Box("ID Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.ID, x, y);
@@ -377,7 +381,6 @@ class ControllerFXEditor {
 	 * Called when we finish creating a new box (Mouse release)
 	 */
 	def addBox(Box box) {
-		//renameBox(box,box.name)//TODO fix
 		var lb = box.listViewBox;
 		/*lb.upAction = new EventHandler<ActionEvent>() {
 
@@ -452,7 +455,7 @@ class ControllerFXEditor {
 		lb.addGradeItemAction = new EventHandler<ActionEvent>(){
 			
 			override handle(ActionEvent event) {
-				val item = new GradeItemHBox()
+				val item = new GradeItemHBox(box.boxId);
 				addGradeItem(item)
 				box.addGradeItem(item)
 				item.removeGradeItemAction = new EventHandler<ActionEvent>(){
@@ -514,17 +517,19 @@ class ControllerFXEditor {
 	}
 	
 	def addGradeItem(GradeItemHBox item) {
-		item.gradeItemId = editor.presenter.addGradeItem(item.gradeItemName,Double.parseDouble(item.gradeItemPoints))
+		item.gradeItemId = editor.presenter.presenterMarkingScheme.addEntry(item.gradeQuestionId,item.gradeItemName,Float.parseFloat(item.gradeItemPoints))
+		logger.warn(item.gradeItemId)
 	}
 	
 	def updateGradeItem(GradeItemHBox item) {
 		item.gradeItemName = item.nameFieldText
 		item.gradeItemPoints = item.pointFieldText
-		editor.presenter.updateGradeItem(item.gradeItemId,item.gradeItemName,Double.parseDouble(item.gradeItemPoints))
+		editor.presenter.presenterMarkingScheme.modifyEntry(item.gradeQuestionId,item.gradeItemId,item.gradeItemName,Float.parseFloat(item.gradeItemPoints))
+	
 	}
 	
 	def removeGradeItem(GradeItemHBox item) {
-		editor.presenter.removeGradeItem(item.gradeItemId)
+		editor.presenter.presenterMarkingScheme.removeEntry(item.gradeQuestionId,item.gradeItemId)
 	}
 	
 	
@@ -535,14 +540,11 @@ class ControllerFXEditor {
 	def removeBox(Box box) {
 		logger.info("Removing box " + box)
 		questionList.items.remove(box.listViewBox)
-		mainPane.children.remove(box.getText());
+		mainPane.children.remove(box.getText())
 		mainPane.children.remove(box)
 		boxes.remove(box)
-		editor.removeBox(box);
+		editor.removeBox(box)
 		setToNoTool
-	}
-	
-	def changePoints(Box box,String points) {
 	}
 	
 	def addBoxModel(Box box){
@@ -554,7 +556,7 @@ class ControllerFXEditor {
 	 * load a new pdf to start the creation of a new template
 	 */
 	def loadPdf() {
-
+		
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("PDF files", Arrays.asList("*.pdf")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
@@ -562,6 +564,7 @@ class ControllerFXEditor {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
+			clearVue()
 			editor.presenter.getPresenterPdf.create(file);
 			renderDocument();
 		} else {
@@ -592,6 +595,7 @@ class ControllerFXEditor {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
+			clearVue()
 			editor.presenter.load(file.path);
 			renderDocument();
 			loadBoxes();
@@ -701,6 +705,7 @@ class ControllerFXEditor {
 			}
 		}
 	}
+	
 
 	/**
 	 * Highlights the Box box, called when we click on a box on the listview
@@ -716,5 +721,15 @@ class ControllerFXEditor {
 	}
 	def double convertToRelative(double relative, double to){
 		return relative/to
+	}
+	
+	def void clearVue(){
+		boxes.clear();
+		for (ListViewBox n : questionList.items){
+			mainPane.children.remove(n.parentBox);
+			mainPane.children.remove(n.parentBox.text)
+			boxes.remove(n.parentBox)
+		}
+	questionList.items.clear()
 	}
 }
