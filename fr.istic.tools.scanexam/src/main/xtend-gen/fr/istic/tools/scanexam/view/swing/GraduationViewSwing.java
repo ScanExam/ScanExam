@@ -255,7 +255,7 @@ public class GraduationViewSwing {
    * Initialise la fenêtre
    */
   private void initialize() {
-    String _translate = LanguageManager.translate("title.ScanExam");
+    String _translate = LanguageManager.translate("title.scanexam");
     JFrame _jFrame = new JFrame(_translate);
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
@@ -272,7 +272,8 @@ public class GraduationViewSwing {
     JMenuItem _jMenuItem_1 = new JMenuItem("Change session");
     this.mnItemSession = _jMenuItem_1;
     this.mnFile.add(this.mnItemSession);
-    JMenuItem _jMenuItem_2 = new JMenuItem("Swap to editor");
+    String _translate_1 = LanguageManager.translate("menu.file.switchToEditor");
+    JMenuItem _jMenuItem_2 = new JMenuItem(_translate_1);
     this.mnItemSwap = _jMenuItem_2;
     this.mnFile.add(this.mnItemSwap);
     Container _contentPane = this.window.getContentPane();

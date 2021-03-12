@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.GradeEntryImpl#getId <em>Id</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.GradeEntryImpl#getStep <em>Step</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.GradeEntryImpl#getHeader <em>Header</em>}</li>
  * </ul>
@@ -27,6 +28,26 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * @generated
  */
 public class GradeEntryImpl extends MinimalEObjectImpl.Container implements GradeEntry {
+	/**
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int ID_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected int id = ID_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getStep() <em>Step</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -91,6 +112,27 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setId(int newId) {
+		int oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.GRADE_ENTRY__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public float getStep() {
 		return step;
 	}
@@ -136,6 +178,8 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case CorePackage.GRADE_ENTRY__ID:
+				return getId();
 			case CorePackage.GRADE_ENTRY__STEP:
 				return getStep();
 			case CorePackage.GRADE_ENTRY__HEADER:
@@ -152,6 +196,9 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case CorePackage.GRADE_ENTRY__ID:
+				setId((Integer)newValue);
+				return;
 			case CorePackage.GRADE_ENTRY__STEP:
 				setStep((Float)newValue);
 				return;
@@ -170,6 +217,9 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case CorePackage.GRADE_ENTRY__ID:
+				setId(ID_EDEFAULT);
+				return;
 			case CorePackage.GRADE_ENTRY__STEP:
 				setStep(STEP_EDEFAULT);
 				return;
@@ -188,6 +238,8 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case CorePackage.GRADE_ENTRY__ID:
+				return id != ID_EDEFAULT;
 			case CorePackage.GRADE_ENTRY__STEP:
 				return step != STEP_EDEFAULT;
 			case CorePackage.GRADE_ENTRY__HEADER:
@@ -206,7 +258,9 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (step: ");
+		result.append(" (id: ");
+		result.append(id);
+		result.append(", step: ");
 		result.append(step);
 		result.append(", header: ");
 		result.append(header);
