@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.api;
 
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Grade;
+import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
@@ -66,6 +67,22 @@ public class DataFactory {
    */
   public GradeScale createGradeScale() {
     return CoreFactory.eINSTANCE.createGradeScale();
+  }
+  
+  /**
+   * @return une instance d'objet de type {@link GradeEntry}
+   * @author Théo Giraudet
+   */
+  public GradeEntry createGradeEntry(final int id, final String desc, final float point) {
+    GradeEntry _xblockexpression = null;
+    {
+      final GradeEntry scale = CoreFactory.eINSTANCE.createGradeEntry();
+      scale.setId(id);
+      scale.setHeader(desc);
+      scale.setStep(point);
+      _xblockexpression = scale;
+    }
+    return _xblockexpression;
   }
   
   /**
