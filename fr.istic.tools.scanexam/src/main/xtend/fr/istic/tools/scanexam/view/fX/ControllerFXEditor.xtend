@@ -451,16 +451,44 @@ class ControllerFXEditor {
 		lb.addGradeItemAction = new EventHandler<ActionEvent>(){
 			
 			override handle(ActionEvent event) {
-				var item = new GradeItemHBox()
+				val item = new GradeItemHBox()
 				addGradeItem(item)
 				box.addGradeItem(item)
 				item.removeGradeItemAction = new EventHandler<ActionEvent>(){
 					
 					override handle(ActionEvent event) {
-						removeGradeItem((event.source as Button).parent as GradeItemHBox)
-						box.removeGradeItem((event.source as Button).parent as GradeItemHBox);
+						removeGradeItem(item)
+						box.removeGradeItem(item);
 					}
 				
+				}
+				item.changeName = new EventHandler<ActionEvent>(){
+					
+					override handle(ActionEvent event) {
+						item.toggleRenaming
+					}
+				}
+				item.changePoints = new EventHandler<ActionEvent>(){
+					
+					override handle(ActionEvent event) {
+						item.togglePointChange
+					}
+				}
+				item.nameCommit = new EventHandler<ActionEvent>() {
+
+					override handle(ActionEvent event) {
+						updateGradeItem(item)
+						item.toggleRenaming
+					}
+		
+				}
+				item.pointsCommit = new EventHandler<ActionEvent>() {
+
+					override handle(ActionEvent event) {
+						updateGradeItem(item)
+						item.togglePointChange
+					}
+		
 				}
 			}
 			
@@ -489,6 +517,8 @@ class ControllerFXEditor {
 	}
 	
 	def updateGradeItem(GradeItemHBox item) {
+		item.gradeItemName = item.nameFieldText
+		item.gradeItemPoints = item.pointFieldText
 		editor.presenter.updateGradeItem(item.gradeItemId,item.gradeItemName,Double.parseDouble(item.gradeItemPoints))
 	}
 	
