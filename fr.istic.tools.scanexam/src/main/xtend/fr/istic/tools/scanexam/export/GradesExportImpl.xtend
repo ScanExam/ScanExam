@@ -26,6 +26,13 @@ class GradesExportImpl implements GradesExport {
 		
 		var int rowCount = 0
 		println(service.studentSheets)
+		val Row row1 = sheet.createRow(rowCount)
+		val Cell name = row1.createCell(0)
+		name.cellValue = "Nom"
+		rowCount++
+			
+		val Cell grade = row1.createCell(1)
+		grade.cellValue = "Note"
 		
 		for(i : 0 ..< service.studentSheets.size){
 			val Row row = sheet.createRow(rowCount)
@@ -38,15 +45,13 @@ class GradesExportImpl implements GradesExport {
 		}
 		
 		try{
-			val FileOutputStream outStream = new FileOutputStream(service.examName +".xslx")
+			val FileOutputStream outStream = new FileOutputStream(service.examName +".xlsx")
 			workbook.write(outStream)
 			
 		}
 		catch(IOException e){
 			e.printStackTrace
 		}
-
 	}
-	
 	
 }
