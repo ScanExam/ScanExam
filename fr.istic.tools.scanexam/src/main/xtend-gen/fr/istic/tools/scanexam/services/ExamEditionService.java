@@ -135,7 +135,7 @@ public class ExamEditionService extends Service {
     final GradeScale scale = this.getQuestion(questionId).getGradeScale();
     final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
       int _id = step.getId();
-      return Boolean.valueOf((_id == questionId));
+      return Boolean.valueOf((_id == gradeEntryId));
     };
     final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
     if ((scaleEntry != null)) {
@@ -155,7 +155,7 @@ public class ExamEditionService extends Service {
       final GradeScale scale = this.getQuestion(questionId).getGradeScale();
       final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
         int _id = step.getId();
-        return Boolean.valueOf((_id == questionId));
+        return Boolean.valueOf((_id == gradeEntryId));
       };
       final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
       boolean _xifexpression = false;

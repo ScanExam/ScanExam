@@ -105,7 +105,7 @@ class ExamEditionService extends Service // TODO : renommer
 	 */
 	def modifyEntry(int questionId, int gradeEntryId, String desc, float point) {
 		val scale = getQuestion(questionId).gradeScale
-		val scaleEntry = scale.steps.findFirst[step | step.id == questionId]
+		val scaleEntry = scale.steps.findFirst[step | step.id == gradeEntryId]
 		if(scaleEntry !== null) {
 			scaleEntry.header = desc
 			scaleEntry.step = point
@@ -119,7 +119,7 @@ class ExamEditionService extends Service // TODO : renommer
 	 */
 	def removeEntry(int questionId, int gradeEntryId) {
 		val scale = getQuestion(questionId).gradeScale
-		val scaleEntry = scale.steps.findFirst[step | step.id == questionId]
+		val scaleEntry = scale.steps.findFirst[step | step.id == gradeEntryId]
 		if(scaleEntry !== null)
 			scale.steps.remove(scaleEntry)
 	}
