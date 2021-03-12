@@ -89,6 +89,7 @@ class ExamEditionService extends Service // TODO : renommer
             ExamSingleton.instance = creationTemplate.get().exam
             val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
             document = PDDocument.load(decoded)
+            questionId = ExamSingleton.instance.pages.stream.map[page | page.questions.size].reduce[acc, num | acc + num].get + 1
             return true
         }
         return false
@@ -108,6 +109,7 @@ class ExamEditionService extends Service // TODO : renommer
 		
 			ExamSingleton.instance.pages.add(page);
 		}
+		questionId = 0
 	}
 
 	

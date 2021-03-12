@@ -13,6 +13,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -102,6 +104,15 @@ public class ExamEditionService extends Service {
         ExamSingleton.instance = creationTemplate.get().getExam();
         final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
         this.document = PDDocument.load(decoded);
+        final Function<Page, Integer> _function = (Page page) -> {
+          return Integer.valueOf(page.getQuestions().size());
+        };
+        final BinaryOperator<Integer> _function_1 = (Integer acc, Integer num) -> {
+          return Integer.valueOf(((acc).intValue() + (num).intValue()));
+        };
+        Integer _get = ExamSingleton.instance.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
+        int _plus = ((_get).intValue() + 1);
+        this.questionId = _plus;
         return true;
       }
       return false;
@@ -123,6 +134,7 @@ public class ExamEditionService extends Service {
           ExamSingleton.instance.getPages().add(page);
         }
       }
+      this.questionId = 0;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
