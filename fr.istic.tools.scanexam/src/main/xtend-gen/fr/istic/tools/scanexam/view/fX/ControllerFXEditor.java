@@ -21,6 +21,7 @@ import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -30,7 +31,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -74,7 +74,7 @@ public class ControllerFXEditor {
   private ImageView pdfView;
   
   @FXML
-  private ListView<VBox> questionList;
+  private ListView<ListViewBox> questionList;
   
   @FXML
   private ChoiceBox<Integer> pageChoice;
@@ -87,6 +87,9 @@ public class ControllerFXEditor {
   
   @FXML
   private Label pageNumberLabel;
+  
+  @FXML
+  private Button createBoxButton;
   
   @FXML
   public void pressed() {
@@ -424,10 +427,8 @@ public class ControllerFXEditor {
     if (currentTool != null) {
       switch (currentTool) {
         case QUESTION_AREA:
-          int _questionId = this.editor.getPresenter().getQuestionId();
-          String _plus = ("Question " + Integer.valueOf(_questionId));
           int _currentPdfPageNumber = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
-          _switchResult = new Box(_plus, _currentPdfPageNumber, Box.BoxType.QUESTION, x, y);
+          _switchResult = new Box("Question temp", _currentPdfPageNumber, Box.BoxType.QUESTION, x, y);
           break;
         case ID_AREA:
           int _currentPdfPageNumber_1 = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
@@ -508,7 +509,8 @@ public class ControllerFXEditor {
       lb.setAddGradeItemAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
-          final GradeItemHBox item = new GradeItemHBox();
+          int _boxId = box.getBoxId();
+          final GradeItemHBox item = new GradeItemHBox(_boxId);
           ControllerFXEditor.this.addGradeItem(item);
           box.addGradeItem(item);
           item.setRemoveGradeItemAction(new EventHandler<ActionEvent>() {
@@ -566,22 +568,19 @@ public class ControllerFXEditor {
     this.editor.getPresenter().getPresenterQuestionZone().resizeQuestion(box.getBoxId(), this.convertToRelative(box.getHeight(), this.maxY), this.convertToRelative(box.getWidth(), this.maxX));
   }
   
-  public int addGradeItem(final GradeItemHBox item) {
-    return item.setGradeItemId(this.editor.getPresenter().addGradeItem(item.getGradeItemName(), Double.parseDouble(item.getGradeItemPoints())));
+  public void addGradeItem(final GradeItemHBox item) {
+    item.setGradeItemId(this.editor.getPresenter().getPresenterMarkingScheme().addEntry(item.getGradeQuestionId(), item.getGradeItemName(), Float.parseFloat(item.getGradeItemPoints())));
+    this.logger.warn(Integer.valueOf(item.getGradeItemId()));
   }
   
-  public Object updateGradeItem(final GradeItemHBox item) {
-    Object _xblockexpression = null;
-    {
-      item.setGradeItemName(item.getNameFieldText());
-      item.setGradeItemPoints(item.getPointFieldText());
-      _xblockexpression = this.editor.getPresenter().updateGradeItem(item.getGradeItemId(), item.getGradeItemName(), Double.parseDouble(item.getGradeItemPoints()));
-    }
-    return _xblockexpression;
+  public void updateGradeItem(final GradeItemHBox item) {
+    item.setGradeItemName(item.getNameFieldText());
+    item.setGradeItemPoints(item.getPointFieldText());
+    this.editor.getPresenter().getPresenterMarkingScheme().modifyEntry(item.getGradeQuestionId(), item.getGradeItemId(), item.getGradeItemName(), Float.parseFloat(item.getGradeItemPoints()));
   }
   
-  public Object removeGradeItem(final GradeItemHBox item) {
-    return this.editor.getPresenter().removeGradeItem(item.getGradeItemId());
+  public boolean removeGradeItem(final GradeItemHBox item) {
+    return this.editor.getPresenter().getPresenterMarkingScheme().removeEntry(item.getGradeQuestionId(), item.getGradeItemId());
   }
   
   /**
@@ -595,10 +594,6 @@ public class ControllerFXEditor {
     this.boxes.remove(box);
     this.editor.removeBox(box);
     this.setToNoTool();
-  }
-  
-  public Object changePoints(final Box box, final String points) {
-    return null;
   }
   
   public int addBoxModel(final Box box) {
@@ -628,6 +623,7 @@ public class ControllerFXEditor {
       if ((file != null)) {
         boolean _xblockexpression_1 = false;
         {
+          this.clearVue();
           this.editor.getPresenter().getPresenterPdf().create(file);
           _xblockexpression_1 = this.renderDocument();
         }
@@ -676,6 +672,7 @@ public class ControllerFXEditor {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
+      this.clearVue();
       this.editor.getPresenter().load(file.getPath());
       this.renderDocument();
       this.loadBoxes();
@@ -811,5 +808,18 @@ public class ControllerFXEditor {
   
   public double convertToRelative(final double relative, final double to) {
     return (relative / to);
+  }
+  
+  public void clearVue() {
+    this.boxes.clear();
+    ObservableList<ListViewBox> _items = this.questionList.getItems();
+    for (final ListViewBox n : _items) {
+      {
+        this.mainPane.getChildren().remove(n.getParentBox());
+        this.mainPane.getChildren().remove(n.getParentBox().getText());
+        this.boxes.remove(n.getParentBox());
+      }
+    }
+    this.questionList.getItems().clear();
   }
 }

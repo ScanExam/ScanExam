@@ -89,16 +89,4 @@ public class EditorPresenter implements Presenter {
   public int getQuestionId() {
     return this.service.getQuestionId();
   }
-  
-  public int addGradeItem(final String name, final double points) {
-    return 0;
-  }
-  
-  public Object updateGradeItem(final int gradeItemId, final String name, final double points) {
-    return null;
-  }
-  
-  public Object removeGradeItem(final int gradeItemId) {
-    return null;
-  }
 }

@@ -114,4 +114,9 @@ public class PresenterPdf {
     Objects.<File>requireNonNull(file);
     ((ExamEditionService) this.service).create(file);
   }
+  
+  public boolean atCorrectPage(final int page) {
+    int _currentPageNumber = this.service.getCurrentPageNumber();
+    return (page == _currentPageNumber);
+  }
 }

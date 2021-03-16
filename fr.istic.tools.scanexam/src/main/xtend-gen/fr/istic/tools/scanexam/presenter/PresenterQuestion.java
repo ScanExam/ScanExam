@@ -62,15 +62,22 @@ public class PresenterQuestion {
   /**
    * @return next question
    */
-  public int getNextQuestion(final int question) {
-    return 0;
+  public int nextQuestion() {
+    return this.service.nextQuestion();
   }
   
   /**
    * @param question is the actual question
-   * @return previous question
    */
-  public int getPreviousQuestion(final int question) {
-    return 0;
+  public int previousQuestion() {
+    return this.service.previousQuestion();
+  }
+  
+  public int nextStudent() {
+    return this.service.nextStudent();
+  }
+  
+  public int previousStudent() {
+    return this.service.previousStudent();
   }
 }

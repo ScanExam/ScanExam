@@ -17,4 +17,12 @@ public class StudentItem extends VBox {
     Label _label = new Label(_plus);
     _children.add(_label);
   }
+  
+  public int setStudentId(final int id) {
+    return this.studentId = id;
+  }
+  
+  public int getStudentId() {
+    return this.studentId;
+  }
 }

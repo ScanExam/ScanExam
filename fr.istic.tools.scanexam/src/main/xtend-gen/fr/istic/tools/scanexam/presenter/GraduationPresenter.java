@@ -86,21 +86,6 @@ public class GraduationPresenter implements Presenter {
     return this.presPdf;
   }
   
-  /**
-   * @return next question
-   */
-  public int getNextQuestion(final int question) {
-    return this.presQuestion.getNextQuestion(question);
-  }
-  
-  /**
-   * @param question is the actual question
-   * @return previous question
-   */
-  public int getPreviousQuestion(final int question) {
-    return this.presQuestion.getPreviousQuestion(question);
-  }
-  
   public void openEditionTemplate(final String path) {
     this.service.openCreationTemplate(path);
   }

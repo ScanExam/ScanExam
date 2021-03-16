@@ -13,7 +13,7 @@ import javafx.scene.layout.Pane;
 
 @SuppressWarnings("all")
 public class GradeItemHBox extends HBox {
-  public GradeItemHBox() {
+  public GradeItemHBox(final int questionId) {
     super();
     Pane p1 = new Pane();
     p1.setMaxWidth(50);
@@ -21,6 +21,7 @@ public class GradeItemHBox extends HBox {
     p2.setMaxWidth(50);
     this.getChildren().add(p1);
     this.getChildren().add(p2);
+    this.questionId = questionId;
     Button _button = new Button("-");
     this.remove = _button;
     this.getChildren().add(this.remove);
@@ -40,6 +41,8 @@ public class GradeItemHBox extends HBox {
     p2.getChildren().addAll(this.field, this.label);
   }
   
+  private int questionId;
+  
   private int gradeItemId;
   
   private Button remove;
@@ -58,6 +61,10 @@ public class GradeItemHBox extends HBox {
   
   public void setButtonAction(final EventHandler<ActionEvent> handler) {
     this.remove.setOnAction(handler);
+  }
+  
+  public int getGradeQuestionId() {
+    return this.questionId;
   }
   
   public int getGradeItemId() {

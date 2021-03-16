@@ -148,7 +148,7 @@ public class ListViewBox extends VBox {
   }
   
   public String getName() {
-    return this.field.getText();
+    return this.nameLabel.getText();
   }
   
   public void toggleRenaming() {

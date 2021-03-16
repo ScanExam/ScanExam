@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX;
+import fr.istic.tools.scanexam.view.fX.Grader;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
 import fr.istic.tools.scanexam.view.fX.QuestionItem;
 import fr.istic.tools.scanexam.view.fX.StudentItem;
@@ -70,6 +71,8 @@ public class ControllerFXCorrector {
   public GraduationAdapterFX getAdapterCorrection() {
     return this.corrector;
   }
+  
+  private Grader grader;
   
   private boolean botShow = false;
   
@@ -240,13 +243,13 @@ public class ControllerFXCorrector {
   
   private double maxY;
   
-  private QuestionItem currentQuestion;
-  
   private int currentQuestionIndex = 0;
   
-  private StudentItem currentStudent;
-  
   private int currentStudentIndex = 0;
+  
+  private double imageWidth;
+  
+  private double imageHeight;
   
   public void chooseMouseAction(final MouseEvent e) {
     MouseButton _button = e.getButton();
@@ -386,10 +389,10 @@ public class ControllerFXCorrector {
             this.prevQuestionPressed();
             break;
           case UP:
-            this.nextStudentPressed();
+            this.prevStudentPressed();
             break;
           case DOWN:
-            this.prevStudentPressed();
+            this.nextStudentPressed();
             break;
           default:
             ControllerFXCorrector.logger.warn("Key not supported.");
@@ -485,6 +488,7 @@ public class ControllerFXCorrector {
       this.renderStudentCopy();
       this.loadQuestions();
       this.loadStudents();
+      this.postLoad();
     } else {
       ControllerFXCorrector.logger.warn("File not chosen");
     }
@@ -511,19 +515,33 @@ public class ControllerFXCorrector {
   }
   
   public void loadQuestions() {
+    Grader _grader = new Grader();
+    this.grader = _grader;
+    this.questionDetails.getChildren().add(this.grader);
     for (int p = 0; (p < this.corrector.getPresenter().getTemplatePageAmount()); p++) {
       {
         LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
         for (final int i : ids) {
           {
             QuestionItem question = new QuestionItem();
-            question.setX(this.corrector.getPresenter().questionX(i));
-            question.setY(this.corrector.getPresenter().questionY(i));
-            question.setH(this.corrector.getPresenter().questionHeight(i));
-            question.setW(this.corrector.getPresenter().questionWidth(i));
+            double _questionX = this.corrector.getPresenter().questionX(i);
+            double _multiply = (_questionX * this.imageWidth);
+            question.setX(_multiply);
+            double _questionY = this.corrector.getPresenter().questionY(i);
+            double _multiply_1 = (_questionY * this.imageHeight);
+            question.setY(_multiply_1);
+            double _questionHeight = this.corrector.getPresenter().questionHeight(i);
+            double _multiply_2 = (_questionHeight * this.imageHeight);
+            question.setH(_multiply_2);
+            double _questionWidth = this.corrector.getPresenter().questionWidth(i);
+            double _multiply_3 = (_questionWidth * this.imageWidth);
+            question.setW(_multiply_3);
+            question.setPage(p);
             question.setQuestionId(i);
             question.setName(this.corrector.getPresenter().questionName(i));
             this.rightList.getItems().add(question);
+            this.grader.add("test1", "1", 1, i);
+            this.grader.add("test1", "1", 2, i);
           }
         }
       }
@@ -539,29 +557,46 @@ public class ControllerFXCorrector {
     }
   }
   
+  public void postLoad() {
+    this.currentQuestionIndex = 0;
+    this.leftList.getSelectionModel().select(0);
+    this.rightList.getSelectionModel().select(0);
+    LinkedList<Integer> list = new LinkedList<Integer>();
+    list.add(Integer.valueOf(1));
+    this.grader.display(this.rightList.getItems().get(this.currentQuestionIndex).getQuestionId(), list);
+    this.currentStudentIndex = 0;
+  }
+  
   public void renderStudentCopy() {
     BufferedImage image = this.corrector.getPresenter().getPresenterPdf().getCurrentPdfPage();
     this.imview.setImage(SwingFXUtils.toFXImage(image, null));
     this.pdfLoaded = true;
+    this.imageWidth = image.getWidth();
+    this.imageHeight = image.getHeight();
   }
   
   public void renderCorrectedCopy() {
   }
   
   public void nextStudent() {
+    this.currentStudentIndex++;
     int _size = this.leftList.getItems().size();
-    int _modulo = ((this.currentStudentIndex + 1) % _size);
-    this.currentStudentIndex = _modulo;
+    boolean _greaterEqualsThan = (this.currentStudentIndex >= _size);
+    if (_greaterEqualsThan) {
+      int _size_1 = this.leftList.getItems().size();
+      int _minus = (_size_1 - 1);
+      this.currentStudentIndex = _minus;
+    }
+    this.corrector.getPresenter().getPresenterQuestion().nextStudent();
     this.setSelectedStudent();
   }
   
   public void previousStudent() {
     this.currentStudentIndex--;
     if ((this.currentStudentIndex < 0)) {
-      int _size = this.leftList.getItems().size();
-      int _minus = (_size - 1);
-      this.currentStudentIndex = _minus;
+      this.currentStudentIndex = 0;
     }
+    this.corrector.getPresenter().getPresenterQuestion().previousStudent();
     this.setSelectedStudent();
   }
   
@@ -571,23 +606,29 @@ public class ControllerFXCorrector {
   }
   
   public void setSelectedStudent() {
-    this.currentStudent = this.leftList.getItems().get(this.currentStudentIndex);
     this.leftList.getSelectionModel().select(this.currentStudentIndex);
+    LinkedList<Integer> list = new LinkedList<Integer>();
+    list.add(Integer.valueOf(1));
+    this.grader.display(this.rightList.getItems().get(this.currentQuestionIndex).getQuestionId(), list);
+    this.display();
   }
   
   public void nextQuestion() {
+    this.currentQuestionIndex++;
     int _size = this.rightList.getItems().size();
-    int _modulo = ((this.currentQuestionIndex + 1) % _size);
-    this.currentQuestionIndex = _modulo;
+    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
+    if (_greaterEqualsThan) {
+      int _size_1 = this.rightList.getItems().size();
+      int _minus = (_size_1 - 1);
+      this.currentQuestionIndex = _minus;
+    }
     this.setSelectedQuestion();
   }
   
   public void previousQuestion() {
     this.currentQuestionIndex--;
     if ((this.currentQuestionIndex < 0)) {
-      int _size = this.rightList.getItems().size();
-      int _minus = (_size - 1);
-      this.currentQuestionIndex = _minus;
+      this.currentQuestionIndex = 0;
     }
     this.setSelectedQuestion();
   }
@@ -598,8 +639,9 @@ public class ControllerFXCorrector {
   }
   
   public void setSelectedQuestion() {
-    this.currentQuestion = this.rightList.getItems().get(this.currentQuestionIndex);
     this.rightList.getSelectionModel().select(this.currentQuestionIndex);
+    this.display();
+    this.displayQuestion();
   }
   
   public void setZoomArea(final int x, final int y, final int height, final int width) {
@@ -607,7 +649,24 @@ public class ControllerFXCorrector {
     this.imview.setViewport(_rectangle2D);
   }
   
-  public void checkPage() {
+  public void display() {
+    int i = this.corrector.getPresenter().getAbsolutePage(this.leftList.getItems().get(this.currentStudentIndex).getStudentId(), this.rightList.getItems().get(this.currentQuestionIndex).getPage());
+    boolean _atCorrectPage = this.corrector.getPresenter().getPresenterPdf().atCorrectPage(i);
+    boolean _not = (!_atCorrectPage);
+    if (_not) {
+      ControllerFXCorrector.logger.warn("changing Page");
+      this.selectPage(this.corrector.getPresenter().getAbsolutePage(this.leftList.getItems().get(this.currentStudentIndex).getStudentId(), this.rightList.getItems().get(this.currentQuestionIndex).getPage()));
+    }
+  }
+  
+  public void setZoomArea(final double x, final double y, final double width, final double height) {
+    Rectangle2D _rectangle2D = new Rectangle2D(x, y, width, height);
+    this.imview.setViewport(_rectangle2D);
+    ControllerFXCorrector.logger.warn(this.imview.getViewport());
+  }
+  
+  public void displayQuestion() {
+    this.setZoomArea(this.rightList.getItems().get(this.currentQuestionIndex).getX(), this.rightList.getItems().get(this.currentQuestionIndex).getY(), this.rightList.getItems().get(this.currentQuestionIndex).getW(), this.rightList.getItems().get(this.currentQuestionIndex).getH());
   }
   
   public void setGrade(final int studentId, final int questionId, final float grade) {
@@ -615,16 +674,16 @@ public class ControllerFXCorrector {
   
   public void nextPage() {
     this.corrector.getPresenter().getPresenterPdf().nextPdfPage();
-    this.renderCorrectedCopy();
+    this.renderStudentCopy();
   }
   
   public void previousPage() {
     this.corrector.getPresenter().getPresenterPdf().previousPdfPage();
-    this.renderCorrectedCopy();
+    this.renderStudentCopy();
   }
   
   public void selectPage(final int pageNumber) {
     this.corrector.getPresenter().getPresenterPdf().goToPage(pageNumber);
-    this.renderCorrectedCopy();
+    this.renderStudentCopy();
   }
 }
