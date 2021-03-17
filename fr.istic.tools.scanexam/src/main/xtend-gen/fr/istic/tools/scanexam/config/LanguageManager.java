@@ -6,14 +6,17 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
@@ -109,10 +112,8 @@ public class LanguageManager {
     int _size = LanguageManager.locales.size();
     boolean _greaterThan_1 = (_size > 0);
     if (_greaterThan_1) {
-      final Function<Locale, String> _function = new Function<Locale, String>() {
-        public String apply(final Locale l) {
-          return l.getDisplayName();
-        }
+      final Function<Locale, String> _function = (Locale l) -> {
+        return l.getDisplayName();
       };
       String _collect = LanguageManager.locales.stream().<String>map(_function).collect(Collectors.joining(", "));
       String _plus_1 = (_collect + " pre-loaded.");
@@ -153,10 +154,44 @@ public class LanguageManager {
    * @throw NullPointerException si <b>language<b/> est null
    */
   private static void change(final Locale language) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field displayNameÂ is undefined for the type Locale"
-      + "\nThe method or field displayNameÂ is undefined for the type Locale"
-      + "\nThe method or field displayNameÂ is undefined for the type Locale");
+    Objects.<Locale>requireNonNull(language);
+    Locale _xifexpression = null;
+    boolean _contains = LanguageManager.locales.contains(language);
+    if (_contains) {
+      _xifexpression = language;
+    } else {
+      final Function1<Locale, Boolean> _function = (Locale l) -> {
+        return Boolean.valueOf(l.getLanguage().equals(language.getLanguage()));
+      };
+      _xifexpression = IterableExtensions.<Locale>findFirst(LanguageManager.locales, _function);
+    }
+    final Locale newLocale = _xifexpression;
+    Locale _xifexpression_1 = null;
+    if ((newLocale == null)) {
+      _xifexpression_1 = Locale.getDefault();
+    } else {
+      _xifexpression_1 = newLocale;
+    }
+    LanguageManager.currentLocale = _xifexpression_1;
+    boolean _equals = LanguageManager.currentLocale.equals(language);
+    boolean _not = (!_equals);
+    if (_not) {
+      StringConcatenation _builder = new StringConcatenation();
+      String _displayName = language.getDisplayName();
+      _builder.append(_displayName);
+      _builder.append(" is not supported, fallback to ");
+      String _displayName_1 = LanguageManager.currentLocale.getDisplayName();
+      _builder.append(_displayName_1);
+      _builder.append(".");
+      LanguageManager.logger.info(_builder);
+    }
+    LanguageManager.currentBundle = ResourceBundle.getBundle((LanguageManager.path + LanguageManager.prefixFileName), LanguageManager.currentLocale, ResourcesUtils.class.getClassLoader());
+    StringConcatenation _builder_1 = new StringConcatenation();
+    _builder_1.append("Change language to ");
+    String _displayName_2 = LanguageManager.currentLocale.getDisplayName();
+    _builder_1.append(_displayName_2);
+    _builder_1.append(".");
+    LanguageManager.logger.info(_builder_1);
   }
   
   /**

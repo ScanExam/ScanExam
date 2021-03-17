@@ -141,6 +141,7 @@ public class EditorQuestionItem extends VBox {
     MenuItem menuItem1 = new MenuItem("Rename Question Item");
     menu.getItems().add(menuItem1);
     menuItem1.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         EditorQuestionItem.this.setNameEditable();
       }
@@ -149,17 +150,20 @@ public class EditorQuestionItem extends VBox {
   
   public void setupEvents(final EditorQuestionItem item) {
     this.remove.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         EditorQuestionItem.this.list.removeQuestion(item);
         EditorQuestionItem.this.list.getController().selectQuestion(null);
       }
     });
     this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
       public void handle(final MouseEvent event) {
         EditorQuestionItem.this.list.getController().selectQuestion(item);
       }
     });
     this.name.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         EditorQuestionItem.this.commitNameChange();
       }

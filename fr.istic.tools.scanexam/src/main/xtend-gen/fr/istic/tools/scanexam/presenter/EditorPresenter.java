@@ -64,10 +64,12 @@ public class EditorPresenter implements Presenter {
   /**
    * @return current {@link PresenterMarkingScheme}
    */
+  @Override
   public PresenterMarkingScheme getPresenterMarkingScheme() {
     return this.presMarkingScheme;
   }
   
+  @Override
   public PresenterPdf getPresenterPdf() {
     return this.presPdf;
   }

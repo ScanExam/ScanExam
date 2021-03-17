@@ -69,6 +69,7 @@ public class SendMailTls {
       props.put("mail.smtp.host", HOST);
       props.put("mail.smtp.port", PORT);
       final Session session = Session.getInstance(props, new Authenticator() {
+        @Override
         protected PasswordAuthentication getPasswordAuthentication() {
           return new PasswordAuthentication(sender, senderPassword);
         }

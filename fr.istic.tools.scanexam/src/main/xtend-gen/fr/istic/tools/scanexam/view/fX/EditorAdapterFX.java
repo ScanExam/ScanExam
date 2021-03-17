@@ -10,6 +10,7 @@ public class EditorAdapterFX implements EditorAdapter {
   
   private ControllerFXEditor controller;
   
+  @Override
   public void setPresenter(final EditorPresenter presenter) {
     this.presenter = presenter;
   }
@@ -18,6 +19,7 @@ public class EditorAdapterFX implements EditorAdapter {
     this.controller = controller;
   }
   
+  @Override
   public EditorPresenter getPresenter() {
     return this.presenter;
   }

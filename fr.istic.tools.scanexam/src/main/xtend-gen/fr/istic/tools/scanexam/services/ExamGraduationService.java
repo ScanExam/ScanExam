@@ -29,46 +29,21 @@ import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
 public class ExamGraduationService extends Service {
-  /**
-   * La page actuelle de l'examen
-   */
   private int currentSheetIndex;
   
-  /**
-   * Question actuelle.
-   */
   private int currentQuestionIndex;
   
-  /**
-   * Liste des copies visible.
-   */
   @Accessors
   private Collection<StudentSheet> studentSheets;
   
-  /**
-   * Fichier du template de l'édition d'examen (Fichier de méta données sur le sujet d'examen)
-   */
   private CreationTemplate creationTemplate;
   
-  /**
-   * Fichier du template de correction d'examen
-   * (Fichier de méta données sur les corrections de copies déja effectués)
-   */
   private CorrectionTemplate correctionTemplate;
   
-  /**
-   * Sauvegarde le fichier de correction d'examen sur le disque.
-   * @params path L'emplacement de sauvegarde du fichier.
-   */
-  public Object saveCorrectionTemplate(final String path) {
-    return null;
+  @Override
+  public void save(final String path) {
   }
   
-  /**
-   * Charge un fichier de correction d'examen a partir du disque.
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
-   */
   public boolean openCorrectionTemplate(final String xmiFile) {
     final Optional<CorrectionTemplate> correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile);
     boolean _isPresent = correctionTemplate.isPresent();
@@ -80,11 +55,6 @@ public class ExamGraduationService extends Service {
     return false;
   }
   
-  /**
-   * Charge un fichier d'edition d'examen a partir du disque.
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
-   */
   public boolean openCreationTemplate(final String xmiFile) {
     final Optional<CreationTemplate> editionTemplate = TemplateIO.loadCreationTemplate(xmiFile);
     boolean _isPresent = editionTemplate.isPresent();
@@ -96,11 +66,6 @@ public class ExamGraduationService extends Service {
     return false;
   }
   
-  /**
-   * Charge le document PDF des copies manuscrites,  corrigés
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
-   */
   public boolean openCorrectionPdf(final String path) {
     try {
       File _file = new File(path);
@@ -110,12 +75,8 @@ public class ExamGraduationService extends Service {
       pdfReader.readPDf();
       this.studentSheets = pdfReader.getCompleteStudentSheets();
       return true;
-    } catch (final Throwable _t) {
-      if (_t instanceof Exception) {
-        return false;
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
   }
   
@@ -134,11 +95,9 @@ public class ExamGraduationService extends Service {
   }
   
   public int getAbsolutePageNumber(final int studentId, final int offset) {
-    final Function1<StudentSheet, Boolean> _function = new Function1<StudentSheet, Boolean>() {
-      public Boolean apply(final StudentSheet x) {
-        int _id = x.getId();
-        return Boolean.valueOf((_id == studentId));
-      }
+    final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
+      int _id = x.getId();
+      return Boolean.valueOf((_id == studentId));
     };
     final Integer pageId = IterableExtensions.<StudentSheet>findFirst(this.studentSheets, _function).getPosPage().get(0);
     return ((pageId).intValue() + offset);
@@ -178,11 +137,9 @@ public class ExamGraduationService extends Service {
   }
   
   public Question getCurrentQuestion() {
-    final Function1<Question, Boolean> _function = new Function1<Question, Boolean>() {
-      public Boolean apply(final Question x) {
-        int _id = x.getId();
-        return Boolean.valueOf((_id == ExamGraduationService.this.currentQuestionIndex));
-      }
+    final Function1<Question, Boolean> _function = (Question x) -> {
+      int _id = x.getId();
+      return Boolean.valueOf((_id == this.currentQuestionIndex));
     };
     return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
   }
@@ -229,11 +186,9 @@ public class ExamGraduationService extends Service {
   public boolean addGradeEntry(final int questionId, final int gradeEntryId) {
     boolean _xblockexpression = false;
     {
-      final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
-        public Boolean apply(final GradeEntry entry) {
-          int _id = entry.getId();
-          return Boolean.valueOf((_id == gradeEntryId));
-        }
+      final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
+        int _id = entry.getId();
+        return Boolean.valueOf((_id == gradeEntryId));
       };
       final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
       _xblockexpression = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries().add(gradeEntry);
@@ -250,11 +205,9 @@ public class ExamGraduationService extends Service {
     boolean _xblockexpression = false;
     {
       final EList<GradeEntry> entries = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries();
-      final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
-        public Boolean apply(final GradeEntry entry) {
-          int _id = entry.getId();
-          return Boolean.valueOf((_id == gradeEntryId));
-        }
+      final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
+        int _id = entry.getId();
+        return Boolean.valueOf((_id == gradeEntryId));
       };
       final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(entries, _function);
       _xblockexpression = entries.remove(gradeEntry);
@@ -267,10 +220,8 @@ public class ExamGraduationService extends Service {
    * @return une liste d'ID d'entrÃ©es sÃ©lectionnÃ©es dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
    */
   public List<Integer> getQuestionSelectedGradeEntries(final int questionId) {
-    final Function1<GradeEntry, Integer> _function = new Function1<GradeEntry, Integer>() {
-      public Integer apply(final GradeEntry entry) {
-        return Integer.valueOf(entry.getId());
-      }
+    final Function1<GradeEntry, Integer> _function = (GradeEntry entry) -> {
+      return Integer.valueOf(entry.getId());
     };
     return ListExtensions.<GradeEntry, Integer>map((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries(), _function);
   }
@@ -280,10 +231,8 @@ public class ExamGraduationService extends Service {
    * @return une liste d'ID d'entrÃ©es pour la question de l'examen dont l'ID est <i>questionId</i>
    */
   public List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(final int questionId) {
-    final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = new Function1<GradeEntry, Tuple3<Integer, String, Float>>() {
-      public Tuple3<Integer, String, Float> apply(final GradeEntry entry) {
-        return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
-      }
+    final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = (GradeEntry entry) -> {
+      return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
     };
     return ListExtensions.<GradeEntry, Tuple3<Integer, String, Float>>map(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
   }

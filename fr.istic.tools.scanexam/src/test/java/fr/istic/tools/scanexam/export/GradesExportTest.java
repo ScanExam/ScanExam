@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.export;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,6 +45,9 @@ public class GradesExportTest {
 		}
 	}
 	
+	/*
+	 * Méthode à utiliser quand on reviendra sur les tests d'export plus propre
+	 * 	
 	private Object jailBreak(Class<?> clazz, String name, Object[] args, Class<?>[] argClasses) {
 		try {
 			
@@ -57,7 +58,7 @@ public class GradesExportTest {
 			e.printStackTrace();
 			return null;
 		}
-	}
+	}*/
 	
 	@Test
 	@DisplayName("Test de la méthode d'export des notes au format Excel xlsx")

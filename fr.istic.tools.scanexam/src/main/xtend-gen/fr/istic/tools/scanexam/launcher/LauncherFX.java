@@ -33,6 +33,7 @@ public class LauncherFX extends Application implements Launcher {
   /**
    * Classe de lancement de l'application FX
    */
+  @Override
   public void start(final Stage primaryStage) throws Exception {
     final FXMLLoader editorLoader = new FXMLLoader();
     final FXMLLoader graduatorLoader = new FXMLLoader();
@@ -77,6 +78,7 @@ public class LauncherFX extends Application implements Launcher {
   
   private static Scene gScene;
   
+  @Override
   public void launch() {
     EditorAdapterFX _editorAdapterFX = new EditorAdapterFX();
     LauncherFX.edit = _editorAdapterFX;

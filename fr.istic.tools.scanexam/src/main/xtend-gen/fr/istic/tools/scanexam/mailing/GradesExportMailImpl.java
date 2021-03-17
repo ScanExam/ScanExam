@@ -22,6 +22,7 @@ public class GradesExportMailImpl implements GradesExportMail {
     this.service = serv;
   }
   
+  @Override
   public void exportGradesMail(final String user, final String password, final String path) {
     try {
       final SendMailXtend mailSender = new SendMailXtend();

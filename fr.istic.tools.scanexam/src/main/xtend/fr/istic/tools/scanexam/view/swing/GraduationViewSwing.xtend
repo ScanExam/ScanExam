@@ -163,6 +163,67 @@ class GraduationViewSwing {
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
 
+		createTopMenu()
+	
+
+		window.getContentPane().setLayout(new BorderLayout(0, 0))
+		
+		AddTopButtons()
+
+		AddMainPaper()
+
+		renderPdf()
+	}
+	
+	/**
+	 * Ajoute le PDF et le l'énoncé en bas
+	 */
+	def void renderPdf() {
+				pnlPdf = new PdfPanel(this.pdfAdapter)
+		window.getContentPane().add(pnlPdf, BorderLayout.CENTER)
+		pnlPdf.setLayout(new BorderLayout(0, 0))
+
+		pnlDown = new JPanel()
+		pnlPdf.add(pnlDown, BorderLayout.SOUTH)
+		pnlDown.setLayout(new BorderLayout(0, 0))
+
+		btnDown = new JButton("▲")
+
+		
+		var InputStream inputContentDown = ResourcesUtils.getInputStreamResource("logo.png")
+		pnlContentDown = new ImagePanel(inputContentDown)
+		pnlContentDown.setPreferredSize(new Dimension(pnlContentDown.getSize().width, 180))
+
+		// to resize the correction 
+		mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JPanel(), pnlContentDown);
+		pnlDown.add(btnDown, BorderLayout.NORTH)
+
+		pnlQst = new JPanel()
+		window.getContentPane().add(pnlQst, BorderLayout.EAST)
+		pnlQst.setLayout(new BorderLayout(0, 0))
+
+		lblNbQst = new JLabel("Question No.i")
+		lblNbQst.setFont(new Font("Arial", Font.PLAIN, 14))
+		lblNbQst.setHorizontalAlignment(SwingConstants.CENTER)
+		pnlQst.add(lblNbQst, BorderLayout.NORTH)
+
+		txtPnQst = new JTextPane()
+		pnlQst.add(txtPnQst, BorderLayout.CENTER)
+
+		spltPnQst = new JSplitPane()
+		pnlQst.add(spltPnQst, BorderLayout.SOUTH)
+
+		btnPrevQst = new JButton("<")
+		spltPnQst.setLeftComponent(btnPrevQst)
+
+		btnNextQst = new JButton(">")
+		spltPnQst.setRightComponent(btnNextQst)
+	}
+	
+	/**
+	 * Création du menu en haut de page
+	 */
+	def void createTopMenu() {
 		menuBar = new JMenuBar()
 		window.setJMenuBar(menuBar)
 
@@ -177,58 +238,12 @@ class GraduationViewSwing {
 		
 		mnItemSwap = new JMenuItem(LanguageManager.translate("menu.file.switchToEditor"))
 		mnFile.add(mnItemSwap)
+	}
 	
-
-		window.getContentPane().setLayout(new BorderLayout(0, 0))
-		pnlMainBtn = new JPanel()
-		window.getContentPane().add(pnlMainBtn, BorderLayout.NORTH)
-		pnlMainBtn.setLayout(new BoxLayout(pnlMainBtn, BoxLayout.X_AXIS))
-
-		btnMain1 = new JButton("Button")
-		pnlMainBtn.add(btnMain1)
-
-		btnMain2 = new JButton("Button")
-		pnlMainBtn.add(btnMain2)
-
-		var Component hStrtMainBtn1 = Box.createHorizontalStrut(20)
-		pnlMainBtn.add(hStrtMainBtn1)
-
-		btnPen = new JButton("Pen")
-		pnlMainBtn.add(btnPen)
-
-		btnEraser = new JButton("Eraser")
-		pnlMainBtn.add(btnEraser)
-
-		btnStamp = new JButton("Stamp")
-		pnlMainBtn.add(btnStamp)
-
-		btnThicc = new JButton("Thicc")
-		pnlMainBtn.add(btnThicc)
-
-		btnThinn = new JButton("Thinn")
-		pnlMainBtn.add(btnThinn)
-
-		btnMain3 = new JButton("Button")
-		pnlMainBtn.add(btnMain3)
-
-		btnMain4 = new JButton("Button")
-		pnlMainBtn.add(btnMain4)
-
-		btnMain5 = new JButton("Button")
-		pnlMainBtn.add(btnMain5)
-
-		var Component hStrtMainBtn2 = Box.createHorizontalStrut(20)
-		pnlMainBtn.add(hStrtMainBtn2)
-
-		btnSave = new JButton("Save")
-		pnlMainBtn.add(btnSave)
-
-		btnLoad = new JButton("Load")
-		pnlMainBtn.add(btnLoad)
-
-		btnExp = new JButton("Exp")
-		pnlMainBtn.add(btnExp)
-
+	/**
+	 * Ajoute la page contenant le pdf
+	 */
+	def void AddMainPaper() {
 		pnlPaper = new JPanel()
 		window.getContentPane().add(pnlPaper, BorderLayout.WEST)
 		pnlPaper.setLayout(new BorderLayout(0, 0))
@@ -285,49 +300,60 @@ class GraduationViewSwing {
 					nextPage()		
 				}
 		})
+	}
+	
+	/**
+	 * Ajoute les boutons en haut de page
+	 */
+	def void AddTopButtons() {
+		pnlMainBtn = new JPanel()
+		window.getContentPane().add(pnlMainBtn, BorderLayout.NORTH)
+		pnlMainBtn.setLayout(new BoxLayout(pnlMainBtn, BoxLayout.X_AXIS))
 
-		// pnlPdf = new JPanel();
-		pnlPdf = new PdfPanel(this.pdfAdapter)
-		window.getContentPane().add(pnlPdf, BorderLayout.CENTER)
-		pnlPdf.setLayout(new BorderLayout(0, 0))
+		btnMain1 = new JButton("Button")
+		pnlMainBtn.add(btnMain1)
 
-		pnlDown = new JPanel()
-		pnlPdf.add(pnlDown, BorderLayout.SOUTH)
-		pnlDown.setLayout(new BorderLayout(0, 0))
+		btnMain2 = new JButton("Button")
+		pnlMainBtn.add(btnMain2)
 
-		btnDown = new JButton("▲")
+		var Component hStrtMainBtn1 = Box.createHorizontalStrut(20)
+		pnlMainBtn.add(hStrtMainBtn1)
 
-		
+		btnPen = new JButton("Pen")
+		pnlMainBtn.add(btnPen)
 
-		// pnlContentDown = new JPanel();
-		var InputStream inputContentDown = ResourcesUtils.getInputStreamResource("logo.png")
-		pnlContentDown = new ImagePanel(inputContentDown)
-		pnlContentDown.setPreferredSize(new Dimension(pnlContentDown.getSize().width, 180))
+		btnEraser = new JButton("Eraser")
+		pnlMainBtn.add(btnEraser)
 
-		// to resize the correction 
-		mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JPanel(), pnlContentDown);
-		pnlDown.add(btnDown, BorderLayout.NORTH)
+		btnStamp = new JButton("Stamp")
+		pnlMainBtn.add(btnStamp)
 
-		pnlQst = new JPanel()
-		window.getContentPane().add(pnlQst, BorderLayout.EAST)
-		pnlQst.setLayout(new BorderLayout(0, 0))
+		btnThicc = new JButton("Thicc")
+		pnlMainBtn.add(btnThicc)
 
-		lblNbQst = new JLabel("Question No.i")
-		lblNbQst.setFont(new Font("Arial", Font.PLAIN, 14))
-		lblNbQst.setHorizontalAlignment(SwingConstants.CENTER)
-		pnlQst.add(lblNbQst, BorderLayout.NORTH)
+		btnThinn = new JButton("Thinn")
+		pnlMainBtn.add(btnThinn)
 
-		txtPnQst = new JTextPane()
-		pnlQst.add(txtPnQst, BorderLayout.CENTER)
+		btnMain3 = new JButton("Button")
+		pnlMainBtn.add(btnMain3)
 
-		spltPnQst = new JSplitPane()
-		pnlQst.add(spltPnQst, BorderLayout.SOUTH)
+		btnMain4 = new JButton("Button")
+		pnlMainBtn.add(btnMain4)
 
-		btnPrevQst = new JButton("<")
-		spltPnQst.setLeftComponent(btnPrevQst)
+		btnMain5 = new JButton("Button")
+		pnlMainBtn.add(btnMain5)
 
-		btnNextQst = new JButton(">")
-		spltPnQst.setRightComponent(btnNextQst)
+		var Component hStrtMainBtn2 = Box.createHorizontalStrut(20)
+		pnlMainBtn.add(hStrtMainBtn2)
+
+		btnSave = new JButton("Save")
+		pnlMainBtn.add(btnSave)
+
+		btnLoad = new JButton("Load")
+		pnlMainBtn.add(btnLoad)
+
+		btnExp = new JButton("Exp")
+		pnlMainBtn.add(btnExp)
 	}
 
 	/** 
@@ -349,10 +375,11 @@ class GraduationViewSwing {
 	 */
 	def void previousPage(){
 		pdfAdapter.presenterPdf.getPresenterPdf().previousPdfPage;
-	}/** 
+	}
+	
+	/** 
 	 * Naviguer vers next page
 	 */
-	
 	def void nextPage(){
 		pdfAdapter.presenterPdf.getPresenterPdf().nextPdfPage;
 	}
@@ -364,6 +391,10 @@ class GraduationViewSwing {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Retourne la fenêtre d'examen
+	 * @return window
+	 */
 	def JFrame getWindow() {
 		return window;
 	}
@@ -384,14 +415,26 @@ class GraduationViewSwing {
 		return mnItemSession;
 	}
 	
+	/**
+	 * Retourne le bouton pour voir l'énoncé
+	 * @return btnDown
+	 */
 	def JButton getBtnDown() {
 		return btnDown
 	}
 	
+	/**
+	 * Retourne le Panel qui affiche l'énoncé
+	 * @return pnlDown
+	 */
 	def JPanel getPnlDown() {
-		return pnlDown
-		
-		}
+		return pnlDown	
+	}
+	
+	/**
+	 * Retourne le item de menu pour swap le mode (création/correction)
+	 * @return mnItemSwap
+	 */
 	def JMenuItem getMnItemSwap() {
 		return mnItemSwap;
 	}

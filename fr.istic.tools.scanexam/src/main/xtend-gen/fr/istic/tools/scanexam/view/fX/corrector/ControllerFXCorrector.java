@@ -379,64 +379,60 @@ public class ControllerFXCorrector {
   }
   
   public void binds(final Node n) {
-    final EventHandler<KeyEvent> _function = new EventHandler<KeyEvent>() {
-      public void handle(final KeyEvent event) {
-        KeyCode _code = event.getCode();
-        if (_code != null) {
-          switch (_code) {
-            case RIGHT:
-              ControllerFXCorrector.this.nextQuestionPressed();
-              break;
-            case LEFT:
-              ControllerFXCorrector.this.prevQuestionPressed();
-              break;
-            case UP:
-              ControllerFXCorrector.this.prevStudentPressed();
-              break;
-            case DOWN:
-              ControllerFXCorrector.this.nextStudentPressed();
-              break;
-            default:
-              ControllerFXCorrector.logger.warn("Key not supported.");
-              break;
-          }
-        } else {
-          ControllerFXCorrector.logger.warn("Key not supported.");
+    final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
+      KeyCode _code = event.getCode();
+      if (_code != null) {
+        switch (_code) {
+          case RIGHT:
+            this.nextQuestionPressed();
+            break;
+          case LEFT:
+            this.prevQuestionPressed();
+            break;
+          case UP:
+            this.prevStudentPressed();
+            break;
+          case DOWN:
+            this.nextStudentPressed();
+            break;
+          default:
+            ControllerFXCorrector.logger.warn("Key not supported.");
+            break;
         }
-        event.consume();
+      } else {
+        ControllerFXCorrector.logger.warn("Key not supported.");
       }
+      event.consume();
     };
     n.setOnKeyPressed(_function);
   }
   
   public void setKeybinds() {
     Scene s = this.mainPane.getScene();
-    final EventHandler<KeyEvent> _function = new EventHandler<KeyEvent>() {
-      public void handle(final KeyEvent event) {
-        KeyCode _code = event.getCode();
-        if (_code != null) {
-          switch (_code) {
-            case RIGHT:
-              ControllerFXCorrector.this.nextQuestionPressed();
-              break;
-            case LEFT:
-              ControllerFXCorrector.this.prevQuestionPressed();
-              break;
-            case UP:
-              ControllerFXCorrector.this.nextStudentPressed();
-              break;
-            case DOWN:
-              ControllerFXCorrector.this.prevStudentPressed();
-              break;
-            default:
-              ControllerFXCorrector.logger.warn("Key not supported.");
-              break;
-          }
-        } else {
-          ControllerFXCorrector.logger.warn("Key not supported.");
+    final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
+      KeyCode _code = event.getCode();
+      if (_code != null) {
+        switch (_code) {
+          case RIGHT:
+            this.nextQuestionPressed();
+            break;
+          case LEFT:
+            this.prevQuestionPressed();
+            break;
+          case UP:
+            this.nextStudentPressed();
+            break;
+          case DOWN:
+            this.prevStudentPressed();
+            break;
+          default:
+            ControllerFXCorrector.logger.warn("Key not supported.");
+            break;
         }
-        event.consume();
+      } else {
+        ControllerFXCorrector.logger.warn("Key not supported.");
       }
+      event.consume();
     };
     s.setOnKeyPressed(_function);
     this.binds(this.scrollMain);

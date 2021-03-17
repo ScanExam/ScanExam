@@ -24,18 +24,17 @@ public class LauncherSwing implements Launcher {
   /**
    * Lancement de l'application Swing
    */
+  @Override
   public void launch() {
-    final Runnable _function = new Runnable() {
-      public void run() {
-        try {
-          PresenterBindings.linkEditorPresenter(LauncherSwing.edit);
-        } catch (final Throwable _t) {
-          if (_t instanceof Exception) {
-            final Exception e = (Exception)_t;
-            e.printStackTrace();
-          } else {
-            throw Exceptions.sneakyThrow(_t);
-          }
+    final Runnable _function = () -> {
+      try {
+        PresenterBindings.linkEditorPresenter(LauncherSwing.edit);
+      } catch (final Throwable _t) {
+        if (_t instanceof Exception) {
+          final Exception e = (Exception)_t;
+          e.printStackTrace();
+        } else {
+          throw Exceptions.sneakyThrow(_t);
         }
       }
     };

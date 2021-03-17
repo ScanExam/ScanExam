@@ -57,6 +57,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     this.sheets = _hashSet;
   }
   
+  @Override
   public boolean readPDf() {
     try {
       final PDDocument doc = PDDocument.load(this.pdfFile);
@@ -163,10 +164,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   public Set<Copie> getCompleteCopies() {
     Set<Copie> completeCopies = new HashSet<Copie>();
-    final Predicate<Copie> _function = new Predicate<Copie>() {
-      public boolean test(final Copie copie) {
-        return copie.isCopyComplete(PdfReaderQrCodeImpl.this.nbPagesInSheet);
-      }
+    final Predicate<Copie> _function = (Copie copie) -> {
+      return copie.isCopyComplete(this.nbPagesInSheet);
     };
     completeCopies = this.sheets.stream().filter(_function).collect(Collectors.<Copie>toSet());
     return completeCopies;
@@ -217,6 +216,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return this.sheets;
   }
   
+  @Override
   public Collection<StudentSheet> getCompleteStudentSheets() {
     final Set<StudentSheet> res = new HashSet<StudentSheet>();
     Set<Copie> temp = new HashSet<Copie>();
@@ -244,6 +244,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return res;
   }
   
+  @Override
   public Collection<StudentSheet> getUncompleteStudentSheets() {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
@@ -252,6 +253,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return null;
   }
   
+  @Override
   public int getNbPagesPdf() {
     try {
       final PDDocument doc = PDDocument.load(this.pdfFile);
@@ -263,6 +265,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     }
   }
   
+  @Override
   public int getNbPagesTreated() {
     int res = 0;
     int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;

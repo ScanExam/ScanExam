@@ -112,6 +112,7 @@ public class GradeList extends VBox {
   
   public void setupEvents(final GradeList list) {
     this.add.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         GradeList.this.newGradeItem();
       }

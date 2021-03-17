@@ -109,6 +109,7 @@ public class Box extends Rectangle {
   public void setupEvents() {
     Box zone = this;
     zone.setOnMouseMoved(new EventHandler<MouseEvent>() {
+      @Override
       public void handle(final MouseEvent event) {
         boolean _checkOnNorthBorder = Box.this.checkOnNorthBorder(event);
         if (_checkOnNorthBorder) {

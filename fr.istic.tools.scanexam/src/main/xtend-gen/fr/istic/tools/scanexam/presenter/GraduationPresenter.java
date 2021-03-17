@@ -69,6 +69,7 @@ public class GraduationPresenter implements Presenter {
   /**
    * @return current {@link PresenterMarkingScheme}
    */
+  @Override
   public PresenterMarkingScheme getPresenterMarkingScheme() {
     return this.presMarkingScheme;
   }
@@ -80,6 +81,7 @@ public class GraduationPresenter implements Presenter {
     return this.graduationPresenter;
   }
   
+  @Override
   public PresenterPdf getPresenterPdf() {
     return this.presPdf;
   }

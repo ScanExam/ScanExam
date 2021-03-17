@@ -52,6 +52,7 @@ public class PdfPanel extends JPanel {
   /**
    * Affichage graphique
    */
+  @Override
   protected void paintComponent(final Graphics g) {
     super.paintComponent(g);
     Image _pdf = this.adapter.getPdf();

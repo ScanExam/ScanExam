@@ -31,10 +31,8 @@ public class ResourcesUtils {
    * @throw NullPointerException si <b>relativePath</b> est null
    */
   public static String getTextResource(final String relativePath) {
-    final Function<Stream<String>, String> _function = new Function<Stream<String>, String>() {
-      public String apply(final Stream<String> s) {
-        return s.collect(Collectors.joining("\n"));
-      }
+    final Function<Stream<String>, String> _function = (Stream<String> s) -> {
+      return s.collect(Collectors.joining("\n"));
     };
     return ResourcesUtils.getFileLines(relativePath).<String>map(_function).orElse(null);
   }
@@ -45,10 +43,8 @@ public class ResourcesUtils {
    * @throw NullPointerException si <b>relativePath</b> est null
    */
   public static Collection<String> getFolderContentNames(final String relativeFolderPath) {
-    final Function<Stream<String>, Set<String>> _function = new Function<Stream<String>, Set<String>>() {
-      public Set<String> apply(final Stream<String> s) {
-        return s.collect(Collectors.<String>toSet());
-      }
+    final Function<Stream<String>, Set<String>> _function = (Stream<String> s) -> {
+      return s.collect(Collectors.<String>toSet());
     };
     return ResourcesUtils.getFileLines(relativeFolderPath).<Set<String>>map(_function).orElse(null);
   }

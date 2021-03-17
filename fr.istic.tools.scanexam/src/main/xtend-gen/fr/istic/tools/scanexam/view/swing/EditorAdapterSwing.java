@@ -59,6 +59,7 @@ public class EditorAdapterSwing implements EditorAdapter {
   private void addActionListeners() {
     JMenuItem _mnItemNew = this.view.getMnItemNew();
     _mnItemNew.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         try {
           EditorAdapterSwing.this.openPdf();
@@ -69,6 +70,7 @@ public class EditorAdapterSwing implements EditorAdapter {
     });
     JMenuItem _mnItemSave = this.view.getMnItemSave();
     _mnItemSave.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         try {
           EditorAdapterSwing.this.saveXmi();
@@ -79,12 +81,14 @@ public class EditorAdapterSwing implements EditorAdapter {
     });
     JMenuItem _mnItemSwap = this.view.getMnItemSwap();
     _mnItemSwap.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.swapVerGraduation();
       }
     });
     JMenuItem _mnItemLoad = this.view.getMnItemLoad();
     _mnItemLoad.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         try {
           EditorAdapterSwing.this.loadXmi();
@@ -95,24 +99,28 @@ public class EditorAdapterSwing implements EditorAdapter {
     });
     JMenuItem _mnItemClose = this.view.getMnItemClose();
     _mnItemClose.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().close();
       }
     });
     JButton _btnQuestionArea = this.view.getBtnQuestionArea();
     _btnQuestionArea.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         SelectionStateMachine.setState(SelectionStateMachine.CREATE);
       }
     });
     JButton _btnMoveCam = this.view.getBtnMoveCam();
     _btnMoveCam.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         SelectionStateMachine.setState(SelectionStateMachine.IDLE);
       }
     });
     JButton _btnPrev = this.view.getBtnPrev();
     _btnPrev.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().getPresenterPdf().previousPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
@@ -121,6 +129,7 @@ public class EditorAdapterSwing implements EditorAdapter {
     });
     JButton _btnNext = this.view.getBtnNext();
     _btnNext.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         EditorAdapterSwing.this.getPresenter().getPresenterPdf().nextPdfPage();
         EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
@@ -155,6 +164,7 @@ public class EditorAdapterSwing implements EditorAdapter {
         }
         JComboBox<Integer> _cmbBxPage = this.view.getCmbBxPage();
         _cmbBxPage.addActionListener(new ActionListener() {
+          @Override
           public void actionPerformed(final ActionEvent e) {
             EditorAdapterSwing.this.getPresenter().getPresenterPdf().goToPage(EditorAdapterSwing.this.view.getCmbBxPage().getSelectedIndex());
             EditorAdapterSwing.this.adapterPdfAndBox.refreshPdf();
@@ -207,12 +217,14 @@ public class EditorAdapterSwing implements EditorAdapter {
     LauncherSwing.swapToGraduator(this.view);
   }
   
+  @Override
   public void setPresenter(final EditorPresenter presenter) {
     this.editorPresenter = presenter;
     this.adapterPdfAndBox.presenterPdf = presenter;
     this.adapterPdfAndBox.setPresenterQst(presenter.getPresenterQuestionZone());
   }
   
+  @Override
   public EditorPresenter getPresenter() {
     return this.editorPresenter;
   }

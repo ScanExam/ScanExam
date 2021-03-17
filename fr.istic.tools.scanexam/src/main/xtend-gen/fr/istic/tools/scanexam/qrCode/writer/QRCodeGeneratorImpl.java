@@ -11,8 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -60,65 +58,44 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @throws IOException If there is an error writing the data.
    */
   public void createPdfFromImageInAllPages(final String inputFile, final String imagePath, final String outputFile) throws IOException {
-    List<Throwable> _ts = new ArrayList<Throwable>();
-    PDDocument doc = null;
-    try {
-      doc = new Function0<PDDocument>() {
-        public PDDocument apply() {
-          try {
-            File _file = new File(inputFile);
-            return PDDocument.load(_file);
-          } catch (Throwable _e) {
-            throw Exceptions.sneakyThrow(_e);
-          }
+    try (final PDDocument doc = new Function0<PDDocument>() {
+      @Override
+      public PDDocument apply() {
+        try {
+          File _file = new File(inputFile);
+          return PDDocument.load(_file);
+        } catch (Throwable _e) {
+          throw Exceptions.sneakyThrow(_e);
         }
-      }.apply();
+      }
+    }.apply()) {
       final float scale = 0.3f;
       final PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, doc);
       PDPageTree _pages = doc.getPages();
       for (final PDPage page : _pages) {
-        List<Throwable> _ts_1 = new ArrayList<Throwable>();
-        PDPageContentStream contentStream = null;
-        try {
-          contentStream = new Function0<PDPageContentStream>() {
-            public PDPageContentStream apply() {
-              try {
-                return new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, true, 
-                  true);
-              } catch (Throwable _e) {
-                throw Exceptions.sneakyThrow(_e);
-              }
+        try (final PDPageContentStream contentStream = new Function0<PDPageContentStream>() {
+          @Override
+          public PDPageContentStream apply() {
+            try {
+              return new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, true, 
+                true);
+            } catch (Throwable _e) {
+              throw Exceptions.sneakyThrow(_e);
             }
-          }.apply();
+          }
+        }.apply()) {
           int _width = pdImage.getWidth();
           float _multiply = (_width * scale);
           int _height = pdImage.getHeight();
           float _multiply_1 = (_height * scale);
           contentStream.drawImage(pdImage, 0, 0, _multiply, _multiply_1);
-        } finally {
-          if (contentStream != null) {
-            try {
-              contentStream.close();
-            } catch (Throwable _t) {
-              _ts_1.add(_t);
-            }
-          }
-          if(!_ts_1.isEmpty()) throw Exceptions.sneakyThrow(_ts_1.get(0));
         }
       }
       doc.save(outputFile);
-    } finally {
-      if (doc != null) {
-        try {
-          doc.close();
-        } catch (Throwable _t) {
-          _ts.add(_t);
-        }
-      }
-      if(!_ts.isEmpty()) throw Exceptions.sneakyThrow(_ts.get(0));
     }
   }
   
+  @Override
   public void createAllExamCopies(final String inputFile, final int nbCopie) {
     try {
       final String base = inputFile.substring(0, inputFile.lastIndexOf("."));
@@ -219,34 +196,23 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       this.generateQRCodeImage(stringAEncoder, 350, 350, pathImage);
       final PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc);
       final float scale = 0.3f;
-      List<Throwable> _ts = new ArrayList<Throwable>();
-      PDPageContentStream contentStream = null;
-      try {
-        contentStream = new Function0<PDPageContentStream>() {
-          public PDPageContentStream apply() {
-            try {
-              PDPage _page = doc.getPage((numPage + (numCopie * nbPagesSujet)));
-              return new PDPageContentStream(doc, _page, PDPageContentStream.AppendMode.APPEND, true, 
-                true);
-            } catch (Throwable _e) {
-              throw Exceptions.sneakyThrow(_e);
-            }
+      try (final PDPageContentStream contentStream = new Function0<PDPageContentStream>() {
+        @Override
+        public PDPageContentStream apply() {
+          try {
+            PDPage _page = doc.getPage((numPage + (numCopie * nbPagesSujet)));
+            return new PDPageContentStream(doc, _page, PDPageContentStream.AppendMode.APPEND, true, 
+              true);
+          } catch (Throwable _e) {
+            throw Exceptions.sneakyThrow(_e);
           }
-        }.apply();
+        }
+      }.apply()) {
         int _width = pdImage.getWidth();
         float _multiply = (_width * scale);
         int _height = pdImage.getHeight();
         float _multiply_1 = (_height * scale);
         contentStream.drawImage(pdImage, 0, 0, _multiply, _multiply_1);
-      } finally {
-        if (contentStream != null) {
-          try {
-            contentStream.close();
-          } catch (Throwable _t) {
-            _ts.add(_t);
-          }
-        }
-        if(!_ts.isEmpty()) throw Exceptions.sneakyThrow(_ts.get(0));
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

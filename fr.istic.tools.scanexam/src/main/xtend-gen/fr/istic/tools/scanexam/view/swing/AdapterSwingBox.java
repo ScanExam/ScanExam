@@ -61,6 +61,7 @@ public class AdapterSwingBox extends AdapterBox {
     super(windowWidth, windowHeight, scale, originX, originY, selectionBoxes);
     this.lastState = SelectionStateMachine.getState();
     this.mouseHandler = new MouseAdapter() {
+      @Override
       public void mousePressed(final MouseEvent e) {
         int _button = e.getButton();
         boolean _tripleEquals = (_button == 1);
@@ -92,6 +93,7 @@ public class AdapterSwingBox extends AdapterBox {
         }
       }
       
+      @Override
       public void mouseReleased(final MouseEvent e) {
         int _state = SelectionStateMachine.getState();
         boolean _tripleEquals = (_state == SelectionStateMachine.RESIZE);
@@ -106,6 +108,7 @@ public class AdapterSwingBox extends AdapterBox {
         AdapterSwingBox.this.lastClickPoint = Optional.<Point>empty();
       }
       
+      @Override
       public void mouseDragged(final MouseEvent e) {
         int _state = SelectionStateMachine.getState();
         boolean _tripleEquals = (_state == SelectionStateMachine.RESIZE);
@@ -221,6 +224,7 @@ public class AdapterSwingBox extends AdapterBox {
    * Supprime une boîte
    * @param box Boîte à retirer
    */
+  @Override
   protected void deleteBox(final Box box) {
     this.selectionBoxes.removeBox(box);
     this.repaint();

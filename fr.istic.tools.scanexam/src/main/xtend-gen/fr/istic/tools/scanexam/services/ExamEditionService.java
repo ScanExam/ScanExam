@@ -133,11 +133,9 @@ public class ExamEditionService extends Service {
    */
   public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
     final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-    final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
-      public Boolean apply(final GradeEntry step) {
-        int _id = step.getId();
-        return Boolean.valueOf((_id == gradeEntryId));
-      }
+    final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
+      int _id = step.getId();
+      return Boolean.valueOf((_id == gradeEntryId));
     };
     final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
     if ((scaleEntry != null)) {
@@ -155,11 +153,9 @@ public class ExamEditionService extends Service {
     boolean _xblockexpression = false;
     {
       final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-      final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
-        public Boolean apply(final GradeEntry step) {
-          int _id = step.getId();
-          return Boolean.valueOf((_id == gradeEntryId));
-        }
+      final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
+        int _id = step.getId();
+        return Boolean.valueOf((_id == gradeEntryId));
       };
       final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
       boolean _xifexpression = false;
@@ -171,6 +167,7 @@ public class ExamEditionService extends Service {
     return _xblockexpression;
   }
   
+  @Override
   public void save(final String path) {
     try {
       final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -195,15 +192,11 @@ public class ExamEditionService extends Service {
         ExamSingleton.instance = creationTemplate.get().getExam();
         final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
         this.document = PDDocument.load(decoded);
-        final Function<Page, Integer> _function = new Function<Page, Integer>() {
-          public Integer apply(final Page page) {
-            return Integer.valueOf(page.getQuestions().size());
-          }
+        final Function<Page, Integer> _function = (Page page) -> {
+          return Integer.valueOf(page.getQuestions().size());
         };
-        final BinaryOperator<Integer> _function_1 = new BinaryOperator<Integer>() {
-          public Integer apply(final Integer acc, final Integer num) {
-            return Integer.valueOf(((acc).intValue() + (num).intValue()));
-          }
+        final BinaryOperator<Integer> _function_1 = (Integer acc, Integer num) -> {
+          return Integer.valueOf(((acc).intValue() + (num).intValue()));
         };
         Integer _get = ExamSingleton.instance.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
         int _plus = ((_get).intValue() + 1);

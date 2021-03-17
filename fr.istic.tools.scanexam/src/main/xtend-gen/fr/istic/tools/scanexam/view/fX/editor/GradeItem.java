@@ -110,6 +110,7 @@ public class GradeItem extends HBox {
       MenuItem menuItem1 = new MenuItem("Rename Grade Item");
       menu.getItems().add(menuItem1);
       menuItem1.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
         public void handle(final ActionEvent event) {
           GradeItem.this.setNameEditable();
         }
@@ -121,6 +122,7 @@ public class GradeItem extends HBox {
       MenuItem menuItem1 = new MenuItem("Change points for Grade Item");
       menu.getItems().add(menuItem1);
       menuItem1.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
         public void handle(final ActionEvent event) {
           GradeItem.this.setPointsEditable();
         }
@@ -131,16 +133,19 @@ public class GradeItem extends HBox {
   public void setupEvents() {
     final GradeItem item = this;
     this.name.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         GradeItem.this.commitNameChange();
       }
     });
     this.points.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         GradeItem.this.commitPointsChange();
       }
     });
     this.remove.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         GradeItem.this.list.removeGradeItem(item);
       }

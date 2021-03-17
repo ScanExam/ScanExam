@@ -268,6 +268,69 @@ public class GraduationViewSwing {
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
     this.window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.createTopMenu();
+    Container _contentPane = this.window.getContentPane();
+    BorderLayout _borderLayout = new BorderLayout(0, 0);
+    _contentPane.setLayout(_borderLayout);
+    this.AddTopButtons();
+    this.AddMainPaper();
+    this.renderPdf();
+  }
+  
+  /**
+   * Ajoute le PDF et le l'énoncé en bas
+   */
+  public void renderPdf() {
+    PdfPanel _pdfPanel = new PdfPanel(this.pdfAdapter);
+    this.pnlPdf = _pdfPanel;
+    this.window.getContentPane().add(this.pnlPdf, BorderLayout.CENTER);
+    BorderLayout _borderLayout = new BorderLayout(0, 0);
+    this.pnlPdf.setLayout(_borderLayout);
+    JPanel _jPanel = new JPanel();
+    this.pnlDown = _jPanel;
+    this.pnlPdf.add(this.pnlDown, BorderLayout.SOUTH);
+    BorderLayout _borderLayout_1 = new BorderLayout(0, 0);
+    this.pnlDown.setLayout(_borderLayout_1);
+    JButton _jButton = new JButton("▲");
+    this.btnDown = _jButton;
+    InputStream inputContentDown = ResourcesUtils.getInputStreamResource("logo.png");
+    ImagePanel _imagePanel = new ImagePanel(inputContentDown);
+    this.pnlContentDown = _imagePanel;
+    Dimension _dimension = new Dimension(this.pnlContentDown.getSize().width, 180);
+    this.pnlContentDown.setPreferredSize(_dimension);
+    JPanel _jPanel_1 = new JPanel();
+    JSplitPane _jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, _jPanel_1, this.pnlContentDown);
+    this.mainSplitPane = _jSplitPane;
+    this.pnlDown.add(this.btnDown, BorderLayout.NORTH);
+    JPanel _jPanel_2 = new JPanel();
+    this.pnlQst = _jPanel_2;
+    this.window.getContentPane().add(this.pnlQst, BorderLayout.EAST);
+    BorderLayout _borderLayout_2 = new BorderLayout(0, 0);
+    this.pnlQst.setLayout(_borderLayout_2);
+    JLabel _jLabel = new JLabel("Question No.i");
+    this.lblNbQst = _jLabel;
+    Font _font = new Font("Arial", Font.PLAIN, 14);
+    this.lblNbQst.setFont(_font);
+    this.lblNbQst.setHorizontalAlignment(SwingConstants.CENTER);
+    this.pnlQst.add(this.lblNbQst, BorderLayout.NORTH);
+    JTextPane _jTextPane = new JTextPane();
+    this.txtPnQst = _jTextPane;
+    this.pnlQst.add(this.txtPnQst, BorderLayout.CENTER);
+    JSplitPane _jSplitPane_1 = new JSplitPane();
+    this.spltPnQst = _jSplitPane_1;
+    this.pnlQst.add(this.spltPnQst, BorderLayout.SOUTH);
+    JButton _jButton_1 = new JButton("<");
+    this.btnPrevQst = _jButton_1;
+    this.spltPnQst.setLeftComponent(this.btnPrevQst);
+    JButton _jButton_2 = new JButton(">");
+    this.btnNextQst = _jButton_2;
+    this.spltPnQst.setRightComponent(this.btnNextQst);
+  }
+  
+  /**
+   * Création du menu en haut de page
+   */
+  public void createTopMenu() {
     JMenuBar _jMenuBar = new JMenuBar();
     this.menuBar = _jMenuBar;
     this.window.setJMenuBar(this.menuBar);
@@ -280,13 +343,90 @@ public class GraduationViewSwing {
     JMenuItem _jMenuItem_1 = new JMenuItem("Change session");
     this.mnItemSession = _jMenuItem_1;
     this.mnFile.add(this.mnItemSession);
-    String _translate_1 = LanguageManager.translate("menu.file.switchToEditor");
-    JMenuItem _jMenuItem_2 = new JMenuItem(_translate_1);
+    String _translate = LanguageManager.translate("menu.file.switchToEditor");
+    JMenuItem _jMenuItem_2 = new JMenuItem(_translate);
     this.mnItemSwap = _jMenuItem_2;
     this.mnFile.add(this.mnItemSwap);
-    Container _contentPane = this.window.getContentPane();
+  }
+  
+  /**
+   * Ajoute la page contenant le pdf
+   */
+  public void AddMainPaper() {
+    JPanel _jPanel = new JPanel();
+    this.pnlPaper = _jPanel;
+    this.window.getContentPane().add(this.pnlPaper, BorderLayout.WEST);
     BorderLayout _borderLayout = new BorderLayout(0, 0);
-    _contentPane.setLayout(_borderLayout);
+    this.pnlPaper.setLayout(_borderLayout);
+    JLabel _jLabel = new JLabel("Copie No.x");
+    this.lblNbPaper = _jLabel;
+    Font _font = new Font("Arial", Font.PLAIN, 14);
+    this.lblNbPaper.setFont(_font);
+    this.lblNbPaper.setHorizontalAlignment(SwingConstants.CENTER);
+    this.pnlPaper.add(this.lblNbPaper, BorderLayout.NORTH);
+    JTextPane _jTextPane = new JTextPane();
+    this.txtPnPapers = _jTextPane;
+    this.pnlPaper.add(this.txtPnPapers, BorderLayout.CENTER);
+    JPanel _jPanel_1 = new JPanel();
+    this.pnlNote = _jPanel_1;
+    this.pnlPaper.add(this.pnlNote, BorderLayout.SOUTH);
+    BorderLayout _borderLayout_1 = new BorderLayout(0, 0);
+    this.pnlNote.setLayout(_borderLayout_1);
+    JLabel _jLabel_1 = new JLabel("Note actuelle");
+    this.lblCurrentNote = _jLabel_1;
+    Font _font_1 = new Font("Arial", Font.PLAIN, 14);
+    this.lblCurrentNote.setFont(_font_1);
+    this.lblCurrentNote.setHorizontalAlignment(SwingConstants.CENTER);
+    this.pnlNote.add(this.lblCurrentNote, BorderLayout.NORTH);
+    String _plus = (Integer.valueOf(this.currentPage) + "/");
+    String _plus_1 = (_plus + Integer.valueOf(this.totalPage));
+    JLabel _jLabel_2 = new JLabel(_plus_1);
+    this.lblNote = _jLabel_2;
+    Font _font_2 = new Font("Arial", Font.PLAIN, 14);
+    this.lblNote.setFont(_font_2);
+    this.lblNote.setHorizontalAlignment(SwingConstants.CENTER);
+    this.pnlNote.add(this.lblNote, BorderLayout.CENTER);
+    JSplitPane _jSplitPane = new JSplitPane();
+    this.spltPnPaper = _jSplitPane;
+    this.pnlNote.add(this.spltPnPaper, BorderLayout.SOUTH);
+    JButton _jButton = new JButton("<<");
+    this.btnPrevPaper = _jButton;
+    this.spltPnPaper.setLeftComponent(this.btnPrevPaper);
+    this.btnPrevPaper.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        if (((GraduationViewSwing.this.currentPage > 0) && (GraduationViewSwing.this.currentPage <= GraduationViewSwing.this.totalPage))) {
+          GraduationViewSwing.this.currentPage--;
+        }
+        String _plus = (Integer.valueOf(GraduationViewSwing.this.currentPage) + "/");
+        String _plus_1 = (_plus + Integer.valueOf(GraduationViewSwing.this.totalPage));
+        GraduationViewSwing.this.lblNote.setText(_plus_1);
+        GraduationViewSwing.this.lblNote.repaint();
+        GraduationViewSwing.this.previousPage();
+      }
+    });
+    JButton _jButton_1 = new JButton(">>");
+    this.btnNextPaper = _jButton_1;
+    this.spltPnPaper.setRightComponent(this.btnNextPaper);
+    this.btnNextPaper.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(final ActionEvent e) {
+        if ((GraduationViewSwing.this.currentPage < GraduationViewSwing.this.totalPage)) {
+          GraduationViewSwing.this.currentPage++;
+        }
+        String _plus = (Integer.valueOf(GraduationViewSwing.this.currentPage) + "/");
+        String _plus_1 = (_plus + Integer.valueOf(GraduationViewSwing.this.totalPage));
+        GraduationViewSwing.this.lblNote.setText(_plus_1);
+        GraduationViewSwing.this.lblNote.repaint();
+        GraduationViewSwing.this.nextPage();
+      }
+    });
+  }
+  
+  /**
+   * Ajoute les boutons en haut de page
+   */
+  public void AddTopButtons() {
     JPanel _jPanel = new JPanel();
     this.pnlMainBtn = _jPanel;
     this.window.getContentPane().add(this.pnlMainBtn, BorderLayout.NORTH);
@@ -335,116 +475,6 @@ public class GraduationViewSwing {
     JButton _jButton_12 = new JButton("Exp");
     this.btnExp = _jButton_12;
     this.pnlMainBtn.add(this.btnExp);
-    JPanel _jPanel_1 = new JPanel();
-    this.pnlPaper = _jPanel_1;
-    this.window.getContentPane().add(this.pnlPaper, BorderLayout.WEST);
-    BorderLayout _borderLayout_1 = new BorderLayout(0, 0);
-    this.pnlPaper.setLayout(_borderLayout_1);
-    JLabel _jLabel = new JLabel("Copie No.x");
-    this.lblNbPaper = _jLabel;
-    Font _font = new Font("Arial", Font.PLAIN, 14);
-    this.lblNbPaper.setFont(_font);
-    this.lblNbPaper.setHorizontalAlignment(SwingConstants.CENTER);
-    this.pnlPaper.add(this.lblNbPaper, BorderLayout.NORTH);
-    JTextPane _jTextPane = new JTextPane();
-    this.txtPnPapers = _jTextPane;
-    this.pnlPaper.add(this.txtPnPapers, BorderLayout.CENTER);
-    JPanel _jPanel_2 = new JPanel();
-    this.pnlNote = _jPanel_2;
-    this.pnlPaper.add(this.pnlNote, BorderLayout.SOUTH);
-    BorderLayout _borderLayout_2 = new BorderLayout(0, 0);
-    this.pnlNote.setLayout(_borderLayout_2);
-    JLabel _jLabel_1 = new JLabel("Note actuelle");
-    this.lblCurrentNote = _jLabel_1;
-    Font _font_1 = new Font("Arial", Font.PLAIN, 14);
-    this.lblCurrentNote.setFont(_font_1);
-    this.lblCurrentNote.setHorizontalAlignment(SwingConstants.CENTER);
-    this.pnlNote.add(this.lblCurrentNote, BorderLayout.NORTH);
-    String _plus = (Integer.valueOf(this.currentPage) + "/");
-    String _plus_1 = (_plus + Integer.valueOf(this.totalPage));
-    JLabel _jLabel_2 = new JLabel(_plus_1);
-    this.lblNote = _jLabel_2;
-    Font _font_2 = new Font("Arial", Font.PLAIN, 14);
-    this.lblNote.setFont(_font_2);
-    this.lblNote.setHorizontalAlignment(SwingConstants.CENTER);
-    this.pnlNote.add(this.lblNote, BorderLayout.CENTER);
-    JSplitPane _jSplitPane = new JSplitPane();
-    this.spltPnPaper = _jSplitPane;
-    this.pnlNote.add(this.spltPnPaper, BorderLayout.SOUTH);
-    JButton _jButton_13 = new JButton("<<");
-    this.btnPrevPaper = _jButton_13;
-    this.spltPnPaper.setLeftComponent(this.btnPrevPaper);
-    this.btnPrevPaper.addActionListener(new ActionListener() {
-      public void actionPerformed(final ActionEvent e) {
-        if (((GraduationViewSwing.this.currentPage > 0) && (GraduationViewSwing.this.currentPage <= GraduationViewSwing.this.totalPage))) {
-          GraduationViewSwing.this.currentPage--;
-        }
-        String _plus = (Integer.valueOf(GraduationViewSwing.this.currentPage) + "/");
-        String _plus_1 = (_plus + Integer.valueOf(GraduationViewSwing.this.totalPage));
-        GraduationViewSwing.this.lblNote.setText(_plus_1);
-        GraduationViewSwing.this.lblNote.repaint();
-        GraduationViewSwing.this.previousPage();
-      }
-    });
-    JButton _jButton_14 = new JButton(">>");
-    this.btnNextPaper = _jButton_14;
-    this.spltPnPaper.setRightComponent(this.btnNextPaper);
-    this.btnNextPaper.addActionListener(new ActionListener() {
-      public void actionPerformed(final ActionEvent e) {
-        if ((GraduationViewSwing.this.currentPage < GraduationViewSwing.this.totalPage)) {
-          GraduationViewSwing.this.currentPage++;
-        }
-        String _plus = (Integer.valueOf(GraduationViewSwing.this.currentPage) + "/");
-        String _plus_1 = (_plus + Integer.valueOf(GraduationViewSwing.this.totalPage));
-        GraduationViewSwing.this.lblNote.setText(_plus_1);
-        GraduationViewSwing.this.lblNote.repaint();
-        GraduationViewSwing.this.nextPage();
-      }
-    });
-    PdfPanel _pdfPanel = new PdfPanel(this.pdfAdapter);
-    this.pnlPdf = _pdfPanel;
-    this.window.getContentPane().add(this.pnlPdf, BorderLayout.CENTER);
-    BorderLayout _borderLayout_3 = new BorderLayout(0, 0);
-    this.pnlPdf.setLayout(_borderLayout_3);
-    JPanel _jPanel_3 = new JPanel();
-    this.pnlDown = _jPanel_3;
-    this.pnlPdf.add(this.pnlDown, BorderLayout.SOUTH);
-    BorderLayout _borderLayout_4 = new BorderLayout(0, 0);
-    this.pnlDown.setLayout(_borderLayout_4);
-    JButton _jButton_15 = new JButton("▲");
-    this.btnDown = _jButton_15;
-    InputStream inputContentDown = ResourcesUtils.getInputStreamResource("logo.png");
-    ImagePanel _imagePanel = new ImagePanel(inputContentDown);
-    this.pnlContentDown = _imagePanel;
-    Dimension _dimension = new Dimension(this.pnlContentDown.getSize().width, 180);
-    this.pnlContentDown.setPreferredSize(_dimension);
-    JPanel _jPanel_4 = new JPanel();
-    JSplitPane _jSplitPane_1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, _jPanel_4, this.pnlContentDown);
-    this.mainSplitPane = _jSplitPane_1;
-    this.pnlDown.add(this.btnDown, BorderLayout.NORTH);
-    JPanel _jPanel_5 = new JPanel();
-    this.pnlQst = _jPanel_5;
-    this.window.getContentPane().add(this.pnlQst, BorderLayout.EAST);
-    BorderLayout _borderLayout_5 = new BorderLayout(0, 0);
-    this.pnlQst.setLayout(_borderLayout_5);
-    JLabel _jLabel_3 = new JLabel("Question No.i");
-    this.lblNbQst = _jLabel_3;
-    Font _font_3 = new Font("Arial", Font.PLAIN, 14);
-    this.lblNbQst.setFont(_font_3);
-    this.lblNbQst.setHorizontalAlignment(SwingConstants.CENTER);
-    this.pnlQst.add(this.lblNbQst, BorderLayout.NORTH);
-    JTextPane _jTextPane_1 = new JTextPane();
-    this.txtPnQst = _jTextPane_1;
-    this.pnlQst.add(this.txtPnQst, BorderLayout.CENTER);
-    JSplitPane _jSplitPane_2 = new JSplitPane();
-    this.spltPnQst = _jSplitPane_2;
-    this.pnlQst.add(this.spltPnQst, BorderLayout.SOUTH);
-    JButton _jButton_16 = new JButton("<");
-    this.btnPrevQst = _jButton_16;
-    this.spltPnQst.setLeftComponent(this.btnPrevQst);
-    JButton _jButton_17 = new JButton(">");
-    this.btnNextQst = _jButton_17;
-    this.spltPnQst.setRightComponent(this.btnNextQst);
   }
   
   /**
@@ -477,7 +507,8 @@ public class GraduationViewSwing {
   }
   
   /**
-   * GETTERS
+   * Retourne la fenêtre d'examen
+   * @return window
    */
   public JFrame getWindow() {
     return this.window;
@@ -499,14 +530,26 @@ public class GraduationViewSwing {
     return this.mnItemSession;
   }
   
+  /**
+   * Retourne le bouton pour voir l'énoncé
+   * @return btnDown
+   */
   public JButton getBtnDown() {
     return this.btnDown;
   }
   
+  /**
+   * Retourne le Panel qui affiche l'énoncé
+   * @return pnlDown
+   */
   public JPanel getPnlDown() {
     return this.pnlDown;
   }
   
+  /**
+   * Retourne le item de menu pour swap le mode (création/correction)
+   * @return mnItemSwap
+   */
   public JMenuItem getMnItemSwap() {
     return this.mnItemSwap;
   }
