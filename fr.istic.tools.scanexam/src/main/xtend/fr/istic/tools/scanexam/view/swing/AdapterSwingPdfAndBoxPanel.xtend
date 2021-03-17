@@ -8,13 +8,13 @@ import java.util.Optional
 import javax.swing.JPanel
 
 /** 
- * Controlleur Swing du pdf avec swing
+ * Controlleur Swing du pdf et de l'ajout de boîtes avec swing
  * @author Julien Cochet
  */
 class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -27,10 +27,11 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/*
 	 * CONSTRUCTEUR
 	 */
 	// ----------------------------------------------------------------------------------------------------
+	
 	/** 
 	 * Constructeur
 	 * @param width Largeur de la fenêtre
@@ -51,13 +52,13 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
 	/** 
-	 * Déplacement de le contenu
+	 * Déplacement du pdf
 	 * @param e Mouvement de la souris
 	 */
 	override void moveOrigin(MouseEvent e) {
@@ -87,34 +88,54 @@ class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * GETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Renvoie l'daptateur des boîtes de sélection 
+	 * @return L'daptateur des boîtes de sélection 
+	 */
 	def AdapterSwingBox getAdapterBox() {
 		return adapterBox
 	}
 	
+	/**
+	 * Renvoie la liste des boîtes de sélection
+	 * @return La liste des boîtes de sélection
+	 */
 	def BoxList getSelectionBoxes() {
 		return selectionBoxes
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Met à jour le présenter de création de zone de question
+	 * @param presenterQst Présenter de création de zone de question
+	 */
 	def void setPresenterQst(PresenterQuestionZone presenterQst) {
 		adapterBox.setPresenter(presenterQst)
 	}
 	
+	/**
+	 * Lie la vue de au panel
+	 * @param view Vue swing
+	 */
 	override void setView(JPanel view) {
 		this.view = Optional::of(view)
 		adapterBox.setView(this.view.get())
 	}
 	
+	/**
+	 * Change la mise à l'échelle. Soit par rapport à la hauteur ou la largueur
+	 * @param scaleOnWidth Indique si la mise à l'échelle se fait par rapport à la hauteur ou la largueur
+	 */
 	override void setScaleOnWidth(boolean scaleOnWidth) {
 		if(pdf !== null) {
 			super.setScaleOnWidth(scaleOnWidth)
