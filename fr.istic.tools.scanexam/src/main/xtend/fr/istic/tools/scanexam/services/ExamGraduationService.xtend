@@ -18,23 +18,46 @@ import static fr.istic.tools.scanexam.services.ExamSingleton.*
 
 class ExamGraduationService extends Service
 {
+	/**
+	 * La page actuelle de l'examen
+	 */
 	int currentSheetIndex;
 	 
+	/**
+	 * Question actuelle.
+	 */
 	int currentQuestionIndex;
 	
+	 
+	/**
+	 * Liste des copies visible.
+	 */
 	@Accessors Collection<StudentSheet> studentSheets;
 	
+	/**
+	 * Fichier du template de l'édition d'examen (Fichier de méta données sur le sujet d'examen)
+	 */
 	CreationTemplate creationTemplate;
 	
+	/**
+	 * Fichier du template de correction d'examen  
+	 * (Fichier de méta données sur les corrections de copies déja effectués)
+	 */
 	CorrectionTemplate correctionTemplate;
 	
-	//Set<StudentSheet> visibleSheets;
-	
-	override save(String path) 
+	/**
+	 * Sauvegarde le fichier de correction d'examen sur le disque.
+	 * @params path L'emplacement de sauvegarde du fichier.
+	 */
+	override saveCorrectionTemplate(String path) 
 	{
 		// TODO (sauvegarde le XMI de correction)
 	}
-	
+	/**
+	 * Charge un fichier de correction d'examen a partir du disque.
+	 * @params path L'emplacement du fichier.
+	 * @returns "true" si le fichier a bien été chargé, "false"
+	 */
 	def boolean openCorrectionTemplate(String xmiFile)
 	{
 		val correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile) 
@@ -49,6 +72,11 @@ class ExamGraduationService extends Service
         }
 		return false
 	}
+	/**
+	 * Charge un fichier d'edition d'examen a partir du disque.
+	 * @params path L'emplacement du fichier.
+	 * @returns "true" si le fichier a bien été chargé, "false"
+	 */
 	def boolean openCreationTemplate(String xmiFile) 
 	{
 		val editionTemplate = TemplateIO.loadCreationTemplate(xmiFile) 
@@ -63,16 +91,26 @@ class ExamGraduationService extends Service
         }
 		return false
 	}
-	
+		/**
+	 * Charge le document PDF des copies manuscrites,  corrigés
+	 * @params path L'emplacement du fichier.
+	 * @returns "true" si le fichier a bien été chargé, "false"
+	 */
 	def boolean openCorrectionPdf(String path)
 	{
-		
-        document = PDDocument.load(new File(path))
-        val pdfReader = new PdfReaderWithoutQrCodeImpl(document,ExamSingleton.instance.pages.size,3); // TODO
-        pdfReader.readPDf();
-        studentSheets = pdfReader.completeStudentSheets
-      	
-        return true
+		try
+		{
+			document = PDDocument.load(new File(path))
+        	val pdfReader = new PdfReaderWithoutQrCodeImpl(document,ExamSingleton.instance.pages.size,3); // TODO
+        	pdfReader.readPDf();
+        	studentSheets = pdfReader.completeStudentSheets
+        	return true
+		}
+		catch (Exception ex)
+		{
+			return false;
+		}
+       
 	}
 	
 	
