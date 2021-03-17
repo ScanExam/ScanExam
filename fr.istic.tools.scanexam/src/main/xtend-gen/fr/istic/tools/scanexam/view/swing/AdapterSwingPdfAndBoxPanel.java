@@ -112,7 +112,7 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
   }
   
   /**
-   * Lie la vue de l'adaptateur de création de boîte
+   * Lie la vue de au panel
    * @param view Vue swing
    */
   @Override
