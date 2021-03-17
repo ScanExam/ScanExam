@@ -189,35 +189,57 @@ public class AdapterSwingPdfPanel {
   }
   
   /**
-   * GETTERS
+   * Renvoie le PDF soit forme d'image
+   * @return L'image du PDF
    */
   public Image getPdf() {
     return this.pdf;
   }
   
+  /**
+   * Renvoie l'échelle courrante
+   * @return Echelle
+   */
   public int getScale() {
     return this.scale;
   }
   
+  /**
+   * Renvoie le point d'origine X
+   * @return Point d'origine X
+   */
   public int getOriginX() {
     return this.originX;
   }
   
+  /**
+   * Renvoie le point d'origine Y
+   * @return Point d'origine Y
+   */
   public int getOriginY() {
     return this.originY;
   }
   
+  /**
+   * Renvoie l'adapter de la souris
+   * @return L'adapter de la souris
+   */
   public MouseAdapter getMouseHandler() {
     return this.mouseHandler;
   }
   
   /**
-   * SETTERS
+   * Met à jour le présenter gérant le PDF
+   * @param presenterPdf Nouveau présenter
    */
   public void setPresenterPdf(final Presenter presenterPdf) {
     this.presenterPdf = presenterPdf;
   }
   
+  /**
+   * Lie la vue de au panel
+   * @param view Vue swing
+   */
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);
   }

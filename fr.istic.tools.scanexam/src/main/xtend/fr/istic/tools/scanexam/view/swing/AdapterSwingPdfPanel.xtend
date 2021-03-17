@@ -17,7 +17,7 @@ import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 class AdapterSwingPdfPanel {
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ class AdapterSwingPdfPanel {
 	protected var MouseAdapter mouseHandler
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * CONSTRUCTEUR
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ class AdapterSwingPdfPanel {
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
@@ -168,41 +168,69 @@ class AdapterSwingPdfPanel {
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * GETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Renvoie le PDF soit forme d'image
+	 * @return L'image du PDF
+	 */
 	def Image getPdf() {
 		return pdf
 	}
 
+	/**
+	 * Renvoie l'échelle courrante
+	 * @return Echelle
+	 */
 	def int getScale() {
 		return scale
 	}
 
+	/**
+	 * Renvoie le point d'origine X
+	 * @return Point d'origine X
+	 */
 	def int getOriginX() {
 		return originX
 	}
 
+	/**
+	 * Renvoie le point d'origine Y
+	 * @return Point d'origine Y
+	 */
 	def int getOriginY() {
 		return originY
 	}
 
+	/**
+	 * Renvoie l'adapter de la souris
+	 * @return L'adapter de la souris
+	 */
 	def MouseAdapter getMouseHandler() {
 		return mouseHandler
 	}
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Met à jour le présenter gérant le PDF
+	 * @param presenterPdf Nouveau présenter
+	 */
 	def void setPresenterPdf(Presenter presenterPdf) {
 		this.presenterPdf = presenterPdf
 	}
 	
+	/**
+	 * Lie la vue de au panel
+	 * @param view Vue swing
+	 */
 	def void setView(JPanel view) {
 		this.view = Optional::of(view)
 	}
