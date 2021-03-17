@@ -107,18 +107,32 @@ public class Box {
   }
   
   /**
-   * METHODES
+   * Met à jour les coordonnées de la boîte
+   * @param x Nouvelle coordonnée X
+   * @param y Nouvelle coordonnée Y
    */
   public void updateCoordinates(final double x, final double y) {
     this.setX(x);
     this.setY(y);
   }
   
+  /**
+   * Met à jour la taille de la boîte
+   * @param width Nouvelle largueur de la boîte
+   * @param height Nouvelle hauteur de la boîte
+   */
   public void updateSize(final double width, final double height) {
     this.setWidth(width);
     this.setHeight(height);
   }
   
+  /**
+   * Met à jour les bornes minimums et maximums de la boîte
+   * @param minWidth Nouvelle largueur minimale de la boîte
+   * @param minHeight Nouvelle hauteur minimale de la boîte
+   * @param maxWidth Nouvelle largueur maximale de la boîte
+   * @param maxHeight Nouvelle hauteur maximale de la boîte
+   */
   public void updateBounds(final double minWidth, final double minHeight, final double maxWidth, final double maxHeight) {
     this.setMinWidth(minWidth);
     this.setMinHeight(minHeight);
@@ -126,69 +140,123 @@ public class Box {
     this.setMaxHeight(maxHeight);
   }
   
+  /**
+   * Retranscrit les informations de la boîte sous forme de String
+   * @return Informations de la boîte
+   */
   @Override
   public String toString() {
-    return ((((((((this.title + ",") + Double.valueOf(this.x)) + ",") + Double.valueOf(this.y)) + ",") + Double.valueOf(this.width)) + ",") + Double.valueOf(this.height));
+    return ((((((((((((("Box#" + Integer.valueOf(this.id)) + " \"") + this.title) + "\", ") + Double.valueOf(this.x)) + ", ") + Double.valueOf(this.y)) + ", ") + Double.valueOf(this.width)) + ", ") + Double.valueOf(this.height)) + ", on page ") + Integer.valueOf(this.nbPage));
   }
   
   /**
-   * GETTERS
+   * Renvoie la coordonnée X de la boîte
+   * @param Coordonnée X de la boîte
    */
   public double getX() {
     return this.x;
   }
   
+  /**
+   * Renvoie la coordonnée Y de la boîte
+   * @param Coordonnée Y de la boîte
+   */
   public double getY() {
     return this.y;
   }
   
+  /**
+   * Renvoie la largueur de la boîte
+   * @param Largueur de la boîte
+   */
   public double getWidth() {
     return this.width;
   }
   
+  /**
+   * Renvoie la hauteur de la boîte
+   * @param Hauteur de la boîte
+   */
   public double getHeight() {
     return this.height;
   }
   
+  /**
+   * Renvoie le nom de la boîte
+   * @param Nom de la boîte
+   */
   public String getTitle() {
     return this.title;
   }
   
+  /**
+   * Renvoie l'indentifiant de la boîte
+   * @param Identifiant de la boîte
+   */
   public int getId() {
     return this.id;
   }
   
+  /**
+   * Renvoie la largueur minimale de la boîte
+   * @param Largueur minimale de la boîte
+   */
   public double getMinWidth() {
     return this.minWidth;
   }
   
+  /**
+   * Renvoie la hauteur minimale de la boîte
+   * @param Hauteur minimale de la boîte
+   */
   public double getMinHeight() {
     return this.minHeight;
   }
   
+  /**
+   * Renvoie la largueur maximale de la boîte
+   * @param Largueur maximale de la boîte
+   */
   public double getMaxWidth() {
     return this.maxWidth;
   }
   
+  /**
+   * Renvoie la hauteur maximale de la boîte
+   * @param Hauteur maximale de la boîte
+   */
   public double getMaxHeight() {
     return this.maxHeight;
   }
   
+  /**
+   * Renvoie le numéro de la page où se trouve la boîte
+   * @return Numéro de page où se trouve la boîte
+   */
   public int getNbPage() {
     return this.nbPage;
   }
   
   /**
-   * SETTERS
+   * Met à jour la coordonnée X de la boîte
+   * @param x Nouvelle coordonnée X de la boîte
    */
   public void setX(final double x) {
     this.x = x;
   }
   
+  /**
+   * Met à jour la coordonnée Y de la boîte
+   * @param y Nouvelle coordonnée Y de la boîte
+   */
   public void setY(final double y) {
     this.y = y;
   }
   
+  /**
+   * Met à jour la largueur de la boîte. La valeur sera automatiquement bornée au minimum et maximum autorisé.
+   * @param y Nouvelle largueur de la boîte
+   */
   public void setWidth(final double width) {
     if ((width < this.minWidth)) {
       this.width = this.minWidth;
@@ -201,6 +269,10 @@ public class Box {
     }
   }
   
+  /**
+   * Met à jour la hauteur de la boîte. La valeur sera automatiquement bornée au minimum et maximum autorisé.
+   * @param y Nouvelle hauteur de la boîte
+   */
   public void setHeight(final double height) {
     if ((height < this.minHeight)) {
       this.height = this.minHeight;
@@ -213,14 +285,26 @@ public class Box {
     }
   }
   
+  /**
+   * Met à jour le titre de la boîte
+   * @param Nouveau nom de la boîte
+   */
   public void setTitle(final String title) {
     this.title = title;
   }
   
+  /**
+   * Met à jour l'identifiant de la boîte
+   * @param Nouvel identifiant de la boîte
+   */
   public void setId(final int id) {
     this.id = id;
   }
   
+  /**
+   * Met à jour la largueur minimale de la boîte
+   * @param y Nouvelle largueur minimale de la boîte
+   */
   public void setMinWidth(final double minWidth) {
     if ((minWidth < 0.0)) {
       this.minWidth = 0.0;
@@ -232,6 +316,10 @@ public class Box {
     }
   }
   
+  /**
+   * Met à jour la hauteur minimale de la boîte
+   * @param y Nouvelle hautueur minimale de la boîte
+   */
   public void setMinHeight(final double minHeight) {
     if ((minHeight < 0.0)) {
       this.minHeight = 0.0;
@@ -243,6 +331,10 @@ public class Box {
     }
   }
   
+  /**
+   * Met à jour la largueur maximale de la boîte
+   * @param y Nouvelle largueur maximale de la boîte
+   */
   public void setMaxWidth(final double maxWidth) {
     if ((maxWidth < 0.0)) {
       this.maxWidth = (-1.0);
@@ -254,6 +346,10 @@ public class Box {
     }
   }
   
+  /**
+   * Met à jour la hauteur maximale de la boîte
+   * @param y Nouvelle hauteur maximale de la boîte
+   */
   public void setMaxHeight(final double maxHeight) {
     if ((maxHeight < 0.0)) {
       this.maxHeight = (-1.0);
@@ -265,6 +361,10 @@ public class Box {
     }
   }
   
+  /**
+   * Met à jour le numéro de la page où se trouve la boîte
+   * @param Nouveau numéro de page
+   */
   public void setNbPage(final int nbPage) {
     this.nbPage = nbPage;
   }
