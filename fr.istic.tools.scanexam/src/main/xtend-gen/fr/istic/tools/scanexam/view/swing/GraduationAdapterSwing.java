@@ -85,6 +85,9 @@ public class GraduationAdapterSwing implements GraduationAdapter {
     });
   }
   
+  /**
+   * Passe de la correction vers l'édition
+   */
   public void swapToEditor() {
     this.view.getWindow().setVisible(false);
     this.viewEdit.getWindow().setVisible(true);
@@ -111,6 +114,9 @@ public class GraduationAdapterSwing implements GraduationAdapter {
     }
   }
   
+  /**
+   * Change la vue de l'éditeur
+   */
   public void setViewEditor(final EditorViewSwing view) {
     this.viewEdit = view;
   }
