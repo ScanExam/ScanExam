@@ -24,7 +24,7 @@ import javax.swing.border.EmptyBorder;
 @SuppressWarnings("all")
 public class EditorViewSwing {
   /**
-   * Controlleur liant les controlleurs du Pdf et des boîtes
+   * Adaptateur liant les controlleurs du Pdf et des boîtes
    */
   private AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel;
   
@@ -175,6 +175,7 @@ public class EditorViewSwing {
   
   /**
    * Constructeur
+   * @param adapterPdfAndBoxPanel Adaptateur liant les controlleurs du Pdf et des boîtes
    */
   public EditorViewSwing(final AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel) {
     this.adapterPdfAndBoxPanel = adapterPdfAndBoxPanel;
@@ -191,51 +192,7 @@ public class EditorViewSwing {
     this.window = _jFrame;
     this.window.setBounds(100, 100, 1280, 720);
     this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    JMenuBar _jMenuBar = new JMenuBar();
-    this.menuBar = _jMenuBar;
-    this.window.setJMenuBar(this.menuBar);
-    String _translate_1 = LanguageManager.translate("menu.file");
-    JMenu _jMenu = new JMenu(_translate_1);
-    this.mnFile = _jMenu;
-    String _translate_2 = LanguageManager.translate("menu.file.new");
-    JMenuItem _jMenuItem = new JMenuItem(_translate_2);
-    this.mnItemNew = _jMenuItem;
-    this.mnFile.add(this.mnItemNew);
-    this.mnFile.addSeparator();
-    String _translate_3 = LanguageManager.translate("menu.file.save");
-    JMenuItem _jMenuItem_1 = new JMenuItem(_translate_3);
-    this.mnItemSave = _jMenuItem_1;
-    this.mnFile.add(this.mnItemSave);
-    String _translate_4 = LanguageManager.translate("menu.file.load");
-    JMenuItem _jMenuItem_2 = new JMenuItem(_translate_4);
-    this.mnItemLoad = _jMenuItem_2;
-    this.mnFile.add(this.mnItemLoad);
-    String _translate_5 = LanguageManager.translate("menu.file.switchToCorrector");
-    JMenuItem _jMenuItem_3 = new JMenuItem(_translate_5);
-    this.mnItemSwap = _jMenuItem_3;
-    this.mnFile.add(this.mnItemSwap);
-    this.mnFile.addSeparator();
-    String _translate_6 = LanguageManager.translate("menu.file.close");
-    JMenuItem _jMenuItem_4 = new JMenuItem(_translate_6);
-    this.mnItemClose = _jMenuItem_4;
-    this.mnFile.add(this.mnItemClose);
-    this.menuBar.add(this.mnFile);
-    String _translate_7 = LanguageManager.translate("menu.edit");
-    JMenu _jMenu_1 = new JMenu(_translate_7);
-    this.mnEdit = _jMenu_1;
-    String _translate_8 = LanguageManager.translate("menu.edit.delete");
-    JMenuItem _jMenuItem_5 = new JMenuItem(_translate_8);
-    this.mnItemDelete = _jMenuItem_5;
-    this.mnEdit.add(this.mnItemDelete);
-    this.menuBar.add(this.mnEdit);
-    String _translate_9 = LanguageManager.translate("menu.help");
-    JMenu _jMenu_2 = new JMenu(_translate_9);
-    this.mnHelp = _jMenu_2;
-    String _translate_10 = LanguageManager.translate("menu.help.about");
-    JMenuItem _jMenuItem_6 = new JMenuItem(_translate_10);
-    this.mnItemAbout = _jMenuItem_6;
-    this.mnHelp.add(this.mnItemAbout);
-    this.menuBar.add(this.mnHelp);
+    this.createTopMenu();
     JPanel _jPanel = new JPanel();
     this.pnlMain = _jPanel;
     EmptyBorder _emptyBorder = new EmptyBorder(5, 5, 5, 5);
@@ -243,71 +200,129 @@ public class EditorViewSwing {
     this.window.setContentPane(this.pnlMain);
     BorderLayout _borderLayout = new BorderLayout(0, 0);
     this.pnlMain.setLayout(_borderLayout);
-    JPanel _jPanel_1 = new JPanel();
-    this.pnlButtons = _jPanel_1;
+    this.addQuestionAndPdfHandler();
+  }
+  
+  /**
+   * Ajoute la gestion de question et du PDF
+   */
+  public void addQuestionAndPdfHandler() {
+    JPanel _jPanel = new JPanel();
+    this.pnlButtons = _jPanel;
     this.pnlMain.add(this.pnlButtons, BorderLayout.NORTH);
     BoxLayout _boxLayout = new BoxLayout(this.pnlButtons, BoxLayout.X_AXIS);
     this.pnlButtons.setLayout(_boxLayout);
-    String _translate_11 = LanguageManager.translate("button.createQuestion");
-    JButton _jButton = new JButton(_translate_11);
+    String _translate = LanguageManager.translate("button.createQuestion");
+    JButton _jButton = new JButton(_translate);
     this.btnQuestionArea = _jButton;
     this.pnlButtons.add(this.btnQuestionArea);
-    String _translate_12 = LanguageManager.translate("button.IDarea");
-    JButton _jButton_1 = new JButton(_translate_12);
+    String _translate_1 = LanguageManager.translate("button.IDarea");
+    JButton _jButton_1 = new JButton(_translate_1);
     this.btnIdArea = _jButton_1;
     this.pnlButtons.add(this.btnIdArea);
-    String _translate_13 = LanguageManager.translate("button.QRarea");
-    JButton _jButton_2 = new JButton(_translate_13);
+    String _translate_2 = LanguageManager.translate("button.QRarea");
+    JButton _jButton_2 = new JButton(_translate_2);
     this.btnQrArea = _jButton_2;
     this.pnlButtons.add(this.btnQrArea);
-    String _translate_14 = LanguageManager.translate("button.moveCamera");
-    JButton _jButton_3 = new JButton(_translate_14);
+    String _translate_3 = LanguageManager.translate("button.moveCamera");
+    JButton _jButton_3 = new JButton(_translate_3);
     this.btnMoveCam = _jButton_3;
     this.pnlButtons.add(this.btnMoveCam);
-    JPanel _jPanel_2 = new JPanel();
-    this.pnlQst = _jPanel_2;
+    JPanel _jPanel_1 = new JPanel();
+    this.pnlQst = _jPanel_1;
     this.pnlMain.add(this.pnlQst, BorderLayout.WEST);
-    BorderLayout _borderLayout_1 = new BorderLayout(0, 0);
-    this.pnlQst.setLayout(_borderLayout_1);
-    String _translate_15 = LanguageManager.translate("label.questions");
-    JLabel _jLabel = new JLabel(_translate_15);
+    BorderLayout _borderLayout = new BorderLayout(0, 0);
+    this.pnlQst.setLayout(_borderLayout);
+    String _translate_4 = LanguageManager.translate("label.questions");
+    JLabel _jLabel = new JLabel(_translate_4);
     this.lblQst = _jLabel;
     this.pnlQst.add(this.lblQst, BorderLayout.NORTH);
     AdapterSwingBox _adapterBox = this.adapterPdfAndBoxPanel.getAdapterBox();
     ListOfQuestionsPanel _listOfQuestionsPanel = new ListOfQuestionsPanel(_adapterBox);
     this.listQst = _listOfQuestionsPanel;
     this.pnlQst.add(this.listQst, BorderLayout.CENTER);
-    JPanel _jPanel_3 = new JPanel();
-    this.pnlPage = _jPanel_3;
+    JPanel _jPanel_2 = new JPanel();
+    this.pnlPage = _jPanel_2;
     this.pnlQst.add(this.pnlPage, BorderLayout.SOUTH);
-    BorderLayout _borderLayout_2 = new BorderLayout(0, 0);
-    this.pnlPage.setLayout(_borderLayout_2);
-    String _translate_16 = LanguageManager.translate("label.pages");
-    JLabel _jLabel_1 = new JLabel(_translate_16);
+    BorderLayout _borderLayout_1 = new BorderLayout(0, 0);
+    this.pnlPage.setLayout(_borderLayout_1);
+    String _translate_5 = LanguageManager.translate("label.pages");
+    JLabel _jLabel_1 = new JLabel(_translate_5);
     this.lblPage = _jLabel_1;
     this.pnlPage.add(this.lblPage, BorderLayout.NORTH);
     JComboBox<Integer> _jComboBox = new JComboBox<Integer>();
     this.cmbBxPage = _jComboBox;
     this.pnlPage.add(this.cmbBxPage, BorderLayout.CENTER);
-    JPanel _jPanel_4 = new JPanel();
-    this.pnlNavPage = _jPanel_4;
+    JPanel _jPanel_3 = new JPanel();
+    this.pnlNavPage = _jPanel_3;
     this.pnlPage.add(this.pnlNavPage, BorderLayout.SOUTH);
-    BorderLayout _borderLayout_3 = new BorderLayout(0, 0);
-    this.pnlNavPage.setLayout(_borderLayout_3);
-    String _translate_17 = LanguageManager.translate("button.previousQuestion");
-    JButton _jButton_4 = new JButton(_translate_17);
+    BorderLayout _borderLayout_2 = new BorderLayout(0, 0);
+    this.pnlNavPage.setLayout(_borderLayout_2);
+    String _translate_6 = LanguageManager.translate("button.previousQuestion");
+    JButton _jButton_4 = new JButton(_translate_6);
     this.btnPrev = _jButton_4;
     this.pnlNavPage.add(this.btnPrev, BorderLayout.WEST);
     JLabel _jLabel_2 = new JLabel(".");
     this.lblNumPage = _jLabel_2;
     this.pnlNavPage.add(this.lblNumPage, BorderLayout.CENTER);
-    String _translate_18 = LanguageManager.translate("button.nextQuestion");
-    JButton _jButton_5 = new JButton(_translate_18);
+    String _translate_7 = LanguageManager.translate("button.nextQuestion");
+    JButton _jButton_5 = new JButton(_translate_7);
     this.btnNext = _jButton_5;
     this.pnlNavPage.add(this.btnNext, BorderLayout.EAST);
     PdfAndBoxPanel _pdfAndBoxPanel = new PdfAndBoxPanel(this.adapterPdfAndBoxPanel);
     this.pnlPdf = _pdfAndBoxPanel;
     this.pnlMain.add(this.pnlPdf, BorderLayout.CENTER);
+  }
+  
+  /**
+   * Création du menu en haut de page
+   */
+  public void createTopMenu() {
+    JMenuBar _jMenuBar = new JMenuBar();
+    this.menuBar = _jMenuBar;
+    this.window.setJMenuBar(this.menuBar);
+    String _translate = LanguageManager.translate("menu.file");
+    JMenu _jMenu = new JMenu(_translate);
+    this.mnFile = _jMenu;
+    String _translate_1 = LanguageManager.translate("menu.file.new");
+    JMenuItem _jMenuItem = new JMenuItem(_translate_1);
+    this.mnItemNew = _jMenuItem;
+    this.mnFile.add(this.mnItemNew);
+    this.mnFile.addSeparator();
+    String _translate_2 = LanguageManager.translate("menu.file.save");
+    JMenuItem _jMenuItem_1 = new JMenuItem(_translate_2);
+    this.mnItemSave = _jMenuItem_1;
+    this.mnFile.add(this.mnItemSave);
+    String _translate_3 = LanguageManager.translate("menu.file.load");
+    JMenuItem _jMenuItem_2 = new JMenuItem(_translate_3);
+    this.mnItemLoad = _jMenuItem_2;
+    this.mnFile.add(this.mnItemLoad);
+    String _translate_4 = LanguageManager.translate("menu.file.switchToCorrector");
+    JMenuItem _jMenuItem_3 = new JMenuItem(_translate_4);
+    this.mnItemSwap = _jMenuItem_3;
+    this.mnFile.add(this.mnItemSwap);
+    this.mnFile.addSeparator();
+    String _translate_5 = LanguageManager.translate("menu.file.close");
+    JMenuItem _jMenuItem_4 = new JMenuItem(_translate_5);
+    this.mnItemClose = _jMenuItem_4;
+    this.mnFile.add(this.mnItemClose);
+    this.menuBar.add(this.mnFile);
+    String _translate_6 = LanguageManager.translate("menu.edit");
+    JMenu _jMenu_1 = new JMenu(_translate_6);
+    this.mnEdit = _jMenu_1;
+    String _translate_7 = LanguageManager.translate("menu.edit.delete");
+    JMenuItem _jMenuItem_5 = new JMenuItem(_translate_7);
+    this.mnItemDelete = _jMenuItem_5;
+    this.mnEdit.add(this.mnItemDelete);
+    this.menuBar.add(this.mnEdit);
+    String _translate_8 = LanguageManager.translate("menu.help");
+    JMenu _jMenu_2 = new JMenu(_translate_8);
+    this.mnHelp = _jMenu_2;
+    String _translate_9 = LanguageManager.translate("menu.help.about");
+    JMenuItem _jMenuItem_6 = new JMenuItem(_translate_9);
+    this.mnItemAbout = _jMenuItem_6;
+    this.mnHelp.add(this.mnItemAbout);
+    this.menuBar.add(this.mnHelp);
   }
   
   /**
