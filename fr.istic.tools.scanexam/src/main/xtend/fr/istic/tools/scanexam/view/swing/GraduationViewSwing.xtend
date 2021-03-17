@@ -29,13 +29,13 @@ import javax.swing.SwingConstants
 class GraduationViewSwing {
 
 	// ----------------------------------------------------------------------------------------------------
-	/** 
+	/* 
 	 * ATTRIBUTS
 	 */
 	// ----------------------------------------------------------------------------------------------------
-	
-	/* Controlleur liant les controlleurs du Pdf et des boîtes */
-	var AdapterSwingPdfPanel pdfPresenter
+
+	/* Adaptateur liant les controlleurs du Pdf et des boîtes */
+	var AdapterSwingPdfPanel pdfAdapter
 
 	/* Fenêtre de correction d'examen */
 	var JFrame window
@@ -125,27 +125,36 @@ class GraduationViewSwing {
 	var JSplitPane mainSplitPane
 	
 	/* Panel d'énoncé d'une question */
-		var boolean contentDown
-		
+	var boolean contentDown
+	
+	/* Page affichée (par défaut la première)) */	
 	var currentPage = 0;
 	
+	/* Nombre de pages par défaut */
 	var totalPage = 20;
 	
-
 	// ----------------------------------------------------------------------------------------------------
-	/** 
-	 * METHODES
+	/*
+	 * CONSTRUCTEUR
 	 */
 	// ----------------------------------------------------------------------------------------------------
+
 	/** 
 	 * Constructeur
+	 * @param pdfAdapter Adaptateur liant les controlleurs du Pdf et des boîtes 
 	 */
-	new(AdapterSwingPdfPanel pdfPresenter) {
+	new(AdapterSwingPdfPanel pdfAdapter) {
 		contentDown = false
-		this.pdfPresenter = pdfPresenter
+		this.pdfAdapter = pdfAdapter
 		initialize()
 	}
 
+
+	// ----------------------------------------------------------------------------------------------------
+	/* 
+	 * METHODES
+	 */
+	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * Initialise la fenêtre
 	 */
@@ -278,7 +287,7 @@ class GraduationViewSwing {
 		})
 
 		// pnlPdf = new JPanel();
-		pnlPdf = new PdfPanel(this.pdfPresenter)
+		pnlPdf = new PdfPanel(this.pdfAdapter)
 		window.getContentPane().add(pnlPdf, BorderLayout.CENTER)
 		pnlPdf.setLayout(new BorderLayout(0, 0))
 
@@ -339,13 +348,13 @@ class GraduationViewSwing {
 	 * Naviguer vers previously page
 	 */
 	def void previousPage(){
-		pdfPresenter.presenterPdf.getPresenterPdf().previousPdfPage;
+		pdfAdapter.presenterPdf.getPresenterPdf().previousPdfPage;
 	}/** 
 	 * Naviguer vers next page
 	 */
 	
 	def void nextPage(){
-		pdfPresenter.presenterPdf.getPresenterPdf().nextPdfPage;
+		pdfAdapter.presenterPdf.getPresenterPdf().nextPdfPage;
 	}
 
 

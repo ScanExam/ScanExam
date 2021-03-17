@@ -8,7 +8,6 @@ import java.io.File
 import java.io.IOException
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
-import fr.istic.tools.scanexam.launcher.LauncherSwing
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen

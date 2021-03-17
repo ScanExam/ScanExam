@@ -15,9 +15,21 @@ import static fr.istic.tools.scanexam.config.LanguageManager.*
  * @author Julien Cochet
  */
 class ListOfQuestionsPanel extends JPanel {
+	
+	// ----------------------------------------------------------------------------------------------------
+	/* 
+	 * ATTRIBUTS
+	 */
+	// ----------------------------------------------------------------------------------------------------
+	
 	/* AdapterSwingBox Adaptateur gérant la boîte */
 	var AdapterSwingBox adapterBox
 	
+	// ----------------------------------------------------------------------------------------------------
+	/*
+	 * CONSTRUCTEUR
+	 */
+	// ----------------------------------------------------------------------------------------------------
 	/**
 	 * Constructeur
 	 * @param AdapterSwingBox Adaptateur gérant la boîte
@@ -27,6 +39,11 @@ class ListOfQuestionsPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 	}
 	
+	// ----------------------------------------------------------------------------------------------------
+	/* 
+	 * METHODES
+	 */
+	// ----------------------------------------------------------------------------------------------------
 	/**
 	 * Ajoute une question
 	 * @param Box Boîte lié à la question
