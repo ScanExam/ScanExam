@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
-import fr.istic.tools.scanexam.box.Box
-import fr.istic.tools.scanexam.box.BoxList
+import fr.istic.tools.scanexam.view.swing.Box
+import fr.istic.tools.scanexam.view.swing.BoxList
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
