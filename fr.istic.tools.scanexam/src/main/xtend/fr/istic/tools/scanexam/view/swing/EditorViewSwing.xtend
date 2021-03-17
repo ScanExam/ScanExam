@@ -26,7 +26,7 @@ class EditorViewSwing {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/* Controlleur liant les controlleurs du Pdf et des boîtes */
+	/* Adaptateur liant les controlleurs du Pdf et des boîtes */
 	var AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel
 	
 	/* Fenêtre de correction d'examen */
@@ -125,6 +125,7 @@ class EditorViewSwing {
 	
 	/** 
 	 * Constructeur
+	 * @param adapterPdfAndBoxPanel Adaptateur liant les controlleurs du Pdf et des boîtes
 	 */
 	new(AdapterSwingPdfAndBoxPanel adapterPdfAndBoxPanel) {
 		this.adapterPdfAndBoxPanel = adapterPdfAndBoxPanel
@@ -140,51 +141,20 @@ class EditorViewSwing {
 		window.setBounds(100, 100, 1280, 720)
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 		
-		menuBar = new JMenuBar()
-		window.setJMenuBar(menuBar)
-		
-		mnFile = new JMenu(translate("menu.file"))
-		
-		mnItemNew = new JMenuItem(translate("menu.file.new"))
-	    mnFile.add(mnItemNew)
-	    
-	    mnFile.addSeparator()
-	    
-		mnItemSave = new JMenuItem(translate("menu.file.save"))
-	    mnFile.add(mnItemSave)
-	    
-		mnItemLoad = new JMenuItem(translate("menu.file.load"))
-	    mnFile.add(mnItemLoad)
-	    
-	    mnItemSwap = new JMenuItem(translate("menu.file.switchToCorrector"))
-	    mnFile.add(mnItemSwap)
-	    
-	    mnFile.addSeparator()
-	    
-		mnItemClose = new JMenuItem(translate("menu.file.close"))
-	    mnFile.add(mnItemClose)
-	    
-		menuBar.add(mnFile)
-		
-		mnEdit = new JMenu(translate("menu.edit"))
-		
-		mnItemDelete = new JMenuItem(translate("menu.edit.delete"))
-	    mnEdit.add(mnItemDelete)
-	    
-		menuBar.add(mnEdit)
-		
-		mnHelp = new JMenu(translate("menu.help"))
-		
-		mnItemAbout = new JMenuItem(translate("menu.help.about"))
-	    mnHelp.add(mnItemAbout)
-	    
-		menuBar.add(mnHelp)
+		createTopMenu()
 		
 		pnlMain = new JPanel()
 		pnlMain.setBorder(new EmptyBorder(5, 5, 5, 5))
 		window.setContentPane(pnlMain)
 		pnlMain.setLayout(new BorderLayout(0, 0))
 		
+		addQuestionAndPdfHandler()
+	}
+	
+	/**
+	 * Ajoute la gestion de question et du PDF
+	 */
+	def void addQuestionAndPdfHandler() {
 		pnlButtons = new JPanel()
 		pnlMain.add(pnlButtons, BorderLayout::NORTH)
 		pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout::X_AXIS))
@@ -235,8 +205,52 @@ class EditorViewSwing {
 		pnlNavPage.add(btnNext, BorderLayout.EAST)
 		
 		pnlPdf = new PdfAndBoxPanel(this.adapterPdfAndBoxPanel)
-		//pnlPdf = new ImagePanel(ResourcesUtils.getInputStreamResource("/logo.png"))
 		pnlMain.add(pnlPdf, BorderLayout::CENTER)
+	}
+	
+	/**
+	 * Création du menu en haut de page
+	 */
+	def void createTopMenu() {
+		menuBar = new JMenuBar()
+		window.setJMenuBar(menuBar)
+		
+		mnFile = new JMenu(translate("menu.file"))
+		
+		mnItemNew = new JMenuItem(translate("menu.file.new"))
+	    mnFile.add(mnItemNew)
+	    
+	    mnFile.addSeparator()
+	    
+		mnItemSave = new JMenuItem(translate("menu.file.save"))
+	    mnFile.add(mnItemSave)
+	    
+		mnItemLoad = new JMenuItem(translate("menu.file.load"))
+	    mnFile.add(mnItemLoad)
+	    
+	    mnItemSwap = new JMenuItem(translate("menu.file.switchToCorrector"))
+	    mnFile.add(mnItemSwap)
+	    
+	    mnFile.addSeparator()
+	    
+		mnItemClose = new JMenuItem(translate("menu.file.close"))
+	    mnFile.add(mnItemClose)
+	    
+		menuBar.add(mnFile)
+		
+		mnEdit = new JMenu(translate("menu.edit"))
+		
+		mnItemDelete = new JMenuItem(translate("menu.edit.delete"))
+	    mnEdit.add(mnItemDelete)
+	    
+		menuBar.add(mnEdit)
+		
+		mnHelp = new JMenu(translate("menu.help"))
+		
+		mnItemAbout = new JMenuItem(translate("menu.help.about"))
+	    mnHelp.add(mnItemAbout)
+	    
+		menuBar.add(mnHelp)
 	}
 
 	// ----------------------------------------------------------------------------------------------------
