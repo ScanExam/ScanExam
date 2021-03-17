@@ -1,9 +1,9 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
+import fr.istic.tools.scanexam.view.swing.Box;
 import fr.istic.tools.scanexam.view.swing.ListOfQuestionsPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

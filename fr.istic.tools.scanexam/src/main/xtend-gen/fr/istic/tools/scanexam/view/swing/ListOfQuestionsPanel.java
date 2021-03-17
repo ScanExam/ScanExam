@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.box.Box;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
+import fr.istic.tools.scanexam.view.swing.Box;
 import fr.istic.tools.scanexam.view.swing.QuestionPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;

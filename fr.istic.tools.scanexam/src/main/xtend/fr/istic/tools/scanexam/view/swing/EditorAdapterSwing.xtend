@@ -1,7 +1,8 @@
 package fr.istic.tools.scanexam.view.swing
 
-import fr.istic.tools.scanexam.box.BoxList
+import fr.istic.tools.scanexam.launcher.LauncherSwing
 import fr.istic.tools.scanexam.presenter.EditorPresenter
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 import fr.istic.tools.scanexam.view.EditorAdapter
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -9,8 +10,6 @@ import java.io.File
 import java.io.IOException
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
-import fr.istic.tools.scanexam.launcher.LauncherSwing
-import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen

@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.box;
+package fr.istic.tools.scanexam.view.swing;
 
 /**
  * Donnée d'une boîte en deux dimensions

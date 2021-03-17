@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.view.swing
 
-import fr.istic.tools.scanexam.box.Box
-import fr.istic.tools.scanexam.box.BoxList
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D

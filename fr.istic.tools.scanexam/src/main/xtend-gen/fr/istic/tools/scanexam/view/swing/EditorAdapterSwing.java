@@ -1,11 +1,11 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.box.BoxList;
 import fr.istic.tools.scanexam.launcher.LauncherSwing;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
 import fr.istic.tools.scanexam.view.EditorAdapter;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
+import fr.istic.tools.scanexam.view.swing.BoxList;
 import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
