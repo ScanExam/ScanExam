@@ -7,6 +7,12 @@ import java.awt.Rectangle
 
 class PdfAndBoxPanel extends PdfPanel {
 	
+	// ----------------------------------------------------------------------------------------------------
+	/* 
+	 * ATTRIBUTS
+	 */
+	// ----------------------------------------------------------------------------------------------------
+	
 	/* Adaptateur swing du gestionnaire de boîtes de sélection */
 	public var AdapterSwingBox adapterBox
 	/* Couleur de l'intérieur des boîtes */
@@ -15,7 +21,16 @@ class PdfAndBoxPanel extends PdfPanel {
 	val Color titleColor = new Color(191, 191, 191, 191)
 	/* Couleur des contours des boîtes */
 	val Color outLineColor = Color.BLACK
-		
+	
+	// ----------------------------------------------------------------------------------------------------
+	/*
+	 * CONSTRUCTEUR
+	 */
+	// ----------------------------------------------------------------------------------------------------
+	/**
+	 * Constructeur
+	 * @param adapter Adaptateur de le classe
+	 */
 	new(AdapterSwingPdfAndBoxPanel adapter) {
 		super(adapter)
 		
@@ -28,6 +43,11 @@ class PdfAndBoxPanel extends PdfPanel {
         addMouseMotionListener(this.adapterBox.getMouseHandler())
 	}
 	
+	// ----------------------------------------------------------------------------------------------------
+	/* 
+	 * METHODES
+	 */
+	// ----------------------------------------------------------------------------------------------------
 	/**
 	 * Affichage graphique
 	 */
