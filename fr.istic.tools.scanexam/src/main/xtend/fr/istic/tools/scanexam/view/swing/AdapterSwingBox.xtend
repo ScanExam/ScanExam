@@ -50,6 +50,7 @@ class AdapterSwingBox extends AdapterBox {
 	 * @param scale Echelle pour l'affichage
 	 * @param originX Point d'origine sur l'axe X
 	 * @param originY Point d'origine sur l'axe Y
+	 * @param selectionBoxes Liste des boîtes desinnées
 	 */
 	new(int windowWidth, int windowHeight, int scale, int originX, int originY, BoxList selectionBoxes) {
 		super(windowWidth, windowHeight, scale, originX, originY, selectionBoxes)
@@ -200,10 +201,14 @@ class AdapterSwingBox extends AdapterBox {
 
 	// ----------------------------------------------------------------------------------------------------
 	/* 
-	 * GETTERS
+	 * GETTER
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Renvoie l'adapter de la souris
+	 * @return L'adapter de la souris
+	 */
 	def MouseAdapter getMouseHandler() {
 		return mouseHandler
 	}
@@ -214,19 +219,36 @@ class AdapterSwingBox extends AdapterBox {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
+	/**
+	 * Lie la vue de l'adaptateur de création de boîte
+	 * @param view Vue swing
+	 */
 	def void setView(JPanel view) {
 		this.view = Optional::of(view)
 	}
 	
+	/**
+	 * Met à jour la largueur de la fenêtre pour l'adaptateur
+	 * @param width Largueur de la fenêtre
+	 */
 	def void setWindowWidth(int width) {
 		this.windowWidth = width
 	}
 	
+	/**
+	 * Met à jour la hauteur de la fenêtre pour l'adaptateur
+	 * @param height Hauteur de la fenêtre
+	 */
 	def void setWindowHeight(int height) {
 		this.windowHeight = height
 	}
 	
+	/**
+	 * Met à jour la référence du panel de liste des questions pour l'adaptateur
+	 * @param listQst Panel de liste des questions
+	 */
 	def void setListQst(ListOfQuestionsPanel listQst) {
 		this.listQst = listQst
 	}
+	
 }
