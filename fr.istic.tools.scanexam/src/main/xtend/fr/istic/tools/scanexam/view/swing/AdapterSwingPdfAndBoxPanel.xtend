@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.swing
 
-import fr.istic.tools.scanexam.box.BoxList
 import fr.istic.tools.scanexam.presenter.Presenter
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone
 import java.awt.Point

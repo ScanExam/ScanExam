@@ -4,12 +4,7 @@ package fr.istic.tools.scanexam.core.impl;
 
 import fr.istic.tools.scanexam.core.*;
 
-import fr.istic.tools.scanexam.utils.Pair;
-
-import java.util.Map;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -74,40 +69,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 			case CorePackage.STUDENT_SHEET: return createStudentSheet();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-			case CorePackage.MAP:
-				return createMapFromString(eDataType, initialValue);
-			case CorePackage.PAIR:
-				return createPairFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-			case CorePackage.MAP:
-				return convertMapToString(eDataType, instanceValue);
-			case CorePackage.PAIR:
-				return convertPairToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -219,42 +180,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	public StudentSheet createStudentSheet() {
 		StudentSheetImpl studentSheet = new StudentSheetImpl();
 		return studentSheet;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Map<?, ?> createMapFromString(EDataType eDataType, String initialValue) {
-		return (Map<?, ?>)super.createFromString(initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertMapToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Pair<?, ?> createPairFromString(EDataType eDataType, String initialValue) {
-		return (Pair<?, ?>)super.createFromString(initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertPairToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(instanceValue);
 	}
 
 	/**

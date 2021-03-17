@@ -3,15 +3,15 @@ package fr.istic.tools.scanexam.launcher
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.presenter.PresenterBindings
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fX.ControllerFXEditor
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
+import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector
+import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
-import fr.istic.tools.scanexam.view.fX.ControllerFXCorrector
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -54,8 +54,11 @@ class LauncherFX extends Application implements Launcher {
 			
 			val editorScene = new Scene(editorRoot, 1280, 720) ;
 			val graduatorScene = new Scene(graduatorRoot, 1280, 720);
+			editorScene.stylesheets.add("viewResources/MyStyle.css")
 			
 			controllerGraduator.init
+			controllerEditor.init
+			
 			
 			pStage = primaryStage;
 			eScene = editorScene

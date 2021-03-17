@@ -16,13 +16,8 @@ import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.TextComment;
 
-import fr.istic.tools.scanexam.utils.Pair;
-
-import java.util.Map;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -113,20 +108,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	private EClass studentSheetEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType mapEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType pairEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -539,24 +520,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EDataType getMap() {
-		return mapEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EDataType getPair() {
-		return pairEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public CoreFactory getCoreFactory() {
 		return (CoreFactory)getEFactoryInstance();
 	}
@@ -628,10 +591,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(studentSheetEClass, STUDENT_SHEET__POS_PAGE);
 		createEReference(studentSheetEClass, STUDENT_SHEET__GRADES);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___COMPUTE_GRADE);
-
-		// Create data types
-		mapEDataType = createEDataType(MAP);
-		pairEDataType = createEDataType(PAIR);
 	}
 
 	/**
@@ -661,10 +620,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
 		// Create type parameters
-		addETypeParameter(mapEDataType, "T1");
-		addETypeParameter(mapEDataType, "T2");
-		addETypeParameter(pairEDataType, "T1");
-		addETypeParameter(pairEDataType, "T2");
 
 		// Set bounds for type parameters
 
@@ -722,10 +677,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEReference(getStudentSheet_Grades(), this.getGrade(), null, "grades", null, 0, -1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getStudentSheet__ComputeGrade(), theEcorePackage.getEFloat(), "computeGrade", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		// Initialize data types
-		initEDataType(mapEDataType, Map.class, "Map", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(pairEDataType, Pair.class, "Pair", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

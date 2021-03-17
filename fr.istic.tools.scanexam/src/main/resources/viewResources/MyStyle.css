@@ -52,6 +52,8 @@ ListView {
 	-fx-background-color: transparent;
 	-fx-focus-color : transparent;
 	-fx-faint-focus-color : transparent;
+	-fx-border-color: lightgrey ;
+	-fx-border-width: 1px 1px 1px 1px;
 }
 
 #correctionScrollPane > .viewport {
@@ -63,3 +65,26 @@ ListView {
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 0px 0px 0px;
 }
+
+#ListBox {
+	-fx-background-color: transparent;
+	-fx-focus-color : transparent;
+	-fx-faint-focus-color : transparent;
+	-fx-border-color: lightgrey ;
+	-fx-border-width: 1px 1px 1px 1px;
+}
+
+#ListBox > .viewport {
+	-fx-background-color: white;
+}
+
+.GradeItemBox {
+	-fx-border-color: lightgrey ;
+	-fx-border-width: 1px 1px 1px 1px;
+}
+.test1 {
+	-fx-border-color: lightgrey ;
+	-fx-border-width: 1px 1px 1px 1px;
+}
+
+

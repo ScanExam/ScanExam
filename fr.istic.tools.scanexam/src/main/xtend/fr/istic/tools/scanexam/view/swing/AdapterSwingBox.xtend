@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.view.swing
 
-import fr.istic.tools.scanexam.box.Box
-import fr.istic.tools.scanexam.box.BoxList
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 import fr.istic.tools.scanexam.view.AdapterBox
 import java.awt.Point

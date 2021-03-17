@@ -1,15 +1,14 @@
 package fr.istic.tools.scanexam.view.swing
 
+import fr.istic.tools.scanexam.presenter.SelectionStateMachine
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
-import fr.istic.tools.scanexam.box.Box
 
 import static fr.istic.tools.scanexam.config.LanguageManager.*
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
-import fr.istic.tools.scanexam.presenter.SelectionStateMachine
 
 /**
  * Classe pour afficher la liste des questions en swing
