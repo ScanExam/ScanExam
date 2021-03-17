@@ -1,21 +1,20 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.view.fX.editor;
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.launcher.LauncherFX
-import fr.istic.tools.scanexam.view.fX.Box.BoxType
+import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
+import fr.istic.tools.scanexam.view.fX.FXSettings
 import java.io.File
 import java.util.Arrays
-import java.util.LinkedList
 import javafx.embed.swing.SwingFXUtils
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.Cursor
 import javafx.scene.Node
+import javafx.scene.control.Button
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
@@ -25,7 +24,9 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import javafx.scene.control.Button
+import javafx.scene.layout.AnchorPane
+import javafx.scene.control.ScrollPane
+import javafx.scene.control.ToggleButton
 
 class ControllerFXEditor {
 
@@ -34,6 +35,10 @@ class ControllerFXEditor {
 
 	def void setEditorAdapterFX(EditorAdapterFX editor) {
 		this.editor = editor
+	}
+	
+	def getEditor(){
+		editor
 	}
 
 	double maxX;
@@ -52,22 +57,23 @@ class ControllerFXEditor {
 		RESIZE_TOOL
 
 	}
+	
+	def getSelectedTool(){
+		this.currentTool
+	}
 
 	// ** FXML TAGS **//	
-	@FXML
-	Pane mainPane;
+	
+	PdfPane mainPane;
 
 	@FXML
-	ImageView pdfView;
-
+	ScrollPane questionListContainer;
+	
 	@FXML
-	ListView<ListViewBox> questionList;
+	ScrollPane gradeListContainer;
 
 	@FXML
 	ChoiceBox<Integer> pageChoice;
-
-	@FXML
-	Label introLabel;
 
 	@FXML
 	Label currentToolLabel;
@@ -76,8 +82,14 @@ class ControllerFXEditor {
 	Label pageNumberLabel;
 	
 	@FXML
-	Button createBoxButton;
+	ToggleButton createBoxButton;
 	
+	QuestionList questionList;
+	
+	GradeList gradeList;
+	
+	@FXML
+	AnchorPane mainPaneContainer
 
 	@FXML
 	def void pressed() {
@@ -85,7 +97,11 @@ class ControllerFXEditor {
 
 	@FXML
 	def void questionAreaPressed() {
-		setToQuestionAreaTool
+		if (createBoxButton.selected) {
+			setToQuestionAreaTool
+		}else {
+			setToNoTool
+		}
 	}
 
 	@FXML
@@ -143,6 +159,50 @@ class ControllerFXEditor {
 			}
 		}
 	}
+	
+	def getMainPane(){
+		mainPane
+	}
+	
+	def getGradeList(){
+		gradeList
+	}
+	
+	def void changeFocus(EditorQuestionItem newItem) {
+		gradeList.showFor(newItem)
+	}
+	
+	def void noFocus(){
+		gradeList.clearDisplay
+	}
+	
+	/**
+	 * Called When we decide to focus on a specific question
+	 */
+	def void selectQuestion(EditorQuestionItem item){
+		if (item === null) {
+			questionList.removeFocus
+			gradeList.clearDisplay
+			return
+		}
+		questionList.changeFocus(item)
+		gradeList.showFor(item)
+	}
+	
+	
+	def void init(){
+		
+		mainPane = new PdfPane(this);
+		mainPaneContainer.children.add(mainPane)
+		
+		questionList = new QuestionList(this);
+		questionListContainer.content = questionList
+		
+		gradeList = new GradeList(this);
+		gradeListContainer.content = gradeList
+		
+	}
+
 
 	def void chooseMouseAction(MouseEvent e) {
 		switch currentTool {
@@ -174,22 +234,20 @@ class ControllerFXEditor {
 	var objectOriginX = 0d;
 	var objectOriginY = 0d;
 
-	var boxes = new LinkedList<Box>();
 	Box currentRectangle = null;
 
 	def void createBox(MouseEvent e) {
 		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,
-			Math.min(e.x, maxX - FXSettings.BOX_BORDER_THICKNESS));
+								Math.min(e.x, maxX - FXSettings.BOX_BORDER_THICKNESS));
 		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,
-			Math.min(e.y, maxY - FXSettings.BOX_BORDER_THICKNESS));
+							Math.min(e.y, maxY - FXSettings.BOX_BORDER_THICKNESS));
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { // TODO add type checks
 			mouseOriginX = mousePositionX
 			mouseOriginY = mousePositionY
-			var source = e.source as Pane
-			currentRectangle = createBox(mousePositionX, mousePositionY);
+		
 			
-			source.children.add(currentRectangle);
-			source.children.add(currentRectangle.getText());
+			currentRectangle = createZone(mousePositionX, mousePositionY);
+			mainPane.addZone(currentRectangle);
 
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
@@ -216,16 +274,14 @@ class ControllerFXEditor {
 		{
 			if (currentRectangle.width > FXSettings.MINIMUM_ZONE_SIZE && currentRectangle.height > FXSettings.MINIMUM_ZONE_SIZE)
 			{
-				addBox(currentRectangle);
-				addBoxModel(currentRectangle);
-				renameBox(currentRectangle, String.format(LanguageManager.translate("question.default_name"), currentRectangle.boxId))
+				questionList.newQuestion(currentRectangle)
 			}
 			else
 			{
-				(e.source as Pane).children.remove(currentRectangle);
-				(e.source as Pane).children.remove(currentRectangle.getText());
+				mainPane.removeZone(currentRectangle);
 			}
-		
+			setToNoTool
+			createBoxButton.selected = false
 		}
 	}
 
@@ -260,7 +316,7 @@ class ControllerFXEditor {
 			currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			resizeBox(currentRectangle)
+			//resizeBox(currentRectangle)
 		}
 	}
 
@@ -285,7 +341,7 @@ class ControllerFXEditor {
 			source.layoutY = objectOriginY + (e.screenY - mouseOriginY)
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			mainPane.cursor = Cursor.OPEN_HAND
+			mainPane.cursor = Cursor.DEFAULT
 		}
 	}
 
@@ -359,197 +415,25 @@ class ControllerFXEditor {
 	 * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
 	 */
 
-	def Box createBox(double x, double y) {
-		switch currentTool {
-			case QUESTION_AREA: {
-				new Box("Question temp", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QUESTION, x, y);
-			}
-			case ID_AREA: {
-				new Box("ID Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.ID, x, y);
-			}
-			case QR_AREA: {
-				new Box("QR Zone", editor.presenter.getPresenterPdf.currentPdfPageNumber, BoxType.QR, x, y);
-			}
-			default: {
-			}
-		}
+	def Box createZone(double x, double y) {
+		
+		new Box(x, y,0,0);
+		
 	}
 
-	/**
-	 * notifies the rest of the program to the addition of a new box
-	 * 
-	 * Called when we finish creating a new box (Mouse release)
-	 */
-	def addBox(Box box) {
-		var lb = box.listViewBox;
-		/*lb.upAction = new EventHandler<ActionEvent>() {
 
-			override handle(ActionEvent event) {
-			}
 
-		}*/
-		/*lb.downAction = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-			}
-
-		}*/
-		
-		lb.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-				override handle(MouseEvent event) {
-					highlightBox(box);
-				}
-
-			})
-		lb.removeAction = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				System.out.println("Remove "+box.getName());
-				removeBox(box);
-			}
-
-		}
-
-		lb.textCommit = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				renameBox(box, (event.source as TextField).text)
-				box.listViewBox.toggleRenaming
-			}
-
-		}
-		
-		lb.moveAction = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				setToMoveTool
-				currentRectangle = box
-			}
-
-		}
-		lb.resizeAction = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				setToResizeTool
-				currentRectangle = box
-			}
-
-		}
-		
-		lb.renameOption = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				box.listViewBox.toggleRenaming
-			}
-
-		}
-		lb.changePoints = new EventHandler<ActionEvent>() {
-
-			override handle(ActionEvent event) {
-				box.listViewBox.togglePointChange
-			}
-
-		}
-		
-		lb.addGradeItemAction = new EventHandler<ActionEvent>(){
-			
-			override handle(ActionEvent event) {
-				val item = new GradeItemHBox(box.boxId);
-				addGradeItem(item)
-				box.addGradeItem(item)
-				item.removeGradeItemAction = new EventHandler<ActionEvent>(){
-					
-					override handle(ActionEvent event) {
-						removeGradeItem(item)
-						box.removeGradeItem(item);
-					}
-				
-				}
-				item.changeName = new EventHandler<ActionEvent>(){
-					
-					override handle(ActionEvent event) {
-						item.toggleRenaming
-					}
-				}
-				item.changePoints = new EventHandler<ActionEvent>(){
-					
-					override handle(ActionEvent event) {
-						item.togglePointChange
-					}
-				}
-				item.nameCommit = new EventHandler<ActionEvent>() {
-
-					override handle(ActionEvent event) {
-						updateGradeItem(item)
-						item.toggleRenaming
-					}
-		
-				}
-				item.pointsCommit = new EventHandler<ActionEvent>() {
-
-					override handle(ActionEvent event) {
-						updateGradeItem(item)
-						item.togglePointChange
-					}
-		
-				}
-			}
-			
-		}
-		
-		questionList.items.add(lb);
-		boxes.add(box);
+	def addZone(Box zone) {
+		mainPane.children.add(zone);
 	}
+	
+	
 
 	// --- ACTIONS ON THE MODEL ---//
-	def renameBox(Box box, String newName) {
-		box.listViewBox.labelText = newName
-		editor.presenter.presenterQuestionZone.renameQuestion(box.boxId, box.name)
-	}
-
-	def moveBox(Box box) {
-		editor.presenter.presenterQuestionZone.moveQuestion(box.boxId,convertToRelative(box.x,maxX),convertToRelative(box.y,maxY));
-	}
-
-	def resizeBox(Box box) {
-		editor.presenter.presenterQuestionZone.resizeQuestion(box.boxId,convertToRelative(box.height,maxY),convertToRelative(box.width,maxX));
-	}
-	
-	def addGradeItem(GradeItemHBox item) {
-		item.gradeItemId = editor.presenter.presenterMarkingScheme.addEntry(item.gradeQuestionId,item.gradeItemName,Float.parseFloat(item.gradeItemPoints))
-		logger.warn(item.gradeItemId)
-	}
-	
-	def updateGradeItem(GradeItemHBox item) {
-		item.gradeItemName = item.nameFieldText
-		item.gradeItemPoints = item.pointFieldText
-		editor.presenter.presenterMarkingScheme.modifyEntry(item.gradeQuestionId,item.gradeItemId,item.gradeItemName,Float.parseFloat(item.gradeItemPoints))
-	
-	}
-	
-	def removeGradeItem(GradeItemHBox item) {
-		editor.presenter.presenterMarkingScheme.removeEntry(item.gradeQuestionId,item.gradeItemId)
-	}
 	
 	
-
-	/**
-	 * notifies the rest of the program to the removal of a box
-	 */
-	def removeBox(Box box) {
-		logger.info("Removing box " + box)
-		questionList.items.remove(box.listViewBox)
-		mainPane.children.remove(box.getText())
-		mainPane.children.remove(box)
-		boxes.remove(box)
-		editor.removeBox(box)
-		setToNoTool
-	}
 	
-	def addBoxModel(Box box){
-		box.boxId = editor.presenter.presenterQuestionZone.createQuestion(convertToRelative(box.x,maxX),convertToRelative(box.y,maxY),convertToRelative(box.height,maxY),convertToRelative(box.width,maxX))
-	}
+	
 
 	// ------------//
 	/**
@@ -605,38 +489,22 @@ class ControllerFXEditor {
 	}
 
 	def loadBoxes() {
-		/*editor.presenter.presenterQuestionZone.initLoading
-		while (editor.presenter.presenterQuestionZone.loadNextQuestion) {
-			var box = new Box(
-				editor.presenter.presenterQuestionZone.currentQuestionName,
-				editor.presenter.presenterQuestionZone.currentQuestionPage,
-				BoxType.QUESTION,
-				editor.presenter.presenterQuestionZone.currentQuestionX,
-				editor.presenter.presenterQuestionZone.currentQuestionY,
-				editor.presenter.presenterQuestionZone.currentQuestionHeight,
-				editor.presenter.presenterQuestionZone.currentQuestionWidth
-			);
-			addBox(box);
-		}*/
 		
 		for (var p = 0;p < editor.presenter.getPresenterPdf.totalPdfPageNumber;p++) {
 			var ids = editor.presenter.presenterQuestionZone.initLoading(p)
 			for (int i:ids) {
+				
 				var box = new Box(
-					editor.presenter.presenterQuestionZone.questionName(i),
-					p,
-					BoxType.QUESTION,
 					editor.presenter.presenterQuestionZone.questionX(i) * maxX,
 					editor.presenter.presenterQuestionZone.questionY(i) * maxY,
 					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY,
 					editor.presenter.presenterQuestionZone.questionWidth(i) * maxX
 				)
-				addBox(box)
 				mainPane.children.add(box)
 			}
 		}
 		
-		showOnlyPage(0)
+		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 	
 
@@ -654,18 +522,10 @@ class ControllerFXEditor {
 	def renderDocument() {
 
 		pageNumberLabel.text = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1 + "/" + editor.presenter.getPresenterPdf.totalPdfPageNumber
-		introLabel.visible = false
 		val image = editor.presenter.getPresenterPdf.currentPdfPage
-		pdfView.image = SwingFXUtils.toFXImage(image, null);
-		var fitW = pdfView.fitWidth
-		var fitH = pdfView.fitHeight
-		if (image.height > image.width) { // calculates the actual image coordinates
-			maxY = fitH
-			maxX = (pdfView.image.width / pdfView.image.height) * fitW
-		} else {
-			maxY = (pdfView.image.height / pdfView.image.width) * fitH
-			maxX = fitW
-		}
+		mainPane.image = SwingFXUtils.toFXImage(image, null);
+		maxX = mainPane.imageViewWidth
+		maxY = mainPane.imageViewHeight
 		pdfLoaded = true
 	}
 
@@ -675,7 +535,7 @@ class ControllerFXEditor {
 	def selectPage(int pageNumber) {
 		editor.presenter.getPresenterPdf.choosePdfPage(pageNumber);
 		renderDocument();
-		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
+		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 
 	/**
@@ -684,28 +544,15 @@ class ControllerFXEditor {
 	def nextPage() {
 		editor.presenter.getPresenterPdf.nextPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
+		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 
 	def previousPage() {
 		editor.presenter.getPresenterPdf.previousPdfPage();
 		renderDocument
-		showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber);
+		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 
-	def showOnlyPage(int page) {
-		for (Box b : boxes) {
-			if (b.pageNumber == page) {
-				b.visible = true;
-
-				b.isVisible(true)
-			} else {
-				b.visible = false;
-				b.isVisible(false)
-			}
-		}
-	}
-	
 
 	/**
 	 * Highlights the Box box, called when we click on a box on the listview
@@ -713,23 +560,23 @@ class ControllerFXEditor {
 	Box highlightedBox = null;
 
 	def highlightBox(Box box) {
-		if (highlightedBox !== null) {
+		/*if (highlightedBox !== null) {
 			highlightedBox.focus = false;
 		}
 		highlightedBox = box;
-		highlightedBox.focus = true
+		highlightedBox.focus = true*/
 	}
 	def double convertToRelative(double relative, double to){
 		return relative/to
 	}
 	
 	def void clearVue(){
-		boxes.clear();
-		for (ListViewBox n : questionList.items){
+		/*boxes.clear(); //TODO 
+		for (EditorQuestionItem n : questionList.items){
 			mainPane.children.remove(n.parentBox);
 			mainPane.children.remove(n.parentBox.text)
 			boxes.remove(n.parentBox)
 		}
-	questionList.items.clear()
+	questionList.items.clear()*/
 	}
 }

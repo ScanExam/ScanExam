@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.presenter.GraduationPresenter
 import fr.istic.tools.scanexam.view.GraduationAdapter
 import java.io.File
 import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector
 
 class GraduationAdapterFX implements GraduationAdapter {
 	

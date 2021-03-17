@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.view.fX.corrector
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
 import java.io.File
@@ -24,6 +24,7 @@ import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import java.util.LinkedList
 import javafx.embed.swing.SwingFXUtils
+import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -288,6 +289,7 @@ class ControllerFXCorrector {
 			source.scaleX = source.scaleX * 1.05
 			source.scaleY = source.scaleY * 1.05
 		}
+		e.consume
 	}
 
 	

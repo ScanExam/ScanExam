@@ -1,12 +1,11 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.view.fX.corrector
 
-import javafx.scene.layout.VBox
-import javafx.scene.layout.HBox
+import java.util.LinkedList
+import java.util.List
 import javafx.scene.control.Label
 import javafx.scene.control.ToggleButton
-import java.util.List
-import javafx.scene.Node
-import java.util.LinkedList
+import javafx.scene.layout.HBox
+import javafx.scene.layout.VBox
 
 class Grader extends VBox {
 

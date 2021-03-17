@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.view.fX.corrector
 
 import javafx.scene.layout.VBox
 import javafx.scene.control.Label
