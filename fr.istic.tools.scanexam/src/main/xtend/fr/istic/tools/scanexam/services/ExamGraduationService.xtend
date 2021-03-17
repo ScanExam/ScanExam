@@ -49,8 +49,9 @@ class ExamGraduationService extends Service
 	 * Sauvegarde le fichier de correction d'examen sur le disque.
 	 * @params path L'emplacement de sauvegarde du fichier.
 	 */
-	override saveCorrectionTemplate(String path) 
+	def saveCorrectionTemplate(String path) 
 	{
+		
 		// TODO (sauvegarde le XMI de correction)
 	}
 	/**

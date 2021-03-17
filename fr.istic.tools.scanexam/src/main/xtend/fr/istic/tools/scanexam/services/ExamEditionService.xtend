@@ -124,7 +124,7 @@ class ExamEditionService extends Service // TODO : renommer
 			scale.steps.remove(scaleEntry)
 	}
 	
-	override save(String path) {
+	def save(String path) {
 		
 		val outputStream = new ByteArrayOutputStream();
 		document.save(outputStream);

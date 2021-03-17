@@ -117,9 +117,6 @@ abstract class Service
 	{
 		return ExamSingleton.getQuestion(pageIndex,index).zone
 	}
-	
-	
-	def void save(String path)
 
 	
 	def int getPageNumber() {
