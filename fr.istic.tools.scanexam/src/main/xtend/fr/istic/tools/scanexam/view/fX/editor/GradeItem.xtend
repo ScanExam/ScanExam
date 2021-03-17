@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 
 class GradeItem extends HBox {
-		
+		//---Constructor---//
 		new(GradeList list,EditorQuestionItem item){
 			super();
 			this.questionItem = item
@@ -39,6 +39,8 @@ class GradeItem extends HBox {
 			setupContextMenu
 			setupEvents
 		}
+		//-----------------//
+		
 		GradeList list;
 		EditorQuestionItem questionItem;
 		int gradeItemId;

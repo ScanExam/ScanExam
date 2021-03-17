@@ -236,6 +236,10 @@ class ControllerFXEditor {
 
 	Box currentRectangle = null;
 
+	/**
+	 * Called when we click and drag on the pdf with the create question too selected
+	 * will not create the question if the zone is too small
+	 */
 	def void createBox(MouseEvent e) {
 		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,
 								Math.min(e.x, maxX - FXSettings.BOX_BORDER_THICKNESS));
@@ -285,6 +289,11 @@ class ControllerFXEditor {
 		}
 	}
 
+/**
+ * OLD CODE
+ * Called when we click on a pdf with the move tool selected
+ * the box is limited to inside the pdf
+ */
 	def void moveBox(MouseEvent e) {
 		var mousePositionX = Math.max(FXSettings.BOX_BORDER_THICKNESS,
 			Math.min(e.x, maxX - FXSettings.BOX_BORDER_THICKNESS));
@@ -322,6 +331,7 @@ class ControllerFXEditor {
 
 	/**
 	 * Used to move around the image in the parent pane
+	 * Called when we right click on the pdf
 	 */
 	def void moveImage(MouseEvent e) {
 
@@ -422,21 +432,17 @@ class ControllerFXEditor {
 	}
 
 
-
+ 	/**
+ 	 * Adds a zone to the children of the mainPane
+ 	 */
 	def addZone(Box zone) {
 		mainPane.children.add(zone);
 	}
 	
-	
 
-	// --- ACTIONS ON THE MODEL ---//
 	
-	
-	
-	
-
-	// ------------//
 	/**
+	 * Called when we press create template
 	 * load a new pdf to start the creation of a new template
 	 */
 	def loadPdf() {
@@ -457,6 +463,9 @@ class ControllerFXEditor {
 
 	}
 
+	/**
+	 * Saves the current model to a XMI file
+	 */
 	def saveTemplate() {
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files", Arrays.asList("*.xmi")));
@@ -470,7 +479,9 @@ class ControllerFXEditor {
 			logger.warn("File not chosen")
 		}
 	}
-
+	/**
+	 * Loads new model from an xmi file
+	 */
 	def loadTemplate() {
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI Files", Arrays.asList("*.xmi")));
@@ -487,7 +498,9 @@ class ControllerFXEditor {
 			logger.warn("File not chosen")
 		}
 	}
-
+	/**
+	 * called to load each question from the model into the vue
+	 */
 	def loadBoxes() {
 		
 		for (var p = 0;p < editor.presenter.getPresenterPdf.totalPdfPageNumber;p++) {
@@ -553,22 +566,7 @@ class ControllerFXEditor {
 		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 
-
-	/**
-	 * Highlights the Box box, called when we click on a box on the listview
-	 */
-	Box highlightedBox = null;
-
-	def highlightBox(Box box) {
-		/*if (highlightedBox !== null) {
-			highlightedBox.focus = false;
-		}
-		highlightedBox = box;
-		highlightedBox.focus = true*/
-	}
-	def double convertToRelative(double relative, double to){
-		return relative/to
-	}
+	
 	
 	def void clearVue(){
 		/*boxes.clear(); //TODO 

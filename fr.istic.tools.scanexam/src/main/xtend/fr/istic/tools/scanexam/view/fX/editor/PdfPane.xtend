@@ -9,6 +9,7 @@ import javafx.scene.input.ScrollEvent
 
 class PdfPane extends Pane {
 	
+	//---Controller---//
 	new(ControllerFXEditor controller){
 		super()
 		this.controller = controller
@@ -19,21 +20,18 @@ class PdfPane extends Pane {
 		this.children.add(imageView)
 		setupEvents
 	}
+	//----------------//
+	
+	//---FX vars---//
 	ImageView imageView
 	Image currentImage
 	ControllerFXEditor controller
+	//-------------//
 	
+	//---GETTERS/SETTERS---//
 	def setImage(Image image){
 		imageView.image = image
 		currentImage = image
-	}
-	
-	def addZone(Box toAdd){
-		this.children.add(toAdd)
-	}
-	
-	def removeZone(Box toRemove){
-		this.children.remove(toRemove)
 	}
 	
 	def getImageViewHeight(){
@@ -52,7 +50,19 @@ class PdfPane extends Pane {
 			imageView.fitWidth
 		}
 	}
+	//---------------------//
 	
+	//---Methods---//
+	def addZone(Box toAdd){
+		this.children.add(toAdd)
+	}
+	
+	def removeZone(Box toRemove){
+		this.children.remove(toRemove)
+	}
+	//-------------//
+	
+	//---Setups---//
 	def setupEvents(){
 		onMousePressed = new EventHandler<MouseEvent>(){
 			
@@ -83,4 +93,5 @@ class PdfPane extends Pane {
 			
 		}
 	}
+	//------------//
 }

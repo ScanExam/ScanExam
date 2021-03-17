@@ -5,13 +5,25 @@ import javafx.scene.layout.Priority
 import javafx.scene.Node
 
 class QuestionList extends VBox {
+	
+	//---Controller---//
 	new(ControllerFXEditor controller) {
 		this.controller = controller
 		this.vgrow = Priority.ALWAYS
 	}
-
+	//----------------//
+	
+	//---FX vars---//
 	ControllerFXEditor controller
-
+	//-------------//
+	
+	//---GETTERS/SETTERS---//
+	def getController(){
+		controller
+	}
+	//---------------------//
+	
+	//---Methods---//
 	def loadQuestion(EditorQuestionItem item) {
 		add(item);
 		controller.addZone(item.zone);
@@ -49,28 +61,7 @@ class QuestionList extends VBox {
 		remove(item)
 		//removeFromModel(item) //TODO FIX
 	}
-
-	def addToModel(EditorQuestionItem item) {
-		item.questionId = controller.editor.presenter.presenterQuestionZone.createQuestion(item.zone.x, item.zone.y,
-			item.zone.height, item.zone.width) // TODO convert
-	}
-
-
-	def updateInModel(EditorQuestionItem item) {
-		controller.editor.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x, item.zone.y) // TODO convert
-		controller.editor.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height,
-			item.zone.width) // TODO convert
-	}
-
-	def removeFromModel(EditorQuestionItem item) {
-		controller.editor.presenter.presenterQuestionZone.removeQuestion(item.questionId)
-	}
-
-
-	def void focusQuestion(EditorQuestionItem item) {
-		
-	}
-
+	
 	def void changeFocus(EditorQuestionItem item) {
 		for (Node n : children) {
 			var question = n as EditorQuestionItem
@@ -120,9 +111,28 @@ class QuestionList extends VBox {
 	def remove(EditorQuestionItem item) {
 		this.children.remove(item)
 	}
-	
-	def getController(){
-		controller
+	//-------------//
+
+	//---Model Interactions---//
+	def addToModel(EditorQuestionItem item) {
+		item.questionId = controller.editor.presenter.presenterQuestionZone.createQuestion(item.zone.x, item.zone.y,
+			item.zone.height, item.zone.width) // TODO convert
 	}
+
+
+	def updateInModel(EditorQuestionItem item) {
+		controller.editor.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x, item.zone.y) // TODO convert
+		controller.editor.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height,
+			item.zone.width) // TODO convert
+	}
+
+	def removeFromModel(EditorQuestionItem item) {
+		controller.editor.presenter.presenterQuestionZone.removeQuestion(item.questionId)
+	}
+	//------------------------//
+	
+	
+	
+	
 
 }

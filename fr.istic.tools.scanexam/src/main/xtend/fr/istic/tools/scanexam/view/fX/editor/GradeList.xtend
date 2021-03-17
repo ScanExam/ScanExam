@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox
 
 class GradeList extends VBox {
 	
+	//---Controller---//
 	new(ControllerFXEditor controller){
 		this.controller = controller;
 		allItems = new LinkedList<GradeItem>();
@@ -23,11 +24,16 @@ class GradeList extends VBox {
 	}
 	List<GradeItem> allItems;
 	
+	//----------------//
+	
+	//---FX vars---//
 	Button add;
 	VBox itemContainer;
 	EditorQuestionItem currentItem;
 	ControllerFXEditor controller;
+	//-------------//
 	
+	//---Methods---//
 	def showFor(EditorQuestionItem item) {
 		clearDisplay
 		currentItem = item;
@@ -37,6 +43,20 @@ class GradeList extends VBox {
 				display(g);
 			}
 		}
+	}
+	
+	def boolean isGradeOf(GradeItem gItem,EditorQuestionItem qItem) {
+		return gItem.gradeQuestionItem == qItem
+	}
+	
+	def clearDisplay(){
+		add.visible = false
+		itemContainer.children.clear
+		currentItem = null
+	}
+	
+	def display(GradeItem item) {
+		itemContainer.children.add(item)
 	}
 	
 	def loadGradeItem(GradeItem toAdd){//TODO
@@ -62,7 +82,9 @@ class GradeList extends VBox {
 		allItems.remove(toRemove)
 		removeGradeItemFromModel(toRemove) 
 	}
+	//-------------//
 	
+	//---Model Interactions---//
 	def addGradeItemToModel(GradeItem toAdd){
 		toAdd.gradeItemId = controller.editor.presenter.presenterMarkingScheme.addEntry(toAdd.gradeQuestionItem.questionId,toAdd.gradeItemName,Float.parseFloat(toAdd.gradeItemPoints))
 	}
@@ -72,25 +94,13 @@ class GradeList extends VBox {
 	def removeGradeItemFromModel(GradeItem toRemove){
 		controller.editor.presenter.presenterMarkingScheme.removeEntry(toRemove.gradeQuestionItem.questionId,toRemove.gradeItemId)
 	}
+	//------------------------//
 	
 	
 	
 	
-	def boolean isGradeOf(GradeItem gItem,EditorQuestionItem qItem) {
-		return gItem.gradeQuestionItem == qItem
-	}
 	
-	def clearDisplay(){
-		add.visible = false
-		itemContainer.children.clear
-		currentItem = null
-	}
-	
-	def display(GradeItem item) {
-		itemContainer.children.add(item)
-	}
-	
-	
+	//---Setups---//
 	def setupEvents(GradeList list){
 		add.onAction = new EventHandler<ActionEvent>(){
 			
@@ -100,5 +110,6 @@ class GradeList extends VBox {
 			
 		}
 	}
+	//------------//
 
 }

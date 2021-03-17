@@ -1,30 +1,33 @@
 package fr.istic.tools.scanexam.view.fX.editor
 
+import fr.istic.tools.scanexam.view.fX.FXSettings
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.geometry.Insets
 import javafx.scene.control.Button
 import javafx.scene.control.ContextMenu
-import javafx.scene.control.Label
 import javafx.scene.control.MenuItem
 import javafx.scene.control.TextField
-import javafx.scene.layout.HBox
-import javafx.scene.layout.Pane
-import javafx.scene.layout.VBox
-import java.util.LinkedList
-import javafx.scene.Node
 import javafx.scene.input.MouseEvent
-import javafx.scene.paint.Color
-import fr.istic.tools.scanexam.view.fX.FXSettings
-import javafx.scene.layout.BackgroundFill
-import javafx.geometry.Insets
-import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.Background
+import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.CornerRadii
+import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
+import javafx.scene.paint.Color
 
 class EditorQuestionItem extends VBox{
+	
+	//---Constructors---//
 	new(QuestionList list,Box zone) {
 		super()
-		init()
+		top = new HBox();
+		middle = new HBox();
+		bottom = new HBox();
+		remove = new Button("remove");
+		bottom.children.add(remove);
+		
 		this.list = list
 		this.zone = zone
 		this.zone.questionItem = this
@@ -32,9 +35,6 @@ class EditorQuestionItem extends VBox{
 		name = new TextField("New Question");
 		name.editable = false;
 	
-	
-		
-		
 		
 		this.children.addAll(top,middle,bottom)
 	
@@ -51,36 +51,28 @@ class EditorQuestionItem extends VBox{
 		this.page = page
 	}
 	
-	def init(){
-		top = new HBox();
-		middle = new HBox();
-		bottom = new HBox();
-		
-		remove = new Button("remove");
+	//------------------//
 	
-		bottom.children.add(remove);
-
-	}
 	//---FX VARS---//
-	Box zone;//Zone of the question, a rectangle
-
-	TextField name;//textfield used to rename the question
 	HBox top; //the top container of the questionItem
 	HBox middle;//the middle container of the questionItem
 	HBox bottom;//the bottom container of the questionItem
-	
 	Button remove;
+	//-------------//
 	
+	//---Question vars---//
+	Box zone;		//Zone of the question, a rectangle
+	TextField name;	//textfield used to rename the question
+	int questionId;	//Id of this question
+	int page;		//page location of this question
+	BoxType type;	//the type of this zone
+	//-------------------//
 	
-	QuestionList list
-	//---QUESTION VARS---//
-	int questionId;
-	int page;
-	BoxType type;
+	//---Other Vars---//
+	QuestionList list 	// the container of all the question items
+	//----------------//
 	
-	
-	
-	
+	//---GETTERS/SETTERS---//
 	def getZone(){
 	 	zone
 	}
@@ -100,8 +92,6 @@ class EditorQuestionItem extends VBox{
 	def setPage(int page){
 		this.page = page
 	}
-	
-
 
 	def void setFocus(boolean b) {//sets the color of the zone and the item in the list
 			if (b) {
@@ -117,18 +107,6 @@ class EditorQuestionItem extends VBox{
 		var bf = new BackgroundFill(color,CornerRadii.EMPTY,Insets.EMPTY);
 		this.background = new Background(bf)
 	}
-
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-
 	
 	def void setName(String text) {
 		name.text = text
@@ -137,7 +115,10 @@ class EditorQuestionItem extends VBox{
 	def String getName(){
 		name.text
 	}
+	//---------------------//
 	
+	
+	//---METHODS---//
 	def setNameEditable(){
 		name.editable = true
 		name.selectAll
@@ -147,11 +128,12 @@ class EditorQuestionItem extends VBox{
 		name.editable = false
 		list.updateInModel(this)
 	}
-
+	//-------------//
 
 
 		
-		
+	
+	//---SETUP METHODS---//	
 	def setupContextMenu(){
 		var menu = new ContextMenu();
 		name.contextMenu = menu
@@ -194,5 +176,5 @@ class EditorQuestionItem extends VBox{
 		
 		
 	}
-	
+	//-------------------//	
 }
