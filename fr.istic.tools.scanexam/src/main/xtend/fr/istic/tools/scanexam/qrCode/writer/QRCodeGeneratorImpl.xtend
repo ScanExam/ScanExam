@@ -25,6 +25,7 @@ import java.io.StringWriter
 import org.apache.commons.io.IOUtils
 import java.io.ByteArrayInputStream
 
+
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 
@@ -219,11 +220,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
-		//val InputStream input = ResourcesUtils.getInputStreamResource("/QRCode/pfo_example.pdf");
 		val InputStream input = new ByteArrayInputStream("./src/main/resources/QRCode/pfo_example.pdf".getBytes())
 		gen.createAllExamCopies(input, 15)
-
-
 
 		val String in = "./src/main/resources/QRCode/pfo_example_Inserted.pdf"
 		val File f = new File(in)
