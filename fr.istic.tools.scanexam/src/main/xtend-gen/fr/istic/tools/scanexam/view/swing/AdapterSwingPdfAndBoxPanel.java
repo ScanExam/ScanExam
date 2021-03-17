@@ -11,7 +11,7 @@ import java.util.Optional;
 import javax.swing.JPanel;
 
 /**
- * Controlleur Swing du pdf avec swing
+ * Controlleur Swing du pdf et de l'ajout de boîtes avec swing
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
@@ -48,7 +48,7 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
   }
   
   /**
-   * Déplacement de le contenu
+   * Déplacement du pdf
    * @param e Mouvement de la souris
    */
   @Override
@@ -88,29 +88,43 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
   }
   
   /**
-   * GETTERS
+   * Renvoie l'daptateur des boîtes de sélection
+   * @return L'daptateur des boîtes de sélection
    */
   public AdapterSwingBox getAdapterBox() {
     return this.adapterBox;
   }
   
+  /**
+   * Renvoie la liste des boîtes de sélection
+   * @return La liste des boîtes de sélection
+   */
   public BoxList getSelectionBoxes() {
     return this.selectionBoxes;
   }
   
   /**
-   * SETTERS
+   * Met à jour le présenter de création de zone de question
+   * @param presenterQst Présenter de création de zone de question
    */
   public void setPresenterQst(final PresenterQuestionZone presenterQst) {
     this.adapterBox.setPresenter(presenterQst);
   }
   
+  /**
+   * Lie la vue de l'adaptateur de création de boîte
+   * @param view Vue swing
+   */
   @Override
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);
     this.adapterBox.setView(this.view.get());
   }
   
+  /**
+   * Change la mise à l'échelle. Soit par rapport à la hauteur ou la largueur
+   * @param scaleOnWidth Indique si la mise à l'échelle se fait par rapport à la hauteur ou la largueur
+   */
   @Override
   public void setScaleOnWidth(final boolean scaleOnWidth) {
     if ((this.pdf != null)) {
