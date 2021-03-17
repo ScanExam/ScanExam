@@ -3,14 +3,33 @@ package fr.istic.tools.scanexam.view.swing
 import java.awt.Graphics
 import javax.swing.JPanel
 
+/**
+ * Panel Swing permettant d'afficher un PDF
+ */
 class PdfPanel extends JPanel {
 	
+	// ----------------------------------------------------------------------------------------------------
+	/* 
+	 * ATTRIBUTS
+	 */
+	// ----------------------------------------------------------------------------------------------------
+	
+	/* Adaptateur de ce Panel, permet de lui apporter des fonctionnalités */
 	public var AdapterSwingPdfPanel adapter
 	/* Largeur du panel */
 	public var int width
 	/* Hauteur du panel */
 	public var int height
-		
+	
+	// ----------------------------------------------------------------------------------------------------
+	/*
+	 * CONSTRUCTEUR
+	 */
+	// ----------------------------------------------------------------------------------------------------
+	/**
+	 * Constructeur
+	 * @param adapter Adaptateur de la classe
+	 */
 	new(AdapterSwingPdfPanel adapter) {
 		this.adapter = adapter
 		
@@ -25,6 +44,11 @@ class PdfPanel extends JPanel {
         addMouseMotionListener(this.adapter.getMouseHandler())
 	}
 	
+	// ----------------------------------------------------------------------------------------------------
+	/* 
+	 * METHODES
+	 */
+	// ----------------------------------------------------------------------------------------------------
 	/**
 	 * Affichage graphique
 	 */
