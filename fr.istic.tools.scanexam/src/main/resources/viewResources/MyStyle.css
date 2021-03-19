@@ -78,13 +78,15 @@ ListView {
 	-fx-background-color: white;
 }
 
-.GradeItemBox {
+.GradeItem {
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 1px 1px 1px;
-}
-.test1 {
-	-fx-border-color: lightgrey ;
-	-fx-border-width: 1px 1px 1px 1px;
+	-fx-padding: 1px 1px 1px 1px ;
 }
 
+.QuestionItem {
+	-fx-border-color: lightgrey ;
+	-fx-border-width: 1px 1px 1px 1px;
+	-fx-padding: 3px;
+}
 

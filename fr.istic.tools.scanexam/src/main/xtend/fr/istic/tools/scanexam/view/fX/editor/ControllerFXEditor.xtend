@@ -84,9 +84,9 @@ class ControllerFXEditor {
 	@FXML
 	ToggleButton createBoxButton;
 	
-	QuestionList questionList;
+	QuestionListEditor questionList;
 	
-	GradeList gradeList;
+	QuestionOptionsEditor questionEditor;
 	
 	@FXML
 	AnchorPane mainPaneContainer
@@ -164,29 +164,24 @@ class ControllerFXEditor {
 		mainPane
 	}
 	
-	def getGradeList(){
-		gradeList
+	
+	
+	def getQuestionList(){
+		questionList
 	}
 	
-	def void changeFocus(EditorQuestionItem newItem) {
-		gradeList.showFor(newItem)
-	}
-	
-	def void noFocus(){
-		gradeList.clearDisplay
-	}
 	
 	/**
 	 * Called When we decide to focus on a specific question
 	 */
-	def void selectQuestion(EditorQuestionItem item){
+	def void selectQuestion(QuestionItemEditor item){
 		if (item === null) {
 			questionList.removeFocus
-			gradeList.clearDisplay
+			questionEditor.hideAll
 			return
 		}
-		questionList.changeFocus(item)
-		gradeList.showFor(item)
+		questionList.select(item)
+		questionEditor.select(item)
 	}
 	
 	
@@ -195,11 +190,11 @@ class ControllerFXEditor {
 		mainPane = new PdfPane(this);
 		mainPaneContainer.children.add(mainPane)
 		
-		questionList = new QuestionList(this);
+		questionList = new QuestionListEditor(this);
 		questionListContainer.content = questionList
 		
-		gradeList = new GradeList(this);
-		gradeListContainer.content = gradeList
+		questionEditor = new QuestionOptionsEditor(this);
+		gradeListContainer.content = questionEditor
 		
 	}
 
@@ -446,7 +441,7 @@ class ControllerFXEditor {
 	 * load a new pdf to start the creation of a new template
 	 */
 	def loadPdf() {
-		
+		clearVue
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("PDF files", Arrays.asList("*.pdf")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
@@ -454,7 +449,7 @@ class ControllerFXEditor {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			clearVue()
+			clearVue
 			editor.presenter.getPresenterPdf.create(file);
 			renderDocument();
 		} else {
@@ -483,6 +478,7 @@ class ControllerFXEditor {
 	 * Loads new model from an xmi file
 	 */
 	def loadTemplate() {
+		
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI Files", Arrays.asList("*.xmi")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
@@ -490,7 +486,7 @@ class ControllerFXEditor {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			clearVue()
+			clearVue
 			editor.presenter.load(file.path);
 			renderDocument();
 			loadBoxes();
@@ -510,10 +506,12 @@ class ControllerFXEditor {
 				var box = new Box(
 					editor.presenter.presenterQuestionZone.questionX(i) * maxX,
 					editor.presenter.presenterQuestionZone.questionY(i) * maxY,
-					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY,
-					editor.presenter.presenterQuestionZone.questionWidth(i) * maxX
+					editor.presenter.presenterQuestionZone.questionWidth(i) * maxX,
+					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY		
 				)
-				mainPane.children.add(box)
+				print("loading width for " + i + " = " + editor.presenter.presenterQuestionZone.questionWidth(i));
+				addZone(box);
+				questionList.loadQuestion(box,editor.presenter.presenterQuestionZone.questionName(i),p,i)
 			}
 		}
 		
@@ -565,16 +563,17 @@ class ControllerFXEditor {
 		renderDocument
 		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
-
 	
+	def double getMaxY(){
+		maxY
+	}
+	def double getMaxX(){
+		maxX
+	}
 	
 	def void clearVue(){
-		/*boxes.clear(); //TODO 
-		for (EditorQuestionItem n : questionList.items){
-			mainPane.children.remove(n.parentBox);
-			mainPane.children.remove(n.parentBox.text)
-			boxes.remove(n.parentBox)
-		}
-	questionList.items.clear()*/
+		mainPane.clear
+		questionList.clear
+		questionEditor.hideAll
 	}
 }

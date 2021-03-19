@@ -53,7 +53,7 @@ class PresenterQuestionZone {
 	}
 	
 	def void resizeQuestion(int ID, double height, double width) {		
-		service.rescaleQuestion(ID,height as float,height as float)
+		service.rescaleQuestion(ID,height as float,width as float)
 	}
 	
 	/**

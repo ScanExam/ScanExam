@@ -50,15 +50,25 @@ class PdfPane extends Pane {
 			imageView.fitWidth
 		}
 	}
+	
+	def getController(){
+		controller
+	}
 	//---------------------//
 	
 	//---Methods---//
 	def addZone(Box toAdd){
+		toAdd.pane = this
 		this.children.add(toAdd)
 	}
 	
 	def removeZone(Box toRemove){
 		this.children.remove(toRemove)
+	}
+	
+	def clear(){
+		children.clear
+		children.add(imageView)
 	}
 	//-------------//
 	

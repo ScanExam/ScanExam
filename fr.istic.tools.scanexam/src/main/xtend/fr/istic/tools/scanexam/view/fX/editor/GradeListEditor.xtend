@@ -8,12 +8,12 @@ import javafx.scene.control.Button
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 
-class GradeList extends VBox {
+class GradeListEditor extends VBox {
 	
 	//---Controller---//
 	new(ControllerFXEditor controller){
 		this.controller = controller;
-		allItems = new LinkedList<GradeItem>();
+		allItems = new LinkedList<GradeItemEditor>();
 		add = new Button("Add");
 		var topBox = new HBox();
 		topBox.children.add(add);
@@ -22,30 +22,30 @@ class GradeList extends VBox {
 		setupEvents(this)
 		clearDisplay
 	}
-	List<GradeItem> allItems;
+	List<GradeItemEditor> allItems;
 	
 	//----------------//
 	
 	//---FX vars---//
 	Button add;
 	VBox itemContainer;
-	EditorQuestionItem currentItem;
+	QuestionItemEditor currentItem;
 	ControllerFXEditor controller;
 	//-------------//
 	
 	//---Methods---//
-	def showFor(EditorQuestionItem item) {
+	def select(QuestionItemEditor item) {
 		clearDisplay
 		currentItem = item;
 		add.visible = true
-		for (GradeItem g : allItems) {
+		for (GradeItemEditor g : allItems) {
 			if (isGradeOf(g,item)) {
 				display(g);
 			}
 		}
 	}
 	
-	def boolean isGradeOf(GradeItem gItem,EditorQuestionItem qItem) {
+	def boolean isGradeOf(GradeItemEditor gItem,QuestionItemEditor qItem) {
 		return gItem.gradeQuestionItem == qItem
 	}
 	
@@ -55,11 +55,11 @@ class GradeList extends VBox {
 		currentItem = null
 	}
 	
-	def display(GradeItem item) {
+	def display(GradeItemEditor item) {
 		itemContainer.children.add(item)
 	}
 	
-	def loadGradeItem(GradeItem toAdd){//TODO
+	def loadGradeItem(GradeItemEditor toAdd){//TODO
 		
 	}
 	
@@ -67,31 +67,36 @@ class GradeList extends VBox {
 		if (currentItem === null) {
 			return 
 		}
-		var gradeItem = new GradeItem(this,currentItem);
+		var gradeItem = new GradeItemEditor(this,currentItem);
 		display(gradeItem)
 		allItems.add(gradeItem);
 		addGradeItemToModel(gradeItem); 
 	}
 	
-	def updateGradeItem(GradeItem toUpdate) {
+	def updateGradeItem(GradeItemEditor toUpdate) {
 		updateGradeItemInModel(toUpdate)
 	}
 	
-	def removeGradeItem(GradeItem toRemove) {
+	def removeGradeItem(GradeItemEditor toRemove) {
 		itemContainer.children.remove(toRemove)
 		allItems.remove(toRemove)
 		removeGradeItemFromModel(toRemove) 
 	}
+	
+	def clear(){
+		clearDisplay
+		this.itemContainer.children.clear
+	}
 	//-------------//
 	
 	//---Model Interactions---//
-	def addGradeItemToModel(GradeItem toAdd){
+	def addGradeItemToModel(GradeItemEditor toAdd){
 		toAdd.gradeItemId = controller.editor.presenter.presenterMarkingScheme.addEntry(toAdd.gradeQuestionItem.questionId,toAdd.gradeItemName,Float.parseFloat(toAdd.gradeItemPoints))
 	}
-	def updateGradeItemInModel(GradeItem toUpdate){
+	def updateGradeItemInModel(GradeItemEditor toUpdate){
 		controller.editor.presenter.presenterMarkingScheme.modifyEntry(toUpdate.gradeQuestionItem.questionId,toUpdate.gradeItemId,toUpdate.gradeItemName,Float.parseFloat(toUpdate.gradeItemPoints))
 	}
-	def removeGradeItemFromModel(GradeItem toRemove){
+	def removeGradeItemFromModel(GradeItemEditor toRemove){
 		controller.editor.presenter.presenterMarkingScheme.removeEntry(toRemove.gradeQuestionItem.questionId,toRemove.gradeItemId)
 	}
 	//------------------------//
@@ -101,7 +106,7 @@ class GradeList extends VBox {
 	
 	
 	//---Setups---//
-	def setupEvents(GradeList list){
+	def setupEvents(GradeListEditor list){
 		add.onAction = new EventHandler<ActionEvent>(){
 			
 			override handle(ActionEvent event) {

@@ -19,5 +19,5 @@ class FXSettings {
 	public static var LIST_BACKGROUND_COLOR = Color.WHITE
 	public static var  MINIMUM_ZONE_SIZE =  20
 	
-	public static var  ZONE_RESIZE_TOLERANCE =  3
+	public static var  ZONE_RESIZE_TOLERANCE =  10
 }

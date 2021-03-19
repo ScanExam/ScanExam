@@ -4,7 +4,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.layout.Priority
 import javafx.scene.Node
 
-class QuestionList extends VBox {
+class QuestionListEditor extends VBox {
 	
 	//---Controller---//
 	new(ControllerFXEditor controller) {
@@ -24,15 +24,15 @@ class QuestionList extends VBox {
 	//---------------------//
 	
 	//---Methods---//
-	def loadQuestion(EditorQuestionItem item) {
+	def loadQuestion(Box box, String name,int page,int id) {
+		var item = new QuestionItemEditor(this,box,name,page,id);
 		add(item);
-		controller.addZone(item.zone);
 	}
 
 	/*
 	 * Create new question and add to model
 	 */
-	def newQuestion(Box box) {
+	def void newQuestion(Box box) {
 		var type = BoxType.QUESTION
 		switch controller.selectedTool {
 			case QUESTION_AREA: {
@@ -47,14 +47,14 @@ class QuestionList extends VBox {
 			default: {
 			}
 		}
-		var item = new EditorQuestionItem(this, box, type,
+		var item = new QuestionItemEditor(this, box, type,
 			controller.editor.presenter.presenterPdf.currentPdfPageNumber);
 
 		addToModel(item)
 		add(item)
 	}
 
-	def removeQuestion(EditorQuestionItem item) {
+	def removeQuestion(QuestionItemEditor item) {
 		removeFocus
 		controller.mainPane.removeZone(item.zone)
 		controller.mainPane.children.remove(item.zone)
@@ -62,9 +62,9 @@ class QuestionList extends VBox {
 		//removeFromModel(item) //TODO FIX
 	}
 	
-	def void changeFocus(EditorQuestionItem item) {
+	def void select(QuestionItemEditor item) {
 		for (Node n : children) {
-			var question = n as EditorQuestionItem
+			var question = n as QuestionItemEditor
 			if (question == item) {
 				question.setFocus(true)
 			}
@@ -76,26 +76,22 @@ class QuestionList extends VBox {
 
 	def void removeFocus() {
 		for (Node e : children) {
-			if (e instanceof EditorQuestionItem) {
-				(e as EditorQuestionItem).focus = false
+			if (e instanceof QuestionItemEditor) {
+				(e as QuestionItemEditor).focus = false
 			}
 		}
-	}
-
-	def void changeGradeItems(EditorQuestionItem newItem) {
-		controller.changeFocus(newItem)
 	}
 
 	def void showOnlyPage(int page) {
 		for (Node e : children) {
-			if (e instanceof EditorQuestionItem) {
-				checkAndDisplay(page, e as EditorQuestionItem)
+			if (e instanceof QuestionItemEditor) {
+				checkAndDisplay(page, e as QuestionItemEditor)
 			}
 
 		}
 	}
 
-	def void checkAndDisplay(int page, EditorQuestionItem item) {
+	def void checkAndDisplay(int page, QuestionItemEditor item) {
 		if (item.page == page) {
 			item.zone.isVisible(true)
 		} else {
@@ -104,29 +100,34 @@ class QuestionList extends VBox {
 
 	}
 
-	def add(EditorQuestionItem item) {
+	def add(QuestionItemEditor item) {
 		this.children.add(item)
 	}
 
-	def remove(EditorQuestionItem item) {
+	def remove(QuestionItemEditor item) {
 		this.children.remove(item)
+	}
+	
+	def clear(){
+		controller.selectQuestion(null)
+		children.clear
 	}
 	//-------------//
 
 	//---Model Interactions---//
-	def addToModel(EditorQuestionItem item) {
-		item.questionId = controller.editor.presenter.presenterQuestionZone.createQuestion(item.zone.x, item.zone.y,
-			item.zone.height, item.zone.width) // TODO convert
+	def addToModel(QuestionItemEditor item) {
+		item.questionId = controller.editor.presenter.presenterQuestionZone.createQuestion(item.zone.x/controller.maxX, item.zone.y/controller.maxY,item.zone.height/controller.maxY, item.zone.width/controller.maxX) // TODO convert
+		updateInModel(item)
 	}
 
 
-	def updateInModel(EditorQuestionItem item) {
-		controller.editor.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x, item.zone.y) // TODO convert
-		controller.editor.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height,
-			item.zone.width) // TODO convert
+	def updateInModel(QuestionItemEditor item) {
+		controller.editor.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x/controller.maxX, item.zone.y/controller.maxY) 
+		controller.editor.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height/controller.maxY,item.zone.width/controller.maxX)
+		controller.editor.presenter.presenterQuestionZone.renameQuestion(item.questionId,item.name)
 	}
 
-	def removeFromModel(EditorQuestionItem item) {
+	def removeFromModel(QuestionItemEditor item) {
 		controller.editor.presenter.presenterQuestionZone.removeQuestion(item.questionId)
 	}
 	//------------------------//

@@ -16,11 +16,12 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
+import javafx.scene.control.Label
 
-class EditorQuestionItem extends VBox{
+class QuestionItemEditor extends VBox{
 	
 	//---Constructors---//
-	new(QuestionList list,Box zone) {
+	new(QuestionListEditor list,Box zone) {
 		super()
 		top = new HBox();
 		middle = new HBox();
@@ -32,8 +33,8 @@ class EditorQuestionItem extends VBox{
 		this.zone = zone
 		this.zone.questionItem = this
 		
-		name = new TextField("New Question");
-		name.editable = false;
+		name = new Label("New Question");
+
 	
 		
 		this.children.addAll(top,middle,bottom)
@@ -42,14 +43,26 @@ class EditorQuestionItem extends VBox{
 		
 		vgrow = Priority.ALWAYS
 		zone.setupEvents
+		
+		this.styleClass.add("QuestionItem")
+		this.margin = new Insets(2);
 		setupContextMenu
 		setupEvents(this)
 	}
-	new (QuestionList list,Box zone,BoxType type,int page){
+	new (QuestionListEditor list,Box zone,BoxType type,int page){
 		this(list,zone);
 		this.type = type
 		this.page = page
 	}
+	
+	new (QuestionListEditor list,Box zone,String name,int page,int id) {
+		this(list,zone)
+		this.
+		name.text = name
+		this.page = page
+		this.questionId = id
+	}
+	
 	
 	//------------------//
 	
@@ -62,17 +75,21 @@ class EditorQuestionItem extends VBox{
 	
 	//---Question vars---//
 	Box zone;		//Zone of the question, a rectangle
-	TextField name;	//textfield used to rename the question
+	Label name;	//textfield used to rename the question
 	int questionId;	//Id of this question
 	int page;		//page location of this question
 	BoxType type;	//the type of this zone
 	//-------------------//
 	
 	//---Other Vars---//
-	QuestionList list 	// the container of all the question items
+	QuestionListEditor list 	// the container of all the question items
 	//----------------//
 	
 	//---GETTERS/SETTERS---//
+	
+	def getWeight(){
+		1
+	}
 	def getZone(){
 	 	zone
 	}
@@ -119,7 +136,7 @@ class EditorQuestionItem extends VBox{
 	
 	
 	//---METHODS---//
-	def setNameEditable(){
+	/*def setNameEditable(){
 		name.editable = true
 		name.selectAll
 	}
@@ -128,6 +145,7 @@ class EditorQuestionItem extends VBox{
 		name.editable = false
 		list.updateInModel(this)
 	}
+	*/
 	//-------------//
 
 
@@ -135,19 +153,9 @@ class EditorQuestionItem extends VBox{
 	
 	//---SETUP METHODS---//	
 	def setupContextMenu(){
-		var menu = new ContextMenu();
-		name.contextMenu = menu
-		var menuItem1 = new MenuItem("Rename Question Item");//TODO translate
-		menu.items.add(menuItem1);
-		menuItem1.onAction = new EventHandler<ActionEvent>(){
-			
-			override handle(ActionEvent event) {
-				setNameEditable
-			}
-			
-		}
+		
 	}
-	def setupEvents(EditorQuestionItem item){
+	def setupEvents(QuestionItemEditor item){
 		
 		remove.onAction = new EventHandler<ActionEvent>(){
 			
@@ -165,16 +173,8 @@ class EditorQuestionItem extends VBox{
 				
 			}
 			
-		}
-		
-		name.onAction =  new EventHandler<ActionEvent>(){
+		}		
 				
-				override handle(ActionEvent event) {
-					commitNameChange
-				}
-			}
-		
-		
 	}
 	//-------------------//	
 }

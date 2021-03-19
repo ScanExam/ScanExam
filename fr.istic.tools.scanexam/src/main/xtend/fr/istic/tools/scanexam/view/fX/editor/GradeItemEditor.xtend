@@ -9,9 +9,9 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 
-class GradeItem extends HBox {
+class GradeItemEditor extends HBox {
 		//---Constructor---//
-		new(GradeList list,EditorQuestionItem item){
+		new(GradeListEditor list,QuestionItemEditor item){
 			super();
 			this.questionItem = item
 			this.list = list
@@ -35,14 +35,14 @@ class GradeItem extends HBox {
 			
 			h.children.addAll(name,points);
 			
-			this.styleClass.add("GradeItemBox")
+			this.styleClass.add("GradeItem")
 			setupContextMenu
 			setupEvents
 		}
 		//-----------------//
 		
-		GradeList list;
-		EditorQuestionItem questionItem;
+		GradeListEditor list;
+		QuestionItemEditor questionItem;
 		int gradeItemId;
 		Button remove;
 		NumberTextField points;

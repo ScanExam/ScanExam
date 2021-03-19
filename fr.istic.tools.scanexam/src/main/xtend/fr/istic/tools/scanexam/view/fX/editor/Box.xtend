@@ -5,12 +5,13 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.input.MouseEvent
 import javafx.event.EventHandler
+import javafx.scene.Cursor
 
 class Box extends Rectangle {
 	
 		
-		
-		new(EditorQuestionItem item,double x, double y , double width , double height) {
+		//---Controller---//
+		new(QuestionItemEditor item,double x, double y , double width , double height) {
 			super(x,y,width,height)
 			this.questionItem = item
 			this.strokeWidth = FXSettings.BOX_BORDER_THICKNESS
@@ -21,17 +22,28 @@ class Box extends Rectangle {
 		new(double x, double y , double width , double height) {
 			this(null,x,y,width,height)
 		}
+		//----------------//
 		
-		EditorQuestionItem questionItem;
-	
+		//---FX vars---//
+		QuestionItemEditor questionItem;
+		PdfPane pane;
+		//-------------//
 		
+		//---GETTERS/SETTERS---//
 		def getQuestionItem(){
 			questionItem
 		}
 		
-		def setQuestionItem(EditorQuestionItem item){
+		def setQuestionItem(QuestionItemEditor item){
 			questionItem = item
-		}		
+		}
+		
+		def setPane(PdfPane pane){
+			this.pane = pane
+		}	
+		//---------------------//
+		
+		//---METHODS---//
 		
 		def void isVisible(boolean b){
 			this.visible = b;
@@ -51,6 +63,7 @@ class Box extends Rectangle {
 		def void setColor(Color color) {
 			stroke = color
 		}
+		
 		
 		def void x(double x) {
 			setX(x);
@@ -107,20 +120,34 @@ class Box extends Rectangle {
 		
 		def setupEvents(){
 			var zone = this
+			zone.onMouseClicked = new EventHandler<MouseEvent> {
+			
+				override handle(MouseEvent event) {
+					var onNorth = checkOnNorthBorder(event)
+					var onSouth = checkOnSouthBorder(event)
+					var onEast = checkOnEastBorder(event)
+					var onWest = checkOnWestBorder(event)
+					pane.controller.selectQuestion(questionItem)
+				}
+			}
 			zone.onMouseMoved = new EventHandler<MouseEvent> {
 			
 				override handle(MouseEvent event) {
-					if (checkOnNorthBorder(event)) {
-						print("on north \n")
+					var onNorth = checkOnNorthBorder(event)
+					var onSouth = checkOnSouthBorder(event)
+					var onEast = checkOnEastBorder(event)
+					var onWest = checkOnWestBorder(event)
+					if (onNorth || onSouth) {
+						cursor = Cursor.V_RESIZE
 					}
-					if (checkOnSouthBorder(event)) {
-						print("on south \n")
+					if (onEast || onWest) {
+						cursor = Cursor.H_RESIZE
 					}
-					if (checkOnEastBorder(event)) {
-						print("on East \n")
+					if (onSouth && onEast) {
+						cursor = Cursor.NW_RESIZE
 					}
-					if (checkOnWestBorder(event)) {
-						print("on West \n")
+					if (!(onEast || onWest || onNorth || onSouth)) {
+						cursor = Cursor.DEFAULT
 					}
 				}
 			}
