@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.services;
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
+import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
@@ -29,21 +30,46 @@ import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
 public class ExamGraduationService extends Service {
+  /**
+   * La page actuelle de l'examen
+   */
   private int currentSheetIndex;
   
+  /**
+   * Question actuelle.
+   */
   private int currentQuestionIndex;
   
+  /**
+   * Liste des copies visible.
+   */
   @Accessors
   private Collection<StudentSheet> studentSheets;
   
+  /**
+   * Fichier du template de l'édition d'examen (Fichier de méta données sur le sujet d'examen)
+   */
   private CreationTemplate creationTemplate;
   
+  /**
+   * Fichier du template de correction d'examen
+   * (Fichier de méta données sur les corrections de copies déja effectués)
+   */
   private CorrectionTemplate correctionTemplate;
   
-  @Override
-  public void save(final String path) {
+  /**
+   * Sauvegarde le fichier de correction d'examen sur le disque.
+   * @params path L'emplacement de sauvegarde du fichier.
+   */
+  public Object saveCorrectionTemplate(final String path) {
+    return null;
   }
   
+  /**
+   * Charge un fichier de correction d'examen a partir du disque.
+   * @params path L'emplacement du fichier.
+   * @returns "true" si le fichier a bien été chargé, "false"
+   */
   public boolean openCorrectionTemplate(final String xmiFile) {
     final Optional<CorrectionTemplate> correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile);
     boolean _isPresent = correctionTemplate.isPresent();
@@ -55,6 +81,11 @@ public class ExamGraduationService extends Service {
     return false;
   }
   
+  /**
+   * Charge un fichier d'edition d'examen a partir du disque.
+   * @params path L'emplacement du fichier.
+   * @returns "true" si le fichier a bien été chargé, "false"
+   */
   public boolean openCreationTemplate(final String xmiFile) {
     final Optional<CreationTemplate> editionTemplate = TemplateIO.loadCreationTemplate(xmiFile);
     boolean _isPresent = editionTemplate.isPresent();
@@ -66,6 +97,11 @@ public class ExamGraduationService extends Service {
     return false;
   }
   
+  /**
+   * Charge le document PDF des copies manuscrites,  corrigés
+   * @params path L'emplacement du fichier.
+   * @returns "true" si le fichier a bien été chargé, "false"
+   */
   public boolean openCorrectionPdf(final String path) {
     try {
       File _file = new File(path);
@@ -75,8 +111,12 @@ public class ExamGraduationService extends Service {
       pdfReader.readPDf();
       this.studentSheets = pdfReader.getCompleteStudentSheets();
       return true;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
+    } catch (final Throwable _t) {
+      if (_t instanceof Exception) {
+        return false;
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
     }
   }
   
@@ -160,6 +200,28 @@ public class ExamGraduationService extends Service {
       _xifexpression = this.currentQuestionIndex--;
     }
     return _xifexpression;
+  }
+  
+  /**
+   * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
+   * Ne fait rien si la question n'existe pas
+   * @param id un ID de question
+   */
+  public void selectQuestion(final int id) {
+    EList<Page> _pages = ExamSingleton.instance.getPages();
+    for (final Page page : _pages) {
+      {
+        final Function1<Question, Boolean> _function = (Question question) -> {
+          int _id = question.getId();
+          return Boolean.valueOf((_id == id));
+        };
+        final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
+        if ((question != null)) {
+          this.pageIndex = page.getId();
+          this.currentQuestionIndex = question.getId();
+        }
+      }
+    }
   }
   
   public int indexOfQuestions(final int indexpage, final int indexquestion) {

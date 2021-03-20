@@ -35,13 +35,13 @@ class ExamGraduationService extends Service
 	@Accessors Collection<StudentSheet> studentSheets;
 	
 	/**
-	 * Fichier du template de l'Èdition d'examen (Fichier de mÈta donnÈes sur le sujet d'examen)
+	 * Fichier du template de l'√©dition d'examen (Fichier de m√©ta donn√©es sur le sujet d'examen)
 	 */
 	CreationTemplate creationTemplate;
 	
 	/**
 	 * Fichier du template de correction d'examen  
-	 * (Fichier de mÈta donnÈes sur les corrections de copies dÈja effectuÈs)
+	 * (Fichier de m√©ta donn√©es sur les corrections de copies d√©ja effectu√©s)
 	 */
 	CorrectionTemplate correctionTemplate;
 	
@@ -57,7 +57,7 @@ class ExamGraduationService extends Service
 	/**
 	 * Charge un fichier de correction d'examen a partir du disque.
 	 * @params path L'emplacement du fichier.
-	 * @returns "true" si le fichier a bien ÈtÈ chargÈ, "false"
+	 * @returns "true" si le fichier a bien √©t√© charg√©, "false"
 	 */
 	def boolean openCorrectionTemplate(String xmiFile)
 	{
@@ -76,7 +76,7 @@ class ExamGraduationService extends Service
 	/**
 	 * Charge un fichier d'edition d'examen a partir du disque.
 	 * @params path L'emplacement du fichier.
-	 * @returns "true" si le fichier a bien ÈtÈ chargÈ, "false"
+	 * @returns "true" si le fichier a bien √©t√© charg√©, "false"
 	 */
 	def boolean openCreationTemplate(String xmiFile) 
 	{
@@ -93,9 +93,9 @@ class ExamGraduationService extends Service
 		return false
 	}
 		/**
-	 * Charge le document PDF des copies manuscrites,  corrigÈs
+	 * Charge le document PDF des copies manuscrites,  corrig√©s
 	 * @params path L'emplacement du fichier.
-	 * @returns "true" si le fichier a bien ÈtÈ chargÈ, "false"
+	 * @returns "true" si le fichier a bien √©t√© charg√©, "false"
 	 */
 	def boolean openCorrectionPdf(String path)
 	{
@@ -164,6 +164,7 @@ class ExamGraduationService extends Service
 	{
 		return currentPage.questions.findFirst[x | x.id == currentQuestionIndex];
 	}
+	
 	def nextQuestion()
 	{
 		if (currentQuestionIndex + 1 < currentPage.questions.size)
@@ -174,6 +175,21 @@ class ExamGraduationService extends Service
 	{
 		if (currentQuestionIndex > 0)
 			currentQuestionIndex--
+	}
+	
+	/**
+	 * D√©fini pour question courante la question dont l'ID est pass√© en param√®tre si celle-ci existe, et d√©fini pour page courante la page o√π se trouve cette question.<br/>
+	 * Ne fait rien si la question n'existe pas 
+	 * @param id un ID de question
+	 */
+	def selectQuestion(int id) {
+		for(page: ExamSingleton.instance.pages) {
+			val question = page.questions.findFirst[question | question.id == id]
+			if(question !== null) {
+				pageIndex = page.id
+				currentQuestionIndex = question.id
+			}
+		}
 	}
 	
 	
