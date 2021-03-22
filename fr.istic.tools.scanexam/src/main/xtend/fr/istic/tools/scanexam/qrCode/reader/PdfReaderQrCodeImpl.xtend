@@ -17,31 +17,30 @@ import java.util.HashMap
 import java.util.HashSet
 import java.util.Map
 import java.util.Set
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.regex.Pattern
 import java.util.stream.Collectors
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
+import java.io.File
 
 class PdfReaderQrCodeImpl implements PdfReaderQrCode {
-	
+
 	Set<Copie> sheets
 	int nbSheetsTotal
 	int nbPagesInSheet
 	int nbPagesInPdf
 	PDDocument doc
-	
-	new(PDDocument doc ,int nbPages, int nbCopies){
+
+	new(PDDocument doc, int nbPages, int nbCopies) {
 		this.doc = doc
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
-	
+
 		sheets = new HashSet<Copie>()
 	}
 
-	override readPDf() {		
+	override readPDf() {
 		try {
 			this.nbPagesInPdf = doc.numberOfPages
 			val PDFRenderer pdf = new PDFRenderer(doc)
@@ -52,24 +51,22 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		}
 		return true
 	}
-	
 
 	def void readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
 		for (page : startPages ..< endPages) {
 			val BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB)
 			// val int taille = (bim.getHeight() * 0.3f) as int
 			// val BufferedImage dest = bim.getSubimage(0, bim.getHeight() -  taille , taille, taille)
-
-			
 			val Pattern pattern = Pattern.compile("_")
 			val String[] items = pattern.split(decodeQRCodeBuffered(bim))
-			
-			val Copie cop = new Copie(Integer.parseInt(items.get(1)),page, Integer.parseInt(items.get(2)))
+
+			val Copie cop = new Copie(Integer.parseInt(items.get(items.size - 2)), page,
+				Integer.parseInt(items.get(items.size - 1)))
+
 			// WARNING Possible racecondtion dans addCopie
-			synchronized(sheets){
-			addCopie(cop)
+			synchronized (sheets) {
+				addCopie(cop)
 			}
-			//println("Success page " + page)
 		}
 
 	}
@@ -108,99 +105,88 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 */
 	def createThread(int nbPage, PDFRenderer pdfRenderer) {
 
-		val ExecutorService service = Executors.newFixedThreadPool(4)
-
-		service.execute(new PdfReaderQrCodeThread(this, 0, (nbPage / 4), pdfRenderer))
-		service.execute(new PdfReaderQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer))
-		service.execute(new PdfReaderQrCodeThread(this, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer))
-		service.execute(new PdfReaderQrCodeThread(this, (3 * nbPage / 4), nbPage, pdfRenderer))
-
-		service.shutdown()
-		//service.awaitTermination(5, TimeUnit.MINUTES);
+		val PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, pdfRenderer, this)
+		manager.start
 	}
 
 	/**
 	 * Dis si un examen est complet ou non
 	 * @return true si l'examen est complet (contient toutes les pages de toutes les copies), false sinon
 	 */
-	def boolean isExamenComplete(){
+	def boolean isExamenComplete() {
 		var boolean ret = true
-		for(i : 0 ..< sheets.length){
+		for (i : 0 ..< sheets.length) {
 			ret = ret && sheets.get(i).isCopyComplete(nbPagesInSheet)
 		}
 		return ret && (nbSheetsTotal == sheets.length)
 	}
-	
+
 	/**
 	 * Renvoie une collection de toutes les copies incomplètes
 	 * @return une collection de copies incomplètes
 	 */
-	def Set<Copie> getUncompleteCopies(){
+	def Set<Copie> getUncompleteCopies() {
 		val Set<Copie> uncompleteCopies = new HashSet<Copie>()
-		
-		for(i : 0 ..< sheets.length){
-			if(!sheets.get(i).isCopyComplete(nbPagesInSheet))
+
+		for (i : 0 ..< sheets.length) {
+			if (!sheets.get(i).isCopyComplete(nbPagesInSheet))
 				uncompleteCopies.add(sheets.get(i))
 		}
 		return uncompleteCopies
 	}
-	
+
 	/**
 	 * Renvoie une collection de toutes les copies complètes
 	 * @return une collection de copies complètes
 	 */
-	def Set<Copie> getCompleteCopies(){
+	def Set<Copie> getCompleteCopies() {
 		var Set<Copie> completeCopies = new HashSet<Copie>()
-		
-		completeCopies = sheets.stream
-			.filter(copie|copie.isCopyComplete(nbPagesInSheet))
-			.collect(Collectors.toSet)
-		
+
+		completeCopies = sheets.stream.filter(copie|copie.isCopyComplete(nbPagesInSheet)).collect(Collectors.toSet)
+
 		return completeCopies
 
 	}
-	
+
 	/**
 	 * Renvoie une copie spécifique à son indentifiant
 	 * @param numCopie le numéro de la copie voulue
 	 * @return la copie correspondante
 	 */
-	def Copie getCopie(int numCopie){
-		for(i : 0 ..< sheets.length)
-			if(sheets.get(i).numCopie == numCopie)
+	def Copie getCopie(int numCopie) {
+		for (i : 0 ..< sheets.length)
+			if (sheets.get(i).numCopie == numCopie)
 				return sheets.get(i)
 	}
-	
+
 	/**
 	 * Ajoute une copie lu au tas de copies déjà lues. Si la copie existe déjà, on merge les pages
 	 * @param sheet la copie à ajouter 
 	 */
-	def addCopie(Copie copie){
+	def addCopie(Copie copie) {
 		var boolean trouve = false
 		var int i = 0
-		
-		while(!trouve && i < sheets.length){
-			if(sheets.get(i).numCopie == copie.numCopie)
+
+		while (!trouve && i < sheets.length) {
+			if (sheets.get(i).numCopie == copie.numCopie)
 				trouve = true
 			i++
-		}//while
-		
+		} // while
 		i--
-		if(trouve){
+		if (trouve) {
 			sheets.get(i).addInSet(copie.pagesCopie)
-		}
-		else
+		} else
 			sheets.add(copie)
 	}
-		
+
 	/**
 	 * Renvoie une collection de toutes les copies lues, complètes ou non
 	 * @return une collection de toutes les copies lues
 	 */
-	def Set<Copie> getSheets(){
+	def Set<Copie> getSheets() {
 		return sheets
 	}
-	
+
 	/**
 	 * Renvoie la collection des copies complètes uniquement au format de l'API
 	 * @return la collection des copies complètes au format de l'API
@@ -209,22 +195,23 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		val Set<StudentSheet> res = new HashSet<StudentSheet>()
 		var Set<Copie> temp = new HashSet<Copie>()
 		val DataFactory dF = new DataFactory()
-		
+
 		temp = completeCopies
-		
+
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
-			
+
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
-				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject,
+					temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
 			res.add(dF.createStudentSheet(index, pagesArray))
-			
+
 		}
 		return res
 	}
-	
+
 	/**
 	 * Renvoie la collection des copies incomplètes uniquement au format de l'API
 	 * @return la collection des copies incomplètes au format de l'API
@@ -235,25 +222,26 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		val DataFactory dF = new DataFactory()
 
 		temp = uncompleteCopies
-		
+
 		var Set<Copie> temp2 = new HashSet<Copie>()
 		temp2 = completeCopies
-		
+
 		println(temp2.toString)
 		println(temp.toString)
 
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
-			
+
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
-				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject, temp.get(i).pagesCopie.get(j).numPageInPDF)
+				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject,
+					temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
 			res.add(dF.createStudentSheet(index, pagesArray))
 		}
 		return res
 	}
-	
+
 	/**
 	 * Renvoie le nombre de total de pages du PDF de toutes les copies
 	 * @return le nombre de pages du PDF source
@@ -261,47 +249,46 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	override getNbPagesPdf() {
 		return this.nbPagesInPdf;
 	}
-	
+
 	/**
 	 * Renvoie le nombre de pages traitées par la lecture du PDF
 	 * @return le nombre de pages que le reader a lu du PDF source
 	 */
 	override getNbPagesTreated() {
 		var int res = 0
-		
-		for(i : 0 ..< sheets.length){
-			res += sheets.get(i).setPages.length
+		//TODO a revoir plus tard 
+		synchronized(sheets) {
+			for (i : 0 ..< sheets.length) {
+				res += sheets.get(i).setPages.length
+			}
+
 		}
 		return res
 	}
-	
-	
-	/* FIXME
-	 * C'est parti en sucette je crois, boucle infini, il a pas trouvé de QRCode dans une des pages
-	 * impossible de comprendre pour le moment, à check
-	 */
+
 	def static void main(String[] arg) {
-		//cinq copies de deux pages
-		/*val File pdf = new File("pfo_example_Inserted.pdf")
-		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(pdf,8,200)		
-		
+		// cinq copies de deux pages
+		val File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf")
+		val PDDocument doc = PDDocument.load(pdf)
+		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8, 32)
+
 		qrcodeReader.readPDf
-		//qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
-		var progress = 0
-		while(progress!=100){
-			TimeUnit.SECONDS.sleep(1)
-			progress = (qrcodeReader.nbPagesTreated*100)/qrcodeReader.nbPagesPdf
-			println("Progress : " + progress)
+		println("le threads principal continue")
+
+		while (qrcodeReader.getNbPagesTreated != qrcodeReader.getNbPagesPdf) {
 		}
-		for(i:0 ..<qrcodeReader.sheets.length)
-			println(qrcodeReader.sheets.get(i).toString())
-			
-		println(qrcodeReader.isExamenComplete())
-		*/
+		println(qrcodeReader.completeStudentSheets.toString)
+
+	// qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
+	/*var progress = 0
+	 * while(progress!=100){
+	 * 	progress = (qrcodeReader.nbPagesTreated*100)/qrcodeReader.nbPagesPdf
+	 * 	println("Progress : " + progress)
+	 * }
+	 * for(i:0 ..<qrcodeReader.sheets.length)
+	 * 	println(qrcodeReader.sheets.get(i).toString())
+	 * 	
+	 println(qrcodeReader.isExamenComplete())*/
 	}
-	
-	
-	
-	
 
 }

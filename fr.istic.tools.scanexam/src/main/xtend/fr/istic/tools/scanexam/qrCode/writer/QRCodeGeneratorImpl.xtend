@@ -221,14 +221,14 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
 		val InputStream input = new ByteArrayInputStream("./src/main/resources/QRCode/pfo_example.pdf".getBytes())
-		gen.createAllExamCopies(input, 15)
+		gen.createAllExamCopies(input, 4)
 
 		val String in = "./src/main/resources/QRCode/pfo_example_Inserted.pdf"
 		val File f = new File(in)
 		val PDDocument doc = PDDocument.load(f)
-		val File desti = new File("./src/main/resources/QRCode/pfo_Dirty.pdf")
+		val File desti = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf")
 
-		doc.removePage(12)
+		//doc.removePage(12)
 		doc.save(desti)
 
 		println("Done")
