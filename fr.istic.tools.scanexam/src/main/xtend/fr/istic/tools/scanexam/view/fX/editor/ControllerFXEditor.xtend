@@ -7,20 +7,14 @@ import fr.istic.tools.scanexam.view.fX.FXSettings
 import java.io.File
 import java.util.Arrays
 import javafx.embed.swing.SwingFXUtils
-import javafx.event.ActionEvent
-import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.scene.Cursor
 import javafx.scene.Node
-import javafx.scene.control.Button
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
-import javafx.scene.image.ImageView
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
-import javafx.scene.layout.Pane
-import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
@@ -195,6 +189,17 @@ class ControllerFXEditor {
 		
 		questionEditor = new QuestionOptionsEditor(this);
 		gradeListContainer.content = questionEditor
+		
+		
+		//Permet de définir pour chaque item de pageChoice une action : aller à la page sélectionnée
+		pageChoice.setOnAction([ event |
+			var pdfPresenter = editor.presenter.getPresenterPdf()
+		    var selectedIndex = pageChoice.getSelectionModel().getSelectedIndex();
+		    //var selectedItem = pageChoice.getSelectionModel().getSelectedItem();
+		    
+		    pdfPresenter.goToPage(selectedIndex)
+		    renderDocument
+		]);
 		
 	}
 
@@ -525,6 +530,11 @@ class ControllerFXEditor {
 	 */
 	def initPageSelection() {
 		pageChoice.items.clear
+		var pdfPresenter = editor.presenter.getPresenterPdf()
+		for (var i = 1; i<=pdfPresenter.totalPdfPageNumber(); i++) {
+			//println(i)
+			pageChoice.getItems().add(i);
+		}
 	}
 
 	/**
@@ -538,6 +548,8 @@ class ControllerFXEditor {
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
 		pdfLoaded = true
+		//Initialise le selecteur de page (pageChoice)
+		initPageSelection()
 	}
 
 	/**
