@@ -36,13 +36,13 @@ class EditorPresenter implements Presenter
 		presMarkingScheme = new PresenterMarkingScheme(service, this)
 		
 		//Verification Switch Service
-		if(this.service.getExamInstance().equals(null)){
+		/*if(this.service.getExamInstance() === null){
 			if(!EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance()).equals(null)){
 				this.service.setExamInstance(EditorGraduationSwitchVerification.loadExamInstance)
 			}
 		}else{
 			EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance())
-		}
+		}*/
 	}
 
 
