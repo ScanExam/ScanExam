@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import fr.istic.tools.scanexam.view.fX.ControllerRoot
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -34,16 +35,19 @@ class LauncherFX extends Application implements Launcher {
 	override start(Stage primaryStage) throws Exception {
 			val editorLoader = new FXMLLoader();
 			val graduatorLoader = new FXMLLoader();
+			val rootLoader = new FXMLLoader();
 			
 			editorLoader.setResources(LanguageManager.currentBundle);
 			graduatorLoader.setResources(LanguageManager.currentBundle);
 			
+			
 			val editorRoot = editorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
 			val graduatorRoot = graduatorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
+			val mainRoot = rootLoader.load(ResourcesUtils.getInputStreamResource("viewResources/Root.fxml"));
 			
 			val controllerEditor = (editorLoader.controller as ControllerFXEditor);
 			val controllerGraduator = (graduatorLoader.controller as ControllerFXCorrector);
-			
+			var controllerRoot = (rootLoader.controller as ControllerRoot);
 		
 			controllerEditor.editorAdapterFX = edit;
 			edit.controllerFXCreator =  controllerEditor;
@@ -51,21 +55,19 @@ class LauncherFX extends Application implements Launcher {
 			controllerGraduator.adapterCorrection = grad;
 			grad.controller =  controllerGraduator;
 			
+			controllerRoot.corrector = graduatorRoot
+			controllerRoot.editor = editorRoot
 			
-			val editorScene = new Scene(editorRoot, 1280, 720) ;
-			val graduatorScene = new Scene(graduatorRoot, 1280, 720);
-			editorScene.stylesheets.add("viewResources/MyStyle.css")
+			val rootScene = new Scene(mainRoot, 1280, 720);
+			
+			rootScene.stylesheets.add("viewResources/MyStyle.css")
 			
 			controllerGraduator.init
 			controllerEditor.init
 			
-			
-			pStage = primaryStage;
-			eScene = editorScene
-			gScene = graduatorScene;
-			
-			primaryStage.setTitle("Corrector GUI - ScanExam");
-			primaryStage.setScene(editorScene);
+		
+			primaryStage.setTitle("ScanExam");
+			primaryStage.setScene(rootScene);
 			primaryStage.setMinHeight(720);
 			primaryStage.setMinWidth(720);
 			primaryStage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
@@ -74,9 +76,6 @@ class LauncherFX extends Application implements Launcher {
 	
 	static EditorAdapterFX edit; 
 	static GraduationAdapterFX grad;
-	static Stage pStage;
-	static Scene eScene;
-	static Scene gScene;
 	
 	override launch() {
 		edit = new EditorAdapterFX();
@@ -87,11 +86,11 @@ class LauncherFX extends Application implements Launcher {
 	}
 	
 	static def swapToEditor(){
-		pStage.scene = eScene;
+		
 	}
 	
 	static def swapToGraduator(){
-		pStage.scene = gScene;
+	
 	}
 }
 

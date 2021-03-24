@@ -432,13 +432,7 @@ class ControllerFXEditor {
 	}
 
 
- 	/**
- 	 * Adds a zone to the children of the mainPane
- 	 */
-	def addZone(Box zone) {
-		mainPane.children.add(zone);
-	}
-	
+
 
 	
 	/**
@@ -515,7 +509,7 @@ class ControllerFXEditor {
 					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY		
 				)
 				print("loading width for " + i + " = " + editor.presenter.presenterQuestionZone.questionWidth(i));
-				addZone(box);
+				mainPane.addZone(box);
 				questionList.loadQuestion(box,editor.presenter.presenterQuestionZone.questionName(i),p,i)
 			}
 		}
