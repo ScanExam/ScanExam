@@ -127,6 +127,8 @@ class QuestionOptionsEditor extends VBox {
 		if (b) {
 			grid.children.remove(questionName);
 			grid.add(renameField, 1, 0);
+			renameField.requestFocus
+			renameField.selectAll
 		} else {
 			if (!grid.children.contains(questionName)) {
 				grid.children.remove(renameField);

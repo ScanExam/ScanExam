@@ -98,7 +98,8 @@ class QuestionItemEditor extends VBox {
 		vgrow = Priority.ALWAYS
 		zone.setupEvents
 
-		this.styleClass.add("QuestionItem")
+		this.styleClass.add("ListItem");
+		
 		this.margin = new Insets(2);
 		setupContextMenu
 		setupEvents(this)
