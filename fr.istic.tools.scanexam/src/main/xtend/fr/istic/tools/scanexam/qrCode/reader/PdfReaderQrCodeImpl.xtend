@@ -223,11 +223,6 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
 		temp = uncompleteCopies
 
-		var Set<Copie> temp2 = new HashSet<Copie>()
-		temp2 = completeCopies
-
-		println(temp2.toString)
-		println(temp.toString)
 
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
@@ -267,7 +262,6 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 
 	def static void main(String[] arg) {
-		// cinq copies de deux pages
 		val File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf")
 		val PDDocument doc = PDDocument.load(pdf)
 		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8, 32)
@@ -277,18 +271,6 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
 		while (qrcodeReader.getNbPagesTreated != qrcodeReader.getNbPagesPdf) {
 		}
-		println(qrcodeReader.completeStudentSheets.toString)
-
-	// qrcodeReader.readQRCodeImage( pdfRenderer,0,document.numberOfPages)
-	/*var progress = 0
-	 * while(progress!=100){
-	 * 	progress = (qrcodeReader.nbPagesTreated*100)/qrcodeReader.nbPagesPdf
-	 * 	println("Progress : " + progress)
-	 * }
-	 * for(i:0 ..<qrcodeReader.sheets.length)
-	 * 	println(qrcodeReader.sheets.get(i).toString())
-	 * 	
-	 println(qrcodeReader.isExamenComplete())*/
 	}
 
 }
