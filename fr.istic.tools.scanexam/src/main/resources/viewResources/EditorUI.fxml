@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1280.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1280.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor">
    <children>
       <MenuBar>
         <menus>
@@ -52,13 +52,16 @@
             <Button mnemonicParsing="false" onAction="#qRArearessed" text="%button.QRarea" />
             <Button mnemonicParsing="false" onAction="#movePressed" text="%button.moveCamera" />
         </items>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
       </ToolBar>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox minWidth="-Infinity" prefWidth="250.0" spacing="10.0">
+            <VBox alignment="CENTER_LEFT" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
                <children>
                   <Label text="%label.questions" />
-                  <ScrollPane id="ListBox" fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
                   <Label text="%label.pages" />
                   <ChoiceBox fx:id="pageChoice" prefWidth="150.0" />
                   <HBox>
@@ -73,13 +76,13 @@
                   </HBox>
                </children>
                <HBox.margin>
-                  <Insets />
+                  <Insets left="5.0" right="5.0" />
                </HBox.margin>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <ScrollPane id="mainScrollPane" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+            <ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
                <content>
                   <AnchorPane fx:id="mainPaneContainer" />
                </content>
@@ -87,21 +90,21 @@
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
             </ScrollPane>
-            <VBox prefWidth="250.0" spacing="10.0">
+            <VBox alignment="CENTER_RIGHT" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
                <children>
                   <Label text="Question details" />
-                  <ScrollPane id="ListBox" fx:id="gradeListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ScrollPane fx:id="gradeListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
                   <Label text="Exam details" />
                   <VBox id="examDetails" prefHeight="200.0" prefWidth="100.0" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
             </VBox>
          </children>
-         <padding>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-         </padding>
       </HBox>
       <HBox>
          <children>
@@ -110,6 +113,9 @@
             <Pane HBox.hgrow="ALWAYS" />
             <Label text="Label" />
          </children>
+         <VBox.margin>
+            <Insets left="3.0" right="3.0" top="5.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>

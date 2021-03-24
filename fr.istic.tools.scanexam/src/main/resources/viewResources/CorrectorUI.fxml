@@ -4,14 +4,16 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -26,17 +28,17 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#savePressed" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveAsPressed" text="Save as" />
+              <MenuItem disable="true" mnemonicParsing="false" onAction="#savePressed" text="Save" />
+                  <MenuItem disable="true" mnemonicParsing="false" onAction="#saveAsPressed" text="Save as" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#loadPressed" text="Load" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#exportPressed" text="Export" />
-                  <MenuItem mnemonicParsing="false" onAction="#importPressed" text="Import" />
+                  <MenuItem disable="true" mnemonicParsing="false" onAction="#exportPressed" text="Export" />
+                  <MenuItem disable="true" mnemonicParsing="false" onAction="#importPressed" text="Import" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#swapToEditorPressed" text="Swap to Editor" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Quit" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Quit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -44,7 +46,12 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help" />
+          <Menu mnemonicParsing="false" text="View">
+               <items>
+                  <CheckMenuItem mnemonicParsing="false" text="Auto-Zoom" />
+                  <MenuItem mnemonicParsing="false" text="Reset Zoom" />
+               </items></Menu>
+            <Menu mnemonicParsing="false" text="Help" />
         </menus>
       </MenuBar>
       <HBox>
@@ -81,20 +88,19 @@
                </opaqueInsets>
             </ToolBar>
          </children>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
+            <VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
                <children>
-                  <Label prefHeight="100.0" styleClass="UILabel" text="Students" VBox.vgrow="NEVER" />
-                  <ListView fx:id="leftList" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" />
-                     </VBox.margin>
-                  </ListView>
+                  <Label alignment="CENTER" styleClass="UILabel" text="Students" VBox.vgrow="NEVER" />
+                  <ScrollPane fx:id="studentListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
                   <VBox fx:id="studentDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
                      <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                        <Insets />
                      </VBox.margin>
                   </VBox>
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
@@ -105,27 +111,34 @@
                   </HBox>
                </children>
                <HBox.margin>
-                  <Insets bottom="2.0" right="2.0" top="2.0" />
+                  <Insets left="5.0" right="5.0" />
                </HBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
             </VBox>
-            <AnchorPane fx:id="mainPane" styleClass="MainPane" HBox.hgrow="ALWAYS">
+            <AnchorPane fx:id="mainPane" HBox.hgrow="ALWAYS">
                <children>
-                  <ScrollPane id="mainScrollPane" fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Pane prefHeight="200.0" prefWidth="200.0" />
+                        <HBox prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <Pane prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </VBox>
+                  <ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <content>
                         <AnchorPane fx:id="parentPane">
                            <children>
-                              <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage" style="-fx-background-color: GREEN;">
+                              <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage">
                                  <children>
-                                    <ImageView fx:id="imview" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@test.png" />
-                                       </image>
-                                    </ImageView>
+                                    <ImageView fx:id="imview" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
                                  </children>
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
                               </Pane>
+                              <Label styleClass="InstructionLabel" text="%label.editorInstructions" />
                            </children>
                         </AnchorPane>
                      </content>
@@ -182,36 +195,48 @@
                   </HBox>
                </children>
                <HBox.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                  <Insets />
                </HBox.margin>
             </AnchorPane>
-            <VBox alignment="CENTER" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label prefHeight="100.0" styleClass="UILabel" text="Questions" VBox.vgrow="NEVER" />
-                  <ListView fx:id="rightList" focusTraversable="false" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" />
-                     </VBox.margin></ListView>
-                  <VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" />
-                     </VBox.margin>
-                     
-                     
-                     
-                     
-                  </VBox>
-                  <HBox alignment="CENTER" VBox.vgrow="NEVER">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#prevQuestionPressed" text="last question" />
-                        <Button mnemonicParsing="false" onAction="#nextQuestionPressed" text="Next Question" />
-                     </children>
-                  </HBox>
-               </children>
+            <TabPane styleClass="SideBoxes" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="NEVER">
                <HBox.margin>
-                  <Insets bottom="2.0" left="2.0" top="2.0" />
+                  <Insets left="5.0" right="5.0" />
                </HBox.margin>
-            </VBox>
+               <tabs>
+                  <Tab closable="false" text="Questions">
+                     <content>
+                        <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
+                              <VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 
+                                 
+                                 
+                                 
+                              </VBox>
+                              <HBox alignment="CENTER" VBox.vgrow="NEVER">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#prevQuestionPressed" text="last question" />
+                                    <Button mnemonicParsing="false" onAction="#nextQuestionPressed" text="Next Question" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </Tab>
+                  <Tab closable="false" text="IDs">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
          </children>
       </HBox>
       <HBox styleClass="botBar" VBox.vgrow="NEVER">
@@ -225,8 +250,11 @@
             <Label styleClass="bottomLabel" text="Label" />
          </children>
          <VBox.margin>
-            <Insets top="2.0" />
+            <Insets />
          </VBox.margin>
+         <padding>
+            <Insets left="3.0" right="3.0" top="5.0" />
+         </padding>
       </HBox>
   </children>
 </VBox>

@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager
 import java.util.LinkedList
 import javafx.embed.swing.SwingFXUtils
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
+import fr.istic.tools.scanexam.view.fX.FXSettings
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -53,7 +54,10 @@ class ControllerFXCorrector {
 	def getAdapterCorrection() {
 		corrector
 	}
+	boolean LoadedModel = false;
 	Grader grader;
+	QuestionListCorrector questionList;
+	StudentListCorrector studentList;
 
 	boolean botShow = false;
 	@FXML
@@ -75,9 +79,9 @@ class ControllerFXCorrector {
 	@FXML
 	public Pane parentPane;
 	@FXML
-	public ListView<StudentItem> leftList;
+	public ScrollPane studentListContainer;
 	@FXML
-	public ListView<QuestionItem> rightList;
+	public ScrollPane questionListContainer;
 	@FXML
 	public ImageView imview;
 	@FXML
@@ -145,6 +149,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void nextQuestionPressed() {
 		println("Next question method");
+		if (LoadedModel)
 		nextQuestion
 	}
 
@@ -154,6 +159,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void prevQuestionPressed() {
 		println("Previous question method");
+		if (LoadedModel)
 		previousQuestion
 	}
 
@@ -163,6 +169,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void nextStudentPressed() {
 		println("Next student method");
+		if (LoadedModel)
 		nextStudent
 	}
 
@@ -172,6 +179,7 @@ class ControllerFXCorrector {
 	@FXML
 	def void prevStudentPressed() {
 		println("Previous student method");
+		if (LoadedModel)
 		previousStudent
 	}
 
@@ -210,9 +218,7 @@ class ControllerFXCorrector {
 	double maxX; //la taille de l'image courrante
 	double maxY;
 	
-	int currentQuestionIndex = 0;
-	
-	int currentStudentIndex = 0;
+
 	
 	double imageWidth;
 	double imageHeight;
@@ -313,6 +319,11 @@ class ControllerFXCorrector {
 	// ---------------------------------//
 	
 	def init(){
+		questionList = new QuestionListCorrector(this);
+		questionListContainer.content = questionList
+		
+		studentList = new StudentListCorrector(this);
+		studentListContainer.content = studentList
 		binds(root);
 		binds(scrollMain);
 		binds(scrollBis);
@@ -321,14 +332,14 @@ class ControllerFXCorrector {
 	def void binds(Node n) {
 		n.setOnKeyPressed([ event |
 			{
-				switch event.code {
-					case KeyCode.RIGHT: nextQuestionPressed
-					case KeyCode.LEFT: prevQuestionPressed
-					case KeyCode.UP: prevStudentPressed  
-					case KeyCode.DOWN: nextStudentPressed
-					default: logger.warn("Key not supported.")
-				}
-				event.consume
+					switch event.code {
+						case FXSettings.BUTTON_NEXT_QUESTION: nextQuestionPressed
+						case FXSettings.BUTTON_PREV_QUESTION: prevQuestionPressed
+						case FXSettings.BUTTON_PREV_STUDENT: prevStudentPressed  
+						case FXSettings.BUTTON_NEXT_STUDENT: nextStudentPressed
+						default: logger.warn("Key not supported.")
+					}
+					event.consume
 			}
 		])
 	}
@@ -337,15 +348,15 @@ class ControllerFXCorrector {
 		var s = mainPane.scene
 		s.setOnKeyPressed([ event |
 			{
-				switch event.code {
-					case KeyCode.RIGHT: nextQuestionPressed
-					case KeyCode.LEFT: prevQuestionPressed
-					case KeyCode.UP: nextStudentPressed
-					case KeyCode.DOWN: prevStudentPressed
-					default: logger.warn("Key not supported.")
+					switch event.code {
+						case FXSettings.BUTTON_NEXT_QUESTION: nextQuestionPressed
+						case FXSettings.BUTTON_PREV_QUESTION: prevQuestionPressed
+						case FXSettings.BUTTON_PREV_STUDENT: prevStudentPressed  
+						case FXSettings.BUTTON_NEXT_STUDENT: nextStudentPressed
+						default: logger.warn("Key not supported.")
+					}
+					event.consume
 				}
-				event.consume
-			}
 		])
 		binds(scrollMain);
 		binds(scrollBis);
@@ -357,7 +368,7 @@ class ControllerFXCorrector {
 	
 	
 	def void load(){
-		loadExam();
+		loadTemplate();
 		loadStudentPdfs();
 	}
 	
@@ -368,7 +379,7 @@ class ControllerFXCorrector {
 	 
 	 //path vers template edit
 	 //pathervers tempplate pfsds
-	def void loadExam() { 
+	def void loadTemplate() { 
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files", Arrays.asList("*.xmi")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
@@ -408,7 +419,7 @@ class ControllerFXCorrector {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			
+			//TODO
 		} 
 		else {
 			logger.warn("File not chosen")
@@ -422,7 +433,7 @@ class ControllerFXCorrector {
 		for (var p = 0;p < corrector.presenter.templatePageAmount;p++) {
 			var ids = corrector.presenter.initLoading(p);
 			for (int i:ids) {
-				var question = new QuestionItem();
+				var question = new QuestionItemCorrector();
 				question.x = corrector.presenter.questionX(i) * imageWidth;
 				question.y = corrector.presenter.questionY(i) * imageHeight;
 				question.h = corrector.presenter.questionHeight(i) * imageHeight;
@@ -430,7 +441,7 @@ class ControllerFXCorrector {
 				question.page = p
 				question.questionId = i
 				question.name = corrector.presenter.questionName(i);
-				rightList.items.add(question);
+				questionList.addItem(question)
 				
 				grader.add("test1","1",1,i)
 				grader.add("test1","1",2,i)
@@ -443,19 +454,13 @@ class ControllerFXCorrector {
 		//TODO link to service
 		//var ids = new LinkedList<Integer>();
 		for (int i : ids) {
-			leftList.items.add(new StudentItem(i))
+			studentList.addItem(new StudentItemCorrector(i))
 		}
 	}
 	
 	def void postLoad(){
-		currentQuestionIndex = 0
-		leftList.selectionModel.select(0);
-		rightList.selectionModel.select(0);
-		var list = new LinkedList<Integer>()
-		list.add(1)
-		grader.display(rightList.items.get(currentQuestionIndex).questionId,list)
-		currentStudentIndex = 0;
-	}
+		LoadedModel = true
+		}
 	
 	//---------------------//
 	
@@ -474,59 +479,48 @@ class ControllerFXCorrector {
 	}
 	
 	def void nextStudent(){
-		currentStudentIndex++;	
-		if (currentStudentIndex >= leftList.items.size) {
-			currentStudentIndex = leftList.items.size-1;
-		}
-		corrector.presenter.presenterQuestion.nextStudent
+		studentList.selectNextItem
 		setSelectedStudent();
 	}
 	def void previousStudent(){
-		currentStudentIndex--;
-		if (currentStudentIndex < 0){
-			currentStudentIndex = 0
-		}
-		corrector.presenter.presenterQuestion.previousStudent
+		studentList.selectPreviousItem
 		setSelectedStudent();
 	}
-	def void selectStudent(int index){
-		currentStudentIndex = index;
+	def void selectStudent(StudentItemCorrector item){
+		studentList.selectItem(item);
 		setSelectedStudent();
 	}
 
 	def void setSelectedStudent(){
-		leftList.selectionModel.select(currentStudentIndex)
-		var list = new LinkedList<Integer>()
-		list.add(1)
-		grader.display(rightList.items.get(currentQuestionIndex).questionId,list)
+		focusStudent(studentList.currentItem)
 		display();
 	}
 
 	def void nextQuestion(){
-		currentQuestionIndex++;
-		if (currentQuestionIndex >= rightList.items.size) {
-			currentQuestionIndex = rightList.items.size -1;
-		}
-		//corrector.presenter.presenterQuestion.nextQuestion
+		questionList.selectNextItem
 		setSelectedQuestion()
 	}
 	def void previousQuestion(){
-		currentQuestionIndex--;
-		if (currentQuestionIndex < 0){
-			currentQuestionIndex = 0
-		}
-		//corrector.presenter.presenterQuestion.previousQuestion
+		questionList.selectPreviousItem
 		setSelectedQuestion()
 	}
-	def void selectQuestion(int index) {
-		currentQuestionIndex = index;
+	def void selectQuestion(QuestionItemCorrector item) {
+		questionList.selectItem(item);
 		setSelectedQuestion()
 	}
 
 	def void setSelectedQuestion(){
-		rightList.selectionModel.select(currentQuestionIndex)
+		focusQuestion(questionList.currentItem)
 		display();
 		displayQuestion();
+	}
+	
+	def focusQuestion(QuestionItemCorrector item) {
+		questionList.focusItem(item)
+	}
+	
+	def focusStudent(StudentItemCorrector item) {
+		studentList.focusItem(item)
 	}
 	
 	def void setZoomArea(int x, int y, int height, int width) {
@@ -537,10 +531,10 @@ class ControllerFXCorrector {
 	
 	//---DISPLAYING---//
 	def void display(){
-		var i = corrector.presenter.getAbsolutePage(leftList.items.get(currentStudentIndex).studentId,rightList.items.get(currentQuestionIndex).page)
+		var i = corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
 		if (!corrector.presenter.presenterPdf.atCorrectPage(i)){
 			logger.warn("changing Page")
-			selectPage(corrector.presenter.getAbsolutePage(leftList.items.get(currentStudentIndex).studentId,rightList.items.get(currentQuestionIndex).page))
+			selectPage(corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page))
 		}
 	}
 
@@ -551,7 +545,7 @@ class ControllerFXCorrector {
 	}
 
 	def void displayQuestion(){
-		setZoomArea(rightList.items.get(currentQuestionIndex).x,rightList.items.get(currentQuestionIndex).y,rightList.items.get(currentQuestionIndex).w,rightList.items.get(currentQuestionIndex).h)
+		setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
 	}
 
 	//----------------//

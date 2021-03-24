@@ -2,10 +2,15 @@
     -fx-font-family: Arial;
     -fx-font-weight: bold;
     -fx-text-fill: darkblue;
-    -fx-font-size: 19;
-    -fx-label-padding: 10px;
+    -fx-font-size: 14;
+    -fx-label-padding: 5px;
 }
 
+.InstructionLabel {
+	 -fx-font-family: Arial;
+    -fx-text-fill: grey;
+    -fx-font-size: 14;
+}
 .ArrowButton {
     -fx-padding: 5px;
     -fx-background-size: 40px 40px;
@@ -33,9 +38,6 @@
     -fx-background-color : white;
 }
 
-ListView {
-	
-}
 
 .SideBoxes {
     -fx-border-color : lightgrey;
@@ -56,17 +58,17 @@ ListView {
 	-fx-border-width: 1px 1px 1px 1px;
 }
 
+
 #correctionScrollPane > .viewport {
 	-fx-background-color: rgba(211,211,211,0.80);
 	
 }
 
 .botBar {
-	-fx-border-color: lightgrey ;
-	-fx-border-width: 1px 0px 0px 0px;
+
 }
 
-#ListBox {
+.List {
 	-fx-background-color: transparent;
 	-fx-focus-color : transparent;
 	-fx-faint-focus-color : transparent;
@@ -74,9 +76,10 @@ ListView {
 	-fx-border-width: 1px 1px 1px 1px;
 }
 
-#ListBox > .viewport {
+.List > .viewport {
 	-fx-background-color: white;
 }
+
 
 .GradeItem {
 	-fx-border-color: lightgrey ;
@@ -84,9 +87,16 @@ ListView {
 	-fx-padding: 1px 1px 1px 1px ;
 }
 
-.QuestionItem {
+.ListItem {
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 1px 1px 1px;
 	-fx-padding: 3px;
 }
 
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+.tab-header-background {
+	-fx-border-color: lightgrey ;
+	-fx-border-width: 0px 0px 1px 0px;
+}
