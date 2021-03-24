@@ -15,6 +15,7 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import fr.istic.tools.scanexam.core.GradeEntry
 
 class ExamGraduationService extends Service
 {
@@ -206,10 +207,16 @@ class ExamGraduationService extends Service
 	 * Ajoute une entrée à la note d'une question d'une copie
 	 * @param questionId l'ID de la question à laquelle ajouter l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
+	 * @return boolean indique si les points on bien ete attribuer
 	 */
-	def addGradeEntry(int questionId, int gradeEntryId) {
+	def boolean addGradeEntry(int questionId, int gradeEntryId) {
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry | entry.id == gradeEntryId]
-		studentSheets.get(currentSheetIndex).grades.get(questionId).entries.add(gradeEntry)
+		if(valideGradeEntry(questionId,gradeEntry)){
+			studentSheets.get(currentSheetIndex).grades.get(questionId).entries.add(gradeEntry)
+			return true
+		}else{
+			return false
+		}
 	}
 	
 	/**
@@ -244,6 +251,32 @@ class ExamGraduationService extends Service
 	 */
 	def setGrade (Grade note){
 		studentSheets.get(currentSheetIndex).grades.set(indexOfQuestions(pageIndex,currentQuestionIndex), note);
+	}
+	
+	
+	
+	//FIXME : Probleme lorsque la note maximal est modifier pour une note plus basse, risque de depacement
+	/**
+	 * Verification de la validiter d'une note quand on ajoute un grandEntry
+	 * Elle doit respecter les condition suivant:
+	 * -La note doit etre superieur a la note maximal possible
+	 * -La note ne peut etre inferieur a 0
+	 */
+	def boolean valideGradeEntry(int questionId,GradeEntry gradeAdd){
+		val gradeMax = getQuestion(questionId).gradeScale.maxPoint
+		val gradeEntry = getQuestion(questionId).gradeScale.steps
+		
+		var gardeCurrent = 0.0
+		for(var i = 0 ; i< gradeEntry.length-1;i++){
+			gardeCurrent = gardeCurrent + gradeEntry.get(i).step
+		}
+		gardeCurrent+= gradeAdd.step
+		
+		if(gardeCurrent < gradeMax || 0 <= gardeCurrent){
+			return true
+		}else{
+			return false
+		}
 	}
 	
 	

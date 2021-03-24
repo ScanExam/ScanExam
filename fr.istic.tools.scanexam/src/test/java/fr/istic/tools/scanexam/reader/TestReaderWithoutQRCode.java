@@ -31,11 +31,13 @@ class TestReaderWithoutQRCode {
 	void init() throws IOException {
 		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("QRCode/pfo_Inserted.pdf");
 		if (inStreamGood != null) {
+			System.out.println("good pas vide");
 			PDDocument docGood = PDDocument.load(inStreamGood);
 			readerGood = new PdfReaderWithoutQrCodeImpl(docGood, nbPages, nbCopies);
 		}
 		InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("QRCode/pfo_Dirty.pdf");
 		if (inStreamDirty != null) {
+			System.out.println("dirty pas vide");
 			PDDocument docDirty = PDDocument.load(inStreamDirty);
 			readerDirty = new PdfReaderWithoutQrCodeImpl(docDirty, nbPages, nbCopies);
 			}

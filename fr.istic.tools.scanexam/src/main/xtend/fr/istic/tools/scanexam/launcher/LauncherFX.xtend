@@ -39,11 +39,12 @@ class LauncherFX extends Application implements Launcher {
 			
 			editorLoader.setResources(LanguageManager.currentBundle);
 			graduatorLoader.setResources(LanguageManager.currentBundle);
+			rootLoader.setResources(LanguageManager.currentBundle);
 			
-			
+			val mainRoot = rootLoader.load(ResourcesUtils.getInputStreamResource("viewResources/RootUI.fxml"));
 			val editorRoot = editorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
 			val graduatorRoot = graduatorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
-			val mainRoot = rootLoader.load(ResourcesUtils.getInputStreamResource("viewResources/Root.fxml"));
+			
 			
 			val controllerEditor = (editorLoader.controller as ControllerFXEditor);
 			val controllerGraduator = (graduatorLoader.controller as ControllerFXCorrector);
@@ -62,9 +63,12 @@ class LauncherFX extends Application implements Launcher {
 			
 			rootScene.stylesheets.add("viewResources/MyStyle.css")
 			
+			
+			
 			controllerGraduator.init
 			controllerEditor.init
-			
+			controllerRoot.correctorController = controllerGraduator
+			controllerRoot.editorController = controllerEditor
 		
 			primaryStage.setTitle("ScanExam");
 			primaryStage.setScene(rootScene);

@@ -5,11 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -17,34 +13,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1280.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor">
+<VBox prefHeight="750.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor">
    <children>
-      <MenuBar>
-        <menus>
-          <Menu mnemonicParsing="false" text="%menu.file">
-            <items>
-                  <MenuItem mnemonicParsing="false" onAction="#newTemplatePressed" text="%menu.file.new" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#saveTemplatePressed" text="%menu.file.save" />
-                  <MenuItem mnemonicParsing="false" onAction="#loadTemplatePressed" text="%menu.file.load" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#switchToCorrectorPressed" text="%menu.file.switchToCorrector" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="%menu.file.close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="%menu.edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="%menu.edit.delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="%menu.help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="%menu.help.about" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
       <ToolBar>
         <items>
             <ToggleButton fx:id="createBoxButton" mnemonicParsing="false" onAction="#questionAreaPressed" text="%button.createQuestion" />
@@ -53,12 +23,12 @@
             <Button mnemonicParsing="false" onAction="#movePressed" text="%button.moveCamera" />
         </items>
          <VBox.margin>
-            <Insets bottom="5.0" />
+            <Insets />
          </VBox.margin>
       </ToolBar>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox alignment="CENTER_LEFT" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
+            <VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
                <children>
                   <Label text="%label.questions" />
                   <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
@@ -90,7 +60,7 @@
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
             </ScrollPane>
-            <VBox alignment="CENTER_RIGHT" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
+            <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
                <children>
                   <Label text="Question details" />
                   <ScrollPane fx:id="gradeListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
@@ -105,16 +75,8 @@
                </HBox.margin>
             </VBox>
          </children>
-      </HBox>
-      <HBox>
-         <children>
-            <Label text="%label.tool" />
-            <Label fx:id="currentToolLabel" text="%label.tool.none" />
-            <Pane HBox.hgrow="ALWAYS" />
-            <Label text="Label" />
-         </children>
          <VBox.margin>
-            <Insets left="3.0" right="3.0" top="5.0" />
+            <Insets top="5.0" />
          </VBox.margin>
       </HBox>
    </children>

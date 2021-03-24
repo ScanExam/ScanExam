@@ -18,7 +18,7 @@ class Question
 
 class GradeScale 
 {
-	// float weigth
+	float maxPoint
 	contains GradeEntry[] steps
 }
 class GradeEntry

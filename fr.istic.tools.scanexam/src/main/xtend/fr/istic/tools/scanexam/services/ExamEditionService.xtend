@@ -124,6 +124,19 @@ class ExamEditionService extends Service // TODO : renommer
 			scale.steps.remove(scaleEntry)
 	}
 	
+	
+/**
+	 * Modifie la note maximal que l'on peut attribuer a une question.
+	 * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
+	 * @param maxPoint, note maximal de la question question a ajouter
+	 */
+	 def modifMaxPoint(int questionId, float maxPoint) {
+		val scale = getQuestion(questionId).gradeScale
+		if(maxPoint>0){
+			scale.maxPoint=maxPoint
+		}
+	}
+	
 	def save(String path) {
 		
 		val outputStream = new ByteArrayOutputStream();
