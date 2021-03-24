@@ -52,6 +52,11 @@ class ControllerRoot {
 		
 	}
 	
+	@FXML
+	def sendMail(){
+		println("sending mail")
+	}
+	
 	
 	
 	

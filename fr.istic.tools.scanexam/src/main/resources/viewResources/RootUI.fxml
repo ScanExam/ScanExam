@@ -33,9 +33,9 @@
                   <MenuItem disable="true" mnemonicParsing="false" text="Close" />
                </items>
             </Menu>
-          <Menu disable="true" mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" onAction="#sendMail" text="%menu.edit.sendmail" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="View">
