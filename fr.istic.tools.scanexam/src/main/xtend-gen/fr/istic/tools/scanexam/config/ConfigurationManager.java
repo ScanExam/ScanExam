@@ -9,8 +9,8 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -24,7 +24,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
  */
 @SuppressWarnings("all")
 public class ConfigurationManager {
-  private static final Logger logger = Logger.getGlobal();
+  private static final Logger logger = LogManager.getLogger();
   
   /**
    * Chemin d'accès au fichier de configuration.
@@ -51,7 +51,6 @@ public class ConfigurationManager {
         ConfigurationManager.instance = config.get();
         ConfigurationManager.logger.info("Configuration loaded.");
       } else {
-        ConfigurationManager.logger.log(Level.WARNING, "Unable to load configuration. Using default.");
         ConfigurationManager.instance = ConfigurationManager.create();
         ConfigurationManager.save();
       }

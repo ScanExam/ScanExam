@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.core.config.ConfigFactory
 import fr.istic.tools.scanexam.core.config.ConfigPackage
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.logging.Logger
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
@@ -13,6 +12,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import java.util.logging.Level
 import java.util.Optional
 import java.util.Locale
+import org.apache.logging.log4j.LogManager
 
 /**
  * @author Marius Lumbroso
@@ -20,7 +20,7 @@ import java.util.Locale
  */
 class ConfigurationManager 
 {
-	static final Logger logger = Logger.getGlobal;
+	static val logger = LogManager.logger
 	
 	/**
 	 * Chemin d'accès au fichier de configuration.
@@ -51,7 +51,7 @@ class ConfigurationManager
 			}
 			else
 			{	
-				logger.log(Level.WARNING , "Unable to load configuration. Using default.");
+			//	logger.log(Level.WARNING , "Unable to load configuration. Using default."); // TODO
 				instance = create()
 				save()
 			}

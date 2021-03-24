@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.sessions;
+package services;
 
 
 import org.junit.jupiter.api.BeforeEach;
