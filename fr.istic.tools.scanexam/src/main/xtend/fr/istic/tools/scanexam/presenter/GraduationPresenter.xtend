@@ -39,6 +39,15 @@ class GraduationPresenter implements Presenter
 		
 		presPdf = new PresenterPdf(service, this)
 		presQuestion = new PresenterQuestion(service)
+		
+		//Verification Switch Service
+		if(this.service.getExamInstance().equals(null)){
+			if(!EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance()).equals(null)){
+				this.service.setExamInstance(EditorGraduationSwitchVerification.loadExamInstance)
+			}
+		}else{
+			EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance())
+		}
 	}
 	
 	

@@ -34,6 +34,15 @@ class EditorPresenter implements Presenter
 		presPdf = new PresenterPdf(service, this)
 		presQuestionZone =  new PresenterQuestionZone(service,this)
 		presMarkingScheme = new PresenterMarkingScheme(service, this)
+		
+		//Verification Switch Service
+		if(this.service.getExamInstance().equals(null)){
+			if(!EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance()).equals(null)){
+				this.service.setExamInstance(EditorGraduationSwitchVerification.loadExamInstance)
+			}
+		}else{
+			EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance())
+		}
 	}
 
 

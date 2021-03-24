@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.eclipse.xtend.lib.annotations.Accessors
+import fr.istic.tools.scanexam.core.Exam
 
 abstract class Service 
 {
@@ -128,5 +129,20 @@ abstract class Service
 	 */
 	def getCurrentPageNumber() {
 		return pageIndex;
+	}
+	
+	
+		/**
+	 * @return l'instance de l'examen
+	 */
+	def Exam getExamInstance(){
+		return ExamSingleton.instance;
+	}
+	
+	/**
+	 * @return modifie l'instance de l'examen
+	 */
+	def void setExamInstance(Exam exam){
+		ExamSingleton.instance = exam;
 	}
 }
