@@ -81,6 +81,20 @@
 }
 
 
+.GradeList {
+	-fx-background-color: transparent;
+	-fx-focus-color : transparent;
+	-fx-faint-focus-color : transparent;
+	-fx-border-color: transparent ;
+}
+
+.GradeList > .viewport {
+	-fx-background-color: transparent;
+}
+
+
+
+
 .GradeItem {
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 1px 1px 1px;
@@ -106,3 +120,23 @@
 	-fx-border-width: 1px;
 	-fx-padding: 0px;
 }
+.Grader {
+	-fx-border-color: lightgrey;
+	-fx-border-width: 1px;
+	-fx-background-color: #f0f2f5;
+}
+
+.button {
+	-fx-border-color : lightgrey;
+	-fx-border-width: 1px;
+	-fx-background-insets: 0px;
+}
+
+.check-box > .box {
+	-fx-border-color : lightgrey;
+	-fx-border-width: 1px;
+	-fx-background-insets: 0px;
+}
+.InfinityButton {
+	-fx-pref-width: Infinity;
+} 

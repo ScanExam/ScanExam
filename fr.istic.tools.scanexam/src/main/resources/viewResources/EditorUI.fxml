@@ -23,12 +23,12 @@
             <Button mnemonicParsing="false" onAction="#movePressed" text="%button.moveCamera" />
         </items>
          <VBox.margin>
-            <Insets bottom="5.0" />
+            <Insets />
          </VBox.margin>
       </ToolBar>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox alignment="CENTER_LEFT" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
+            <VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
                <children>
                   <Label text="%label.questions" />
                   <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
@@ -60,7 +60,7 @@
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
             </ScrollPane>
-            <VBox alignment="CENTER_RIGHT" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
+            <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
                <children>
                   <Label text="Question details" />
                   <ScrollPane fx:id="gradeListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
@@ -75,6 +75,9 @@
                </HBox.margin>
             </VBox>
          </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>

@@ -26,6 +26,7 @@ import java.util.LinkedList
 import javafx.embed.swing.SwingFXUtils
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
 import fr.istic.tools.scanexam.view.fX.FXSettings
+import javafx.scene.layout.HBox
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -96,6 +97,8 @@ class ControllerFXCorrector {
 	public Spinner<Double> gradeSpinner;
 	@FXML
 	public Spinner<Double> totalGradeSpinner;
+	@FXML
+	public HBox graderContainer;
 
 	@FXML
 	def Pressed() {
@@ -324,6 +327,10 @@ class ControllerFXCorrector {
 		
 		studentList = new StudentListCorrector(this);
 		studentListContainer.content = studentList
+		
+		grader = new Grader(this);
+		graderContainer.children.add(grader);
+		
 		binds(root);
 		binds(scrollMain);
 		binds(scrollBis);
@@ -428,8 +435,6 @@ class ControllerFXCorrector {
 	
 	
 	def void loadQuestions(){
-		grader = new Grader();
-		questionDetails.children.add(grader);
 		for (var p = 0;p < corrector.presenter.templatePageAmount;p++) {
 			var ids = corrector.presenter.initLoading(p);
 			for (int i:ids) {
@@ -443,8 +448,6 @@ class ControllerFXCorrector {
 				question.name = corrector.presenter.questionName(i);
 				questionList.addItem(question)
 				
-				grader.add("test1","1",1,i)
-				grader.add("test1","1",2,i)
 			}
 		}
 	}

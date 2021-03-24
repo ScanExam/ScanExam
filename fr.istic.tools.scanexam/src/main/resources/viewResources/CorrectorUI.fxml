@@ -7,8 +7,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -38,7 +36,7 @@
                   <Button mnemonicParsing="false" text="Button" />
               </items>
                <HBox.margin>
-                  <Insets bottom="2.0" />
+                  <Insets />
                </HBox.margin>
             </ToolBar>
             <ToolBar prefWidth="150.0" HBox.hgrow="SOMETIMES">
@@ -53,7 +51,7 @@
             </ToolBar>
          </children>
          <VBox.margin>
-            <Insets bottom="5.0" />
+            <Insets />
          </VBox.margin>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
@@ -83,13 +81,6 @@
             </VBox>
             <AnchorPane fx:id="mainPane" HBox.hgrow="ALWAYS">
                <children>
-                  <VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0" />
-                        <HBox prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <Pane prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
                   <ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <content>
                         <AnchorPane fx:id="parentPane">
@@ -110,6 +101,13 @@
                         <Cursor fx:constant="OPEN_HAND" />
                      </cursor>
                   </ScrollPane>
+                  <VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <HBox fx:id="graderContainer" prefWidth="200.0" />
+                        <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
                   <AnchorPane id="CorrectionBackground" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="CorrectionBackground" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
                         <ScrollPane id="correctionScrollPane" fx:id="scrollBis" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -158,46 +156,37 @@
                   <Insets />
                </HBox.margin>
             </AnchorPane>
-            <TabPane styleClass="SideBoxes" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="NEVER">
+            <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes">
+               <children>
+                  <Label alignment="CENTER" styleClass="UILabel" text="Questions" />
+                  <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
+                  <VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     
+                                 
+                     
+                                 
+                  </VBox>
+                  <HBox alignment="CENTER" VBox.vgrow="NEVER">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#prevQuestionPressed" text="last question" />
+                        <Button mnemonicParsing="false" onAction="#nextQuestionPressed" text="Next Question" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
                <HBox.margin>
                   <Insets left="5.0" right="5.0" />
                </HBox.margin>
-               <tabs>
-                  <Tab closable="false" text="Questions">
-                     <content>
-                        <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                              <VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 
-                                 
-                                 
-                                 
-                              </VBox>
-                              <HBox alignment="CENTER" VBox.vgrow="NEVER">
-                                 <children>
-                                    <Button mnemonicParsing="false" onAction="#prevQuestionPressed" text="last question" />
-                                    <Button mnemonicParsing="false" onAction="#nextQuestionPressed" text="Next Question" />
-                                 </children>
-                              </HBox>
-                           </children>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </VBox>
-                     </content>
-                  </Tab>
-                  <Tab closable="false" text="IDs">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
+            </VBox>
          </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
       </HBox>
   </children>
 </VBox>
