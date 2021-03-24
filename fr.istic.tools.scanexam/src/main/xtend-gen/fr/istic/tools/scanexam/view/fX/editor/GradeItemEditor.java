@@ -1,8 +1,8 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
-import fr.istic.tools.scanexam.view.fX.editor.EditorQuestionItem;
-import fr.istic.tools.scanexam.view.fX.editor.GradeList;
+import fr.istic.tools.scanexam.view.fX.editor.GradeListEditor;
 import fr.istic.tools.scanexam.view.fX.editor.NumberTextField;
+import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -13,8 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 @SuppressWarnings("all")
-public class GradeItem extends HBox {
-  public GradeItem(final GradeList list, final EditorQuestionItem item) {
+public class GradeItemEditor extends HBox {
+  public GradeItemEditor(final GradeListEditor list, final QuestionItemEditor item) {
     super();
     this.questionItem = item;
     this.list = list;
@@ -32,14 +32,14 @@ public class GradeItem extends HBox {
     this.points.setText("0");
     this.points.setEditable(false);
     h.getChildren().addAll(this.name, this.points);
-    this.getStyleClass().add("GradeItemBox");
+    this.getStyleClass().add("GradeItem");
     this.setupContextMenu();
     this.setupEvents();
   }
   
-  private GradeList list;
+  private GradeListEditor list;
   
-  private EditorQuestionItem questionItem;
+  private QuestionItemEditor questionItem;
   
   private int gradeItemId;
   
@@ -57,7 +57,7 @@ public class GradeItem extends HBox {
     this.remove.setOnAction(handler);
   }
   
-  public EditorQuestionItem getGradeQuestionItem() {
+  public QuestionItemEditor getGradeQuestionItem() {
     return this.questionItem;
   }
   
@@ -112,7 +112,7 @@ public class GradeItem extends HBox {
       menuItem1.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
-          GradeItem.this.setNameEditable();
+          GradeItemEditor.this.setNameEditable();
         }
       });
     }
@@ -124,30 +124,30 @@ public class GradeItem extends HBox {
       menuItem1.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
-          GradeItem.this.setPointsEditable();
+          GradeItemEditor.this.setPointsEditable();
         }
       });
     }
   }
   
   public void setupEvents() {
-    final GradeItem item = this;
+    final GradeItemEditor item = this;
     this.name.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent event) {
-        GradeItem.this.commitNameChange();
+        GradeItemEditor.this.commitNameChange();
       }
     });
     this.points.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent event) {
-        GradeItem.this.commitPointsChange();
+        GradeItemEditor.this.commitPointsChange();
       }
     });
     this.remove.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent event) {
-        GradeItem.this.list.removeGradeItem(item);
+        GradeItemEditor.this.list.removeGradeItem(item);
       }
     });
   }

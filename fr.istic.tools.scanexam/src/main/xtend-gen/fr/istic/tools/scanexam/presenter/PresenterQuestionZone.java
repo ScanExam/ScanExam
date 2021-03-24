@@ -62,7 +62,7 @@ public class PresenterQuestionZone {
   }
   
   public void resizeQuestion(final int ID, final double height, final double width) {
-    this.service.rescaleQuestion(ID, ((float) height), ((float) height));
+    this.service.rescaleQuestion(ID, ((float) height), ((float) width));
   }
   
   /**

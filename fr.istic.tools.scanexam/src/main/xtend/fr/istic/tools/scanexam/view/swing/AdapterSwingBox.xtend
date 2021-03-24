@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent
 import java.util.Optional
 import javax.swing.JPanel
 
+
 /** 
  * Permet de dessiner des boîtes de sélection avec Swing
  * @author Julien Cochet

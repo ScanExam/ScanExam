@@ -1,16 +1,17 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.editor.EditorQuestionItem;
+import fr.istic.tools.scanexam.view.fX.editor.PdfPane;
+import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class Box extends Rectangle {
-  public Box(final EditorQuestionItem item, final double x, final double y, final double width, final double height) {
+  public Box(final QuestionItemEditor item, final double x, final double y, final double width, final double height) {
     super(x, y, width, height);
     this.questionItem = item;
     this.setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
@@ -22,14 +23,20 @@ public class Box extends Rectangle {
     this(null, x, y, width, height);
   }
   
-  private EditorQuestionItem questionItem;
+  private QuestionItemEditor questionItem;
   
-  public EditorQuestionItem getQuestionItem() {
+  private PdfPane pane;
+  
+  public QuestionItemEditor getQuestionItem() {
     return this.questionItem;
   }
   
-  public EditorQuestionItem setQuestionItem(final EditorQuestionItem item) {
+  public QuestionItemEditor setQuestionItem(final QuestionItemEditor item) {
     return this.questionItem = item;
+  }
+  
+  public PdfPane setPane(final PdfPane pane) {
+    return this.pane = pane;
   }
   
   public void isVisible(final boolean b) {
@@ -108,24 +115,34 @@ public class Box extends Rectangle {
   
   public void setupEvents() {
     Box zone = this;
+    zone.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(final MouseEvent event) {
+        boolean onNorth = Box.this.checkOnNorthBorder(event);
+        boolean onSouth = Box.this.checkOnSouthBorder(event);
+        boolean onEast = Box.this.checkOnEastBorder(event);
+        boolean onWest = Box.this.checkOnWestBorder(event);
+        Box.this.pane.getController().selectQuestion(Box.this.questionItem);
+      }
+    });
     zone.setOnMouseMoved(new EventHandler<MouseEvent>() {
       @Override
       public void handle(final MouseEvent event) {
-        boolean _checkOnNorthBorder = Box.this.checkOnNorthBorder(event);
-        if (_checkOnNorthBorder) {
-          InputOutput.<String>print("on north \n");
+        boolean onNorth = Box.this.checkOnNorthBorder(event);
+        boolean onSouth = Box.this.checkOnSouthBorder(event);
+        boolean onEast = Box.this.checkOnEastBorder(event);
+        boolean onWest = Box.this.checkOnWestBorder(event);
+        if ((onNorth || onSouth)) {
+          Box.this.setCursor(Cursor.V_RESIZE);
         }
-        boolean _checkOnSouthBorder = Box.this.checkOnSouthBorder(event);
-        if (_checkOnSouthBorder) {
-          InputOutput.<String>print("on south \n");
+        if ((onEast || onWest)) {
+          Box.this.setCursor(Cursor.H_RESIZE);
         }
-        boolean _checkOnEastBorder = Box.this.checkOnEastBorder(event);
-        if (_checkOnEastBorder) {
-          InputOutput.<String>print("on East \n");
+        if ((onSouth && onEast)) {
+          Box.this.setCursor(Cursor.NW_RESIZE);
         }
-        boolean _checkOnWestBorder = Box.this.checkOnWestBorder(event);
-        if (_checkOnWestBorder) {
-          InputOutput.<String>print("on West \n");
+        if ((!(((onEast || onWest) || onNorth) || onSouth))) {
+          Box.this.setCursor(Cursor.DEFAULT);
         }
       }
     });

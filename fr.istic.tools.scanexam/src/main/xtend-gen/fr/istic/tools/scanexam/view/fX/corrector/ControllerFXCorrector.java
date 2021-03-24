@@ -1,10 +1,13 @@
 package fr.istic.tools.scanexam.view.fX.corrector;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX;
+import fr.istic.tools.scanexam.view.fX.FXSettings;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
 import fr.istic.tools.scanexam.view.fX.corrector.Grader;
-import fr.istic.tools.scanexam.view.fX.corrector.QuestionItem;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentItem;
+import fr.istic.tools.scanexam.view.fX.corrector.QuestionItemCorrector;
+import fr.istic.tools.scanexam.view.fX.corrector.QuestionListCorrector;
+import fr.istic.tools.scanexam.view.fX.corrector.StudentItemCorrector;
+import fr.istic.tools.scanexam.view.fX.corrector.StudentListCorrector;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +24,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
@@ -72,7 +74,13 @@ public class ControllerFXCorrector {
     return this.corrector;
   }
   
+  private boolean LoadedModel = false;
+  
   private Grader grader;
+  
+  private QuestionListCorrector questionList;
+  
+  private StudentListCorrector studentList;
   
   private boolean botShow = false;
   
@@ -104,10 +112,10 @@ public class ControllerFXCorrector {
   public Pane parentPane;
   
   @FXML
-  public ListView<StudentItem> leftList;
+  public ScrollPane studentListContainer;
   
   @FXML
-  public ListView<QuestionItem> rightList;
+  public ScrollPane questionListContainer;
   
   @FXML
   public ImageView imview;
@@ -182,7 +190,9 @@ public class ControllerFXCorrector {
   @FXML
   public void nextQuestionPressed() {
     InputOutput.<String>println("Next question method");
-    this.nextQuestion();
+    if (this.LoadedModel) {
+      this.nextQuestion();
+    }
   }
   
   /**
@@ -191,7 +201,9 @@ public class ControllerFXCorrector {
   @FXML
   public void prevQuestionPressed() {
     InputOutput.<String>println("Previous question method");
-    this.previousQuestion();
+    if (this.LoadedModel) {
+      this.previousQuestion();
+    }
   }
   
   /**
@@ -200,7 +212,9 @@ public class ControllerFXCorrector {
   @FXML
   public void nextStudentPressed() {
     InputOutput.<String>println("Next student method");
-    this.nextStudent();
+    if (this.LoadedModel) {
+      this.nextStudent();
+    }
   }
   
   /**
@@ -209,7 +223,9 @@ public class ControllerFXCorrector {
   @FXML
   public void prevStudentPressed() {
     InputOutput.<String>println("Previous student method");
-    this.previousStudent();
+    if (this.LoadedModel) {
+      this.previousStudent();
+    }
   }
   
   /**
@@ -242,10 +258,6 @@ public class ControllerFXCorrector {
   private double maxX;
   
   private double maxY;
-  
-  private int currentQuestionIndex = 0;
-  
-  private int currentStudentIndex = 0;
   
   private double imageWidth;
   
@@ -373,6 +385,12 @@ public class ControllerFXCorrector {
   }
   
   public void init() {
+    QuestionListCorrector _questionListCorrector = new QuestionListCorrector(this);
+    this.questionList = _questionListCorrector;
+    this.questionListContainer.setContent(this.questionList);
+    StudentListCorrector _studentListCorrector = new StudentListCorrector(this);
+    this.studentList = _studentListCorrector;
+    this.studentListContainer.setContent(this.studentList);
     this.binds(this.root);
     this.binds(this.scrollMain);
     this.binds(this.scrollBis);
@@ -381,25 +399,30 @@ public class ControllerFXCorrector {
   public void binds(final Node n) {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
       KeyCode _code = event.getCode();
-      if (_code != null) {
-        switch (_code) {
-          case RIGHT:
-            this.nextQuestionPressed();
-            break;
-          case LEFT:
-            this.prevQuestionPressed();
-            break;
-          case UP:
-            this.prevStudentPressed();
-            break;
-          case DOWN:
-            this.nextStudentPressed();
-            break;
-          default:
-            ControllerFXCorrector.logger.warn("Key not supported.");
-            break;
+      boolean _matched = false;
+      if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_NEXT_QUESTION)) {
+        _matched=true;
+        this.nextQuestionPressed();
+      }
+      if (!_matched) {
+        if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_PREV_QUESTION)) {
+          _matched=true;
+          this.prevQuestionPressed();
         }
-      } else {
+      }
+      if (!_matched) {
+        if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_PREV_STUDENT)) {
+          _matched=true;
+          this.prevStudentPressed();
+        }
+      }
+      if (!_matched) {
+        if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_NEXT_STUDENT)) {
+          _matched=true;
+          this.nextStudentPressed();
+        }
+      }
+      if (!_matched) {
         ControllerFXCorrector.logger.warn("Key not supported.");
       }
       event.consume();
@@ -411,25 +434,30 @@ public class ControllerFXCorrector {
     Scene s = this.mainPane.getScene();
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
       KeyCode _code = event.getCode();
-      if (_code != null) {
-        switch (_code) {
-          case RIGHT:
-            this.nextQuestionPressed();
-            break;
-          case LEFT:
-            this.prevQuestionPressed();
-            break;
-          case UP:
-            this.nextStudentPressed();
-            break;
-          case DOWN:
-            this.prevStudentPressed();
-            break;
-          default:
-            ControllerFXCorrector.logger.warn("Key not supported.");
-            break;
+      boolean _matched = false;
+      if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_NEXT_QUESTION)) {
+        _matched=true;
+        this.nextQuestionPressed();
+      }
+      if (!_matched) {
+        if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_PREV_QUESTION)) {
+          _matched=true;
+          this.prevQuestionPressed();
         }
-      } else {
+      }
+      if (!_matched) {
+        if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_PREV_STUDENT)) {
+          _matched=true;
+          this.prevStudentPressed();
+        }
+      }
+      if (!_matched) {
+        if (com.google.common.base.Objects.equal(_code, FXSettings.BUTTON_NEXT_STUDENT)) {
+          _matched=true;
+          this.nextStudentPressed();
+        }
+      }
+      if (!_matched) {
         ControllerFXCorrector.logger.warn("Key not supported.");
       }
       event.consume();
@@ -440,7 +468,7 @@ public class ControllerFXCorrector {
   }
   
   public void load() {
-    this.loadExam();
+    this.loadTemplate();
     this.loadStudentPdfs();
   }
   
@@ -448,7 +476,7 @@ public class ControllerFXCorrector {
    * Opens a Open dialog box
    * Used to choose a .xmi file representing a already started Graduation
    */
-  public void loadExam() {
+  public void loadTemplate() {
     FileChooser fileChooser = new FileChooser();
     ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
     List<String> _asList = Arrays.<String>asList("*.xmi");
@@ -524,7 +552,7 @@ public class ControllerFXCorrector {
         LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
         for (final int i : ids) {
           {
-            QuestionItem question = new QuestionItem();
+            QuestionItemCorrector question = new QuestionItemCorrector();
             double _questionX = this.corrector.getPresenter().questionX(i);
             double _multiply = (_questionX * this.imageWidth);
             question.setX(_multiply);
@@ -540,7 +568,7 @@ public class ControllerFXCorrector {
             question.setPage(p);
             question.setQuestionId(i);
             question.setName(this.corrector.getPresenter().questionName(i));
-            this.rightList.getItems().add(question);
+            this.questionList.addItem(question);
             this.grader.add("test1", "1", 1, i);
             this.grader.add("test1", "1", 2, i);
           }
@@ -552,20 +580,13 @@ public class ControllerFXCorrector {
   public void loadStudents() {
     LinkedList<Integer> ids = this.corrector.getPresenter().getStudentIds();
     for (final int i : ids) {
-      ObservableList<StudentItem> _items = this.leftList.getItems();
-      StudentItem _studentItem = new StudentItem(i);
-      _items.add(_studentItem);
+      StudentItemCorrector _studentItemCorrector = new StudentItemCorrector(i);
+      this.studentList.addItem(_studentItemCorrector);
     }
   }
   
   public void postLoad() {
-    this.currentQuestionIndex = 0;
-    this.leftList.getSelectionModel().select(0);
-    this.rightList.getSelectionModel().select(0);
-    LinkedList<Integer> list = new LinkedList<Integer>();
-    list.add(Integer.valueOf(1));
-    this.grader.display(this.rightList.getItems().get(this.currentQuestionIndex).getQuestionId(), list);
-    this.currentStudentIndex = 0;
+    this.LoadedModel = true;
   }
   
   public void renderStudentCopy() {
@@ -580,69 +601,52 @@ public class ControllerFXCorrector {
   }
   
   public void nextStudent() {
-    this.currentStudentIndex++;
-    int _size = this.leftList.getItems().size();
-    boolean _greaterEqualsThan = (this.currentStudentIndex >= _size);
-    if (_greaterEqualsThan) {
-      int _size_1 = this.leftList.getItems().size();
-      int _minus = (_size_1 - 1);
-      this.currentStudentIndex = _minus;
-    }
-    this.corrector.getPresenter().getPresenterQuestion().nextStudent();
+    this.studentList.selectNextItem();
     this.setSelectedStudent();
   }
   
   public void previousStudent() {
-    this.currentStudentIndex--;
-    if ((this.currentStudentIndex < 0)) {
-      this.currentStudentIndex = 0;
-    }
-    this.corrector.getPresenter().getPresenterQuestion().previousStudent();
+    this.studentList.selectPreviousItem();
     this.setSelectedStudent();
   }
   
-  public void selectStudent(final int index) {
-    this.currentStudentIndex = index;
+  public void selectStudent(final StudentItemCorrector item) {
+    this.studentList.selectItem(item);
     this.setSelectedStudent();
   }
   
   public void setSelectedStudent() {
-    this.leftList.getSelectionModel().select(this.currentStudentIndex);
-    LinkedList<Integer> list = new LinkedList<Integer>();
-    list.add(Integer.valueOf(1));
-    this.grader.display(this.rightList.getItems().get(this.currentQuestionIndex).getQuestionId(), list);
+    this.focusStudent(this.studentList.getCurrentItem());
     this.display();
   }
   
   public void nextQuestion() {
-    this.currentQuestionIndex++;
-    int _size = this.rightList.getItems().size();
-    boolean _greaterEqualsThan = (this.currentQuestionIndex >= _size);
-    if (_greaterEqualsThan) {
-      int _size_1 = this.rightList.getItems().size();
-      int _minus = (_size_1 - 1);
-      this.currentQuestionIndex = _minus;
-    }
+    this.questionList.selectNextItem();
     this.setSelectedQuestion();
   }
   
   public void previousQuestion() {
-    this.currentQuestionIndex--;
-    if ((this.currentQuestionIndex < 0)) {
-      this.currentQuestionIndex = 0;
-    }
+    this.questionList.selectPreviousItem();
     this.setSelectedQuestion();
   }
   
-  public void selectQuestion(final int index) {
-    this.currentQuestionIndex = index;
+  public void selectQuestion(final QuestionItemCorrector item) {
+    this.questionList.selectItem(item);
     this.setSelectedQuestion();
   }
   
   public void setSelectedQuestion() {
-    this.rightList.getSelectionModel().select(this.currentQuestionIndex);
+    this.focusQuestion(this.questionList.getCurrentItem());
     this.display();
     this.displayQuestion();
+  }
+  
+  public void focusQuestion(final QuestionItemCorrector item) {
+    this.questionList.focusItem(item);
+  }
+  
+  public void focusStudent(final StudentItemCorrector item) {
+    this.studentList.focusItem(item);
   }
   
   public void setZoomArea(final int x, final int y, final int height, final int width) {
@@ -651,12 +655,12 @@ public class ControllerFXCorrector {
   }
   
   public void display() {
-    int i = this.corrector.getPresenter().getAbsolutePage(this.leftList.getItems().get(this.currentStudentIndex).getStudentId(), this.rightList.getItems().get(this.currentQuestionIndex).getPage());
+    int i = this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
     boolean _atCorrectPage = this.corrector.getPresenter().getPresenterPdf().atCorrectPage(i);
     boolean _not = (!_atCorrectPage);
     if (_not) {
       ControllerFXCorrector.logger.warn("changing Page");
-      this.selectPage(this.corrector.getPresenter().getAbsolutePage(this.leftList.getItems().get(this.currentStudentIndex).getStudentId(), this.rightList.getItems().get(this.currentQuestionIndex).getPage()));
+      this.selectPage(this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
     }
   }
   
@@ -667,7 +671,7 @@ public class ControllerFXCorrector {
   }
   
   public void displayQuestion() {
-    this.setZoomArea(this.rightList.getItems().get(this.currentQuestionIndex).getX(), this.rightList.getItems().get(this.currentQuestionIndex).getY(), this.rightList.getItems().get(this.currentQuestionIndex).getW(), this.rightList.getItems().get(this.currentQuestionIndex).getH());
+    this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getW(), this.questionList.getCurrentItem().getH());
   }
   
   public void setGrade(final int studentId, final int questionId, final float grade) {

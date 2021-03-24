@@ -1,29 +1,34 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import com.google.common.base.Objects;
+import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.view.fX.editor.Box;
 import fr.istic.tools.scanexam.view.fX.editor.BoxType;
 import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
-import fr.istic.tools.scanexam.view.fX.editor.EditorQuestionItem;
+import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 @SuppressWarnings("all")
-public class QuestionList extends VBox {
-  public QuestionList(final ControllerFXEditor controller) {
+public class QuestionListEditor extends VBox {
+  public QuestionListEditor(final ControllerFXEditor controller) {
     this.controller = controller;
     VBox.setVgrow(this, Priority.ALWAYS);
   }
   
   private ControllerFXEditor controller;
   
-  public boolean loadQuestion(final EditorQuestionItem item) {
+  public ControllerFXEditor getController() {
+    return this.controller;
+  }
+  
+  public boolean loadQuestion(final Box box, final String name, final int page, final int id) {
     boolean _xblockexpression = false;
     {
-      this.add(item);
-      _xblockexpression = this.controller.addZone(item.getZone());
+      QuestionItemEditor item = new QuestionItemEditor(this, box, name, page, id);
+      _xblockexpression = this.add(item);
     }
     return _xblockexpression;
   }
@@ -31,36 +36,32 @@ public class QuestionList extends VBox {
   /**
    * Create new question and add to model
    */
-  public boolean newQuestion(final Box box) {
-    boolean _xblockexpression = false;
-    {
-      BoxType type = BoxType.QUESTION;
-      ControllerFXEditor.SelectedTool _selectedTool = this.controller.getSelectedTool();
-      if (_selectedTool != null) {
-        switch (_selectedTool) {
-          case QUESTION_AREA:
-            type = BoxType.QUESTION;
-            break;
-          case ID_AREA:
-            type = BoxType.ID;
-            break;
-          case QR_AREA:
-            type = BoxType.QR;
-            break;
-          default:
-            break;
-        }
-      } else {
+  public void newQuestion(final Box box) {
+    BoxType type = BoxType.QUESTION;
+    ControllerFXEditor.SelectedTool _selectedTool = this.controller.getSelectedTool();
+    if (_selectedTool != null) {
+      switch (_selectedTool) {
+        case QUESTION_AREA:
+          type = BoxType.QUESTION;
+          break;
+        case ID_AREA:
+          type = BoxType.ID;
+          break;
+        case QR_AREA:
+          type = BoxType.QR;
+          break;
+        default:
+          break;
       }
-      int _currentPdfPageNumber = this.controller.getEditor().getPresenter().getPresenterPdf().currentPdfPageNumber();
-      EditorQuestionItem item = new EditorQuestionItem(this, box, type, _currentPdfPageNumber);
-      this.addToModel(item);
-      _xblockexpression = this.add(item);
+    } else {
     }
-    return _xblockexpression;
+    int _currentPdfPageNumber = this.controller.getEditor().getPresenter().getPresenterPdf().currentPdfPageNumber();
+    QuestionItemEditor item = new QuestionItemEditor(this, box, type, _currentPdfPageNumber);
+    this.addToModel(item);
+    this.add(item);
   }
   
-  public boolean removeQuestion(final EditorQuestionItem item) {
+  public boolean removeQuestion(final QuestionItemEditor item) {
     boolean _xblockexpression = false;
     {
       this.removeFocus();
@@ -71,29 +72,11 @@ public class QuestionList extends VBox {
     return _xblockexpression;
   }
   
-  public int addToModel(final EditorQuestionItem item) {
-    return item.setQuestionId(this.controller.getEditor().getPresenter().getPresenterQuestionZone().createQuestion(item.getZone().getX(), item.getZone().getY(), 
-      item.getZone().getHeight(), item.getZone().getWidth()));
-  }
-  
-  public void updateInModel(final EditorQuestionItem item) {
-    this.controller.getEditor().getPresenter().getPresenterQuestionZone().moveQuestion(item.getQuestionId(), item.getZone().getX(), item.getZone().getY());
-    this.controller.getEditor().getPresenter().getPresenterQuestionZone().resizeQuestion(item.getQuestionId(), item.getZone().getHeight(), 
-      item.getZone().getWidth());
-  }
-  
-  public void removeFromModel(final EditorQuestionItem item) {
-    this.controller.getEditor().getPresenter().getPresenterQuestionZone().removeQuestion(item.getQuestionId());
-  }
-  
-  public void focusQuestion(final EditorQuestionItem item) {
-  }
-  
-  public void changeFocus(final EditorQuestionItem item) {
+  public void select(final QuestionItemEditor item) {
     ObservableList<Node> _children = this.getChildren();
     for (final Node n : _children) {
       {
-        EditorQuestionItem question = ((EditorQuestionItem) n);
+        QuestionItemEditor question = ((QuestionItemEditor) n);
         boolean _equals = Objects.equal(question, item);
         if (_equals) {
           question.setFocus(true);
@@ -107,26 +90,22 @@ public class QuestionList extends VBox {
   public void removeFocus() {
     ObservableList<Node> _children = this.getChildren();
     for (final Node e : _children) {
-      if ((e instanceof EditorQuestionItem)) {
-        ((EditorQuestionItem) e).setFocus(false);
+      if ((e instanceof QuestionItemEditor)) {
+        ((QuestionItemEditor) e).setFocus(false);
       }
     }
-  }
-  
-  public void changeGradeItems(final EditorQuestionItem newItem) {
-    this.controller.changeFocus(newItem);
   }
   
   public void showOnlyPage(final int page) {
     ObservableList<Node> _children = this.getChildren();
     for (final Node e : _children) {
-      if ((e instanceof EditorQuestionItem)) {
-        this.checkAndDisplay(page, ((EditorQuestionItem) e));
+      if ((e instanceof QuestionItemEditor)) {
+        this.checkAndDisplay(page, ((QuestionItemEditor) e));
       }
     }
   }
   
-  public void checkAndDisplay(final int page, final EditorQuestionItem item) {
+  public void checkAndDisplay(final int page, final QuestionItemEditor item) {
     int _page = item.getPage();
     boolean _equals = (_page == page);
     if (_equals) {
@@ -136,15 +115,60 @@ public class QuestionList extends VBox {
     }
   }
   
-  public boolean add(final EditorQuestionItem item) {
+  public boolean add(final QuestionItemEditor item) {
     return this.getChildren().add(item);
   }
   
-  public boolean remove(final EditorQuestionItem item) {
+  public boolean remove(final QuestionItemEditor item) {
     return this.getChildren().remove(item);
   }
   
-  public ControllerFXEditor getController() {
-    return this.controller;
+  public void clear() {
+    this.controller.selectQuestion(null);
+    this.getChildren().clear();
+  }
+  
+  public void addToModel(final QuestionItemEditor item) {
+    PresenterQuestionZone _presenterQuestionZone = this.controller.getEditor().getPresenter().getPresenterQuestionZone();
+    double _x = item.getZone().getX();
+    double _maxX = this.controller.getMaxX();
+    double _divide = (_x / _maxX);
+    double _y = item.getZone().getY();
+    double _maxY = this.controller.getMaxY();
+    double _divide_1 = (_y / _maxY);
+    double _height = item.getZone().getHeight();
+    double _maxY_1 = this.controller.getMaxY();
+    double _divide_2 = (_height / _maxY_1);
+    double _width = item.getZone().getWidth();
+    double _maxX_1 = this.controller.getMaxX();
+    double _divide_3 = (_width / _maxX_1);
+    item.setQuestionId(_presenterQuestionZone.createQuestion(_divide, _divide_1, _divide_2, _divide_3));
+    this.updateInModel(item);
+  }
+  
+  public void updateInModel(final QuestionItemEditor item) {
+    PresenterQuestionZone _presenterQuestionZone = this.controller.getEditor().getPresenter().getPresenterQuestionZone();
+    int _questionId = item.getQuestionId();
+    double _x = item.getZone().getX();
+    double _maxX = this.controller.getMaxX();
+    double _divide = (_x / _maxX);
+    double _y = item.getZone().getY();
+    double _maxY = this.controller.getMaxY();
+    double _divide_1 = (_y / _maxY);
+    _presenterQuestionZone.moveQuestion(_questionId, _divide, _divide_1);
+    PresenterQuestionZone _presenterQuestionZone_1 = this.controller.getEditor().getPresenter().getPresenterQuestionZone();
+    int _questionId_1 = item.getQuestionId();
+    double _height = item.getZone().getHeight();
+    double _maxY_1 = this.controller.getMaxY();
+    double _divide_2 = (_height / _maxY_1);
+    double _width = item.getZone().getWidth();
+    double _maxX_1 = this.controller.getMaxX();
+    double _divide_3 = (_width / _maxX_1);
+    _presenterQuestionZone_1.resizeQuestion(_questionId_1, _divide_2, _divide_3);
+    this.controller.getEditor().getPresenter().getPresenterQuestionZone().renameQuestion(item.getQuestionId(), item.getName());
+  }
+  
+  public void removeFromModel(final QuestionItemEditor item) {
+    this.controller.getEditor().getPresenter().getPresenterQuestionZone().removeQuestion(item.getQuestionId());
   }
 }

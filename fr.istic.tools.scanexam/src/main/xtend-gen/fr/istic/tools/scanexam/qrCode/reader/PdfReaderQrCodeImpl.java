@@ -14,20 +14,16 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.qrCode.reader.Copie;
 import fr.istic.tools.scanexam.qrCode.reader.Page;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCode;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeThread;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderThreadManager;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -47,10 +43,12 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private int nbPagesInSheet;
   
-  private File pdfFile;
+  private int nbPagesInPdf;
   
-  public PdfReaderQrCodeImpl(final File pFile, final int nbPages, final int nbCopies) {
-    this.pdfFile = pFile;
+  private PDDocument doc;
+  
+  public PdfReaderQrCodeImpl(final PDDocument doc, final int nbPages, final int nbCopies) {
+    this.doc = doc;
     this.nbPagesInSheet = nbPages;
     this.nbSheetsTotal = nbCopies;
     HashSet<Copie> _hashSet = new HashSet<Copie>();
@@ -60,9 +58,9 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   @Override
   public boolean readPDf() {
     try {
-      final PDDocument doc = PDDocument.load(this.pdfFile);
-      final PDFRenderer pdf = new PDFRenderer(doc);
-      this.createThread(doc.getNumberOfPages(), pdf);
+      this.nbPagesInPdf = this.doc.getNumberOfPages();
+      final PDFRenderer pdf = new PDFRenderer(this.doc);
+      this.createThread(this.doc.getNumberOfPages(), pdf);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -82,8 +80,12 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
         final BufferedImage bim = pdfRenderer.renderImageWithDPI((page).intValue(), 300, ImageType.RGB);
         final Pattern pattern = Pattern.compile("_");
         final String[] items = pattern.split(this.decodeQRCodeBuffered(bim));
-        int _parseInt = Integer.parseInt(items[1]);
-        int _parseInt_1 = Integer.parseInt(items[2]);
+        int _size = ((List<String>)Conversions.doWrapArray(items)).size();
+        int _minus = (_size - 2);
+        int _parseInt = Integer.parseInt(items[_minus]);
+        int _size_1 = ((List<String>)Conversions.doWrapArray(items)).size();
+        int _minus_1 = (_size_1 - 1);
+        int _parseInt_1 = Integer.parseInt(items[_minus_1]);
         final Copie cop = new Copie(_parseInt, (page).intValue(), _parseInt_1);
         synchronized (this.sheets) {
           this.addCopie(cop);
@@ -126,18 +128,14 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param docSujetMaitre document dans lequel insérer les Codes
    */
   public void createThread(final int nbPage, final PDFRenderer pdfRenderer) {
-    final ExecutorService service = Executors.newFixedThreadPool(4);
-    PdfReaderQrCodeThread _pdfReaderQrCodeThread = new PdfReaderQrCodeThread(this, 0, (nbPage / 4), pdfRenderer);
-    service.execute(_pdfReaderQrCodeThread);
-    PdfReaderQrCodeThread _pdfReaderQrCodeThread_1 = new PdfReaderQrCodeThread(this, (nbPage / 4), (nbPage / 2), pdfRenderer);
-    service.execute(_pdfReaderQrCodeThread_1);
-    PdfReaderQrCodeThread _pdfReaderQrCodeThread_2 = new PdfReaderQrCodeThread(this, (nbPage / 2), (3 * (nbPage / 4)), pdfRenderer);
-    service.execute(_pdfReaderQrCodeThread_2);
-    PdfReaderQrCodeThread _pdfReaderQrCodeThread_3 = new PdfReaderQrCodeThread(this, ((3 * nbPage) / 4), nbPage, pdfRenderer);
-    service.execute(_pdfReaderQrCodeThread_3);
-    service.shutdown();
+    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, pdfRenderer, this);
+    manager.start();
   }
   
+  /**
+   * Dis si un examen est complet ou non
+   * @return true si l'examen est complet (contient toutes les pages de toutes les copies), false sinon
+   */
   public boolean isExamenComplete() {
     boolean ret = true;
     int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;
@@ -148,6 +146,10 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return (ret && (this.nbSheetsTotal == ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length));
   }
   
+  /**
+   * Renvoie une collection de toutes les copies incomplètes
+   * @return une collection de copies incomplètes
+   */
   public Set<Copie> getUncompleteCopies() {
     final Set<Copie> uncompleteCopies = new HashSet<Copie>();
     int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;
@@ -162,6 +164,10 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return uncompleteCopies;
   }
   
+  /**
+   * Renvoie une collection de toutes les copies complètes
+   * @return une collection de copies complètes
+   */
   public Set<Copie> getCompleteCopies() {
     Set<Copie> completeCopies = new HashSet<Copie>();
     final Predicate<Copie> _function = (Copie copie) -> {
@@ -171,6 +177,11 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return completeCopies;
   }
   
+  /**
+   * Renvoie une copie spécifique à son indentifiant
+   * @param numCopie le numéro de la copie voulue
+   * @return la copie correspondante
+   */
   public Copie getCopie(final int numCopie) {
     int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
@@ -184,6 +195,10 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return null;
   }
   
+  /**
+   * Ajoute une copie lu au tas de copies déjà lues. Si la copie existe déjà, on merge les pages
+   * @param sheet la copie à ajouter
+   */
   public Boolean addCopie(final Copie copie) {
     boolean _xblockexpression = false;
     {
@@ -212,10 +227,18 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return Boolean.valueOf(_xblockexpression);
   }
   
+  /**
+   * Renvoie une collection de toutes les copies lues, complètes ou non
+   * @return une collection de toutes les copies lues
+   */
   public Set<Copie> getSheets() {
     return this.sheets;
   }
   
+  /**
+   * Renvoie la collection des copies complètes uniquement au format de l'API
+   * @return la collection des copies complètes au format de l'API
+   */
   @Override
   public Collection<StudentSheet> getCompleteStudentSheets() {
     final Set<StudentSheet> res = new HashSet<StudentSheet>();
@@ -229,83 +252,97 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
       {
         final Set<Copie> _converted_temp_1 = (Set<Copie>)temp;
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
-        final List<Integer> pages = new ArrayList<Integer>();
+        final int[] pagesArray = new int[this.nbPagesInSheet];
         final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
         int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
         ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
         for (final Integer j : _doubleDotLessThan_1) {
           final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
           final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
-          pages.add((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject(), Integer.valueOf((((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF()));
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
+            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        res.add(dF.createStudentSheet(index, pages));
+        res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
       }
-    }
-    return res;
-  }
-  
-  @Override
-  public Collection<StudentSheet> getUncompleteStudentSheets() {
-    throw new UnsupportedOperationException("TODO: auto-generated method stub");
-  }
-  
-  public Object getStudentSheets() {
-    return null;
-  }
-  
-  @Override
-  public int getNbPagesPdf() {
-    try {
-      final PDDocument doc = PDDocument.load(this.pdfFile);
-      final int nbPages = doc.getNumberOfPages();
-      doc.close();
-      return nbPages;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  @Override
-  public int getNbPagesTreated() {
-    int res = 0;
-    int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;
-    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
-    for (final Integer i : _doubleDotLessThan) {
-      int _res = res;
-      int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[(i).intValue()]).getSetPages(), Object.class)).length;
-      res = (_res + _length_1);
     }
     return res;
   }
   
   /**
-   * FIXME
-   * C'est parti en sucette je crois, boucle infini, il a pas trouvé de QRCode dans une des pages
-   * impossible de comprendre pour le moment, à check
+   * Renvoie la collection des copies incomplètes uniquement au format de l'API
+   * @return la collection des copies incomplètes au format de l'API
    */
-  public static void main(final String[] arg) {
-    try {
-      final File pdf = new File("pfo_example_Inserted.pdf");
-      final PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(pdf, 8, 200);
-      qrcodeReader.readPDf();
-      int progress = 0;
-      while ((progress != 100)) {
-        {
-          TimeUnit.SECONDS.sleep(1);
-          int _nbPagesTreated = qrcodeReader.getNbPagesTreated();
-          int _multiply = (_nbPagesTreated * 100);
-          int _nbPagesPdf = qrcodeReader.getNbPagesPdf();
-          int _divide = (_multiply / _nbPagesPdf);
-          progress = _divide;
-          InputOutput.<String>println(("Progress : " + Integer.valueOf(progress)));
+  @Override
+  public Collection<StudentSheet> getUncompleteStudentSheets() {
+    final Set<StudentSheet> res = new HashSet<StudentSheet>();
+    Set<Copie> temp = new HashSet<Copie>();
+    final DataFactory dF = new DataFactory();
+    temp = this.getUncompleteCopies();
+    Set<Copie> temp2 = new HashSet<Copie>();
+    temp2 = this.getCompleteCopies();
+    InputOutput.<String>println(temp2.toString());
+    InputOutput.<String>println(temp.toString());
+    final Set<Copie> _converted_temp = (Set<Copie>)temp;
+    int _length = ((Object[])Conversions.unwrapArray(_converted_temp, Object.class)).length;
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
+    for (final Integer i : _doubleDotLessThan) {
+      {
+        final Set<Copie> _converted_temp_1 = (Set<Copie>)temp;
+        final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
+        final int[] pagesArray = new int[this.nbPagesInSheet];
+        final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
+        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
+        ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
+        for (final Integer j : _doubleDotLessThan_1) {
+          final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
+          final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
+            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
+        res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
       }
-      int _length = ((Object[])Conversions.unwrapArray(qrcodeReader.sheets, Object.class)).length;
+    }
+    return res;
+  }
+  
+  /**
+   * Renvoie le nombre de total de pages du PDF de toutes les copies
+   * @return le nombre de pages du PDF source
+   */
+  @Override
+  public int getNbPagesPdf() {
+    return this.nbPagesInPdf;
+  }
+  
+  /**
+   * Renvoie le nombre de pages traitées par la lecture du PDF
+   * @return le nombre de pages que le reader a lu du PDF source
+   */
+  @Override
+  public int getNbPagesTreated() {
+    int res = 0;
+    synchronized (this.sheets) {
+      int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
       for (final Integer i : _doubleDotLessThan) {
-        InputOutput.<String>println((((Copie[])Conversions.unwrapArray(qrcodeReader.sheets, Copie.class))[(i).intValue()]).toString());
+        int _res = res;
+        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[(i).intValue()]).getSetPages(), Object.class)).length;
+        res = (_res + _length_1);
       }
-      InputOutput.<Boolean>println(Boolean.valueOf(qrcodeReader.isExamenComplete()));
+    }
+    return res;
+  }
+  
+  public static void main(final String[] arg) {
+    try {
+      final File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf");
+      final PDDocument doc = PDDocument.load(pdf);
+      final PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8, 32);
+      qrcodeReader.readPDf();
+      InputOutput.<String>println("le threads principal continue");
+      while ((qrcodeReader.getNbPagesTreated() != qrcodeReader.getNbPagesPdf())) {
+      }
+      InputOutput.<String>println(qrcodeReader.getCompleteStudentSheets().toString());
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

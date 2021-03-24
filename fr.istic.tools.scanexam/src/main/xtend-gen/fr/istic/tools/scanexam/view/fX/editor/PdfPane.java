@@ -38,14 +38,6 @@ public class PdfPane extends Pane {
     return _xblockexpression;
   }
   
-  public boolean addZone(final Box toAdd) {
-    return this.getChildren().add(toAdd);
-  }
-  
-  public boolean removeZone(final Box toRemove) {
-    return this.getChildren().remove(toRemove);
-  }
-  
   public double getImageViewHeight() {
     double _height = this.currentImage.getHeight();
     double _width = this.currentImage.getWidth();
@@ -75,6 +67,32 @@ public class PdfPane extends Pane {
       _xifexpression = this.imageView.getFitWidth();
     }
     return _xifexpression;
+  }
+  
+  public ControllerFXEditor getController() {
+    return this.controller;
+  }
+  
+  public boolean addZone(final Box toAdd) {
+    boolean _xblockexpression = false;
+    {
+      toAdd.setPane(this);
+      _xblockexpression = this.getChildren().add(toAdd);
+    }
+    return _xblockexpression;
+  }
+  
+  public boolean removeZone(final Box toRemove) {
+    return this.getChildren().remove(toRemove);
+  }
+  
+  public boolean clear() {
+    boolean _xblockexpression = false;
+    {
+      this.getChildren().clear();
+      _xblockexpression = this.getChildren().add(this.imageView);
+    }
+    return _xblockexpression;
   }
   
   public void setupEvents() {

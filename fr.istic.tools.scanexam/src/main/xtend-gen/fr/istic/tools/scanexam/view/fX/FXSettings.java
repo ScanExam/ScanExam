@@ -13,8 +13,6 @@ public class FXSettings {
   
   public static int BUTTON_ICON_SIZE = 16;
   
-  public static KeyCode NEXT_QUESTION_BUTTON = KeyCode.RIGHT;
-  
   public static double BOX_TEXT_OFFSET_X = 25.0;
   
   public static double BOX_TEXT_OFFSET_Y = 25.0;
@@ -31,5 +29,13 @@ public class FXSettings {
   
   public static int MINIMUM_ZONE_SIZE = 20;
   
-  public static int ZONE_RESIZE_TOLERANCE = 3;
+  public static int ZONE_RESIZE_TOLERANCE = 10;
+  
+  public static KeyCode BUTTON_NEXT_STUDENT = KeyCode.RIGHT;
+  
+  public static KeyCode BUTTON_PREV_STUDENT = KeyCode.LEFT;
+  
+  public static KeyCode BUTTON_NEXT_QUESTION = KeyCode.DOWN;
+  
+  public static KeyCode BUTTON_PREV_QUESTION = KeyCode.UP;
 }

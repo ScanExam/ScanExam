@@ -158,6 +158,8 @@ public class QuestionOptionsEditor extends VBox {
     if (b) {
       this.grid.getChildren().remove(this.questionName);
       this.grid.add(this.renameField, 1, 0);
+      this.renameField.requestFocus();
+      this.renameField.selectAll();
     } else {
       boolean _contains = this.grid.getChildren().contains(this.questionName);
       boolean _not = (!_contains);

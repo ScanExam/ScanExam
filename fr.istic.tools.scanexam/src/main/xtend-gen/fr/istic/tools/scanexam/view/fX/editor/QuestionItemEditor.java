@@ -132,7 +132,7 @@ public class QuestionItemEditor extends VBox {
     this.top.getChildren().addAll(this.name);
     VBox.setVgrow(this, Priority.ALWAYS);
     zone.setupEvents();
-    this.getStyleClass().add("QuestionItem");
+    this.getStyleClass().add("ListItem");
     Insets _insets = new Insets(2);
     VBox.setMargin(this, _insets);
     this.setupContextMenu();

@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.services;
 
+import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
@@ -140,8 +141,6 @@ public abstract class Service {
     return ExamSingleton.getQuestion(this.pageIndex, index).getZone();
   }
   
-  public abstract void save(final String path);
-  
   public int getPageNumber() {
     return IterableExtensions.size(this.document.getPages());
   }
@@ -151,6 +150,20 @@ public abstract class Service {
    */
   public int getCurrentPageNumber() {
     return this.pageIndex;
+  }
+  
+  /**
+   * @return l'instance de l'examen
+   */
+  public Exam getExamInstance() {
+    return ExamSingleton.instance;
+  }
+  
+  /**
+   * @return modifie l'instance de l'examen
+   */
+  public void setExamInstance(final Exam exam) {
+    ExamSingleton.instance = exam;
   }
   
   @Pure

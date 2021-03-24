@@ -264,12 +264,11 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
       byte[] _bytes = "./src/main/resources/QRCode/pfo_example.pdf".getBytes();
       final InputStream input = new ByteArrayInputStream(_bytes);
-      gen.createAllExamCopies(input, 15);
+      gen.createAllExamCopies(input, 4);
       final String in = "./src/main/resources/QRCode/pfo_example_Inserted.pdf";
       final File f = new File(in);
       final PDDocument doc = PDDocument.load(f);
-      final File desti = new File("./src/main/resources/QRCode/pfo_Dirty.pdf");
-      doc.removePage(12);
+      final File desti = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf");
       doc.save(desti);
       InputOutput.<String>println("Done");
     } catch (Throwable _e) {
