@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.config;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.MissingResourceException;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -137,6 +139,8 @@ public class LanguageManagerTest {
 		assertEquals("pierre", LanguageManager.translate("stone"));
 		assertEquals("jardin", LanguageManager.translate("garden"));
 		assertEquals("raton laveur", LanguageManager.translate("raccoon"));
+		assertNotNull(LanguageManager.getCurrentBundle());
+		assertEquals("pierre", LanguageManager.getCurrentBundle().getString("stone"));
 	}
 	
 	@Test
@@ -146,6 +150,8 @@ public class LanguageManagerTest {
 		assertEquals("piedra", LanguageManager.translate("stone"));
 		assertEquals("jardín", LanguageManager.translate("garden"));
 		assertEquals("mapache", LanguageManager.translate("raccoon"));
+		assertNotNull(LanguageManager.getCurrentBundle());
+		assertEquals("piedra", LanguageManager.getCurrentBundle().getString("stone"));
 	}
 	
 	@Test
@@ -153,5 +159,7 @@ public class LanguageManagerTest {
 	void translateTest3() {
 		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		assertEquals("oyster", LanguageManager.translate("oyster"));
+		assertNotNull(LanguageManager.getCurrentBundle());
+		assertThrows(MissingResourceException.class, () -> LanguageManager.getCurrentBundle().getString("oyster"));
 	}
 }
