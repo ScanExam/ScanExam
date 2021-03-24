@@ -32,6 +32,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -137,6 +138,9 @@ public class ControllerFXCorrector {
   
   @FXML
   public Spinner<Double> totalGradeSpinner;
+  
+  @FXML
+  public HBox graderContainer;
   
   @FXML
   public Object Pressed() {
@@ -391,6 +395,9 @@ public class ControllerFXCorrector {
     StudentListCorrector _studentListCorrector = new StudentListCorrector(this);
     this.studentList = _studentListCorrector;
     this.studentListContainer.setContent(this.studentList);
+    Grader _grader = new Grader(this);
+    this.grader = _grader;
+    this.graderContainer.getChildren().add(this.grader);
     this.binds(this.root);
     this.binds(this.scrollMain);
     this.binds(this.scrollBis);
@@ -544,9 +551,6 @@ public class ControllerFXCorrector {
   }
   
   public void loadQuestions() {
-    Grader _grader = new Grader();
-    this.grader = _grader;
-    this.questionDetails.getChildren().add(this.grader);
     for (int p = 0; (p < this.corrector.getPresenter().getTemplatePageAmount()); p++) {
       {
         LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
@@ -569,8 +573,6 @@ public class ControllerFXCorrector {
             question.setQuestionId(i);
             question.setName(this.corrector.getPresenter().questionName(i));
             this.questionList.addItem(question);
-            this.grader.add("test1", "1", 1, i);
-            this.grader.add("test1", "1", 2, i);
           }
         }
       }

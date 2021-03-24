@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import com.google.common.base.Objects;
-import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
@@ -87,9 +86,6 @@ public class ControllerFXEditor {
   
   @FXML
   private ChoiceBox<Integer> pageChoice;
-  
-  @FXML
-  private Label currentToolLabel;
   
   @FXML
   private Label pageNumberLabel;
@@ -437,43 +433,36 @@ public class ControllerFXEditor {
   
   public void setToMoveCameraTool() {
     this.mainPane.setCursor(Cursor.OPEN_HAND);
-    this.currentToolLabel.setText(LanguageManager.translate("label.tool.moveCamera"));
     this.currentTool = ControllerFXEditor.SelectedTool.MOVE_CAMERA_TOOL;
   }
   
   public void setToQuestionAreaTool() {
     this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentToolLabel.setText(LanguageManager.translate("label.tool.questionZone"));
     this.currentTool = ControllerFXEditor.SelectedTool.QUESTION_AREA;
   }
   
   public void setToIDAreaTool() {
     this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentToolLabel.setText(LanguageManager.translate("label.tool.idZone"));
     this.currentTool = ControllerFXEditor.SelectedTool.ID_AREA;
   }
   
   public void setToQRAreaTool() {
     this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentToolLabel.setText(LanguageManager.translate("label.tool.qrZone"));
     this.currentTool = ControllerFXEditor.SelectedTool.QR_AREA;
   }
   
   public void setToMoveTool() {
     this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentToolLabel.setText(LanguageManager.translate("label.tool.moveZone"));
     this.currentTool = ControllerFXEditor.SelectedTool.MOVE_TOOL;
   }
   
   public void setToResizeTool() {
     this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentToolLabel.setText(LanguageManager.translate("label.tool.resizeZone"));
     this.currentTool = ControllerFXEditor.SelectedTool.RESIZE_TOOL;
   }
   
   public void setToNoTool() {
     this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentToolLabel.setText(LanguageManager.translate("label.tool.none"));
     this.currentTool = ControllerFXEditor.SelectedTool.NO_TOOL;
   }
   
@@ -482,13 +471,6 @@ public class ControllerFXEditor {
    */
   public Box createZone(final double x, final double y) {
     return new Box(x, y, 0, 0);
-  }
-  
-  /**
-   * Adds a zone to the children of the mainPane
-   */
-  public boolean addZone(final Box zone) {
-    return this.mainPane.getChildren().add(zone);
   }
   
   /**
@@ -591,7 +573,7 @@ public class ControllerFXEditor {
             double _questionWidth_1 = this.editor.getPresenter().getPresenterQuestionZone().questionWidth(i);
             String _plus = ((("loading width for " + Integer.valueOf(i)) + " = ") + Double.valueOf(_questionWidth_1));
             InputOutput.<String>print(_plus);
-            this.addZone(box);
+            this.mainPane.addZone(box);
             this.questionList.loadQuestion(box, this.editor.getPresenter().getPresenterQuestionZone().questionName(i), p, i);
           }
         }

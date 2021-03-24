@@ -11,7 +11,7 @@ import java.util.Collections;
  */
 @SuppressWarnings("all")
 public final class ExamSingleton {
-  protected static Exam instance = null;
+  public static Exam instance = null;
   
   /**
    * Permet de récupérer une Question

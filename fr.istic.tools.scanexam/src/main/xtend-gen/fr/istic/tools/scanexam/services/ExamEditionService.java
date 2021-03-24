@@ -167,6 +167,18 @@ public class ExamEditionService extends Service {
     return _xblockexpression;
   }
   
+  /**
+   * Modifie la note maximal que l'on peut attribuer a une question.
+   * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
+   * @param maxPoint, note maximal de la question question a ajouter
+   */
+  public void modifMaxPoint(final int questionId, final float maxPoint) {
+    final GradeScale scale = this.getQuestion(questionId).getGradeScale();
+    if ((maxPoint > 0)) {
+      scale.setMaxPoint(maxPoint);
+    }
+  }
+  
   public void save(final String path) {
     try {
       final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

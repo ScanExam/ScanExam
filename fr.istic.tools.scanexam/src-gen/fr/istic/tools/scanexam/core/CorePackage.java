@@ -196,13 +196,22 @@ public interface CorePackage extends EPackage {
 	int GRADE_SCALE = 2;
 
 	/**
+	 * The feature id for the '<em><b>Max Point</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GRADE_SCALE__MAX_POINT = 0;
+
+	/**
 	 * The feature id for the '<em><b>Steps</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE__STEPS = 0;
+	int GRADE_SCALE__STEPS = 1;
 
 	/**
 	 * The number of structural features of the '<em>Grade Scale</em>' class.
@@ -211,7 +220,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_SCALE_FEATURE_COUNT = 1;
+	int GRADE_SCALE_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Grade Scale</em>' class.
@@ -746,6 +755,17 @@ public interface CorePackage extends EPackage {
 	EClass getGradeScale();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.GradeScale#getMaxPoint <em>Max Point</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Max Point</em>'.
+	 * @see fr.istic.tools.scanexam.core.GradeScale#getMaxPoint()
+	 * @see #getGradeScale()
+	 * @generated
+	 */
+	EAttribute getGradeScale_MaxPoint();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.GradeScale#getSteps <em>Steps</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1148,6 +1168,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EClass GRADE_SCALE = eINSTANCE.getGradeScale();
+
+		/**
+		 * The meta object literal for the '<em><b>Max Point</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute GRADE_SCALE__MAX_POINT = eINSTANCE.getGradeScale_MaxPoint();
 
 		/**
 		 * The meta object literal for the '<em><b>Steps</b></em>' containment reference list feature.

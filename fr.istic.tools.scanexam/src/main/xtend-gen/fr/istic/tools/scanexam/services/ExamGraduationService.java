@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.services;
 
-import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.Page;
@@ -22,7 +21,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
@@ -244,18 +242,21 @@ public class ExamGraduationService extends Service {
    * Ajoute une entrée à la note d'une question d'une copie
    * @param questionId l'ID de la question à laquelle ajouter l'entrée
    * @param l'ID de l'entrée dans l'Examen
+   * @return boolean indique si les points on bien ete attribuer
    */
   public boolean addGradeEntry(final int questionId, final int gradeEntryId) {
-    boolean _xblockexpression = false;
-    {
-      final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
-        int _id = entry.getId();
-        return Boolean.valueOf((_id == gradeEntryId));
-      };
-      final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
-      _xblockexpression = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries().add(gradeEntry);
+    final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
+      int _id = entry.getId();
+      return Boolean.valueOf((_id == gradeEntryId));
+    };
+    final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
+    boolean _valideGradeEntry = this.valideGradeEntry(questionId, gradeEntry);
+    if (_valideGradeEntry) {
+      (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries().add(gradeEntry);
+      return true;
+    } else {
+      return false;
     }
-    return _xblockexpression;
   }
   
   /**
@@ -306,17 +307,28 @@ public class ExamGraduationService extends Service {
     return (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().set(this.indexOfQuestions(this.pageIndex, this.currentQuestionIndex), note);
   }
   
-  public void create(final File file) {
-    try {
-      this.document = PDDocument.load(file);
-      ExamSingleton.instance = CoreFactory.eINSTANCE.createExam();
-      int _size = IterableExtensions.size(this.document.getPages());
-      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
-      for (final Integer i : _doubleDotLessThan) {
-        ExamSingleton.instance.getPages().add(CoreFactory.eINSTANCE.createPage());
-      }
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
+  /**
+   * Verification de la validiter d'une note quand on ajoute un grandEntry
+   * Elle doit respecter les condition suivant:
+   * -La note doit etre superieur a la note maximal possible
+   * -La note ne peut etre inferieur a 0
+   */
+  public boolean valideGradeEntry(final int questionId, final GradeEntry gradeAdd) {
+    final float gradeMax = this.getQuestion(questionId).getGradeScale().getMaxPoint();
+    final EList<GradeEntry> gradeEntry = this.getQuestion(questionId).getGradeScale().getSteps();
+    double gardeCurrent = 0.0;
+    for (int i = 0; (i < (((Object[])Conversions.unwrapArray(gradeEntry, Object.class)).length - 1)); i++) {
+      float _step = gradeEntry.get(i).getStep();
+      double _plus = (gardeCurrent + _step);
+      gardeCurrent = _plus;
+    }
+    double _gardeCurrent = gardeCurrent;
+    float _step = gradeAdd.getStep();
+    gardeCurrent = (_gardeCurrent + _step);
+    if (((gardeCurrent < gradeMax) || (0 <= gardeCurrent))) {
+      return true;
+    } else {
+      return false;
     }
   }
   

@@ -278,10 +278,6 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     Set<Copie> temp = new HashSet<Copie>();
     final DataFactory dF = new DataFactory();
     temp = this.getUncompleteCopies();
-    Set<Copie> temp2 = new HashSet<Copie>();
-    temp2 = this.getCompleteCopies();
-    InputOutput.<String>println(temp2.toString());
-    InputOutput.<String>println(temp.toString());
     final Set<Copie> _converted_temp = (Set<Copie>)temp;
     int _length = ((Object[])Conversions.unwrapArray(_converted_temp, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
@@ -342,7 +338,6 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
       InputOutput.<String>println("le threads principal continue");
       while ((qrcodeReader.getNbPagesTreated() != qrcodeReader.getNbPagesPdf())) {
       }
-      InputOutput.<String>println(qrcodeReader.getCompleteStudentSheets().toString());
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

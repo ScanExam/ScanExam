@@ -280,16 +280,6 @@ class ExamGraduationService extends Service
 	}
 	
 	
-	def void create(File file) 
-	{
-		document = PDDocument.load(file)
-
-		ExamSingleton.instance = CoreFactory.eINSTANCE.createExam()
-
-		for (i : 0 ..< document.pages.size()) 
-		{
-			ExamSingleton.instance.pages.add(CoreFactory.eINSTANCE.createPage());
-		}
-	}
+	
 	
 }

@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fX.ControllerRoot;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
 import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -37,28 +39,33 @@ public class LauncherFX extends Application implements Launcher {
   public void start(final Stage primaryStage) throws Exception {
     final FXMLLoader editorLoader = new FXMLLoader();
     final FXMLLoader graduatorLoader = new FXMLLoader();
+    final FXMLLoader rootLoader = new FXMLLoader();
     editorLoader.setResources(LanguageManager.getCurrentBundle());
     graduatorLoader.setResources(LanguageManager.getCurrentBundle());
-    final Parent editorRoot = editorLoader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
-    final Parent graduatorRoot = graduatorLoader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
+    rootLoader.setResources(LanguageManager.getCurrentBundle());
+    final Parent mainRoot = rootLoader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/RootUI.fxml"));
+    final Node editorRoot = editorLoader.<Node>load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
+    final Node graduatorRoot = graduatorLoader.<Node>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
     Object _controller = editorLoader.<Object>getController();
     final ControllerFXEditor controllerEditor = ((ControllerFXEditor) _controller);
     Object _controller_1 = graduatorLoader.<Object>getController();
     final ControllerFXCorrector controllerGraduator = ((ControllerFXCorrector) _controller_1);
+    Object _controller_2 = rootLoader.<Object>getController();
+    ControllerRoot controllerRoot = ((ControllerRoot) _controller_2);
     controllerEditor.setEditorAdapterFX(LauncherFX.edit);
     LauncherFX.edit.setControllerFXCreator(controllerEditor);
     controllerGraduator.setAdapterCorrection(LauncherFX.grad);
     LauncherFX.grad.setController(controllerGraduator);
-    final Scene editorScene = new Scene(editorRoot, 1280, 720);
-    final Scene graduatorScene = new Scene(graduatorRoot, 1280, 720);
-    editorScene.getStylesheets().add("viewResources/MyStyle.css");
+    controllerRoot.setCorrector(graduatorRoot);
+    controllerRoot.setEditor(editorRoot);
+    final Scene rootScene = new Scene(mainRoot, 1280, 720);
+    rootScene.getStylesheets().add("viewResources/MyStyle.css");
     controllerGraduator.init();
     controllerEditor.init();
-    LauncherFX.pStage = primaryStage;
-    LauncherFX.eScene = editorScene;
-    LauncherFX.gScene = graduatorScene;
-    primaryStage.setTitle("Corrector GUI - ScanExam");
-    primaryStage.setScene(editorScene);
+    controllerRoot.setCorrectorController(controllerGraduator);
+    controllerRoot.setEditorController(controllerEditor);
+    primaryStage.setTitle("ScanExam");
+    primaryStage.setScene(rootScene);
     primaryStage.setMinHeight(720);
     primaryStage.setMinWidth(720);
     ObservableList<Image> _icons = primaryStage.getIcons();
@@ -72,12 +79,6 @@ public class LauncherFX extends Application implements Launcher {
   
   private static GraduationAdapterFX grad;
   
-  private static Stage pStage;
-  
-  private static Scene eScene;
-  
-  private static Scene gScene;
-  
   @Override
   public void launch() {
     EditorAdapterFX _editorAdapterFX = new EditorAdapterFX();
@@ -89,11 +90,11 @@ public class LauncherFX extends Application implements Launcher {
     LauncherFX.launchApp(null);
   }
   
-  public static void swapToEditor() {
-    LauncherFX.pStage.setScene(LauncherFX.eScene);
+  public static Object swapToEditor() {
+    return null;
   }
   
-  public static void swapToGraduator() {
-    LauncherFX.pStage.setScene(LauncherFX.gScene);
+  public static Object swapToGraduator() {
+    return null;
   }
 }
