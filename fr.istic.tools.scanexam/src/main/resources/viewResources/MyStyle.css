@@ -100,3 +100,9 @@
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 0px 0px 1px 0px;
 }
+
+.text-field {
+	-fx-border-color: lightgrey;
+	-fx-border-width: 1px;
+	-fx-padding: 0px;
+}
