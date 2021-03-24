@@ -98,7 +98,7 @@
 }
 .tab-header-background {
 	-fx-border-color: lightgrey ;
-	-fx-border-width: 0px 0px 1px 0px;
+	-fx-border-width: 0px 0px 1px 1px;
 }
 
 .text-field {

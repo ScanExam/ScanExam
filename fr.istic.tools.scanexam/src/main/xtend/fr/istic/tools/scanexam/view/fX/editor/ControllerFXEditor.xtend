@@ -69,8 +69,6 @@ class ControllerFXEditor {
 	@FXML
 	ChoiceBox<Integer> pageChoice;
 
-	@FXML
-	Label currentToolLabel;
 
 	@FXML
 	Label pageNumberLabel;
@@ -380,44 +378,43 @@ class ControllerFXEditor {
 
 	def void setToMoveCameraTool() {
 		mainPane.cursor = Cursor.OPEN_HAND
-		currentToolLabel.text = LanguageManager.translate("label.tool.moveCamera")
 		currentTool = SelectedTool.MOVE_CAMERA_TOOL
 	}
 
 	def void setToQuestionAreaTool() {
 		mainPane.cursor = Cursor.DEFAULT
-		currentToolLabel.text = LanguageManager.translate("label.tool.questionZone")
+		
 		currentTool = SelectedTool.QUESTION_AREA
 	}
 
 	def void setToIDAreaTool() {
 		mainPane.cursor = Cursor.DEFAULT
-		currentToolLabel.text = LanguageManager.translate("label.tool.idZone")
+		
 
 		currentTool = SelectedTool.ID_AREA
 	}
 
 	def void setToQRAreaTool() {
 		mainPane.cursor = Cursor.DEFAULT
-		currentToolLabel.text = LanguageManager.translate("label.tool.qrZone")
+	
 		currentTool = SelectedTool.QR_AREA
 	}
 
 	def void setToMoveTool() {
 		mainPane.cursor = Cursor.DEFAULT
-		currentToolLabel.text = LanguageManager.translate("label.tool.moveZone")
+		
 		currentTool = SelectedTool.MOVE_TOOL
 	}
 
 	def void setToResizeTool() {
 		mainPane.cursor = Cursor.DEFAULT
-		currentToolLabel.text = LanguageManager.translate("label.tool.resizeZone")
+		
 		currentTool = SelectedTool.RESIZE_TOOL
 	}
 
 	def void setToNoTool() {
 		mainPane.cursor = Cursor.DEFAULT
-		currentToolLabel.text = LanguageManager.translate("label.tool.none")
+		
 		currentTool = SelectedTool.NO_TOOL
 	}
 

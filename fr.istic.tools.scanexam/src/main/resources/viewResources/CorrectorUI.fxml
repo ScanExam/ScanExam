@@ -4,56 +4,20 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1280.0" stylesheets="@viewResources/MyStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector">
+<VBox fx:id="root" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector">
   <children>
-      <MenuBar>
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem disable="true" mnemonicParsing="false" onAction="#savePressed" text="Save" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#saveAsPressed" text="Save as" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#loadPressed" text="Load" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#exportPressed" text="Export" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#importPressed" text="Import" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#swapToEditorPressed" text="Swap to Editor" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem disable="true" mnemonicParsing="false" text="Quit" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="View">
-               <items>
-                  <CheckMenuItem mnemonicParsing="false" text="Auto-Zoom" />
-                  <MenuItem mnemonicParsing="false" text="Reset Zoom" />
-               </items></Menu>
-            <Menu mnemonicParsing="false" text="Help" />
-        </menus>
-      </MenuBar>
       <HBox>
          <children>
             <ToolBar maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" HBox.hgrow="SOMETIMES">
@@ -154,11 +118,7 @@
                                  <children>
                                     <Pane onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onScroll="#mainMouseEvent" style="-fx-background-color: GREEN;">
                                        <children>
-                                          <ImageView fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@test.png" />
-                                             </image>
-                                          </ImageView>
+                                          <ImageView fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
                                        </children>
                                     </Pane>
                                  </children>
@@ -238,23 +198,6 @@
                </tabs>
             </TabPane>
          </children>
-      </HBox>
-      <HBox styleClass="botBar" VBox.vgrow="NEVER">
-         <children>
-            <Label styleClass="bottomLabel" text="Label" />
-            <Pane HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Pane>
-            <Label styleClass="bottomLabel" text="Label" />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets left="3.0" right="3.0" top="5.0" />
-         </padding>
       </HBox>
   </children>
 </VBox>
