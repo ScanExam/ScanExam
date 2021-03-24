@@ -5,17 +5,11 @@ import fr.istic.tools.scanexam.view.fX.FXSettings;
 import fr.istic.tools.scanexam.view.fX.editor.Box;
 import fr.istic.tools.scanexam.view.fX.editor.BoxType;
 import fr.istic.tools.scanexam.view.fX.editor.QuestionListEditor;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -24,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.converter.NumberStringConverter;
 
 /**
  * [JavaFX] Item question dans la liste de gauche des questions
@@ -53,16 +46,6 @@ public class QuestionItemEditor extends VBox {
   private Button remove;
   
   /**
-   * Text field for the scale of the question
-   */
-  private TextField scaleField;
-  
-  /**
-   * Formatter to allow only number in scale field
-   */
-  private final TextFormatter<Number> formatter;
-  
-  /**
    * Zone of the question, a rectangle
    */
   private Box zone;
@@ -85,7 +68,7 @@ public class QuestionItemEditor extends VBox {
   /**
    * Scale of the question
    */
-  private int scale;
+  private float scale;
   
   /**
    * the type of this zone
@@ -106,28 +89,17 @@ public class QuestionItemEditor extends VBox {
     this.top = _hBox;
     HBox _hBox_1 = new HBox();
     this.middle = _hBox_1;
-    ObservableList<Node> _children = this.middle.getChildren();
-    String _translate = LanguageManager.translate("question.scale");
-    Label _label = new Label(_translate);
-    _children.add(_label);
-    TextField _textField = new TextField();
-    this.scaleField = _textField;
-    NumberStringConverter _numberStringConverter = new NumberStringConverter();
-    TextFormatter<Number> _textFormatter = new TextFormatter<Number>(_numberStringConverter);
-    this.formatter = _textFormatter;
-    this.scaleField.setTextFormatter(this.formatter);
-    this.middle.getChildren().add(this.scaleField);
     HBox _hBox_2 = new HBox();
     this.bottom = _hBox_2;
-    String _translate_1 = LanguageManager.translate("question.remove");
-    Button _button = new Button(_translate_1);
+    String _translate = LanguageManager.translate("question.remove");
+    Button _button = new Button(_translate);
     this.remove = _button;
     this.bottom.getChildren().add(this.remove);
     this.list = list;
     this.zone = zone;
     this.zone.setQuestionItem(this);
-    Label _label_1 = new Label("New Question");
-    this.name = _label_1;
+    Label _label = new Label("New Question");
+    this.name = _label;
     this.getChildren().addAll(this.top, this.middle, this.bottom);
     this.top.getChildren().addAll(this.name);
     VBox.setVgrow(this, Priority.ALWAYS);
@@ -175,10 +147,6 @@ public class QuestionItemEditor extends VBox {
         QuestionItemEditor.this.list.getController().selectQuestion(null);
       }
     });
-    final ChangeListener<Number> _function = (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-      this.scale = newValue.intValue();
-    };
-    this.formatter.valueProperty().addListener(_function);
     this.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
       public void handle(final MouseEvent event) {
@@ -194,7 +162,7 @@ public class QuestionItemEditor extends VBox {
     return 1;
   }
   
-  public int getScale() {
+  public float getScale() {
     return this.scale;
   }
   
@@ -212,6 +180,10 @@ public class QuestionItemEditor extends VBox {
   
   public String getName() {
     return this.name.getText();
+  }
+  
+  public BoxType getType() {
+    return this.type;
   }
   
   /**
@@ -247,5 +219,9 @@ public class QuestionItemEditor extends VBox {
   
   public void setName(final String text) {
     this.name.setText(text);
+  }
+  
+  public float setScale(final float scale) {
+    return this.scale = scale;
   }
 }

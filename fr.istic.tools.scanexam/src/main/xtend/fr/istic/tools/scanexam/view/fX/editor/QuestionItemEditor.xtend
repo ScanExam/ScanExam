@@ -6,8 +6,6 @@ import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.scene.control.Button
 import javafx.scene.control.Label
-import javafx.scene.control.TextField
-import javafx.scene.control.TextFormatter
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
@@ -16,7 +14,6 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
-import javafx.util.converter.NumberStringConverter
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
 
@@ -41,10 +38,6 @@ class QuestionItemEditor extends VBox {
 	HBox bottom
 	/* button remote */
 	Button remove
-	/* Text field for the scale of the question */
-	TextField scaleField
-	/* Formatter to allow only number in scale field */
-	val TextFormatter<Number> formatter
 	
 	//--- Question vars ---//
 	/* Zone of the question, a rectangle */
@@ -56,7 +49,7 @@ class QuestionItemEditor extends VBox {
 	/* page location of this question */
 	int page
 	/* Scale of the question */
-	int scale
+	float scale
 	/* the type of this zone */
 	BoxType type
 	
@@ -73,14 +66,7 @@ class QuestionItemEditor extends VBox {
 	new(QuestionListEditor list, Box zone) {
 		super()
 		top = new HBox
-		
 		middle = new HBox
-		middle.children.add(new Label(translate("question.scale")))
-		scaleField = new TextField
-        formatter = new TextFormatter(new NumberStringConverter())
-		scaleField.setTextFormatter(formatter)
-		middle.children.add(scaleField)
-		
 		bottom = new HBox
 		remove = new Button(translate("question.remove"))
 		bottom.children.add(remove)
@@ -151,10 +137,6 @@ class QuestionItemEditor extends VBox {
 			}
 			
 		}
-		
-		formatter.valueProperty.addListener([observable, oldValue, newValue |
-			scale = newValue.intValue
-		]) 
 
 		this.onMouseClicked = new EventHandler<MouseEvent> {
 
@@ -197,6 +179,10 @@ class QuestionItemEditor extends VBox {
 		name.text
 	}
 	
+	def BoxType getType() {
+		type
+	}
+	
 	//----------------------------------------------------------------------------------------------------
 	/*
 	 *	SETTERS
@@ -232,5 +218,9 @@ class QuestionItemEditor extends VBox {
 
 	def void setName(String text) {
 		name.text = text
+	}
+	
+	def setScale(float scale) {
+		this.scale = scale
 	}
 }

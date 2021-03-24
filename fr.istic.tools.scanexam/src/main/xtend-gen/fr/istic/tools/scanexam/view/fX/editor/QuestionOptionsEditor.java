@@ -11,9 +11,11 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.NumberStringConverter;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
@@ -30,6 +32,16 @@ public class QuestionOptionsEditor extends VBox {
   private Label questionName;
   
   private TextField renameField;
+  
+  /**
+   * Text field for the scale of the question
+   */
+  private TextField scaleField;
+  
+  /**
+   * Formatter to allow only number in scale field
+   */
+  private final TextFormatter<Number> formatter;
   
   private Label questionId;
   
@@ -79,6 +91,12 @@ public class QuestionOptionsEditor extends VBox {
     this.grid.add(l7, 0, 6);
     TextField _textField = new TextField();
     this.renameField = _textField;
+    TextField _textField_1 = new TextField();
+    this.scaleField = _textField_1;
+    NumberStringConverter _numberStringConverter = new NumberStringConverter();
+    TextFormatter<Number> _textFormatter = new TextFormatter<Number>(_numberStringConverter);
+    this.formatter = _textFormatter;
+    this.scaleField.setTextFormatter(this.formatter);
     Label _label = new Label();
     this.questionName = _label;
     Label _label_1 = new Label();
@@ -110,6 +128,7 @@ public class QuestionOptionsEditor extends VBox {
   
   /**
    * Selects a question to display
+   * @param item Question sélectionnée
    */
   public void select(final QuestionItemEditor item) {
     this.showAll();
@@ -122,24 +141,27 @@ public class QuestionOptionsEditor extends VBox {
     int _questionId = item.getQuestionId();
     String _plus_1 = ("" + Integer.valueOf(_questionId));
     this.questionId.setText(_plus_1);
-    int _scale = item.getScale();
-    String _plus_2 = ("" + Integer.valueOf(_scale));
+    float _scale = item.getScale();
+    String _plus_2 = ("" + Float.valueOf(_scale));
     this.questionScale.setText(_plus_2);
+    float _scale_1 = item.getScale();
+    String _plus_3 = ("" + Float.valueOf(_scale_1));
+    this.scaleField.setText(_plus_3);
     int _weight = item.getWeight();
-    String _plus_3 = ("" + Integer.valueOf(_weight));
-    this.questionWeight.setText(_plus_3);
+    String _plus_4 = ("" + Integer.valueOf(_weight));
+    this.questionWeight.setText(_plus_4);
     double _x = item.getZone().getX();
-    String _plus_4 = ("X:" + Double.valueOf(_x));
-    String _plus_5 = (_plus_4 + "\nY:");
+    String _plus_5 = ("X:" + Double.valueOf(_x));
+    String _plus_6 = (_plus_5 + "\nY:");
     double _y = item.getZone().getY();
-    String _plus_6 = (_plus_5 + Double.valueOf(_y));
-    String _plus_7 = (_plus_6 + "\nH:");
+    String _plus_7 = (_plus_6 + Double.valueOf(_y));
+    String _plus_8 = (_plus_7 + "\nH:");
     double _height = item.getZone().getHeight();
-    String _plus_8 = (_plus_7 + Double.valueOf(_height));
-    String _plus_9 = (_plus_8 + "\nW:");
+    String _plus_9 = (_plus_8 + Double.valueOf(_height));
+    String _plus_10 = (_plus_9 + "\nW:");
     double _width = item.getZone().getWidth();
-    String _plus_10 = (_plus_9 + Double.valueOf(_width));
-    this.questionCoords.setText(_plus_10);
+    String _plus_11 = (_plus_10 + Double.valueOf(_width));
+    this.questionCoords.setText(_plus_11);
     this.questionDescription.setText("No description");
   }
   
@@ -171,11 +193,39 @@ public class QuestionOptionsEditor extends VBox {
   }
   
   /**
+   * Toggles if the sclaefield is the visible element
+   */
+  public void toggleRescale(final boolean b) {
+    if (b) {
+      this.grid.getChildren().remove(this.questionScale);
+      this.grid.add(this.scaleField, 1, 3);
+      this.scaleField.requestFocus();
+      this.scaleField.selectAll();
+    } else {
+      boolean _contains = this.grid.getChildren().contains(this.questionScale);
+      boolean _not = (!_contains);
+      if (_not) {
+        this.grid.getChildren().remove(this.scaleField);
+        this.grid.add(this.questionScale, 1, 3);
+      }
+    }
+  }
+  
+  /**
    * Called to commit a name change
    */
   public void commitRename() {
     this.questionName.setText(this.renameField.getText());
     this.currentItem.setName(this.renameField.getText());
+    this.controller.getQuestionList().updateInModel(this.currentItem);
+  }
+  
+  /**
+   * Called to commit a scale change
+   */
+  public void commitRescale() {
+    this.questionScale.setText(this.formatter.getValue().toString());
+    this.currentItem.setScale(this.formatter.getValue().floatValue());
     this.controller.getQuestionList().updateInModel(this.currentItem);
   }
   
@@ -191,6 +241,12 @@ public class QuestionOptionsEditor extends VBox {
       @Override
       public void handle(final MouseEvent event) {
         QuestionOptionsEditor.this.toggleRename(true);
+      }
+    });
+    this.questionScale.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(final MouseEvent event) {
+        QuestionOptionsEditor.this.toggleRescale(true);
       }
     });
     this.renameField.setOnAction(new EventHandler<ActionEvent>() {
@@ -209,6 +265,25 @@ public class QuestionOptionsEditor extends VBox {
           InputOutput.<String>print("rename actions\n");
           QuestionOptionsEditor.this.commitRename();
           QuestionOptionsEditor.this.toggleRename(false);
+        }
+      }
+    });
+    this.scaleField.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(final ActionEvent event) {
+        InputOutput.<String>print("rescale actions\n");
+        QuestionOptionsEditor.this.commitRescale();
+        QuestionOptionsEditor.this.toggleRescale(false);
+      }
+    });
+    ReadOnlyBooleanProperty _focusedProperty_1 = this.scaleField.focusedProperty();
+    _focusedProperty_1.addListener(new ChangeListener<Boolean>() {
+      @Override
+      public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+        if ((!(newValue).booleanValue())) {
+          InputOutput.<String>print("rescale actions\n");
+          QuestionOptionsEditor.this.commitRescale();
+          QuestionOptionsEditor.this.toggleRescale(false);
         }
       }
     });
