@@ -8,33 +8,30 @@ class SendMailXtend  {
 	//Remplissage des champ par défault
 	
 	//Adresse mail de l'expediteur
-	var static sender = "A completer"
+	var static sender = ""
 		
 	//mot de passe de l'expediteur
-	var static senderPassword= "A completer"
+	var static senderPassword= ""
 		
-	//Adresse mail cible du mail
-	var static recipient = "A completer"
+	//Numero anonymat ou nom présent sur la copie
+	var static recipient = ""
 		
 	//Titre du mail
-	var static titleMail = "A completer"
+	var static titleMail = ""
 		
 	//Message a envoier - (changer la nature du message a envoyer)
-	var static messageMail ="A completer"
+	var static messageMail =""
 
 	//chemin vers la piece jointe - (de la forme C:\\Users\\... mettre "" quand il n'y a pas de piece jointe)
-	var static pieceJointe = "A completer"
-
+	var static pieceJointe = ""
 
 	
-	def static void main(String[] arg){
-		
+	def static void main(String[] arg){		
+		//Sauvegarde du fichier contenant les informations sur les mails		
+		//SendMailTls.save(fichier)
 		//Envoie du mail
 		SendMailTls.sendMail(sender, senderPassword , recipient, titleMail, messageMail, pieceJointe)
 	}
-	
-	
-	
 	
 	/**
 	 * Fonction envoie du mail avec les valeur donnée par les getter
@@ -48,7 +45,6 @@ class SendMailXtend  {
 	 *Liste des getter et setter pour modifier est acceder au parametre 
 	 * 
 	 */
-	
 	
 	def String getSender(){
 		return sender

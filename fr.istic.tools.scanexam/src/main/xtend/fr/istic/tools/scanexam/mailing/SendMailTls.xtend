@@ -1,5 +1,5 @@
-
 package fr.istic.tools.scanexam.mailing
+
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import java.util.Date
@@ -18,7 +18,19 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeBodyPart
 import javax.mail.internet.MimeMessage
 import javax.mail.internet.MimeMultipart
+import org.apache.poi.poifs.filesystem.POIFSFileSystem
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.hssf.usermodel.HSSFSheet
+import org.apache.poi.hssf.usermodel.HSSFRow
+import org.apache.poi.hssf.usermodel.HSSFCell
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.File
+import java.io.BufferedReader
+import java.io.FileReader
 
+import fr.istic.tools.scanexam.services.Service
+import java.io.PrintWriter
 /**
  * @author Thomas Guibert
  */
@@ -33,7 +45,23 @@ class SendMailTls {
  * @param messageMail : Contenu du mail
  * @param pieceJointe : piece jointe du mail
  */
-	static def sendMail(String sender, String senderPassword, String recipient, String titleMail, String messageMail, String pieceJointe) {
+ 
+ 	static Service service
+
+	new(Service serv) {
+		service = serv
+	}
+ 	
+ 	def static save(File files){
+		var String chemin = files.absolutePath
+		var String nom = "nomExam" + ".txt" 		
+		//var String nom1 = service.examName + ".txt"
+		var PrintWriter writer = new PrintWriter(nom,'UTF-8');
+		writer.println(chemin)
+		writer.close()
+ 	}
+ 
+	def static sendMail(String sender, String senderPassword, String recipient, String titleMail, String messageMail, String pieceJointe) {
 		
 		//Verification des parametres
 		Objects.requireNonNull(sender, "Erreur : L'expediteur donner doit etre non Null");
@@ -44,7 +72,7 @@ class SendMailTls {
 		Objects.requireNonNull(pieceJointe, "Erreur : La piece Jointe du mail ne doit pas etre Null");
 		
 	    val props = new Properties()
-	    
+	     
 	    //Lecture du fichier config
 	    val file = ResourcesUtils.getInputStreamResource("mailing/configMailFile.properties")
 	    
@@ -55,8 +83,8 @@ class SendMailTls {
 	    //Verification de la validiter d'une adresse
 	    if(!sender.contains('@')){
 	    	throw new Exception("L'expediteur n'a pas une adresse mail valide");}
-	    if(!recipient.contains('@')){
-	    	throw new Exception("Le destinataire n'a pas une adresse mail valide");}
+	   /*if(!recipient.contains('@')){
+	    	throw new Exception("Le destinataire n'a pas une adresse mail valide");}*/
 	    	
 	    //Extraction de la chaine de caractère situer apres l'@ dans l'adresse de l'expediteur
 	    var typeMail = sender.substring(sender.indexOf('@')+1, sender.length)
@@ -77,7 +105,68 @@ class SendMailTls {
 	    props.put("mail.smtp.host", HOST)
 	    props.put("mail.smtp.port", PORT)
 	    
+	    var String nom = null
+        var String mail = ""
 	    
+	    try{
+	    //Lecture fichier liant une copie à un élève
+	    //var File cheminInfo = new File(service.examName + ".txt")
+	    var File cheminInfo = new File("nomExam.txt")
+	    var FileReader fx = new FileReader(cheminInfo)
+	    var BufferedReader f = new BufferedReader(fx)
+	    var File informationMail = new File(f.readLine + ".xls")
+	    
+	   // val files = ResourcesUtils.getInputStreamResource("mailing/anonymat_nom_mail.xls")
+	    
+        var POIFSFileSystem doc = new POIFSFileSystem(informationMail)
+        var HSSFWorkbook wb = new HSSFWorkbook(doc)
+        var HSSFSheet sheet = wb.getSheetAt(0)
+        
+        //Lecture d'une cellule
+        var int x = 0        
+        var HSSFRow row = sheet.getRow(x)
+        var HSSFCell cell = row.getCell(0)
+        
+        var boolean trouve = false
+        
+        //Parcourt notre tableau
+        while (((cell.getStringCellValue() != "") && (!trouve))) {
+          //Si recipient est de la forme n° d'anonymat
+          if ((com.google.common.base.Objects.equal(cell.getStringCellValue(), recipient) && recipient.matches("[0-9]+"))) {
+            cell = row.getCell(1)
+            mail = cell.getStringCellValue()
+            cell = row.getCell(2)
+            nom = cell.getStringCellValue()
+            trouve = true
+          } 
+          else {
+          	//Si recipient est de la forme nom
+            var boolean equals = com.google.common.base.Objects.equal(cell, recipient)
+            if (equals) {
+              nom = recipient;
+              cell = row.getCell(1);
+              mail = cell.getStringCellValue();
+              trouve = true;
+            } 
+            else {
+              x++;
+              row = sheet.getRow(x);
+              cell = row.getCell(0);
+            }
+          }
+        }
+	    	
+	    }catch (FileNotFoundException e){
+			e.printStackTrace();
+		} catch(IOException e){
+		e.printStackTrace();
+		}
+		
+		var boolean equals = com.google.common.base.Objects.equal(mail, "")
+		
+        if (equals) {
+          println("Le numero d'etudiant ou le nom ne correspond a aucune adresse mail")
+        } else {	   	    
 	    //session de l'expediteur
 	    val session = Session.getInstance(props, new Authenticator() {
 	            override protected PasswordAuthentication getPasswordAuthentication() {
@@ -91,12 +180,12 @@ class SendMailTls {
 	    	
 	    	// Expéditeur et destinataire du message
 	    	message.setFrom(new InternetAddress(sender))
-	    	message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient))
+	    	message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mail))
 	    	
 	    	// Sujet du mail et contenu du message
 	    	message.setSubject(titleMail)
 	    	var messageBodyPart = new MimeBodyPart();
-	    	messageBodyPart.setText(messageMail)
+	    	messageBodyPart.setText(messageMail + nom)
 	    	
 	    	var multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
@@ -127,4 +216,5 @@ class SendMailTls {
 	    	e.printStackTrace
 	    }
 	}
+}
 }
