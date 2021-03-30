@@ -175,6 +175,9 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		return sheets
 	}
 
+	override isFinished(){
+		return true
+	}
 	
 		
 	override getCompleteStudentSheets() {

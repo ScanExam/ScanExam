@@ -31,11 +31,13 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	int nbPagesInSheet
 	int nbPagesInPdf
 	PDDocument doc
+	boolean isFinished
 
 	new(PDDocument doc, int nbPages, int nbCopies) {
 		this.doc = doc
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
+		this.isFinished = false
 
 		sheets = new HashSet<Copie>()
 	}
@@ -259,6 +261,14 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
 		}
 		return res
+	}
+	
+	override isFinished(){
+		return isFinished
+	}
+	
+	def setFinished(boolean bool){
+		this.isFinished = bool
 	}
 
 	def static void main(String[] arg) {

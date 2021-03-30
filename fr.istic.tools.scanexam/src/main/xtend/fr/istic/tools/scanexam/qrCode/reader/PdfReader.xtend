@@ -38,4 +38,9 @@ interface PdfReader {
 	 * @return le nombre de pages que le reader a lu du PDF source
 	 */
 	def int getNbPagesTreated()
+	
+	/**
+	 * @return true si la lecture du PDF est terminée, false sinon
+	 */
+	def boolean isFinished()
 }

@@ -22,6 +22,7 @@ class PdfReaderQrCodeThread extends Thread implements Runnable {
 	override run() {
 		this.reader.readQRCodeImage(this.pdf, this.borneInf, this.borneMax)
 		countDown.countDown
-		println("Fermeture du Thread de Lecture")
+		println("Fermeture du Thread de Lecture: " + countDown.count)
+		
 	}
 }
