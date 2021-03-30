@@ -62,21 +62,31 @@ public class TestReaderWithQRCode {
 	void readPdfTestDirty() {
 		assertTrue(readerDirty.readPDf());
 	}
-	
+	*/
 	@Test
 	@DisplayName("Test getNbPagesPdf dans le pdf complet")
-	void getNbPagesPdfTestGood() {
+	void getNbPagesPdfTestGood() throws InterruptedException {
 		assertTrue(readerGood.readPDf());
+		while(!readerGood.isFinished()) {
+			TimeUnit.SECONDS.sleep(3);
+			System.out.println(readerGood.isFinished());
+			System.out.println(readerGood.getNbPagesTreated() + " / " + nbCopies * nbPages);
+		}
 		assertEquals(nbCopies * nbPages, readerGood.getNbPagesPdf());
 	}
 
 	@Test
 	@DisplayName("Test getNbPagesPdf dans un pdf incomplet")
-	void getNbPagesPdfTestDirty() {
+	void getNbPagesPdfTestDirty() throws InterruptedException {
 		assertTrue(readerDirty.readPDf());
+		while(!readerDirty.isFinished()) {
+			TimeUnit.SECONDS.sleep(3);
+			System.out.println(readerDirty.isFinished());
+			System.out.println(readerDirty.getNbPagesTreated() + " / " + nbCopies * nbPages);
+		}
 		assertEquals(nbCopies * nbPages - 1, readerDirty.getNbPagesPdf());
 	}
-	*/
+	
 	@Test
 	@DisplayName("Test getNbPagesTraitee")
 	void getNbPagesTraiteePdfTest() throws InterruptedException {
