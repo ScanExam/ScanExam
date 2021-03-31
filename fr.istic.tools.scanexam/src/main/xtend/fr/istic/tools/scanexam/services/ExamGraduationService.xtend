@@ -18,6 +18,7 @@ import static fr.istic.tools.scanexam.services.ExamSingleton.*
 import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.api.DataFactory
 import java.util.ArrayList
+import fr.istic.tools.scanexam.core.impl.GradeImpl
 
 class ExamGraduationService extends Service
 {
@@ -108,6 +109,21 @@ class ExamGraduationService extends Service
         	val pdfReader = new PdfReaderWithoutQrCodeImpl(document,ExamSingleton.instance.pages.size,3); // TODO
         	pdfReader.readPDf();
         	studentSheets = pdfReader.completeStudentSheets
+        	
+        	var index =0;
+        	for (StudentSheet sheet : studentSheets)
+        	{
+        		val examPage = ExamSingleton.getPage(index);
+        		
+        		index ++;
+        		
+        		for (var i = 0;i< examPage.questions.size;i++)
+        		{
+        			sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
+        		}
+        		
+        	}
+        	
         	return true
 		}
 		catch (Exception ex)
@@ -127,7 +143,8 @@ class ExamGraduationService extends Service
 	 * @param point le nombre de point de l'entrée
 	 * @return l'ID de l'entrée
 	 */
-	def int addEntry(int questionId, String desc, float point) {
+	def int addEntry(int questionId, String desc, float point) 
+	{
 		val DataFactory factory = new DataFactory
 		val question = getQuestion(questionId)
 		if(question.gradeScale === null)
@@ -258,12 +275,21 @@ class ExamGraduationService extends Service
 	 * @param l'ID de l'entrée dans l'Examen
 	 * @return boolean indique si les points on bien ete attribuer
 	 */
-	def boolean addGradeEntry(int questionId, int gradeEntryId) {
+	def boolean addGradeEntry(int questionId, int gradeEntryId) 
+	{
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry | entry.id == gradeEntryId]
-		if(valideGradeEntry(questionId,gradeEntry)){
-			studentSheets.get(currentSheetIndex).grades.get(questionId).entries.add(gradeEntry)
+		
+		
+		if(valideGradeEntry(questionId,gradeEntry))
+		{
+			val sheet = studentSheets.get(currentSheetIndex);
+			
+			
+			sheet.grades.get(questionId).entries.add(gradeEntry)
 			return true
-		}else{
+		}
+		else
+		{
 			return false
 		}
 	}

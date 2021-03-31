@@ -178,7 +178,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getQuestionZone() {
 		return questionZoneEClass;
 	}
@@ -188,7 +187,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getQuestionZone_X() {
 		return (EAttribute)questionZoneEClass.getEStructuralFeatures().get(0);
 	}
@@ -198,7 +196,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getQuestionZone_Y() {
 		return (EAttribute)questionZoneEClass.getEStructuralFeatures().get(1);
 	}
@@ -208,7 +205,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getQuestionZone_Width() {
 		return (EAttribute)questionZoneEClass.getEStructuralFeatures().get(2);
 	}
@@ -218,7 +214,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getQuestionZone_Heigth() {
 		return (EAttribute)questionZoneEClass.getEStructuralFeatures().get(3);
 	}
@@ -228,7 +223,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getQuestion() {
 		return questionEClass;
 	}
@@ -238,7 +232,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getQuestion_Id() {
 		return (EAttribute)questionEClass.getEStructuralFeatures().get(0);
 	}
@@ -248,7 +241,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getQuestion_Name() {
 		return (EAttribute)questionEClass.getEStructuralFeatures().get(1);
 	}
@@ -258,7 +250,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getQuestion_GradeScale() {
 		return (EReference)questionEClass.getEStructuralFeatures().get(2);
 	}
@@ -268,7 +259,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getQuestion_Zone() {
 		return (EReference)questionEClass.getEStructuralFeatures().get(3);
 	}
@@ -278,7 +268,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getGradeScale() {
 		return gradeScaleEClass;
 	}
@@ -288,7 +277,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getGradeScale_MaxPoint() {
 		return (EAttribute)gradeScaleEClass.getEStructuralFeatures().get(0);
 	}
@@ -298,7 +286,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getGradeScale_Steps() {
 		return (EReference)gradeScaleEClass.getEStructuralFeatures().get(1);
 	}
@@ -308,7 +295,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getGradeEntry() {
 		return gradeEntryEClass;
 	}
@@ -318,7 +304,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getGradeEntry_Id() {
 		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(0);
 	}
@@ -328,7 +313,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getGradeEntry_Step() {
 		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(1);
 	}
@@ -338,7 +322,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getGradeEntry_Header() {
 		return (EAttribute)gradeEntryEClass.getEStructuralFeatures().get(2);
 	}
@@ -348,7 +331,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getExam() {
 		return examEClass;
 	}
@@ -358,7 +340,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getExam_Id() {
 		return (EAttribute)examEClass.getEStructuralFeatures().get(0);
 	}
@@ -368,7 +349,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getExam_Name() {
 		return (EAttribute)examEClass.getEStructuralFeatures().get(1);
 	}
@@ -378,7 +358,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getExam_Pages() {
 		return (EReference)examEClass.getEStructuralFeatures().get(2);
 	}
@@ -388,7 +367,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getPage() {
 		return pageEClass;
 	}
@@ -398,7 +376,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getPage_Id() {
 		return (EAttribute)pageEClass.getEStructuralFeatures().get(0);
 	}
@@ -408,7 +385,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getPage_Questions() {
 		return (EReference)pageEClass.getEStructuralFeatures().get(1);
 	}
@@ -418,7 +394,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getComment() {
 		return commentEClass;
 	}
@@ -428,7 +403,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getComment_X() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(0);
 	}
@@ -438,7 +412,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getComment_Y() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(1);
 	}
@@ -448,7 +421,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getTextComment() {
 		return textCommentEClass;
 	}
@@ -458,7 +430,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EOperation getTextComment__GetText() {
 		return textCommentEClass.getEOperations().get(0);
 	}
@@ -468,7 +439,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getHandwritingComment() {
 		return handwritingCommentEClass;
 	}
@@ -478,7 +448,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getGrade() {
 		return gradeEClass;
 	}
@@ -488,7 +457,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getGrade_Entries() {
 		return (EReference)gradeEClass.getEStructuralFeatures().get(0);
 	}
@@ -498,7 +466,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getGrade_Comments() {
 		return (EReference)gradeEClass.getEStructuralFeatures().get(1);
 	}
@@ -508,7 +475,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EClass getStudentSheet() {
 		return studentSheetEClass;
 	}
@@ -518,7 +484,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getStudentSheet_Id() {
 		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(0);
 	}
@@ -528,7 +493,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getStudentSheet_StudentName() {
 		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(1);
 	}
@@ -538,7 +502,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EAttribute getStudentSheet_PosPage() {
 		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(2);
 	}
@@ -548,7 +511,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EReference getStudentSheet_Grades() {
 		return (EReference)studentSheetEClass.getEStructuralFeatures().get(3);
 	}
@@ -558,7 +520,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EOperation getStudentSheet__ComputeGrade() {
 		return studentSheetEClass.getEOperations().get(0);
 	}
@@ -568,7 +529,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public CoreFactory getCoreFactory() {
 		return (CoreFactory)getEFactoryInstance();
 	}

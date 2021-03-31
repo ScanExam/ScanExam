@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.api.DataFactory;
+import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
@@ -13,6 +14,7 @@ import fr.istic.tools.scanexam.io.TemplateIO;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -110,6 +112,16 @@ public class ExamGraduationService extends Service {
       final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(this.document, _size, 3);
       pdfReader.readPDf();
       this.studentSheets = pdfReader.getCompleteStudentSheets();
+      int index = 0;
+      for (final StudentSheet sheet : this.studentSheets) {
+        {
+          final Page examPage = ExamSingleton.getPage(index);
+          index++;
+          for (int i = 0; (i < examPage.getQuestions().size()); i++) {
+            sheet.getGrades().add(CoreFactory.eINSTANCE.createGrade());
+          }
+        }
+      }
       return true;
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
@@ -308,7 +320,7 @@ public class ExamGraduationService extends Service {
   }
   
   /**
-   * Ajoute une entrée à la note d'une question d'une copie
+   * Ajoute une (n as GradeItem)entrée à la note d'une question d'une copie
    * @param questionId l'ID de la question à laquelle ajouter l'entrée
    * @param l'ID de l'entrée dans l'Examen
    * @return boolean indique si les points on bien ete attribuer
@@ -321,7 +333,8 @@ public class ExamGraduationService extends Service {
     final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
     boolean _valideGradeEntry = this.valideGradeEntry(questionId, gradeEntry);
     if (_valideGradeEntry) {
-      (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries().add(gradeEntry);
+      final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
+      sheet.getGrades().get(questionId).getEntries().add(gradeEntry);
       return true;
     } else {
       return false;
@@ -352,10 +365,27 @@ public class ExamGraduationService extends Service {
    * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
    */
   public List<Integer> getQuestionSelectedGradeEntries(final int questionId) {
-    final Function1<GradeEntry, Integer> _function = (GradeEntry entry) -> {
-      return Integer.valueOf(entry.getId());
-    };
-    return ListExtensions.<GradeEntry, Integer>map((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries(), _function);
+    List<Integer> _xblockexpression = null;
+    {
+      int _size = this.studentSheets.size();
+      int _minus = (_size - 1);
+      boolean _greaterThan = (this.currentSheetIndex > _minus);
+      if (_greaterThan) {
+        return new ArrayList<Integer>();
+      }
+      final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
+      int _size_1 = sheet.getGrades().size();
+      int _minus_1 = (_size_1 - 1);
+      boolean _greaterThan_1 = (questionId > _minus_1);
+      if (_greaterThan_1) {
+        return new ArrayList<Integer>();
+      }
+      final Function1<GradeEntry, Integer> _function = (GradeEntry entry) -> {
+        return Integer.valueOf(entry.getId());
+      };
+      _xblockexpression = ListExtensions.<GradeEntry, Integer>map(sheet.getGrades().get(questionId).getEntries(), _function);
+    }
+    return _xblockexpression;
   }
   
   /**

@@ -91,7 +91,6 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getId() {
 		return id;
 	}
@@ -101,7 +100,6 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setId(int newId) {
 		int oldId = id;
 		id = newId;
@@ -114,7 +112,6 @@ public class PageImpl extends MinimalEObjectImpl.Container implements Page {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Question> getQuestions() {
 		if (questions == null) {
 			questions = new EObjectContainmentEList<Question>(Question.class, this, CorePackage.PAGE__QUESTIONS);

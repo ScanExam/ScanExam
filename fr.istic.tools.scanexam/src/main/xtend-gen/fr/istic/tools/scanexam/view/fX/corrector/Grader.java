@@ -1,8 +1,6 @@
 package fr.istic.tools.scanexam.view.fX.corrector;
 
-import fr.istic.tools.scanexam.presenter.GraduationPresenter;
-import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
-import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
+import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -129,7 +127,6 @@ public class Grader extends VBox {
     public boolean leaveEditMode() {
       boolean _xblockexpression = false;
       {
-        this.commitChanges();
         this.topRow.getChildren().remove(this.worthField);
         this.topRow.getChildren().remove(this.remove);
         this.topRow.getChildren().add(this.worth);
@@ -139,9 +136,14 @@ public class Grader extends VBox {
       return _xblockexpression;
     }
     
-    public void commitChanges() {
-      this.text.setText(this.textArea.getText());
-      this.worth.setText(this.worthField.getText());
+    public boolean commitChanges() {
+      boolean _xblockexpression = false;
+      {
+        this.text.setText(this.textArea.getText());
+        this.worth.setText(this.worthField.getText());
+        _xblockexpression = this.leaveEditMode();
+      }
+      return _xblockexpression;
     }
     
     public void setupEvents() {
@@ -215,6 +217,26 @@ public class Grader extends VBox {
     float _worth = qItem.getWorth();
     String _plus = (Float.valueOf(_worth) + "");
     this.maxPoints.setText(_plus);
+    List<Integer> ids = this.controller.getAdapterCorrection().getPresenter().getEntryIds(qItem.getQuestionId());
+    List<Integer> sids = this.controller.getAdapterCorrection().getPresenter().getSelectedEntryIds(qItem.getQuestionId());
+    int _size = ids.size();
+    String _plus_1 = ("size :" + Integer.valueOf(_size));
+    InputOutput.<String>print(_plus_1);
+    for (final Integer i : ids) {
+      {
+        Grader.GradeItem g = new Grader.GradeItem(this);
+        g.setItemId((i).intValue());
+        g.setText(this.controller.getAdapterCorrection().getPresenter().getEntryText((i).intValue(), qItem.getQuestionId()));
+        g.setWorth(this.controller.getAdapterCorrection().getPresenter().getEntryWorth((i).intValue(), qItem.getQuestionId()));
+        this.itemContainer.getChildren().add(g);
+        boolean _contains = sids.contains(i);
+        if (_contains) {
+          g.setSelected(Boolean.valueOf(true));
+          this.addPointsOf(g);
+        }
+        g.leaveEditMode();
+      }
+    }
   }
   
   public void createNewGradeEntry() {
@@ -255,30 +277,11 @@ public class Grader extends VBox {
   }
   
   public void addEntryToModel(final Grader.GradeItem item, final QuestionItemCorrector qItem) {
-    int _questionId = qItem.getQuestionId();
-    String _plus = ((("\n" + qItem) + " ") + Integer.valueOf(_questionId));
-    InputOutput.<String>println(_plus);
-    String _text = item.getText();
-    String _plus_1 = ((("\n" + item) + " ") + _text);
-    InputOutput.<String>println(_plus_1);
-    float _parseFloat = Float.parseFloat(item.getWorth());
-    String _plus_2 = ((("\n" + item) + " ") + Float.valueOf(_parseFloat));
-    String _plus_3 = (_plus_2 + "\n");
-    InputOutput.<String>println(_plus_3);
-    GraduationAdapterFX _adapterCorrection = this.controller.getAdapterCorrection();
-    String _plus_4 = ((("\n" + this.controller) + " ") + _adapterCorrection);
-    String _plus_5 = (_plus_4 + " ");
-    GraduationPresenter _presenter = this.controller.getAdapterCorrection().getPresenter();
-    String _plus_6 = (_plus_5 + _presenter);
-    String _plus_7 = (_plus_6 + " ");
-    PresenterMarkingScheme _presenterMarkingScheme = this.controller.getAdapterCorrection().getPresenter().getPresenterMarkingScheme();
-    String _plus_8 = (_plus_7 + _presenterMarkingScheme);
-    String _plus_9 = (_plus_8 + "\n");
-    InputOutput.<String>println(_plus_9);
+    item.setItemId(this.controller.getAdapterCorrection().getPresenter().addEntry(qItem.getQuestionId(), item.getText(), Float.parseFloat(item.getWorth())));
   }
   
-  public Object updateEntryInModel(final Grader.GradeItem item, final QuestionItemCorrector qItem) {
-    return null;
+  public void updateEntryInModel(final Grader.GradeItem item, final QuestionItemCorrector qItem) {
+    this.controller.getAdapterCorrection().getPresenter().modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), Float.parseFloat(item.getWorth()));
   }
   
   public Object removeEntryFromModel(final Grader.GradeItem item, final QuestionItemCorrector qItem) {
@@ -289,6 +292,7 @@ public class Grader extends VBox {
     String _xblockexpression = null;
     {
       this.addPointsOf(item);
+      this.controller.getAdapterCorrection().getPresenter().applyGrade(item.id, this.controller.getQuestionList().getCurrentItem().getQuestionId());
       _xblockexpression = InputOutput.<String>print("\nAdding points ");
     }
     return _xblockexpression;
@@ -327,7 +331,10 @@ public class Grader extends VBox {
         {
           ObservableList<Node> _children = this.itemContainer.getChildren();
           for (final Node n : _children) {
-            ((Grader.GradeItem) n).leaveEditMode();
+            {
+              ((Grader.GradeItem) n).commitChanges();
+              this.updateEntryInModel(((Grader.GradeItem) n), this.controller.getQuestionList().getCurrentItem());
+            }
           }
           _xblockexpression_2 = this.getChildren().remove(this.add);
         }
