@@ -35,6 +35,7 @@
             </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
+              <MenuItem mnemonicParsing="false" onAction="#updateConfig" text="%menu.edit.updateconfig" />
               <MenuItem mnemonicParsing="false" onAction="#sendMail" text="%menu.edit.sendmail" />
             </items>
           </Menu>

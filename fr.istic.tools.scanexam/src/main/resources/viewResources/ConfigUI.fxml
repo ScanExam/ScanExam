@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="384.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.AdapterFXConfiguration">
+   <children>
+      <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="24.0" prefHeight="17.0" prefWidth="112.0" text="%config.language" />
+      <ComboBox fx:id="cmbBxLanguage" layoutX="146.0" layoutY="20.0" prefHeight="25.0" prefWidth="192.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="64.0" prefHeight="17.0" prefWidth="112.0" text="%config.email" />
+      <TextField fx:id="txtFldEmail" layoutX="146.0" layoutY="60.0" prefHeight="25.0" prefWidth="192.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="104.0" prefHeight="17.0" prefWidth="112.0" text="%config.emailpassword" />
+      <PasswordField fx:id="pwdFldEmailPassword" layoutX="146.0" layoutY="100.0" prefHeight="25.0" prefWidth="192.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="15.0" layoutY="143.0" prefHeight="17.0" prefWidth="112.0" text="%config.emailHost" />
+      <TextField fx:id="txtFldEmailHost" layoutX="146.0" layoutY="139.0" prefHeight="25.0" prefWidth="192.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="16.0" layoutY="180.0" prefHeight="17.0" prefWidth="112.0" text="%config.emailPort" />
+      <TextField fx:id="txtFldEmailPort" layoutX="146.0" layoutY="176.0" prefHeight="25.0" prefWidth="192.0" />
+      <Button layoutX="84.0" layoutY="224.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" onAction="#quit" />
+      <Button layoutX="217.0" layoutY="224.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="%button.ok" onAction="#saveAndQuit" />
+   </children>
+</Pane>
