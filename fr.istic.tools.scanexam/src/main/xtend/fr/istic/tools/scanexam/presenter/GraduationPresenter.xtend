@@ -108,11 +108,11 @@ class GraduationPresenter implements Presenter
 	//--- Grade application
 	
 	def applyGrade(int questionId,int gradeId) {
-		
+		service.addGradeEntry(questionId,gradeId);
 	}
 	
 	def removeGrade(int questionId,int gradeId) {
-		
+		service.removeGradeEntry(questionId,gradeId);
 	}
 	
 	
@@ -283,10 +283,10 @@ class GraduationPresenter implements Presenter
 	}
 	
 	def float questionWorth(int id){//TODO FIX
-		var result = -1;
+		var result = -1f;
 		for (Question q : questions) {
 			if (q.id == id) {
-				result = -1
+				result = q.gradeScale.maxPoint
 			}
 		}
 		result

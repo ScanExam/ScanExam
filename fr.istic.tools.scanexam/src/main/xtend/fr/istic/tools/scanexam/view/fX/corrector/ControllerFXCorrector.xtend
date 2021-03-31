@@ -482,8 +482,8 @@ class ControllerFXCorrector {
 		LoadedModel = true
 		instructionLabel.visible = false;
 		grader.visible = true;
-		focusQuestion(questionList.currentItem)
-		focusStudent(studentList.currentItem)
+		setSelectedQuestion
+		setSelectedStudent
 	}
 	
 	//---------------------//
@@ -504,10 +504,12 @@ class ControllerFXCorrector {
 	
 	def void nextStudent(){
 		studentList.selectNextItem
+		adapterCorrection.presenter.presenterQuestion.nextStudent
 		setSelectedStudent();
 	}
 	def void previousStudent(){
 		studentList.selectPreviousItem
+		adapterCorrection.presenter.presenterQuestion.previousStudent
 		setSelectedStudent();
 	}
 	def void selectStudent(StudentItemCorrector item){
@@ -524,14 +526,17 @@ class ControllerFXCorrector {
 
 	def void nextQuestion(){
 		questionList.selectNextItem
+		adapterCorrection.presenter.presenterQuestion.nextQuestion
 		setSelectedQuestion()
 	}
 	def void previousQuestion(){
 		questionList.selectPreviousItem
+		adapterCorrection.presenter.presenterQuestion.previousQuestion
 		setSelectedQuestion()
 	}
 	def void selectQuestion(QuestionItemCorrector item) {
 		questionList.selectItem(item);
+		adapterCorrection.presenter.presenterQuestion.selectQuestion(item.questionId)
 		setSelectedQuestion()
 	}
 

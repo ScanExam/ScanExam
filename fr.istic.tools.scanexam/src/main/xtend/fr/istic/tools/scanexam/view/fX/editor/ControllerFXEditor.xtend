@@ -441,7 +441,6 @@ class ControllerFXEditor {
 	 * load a new pdf to start the creation of a new template
 	 */
 	def loadPdf() {
-		clearVue
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("PDF files", Arrays.asList("*.pdf")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +

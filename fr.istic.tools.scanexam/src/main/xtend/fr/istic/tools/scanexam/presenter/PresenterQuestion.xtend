@@ -70,6 +70,10 @@ class PresenterQuestion {
 		service.previousQuestion
 	}
 	
+	def selectQuestion(int questionId) {
+		service.selectQuestion(questionId);
+	}
+	
 	def nextStudent(){
 		service.nextStudent
 	}
