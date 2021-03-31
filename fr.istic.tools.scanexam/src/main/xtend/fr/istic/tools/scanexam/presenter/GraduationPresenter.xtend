@@ -8,6 +8,7 @@ import fr.istic.tools.scanexam.view.Adapter
 import java.util.LinkedList
 import java.util.List
 import java.util.Objects
+import fr.istic.tools.scanexam.utils.Tuple3
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -102,6 +103,65 @@ class GraduationPresenter implements Presenter
 	def void openCorrectionPdf(String path){
 		service.openCorrectionPdf(path)
 	}
+	
+	
+	//--- Grade application
+	
+	def applyGrade(int questionId,int gradeId) {
+		service.addGradeEntry(questionId,gradeId);
+	}
+	
+	def removeGrade(int questionId,int gradeId) {
+		service.removeGradeEntry(questionId,gradeId);
+	}
+	
+	
+	//---Grade entry management
+	
+	def List<Integer> getEntryIds(int questionId){
+		var l = service.getQuestionGradeEntries(questionId);
+		var result = new LinkedList<Integer>();
+		for (Tuple3<Integer, String, Float> t : l) {
+			result.add(t._1);
+		}
+		result
+	}
+	
+	def List<Integer> getSelectedEntryIds(int questionId){
+		service.getQuestionSelectedGradeEntries(questionId);
+	}
+	
+	def String getEntryText(int entryId,int questionId){
+		var l = service.getQuestionGradeEntries(questionId);
+		for (Tuple3<Integer, String, Float> t : l) {
+			if (entryId == t._1) {
+				return t._2
+			}
+		}
+		"Entry not found"
+	}
+	
+	def float getEntryWorth(int entryId,int questionId){
+		var l = service.getQuestionGradeEntries(questionId);
+		for (Tuple3<Integer, String, Float> t : l) {
+			if (entryId == t._1) {
+				return t._3
+			}
+		}
+		return -1
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	def LinkedList<Integer> getStudentIds(){
 		var list = service.studentSheets
 		print(list.size)
@@ -187,6 +247,16 @@ class GraduationPresenter implements Presenter
 		for (Question q : questions) {
 			if (q.id == id) {
 				result = q.name
+			}
+		}
+		result
+	}
+	
+	def float questionWorth(int id){//TODO FIX
+		var result = -1;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = -1
 			}
 		}
 		result

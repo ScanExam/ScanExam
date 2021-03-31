@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
-import java.util.Objects
 import fr.istic.tools.scanexam.services.ExamEditionService
+import java.util.Objects
 
 /**
  * Class to manage an exam marking scheme (french : barème)
@@ -50,7 +50,8 @@ class PresenterMarkingScheme {
 	 * @return l'ID de l'entrée
 	 */
 	def int addEntry(int questionId, String desc, float point) {
-		service.addEntry(questionId, desc, point)
+		//service.addEntry(questionId, desc, point)
+		0
 	}
 	
 	/**
@@ -72,5 +73,7 @@ class PresenterMarkingScheme {
 	def removeEntry(int questionId, int gradeEntryId) {
 		service.removeEntry(questionId, gradeEntryId)
 	}
+	
+	
 	
 }

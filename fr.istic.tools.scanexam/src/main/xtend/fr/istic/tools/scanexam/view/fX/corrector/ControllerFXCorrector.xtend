@@ -1,32 +1,30 @@
 package fr.istic.tools.scanexam.view.fX.corrector
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
+import fr.istic.tools.scanexam.view.fX.FXSettings
+import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
 import java.io.File
 import java.io.IOException
 import java.util.Arrays
 import java.util.Objects
+import javafx.embed.swing.SwingFXUtils
 import javafx.fxml.FXML
 import javafx.geometry.Rectangle2D
 import javafx.scene.Node
 import javafx.scene.control.Button
-import javafx.scene.control.ListView
+import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Spinner
 import javafx.scene.image.ImageView
-import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
+import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import java.util.LinkedList
-import javafx.embed.swing.SwingFXUtils
-import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
-import fr.istic.tools.scanexam.view.fX.FXSettings
-import javafx.scene.layout.HBox
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -59,6 +57,7 @@ class ControllerFXCorrector {
 	Grader grader;
 	QuestionListCorrector questionList;
 	StudentListCorrector studentList;
+	StudentDetails studentDetails;
 
 	boolean botShow = false;
 	@FXML
@@ -90,7 +89,7 @@ class ControllerFXCorrector {
 	@FXML
 	public ScrollPane scrollBis;
 	@FXML
-	public VBox studentDetails;
+	public VBox studentDetailsContainer;
 	@FXML
 	public VBox questionDetails;
 	@FXML
@@ -99,6 +98,8 @@ class ControllerFXCorrector {
 	public Spinner<Double> totalGradeSpinner;
 	@FXML
 	public HBox graderContainer;
+	@FXML
+	public Label instructionLabel;
 
 	@FXML
 	def Pressed() {
@@ -226,6 +227,13 @@ class ControllerFXCorrector {
 	double imageWidth;
 	double imageHeight;
 
+
+	def getQuestionList(){
+		questionList
+	}
+	def getStudentList(){
+		studentList
+	}
 	//-----------------------//
 	
 	
@@ -277,7 +285,6 @@ class ControllerFXCorrector {
 			mouseOriginX = e.screenX
 			mouseOriginY = e.screenY
 			var source = e.source as Node
-			println(source)
 			objectOriginX = source.layoutX
 			objectOriginY = source.layoutY
 		}
@@ -330,7 +337,10 @@ class ControllerFXCorrector {
 		
 		grader = new Grader(this);
 		graderContainer.children.add(grader);
+		grader.visible = false;
 		
+		studentDetails = new StudentDetails();
+		studentDetailsContainer.children.add(studentDetails)
 		binds(root);
 		binds(scrollMain);
 		binds(scrollBis);
@@ -446,6 +456,7 @@ class ControllerFXCorrector {
 				question.page = p
 				question.questionId = i
 				question.name = corrector.presenter.questionName(i);
+				question.worth = corrector.presenter.questionWorth(i)
 				questionList.addItem(question)
 				
 			}
@@ -463,7 +474,11 @@ class ControllerFXCorrector {
 	
 	def void postLoad(){
 		LoadedModel = true
-		}
+		instructionLabel.visible = false;
+		grader.visible = true;
+		focusQuestion(questionList.currentItem)
+		focusStudent(studentList.currentItem)
+	}
 	
 	//---------------------//
 	
@@ -496,7 +511,9 @@ class ControllerFXCorrector {
 
 	def void setSelectedStudent(){
 		focusStudent(studentList.currentItem)
+		studentDetails.display(studentList.currentItem)
 		display();
+		displayGrader();
 	}
 
 	def void nextQuestion(){
@@ -516,6 +533,8 @@ class ControllerFXCorrector {
 		focusQuestion(questionList.currentItem)
 		display();
 		displayQuestion();
+		displayGrader();
+		
 	}
 	
 	def focusQuestion(QuestionItemCorrector item) {
@@ -543,12 +562,14 @@ class ControllerFXCorrector {
 
 	def void setZoomArea(double x, double y,double width ,double height) {
 		imview.viewport = new Rectangle2D(x,y,width,height);
-		logger.warn(imview.viewport)
-
 	}
 
 	def void displayQuestion(){
 		setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
+	}
+	
+	def void displayGrader(){
+		grader.changeGrader(questionList.currentItem,studentList.currentItem);
 	}
 
 	//----------------//

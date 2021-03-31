@@ -125,6 +125,7 @@ class QuestionListEditor extends VBox {
 		controller.editor.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x/controller.maxX, item.zone.y/controller.maxY) 
 		controller.editor.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height/controller.maxY,item.zone.width/controller.maxX)
 		controller.editor.presenter.presenterQuestionZone.renameQuestion(item.questionId,item.name)
+		controller.editor.presenter.presenterQuestionZone.changeQuestionWorth(item.questionId,item.scale)
 	}
 
 	def removeFromModel(QuestionItemEditor item) {

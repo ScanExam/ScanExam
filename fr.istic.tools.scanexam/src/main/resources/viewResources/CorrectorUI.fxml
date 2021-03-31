@@ -60,7 +60,7 @@
                <children>
                   <Label alignment="CENTER" styleClass="UILabel" text="Students" VBox.vgrow="NEVER" />
                   <ScrollPane fx:id="studentListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <VBox fx:id="studentDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
+                  <VBox fx:id="studentDetailsContainer" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -93,7 +93,7 @@
                                     <Insets />
                                  </opaqueInsets>
                               </Pane>
-                              <Label styleClass="InstructionLabel" text="%label.editorInstructions" />
+                              <Label fx:id="instructionLabel" styleClass="InstructionLabel" text="%label.editorInstructions" />
                            </children>
                         </AnchorPane>
                      </content>
@@ -103,9 +103,9 @@
                   </ScrollPane>
                   <VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                         <HBox fx:id="graderContainer" prefWidth="200.0" />
-                        <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <AnchorPane id="CorrectionBackground" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="CorrectionBackground" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

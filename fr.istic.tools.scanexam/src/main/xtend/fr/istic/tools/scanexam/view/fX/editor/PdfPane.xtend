@@ -98,7 +98,7 @@ class PdfPane extends Pane {
 		onScroll = new EventHandler<ScrollEvent>(){
 			
 			override handle(ScrollEvent event) {
-					controller.ZoomImage(event)
+				controller.ZoomImage(event)
 			}
 			
 		}

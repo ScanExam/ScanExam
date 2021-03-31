@@ -28,7 +28,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#createNewTemplatePressed" text="Create new Template" />
                   <MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="Load Template" />
-                  <MenuItem disable="true" mnemonicParsing="false" onAction="#SaveTemplatePressed" text="Save Template" />
+                  <MenuItem mnemonicParsing="false" onAction="#SaveTemplatePressed" text="Save Template" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Unspecified Action" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Close" />
                </items>

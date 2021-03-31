@@ -29,6 +29,7 @@ class QuestionItemCorrector extends VBox {
 	Label name;
 	int questionId;
 	int page;
+	float pointsWorth;
 	QuestionListCorrector list;
 	
 	
@@ -80,6 +81,13 @@ class QuestionItemCorrector extends VBox {
 	
 	def getPage(){
 		page
+	}
+	
+	def getWorth(){
+		pointsWorth
+	}
+	def setWorth(Float worth) {
+		pointsWorth = worth;
 	}
 	
 	def void setFocus(boolean b) {//sets the color of the zone and the item in the list

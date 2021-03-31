@@ -113,7 +113,8 @@ class ControllerFXEditor {
 
 	@FXML
 	def void nextPagePressed() {
-		nextPage
+		if (pdfLoaded)
+			nextPage
 	}
 
 	@FXML
@@ -123,7 +124,8 @@ class ControllerFXEditor {
 
 	@FXML
 	def void saveTemplatePressed() {
-		saveTemplate();
+		if (pdfLoaded)
+			saveTemplate();
 	}
 
 	@FXML
@@ -133,7 +135,8 @@ class ControllerFXEditor {
 
 	@FXML
 	def void previousPagePressed() {
-		previousPage
+		if (pdfLoaded)
+			previousPage
 	}
 
 	@FXML
@@ -448,6 +451,7 @@ class ControllerFXEditor {
 			clearVue
 			editor.presenter.getPresenterPdf.create(file);
 			renderDocument();
+			postLoad
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -486,6 +490,7 @@ class ControllerFXEditor {
 			editor.presenter.load(file.path);
 			renderDocument();
 			loadBoxes();
+			postLoad
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -514,6 +519,9 @@ class ControllerFXEditor {
 		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 	
+	def postLoad(){
+		pdfLoaded = true;
+	}
 
 	/**
 	 * initialise the choicebox containing all the page numbers of the pdf
@@ -538,7 +546,6 @@ class ControllerFXEditor {
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
-		pdfLoaded = true
 		//Initialise le selecteur de page (pageChoice)
 		initPageSelection()
 	}

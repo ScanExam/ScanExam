@@ -67,8 +67,8 @@ class PresenterQuestionZone {
 		service.moveQuestion(id,x as float,y as float)
 	}
 	
-	def void changeQuestionWorth(int id,int worth) {
-		//service.
+	def void changeQuestionWorth(int id,float worth) {
+		service.modifMaxPoint(id,worth)
 	}
 	
 	
