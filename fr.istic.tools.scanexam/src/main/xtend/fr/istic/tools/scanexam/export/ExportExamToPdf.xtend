@@ -8,8 +8,15 @@ import org.apache.pdfbox.pdmodel.common.PDStream
 import java.io.OutputStream
 import java.util.Collection
 import java.util.stream.Collectors
+import fr.istic.tools.scanexam.services.Service
 
 class ExportExamToPdf {
+	
+	static Service service
+	 
+	new (Service serv){
+	 	service = serv
+	 }
 
 	def static exportToPdf(PDDocument pdf,StudentSheet sheet, File outputPdfFile){
 		
@@ -61,12 +68,12 @@ class ExportExamToPdf {
     def static File exportToTempFile(PDDocument pdf,StudentSheet sheet){
 		
 		var PDDocument document = new PDDocument();
-		
+//		
 		for(i :sheet.posPage){
 			document.addPage(pdf.getPage(i));	
 		}
 		
-		var File file = File.createTempFile(sheet.studentName , ".pdf");
+		var File file = File.createTempFile(service.examName+sheet.studentName , ".pdf");
 		
 		document.save(file);
 		

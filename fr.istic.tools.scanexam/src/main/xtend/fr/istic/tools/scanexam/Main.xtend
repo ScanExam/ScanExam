@@ -17,7 +17,7 @@ class Main
 	/**
 	 * Library graphique à utiliser par défaut. 
 	 */
-	static val DEFAULT_LIB = GraphicLib.SWING;
+	static val DEFAULT_LIB = GraphicLib.JAVAFX;
 	
 	def static void main(String[] args)
 	{
