@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
-import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.launcher.LauncherFX
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
 import fr.istic.tools.scanexam.view.fX.FXSettings
@@ -12,15 +11,17 @@ import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
+import javafx.scene.control.ScrollPane
+import javafx.scene.control.ToggleButton
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
+import javafx.scene.layout.AnchorPane
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import javafx.scene.layout.AnchorPane
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.ToggleButton
+
+import static fr.istic.tools.scanexam.config.LanguageManager.translate
 
 class ControllerFXEditor {
 
@@ -532,7 +533,9 @@ class ControllerFXEditor {
 		var pdfPresenter = editor.presenter.getPresenterPdf()
 		for (var i = 1; i<=pdfPresenter.totalPdfPageNumber(); i++) {
 			//println(i)
-			pageChoice.getItems().add(i);
+			if (!pageChoice.items.contains(i)) {
+				pageChoice.getItems().add(i)
+			}
 		}
 	}
 
@@ -540,22 +543,24 @@ class ControllerFXEditor {
 	 * feches the current buffered image in the presenter representing the pdf and converts it and loads into the imageview
 	 */
 	def renderDocument() {
-
-		pageNumberLabel.text = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1 + "/" + editor.presenter.getPresenterPdf.totalPdfPageNumber
+		//Initialise le selecteur de page (pageChoice)
+		initPageSelection
+		
 		val image = editor.presenter.getPresenterPdf.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
-		//Initialise le selecteur de page (pageChoice)
-		initPageSelection()
+		
+		pageNumberLabel.text = translate("label.page") + (editor.presenter.getPresenterPdf.currentPdfPageNumber + 1) + " / " + editor.presenter.getPresenterPdf.totalPdfPageNumber
+		pageChoice.value = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1
 	}
 
 	/**
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		editor.presenter.getPresenterPdf.choosePdfPage(pageNumber);
-		renderDocument();
+		editor.presenter.getPresenterPdf.goToPage(pageNumber);
+		renderDocument
 		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 

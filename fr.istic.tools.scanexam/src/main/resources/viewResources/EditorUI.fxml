@@ -32,14 +32,13 @@
                <children>
                   <Label text="%label.questions" />
                   <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <Label text="%label.pages" />
-                  <ChoiceBox fx:id="pageChoice" prefWidth="150.0" />
+                  <Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" />
                   <HBox>
                      <children>
                         <Button mnemonicParsing="false" onAction="#previousPagePressed" text="%button.previousQuestion" />
                         <Pane HBox.hgrow="ALWAYS">
                            <children>
-                              <Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" />
+                              <ChoiceBox fx:id="pageChoice" prefWidth="50.0" />
                            </children></Pane>
                         <Button mnemonicParsing="false" onAction="#nextPagePressed" text="%button.nextQuestion" />
                      </children>
