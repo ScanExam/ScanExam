@@ -64,7 +64,7 @@ class Grader extends VBox {
 		var ids = controller.adapterCorrection.presenter.getEntryIds(qItem.questionId);
 		//Finds all the selected entries for this student/question
 		var sids = controller.adapterCorrection.presenter.getSelectedEntryIds(qItem.questionId)
-		print("size :" + ids.size )
+		print("\nlist :" + sids + "\n")
 		for (Integer i : ids) {
 			var g = new GradeItem(this);
 			g.setItemId(i);
@@ -74,6 +74,9 @@ class Grader extends VBox {
 			if (sids.contains(i)) {
 				g.selected = true;
 				addPointsOf(g);
+			}
+			else {
+				g.selected = false;
 			}
 			g.leaveEditMode
 		} 
@@ -142,7 +145,7 @@ class Grader extends VBox {
 	
 	def removePoints(GradeItem item){
 			removePointsOf(item)
-			//controller.adapterCorrection.presenter.applyGrade(item.id,controller.questionList.currentItem.questionId)
+			controller.adapterCorrection.presenter.removeGrade(item.id,controller.questionList.currentItem.questionId)
 			print("\nRemoving points ");
 	}
 	
