@@ -156,7 +156,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Locale getLanguage() {
 		return language;
 	}
@@ -166,7 +165,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setLanguage(Locale newLanguage) {
 		Locale oldLanguage = language;
 		language = newLanguage;
@@ -179,7 +177,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getEmail() {
 		return email;
 	}
@@ -189,7 +186,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setEmail(String newEmail) {
 		String oldEmail = email;
 		email = newEmail;
@@ -202,7 +198,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getEmailPassword() {
 		return emailPassword;
 	}
@@ -212,7 +207,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setEmailPassword(String newEmailPassword) {
 		String oldEmailPassword = emailPassword;
 		emailPassword = newEmailPassword;
@@ -225,7 +219,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getMailHost() {
 		return mailHost;
 	}
@@ -235,7 +228,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setMailHost(String newMailHost) {
 		String oldMailHost = mailHost;
 		mailHost = newMailHost;
@@ -248,7 +240,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getMailPort() {
 		return mailPort;
 	}
@@ -258,7 +249,6 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setMailPort(String newMailPort) {
 		String oldMailPort = mailPort;
 		mailPort = newMailPort;

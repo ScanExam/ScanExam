@@ -1,6 +1,8 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import fr.istic.tools.scanexam.view.fX.FXSettings;
+import fr.istic.tools.scanexam.view.fX.editor.PdfPane;
+import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;

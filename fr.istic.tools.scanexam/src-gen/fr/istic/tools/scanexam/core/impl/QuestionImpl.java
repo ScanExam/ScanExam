@@ -117,7 +117,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getId() {
 		return id;
 	}
@@ -127,7 +126,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setId(int newId) {
 		int oldId = id;
 		id = newId;
@@ -140,7 +138,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getName() {
 		return name;
 	}
@@ -150,7 +147,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -163,7 +159,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public GradeScale getGradeScale() {
 		return gradeScale;
 	}
@@ -188,7 +183,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setGradeScale(GradeScale newGradeScale) {
 		if (newGradeScale != gradeScale) {
 			NotificationChain msgs = null;
@@ -208,7 +202,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public QuestionZone getZone() {
 		return zone;
 	}
@@ -233,7 +226,6 @@ public class QuestionImpl extends MinimalEObjectImpl.Container implements Questi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setZone(QuestionZone newZone) {
 		if (newZone != zone) {
 			NotificationChain msgs = null;

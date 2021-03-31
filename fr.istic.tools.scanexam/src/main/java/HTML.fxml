@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.HTMLEditor?>
+<?import javafx.scene.control.Button?>
+
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fX.editor.HTMLView">
+	<VBox alignment="CENTER" spacing="20">
+	<children>
+		<HTMLEditor id="html" fx:id="html" maxHeight="300" maxWidth="640" minHeight="300" minWidth="640"/>
+		<Button id="button" fx:id="button" onMouseClicked="#onMouseClicked" text="Valider"/>
+	</children>
+	</VBox>
+</AnchorPane>
+

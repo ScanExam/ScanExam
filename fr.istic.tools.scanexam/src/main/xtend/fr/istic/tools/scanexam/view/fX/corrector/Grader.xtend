@@ -13,6 +13,12 @@ import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
+import javafx.scene.input.MouseEvent
+import javafx.stage.Stage
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import javafx.fxml.FXMLLoader
+import javafx.scene.Scene
+import javafx.scene.input.MouseButton
 
 class Grader extends VBox {
 
@@ -157,7 +163,7 @@ class Grader extends VBox {
 				(n as GradeItem).enterEditMode		
 			}
 			this.children.add(add)
-		}else {
+		} else {
 			for (Node n : itemContainer.children) {
 				(n as GradeItem).commitChanges
 				updateEntryInModel((n as GradeItem),controller.questionList.currentItem);
@@ -279,7 +285,31 @@ class Grader extends VBox {
 				}
 				
 			}
+			/* Quand on clique sur un texte du barême */
+			text.onMouseClicked = new EventHandler<MouseEvent>() {
+				override handle(MouseEvent event) {
+					if(event.getButton().equals(MouseButton.PRIMARY)){
+			            if(event.getClickCount() == 2){
+			                renderHTMLView			            }
+			        }
+				}
+				
+			}
 		}
+		/**
+		 * Render the HTML editor
+		 */
+		def renderHTMLView()  {
+			var stage = new Stage();
+	        stage.setTitle("Editeur HTML");
+			//layout = ClassLoader.getSystemResource("resources_utils/HTML.fxml");
+			var inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.fxml")
+			var fxmlLoader = new FXMLLoader
+	        var root = fxmlLoader.load(inputLayout);
+	        var scene = new Scene(root, 640, 480);
+	        stage.setScene(scene);
+	        stage.show();
+	}
 		
 	}
 	

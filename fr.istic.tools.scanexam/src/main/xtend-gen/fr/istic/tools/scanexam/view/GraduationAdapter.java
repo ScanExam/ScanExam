@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view;
 
 import fr.istic.tools.scanexam.presenter.GraduationPresenter;
+import fr.istic.tools.scanexam.view.Adapter;
 import java.util.List;
 
 /**

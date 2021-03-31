@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.launcher;
 
+import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.view.swing.EditorAdapterSwing;
 import fr.istic.tools.scanexam.view.swing.EditorViewSwing;

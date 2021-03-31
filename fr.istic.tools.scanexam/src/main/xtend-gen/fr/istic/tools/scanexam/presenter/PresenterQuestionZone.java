@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.util.LinkedList;
 import java.util.List;

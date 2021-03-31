@@ -85,7 +85,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getEncodedDocument() {
 		return encodedDocument;
 	}
@@ -95,7 +94,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setEncodedDocument(String newEncodedDocument) {
 		String oldEncodedDocument = encodedDocument;
 		encodedDocument = newEncodedDocument;
@@ -108,7 +106,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Exam getExam() {
 		return exam;
 	}
@@ -133,7 +130,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setExam(Exam newExam) {
 		if (newExam != exam) {
 			NotificationChain msgs = null;

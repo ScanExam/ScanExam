@@ -74,6 +74,8 @@ class QuestionListEditor extends VBox {
 			}
 		}
 	}
+	
+	
 
 	def void removeFocus() {
 		for (Node e : children) {

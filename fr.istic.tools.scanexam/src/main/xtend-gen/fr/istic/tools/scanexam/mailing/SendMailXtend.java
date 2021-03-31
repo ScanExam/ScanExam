@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.mailing;
 
+import fr.istic.tools.scanexam.mailing.SendMailTls;
+
 /**
  * @author Thomas Guibert
  */

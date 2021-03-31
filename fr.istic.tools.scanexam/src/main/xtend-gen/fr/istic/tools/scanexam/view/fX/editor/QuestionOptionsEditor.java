@@ -1,6 +1,8 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

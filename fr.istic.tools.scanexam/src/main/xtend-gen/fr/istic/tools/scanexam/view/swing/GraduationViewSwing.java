@@ -2,6 +2,9 @@ package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
+import fr.istic.tools.scanexam.view.swing.ImagePanel;
+import fr.istic.tools.scanexam.view.swing.PdfPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;

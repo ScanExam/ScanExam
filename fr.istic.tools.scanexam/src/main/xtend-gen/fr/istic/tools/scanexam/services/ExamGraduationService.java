@@ -11,8 +11,11 @@ import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIO;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
+import fr.istic.tools.scanexam.services.ExamSingleton;
+import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -308,7 +311,7 @@ public class ExamGraduationService extends Service {
   }
   
   /**
-   * Ajoute une entrée à la note d'une question d'une copie
+   * Ajoute une (n as GradeItem)entrée à la note d'une question d'une copie
    * @param questionId l'ID de la question à laquelle ajouter l'entrée
    * @param l'ID de l'entrée dans l'Examen
    * @return boolean indique si les points on bien ete attribuer
@@ -352,10 +355,27 @@ public class ExamGraduationService extends Service {
    * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
    */
   public List<Integer> getQuestionSelectedGradeEntries(final int questionId) {
-    final Function1<GradeEntry, Integer> _function = (GradeEntry entry) -> {
-      return Integer.valueOf(entry.getId());
-    };
-    return ListExtensions.<GradeEntry, Integer>map((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries(), _function);
+    List<Integer> _xblockexpression = null;
+    {
+      int _size = this.studentSheets.size();
+      int _minus = (_size - 1);
+      boolean _greaterThan = (this.currentSheetIndex > _minus);
+      if (_greaterThan) {
+        return new ArrayList<Integer>();
+      }
+      final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
+      int _size_1 = sheet.getGrades().size();
+      int _minus_1 = (_size_1 - 1);
+      boolean _greaterThan_1 = (questionId > _minus_1);
+      if (_greaterThan_1) {
+        return new ArrayList<Integer>();
+      }
+      final Function1<GradeEntry, Integer> _function = (GradeEntry entry) -> {
+        return Integer.valueOf(entry.getId());
+      };
+      _xblockexpression = ListExtensions.<GradeEntry, Integer>map(sheet.getGrades().get(questionId).getEntries(), _function);
+    }
+    return _xblockexpression;
   }
   
   /**
