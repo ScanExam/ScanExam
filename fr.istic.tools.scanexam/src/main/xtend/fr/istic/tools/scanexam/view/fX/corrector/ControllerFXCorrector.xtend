@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.fX.corrector
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
+import fr.istic.tools.scanexam.services.ExamSingleton
 import fr.istic.tools.scanexam.view.fX.FXSettings
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
 import java.io.File
@@ -450,8 +451,8 @@ class ControllerFXCorrector {
 	}
 	
 	
-	def void loadQuestions(){
-		for (var p = 0;p < corrector.presenter.templatePageAmount;p++) {
+	def void loadQuestions() {
+		for (var p = 0;p < ExamSingleton.instance.pages.size;p++) {
 			var ids = corrector.presenter.initLoading(p);
 			for (int i:ids) {
 				var question = new QuestionItemCorrector();
@@ -609,7 +610,8 @@ class ControllerFXCorrector {
 		renderStudentCopy
 	}
 	def void selectPage(int pageNumber) {
-		corrector.presenter.getPresenterPdf.goToPage(pageNumber)
+		print("\npage Number" + pageNumber + "\n")
+		corrector.presenter.getPresenterPdf.goToPdfPage(pageNumber)
 		renderStudentCopy
 	}
 	//---------------------//

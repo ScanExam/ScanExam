@@ -199,7 +199,7 @@ class ControllerFXEditor {
 		    var selectedIndex = pageChoice.getSelectionModel().getSelectedIndex();
 		    //var selectedItem = pageChoice.getSelectionModel().getSelectedItem();
 		    
-		    pdfPresenter.goToPage(selectedIndex)
+		    pdfPresenter.goToPdfPage(selectedIndex)
 		    renderDocument
 		]);
 		
@@ -558,7 +558,7 @@ class ControllerFXEditor {
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		editor.presenter.getPresenterPdf.goToPage(pageNumber);
+		editor.presenter.getPresenterPdf.goToPdfPage(pageNumber);
 		renderDocument
 		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
 	}

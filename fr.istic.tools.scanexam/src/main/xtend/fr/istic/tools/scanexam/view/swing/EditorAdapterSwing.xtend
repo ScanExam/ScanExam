@@ -151,7 +151,7 @@ class EditorAdapterSwing implements EditorAdapter {
 			}
 			view.cmbBxPage.addActionListener(new ActionListener() {
 				override actionPerformed(ActionEvent e) {
-					presenter.getPresenterPdf.goToPage(view.cmbBxPage.selectedIndex)
+					presenter.getPresenterPdf.goToPdfPage(view.cmbBxPage.selectedIndex)
 		        	adapterPdfAndBox.refreshPdf()
 	        		view.setCurrentPage(presenter.getPresenterPdf.currentPdfPageNumber)
 				}

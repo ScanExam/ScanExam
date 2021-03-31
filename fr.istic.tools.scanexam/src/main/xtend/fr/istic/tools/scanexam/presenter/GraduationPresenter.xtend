@@ -9,6 +9,7 @@ import java.util.LinkedList
 import java.util.List
 import java.util.Objects
 import fr.istic.tools.scanexam.utils.Tuple3
+import fr.istic.tools.scanexam.services.ExamSingleton
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -219,7 +220,7 @@ class GraduationPresenter implements Presenter
 	}
 	
 	def getTemplatePageAmount(){
-		service.templatePageAmount
+		ExamSingleton.instance.pages.size
 	}
 	
 	List<Question> questions

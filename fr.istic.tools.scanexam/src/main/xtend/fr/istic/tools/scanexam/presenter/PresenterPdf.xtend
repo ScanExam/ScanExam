@@ -76,19 +76,20 @@ class PresenterPdf {
     
 	def getCurrentPdfPage()
 	{
+		print(service.currentPdfPageNumber)
 		return service.getCurrentPdfPage
 	}
 	def void nextPdfPage(){
-		service.nextPage
+		service.nextPdfPage
 	}
 	def void previousPdfPage(){
-		service.previousPage
+		service.previousPdfPage
 	}
-	def void goToPage(int page) {
-		service.goToPage(page)
+	def void goToPdfPage(int page) {
+		service.goToPdfPage(page)
 	}
 	def int totalPdfPageNumber(){
-		service.pageNumber
+		service.getPdfsize
 	}
 	def int currentPdfPageNumber(){
 		service.currentPageNumber
@@ -106,6 +107,6 @@ class PresenterPdf {
 	
 	
 	def boolean atCorrectPage(int page){
-		return page == service.currentPageNumber
+		return page == service.currentPdfPageNumber
 	}
 }

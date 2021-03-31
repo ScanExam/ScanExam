@@ -1,7 +1,9 @@
 package fr.istic.tools.scanexam.services
 
+import fr.istic.tools.scanexam.api.DataFactory
 import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.Grade
+import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
@@ -9,19 +11,20 @@ import fr.istic.tools.scanexam.io.TemplateIO
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import fr.istic.tools.scanexam.utils.Tuple3
 import java.io.File
+import java.util.ArrayList
 import java.util.Collection
 import java.util.List
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import fr.istic.tools.scanexam.core.GradeEntry
-import fr.istic.tools.scanexam.api.DataFactory
-import java.util.ArrayList
-import fr.istic.tools.scanexam.core.impl.GradeImpl
 
 class ExamGraduationService extends Service
 {
+
+	
+	
+	
 	/**
 	 * La page actuelle de l'examen
 	 */
@@ -48,6 +51,11 @@ class ExamGraduationService extends Service
 	 * (Fichier de méta données sur les corrections de copies déja effectués)
 	 */
 	CorrectionTemplate correctionTemplate;
+	
+	
+	/* EXAM RELATED */
+
+	
 	
 	/**
 	 * Sauvegarde le fichier de correction d'examen sur le disque.
@@ -117,7 +125,7 @@ class ExamGraduationService extends Service
         		
         		index ++;
         		
-        		for (var i = 0;i< examPage.questions.size;i++)
+        		for (var i = 0;i< examPage.questions.size+1;i++)
         		{
         			sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
         		}
@@ -195,6 +203,7 @@ class ExamGraduationService extends Service
 	def int getAbsolutePageNumber(int studentId,int offset)
 	{
 		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(0);
+		print("\nPageid = " + (pageId + offset));
 		return pageId  + offset;
 	}
 	
@@ -351,7 +360,7 @@ class ExamGraduationService extends Service
 	 * -La note ne peut etre inferieur a 0
 	 */
 	def boolean valideGradeEntry(int questionId,GradeEntry gradeAdd){
-		val gradeMax = getQuestion(questionId).gradeScale.maxPoint
+		/*val gradeMax = getQuestion(questionId).gradeScale.maxPoint
 		val gradeEntry = getQuestion(questionId).gradeScale.steps
 		
 		var gardeCurrent = 0.0
@@ -364,7 +373,8 @@ class ExamGraduationService extends Service
 			return true
 		}else{
 			return false
-		}
+		}*/
+		true //TODO FIX
 	}
 	
 	

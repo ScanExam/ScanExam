@@ -17,10 +17,13 @@ abstract class Service
 	 @Accessors protected PDDocument document;
 
 	/**
-	 * Index de la page courante
+	 * Index de la page courante du modèle d'exam
+	 */
+	private int pdfPageIndex
+		/**
+	 * Index de la page courante du modèle d'exam
 	 */
 	protected int pageIndex 
-	
 	/**
 	 * @return Identifiant de l'examen
 	 * @author degas
@@ -37,33 +40,77 @@ abstract class Service
 	{
 		return ExamSingleton.instance.name;
 	}
+	/* PDF RELATED */
 	
-	
+		/**
+	 * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
+	 * @param page Numéro de page où se rendre
+	 */
+	def goToPdfPage(int page) {
+		if(page >= 0 && page < document.pages.size) {
+			pdfPageIndex = page
+		}
+	}
 	def getCurrentPdfPage()
 	{
-		pageToImage(document.pages.get(pageIndex));
+		pageToImage(document.pages.get(pdfPageIndex));
+	}
+	def nextPdfPage() 
+	{
+		if (pdfPageIndex + 1 < document.pages.size) 
+		{
+			pdfPageIndex++
+		}
+
+	}
+	
+	
+	/**
+	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+	 */
+	def previousPdfPage() 
+	{
+		 if (pdfPageIndex > 0) 
+		 {
+		 	pdfPageIndex--;
+		 }
+	}
+	
+	def int currentPdfPageNumber(){
+		return pdfPageIndex
+	}
+	
+	
+	def int getPdfsize() {
+		return document.pages.size
 	}
 	
 	def pageToImage(PDPage page)
 	{
 		val renderer = new PDFRenderer(document);
-		val bufferedImage = renderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
+		val bufferedImage = renderer.renderImageWithDPI(pdfPageIndex, 300, ImageType.RGB);
 		bufferedImage
-	}
+	}	
+	
 	/**
-	 * Change la page courante par la page la suivant si elle existe (ne change rien sinon)
+	 * Index de la page courante du modèle d'exam
 	 */
-	def nextPage() 
+	/* ! PDF RELATED */
+	
+	/* EXAM RELATED */
+	
+	
+	protected def getCurrentPage()
 	{
-		if (pageIndex + 1 < document.pages.size) 
+		return ExamSingleton.getPage(pageIndex);
+	}
+	protected def nextPage()
+	{
+		if (pageIndex + 1 < ExamSingleton.instance.pages.length) 
 		{
 			pageIndex++
 		}
-
 	}
-	/**
-	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
-	 */
 	def previousPage() 
 	{
 		 if (pageIndex > 0) 
@@ -71,6 +118,7 @@ abstract class Service
 		 	pageIndex--;
 		 }
 	}
+	
 	
 	def Question getQuestion(int id)
 	{
@@ -87,29 +135,7 @@ abstract class Service
 		ExamSingleton.getPage(pageIndex).questions
 	}
 	
-	def getTemplatePageAmount()
-	{
-		ExamSingleton.templatePageAmount
-	}
-	
-	/**
-	 * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
-	 * @param page Numéro de page où se rendre
-	 */
-	def goToPage(int page) {
-		if(page >= 0 && page < document.pages.size) {
-			pageIndex = page
-		}
-	}
 
-
-	/**
-	 * @return le nombre de page du PDF courant
-	 */
-	protected def getCurrentPage()
-	{
-		return ExamSingleton.getPage(pageIndex);
-	}
 	/** Retourne la zone associée à une question
 	 * @param index Index de la question
 	 * @author degas
@@ -120,10 +146,6 @@ abstract class Service
 	}
 
 	
-	def int getPageNumber() {
-		return document.pages.size
-	}
-	
 	/**
 	 * @return le numéro de la page courante dans le PDF courant
 	 */
@@ -131,18 +153,6 @@ abstract class Service
 		return pageIndex;
 	}
 	
+	/* ! EXAM RELATED */
 	
-		/**
-	 * @return l'instance de l'examen
-	 */
-	def Exam getExamInstance(){
-		return ExamSingleton.instance;
-	}
-	
-	/**
-	 * @return modifie l'instance de l'examen
-	 */
-	def void setExamInstance(Exam exam){
-		ExamSingleton.instance = exam;
-	}
 }
