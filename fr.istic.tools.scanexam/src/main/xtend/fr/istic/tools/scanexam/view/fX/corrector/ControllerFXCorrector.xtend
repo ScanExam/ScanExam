@@ -60,6 +60,7 @@ class ControllerFXCorrector {
 	StudentDetails studentDetails;
 
 	boolean botShow = false;
+	boolean autoZoom = true;
 	@FXML
 	public VBox root;
 	@FXML
@@ -100,6 +101,7 @@ class ControllerFXCorrector {
 	public HBox graderContainer;
 	@FXML
 	public Label instructionLabel;
+	
 
 	@FXML
 	def Pressed() {
@@ -233,6 +235,10 @@ class ControllerFXCorrector {
 	}
 	def getStudentList(){
 		studentList
+	}
+	
+	def setToAutoZoom(Boolean b) {
+		this.autoZoom = b
 	}
 	//-----------------------//
 	
@@ -546,7 +552,8 @@ class ControllerFXCorrector {
 	}
 	
 	def void setZoomArea(int x, int y, int height, int width) {
-		imview.viewport = new Rectangle2D(x,y,height,width);
+		if (autoZoom) 
+			imview.viewport = new Rectangle2D(x,y,height,width);
 	}
 	
 	//----------------//
@@ -565,7 +572,8 @@ class ControllerFXCorrector {
 	}
 
 	def void displayQuestion(){
-		setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
+		if (autoZoom) 
+			setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
 	}
 	
 	def void displayGrader(){

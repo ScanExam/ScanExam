@@ -512,7 +512,7 @@ class ControllerFXEditor {
 				)
 				print("loading width for " + i + " = " + editor.presenter.presenterQuestionZone.questionWidth(i));
 				mainPane.addZone(box);
-				questionList.loadQuestion(box,editor.presenter.presenterQuestionZone.questionName(i),p,i)
+				questionList.loadQuestion(box,editor.presenter.presenterQuestionZone.questionName(i),p,i,editor.presenter.presenterQuestionZone.questionWorth(i))
 			}
 		}
 		

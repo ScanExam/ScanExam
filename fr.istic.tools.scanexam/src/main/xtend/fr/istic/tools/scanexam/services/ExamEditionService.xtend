@@ -37,6 +37,7 @@ class ExamEditionService extends Service // TODO : renommer
 	{
 		val question = CoreFactory.eINSTANCE.createQuestion();
 		question.id = questionId;
+		question.gradeScale = CoreFactory.eINSTANCE.createGradeScale(); 
 		question.zone = CoreFactory.eINSTANCE.createQuestionZone();
 		question.zone.x = x
 		question.zone.y = y 

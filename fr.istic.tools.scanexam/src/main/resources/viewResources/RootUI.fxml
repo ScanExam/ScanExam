@@ -40,7 +40,7 @@
           </Menu>
             <Menu mnemonicParsing="false" text="View">
               <items>
-                  <CheckMenuItem disable="true" mnemonicParsing="false" text="Auto-zoom" />
+                  <CheckMenuItem fx:id="autoZoom" mnemonicParsing="false" selected="true" text="Auto-zoom" onAction="#toggleAutoZoom" />
                 <MenuItem disable="true" mnemonicParsing="false" text="Reset zoom" />
               </items>
             </Menu>

@@ -24,8 +24,9 @@ class QuestionListEditor extends VBox {
 	//---------------------//
 	
 	//---Methods---//
-	def loadQuestion(Box box, String name,int page,int id) {
+	def loadQuestion(Box box, String name,int page,int id,float questionWorth) {
 		var item = new QuestionItemEditor(this,box,name,page,id);
+		item.scale = questionWorth
 		add(item);
 	}
 

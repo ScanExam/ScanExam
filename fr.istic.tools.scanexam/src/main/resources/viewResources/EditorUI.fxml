@@ -18,9 +18,9 @@
       <ToolBar>
         <items>
             <ToggleButton fx:id="createBoxButton" mnemonicParsing="false" onAction="#questionAreaPressed" text="%button.createQuestion" />
-            <Button mnemonicParsing="false" onAction="#iDAreaPressed" text="%button.IDarea" />
-            <Button mnemonicParsing="false" onAction="#qRArearessed" text="%button.QRarea" />
-            <Button mnemonicParsing="false" onAction="#movePressed" text="%button.moveCamera" />
+            <Button disable="true" mnemonicParsing="false" onAction="#iDAreaPressed" text="%button.IDarea" />
+            <Button disable="true" mnemonicParsing="false" onAction="#qRArearessed" text="%button.QRarea" />
+            <Button disable="true" mnemonicParsing="false" onAction="#movePressed" text="%button.moveCamera" />
         </items>
          <VBox.margin>
             <Insets />

@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector
 import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor
 import javafx.fxml.FXML
 import javafx.scene.Node
+import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.Tab
 
 class ControllerRoot {
@@ -12,6 +13,8 @@ class ControllerRoot {
 	Tab correctorTab;
 	@FXML
 	Tab editorTab;
+	@FXML
+	CheckMenuItem autoZoom;
 	
 	ControllerFXCorrector corrector;
 	ControllerFXEditor editor;
@@ -55,6 +58,11 @@ class ControllerRoot {
 	@FXML
 	def sendMail(){
 		println("sending mail")
+	}
+	
+	@FXML
+	def toggleAutoZoom(){
+		corrector.toAutoZoom = autoZoom.selected
 	}
 	
 	

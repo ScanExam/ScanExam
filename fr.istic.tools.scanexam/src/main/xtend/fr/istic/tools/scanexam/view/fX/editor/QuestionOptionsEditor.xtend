@@ -212,7 +212,7 @@ class QuestionOptionsEditor extends VBox {
 		renameField.onAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
-				print("rename actions\n")
+				print("Rename actions\n")
 				commitRename();
 				toggleRename(false);
 
@@ -224,7 +224,7 @@ class QuestionOptionsEditor extends VBox {
 
 			override changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (!newValue) {
-					print("rename actions\n")
+					print("Rename actions\n")
 					commitRename();
 					toggleRename(false);
 				}
@@ -235,7 +235,7 @@ class QuestionOptionsEditor extends VBox {
 		scaleField.onAction = new EventHandler<ActionEvent>() {
 
 			override handle(ActionEvent event) {
-				print("rescale actions\n")
+				print("Rescale actions\n")
 				commitRescale
 				toggleRescale(false)
 
@@ -247,7 +247,7 @@ class QuestionOptionsEditor extends VBox {
 
 			override changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (!newValue) {
-					print("rescale actions\n")
+					print("Rescale actions\n")
 					commitRescale
 					toggleRescale(false)
 				}

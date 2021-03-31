@@ -20,20 +20,20 @@
          <children>
             <ToolBar maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" HBox.hgrow="SOMETIMES">
               <items>
-                <Button mnemonicParsing="false" text="Button" />
-                  <Button mnemonicParsing="false" text="Button" />
+                <Button disable="true" mnemonicParsing="false" text="Button" />
+                  <Button disable="true" mnemonicParsing="false" text="Button" />
               </items>
             </ToolBar>
             <ToolBar prefWidth="200.0" HBox.hgrow="ALWAYS">
               <items>
-                <Button mnemonicParsing="false" text="Pen" />
-                  <Button mnemonicParsing="false" text="Gomme" />
-                  <Button mnemonicParsing="false" text="Stamp" />
-                  <Button mnemonicParsing="false" text="Thicc" />
-                  <Button mnemonicParsing="false" text="Thinn" />
-                  <Button mnemonicParsing="false" onAction="#zoomTest" text="Zoom" />
+                  <Button disable="true" mnemonicParsing="false" text="Pen" />
+                  <Button disable="true" mnemonicParsing="false" text="Gomme" />
+                  <Button disable="true" mnemonicParsing="false" text="Stamp" />
+                  <Button disable="true" mnemonicParsing="false" text="Thicc" />
+                  <Button disable="true" mnemonicParsing="false" text="Thinn" />
+                  <Button disable="true" mnemonicParsing="false" onAction="#zoomTest" text="Zoom" />
                   <Button mnemonicParsing="false" onAction="#resetPosition" text="Reset" />
-                  <Button mnemonicParsing="false" text="Button" />
+                  <Button disable="true" mnemonicParsing="false" text="Button" />
               </items>
                <HBox.margin>
                   <Insets />
@@ -41,9 +41,9 @@
             </ToolBar>
             <ToolBar prefWidth="150.0" HBox.hgrow="SOMETIMES">
                <items>
-                  <Button mnemonicParsing="false" onAction="#savePressed" text="save" />
-                  <Button mnemonicParsing="false" onAction="#loadPressed" text="Load" />
-                  <Button mnemonicParsing="false" onAction="#exportPressed" text="Exp" />
+                  <Button disable="true" mnemonicParsing="false" onAction="#savePressed" text="save" />
+                  <Button disable="true" mnemonicParsing="false" onAction="#loadPressed" text="Load" />
+                  <Button disable="true" mnemonicParsing="false" onAction="#exportPressed" text="Exp" />
                </items>
                <opaqueInsets>
                   <Insets />

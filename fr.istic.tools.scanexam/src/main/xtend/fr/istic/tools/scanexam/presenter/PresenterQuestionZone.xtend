@@ -148,8 +148,14 @@ class PresenterQuestionZone {
 	
 
 	
-	def int questionWorth(int id){
-		0
+	def float questionWorth(int id){
+		var result = 0f;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.gradeScale.maxPoint
+			}
+		}
+		result
 	}
 	
 	/* -----------------------  */
