@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fX.corrector;
 
 import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentListCorrector;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

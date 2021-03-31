@@ -3,12 +3,8 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
-import fr.istic.tools.scanexam.presenter.Presenter;
-import fr.istic.tools.scanexam.presenter.PresenterCopy;
-import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
-import fr.istic.tools.scanexam.presenter.PresenterPdf;
-import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
+import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.Adapter;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -96,6 +92,55 @@ public class GraduationPresenter implements Presenter {
   
   public void openCorrectionPdf(final String path) {
     this.service.openCorrectionPdf(path);
+  }
+  
+  public boolean applyGrade(final int questionId, final int gradeId) {
+    return this.service.addGradeEntry(questionId, gradeId);
+  }
+  
+  public boolean removeGrade(final int questionId, final int gradeId) {
+    return this.service.removeGradeEntry(questionId, gradeId);
+  }
+  
+  public List<Integer> getEntryIds(final int questionId) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      List<Tuple3<Integer, String, Float>> l = this.service.getQuestionGradeEntries(questionId);
+      LinkedList<Integer> result = new LinkedList<Integer>();
+      for (final Tuple3<Integer, String, Float> t : l) {
+        result.add(t._1);
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public List<Integer> getSelectedEntryIds(final int questionId) {
+    return this.service.getQuestionSelectedGradeEntries(questionId);
+  }
+  
+  public String getEntryText(final int entryId, final int questionId) {
+    String _xblockexpression = null;
+    {
+      List<Tuple3<Integer, String, Float>> l = this.service.getQuestionGradeEntries(questionId);
+      for (final Tuple3<Integer, String, Float> t : l) {
+        if ((entryId == (t._1).intValue())) {
+          return t._2;
+        }
+      }
+      _xblockexpression = "Entry not found";
+    }
+    return _xblockexpression;
+  }
+  
+  public float getEntryWorth(final int entryId, final int questionId) {
+    List<Tuple3<Integer, String, Float>> l = this.service.getQuestionGradeEntries(questionId);
+    for (final Tuple3<Integer, String, Float> t : l) {
+      if ((entryId == (t._1).intValue())) {
+        return (t._3).floatValue();
+      }
+    }
+    return (-1);
   }
   
   public LinkedList<Integer> getStudentIds() {
@@ -218,6 +263,22 @@ public class GraduationPresenter implements Presenter {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getName();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public float questionWorth(final int id) {
+    int _xblockexpression = (int) 0;
+    {
+      int result = (-1);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = (-1);
         }
       }
       _xblockexpression = result;

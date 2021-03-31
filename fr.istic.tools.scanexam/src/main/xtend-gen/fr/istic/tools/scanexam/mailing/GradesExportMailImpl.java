@@ -1,8 +1,6 @@
 package fr.istic.tools.scanexam.mailing;
 
 import fr.istic.tools.scanexam.core.StudentSheet;
-import fr.istic.tools.scanexam.mailing.GradesExportMail;
-import fr.istic.tools.scanexam.mailing.SendMailXtend;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.io.BufferedReader;

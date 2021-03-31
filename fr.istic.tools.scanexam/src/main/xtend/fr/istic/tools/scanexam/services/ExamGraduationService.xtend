@@ -16,6 +16,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
 import fr.istic.tools.scanexam.core.GradeEntry
+import fr.istic.tools.scanexam.api.DataFactory
 
 class ExamGraduationService extends Service
 {
@@ -29,7 +30,7 @@ class ExamGraduationService extends Service
 	 */
 	int currentQuestionIndex;
 	
-	 
+	int gradeEntryId;
 	/**
 	 * Liste des copies visible.
 	 */
@@ -114,7 +115,54 @@ class ExamGraduationService extends Service
 		}
        
 	}
+	//===================================================
+	//                   GradeEntry
+	//===================================================
 	
+	/**
+	 * Ajoute une nouvelle entrée à la liste des points attribuable à la question
+	 * @param questionId l'ID de la question dans laquelle ajouter l'entrée
+	 * @param desc la description de l'entrée
+	 * @param point le nombre de point de l'entrée
+	 * @return l'ID de l'entrée
+	 */
+	def int addEntry(int questionId, String desc, float point) {
+		val DataFactory factory = new DataFactory
+		val question = getQuestion(questionId)
+		if(question.gradeScale === null)
+			question.gradeScale = factory.createGradeScale
+		val scale = question.gradeScale
+		scale.steps.add(factory.createGradeEntry(gradeEntryId, desc, point))
+		gradeEntryId++
+	}
+	
+	/**
+	 * Modifie une entrée de la liste des points attribuable à la question
+	 * @param questionId l'ID de la question dans laquelle modifier l'entrée
+	 * @param gradeEntryId l'ID de l'entrée à modifier
+	 * @param desc la nouvelle description de l'entrée
+	 * @param point le nouveau nombre de point de l'entrée
+	 */
+	def modifyEntry(int questionId, int gradeEntryId, String desc, float point) {
+		val scale = getQuestion(questionId).gradeScale
+		val scaleEntry = scale.steps.findFirst[step | step.id == gradeEntryId]
+		if(scaleEntry !== null) {
+			scaleEntry.header = desc
+			scaleEntry.step = point
+		}				
+	}
+	
+	/**
+	 * Supprime une entrée de la liste des points attribuable à la question
+	 * @param questionId l'ID de la question dans laquelle supprimer l'entrée
+	 * @param gradeEntryId l'ID de l'entrée à supprimer
+	 */
+	def removeEntry(int questionId, int gradeEntryId) {
+		val scale = getQuestion(questionId).gradeScale
+		val scaleEntry = scale.steps.findFirst[step | step.id == gradeEntryId]
+		if(scaleEntry !== null)
+			scale.steps.remove(scaleEntry)
+	}
 	
 	
 	def numberOfQuestions ()

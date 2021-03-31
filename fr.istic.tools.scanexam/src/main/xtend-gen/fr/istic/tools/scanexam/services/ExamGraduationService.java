@@ -1,7 +1,9 @@
 package fr.istic.tools.scanexam.services;
 
+import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
+import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
@@ -9,8 +11,6 @@ import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIO;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.File;
 import java.util.Collection;
@@ -37,6 +37,8 @@ public class ExamGraduationService extends Service {
    * Question actuelle.
    */
   private int currentQuestionIndex;
+  
+  private int gradeEntryId;
   
   /**
    * Liste des copies visible.
@@ -116,6 +118,73 @@ public class ExamGraduationService extends Service {
         throw Exceptions.sneakyThrow(_t);
       }
     }
+  }
+  
+  /**
+   * Ajoute une nouvelle entrée à la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle ajouter l'entrée
+   * @param desc la description de l'entrée
+   * @param point le nombre de point de l'entrée
+   * @return l'ID de l'entrée
+   */
+  public int addEntry(final int questionId, final String desc, final float point) {
+    int _xblockexpression = (int) 0;
+    {
+      final DataFactory factory = new DataFactory();
+      final Question question = this.getQuestion(questionId);
+      GradeScale _gradeScale = question.getGradeScale();
+      boolean _tripleEquals = (_gradeScale == null);
+      if (_tripleEquals) {
+        question.setGradeScale(factory.createGradeScale());
+      }
+      final GradeScale scale = question.getGradeScale();
+      scale.getSteps().add(factory.createGradeEntry(this.gradeEntryId, desc, point));
+      _xblockexpression = this.gradeEntryId++;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * Modifie une entrée de la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle modifier l'entrée
+   * @param gradeEntryId l'ID de l'entrée à modifier
+   * @param desc la nouvelle description de l'entrée
+   * @param point le nouveau nombre de point de l'entrée
+   */
+  public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
+    final GradeScale scale = this.getQuestion(questionId).getGradeScale();
+    final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
+      int _id = step.getId();
+      return Boolean.valueOf((_id == gradeEntryId));
+    };
+    final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
+    if ((scaleEntry != null)) {
+      scaleEntry.setHeader(desc);
+      scaleEntry.setStep(point);
+    }
+  }
+  
+  /**
+   * Supprime une entrée de la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle supprimer l'entrée
+   * @param gradeEntryId l'ID de l'entrée à supprimer
+   */
+  public boolean removeEntry(final int questionId, final int gradeEntryId) {
+    boolean _xblockexpression = false;
+    {
+      final GradeScale scale = this.getQuestion(questionId).getGradeScale();
+      final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
+        int _id = step.getId();
+        return Boolean.valueOf((_id == gradeEntryId));
+      };
+      final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
+      boolean _xifexpression = false;
+      if ((scaleEntry != null)) {
+        _xifexpression = scale.getSteps().remove(scaleEntry);
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
   }
   
   public int numberOfQuestions() {

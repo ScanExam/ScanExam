@@ -1,8 +1,5 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
-import fr.istic.tools.scanexam.view.fX.editor.GradeListEditor;
-import fr.istic.tools.scanexam.view.fX.editor.NumberTextField;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

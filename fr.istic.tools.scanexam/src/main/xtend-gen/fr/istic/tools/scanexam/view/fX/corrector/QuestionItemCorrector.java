@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fX.corrector;
 
 import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.corrector.QuestionListCorrector;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -36,6 +35,8 @@ public class QuestionItemCorrector extends VBox {
   private int questionId;
   
   private int page;
+  
+  private float pointsWorth;
   
   private QuestionListCorrector list;
   
@@ -97,6 +98,14 @@ public class QuestionItemCorrector extends VBox {
   
   public int getPage() {
     return this.page;
+  }
+  
+  public float getWorth() {
+    return this.pointsWorth;
+  }
+  
+  public float setWorth(final Float worth) {
+    return this.pointsWorth = (worth).floatValue();
   }
   
   public void setFocus(final boolean b) {

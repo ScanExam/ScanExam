@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector;
 import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Tab;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
@@ -14,6 +15,9 @@ public class ControllerRoot {
   
   @FXML
   private Tab editorTab;
+  
+  @FXML
+  private CheckMenuItem autoZoom;
   
   private ControllerFXCorrector corrector;
   
@@ -63,5 +67,10 @@ public class ControllerRoot {
   @FXML
   public String sendMail() {
     return InputOutput.<String>println("sending mail");
+  }
+  
+  @FXML
+  public boolean toggleAutoZoom() {
+    return this.corrector.setToAutoZoom(Boolean.valueOf(this.autoZoom.isSelected()));
   }
 }

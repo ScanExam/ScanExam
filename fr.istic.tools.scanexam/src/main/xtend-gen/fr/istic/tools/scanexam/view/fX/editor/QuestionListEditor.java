@@ -2,10 +2,6 @@ package fr.istic.tools.scanexam.view.fX.editor;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
-import fr.istic.tools.scanexam.view.fX.editor.Box;
-import fr.istic.tools.scanexam.view.fX.editor.BoxType;
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Priority;
@@ -24,10 +20,11 @@ public class QuestionListEditor extends VBox {
     return this.controller;
   }
   
-  public boolean loadQuestion(final Box box, final String name, final int page, final int id) {
+  public boolean loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
     boolean _xblockexpression = false;
     {
       QuestionItemEditor item = new QuestionItemEditor(this, box, name, page, id);
+      item.setScale(questionWorth);
       _xblockexpression = this.add(item);
     }
     return _xblockexpression;
@@ -166,6 +163,7 @@ public class QuestionListEditor extends VBox {
     double _divide_3 = (_width / _maxX_1);
     _presenterQuestionZone_1.resizeQuestion(_questionId_1, _divide_2, _divide_3);
     this.controller.getEditor().getPresenter().getPresenterQuestionZone().renameQuestion(item.getQuestionId(), item.getName());
+    this.controller.getEditor().getPresenter().getPresenterQuestionZone().changeQuestionWorth(item.getQuestionId(), item.getScale());
   }
   
   public void removeFromModel(final QuestionItemEditor item) {

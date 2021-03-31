@@ -5,11 +5,6 @@ import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
 import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.editor.Box;
-import fr.istic.tools.scanexam.view.fX.editor.PdfPane;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionListEditor;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionOptionsEditor;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
@@ -131,7 +126,9 @@ public class ControllerFXEditor {
   
   @FXML
   public void nextPagePressed() {
-    this.nextPage();
+    if (this.pdfLoaded) {
+      this.nextPage();
+    }
   }
   
   @FXML
@@ -141,7 +138,9 @@ public class ControllerFXEditor {
   
   @FXML
   public void saveTemplatePressed() {
-    this.saveTemplate();
+    if (this.pdfLoaded) {
+      this.saveTemplate();
+    }
   }
   
   @FXML
@@ -151,7 +150,9 @@ public class ControllerFXEditor {
   
   @FXML
   public void previousPagePressed() {
-    this.previousPage();
+    if (this.pdfLoaded) {
+      this.previousPage();
+    }
   }
   
   @FXML
@@ -477,28 +478,39 @@ public class ControllerFXEditor {
    * Called when we press create template
    * load a new pdf to start the creation of a new template
    */
-  public void loadPdf() {
-    this.clearVue();
-    FileChooser fileChooser = new FileChooser();
-    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    List<String> _asList = Arrays.<String>asList("*.pdf");
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
-    _extensionFilters.add(_extensionFilter);
-    String _property = System.getProperty("user.home");
-    String _property_1 = System.getProperty("file.separator");
-    String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + 
-      "Documents");
-    File _file = new File(_plus_1);
-    fileChooser.setInitialDirectory(_file);
-    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-    if ((file != null)) {
+  public Boolean loadPdf() {
+    boolean _xblockexpression = false;
+    {
       this.clearVue();
-      this.editor.getPresenter().getPresenterPdf().create(file);
-      this.renderDocument();
-    } else {
-      this.logger.warn("File not chosen");
+      FileChooser fileChooser = new FileChooser();
+      ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+      List<String> _asList = Arrays.<String>asList("*.pdf");
+      FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
+      _extensionFilters.add(_extensionFilter);
+      String _property = System.getProperty("user.home");
+      String _property_1 = System.getProperty("file.separator");
+      String _plus = (_property + _property_1);
+      String _plus_1 = (_plus + 
+        "Documents");
+      File _file = new File(_plus_1);
+      fileChooser.setInitialDirectory(_file);
+      File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
+      boolean _xifexpression = false;
+      if ((file != null)) {
+        boolean _xblockexpression_1 = false;
+        {
+          this.clearVue();
+          this.editor.getPresenter().getPresenterPdf().create(file);
+          this.renderDocument();
+          _xblockexpression_1 = this.postLoad();
+        }
+        _xifexpression = _xblockexpression_1;
+      } else {
+        this.logger.warn("File not chosen");
+      }
+      _xblockexpression = _xifexpression;
     }
+    return Boolean.valueOf(_xblockexpression);
   }
   
   /**
@@ -528,28 +540,39 @@ public class ControllerFXEditor {
   /**
    * Loads new model from an xmi file
    */
-  public void loadTemplate() {
-    FileChooser fileChooser = new FileChooser();
-    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    List<String> _asList = Arrays.<String>asList("*.xmi");
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XMI Files", _asList);
-    _extensionFilters.add(_extensionFilter);
-    String _property = System.getProperty("user.home");
-    String _property_1 = System.getProperty("file.separator");
-    String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + 
-      "Documents");
-    File _file = new File(_plus_1);
-    fileChooser.setInitialDirectory(_file);
-    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-    if ((file != null)) {
-      this.clearVue();
-      this.editor.getPresenter().load(file.getPath());
-      this.renderDocument();
-      this.loadBoxes();
-    } else {
-      this.logger.warn("File not chosen");
+  public Boolean loadTemplate() {
+    boolean _xblockexpression = false;
+    {
+      FileChooser fileChooser = new FileChooser();
+      ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+      List<String> _asList = Arrays.<String>asList("*.xmi");
+      FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XMI Files", _asList);
+      _extensionFilters.add(_extensionFilter);
+      String _property = System.getProperty("user.home");
+      String _property_1 = System.getProperty("file.separator");
+      String _plus = (_property + _property_1);
+      String _plus_1 = (_plus + 
+        "Documents");
+      File _file = new File(_plus_1);
+      fileChooser.setInitialDirectory(_file);
+      File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
+      boolean _xifexpression = false;
+      if ((file != null)) {
+        boolean _xblockexpression_1 = false;
+        {
+          this.clearVue();
+          this.editor.getPresenter().load(file.getPath());
+          this.renderDocument();
+          this.loadBoxes();
+          _xblockexpression_1 = this.postLoad();
+        }
+        _xifexpression = _xblockexpression_1;
+      } else {
+        this.logger.warn("File not chosen");
+      }
+      _xblockexpression = _xifexpression;
     }
+    return Boolean.valueOf(_xblockexpression);
   }
   
   /**
@@ -574,12 +597,16 @@ public class ControllerFXEditor {
             String _plus = ((("loading width for " + Integer.valueOf(i)) + " = ") + Double.valueOf(_questionWidth_1));
             InputOutput.<String>print(_plus);
             this.mainPane.addZone(box);
-            this.questionList.loadQuestion(box, this.editor.getPresenter().getPresenterQuestionZone().questionName(i), p, i);
+            this.questionList.loadQuestion(box, this.editor.getPresenter().getPresenterQuestionZone().questionName(i), p, i, this.editor.getPresenter().getPresenterQuestionZone().questionWorth(i));
           }
         }
       }
     }
     this.questionList.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
+  }
+  
+  public boolean postLoad() {
+    return this.pdfLoaded = true;
   }
   
   /**
@@ -608,7 +635,6 @@ public class ControllerFXEditor {
     this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.maxX = this.mainPane.getImageViewWidth();
     this.maxY = this.mainPane.getImageViewHeight();
-    this.pdfLoaded = true;
     this.initPageSelection();
   }
   

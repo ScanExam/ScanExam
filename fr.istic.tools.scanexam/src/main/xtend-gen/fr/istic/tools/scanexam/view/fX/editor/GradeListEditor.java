@@ -1,9 +1,6 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import com.google.common.base.Objects;
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
-import fr.istic.tools.scanexam.view.fX.editor.GradeItemEditor;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -84,12 +81,12 @@ public class GradeListEditor extends VBox {
     this.addGradeItemToModel(gradeItem);
   }
   
-  public void updateGradeItem(final GradeItemEditor toUpdate) {
-    this.updateGradeItemInModel(toUpdate);
+  public Object updateGradeItem(final GradeItemEditor toUpdate) {
+    return this.updateGradeItemInModel(toUpdate);
   }
   
-  public boolean removeGradeItem(final GradeItemEditor toRemove) {
-    boolean _xblockexpression = false;
+  public Object removeGradeItem(final GradeItemEditor toRemove) {
+    Object _xblockexpression = null;
     {
       this.itemContainer.getChildren().remove(toRemove);
       this.allItems.remove(toRemove);
@@ -107,11 +104,11 @@ public class GradeListEditor extends VBox {
     return toAdd.setGradeItemId(this.controller.getEditor().getPresenter().getPresenterMarkingScheme().addEntry(toAdd.getGradeQuestionItem().getQuestionId(), toAdd.getGradeItemName(), Float.parseFloat(toAdd.getGradeItemPoints())));
   }
   
-  public void updateGradeItemInModel(final GradeItemEditor toUpdate) {
-    this.controller.getEditor().getPresenter().getPresenterMarkingScheme().modifyEntry(toUpdate.getGradeQuestionItem().getQuestionId(), toUpdate.getGradeItemId(), toUpdate.getGradeItemName(), Float.parseFloat(toUpdate.getGradeItemPoints()));
+  public Object updateGradeItemInModel(final GradeItemEditor toUpdate) {
+    return this.controller.getEditor().getPresenter().getPresenterMarkingScheme().modifyEntry(toUpdate.getGradeQuestionItem().getQuestionId(), toUpdate.getGradeItemId(), toUpdate.getGradeItemName(), Float.parseFloat(toUpdate.getGradeItemPoints()));
   }
   
-  public boolean removeGradeItemFromModel(final GradeItemEditor toRemove) {
+  public Object removeGradeItemFromModel(final GradeItemEditor toRemove) {
     return this.controller.getEditor().getPresenter().getPresenterMarkingScheme().removeEntry(toRemove.getGradeQuestionItem().getQuestionId(), toRemove.getGradeItemId());
   }
   

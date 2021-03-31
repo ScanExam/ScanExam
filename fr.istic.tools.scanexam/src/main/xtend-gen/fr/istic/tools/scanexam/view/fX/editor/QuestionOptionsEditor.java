@@ -1,8 +1,6 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -252,7 +250,7 @@ public class QuestionOptionsEditor extends VBox {
     this.renameField.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent event) {
-        InputOutput.<String>print("rename actions\n");
+        InputOutput.<String>print("Rename actions\n");
         QuestionOptionsEditor.this.commitRename();
         QuestionOptionsEditor.this.toggleRename(false);
       }
@@ -262,7 +260,7 @@ public class QuestionOptionsEditor extends VBox {
       @Override
       public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
         if ((!(newValue).booleanValue())) {
-          InputOutput.<String>print("rename actions\n");
+          InputOutput.<String>print("Rename actions\n");
           QuestionOptionsEditor.this.commitRename();
           QuestionOptionsEditor.this.toggleRename(false);
         }
@@ -271,7 +269,7 @@ public class QuestionOptionsEditor extends VBox {
     this.scaleField.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent event) {
-        InputOutput.<String>print("rescale actions\n");
+        InputOutput.<String>print("Rescale actions\n");
         QuestionOptionsEditor.this.commitRescale();
         QuestionOptionsEditor.this.toggleRescale(false);
       }
@@ -281,7 +279,7 @@ public class QuestionOptionsEditor extends VBox {
       @Override
       public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
         if ((!(newValue).booleanValue())) {
-          InputOutput.<String>print("rescale actions\n");
+          InputOutput.<String>print("Rescale actions\n");
           QuestionOptionsEditor.this.commitRescale();
           QuestionOptionsEditor.this.toggleRescale(false);
         }

@@ -133,6 +133,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public float getX() {
 		return x;
 	}
@@ -142,6 +143,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setX(float newX) {
 		float oldX = x;
 		x = newX;
@@ -154,6 +156,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public float getY() {
 		return y;
 	}
@@ -163,6 +166,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setY(float newY) {
 		float oldY = y;
 		y = newY;
@@ -175,6 +179,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public float getWidth() {
 		return width;
 	}
@@ -184,6 +189,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidth(float newWidth) {
 		float oldWidth = width;
 		width = newWidth;
@@ -196,6 +202,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public float getHeigth() {
 		return heigth;
 	}
@@ -205,6 +212,7 @@ public class QuestionZoneImpl extends MinimalEObjectImpl.Container implements Qu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHeigth(float newHeigth) {
 		float oldHeigth = heigth;
 		heigth = newHeigth;

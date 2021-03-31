@@ -100,6 +100,7 @@ public class ConfigFactoryImpl extends EFactoryImpl implements ConfigFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Config createConfig() {
 		ConfigImpl config = new ConfigImpl();
 		return config;
@@ -128,6 +129,7 @@ public class ConfigFactoryImpl extends EFactoryImpl implements ConfigFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConfigPackage getConfigPackage() {
 		return (ConfigPackage)getEPackage();
 	}

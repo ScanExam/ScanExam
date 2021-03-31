@@ -1,23 +1,21 @@
 package fr.istic.tools.scanexam.mailing;
 
-import fr.istic.tools.scanexam.mailing.SendMailTls;
-
 /**
  * @author Thomas Guibert
  */
 @SuppressWarnings("all")
 public class SendMailXtend {
-  private static String sender = "A completer";
+  private static String sender = "";
   
-  private static String senderPassword = "A completer";
+  private static String senderPassword = "";
   
-  private static String recipient = "A completer";
+  private static String recipient = "";
   
-  private static String titleMail = "A completer";
+  private static String titleMail = "";
   
-  private static String messageMail = "A completer";
+  private static String messageMail = "";
   
-  private static String pieceJointe = "A completer";
+  private static String pieceJointe = "";
   
   public static void main(final String[] arg) {
     SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe);
@@ -26,8 +24,8 @@ public class SendMailXtend {
   /**
    * Fonction envoie du mail avec les valeur donnée par les getter
    */
-  public void sendMailXtend() {
-    SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe);
+  public String sendMailXtend() {
+    return SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe);
   }
   
   /**

@@ -1,3 +1,14 @@
 /AdapterSwingPdfPanel.java
 /Box.java
 /BoxList.java
+/GraduationAdapterSwing.java
+/ImagePanel.java
+/ListOfQuestionsPanel.java
+/PdfPanel.java
+/QuestionPanel.java
+/AdapterSwingBox.java
+/AdapterSwingPdfAndBoxPanel.java
+/EditorAdapterSwing.java
+/EditorViewSwing.java
+/GraduationViewSwing.java
+/PdfAndBoxPanel.java

@@ -38,4 +38,9 @@ public interface PdfReader {
    * @return le nombre de pages que le reader a lu du PDF source
    */
   int getNbPagesTreated();
+  
+  /**
+   * @return true si la lecture du PDF est terminée, false sinon
+   */
+  boolean isFinished();
 }

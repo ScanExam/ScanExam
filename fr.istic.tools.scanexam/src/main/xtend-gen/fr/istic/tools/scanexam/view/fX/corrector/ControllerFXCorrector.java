@@ -3,11 +3,6 @@ package fr.istic.tools.scanexam.view.fX.corrector;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.view.fX.FXSettings;
 import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
-import fr.istic.tools.scanexam.view.fX.corrector.Grader;
-import fr.istic.tools.scanexam.view.fX.corrector.QuestionItemCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.QuestionListCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentItemCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentListCorrector;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +19,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
@@ -83,7 +79,11 @@ public class ControllerFXCorrector {
   
   private StudentListCorrector studentList;
   
+  private StudentDetails studentDetails;
+  
   private boolean botShow = false;
+  
+  private boolean autoZoom = true;
   
   @FXML
   public VBox root;
@@ -128,7 +128,7 @@ public class ControllerFXCorrector {
   public ScrollPane scrollBis;
   
   @FXML
-  public VBox studentDetails;
+  public VBox studentDetailsContainer;
   
   @FXML
   public VBox questionDetails;
@@ -141,6 +141,9 @@ public class ControllerFXCorrector {
   
   @FXML
   public HBox graderContainer;
+  
+  @FXML
+  public Label instructionLabel;
   
   @FXML
   public Object Pressed() {
@@ -267,6 +270,18 @@ public class ControllerFXCorrector {
   
   private double imageHeight;
   
+  public QuestionListCorrector getQuestionList() {
+    return this.questionList;
+  }
+  
+  public StudentListCorrector getStudentList() {
+    return this.studentList;
+  }
+  
+  public boolean setToAutoZoom(final Boolean b) {
+    return this.autoZoom = (b).booleanValue();
+  }
+  
   public void chooseMouseAction(final MouseEvent e) {
     MouseButton _button = e.getButton();
     boolean _equals = com.google.common.base.Objects.equal(_button, MouseButton.SECONDARY);
@@ -331,7 +346,6 @@ public class ControllerFXCorrector {
       this.mouseOriginY = e.getScreenY();
       Object _source = e.getSource();
       Node source = ((Node) _source);
-      InputOutput.<Node>println(source);
       this.objectOriginX = source.getLayoutX();
       this.objectOriginY = source.getLayoutY();
     }
@@ -398,6 +412,10 @@ public class ControllerFXCorrector {
     Grader _grader = new Grader(this);
     this.grader = _grader;
     this.graderContainer.getChildren().add(this.grader);
+    this.grader.setVisible(false);
+    StudentDetails _studentDetails = new StudentDetails();
+    this.studentDetails = _studentDetails;
+    this.studentDetailsContainer.getChildren().add(this.studentDetails);
     this.binds(this.root);
     this.binds(this.scrollMain);
     this.binds(this.scrollBis);
@@ -572,6 +590,7 @@ public class ControllerFXCorrector {
             question.setPage(p);
             question.setQuestionId(i);
             question.setName(this.corrector.getPresenter().questionName(i));
+            question.setWorth(Float.valueOf(this.corrector.getPresenter().questionWorth(i)));
             this.questionList.addItem(question);
           }
         }
@@ -589,6 +608,10 @@ public class ControllerFXCorrector {
   
   public void postLoad() {
     this.LoadedModel = true;
+    this.instructionLabel.setVisible(false);
+    this.grader.setVisible(true);
+    this.focusQuestion(this.questionList.getCurrentItem());
+    this.focusStudent(this.studentList.getCurrentItem());
   }
   
   public void renderStudentCopy() {
@@ -619,7 +642,9 @@ public class ControllerFXCorrector {
   
   public void setSelectedStudent() {
     this.focusStudent(this.studentList.getCurrentItem());
+    this.studentDetails.display(this.studentList.getCurrentItem());
     this.display();
+    this.displayGrader();
   }
   
   public void nextQuestion() {
@@ -641,6 +666,7 @@ public class ControllerFXCorrector {
     this.focusQuestion(this.questionList.getCurrentItem());
     this.display();
     this.displayQuestion();
+    this.displayGrader();
   }
   
   public void focusQuestion(final QuestionItemCorrector item) {
@@ -652,8 +678,10 @@ public class ControllerFXCorrector {
   }
   
   public void setZoomArea(final int x, final int y, final int height, final int width) {
-    Rectangle2D _rectangle2D = new Rectangle2D(x, y, height, width);
-    this.imview.setViewport(_rectangle2D);
+    if (this.autoZoom) {
+      Rectangle2D _rectangle2D = new Rectangle2D(x, y, height, width);
+      this.imview.setViewport(_rectangle2D);
+    }
   }
   
   public void display() {
@@ -669,11 +697,16 @@ public class ControllerFXCorrector {
   public void setZoomArea(final double x, final double y, final double width, final double height) {
     Rectangle2D _rectangle2D = new Rectangle2D(x, y, width, height);
     this.imview.setViewport(_rectangle2D);
-    ControllerFXCorrector.logger.warn(this.imview.getViewport());
   }
   
   public void displayQuestion() {
-    this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getW(), this.questionList.getCurrentItem().getH());
+    if (this.autoZoom) {
+      this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getW(), this.questionList.getCurrentItem().getH());
+    }
+  }
+  
+  public void displayGrader() {
+    this.grader.changeGrader(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
   }
   
   public void setGrade(final int studentId, final int questionId, final float grade) {

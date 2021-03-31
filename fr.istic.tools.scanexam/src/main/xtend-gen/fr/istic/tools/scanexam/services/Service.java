@@ -4,7 +4,6 @@ import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
-import fr.istic.tools.scanexam.services.ExamSingleton;
 import java.awt.image.BufferedImage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;

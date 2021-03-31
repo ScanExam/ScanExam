@@ -2,3 +2,7 @@
 /Grader.java
 /QuestionItem.java
 /StudentItem.java
+/QuestionItemCorrector.java
+/QuestionListCorrector.java
+/StudentItemCorrector.java
+/StudentListCorrector.java

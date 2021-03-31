@@ -1,8 +1,6 @@
 package fr.istic.tools.scanexam.services;
 
-import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.CoreFactory;
-import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
@@ -10,8 +8,6 @@ import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
 import fr.istic.tools.scanexam.io.TemplateIO;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Base64;
@@ -23,7 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -41,8 +36,6 @@ public class ExamEditionService extends Service {
   @Accessors
   private int questionId;
   
-  private int gradeEntryId;
-  
   /**
    * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
    * @param q Une Question
@@ -52,6 +45,7 @@ public class ExamEditionService extends Service {
   public int createQuestion(final float x, final float y, final float heigth, final float width) {
     final Question question = CoreFactory.eINSTANCE.createQuestion();
     question.setId(this.questionId);
+    question.setGradeScale(CoreFactory.eINSTANCE.createGradeScale());
     question.setZone(CoreFactory.eINSTANCE.createQuestionZone());
     QuestionZone _zone = question.getZone();
     _zone.setX(x);
@@ -98,73 +92,6 @@ public class ExamEditionService extends Service {
         }
       }
     }
-  }
-  
-  /**
-   * Ajoute une nouvelle entrée à la liste des points attribuable à la question
-   * @param questionId l'ID de la question dans laquelle ajouter l'entrée
-   * @param desc la description de l'entrée
-   * @param point le nombre de point de l'entrée
-   * @return l'ID de l'entrée
-   */
-  public int addEntry(final int questionId, final String desc, final float point) {
-    int _xblockexpression = (int) 0;
-    {
-      final DataFactory factory = new DataFactory();
-      final Question question = this.getQuestion(questionId);
-      GradeScale _gradeScale = question.getGradeScale();
-      boolean _tripleEquals = (_gradeScale == null);
-      if (_tripleEquals) {
-        question.setGradeScale(factory.createGradeScale());
-      }
-      final GradeScale scale = question.getGradeScale();
-      scale.getSteps().add(factory.createGradeEntry(this.gradeEntryId, desc, point));
-      _xblockexpression = this.gradeEntryId++;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * Modifie une entrée de la liste des points attribuable à la question
-   * @param questionId l'ID de la question dans laquelle modifier l'entrée
-   * @param gradeEntryId l'ID de l'entrée à modifier
-   * @param desc la nouvelle description de l'entrée
-   * @param point le nouveau nombre de point de l'entrée
-   */
-  public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
-    final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-    final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
-      int _id = step.getId();
-      return Boolean.valueOf((_id == gradeEntryId));
-    };
-    final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
-    if ((scaleEntry != null)) {
-      scaleEntry.setHeader(desc);
-      scaleEntry.setStep(point);
-    }
-  }
-  
-  /**
-   * Supprime une entrée de la liste des points attribuable à la question
-   * @param questionId l'ID de la question dans laquelle supprimer l'entrée
-   * @param gradeEntryId l'ID de l'entrée à supprimer
-   */
-  public boolean removeEntry(final int questionId, final int gradeEntryId) {
-    boolean _xblockexpression = false;
-    {
-      final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-      final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
-        int _id = step.getId();
-        return Boolean.valueOf((_id == gradeEntryId));
-      };
-      final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
-      boolean _xifexpression = false;
-      if ((scaleEntry != null)) {
-        _xifexpression = scale.getSteps().remove(scaleEntry);
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return _xblockexpression;
   }
   
   /**

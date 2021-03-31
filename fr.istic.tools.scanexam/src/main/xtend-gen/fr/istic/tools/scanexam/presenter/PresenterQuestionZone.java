@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +75,8 @@ public class PresenterQuestionZone {
     this.service.moveQuestion(id, ((float) x), ((float) y));
   }
   
-  public void changeQuestionWorth(final int id, final int worth) {
+  public void changeQuestionWorth(final int id, final float worth) {
+    this.service.modifMaxPoint(id, worth);
   }
   
   /**
@@ -184,7 +184,19 @@ public class PresenterQuestionZone {
     return _xblockexpression;
   }
   
-  public int questionWorth(final int id) {
-    return 0;
+  public float questionWorth(final int id) {
+    float _xblockexpression = (float) 0;
+    {
+      float result = 0f;
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getGradeScale().getMaxPoint();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
 }

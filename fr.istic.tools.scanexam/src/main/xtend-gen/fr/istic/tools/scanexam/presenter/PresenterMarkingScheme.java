@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 import java.util.Objects;
 
@@ -59,7 +58,7 @@ public class PresenterMarkingScheme {
    * @return l'ID de l'entrée
    */
   public int addEntry(final int questionId, final String desc, final float point) {
-    return this.service.addEntry(questionId, desc, point);
+    return 0;
   }
   
   /**
@@ -69,8 +68,12 @@ public class PresenterMarkingScheme {
    * @param desc la nouvelle description de l'entrée
    * @param point le nouveau nombre de point de l'entrée
    */
-  public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
-    this.service.modifyEntry(questionId, gradeEntryId, desc, point);
+  public Object modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The method modifyEntry(int, int, String, float) is not applicable for the arguments (ExamEditionService,int,int,String,float)"
+      + "\nType mismatch: cannot convert from ExamEditionService to int"
+      + "\nType mismatch: cannot convert from int to String"
+      + "\nType mismatch: cannot convert from String to float");
   }
   
   /**
@@ -78,7 +81,9 @@ public class PresenterMarkingScheme {
    * @param questionId l'ID de la question dans laquelle supprimer l'entrée
    * @param gradeEntryId l'ID de l'entrée à supprimer
    */
-  public boolean removeEntry(final int questionId, final int gradeEntryId) {
-    return this.service.removeEntry(questionId, gradeEntryId);
+  public Object removeEntry(final int questionId, final int gradeEntryId) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The method removeEntry(int, int) is not applicable for the arguments (ExamEditionService,int,int)"
+      + "\nType mismatch: cannot convert from ExamEditionService to int");
   }
 }

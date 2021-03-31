@@ -1,10 +1,5 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
-import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
-import fr.istic.tools.scanexam.view.swing.Box;
-import fr.istic.tools.scanexam.view.swing.BoxList;
-import fr.istic.tools.scanexam.view.swing.PdfPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

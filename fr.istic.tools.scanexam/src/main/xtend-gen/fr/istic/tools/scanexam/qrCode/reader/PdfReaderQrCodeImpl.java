@@ -11,10 +11,6 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.StudentSheet;
-import fr.istic.tools.scanexam.qrCode.reader.Copie;
-import fr.istic.tools.scanexam.qrCode.reader.Page;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCode;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderThreadManager;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,10 +43,13 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private PDDocument doc;
   
+  private boolean isFinished;
+  
   public PdfReaderQrCodeImpl(final PDDocument doc, final int nbPages, final int nbCopies) {
     this.doc = doc;
     this.nbPagesInSheet = nbPages;
     this.nbSheetsTotal = nbCopies;
+    this.isFinished = false;
     HashSet<Copie> _hashSet = new HashSet<Copie>();
     this.sheets = _hashSet;
   }
@@ -327,6 +326,15 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
       }
     }
     return res;
+  }
+  
+  @Override
+  public boolean isFinished() {
+    return this.isFinished;
+  }
+  
+  public boolean setFinished(final boolean bool) {
+    return this.isFinished = bool;
   }
   
   public static void main(final String[] arg) {

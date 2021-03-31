@@ -108,6 +108,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCorrectionTemplate() {
 		return correctionTemplateEClass;
 	}
@@ -117,6 +118,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getCorrectionTemplate_EncodedDocument() {
 		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(0);
 	}
@@ -126,6 +128,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCorrectionTemplate_Exam() {
 		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(1);
 	}
@@ -135,6 +138,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCorrectionTemplate_Studentsheets() {
 		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(2);
 	}
@@ -144,6 +148,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getCreationTemplate() {
 		return creationTemplateEClass;
 	}
@@ -153,6 +158,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getCreationTemplate_EncodedDocument() {
 		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(0);
 	}
@@ -162,6 +168,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getCreationTemplate_Exam() {
 		return (EReference)creationTemplateEClass.getEStructuralFeatures().get(1);
 	}
@@ -171,6 +178,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public TemplatesFactory getTemplatesFactory() {
 		return (TemplatesFactory)getEFactoryInstance();
 	}

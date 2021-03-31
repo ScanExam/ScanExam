@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.qrCode.reader;
 
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeThread;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,8 +35,11 @@ public class PdfReaderThreadManager extends Thread implements Runnable {
       PdfReaderQrCodeThread _pdfReaderQrCodeThread_3 = new PdfReaderQrCodeThread(this.reader, ((3 * this.nbPage) / 4), this.nbPage, this.pdfRenderer, latchThreads);
       service.execute(_pdfReaderQrCodeThread_3);
       latchThreads.await();
+      long _count = latchThreads.getCount();
+      String _plus = ("Fermeture du Thread Manager : " + Long.valueOf(_count));
+      InputOutput.<String>println(_plus);
+      this.reader.setFinished(true);
       service.shutdown();
-      InputOutput.<String>println("Fermeture du Thread Manager");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

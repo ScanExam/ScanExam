@@ -112,6 +112,7 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getId() {
 		return id;
 	}
@@ -121,6 +122,7 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId(int newId) {
 		int oldId = id;
 		id = newId;
@@ -133,6 +135,7 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public float getStep() {
 		return step;
 	}
@@ -142,6 +145,7 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStep(float newStep) {
 		float oldStep = step;
 		step = newStep;
@@ -154,6 +158,7 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getHeader() {
 		return header;
 	}
@@ -163,6 +168,7 @@ public class GradeEntryImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHeader(String newHeader) {
 		String oldHeader = header;
 		header = newHeader;
