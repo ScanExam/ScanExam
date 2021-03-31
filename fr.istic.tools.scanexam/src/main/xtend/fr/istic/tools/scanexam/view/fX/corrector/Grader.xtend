@@ -59,12 +59,12 @@ class Grader extends VBox {
 	def changeGrader(QuestionItemCorrector qItem,StudentItemCorrector sItem) {
 		clearDisplay()
 		maxPoints.text = qItem.worth + "";
-		/*
+		
 		//Loads all the gradeEntries from the model
 		var ids = controller.adapterCorrection.presenter.getEntryIds(qItem.questionId);
 		//Finds all the selected entries for this student/question
 		var sids = controller.adapterCorrection.presenter.getSelectedEntryIds(qItem.questionId)
-		
+		print("size :" + ids.size )
 		for (Integer i : ids) {
 			var g = new GradeItem(this);
 			g.setItemId(i);
@@ -75,16 +75,15 @@ class Grader extends VBox {
 				g.selected = true;
 				addPointsOf(g);
 			}
+			g.leaveEditMode
 		} 
-		**/
+	
 
 		
 		
 	
 		
 		//create each gradeEntry from the model for the question item for the correct student
-		
-		
 	}
 	
 	def createNewGradeEntry(){
@@ -118,15 +117,17 @@ class Grader extends VBox {
 	//---Model intecations 
 	
 	def void addEntryToModel(GradeItem item,QuestionItemCorrector qItem){
+		/*
 		println("\n" +qItem + " " + qItem.questionId);
 		println("\n" +item + " " + item.getText);
 		println("\n" +item + " " + Float.parseFloat(item.getWorth) + "\n");
 		println("\n" +controller + " " + controller.adapterCorrection +" " + controller.adapterCorrection.presenter +" " + controller.adapterCorrection.presenter.presenterMarkingScheme + "\n");
-		//item.itemId = controller.adapterCorrection.presenter.presenterMarkingScheme.addEntry(qItem.questionId,item.getText,Float.parseFloat(item.getWorth));
+		*/
+		item.itemId = controller.adapterCorrection.presenter.addEntry(qItem.questionId,item.getText,Float.parseFloat(item.getWorth));
 	}
 	
 	def updateEntryInModel(GradeItem item,QuestionItemCorrector qItem){
-		//controller.adapterCorrection.presenter.presenterMarkingScheme.modifyEntry(qItem.questionId,item.itemId,item.getText,Float.parseFloat(item.getWorth));
+		controller.adapterCorrection.presenter.modifyEntry(qItem.questionId,item.itemId,item.getText,Float.parseFloat(item.getWorth));
 	}
 	
 	def removeEntryFromModel(GradeItem item,QuestionItemCorrector qItem) {
@@ -135,7 +136,7 @@ class Grader extends VBox {
 	
 	def addPoints(GradeItem item){
 			addPointsOf(item)
-			//controller.adapterCorrection.presenter.applyGrade(item.id,controller.questionList.currentItem.questionId)
+			controller.adapterCorrection.presenter.applyGrade(item.id,controller.questionList.currentItem.questionId)
 			print("\nAdding points ");
 	}
 	
@@ -158,9 +159,8 @@ class Grader extends VBox {
 			this.children.add(add)
 		}else {
 			for (Node n : itemContainer.children) {
-				(n as GradeItem).leaveEditMode
-				
-				
+				(n as GradeItem).commitChanges
+				updateEntryInModel((n as GradeItem),controller.questionList.currentItem);
 			}
 			this.children.remove(add)
 		}
@@ -246,7 +246,6 @@ class Grader extends VBox {
 		}
 		
 		def leaveEditMode(){
-			commitChanges
 			topRow.children.remove(worthField)
 			topRow.children.remove(remove)
 			topRow.children.add(worth);
@@ -257,7 +256,7 @@ class Grader extends VBox {
 		def commitChanges(){
 			text.text = textArea.text
 			worth.text = worthField.text
-			
+			leaveEditMode
 		}
 		
 		def setupEvents(){

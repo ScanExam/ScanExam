@@ -17,6 +17,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
 import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.api.DataFactory
+import java.util.ArrayList
 
 class ExamGraduationService extends Service
 {
@@ -252,7 +253,7 @@ class ExamGraduationService extends Service
 	}
 	
 	/**
-	 * Ajoute une entrée à la note d'une question d'une copie
+	 * Ajoute une (n as GradeItem)entrée à la note d'une question d'une copie
 	 * @param questionId l'ID de la question à laquelle ajouter l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
 	 * @return boolean indique si les points on bien ete attribuer
@@ -282,8 +283,21 @@ class ExamGraduationService extends Service
      * @param l'ID de la question à laquelle récupérer la liste d'entrées
 	 * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
 	 */
-	def List<Integer> getQuestionSelectedGradeEntries(int questionId) {
-		studentSheets.get(currentSheetIndex).grades.get(questionId).entries.map[entry | entry.id]
+	def List<Integer> getQuestionSelectedGradeEntries(int questionId) 
+	{
+		if (currentSheetIndex > studentSheets.size - 1)
+		 {
+		 	return new ArrayList<Integer>();
+		 }
+		 
+		 val sheet = studentSheets.get(currentSheetIndex);
+		 
+		 if (questionId > sheet.grades.size-1)
+		 {
+		 	return new ArrayList<Integer>();
+		 }
+		 
+		sheet.grades.get(questionId).entries.map[entry | entry.id]
 	}
 	
 	/**
