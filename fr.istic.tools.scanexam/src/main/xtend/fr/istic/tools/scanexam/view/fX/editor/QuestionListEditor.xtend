@@ -59,7 +59,6 @@ class QuestionListEditor extends VBox {
 	def removeQuestion(QuestionItemEditor item) {
 		removeFocus
 		controller.mainPane.removeZone(item.zone)
-		controller.mainPane.children.remove(item.zone)
 		remove(item)
 		//removeFromModel(item) //TODO FIX
 	}
