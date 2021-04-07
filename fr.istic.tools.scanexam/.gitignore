@@ -2,3 +2,4 @@
 .classpath
 *.xtendbin
 /foo.xmi
+.java_trace
