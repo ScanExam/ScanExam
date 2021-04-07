@@ -16,20 +16,20 @@
 	<children>
 		<MenuBar>
 			<menus>
+				<Menu mnemonicParsing="false" text="File editor">
+					<items>
+						<MenuItem mnemonicParsing="false" onAction="#createNewTemplatePressed" text="%menu.file.new" />
+						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="%menu.file.loadTemplate" />
+						<MenuItem mnemonicParsing="false" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
+						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
+					</items>
+				</Menu>
 				<Menu mnemonicParsing="false" text="File graduation">
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadTemplate" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.loadStudentCopies" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.loadStudentList" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.save" />
-						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="File editor">
-					<items>
-						<MenuItem mnemonicParsing="false" onAction="#createNewTemplatePressed" text="%menu.file.new" />
-						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="%menu.file.loadTemplate" />
-						<MenuItem mnemonicParsing="false" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
 					</items>
 				</Menu>
@@ -54,8 +54,8 @@
 		</MenuBar>
 		<TabPane side="LEFT" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
 			<tabs>
-				<Tab fx:id="correctorTab" text="%tabs.editor" />
-				<Tab fx:id="editorTab" text="%tabs.graduation" />
+				<Tab fx:id="editorTab" text="%tabs.editor" />
+				<Tab fx:id="correctorTab" text="%tabs.graduation" />
 			</tabs>
 			<opaqueInsets>
 				<Insets />
