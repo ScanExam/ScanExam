@@ -13,7 +13,6 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Tab;
 import javafx.stage.Stage;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class ControllerRoot {
@@ -104,8 +103,19 @@ public class ControllerRoot {
   }
   
   @FXML
-  public String sendMail() {
-    return InputOutput.<String>println("sending mail");
+  public void sendMail() {
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
+      final Stage dialog = new Stage();
+      dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
+      Scene _scene = new Scene(view, 672, 360);
+      dialog.setScene(_scene);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @FXML
