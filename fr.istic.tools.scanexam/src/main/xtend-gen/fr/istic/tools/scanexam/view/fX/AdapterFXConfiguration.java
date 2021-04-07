@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.view.fX;
 
-import fr.istic.tools.scanexam.view.fX.ControllerConfiguration;
+import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import java.util.Locale;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -19,7 +19,7 @@ public class AdapterFXConfiguration {
   /**
    * Controlleur de la configuration
    */
-  private ControllerConfiguration ctrlConfig;
+  private PresenterConfiguration presConfig;
   
   /**
    * Pane principale de la vue
@@ -61,13 +61,13 @@ public class AdapterFXConfiguration {
    * Constructeur. Initialise les différents champs avec la valeur actuelle de la configuration
    */
   public AdapterFXConfiguration() {
-    ControllerConfiguration _controllerConfiguration = new ControllerConfiguration();
-    this.ctrlConfig = _controllerConfiguration;
+    PresenterConfiguration _presenterConfiguration = new PresenterConfiguration();
+    this.presConfig = _presenterConfiguration;
   }
   
   @FXML
   public void saveAndQuit() {
-    this.ctrlConfig.updateConfig(this.cmbBxLanguage.getValue(), this.txtFldEmail.getText(), this.pwdFldEmailPassword.getText(), this.txtFldEmailHost.getText(), this.txtFldEmailPort.getText());
+    this.presConfig.updateConfig(this.cmbBxLanguage.getValue(), this.txtFldEmail.getText(), this.pwdFldEmailPassword.getText(), this.txtFldEmailHost.getText(), this.txtFldEmailPort.getText());
     this.quit();
   }
   
@@ -81,7 +81,7 @@ public class AdapterFXConfiguration {
   /**
    * SETTERS
    */
-  public void setControllerConfiguration(final ControllerConfiguration ctrlConfig) {
-    this.ctrlConfig = ctrlConfig;
+  public void setPresenterConfiguration(final PresenterConfiguration presConfig) {
+    this.presConfig = presConfig;
   }
 }

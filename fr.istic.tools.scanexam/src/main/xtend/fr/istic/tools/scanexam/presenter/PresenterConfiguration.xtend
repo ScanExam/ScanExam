@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.core.config.Config
@@ -8,7 +8,7 @@ import java.util.Locale
  * Classe pour gérer la fenêtre de configuration
  * @author Julien Cochet
  */
-class ControllerConfiguration {
+class PresenterConfiguration {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/*

@@ -7,6 +7,7 @@ import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
 import javafx.stage.Stage
+import fr.istic.tools.scanexam.presenter.PresenterConfiguration
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX
@@ -21,7 +22,7 @@ class AdapterFXConfiguration {
 	// ----------------------------------------------------------------------------------------------------
 	
 	/* Controlleur de la configuration */
-	var ControllerConfiguration ctrlConfig
+	var PresenterConfiguration presConfig
 	
 	/* Pane principale de la vue */
 	@FXML
@@ -57,7 +58,7 @@ class AdapterFXConfiguration {
 	 * Constructeur. Initialise les différents champs avec la valeur actuelle de la configuration
 	 */
 	new() {
-		ctrlConfig = new ControllerConfiguration
+		presConfig = new PresenterConfiguration
 		/*
 		cmbBxLanguage.value = ctrlConfig.config.language
 		txtFldEmail.text = ctrlConfig.config.email
@@ -69,7 +70,7 @@ class AdapterFXConfiguration {
 	
 	@FXML
 	def void saveAndQuit() {
-		ctrlConfig.updateConfig(cmbBxLanguage.value, txtFldEmail.text, pwdFldEmailPassword.text, txtFldEmailHost.text, txtFldEmailPort.text)
+		presConfig.updateConfig(cmbBxLanguage.value, txtFldEmail.text, pwdFldEmailPassword.text, txtFldEmailHost.text, txtFldEmailPort.text)
 		quit
 	}
 	
@@ -85,8 +86,8 @@ class AdapterFXConfiguration {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	def void setControllerConfiguration(ControllerConfiguration ctrlConfig) {
-		this.ctrlConfig = ctrlConfig
+	def void setPresenterConfiguration(PresenterConfiguration presConfig) {
+		this.presConfig = presConfig
 	}
 	
 }
