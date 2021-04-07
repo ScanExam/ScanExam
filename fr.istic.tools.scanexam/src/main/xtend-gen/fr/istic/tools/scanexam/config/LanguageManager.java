@@ -25,6 +25,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * @see Locale
  * @see ResourceBundle
  */
+@SuppressWarnings("all")
 public class LanguageManager {
   private static final Logger logger = LogManager.getLogger();
   

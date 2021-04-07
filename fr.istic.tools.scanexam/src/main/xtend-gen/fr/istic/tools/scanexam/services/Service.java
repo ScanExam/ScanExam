@@ -14,6 +14,7 @@ import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -68,13 +69,18 @@ public abstract class Service {
   }
   
   public int nextPdfPage() {
-    int _xifexpression = (int) 0;
-    int _size = IterableExtensions.size(this.document.getPages());
-    boolean _lessThan = ((this.pdfPageIndex + 1) < _size);
-    if (_lessThan) {
-      _xifexpression = this.pdfPageIndex++;
+    int _xblockexpression = (int) 0;
+    {
+      InputOutput.<String>println((("-" + Integer.valueOf(this.pdfPageIndex)) + "-"));
+      int _xifexpression = (int) 0;
+      int _size = IterableExtensions.size(this.document.getPages());
+      boolean _lessThan = ((this.pdfPageIndex + 1) < _size);
+      if (_lessThan) {
+        _xifexpression = this.pdfPageIndex++;
+      }
+      _xblockexpression = _xifexpression;
     }
-    return _xifexpression;
+    return _xblockexpression;
   }
   
   /**
@@ -169,7 +175,7 @@ public abstract class Service {
    * @return le numéro de la page courante dans le PDF courant
    */
   public int getCurrentPageNumber() {
-    return this.pageIndex;
+    return this.pdfPageIndex;
   }
   
   @Pure

@@ -48,20 +48,20 @@ public class ExamGraduationServiceTest
 	{
 		service.openCorrectionPdf(PDF_PATH);
 		PDDocument document = PDDocument.load(new File(PDF_PATH));
-		assertTrue(service.getPageNumber() == document.getNumberOfPages());
+		assertTrue(service.currentPdfPageNumber() == document.getNumberOfPages());
 	}
 	
 	@Test
-	@DisplayName("Test getNbPagesTraitee")
-	void getNbPagesTraiteePdfTest()
+	@DisplayName("Test changement de test")
+	void testChangementDePage()
 	{
 		service.openCorrectionPdf(PDF_PATH);
 		
 		int pageNumber = service.getCurrentPageNumber();
-		service.nextPage();
-		assertTrue(service.getCurrentPageNumber() == pageNumber + 1);
+		service.nextPdfPage();
+		assertTrue(service.currentPdfPageNumber() == pageNumber + 1);
 		service.previousPage();
-		assertTrue(service.getCurrentPageNumber() == pageNumber);
+		assertTrue(service.currentPdfPageNumber() == pageNumber);
 		
 	}
 	

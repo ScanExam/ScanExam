@@ -26,6 +26,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
@@ -211,6 +214,8 @@ public class Grader extends VBox {
     }
   }
   
+  private static final Logger logger = LogManager.getLogger();
+  
   public Grader(final ControllerFXCorrector controller) {
     this.controller = controller;
     Label _label = new Label("0");
@@ -283,14 +288,16 @@ public class Grader extends VBox {
   }
   
   public void createNewGradeEntry() {
+    Grader.logger.log(Level.INFO, "Creating new GradeEntry");
     Grader.GradeItem entry = new Grader.GradeItem(this);
     this.itemContainer.getChildren().add(entry);
     this.addEntryToModel(entry, this.controller.getQuestionList().getCurrentItem());
   }
   
-  public Object removeGradeEntry(final Grader.GradeItem item) {
-    Object _xblockexpression = null;
+  public boolean removeGradeEntry(final Grader.GradeItem item) {
+    boolean _xblockexpression = false;
     {
+      Grader.logger.log(Level.INFO, "Removing GradeEntry");
       this.itemContainer.getChildren().remove(item);
       boolean _selected = item.getSelected();
       if (_selected) {
@@ -302,21 +309,11 @@ public class Grader extends VBox {
   }
   
   public void addPointsOf(final Grader.GradeItem item) {
-    float current = Float.parseFloat(this.currentPoints.getText());
-    float _parseFloat = Float.parseFloat(item.getWorth());
-    float _plus = (current + _parseFloat);
-    current = _plus;
-    String _plus_1 = (Float.valueOf(current) + "");
-    this.currentPoints.setText(_plus_1);
+    this.currentPoints.setText("FIX");
   }
   
   public void removePointsOf(final Grader.GradeItem item) {
-    float current = Float.parseFloat(this.currentPoints.getText());
-    float _parseFloat = Float.parseFloat(item.getWorth());
-    float _minus = (current - _parseFloat);
-    current = _minus;
-    String _plus = (Float.valueOf(current) + "");
-    this.currentPoints.setText(_plus);
+    this.currentPoints.setText("FIX");
   }
   
   public void addEntryToModel(final Grader.GradeItem item, final QuestionItemCorrector qItem) {
@@ -327,15 +324,16 @@ public class Grader extends VBox {
     this.controller.getAdapterCorrection().getPresenter().modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), Float.parseFloat(item.getWorth()));
   }
   
-  public Object removeEntryFromModel(final Grader.GradeItem item, final QuestionItemCorrector qItem) {
-    return null;
+  public boolean removeEntryFromModel(final Grader.GradeItem item, final QuestionItemCorrector qItem) {
+    return this.controller.getAdapterCorrection().getPresenter().removeEntry(qItem.getQuestionId(), item.id);
   }
   
   public String addPoints(final Grader.GradeItem item) {
     String _xblockexpression = null;
     {
+      Grader.logger.log(Level.INFO, "Adding points");
       this.addPointsOf(item);
-      this.controller.getAdapterCorrection().getPresenter().applyGrade(item.id, this.controller.getQuestionList().getCurrentItem().getQuestionId());
+      this.controller.getAdapterCorrection().getPresenter().applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
       _xblockexpression = InputOutput.<String>print("\nAdding points ");
     }
     return _xblockexpression;
@@ -344,8 +342,9 @@ public class Grader extends VBox {
   public String removePoints(final Grader.GradeItem item) {
     String _xblockexpression = null;
     {
+      Grader.logger.log(Level.INFO, "Removing points, not Imp");
       this.removePointsOf(item);
-      this.controller.getAdapterCorrection().getPresenter().removeGrade(item.id, this.controller.getQuestionList().getCurrentItem().getQuestionId());
+      this.controller.getAdapterCorrection().getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
       _xblockexpression = InputOutput.<String>print("\nRemoving points ");
     }
     return _xblockexpression;

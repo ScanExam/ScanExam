@@ -16,18 +16,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIO;
 import fr.istic.tools.scanexam.services.ExamEditionService;
 
 public class ExamEditionServiceTest 
 {
-
 	ExamEditionService session;
 
 	@BeforeEach
 	void init() 
 	{
 		session = new ExamEditionService();
+		
 	}
 
 	@Test
@@ -35,10 +36,10 @@ public class ExamEditionServiceTest
 	void openTest() 
 	{
 		//Ouverture du fichier
-		session.open("src/test/resources/resources_service/sampleExiste.xmi");
+		session.open("src/test/resources/resources_service/sample.xmi");
 
 		//Verification du nombre de page et du nom de l'examen ouvert
-		assertEquals(session.getPageNumber(), 6);
+		assertEquals(session.currentPdfPageNumber(), 6);
 		assertEquals(session.getExamName(), "PFO_december_19");
 	}
 
@@ -65,7 +66,7 @@ public class ExamEditionServiceTest
 		PDDocument document = PDDocument.load(new File("src/test/resources/resources_service/pfo_example.pdf"));
 
 		//verification que le nombre de page est identique
-		assertEquals(session.getPageNumber(),document.getNumberOfPages());
+		assertEquals(session.getCurrentPdfPage(),document.getNumberOfPages());
 
 		//ajouter une ligne qui verifie que currentPdfPath = file.absolutePath
 	}
@@ -112,10 +113,10 @@ public class ExamEditionServiceTest
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = session.getCurrentPageNumber();
-		session.nextPage();
+		session.nextPdfPage();
 		int newPage = session.getCurrentPageNumber();
 
-		if(oldPage == session.getPageNumber()) {
+		if(oldPage == session.currentPdfPageNumber()) {
 			assertEquals(1, newPage);
 		}else {
 			assertEquals(oldPage, newPage-1);
@@ -130,12 +131,12 @@ public class ExamEditionServiceTest
 		//ouverture du fichier
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		int oldPage = session.getCurrentPageNumber();
+		int oldPage = session.currentPdfPageNumber();
 		session.previousPage();
-		int newPage = session.getCurrentPageNumber();
+		int newPage = session.currentPdfPageNumber();
 
 		if(oldPage == 1) {
-			assertEquals(session.getPageNumber(), newPage);
+			assertEquals(session.getPdfsize(), newPage);
 		}else {
 			assertEquals(oldPage-1, newPage);
 		}
@@ -148,7 +149,7 @@ public class ExamEditionServiceTest
 		//Ouverture du fichier
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		assertEquals(session.getPageNumber(), 6);
+		assertEquals(session.getCurrentPdfPage(), 6);
 	}
 
 

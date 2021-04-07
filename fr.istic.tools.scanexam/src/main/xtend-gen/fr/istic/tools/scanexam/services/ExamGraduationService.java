@@ -397,10 +397,15 @@ public class ExamGraduationService extends Service {
    * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
    */
   public List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(final int questionId) {
-    final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = (GradeEntry entry) -> {
-      return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
-    };
-    return ListExtensions.<GradeEntry, Tuple3<Integer, String, Float>>map(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
+    GradeScale _gradeScale = this.getQuestion(questionId).getGradeScale();
+    boolean _tripleNotEquals = (_gradeScale != null);
+    if (_tripleNotEquals) {
+      final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = (GradeEntry entry) -> {
+        return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
+      };
+      return ListExtensions.<GradeEntry, Tuple3<Integer, String, Float>>map(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
+    }
+    return List.<Tuple3<Integer, String, Float>>of();
   }
   
   /**

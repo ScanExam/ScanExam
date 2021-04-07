@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class QuestionListEditor extends VBox {
@@ -57,7 +58,10 @@ public class QuestionListEditor extends VBox {
     } else {
     }
     int _currentPdfPageNumber = this.controller.getEditor().getPresenter().getPresenterPdf().currentPdfPageNumber();
-    QuestionItemEditor item = new QuestionItemEditor(this, box, type, _currentPdfPageNumber);
+    String _plus = ("page : " + Integer.valueOf(_currentPdfPageNumber));
+    InputOutput.<String>println(_plus);
+    int _currentPdfPageNumber_1 = this.controller.getEditor().getPresenter().getPresenterPdf().currentPdfPageNumber();
+    QuestionItemEditor item = new QuestionItemEditor(this, box, type, _currentPdfPageNumber_1);
     this.addToModel(item);
     this.add(item);
   }
