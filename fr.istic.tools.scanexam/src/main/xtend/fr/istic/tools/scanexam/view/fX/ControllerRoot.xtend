@@ -85,7 +85,13 @@ class ControllerRoot {
 	
 	@FXML
 	def sendMail(){
-		println("sending mail")
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
+		dialog.setScene(new Scene(view, 672, 360))
+		dialog.show
 	}
 	
 	@FXML
