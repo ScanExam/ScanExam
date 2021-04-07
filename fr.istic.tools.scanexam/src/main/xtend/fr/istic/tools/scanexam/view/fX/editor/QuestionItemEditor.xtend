@@ -84,6 +84,8 @@ class QuestionItemEditor extends VBox {
 		vgrow = Priority.ALWAYS
 		zone.setupEvents
 
+		this.scale  = 1f
+		
 		this.styleClass.add("ListItem");
 		
 		this.margin = new Insets(2);

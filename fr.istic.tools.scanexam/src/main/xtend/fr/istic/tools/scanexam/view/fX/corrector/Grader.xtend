@@ -21,9 +21,13 @@ import javafx.scene.Scene
 import javafx.scene.input.MouseButton
 import fr.istic.tools.scanexam.view.fX.editor.HTMLView
 import javafx.stage.StageStyle
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Level
 
 class Grader extends VBox {
-
+	
+	static val logger = LogManager.logger
+	
 	new(ControllerFXCorrector controller){
 		this.controller = controller
 		
@@ -98,29 +102,35 @@ class Grader extends VBox {
 	}
 	
 	def createNewGradeEntry(){
+		logger.log(Level.INFO,"Creating new GradeEntry")
 		var entry = new GradeItem(this);
 		itemContainer.children.add(entry)
 		addEntryToModel(entry,controller.questionList.currentItem);
 	}
 	
 	def removeGradeEntry(GradeItem item){
+		logger.log(Level.INFO,"Removing GradeEntry")
 		itemContainer.children.remove(item);
 		if (item.selected) {
 			removePointsOf(item)
 		}
 		removeEntryFromModel(item,controller.questionList.currentItem)
+		
 	}
 	
 	//used to add and rmeove the points of the selected items to the current points label
 	def addPointsOf(GradeItem item){
-		var current = Float.parseFloat(currentPoints.text);
+		/*var current = Float.parseFloat(currentPoints.text);
 		current = current +  Float.parseFloat(item.getWorth)
-		currentPoints.text = current + ""
+		* */
+		currentPoints.text = "FIX"
 		}
 	def removePointsOf(GradeItem item){
-		var current = Float.parseFloat(currentPoints.text);
+		/*var current = Float.parseFloat(currentPoints.text);
 		current = current -  Float.parseFloat(item.getWorth)
-		currentPoints.text = current + ""
+		* 
+		*/
+		currentPoints.text = "FIX"
 	}
 	
 	
@@ -128,12 +138,6 @@ class Grader extends VBox {
 	//---Model intecations 
 	
 	def void addEntryToModel(GradeItem item,QuestionItemCorrector qItem){
-		/*
-		println("\n" +qItem + " " + qItem.questionId);
-		println("\n" +item + " " + item.getText);
-		println("\n" +item + " " + Float.parseFloat(item.getWorth) + "\n");
-		println("\n" +controller + " " + controller.adapterCorrection +" " + controller.adapterCorrection.presenter +" " + controller.adapterCorrection.presenter.presenterMarkingScheme + "\n");
-		*/
 		item.itemId = controller.adapterCorrection.presenter.addEntry(qItem.questionId,item.getText,Float.parseFloat(item.getWorth));
 	}
 	
@@ -142,18 +146,20 @@ class Grader extends VBox {
 	}
 	
 	def removeEntryFromModel(GradeItem item,QuestionItemCorrector qItem) {
-		
+		controller.adapterCorrection.presenter.removeEntry(qItem.questionId,item.id);
 	}
 	
 	def addPoints(GradeItem item){
+			logger.log(Level.INFO,"Adding points")
 			addPointsOf(item)
-			controller.adapterCorrection.presenter.applyGrade(item.id,controller.questionList.currentItem.questionId)
+			controller.adapterCorrection.presenter.applyGrade(controller.questionList.currentItem.questionId,item.id)
 			print("\nAdding points ");
 	}
 	
 	def removePoints(GradeItem item){
+			logger.log(Level.INFO,"Removing points, not Imp")
 			removePointsOf(item)
-			controller.adapterCorrection.presenter.removeGrade(item.id,controller.questionList.currentItem.questionId)
+			controller.adapterCorrection.presenter.removeGrade(controller.questionList.currentItem.questionId,item.id)
 			print("\nRemoving points ");
 	}
 	

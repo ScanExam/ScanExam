@@ -57,6 +57,7 @@ abstract class Service
 	}
 	def nextPdfPage() 
 	{
+		println("-"+pdfPageIndex + "-")
 		if (pdfPageIndex + 1 < document.pages.size) 
 		{
 			pdfPageIndex++
@@ -150,7 +151,7 @@ abstract class Service
 	 * @return le numéro de la page courante dans le PDF courant
 	 */
 	def getCurrentPageNumber() {
-		return pageIndex;
+		return pdfPageIndex;
 	}
 	
 	/* ! EXAM RELATED */
