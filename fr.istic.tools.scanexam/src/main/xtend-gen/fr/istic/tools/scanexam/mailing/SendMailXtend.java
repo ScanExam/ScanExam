@@ -20,7 +20,7 @@ public class SendMailXtend {
   private static String pieceJointe = "";
   
   public static void main(final String[] arg) {
-    SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe);
+    SendMailTls.sendMail1("testscanexam@gmail.com", "azerty35!", "Arthur Lalande-Marchand", SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe, "test2_pfo");
   }
   
   /**

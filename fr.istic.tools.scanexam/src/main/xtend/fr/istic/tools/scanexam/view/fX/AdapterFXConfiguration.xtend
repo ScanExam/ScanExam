@@ -8,12 +8,18 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
 import javafx.stage.Stage
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration
+import javafx.collections.FXCollections
+import fr.istic.tools.scanexam.config.LanguageManager
+import javafx.fxml.Initializable
+import java.net.URL
+import java.util.ResourceBundle
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX
  * @author Julien Cochet
  */
-class AdapterFXConfiguration {
+
+class AdapterFXConfiguration implements Initializable {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -57,19 +63,25 @@ class AdapterFXConfiguration {
 	/**
 	 * Constructeur. Initialise les différents champs avec la valeur actuelle de la configuration
 	 */
-	new() {
+	
+	
+	override initialize(URL location, ResourceBundle resources) 
+	{
 		presConfig = new PresenterConfiguration
-		/*
-		cmbBxLanguage.value = ctrlConfig.config.language
-		txtFldEmail.text = ctrlConfig.config.email
-		pwdFldEmailPassword.text = ctrlConfig.config.emailPassword
-		txtFldEmailHost.text = ctrlConfig.config.mailHost
-		txtFldEmailPort.text = ctrlConfig.config.mailPort
-		*/
+		
+		cmbBxLanguage.value = LanguageManager.currentLanguage
+		txtFldEmail.text = presConfig.email
+		pwdFldEmailPassword.text = presConfig.emailPassword
+		txtFldEmailHost.text = presConfig.mailHost
+		txtFldEmailPort.text = presConfig.mailPort
+		
+		cmbBxLanguage.items = FXCollections.observableArrayList(presConfig.languages)
 	}
 	
+	
 	@FXML
-	def void saveAndQuit() {
+	def void saveAndQuit() 
+	{
 		presConfig.updateConfig(cmbBxLanguage.value, txtFldEmail.text, pwdFldEmailPassword.text, txtFldEmailHost.text, txtFldEmailPort.text)
 		quit
 	}
@@ -89,5 +101,6 @@ class AdapterFXConfiguration {
 	def void setPresenterConfiguration(PresenterConfiguration presConfig) {
 		this.presConfig = presConfig
 	}
+	
 	
 }

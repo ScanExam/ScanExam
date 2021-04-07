@@ -8,5 +8,5 @@ class Config
 	String email
 	String emailPassword
 	String mailHost
-	String mailPort
+	int mailPort
 }

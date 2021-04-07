@@ -120,12 +120,12 @@ public interface Config extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Mail Port</em>' attribute.
-	 * @see #setMailPort(String)
+	 * @see #setMailPort(int)
 	 * @see fr.istic.tools.scanexam.core.config.ConfigPackage#getConfig_MailPort()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getMailPort();
+	int getMailPort();
 
 	/**
 	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.config.Config#getMailPort <em>Mail Port</em>}' attribute.
@@ -135,6 +135,6 @@ public interface Config extends EObject {
 	 * @see #getMailPort()
 	 * @generated
 	 */
-	void setMailPort(String value);
+	void setMailPort(int value);
 
 } // Config

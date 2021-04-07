@@ -120,7 +120,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String MAIL_PORT_EDEFAULT = null;
+	protected static final int MAIL_PORT_EDEFAULT = 0;
 
 	/**
 	 * The cached value of the '{@link #getMailPort() <em>Mail Port</em>}' attribute.
@@ -130,7 +130,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * @generated
 	 * @ordered
 	 */
-	protected String mailPort = MAIL_PORT_EDEFAULT;
+	protected int mailPort = MAIL_PORT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -240,7 +240,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getMailPort() {
+	public int getMailPort() {
 		return mailPort;
 	}
 
@@ -249,8 +249,8 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setMailPort(String newMailPort) {
-		String oldMailPort = mailPort;
+	public void setMailPort(int newMailPort) {
+		int oldMailPort = mailPort;
 		mailPort = newMailPort;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ConfigPackage.CONFIG__MAIL_PORT, oldMailPort, mailPort));
@@ -299,7 +299,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 				setMailHost((String)newValue);
 				return;
 			case ConfigPackage.CONFIG__MAIL_PORT:
-				setMailPort((String)newValue);
+				setMailPort((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -349,7 +349,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 			case ConfigPackage.CONFIG__MAIL_HOST:
 				return MAIL_HOST_EDEFAULT == null ? mailHost != null : !MAIL_HOST_EDEFAULT.equals(mailHost);
 			case ConfigPackage.CONFIG__MAIL_PORT:
-				return MAIL_PORT_EDEFAULT == null ? mailPort != null : !MAIL_PORT_EDEFAULT.equals(mailPort);
+				return mailPort != MAIL_PORT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

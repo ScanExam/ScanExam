@@ -1,8 +1,13 @@
 package fr.istic.tools.scanexam.view.fX;
 
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
+import java.net.URL;
 import java.util.Locale;
+import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -15,7 +20,7 @@ import javafx.stage.Window;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class AdapterFXConfiguration {
+public class AdapterFXConfiguration implements Initializable {
   /**
    * Controlleur de la configuration
    */
@@ -60,9 +65,16 @@ public class AdapterFXConfiguration {
   /**
    * Constructeur. Initialise les différents champs avec la valeur actuelle de la configuration
    */
-  public AdapterFXConfiguration() {
+  @Override
+  public void initialize(final URL location, final ResourceBundle resources) {
     PresenterConfiguration _presenterConfiguration = new PresenterConfiguration();
     this.presConfig = _presenterConfiguration;
+    this.cmbBxLanguage.setValue(LanguageManager.getCurrentLanguage());
+    this.txtFldEmail.setText(this.presConfig.getEmail());
+    this.pwdFldEmailPassword.setText(this.presConfig.getEmailPassword());
+    this.txtFldEmailHost.setText(this.presConfig.getMailHost());
+    this.txtFldEmailPort.setText(this.presConfig.getMailPort());
+    this.cmbBxLanguage.setItems(FXCollections.<Locale>observableArrayList(this.presConfig.getLanguages()));
   }
   
   @FXML

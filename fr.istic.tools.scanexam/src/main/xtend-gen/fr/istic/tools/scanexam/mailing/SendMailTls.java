@@ -54,10 +54,14 @@ public class SendMailTls {
   }
   
   public static void save(final File files) {
+    SendMailTls.save1(files, SendMailTls.service.getExamName());
+  }
+  
+  private static void save1(final File files, final String nom) {
     try {
       String chemin = files.getAbsolutePath();
-      String nom = ("nomExam" + ".txt");
-      PrintWriter writer = new PrintWriter(nom, "UTF-8");
+      String nom1 = (nom + ".txt");
+      PrintWriter writer = new PrintWriter(nom1, "UTF-8");
       writer.println(chemin);
       writer.close();
     } catch (Throwable _e) {
@@ -66,6 +70,10 @@ public class SendMailTls {
   }
   
   public static String sendMail(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe) {
+    return SendMailTls.sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, SendMailTls.service.getExamName());
+  }
+  
+  public static String sendMail1(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe, final String nameExam) {
     try {
       String _xblockexpression = null;
       {
@@ -99,7 +107,7 @@ public class SendMailTls {
         String nom = null;
         String mail = "";
         try {
-          File cheminInfo = new File("nomExam.txt");
+          File cheminInfo = new File((nameExam + ".txt"));
           FileReader fx = new FileReader(cheminInfo);
           BufferedReader f = new BufferedReader(fx);
           String _readLine = f.readLine();
@@ -120,8 +128,9 @@ public class SendMailTls {
               nom = cell.getStringCellValue();
               trouve = true;
             } else {
-              boolean equals = com.google.common.base.Objects.equal(cell, recipient);
-              if (equals) {
+              String _stringCellValue = cell.getStringCellValue();
+              boolean _equals = com.google.common.base.Objects.equal(_stringCellValue, recipient);
+              if (_equals) {
                 nom = recipient;
                 cell = row.getCell(1);
                 mail = cell.getStringCellValue();
