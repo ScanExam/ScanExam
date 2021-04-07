@@ -53,15 +53,22 @@ class SendMailTls {
 	}
  	
  	def static save(File files){
-		var String chemin = files.absolutePath
-		var String nom = "nomExam" + ".txt" 		
-		//var String nom1 = service.examName + ".txt"
-		var PrintWriter writer = new PrintWriter(nom,'UTF-8');
+ 		save1(files,service.examName)
+ 	}
+ 	
+ 	private def static save1(File files, String nom){
+		var String chemin = files.absolutePath	
+		var String nom1 = nom + ".txt"
+		var PrintWriter writer = new PrintWriter(nom1,'UTF-8');
 		writer.println(chemin)
 		writer.close()
  	}
+ 	
+ 	def static sendMail(String sender, String senderPassword, String recipient, String titleMail, String messageMail, String pieceJointe){
+ 		sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe,service.examName)
+ 	}
  
-	def static sendMail(String sender, String senderPassword, String recipient, String titleMail, String messageMail, String pieceJointe) {
+	def static sendMail1(String sender, String senderPassword, String recipient, String titleMail, String messageMail, String pieceJointe,String nameExam) {
 		
 		//Verification des parametres
 		Objects.requireNonNull(sender, "Erreur : L'expediteur donner doit etre non Null");
@@ -78,8 +85,7 @@ class SendMailTls {
 	    
 	    props.load(file)
 	    file.close()
-	    
-	    
+	    	    
 	    //Verification de la validiter d'une adresse
 	    if(!sender.contains('@')){
 	    	throw new Exception("L'expediteur n'a pas une adresse mail valide");}
@@ -110,8 +116,8 @@ class SendMailTls {
 	    
 	    try{
 	    //Lecture fichier liant une copie à un élève
-	    //var File cheminInfo = new File(service.examName + ".txt")
-	    var File cheminInfo = new File("nomExam.txt")
+	    var File cheminInfo = new File(nameExam + ".txt")
+	    //var File cheminInfo = new File("nomExam.txt")
 	    var FileReader fx = new FileReader(cheminInfo)
 	    var BufferedReader f = new BufferedReader(fx)
 	    var File informationMail = new File(f.readLine + ".xls")
@@ -123,12 +129,11 @@ class SendMailTls {
         var HSSFSheet sheet = wb.getSheetAt(0)
         
         //Lecture d'une cellule
-        var int x = 0        
+        var int x = 0    
         var HSSFRow row = sheet.getRow(x)
         var HSSFCell cell = row.getCell(0)
         
         var boolean trouve = false
-        
         //Parcourt notre tableau
         while (((cell.getStringCellValue() != "") && (!trouve))) {
           //Si recipient est de la forme n° d'anonymat
@@ -141,8 +146,7 @@ class SendMailTls {
           } 
           else {
           	//Si recipient est de la forme nom
-            var boolean equals = com.google.common.base.Objects.equal(cell, recipient)
-            if (equals) {
+            if (cell.stringCellValue == recipient) {
               nom = recipient;
               cell = row.getCell(1);
               mail = cell.getStringCellValue();
@@ -210,7 +214,7 @@ class SendMailTls {
 	    	
 	    	// Envoie du mail
 	    	Transport.send(message)
-	    	Logger.getGlobal.info("Message envoyé !")
+	    	Logger.getGlobal.info("Message envoyé !")	    	
 	    	
 	    } catch(MessagingException e) {
 	    	e.printStackTrace

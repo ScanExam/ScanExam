@@ -1,5 +1,9 @@
 package fr.istic.tools.scanexam.mailing
 
+import java.io.File
+import java.util.Collection
+import fr.istic.tools.scanexam.core.StudentSheet
+
 /**
  * Interface pour l'envoie des notes par mail
  * @author Degas
@@ -12,9 +16,9 @@ interface GradesExportMail {
 	 */
 	/**
 	 * Méthode permettant d'envoyer les notes par mail
-	 * @param user Adresse mail de l'utilisateur
-	 * @param password mot de passe de l'adresse mail
-	 * @param path chemin d'accés au fichier XMI permettant de faire la correspondance nom de l'élève -> Adresse mail
+	 * @param path chemin d'accès au fichier XMI permettant de faire la correspondance nom de l'élève -> Adresse mail
 	 */
-	def void exportGradesMail(String user, String password, String path)
+	def void exportGradesMail(File pdf)
+	
+	def void exportGradesMail1(File pdf, String mail, String mdp, int taille,String nameExam, Collection<StudentSheet> studentSheetss)
 }
