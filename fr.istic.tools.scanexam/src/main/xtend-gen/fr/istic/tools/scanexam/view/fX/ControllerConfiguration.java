@@ -30,7 +30,7 @@ public class ControllerConfiguration {
    * @param emailHost Nouvel hébergeur de l'email
    * @param emailPort Nouveau port de l'email
    */
-  public void updateConfig(final Locale language, final String email, final String emailPassword, final String emailHost, final String emailPort) {
+  public void updateConfig(final Locale language, final String email, final String emailPassword, final String emailHost, final int emailPort) {
     this.config.setLanguage(language);
     this.config.setEmail(email);
     this.config.setEmailPassword(emailPassword);

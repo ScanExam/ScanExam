@@ -1,61 +1,46 @@
 package fr.istic.tools.scanexam.mailing;
 
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.core.config.Config;
 import fr.istic.tools.scanexam.mailing.GradesExportMail;
 import fr.istic.tools.scanexam.mailing.SendMailXtend;
 import fr.istic.tools.scanexam.services.ExamGraduationService;
-import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.LinkedHashMap;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import java.io.File;
+import java.util.Collection;
+import java.util.logging.Logger;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 @SuppressWarnings("all")
 public class GradesExportMailImpl implements GradesExportMail {
-  private ExamGraduationService service;
+  private static ExamGraduationService service;
   
   public GradesExportMailImpl(final ExamGraduationService serv) {
-    this.service = serv;
+    GradesExportMailImpl.service = serv;
+  }
+  
+  private static Config instance;
+  
+  @Override
+  public void exportGradesMail(final File pdf) {
+    this.exportGradesMail1(pdf, GradesExportMailImpl.instance.getEmail(), GradesExportMailImpl.instance.getEmailPassword(), GradesExportMailImpl.service.getStudentSheets().size(), GradesExportMailImpl.service.getExamName(), GradesExportMailImpl.service.getStudentSheets());
   }
   
   @Override
-  public void exportGradesMail(final String user, final String password, final String path) {
-    try {
-      final SendMailXtend mailSender = new SendMailXtend();
-      mailSender.setSender(user);
-      mailSender.setSenderPassword(password);
-      final LinkedHashMap<String, String> myMap = CollectionLiterals.<String, String>newLinkedHashMap();
-      final InputStream file = ResourcesUtils.getInputStreamResource("mailing/mailMap.csv");
-      InputStreamReader _inputStreamReader = new InputStreamReader(file);
-      final BufferedReader reader = new BufferedReader(_inputStreamReader);
-      while (reader.ready()) {
-        {
-          final String line = reader.readLine();
-          myMap.put(line.split(",")[0], line.split(",")[1]);
-        }
+  public void exportGradesMail1(final File pdf, final String mail, final String mdp, final int taille, final String nameExam, final Collection<StudentSheet> studentSheetss) {
+    final SendMailXtend mailSender = new SendMailXtend();
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, taille, true);
+    for (final Integer i : _doubleDotLessThan) {
+      {
+        mailSender.setRecipent((((StudentSheet[])Conversions.unwrapArray(studentSheetss, StudentSheet.class))[(i).intValue()]).getStudentName());
+        mailSender.setTitle(nameExam);
+        mailSender.setMessage("Note :");
+        File _absoluteFile = pdf.getAbsoluteFile();
+        String _plus = (_absoluteFile + ".pdf");
+        mailSender.setPieceJointe(_plus);
+        mailSender.sendMailXtend();
       }
-      reader.close();
-      int _size = this.service.getStudentSheets().size();
-      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
-      for (final Integer i : _doubleDotLessThan) {
-        {
-          final String name = (((StudentSheet[])Conversions.unwrapArray(this.service.getStudentSheets(), StudentSheet.class))[(i).intValue()]).getStudentName();
-          final String adresse = myMap.get(name);
-          mailSender.setRecipent(adresse);
-          mailSender.setTitle("Controle");
-          float _computeGrade = (((StudentSheet[])Conversions.unwrapArray(this.service.getStudentSheets(), StudentSheet.class))[(i).intValue()]).computeGrade();
-          String _plus = ("Note :" + Float.valueOf(_computeGrade));
-          mailSender.setMessage(_plus);
-          mailSender.setPieceJointe("");
-          mailSender.sendMailXtend();
-        }
-      }
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
     }
+    Logger.getGlobal().info("Les mails ont été envoyés");
   }
 }

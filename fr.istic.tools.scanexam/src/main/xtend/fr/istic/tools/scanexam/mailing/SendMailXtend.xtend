@@ -11,7 +11,7 @@ class SendMailXtend  {
 	var static sender = ""
 		
 	//mot de passe de l'expediteur
-	var static senderPassword= ""
+	var static senderPassword = ""
 		
 	//Numero anonymat ou nom présent sur la copie
 	var static recipient = ""
@@ -26,11 +26,12 @@ class SendMailXtend  {
 	var static pieceJointe = ""
 
 	
-	def static void main(String[] arg){		
+	def static void main(String[] arg){
 		//Sauvegarde du fichier contenant les informations sur les mails		
 		//SendMailTls.save(fichier)
 		//Envoie du mail
-		SendMailTls.sendMail(sender, senderPassword , recipient, titleMail, messageMail, pieceJointe)
+		
+		SendMailTls.sendMail1("testscanexam@gmail.com", "azerty35!" , "Arthur Lalande-Marchand", titleMail, messageMail, pieceJointe,"test2_pfo")
 	}
 	
 	/**

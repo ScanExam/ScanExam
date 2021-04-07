@@ -29,7 +29,7 @@ public abstract class Service {
   /**
    * Index de la page courante du modèle d'exam
    */
-  private int pdfPageIndex;
+  protected int pdfPageIndex;
   
   /**
    * Index de la page courante du modèle d'exam

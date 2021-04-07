@@ -1,14 +1,16 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.core.config.Config
 import java.util.Locale
+import java.util.Collection
+import fr.istic.tools.scanexam.config.LanguageManager
 
 /**
  * Classe pour gérer la fenêtre de configuration
  * @author Julien Cochet
  */
-class ControllerConfiguration {
+class PresenterConfiguration {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -45,7 +47,34 @@ class ControllerConfiguration {
 		config.email = email
 		config.emailPassword = emailPassword
 		config.mailHost = emailHost
-		config.mailPort = emailPort
+		config.mailPort = Integer.parseInt(emailPort); // FIXME verify emailPort is integer
+		
+		ConfigurationManager.save();
+	}
+	
+	def Locale getLanguage()
+	{
+		config.language
+	}
+	def String getEmail()
+	{
+		config.email
+	}
+	def String getEmailPassword()
+	{
+		config.emailPassword
+	}
+	def String getMailHost()
+	{
+		config.mailHost
+	}
+	def String getMailPort()
+	{
+		config.mailPort.toString();
+	}
+	def Collection<Locale> getLanguages()
+	{
+		LanguageManager.supportedLocales
 	}
 	
 	// ----------------------------------------------------------------------------------------------------

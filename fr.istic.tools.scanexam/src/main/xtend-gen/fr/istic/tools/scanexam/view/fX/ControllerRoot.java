@@ -13,7 +13,6 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Tab;
 import javafx.stage.Stage;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class ControllerRoot {
@@ -72,6 +71,22 @@ public class ControllerRoot {
   }
   
   @FXML
+  public void loadStudentList() {
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"));
+      final Stage dialog = new Stage();
+      dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"));
+      Scene _scene = new Scene(view, 384, 160);
+      dialog.setScene(_scene);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @FXML
   public void updateConfig() {
     try {
       final FXMLLoader loader = new FXMLLoader();
@@ -88,8 +103,19 @@ public class ControllerRoot {
   }
   
   @FXML
-  public String sendMail() {
-    return InputOutput.<String>println("sending mail");
+  public void sendMail() {
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
+      final Stage dialog = new Stage();
+      dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
+      Scene _scene = new Scene(view, 672, 416);
+      dialog.setScene(_scene);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @FXML

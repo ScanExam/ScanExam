@@ -25,14 +25,14 @@ public class QuestionListEditor extends VBox {
     return this.controller;
   }
   
-  public Object loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
+  public boolean loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
     boolean _xblockexpression = false;
     {
       QuestionItemEditor item = new QuestionItemEditor(this, box, name, page, id);
       item.setScale(questionWorth);
       _xblockexpression = this.add(item);
     }
-    return Boolean.valueOf(_xblockexpression);
+    return _xblockexpression;
   }
   
   /**

@@ -57,7 +57,7 @@ public class ExamEditionService extends Service {
     _zone_2.setWidth(width);
     QuestionZone _zone_3 = question.getZone();
     _zone_3.setHeigth(heigth);
-    this.getCurrentPage().getQuestions().add(question);
+    ExamSingleton.getPage(this.pdfPageIndex).getQuestions().add(question);
     return this.questionId++;
   }
   
