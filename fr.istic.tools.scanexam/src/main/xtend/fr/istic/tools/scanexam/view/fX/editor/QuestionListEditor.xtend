@@ -138,6 +138,5 @@ class QuestionListEditor extends VBox {
 	
 	
 	
-	
 
 }
