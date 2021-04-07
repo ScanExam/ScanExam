@@ -19,6 +19,8 @@ import fr.istic.tools.scanexam.utils.ResourcesUtils
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.input.MouseButton
+import fr.istic.tools.scanexam.view.fX.editor.HTMLView
+import javafx.stage.StageStyle
 
 class Grader extends VBox {
 
@@ -229,6 +231,9 @@ class Grader extends VBox {
 		def setItemId(int id){
 			this.id = id;
 		}
+		/**
+		 * Change le text modifié par le HTML Editor
+		 */
 		def setText(String text){
 			this.text.text = text
 			this.textArea.text = text
@@ -282,7 +287,6 @@ class Grader extends VBox {
 				
 			}
 			remove.onAction = new EventHandler<ActionEvent>(){
-				
 				override handle(ActionEvent event) {
 					grader.removeGradeEntry(me)
 				}
@@ -291,10 +295,13 @@ class Grader extends VBox {
 			/* Quand on clique sur un texte du barême */
 			text.onMouseClicked = new EventHandler<MouseEvent>() {
 				override handle(MouseEvent event) {
-					if(event.getButton().equals(MouseButton.PRIMARY)){
-			            if(event.getClickCount() == 2){
-			                renderHTMLView			            }
-			        }
+					if (!HTMLView.isHTMLEditorOpen) {
+						if(event.getButton().equals(MouseButton.PRIMARY)){
+				            if(event.getClickCount() == 2) {
+				                renderHTMLView			            
+				            }
+				        }
+					}
 				}
 				
 			}
@@ -303,7 +310,9 @@ class Grader extends VBox {
 		 * Render the HTML editor
 		 */
 		def renderHTMLView()  {
+			HTMLView.isHTMLEditorOpen = true
 			var stage = new Stage();
+			stage.initStyle(StageStyle.DECORATED);
 	        stage.setTitle("Editeur HTML");
 			//layout = ClassLoader.getSystemResource("resources_utils/HTML.fxml");
 			var inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.fxml")
@@ -312,7 +321,8 @@ class Grader extends VBox {
 	        var scene = new Scene(root, 640, 480);
 	        stage.setScene(scene);
 	        stage.show();
-	}
+	        stage.setOnHiding(event | HTMLView.isHTMLEditorOpen = false )
+		}
 		
 	}
 	
