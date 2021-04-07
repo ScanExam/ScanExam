@@ -19,31 +19,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>3.11.1</version>
-			<scope>test</scope>
+    		<groupId>org.testfx</groupId>
+    		<artifactId>testfx-junit</artifactId>
+    		<version>4.0.15-alpha</version>
+    		<scope>test</scope>
 		</dependency>
-
-		<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    <version>2.0.0-alpha1</version>
-</dependency>
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-simple</artifactId>
-    <version>2.0.0-alpha1</version>
-</dependency>
-		
 		
 		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-swing-junit</artifactId>
-			<version>3.9.2</version>
-			<scope>test</scope>
+    		<groupId>org.testfx</groupId>
+    		<artifactId>testfx-core</artifactId>
+    		<version>4.0.16-alpha</version>
+    		<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -105,6 +93,17 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-api</artifactId>
+    		<version>2.0.0-alpha1</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.slf4j</groupId>
+    		<artifactId>slf4j-simple</artifactId>
+    		<version>2.0.0-alpha1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.sun.mail</groupId>
@@ -124,7 +123,6 @@
 			<version>3.4.0</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.eclipse.xtend</groupId>
 			<artifactId>org.eclipse.xtend.lib</artifactId>
@@ -142,7 +140,13 @@
 			<artifactId>javafx-web</artifactId>
 			<version>11</version>
 		</dependency>
-				
+		
+		<dependency>
+    		<groupId>org.mockito</groupId>
+    		<artifactId>mockito-all</artifactId>
+    		<version>1.9.5</version>
+    		<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
