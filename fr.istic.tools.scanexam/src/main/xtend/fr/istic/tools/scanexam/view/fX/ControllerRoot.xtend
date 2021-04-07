@@ -62,6 +62,17 @@ class ControllerRoot {
 	}
 	
 	@FXML
+	def loadStudentList() { 
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
+		dialog.setScene(new Scene(view, 384, 160))
+		dialog.show
+	}
+	
+	@FXML
 	def updateConfig() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)

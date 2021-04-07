@@ -234,6 +234,7 @@ public class QuestionOptionsEditor extends VBox {
       @Override
       public void handle(final ActionEvent event) {
         QuestionOptionsEditor.this.controller.getQuestionList().remove(QuestionOptionsEditor.this.currentItem);
+        QuestionOptionsEditor.this.controller.getMainPane().removeZone(QuestionOptionsEditor.this.currentItem.getZone());
         QuestionOptionsEditor.this.controller.selectQuestion(null);
       }
     });

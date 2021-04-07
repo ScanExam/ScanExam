@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.core.config.Config;
@@ -9,7 +9,7 @@ import java.util.Locale;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class ControllerConfiguration {
+public class PresenterConfiguration {
   /**
    * Configuration de l'application
    */
@@ -18,7 +18,7 @@ public class ControllerConfiguration {
   /**
    * Constructeur
    */
-  public ControllerConfiguration() {
+  public PresenterConfiguration() {
     this.config = ConfigurationManager.instance;
   }
   

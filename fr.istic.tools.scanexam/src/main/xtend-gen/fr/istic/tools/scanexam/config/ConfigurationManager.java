@@ -59,7 +59,6 @@ public class ConfigurationManager {
       ConfigurationManager.logger.info("Configuration created.");
       ConfigurationManager.save();
     }
-    System.out.println(ConfigurationManager.instance.getLanguage());
   }
   
   /**

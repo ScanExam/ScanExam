@@ -9,7 +9,6 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
-import java.util.logging.Level
 import java.util.Optional
 import java.util.Locale
 import org.apache.logging.log4j.LogManager
@@ -62,8 +61,6 @@ class ConfigurationManager
 			logger.info("Configuration created.");
 			save();
 		}
-		
-		System.out.println(instance.getLanguage());
 	}
 	/**
 	 * Genère la configuration par defaut.
