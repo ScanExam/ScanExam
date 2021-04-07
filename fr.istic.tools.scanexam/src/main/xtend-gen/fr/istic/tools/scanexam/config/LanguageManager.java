@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -26,7 +25,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * @see Locale
  * @see ResourceBundle
  */
-@SuppressWarnings("all")
 public class LanguageManager {
   private static final Logger logger = LogManager.getLogger();
   
@@ -89,12 +87,14 @@ public class LanguageManager {
         int _minus = (_length_1 - _length_2);
         int _minus_1 = (_minus - 1);
         final String[] langCode = name.substring(_plus, _minus_1).split("_");
-        final String lang = IterableExtensions.<String>head(((Iterable<String>)Conversions.doWrapArray(langCode)));
+        final String lang = langCode[0];
         String _xifexpression_1 = null;
         int _length_3 = langCode.length;
         boolean _greaterThan = (_length_3 > 1);
         if (_greaterThan) {
-          _xifexpression_1 = IterableExtensions.<String>last(((Iterable<String>)Conversions.doWrapArray(langCode)));
+          int _length_4 = langCode.length;
+          int _minus_2 = (_length_4 - 1);
+          _xifexpression_1 = langCode[_minus_2];
         } else {
           _xifexpression_1 = "";
         }

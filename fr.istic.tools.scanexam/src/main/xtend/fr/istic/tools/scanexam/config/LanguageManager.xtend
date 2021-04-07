@@ -71,8 +71,8 @@ class LanguageManager {
 		for(String name: names) {
 			if(name.matches(namePattern)) {
 				val langCode = name.substring(prefixFileName.length + 1, name.length - extFileName.length - 1).split("_")
-				val lang = langCode.head
-				val country = langCode.length > 1 ? langCode.last : ""
+				val lang = langCode.get(0)
+				val country = langCode.length > 1 ? langCode.get(langCode.length - 1) : ""
 				locales.add(new Locale(lang, country))
 			} else if(!name.matches(prefixFileName + "\\." + extFileName))
 				badFileNames.add(name)
