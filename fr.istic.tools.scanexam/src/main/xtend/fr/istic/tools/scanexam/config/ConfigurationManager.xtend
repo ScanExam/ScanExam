@@ -62,8 +62,6 @@ class ConfigurationManager
 			logger.info("Configuration created.");
 			save();
 		}
-		
-		System.out.println(instance.getLanguage());
 	}
 	/**
 	 * Genère la configuration par defaut.

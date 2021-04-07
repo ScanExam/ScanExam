@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.presenter.EditorPresenter;
 import fr.istic.tools.scanexam.services.ExamEditionService;
@@ -193,7 +194,11 @@ public class PresenterQuestionZone {
         int _id = q.getId();
         boolean _equals = (_id == id);
         if (_equals) {
-          result = q.getGradeScale().getMaxPoint();
+          GradeScale _gradeScale = q.getGradeScale();
+          boolean _tripleNotEquals = (_gradeScale != null);
+          if (_tripleNotEquals) {
+            result = q.getGradeScale().getMaxPoint();
+          }
         }
       }
       _xblockexpression = result;
