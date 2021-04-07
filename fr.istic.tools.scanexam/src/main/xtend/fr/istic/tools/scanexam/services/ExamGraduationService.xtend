@@ -288,7 +288,6 @@ class ExamGraduationService extends Service
 	{
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry | entry.id == gradeEntryId]
 		
-		
 		if(valideGradeEntry(questionId,gradeEntry))
 		{
 			val sheet = studentSheets.get(currentSheetIndex);
@@ -340,7 +339,9 @@ class ExamGraduationService extends Service
 	 * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
 	 */
 	def List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(int questionId) {
-		getQuestion(questionId).gradeScale.steps.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
+		if (getQuestion(questionId).gradeScale !== null)//TODO F
+			return getQuestion(questionId).gradeScale.steps.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
+		return List.of
 	}
 	
 	/**

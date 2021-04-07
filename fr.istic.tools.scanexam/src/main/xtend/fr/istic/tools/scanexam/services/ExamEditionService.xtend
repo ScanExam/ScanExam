@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.services
 
-import fr.istic.tools.scanexam.api.DataFactory
 import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory
