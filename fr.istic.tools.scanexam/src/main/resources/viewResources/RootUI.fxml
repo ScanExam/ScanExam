@@ -28,7 +28,7 @@
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadTemplate" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.loadStudentCopies" />
-						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.loadStudentList" />
+						<MenuItem mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.save" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
 					</items>

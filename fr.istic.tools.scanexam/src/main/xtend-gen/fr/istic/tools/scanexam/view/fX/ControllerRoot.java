@@ -72,6 +72,22 @@ public class ControllerRoot {
   }
   
   @FXML
+  public void loadStudentList() {
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"));
+      final Stage dialog = new Stage();
+      dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"));
+      Scene _scene = new Scene(view, 384, 160);
+      dialog.setScene(_scene);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @FXML
   public void updateConfig() {
     try {
       final FXMLLoader loader = new FXMLLoader();
