@@ -152,7 +152,8 @@ class PresenterQuestionZone {
 		var result = 0f;
 		for (Question q : questions) {
 			if (q.id == id) {
-				result = q.gradeScale.maxPoint
+				if (q.gradeScale !== null)
+					result = q.gradeScale.maxPoint
 			}
 		}
 		result
