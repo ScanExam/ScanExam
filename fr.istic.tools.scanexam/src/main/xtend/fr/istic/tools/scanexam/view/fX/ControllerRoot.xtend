@@ -90,7 +90,7 @@ class ControllerRoot {
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
-		dialog.setScene(new Scene(view, 672, 360))
+		dialog.setScene(new Scene(view, 672, 416))
 		dialog.show
 	}
 	

@@ -110,7 +110,7 @@ public class ControllerRoot {
       final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
-      Scene _scene = new Scene(view, 672, 360);
+      Scene _scene = new Scene(view, 672, 416);
       dialog.setScene(_scene);
       dialog.show();
     } catch (Throwable _e) {

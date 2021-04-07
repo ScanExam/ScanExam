@@ -14,9 +14,10 @@ class PresenterSendMail {
 	
 	/**
 	 * Envoie les mails
-	 * @param text Texte du mail
+	 * @param title Titre du mail
+	 * @param content Texte du mail
 	 */
-	def sendMails(String text) {
+	def sendMails(String title, String content) {
 		
 	}
 	

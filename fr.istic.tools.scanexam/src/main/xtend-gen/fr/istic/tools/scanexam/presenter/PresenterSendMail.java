@@ -8,9 +8,10 @@ package fr.istic.tools.scanexam.presenter;
 public class PresenterSendMail {
   /**
    * Envoie les mails
-   * @param text Texte du mail
+   * @param title Titre du mail
+   * @param content Texte du mail
    */
-  public Object sendMails(final String text) {
+  public Object sendMails(final String title, final String content) {
     return null;
   }
 }

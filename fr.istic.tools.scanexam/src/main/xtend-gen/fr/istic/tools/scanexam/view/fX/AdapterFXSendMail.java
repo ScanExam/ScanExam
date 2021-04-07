@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fX;
 
 import fr.istic.tools.scanexam.presenter.PresenterSendMail;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
@@ -25,6 +26,12 @@ public class AdapterFXSendMail {
   public Pane mainPane;
   
   /**
+   * Champ de texte du titre
+   */
+  @FXML
+  public TextField txtFldTitle;
+  
+  /**
    * Champ de texte du mail
    */
   @FXML
@@ -40,7 +47,7 @@ public class AdapterFXSendMail {
   
   @FXML
   public void saveAndQuit() {
-    this.presSendMail.sendMails(this.htmlEditor.getHtmlText());
+    this.presSendMail.sendMails(this.txtFldTitle.getText(), this.htmlEditor.getHtmlText());
     this.quit();
   }
   
