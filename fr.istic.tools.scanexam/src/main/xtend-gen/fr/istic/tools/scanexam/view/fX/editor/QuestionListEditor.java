@@ -71,7 +71,6 @@ public class QuestionListEditor extends VBox {
     {
       this.removeFocus();
       this.controller.getMainPane().removeZone(item.getZone());
-      this.controller.getMainPane().getChildren().remove(item.getZone());
       _xblockexpression = this.remove(item);
     }
     return _xblockexpression;
