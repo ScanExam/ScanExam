@@ -42,7 +42,7 @@ class ExamEditionService extends Service // TODO : renommer
 		question.zone.y = y 
 		question.zone.width = width
 		question.zone.heigth = heigth
-		currentPage.questions.add(question);
+		ExamSingleton.getPage(pdfPageIndex).questions.add(question);
 		return questionId++;
 	}
 	

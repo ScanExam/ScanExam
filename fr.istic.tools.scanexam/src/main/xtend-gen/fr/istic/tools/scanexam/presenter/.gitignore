@@ -11,3 +11,5 @@
 /EditorPresenter.java
 /PresenterMarkingScheme.java
 /PresenterQRCode.java
+/PresenterConfiguration.java
+/PresenterStudentListLoader.java
