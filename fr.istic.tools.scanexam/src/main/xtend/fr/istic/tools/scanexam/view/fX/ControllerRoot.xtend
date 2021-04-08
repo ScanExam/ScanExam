@@ -12,6 +12,7 @@ import javafx.scene.Scene
 import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.Tab
 import javafx.stage.Stage
+import javafx.scene.image.Image
 
 class ControllerRoot {
 	
@@ -68,6 +69,7 @@ class ControllerRoot {
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 384, 160))
 		dialog.show
 	}
@@ -79,6 +81,7 @@ class ControllerRoot {
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 384, 280))
 		dialog.show
 	}
@@ -90,6 +93,7 @@ class ControllerRoot {
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 672, 416))
 		dialog.show
 	}

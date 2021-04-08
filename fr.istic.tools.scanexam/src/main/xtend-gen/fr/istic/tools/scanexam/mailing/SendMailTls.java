@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.mailing;
 
+import com.sun.mail.util.MailConnectException;
+import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.io.BufferedReader;
@@ -15,6 +17,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -32,12 +35,21 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * @author Thomas Guibert
  */
 @SuppressWarnings("all")
 public class SendMailTls {
+  public enum LoginResult {
+    SUCCESS,
+    
+    IDENTIFICATION_FAILED,
+    
+    HOST_NOT_FOUND;
+  }
+  
   /**
    * La fonction sendMail va chercher dans le fichier configMailFile pour trouver le port et les smtp (host) de l'adresse mail donnée puis qui ce charge d'envoier le mail
    * @param sender : Adresse mail de l'expediteur qui ne doit pas etre null
@@ -73,138 +85,212 @@ public class SendMailTls {
     return SendMailTls.sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, SendMailTls.service.getExamName());
   }
   
-  public static String sendMail1(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe, final String nameExam) {
+  /**
+   * @param email une adresse email (non nulle)
+   * @return une paire composée de l'Host et du Port SMTP pour cette adresse mail, si ceux-ci se trouvent dans le fichier mailing/configMailFile.properties
+   * @throw IllegalArgumentException si l'adresse mail n'est pas sous un format valide
+   */
+  public static Pair<String, String> getSmtpInformation(final String email) {
     try {
-      String _xblockexpression = null;
-      {
-        Objects.<String>requireNonNull(sender, "Erreur : L\'expediteur donner doit etre non Null");
-        Objects.<String>requireNonNull(senderPassword, "Erreur : Le mot de passe de l\'expediteur donner doit etre non Null");
-        Objects.<String>requireNonNull(recipient, "Erreur : Le destinataire donner doit etre non Null");
-        Objects.<String>requireNonNull(titleMail, "Erreur : Le titre du mail ne doit pas etre Null");
-        Objects.<String>requireNonNull(messageMail, "Erreur : Le message du mail ne doit pas etre Null");
-        Objects.<String>requireNonNull(pieceJointe, "Erreur : La piece Jointe du mail ne doit pas etre Null");
-        final Properties props = new Properties();
-        final InputStream file = ResourcesUtils.getInputStreamResource("mailing/configMailFile.properties");
-        props.load(file);
-        file.close();
-        boolean _contains = sender.contains("@");
-        boolean _not = (!_contains);
-        if (_not) {
-          throw new Exception("L\'expediteur n\'a pas une adresse mail valide");
+      Objects.<String>requireNonNull(email);
+      final InputStream file = ResourcesUtils.getInputStreamResource("mailing/configMailFile.properties");
+      final Properties props = new Properties();
+      props.load(file);
+      file.close();
+      boolean _checkEmailFormat = SendMailTls.checkEmailFormat(email);
+      boolean _not = (!_checkEmailFormat);
+      if (_not) {
+        throw new IllegalArgumentException("email is not in a valid format");
+      }
+      int _indexOf = email.indexOf("@");
+      int _plus = (_indexOf + 1);
+      String typeMail = email.substring(_plus, email.length());
+      final String HOST = props.getProperty((typeMail + "Host"));
+      final String PORT = props.getProperty((typeMail + "Port"));
+      return Pair.<String, String>of(HOST, PORT);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * @param name l'adresse mail du login
+   * @param password le mot de passe du login
+   * @param host l'host SMTP
+   * @param port le port SMTP
+   * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
+   */
+  public static SendMailTls.LoginResult checkLogin(final String name, final String password, final String host, final int port) {
+    Objects.<String>requireNonNull(name);
+    Objects.<String>requireNonNull(password);
+    final Properties props = new Properties();
+    Objects.<String>requireNonNull(host, "Erreur : Le type d\'adresse mail n\'est pas présent dans le fichier configuration");
+    Objects.<Integer>requireNonNull(Integer.valueOf(port), 
+      "Erreur : Le port de l\'adresse mail n\'est pas présent dans le fichier configuration");
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.localhost", "ScanExam");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", host);
+    props.put("mail.smtp.port", Integer.valueOf(port));
+    try {
+      final Session session = Session.getInstance(props, new Authenticator() {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+          return new PasswordAuthentication(name, password);
         }
-        int _indexOf = sender.indexOf("@");
-        int _plus = (_indexOf + 1);
-        String typeMail = sender.substring(_plus, sender.length());
-        final String HOST = props.getProperty((typeMail + "Host"));
-        final String PORT = props.getProperty((typeMail + "Port"));
-        Objects.<String>requireNonNull(HOST, "Erreur : Le type d\'adresse mail n\'est pas présent dans le fichier configuration");
-        Objects.<String>requireNonNull(PORT, "Erreur : Le port de l\'adresse mail n\'est pas présent dans le fichier configuration");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.localhost", "ScanExam");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", HOST);
-        props.put("mail.smtp.port", PORT);
-        String nom = null;
-        String mail = "";
-        try {
-          File cheminInfo = new File((nameExam + ".txt"));
-          FileReader fx = new FileReader(cheminInfo);
-          BufferedReader f = new BufferedReader(fx);
-          String _readLine = f.readLine();
-          String _plus_1 = (_readLine + ".xls");
-          File informationMail = new File(_plus_1);
-          POIFSFileSystem doc = new POIFSFileSystem(informationMail);
-          HSSFWorkbook wb = new HSSFWorkbook(doc);
-          HSSFSheet sheet = wb.getSheetAt(0);
-          int x = 0;
-          HSSFRow row = sheet.getRow(x);
-          HSSFCell cell = row.getCell(0);
-          boolean trouve = false;
-          while (((!com.google.common.base.Objects.equal(cell.getStringCellValue(), "")) && (!trouve))) {
-            if ((com.google.common.base.Objects.equal(cell.getStringCellValue(), recipient) && recipient.matches("[0-9]+"))) {
+      });
+      final Transport transport = session.getTransport("smtp");
+      transport.connect(host, port, name, password);
+      transport.close();
+      return SendMailTls.LoginResult.SUCCESS;
+    } catch (final Throwable _t) {
+      if (_t instanceof AuthenticationFailedException) {
+        return SendMailTls.LoginResult.IDENTIFICATION_FAILED;
+      } else if (_t instanceof MailConnectException) {
+        return SendMailTls.LoginResult.HOST_NOT_FOUND;
+      } else if (_t instanceof Exception) {
+        final Exception e_2 = (Exception)_t;
+        e_2.printStackTrace();
+        return SendMailTls.LoginResult.IDENTIFICATION_FAILED;
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+  }
+  
+  /**
+   * @param email un string
+   * @return true si <i>email</i> est une adresse email valide, false sinon
+   */
+  public static boolean checkEmailFormat(final String email) {
+    final String emailRegex = "(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+    return email.matches(emailRegex);
+  }
+  
+  public static String sendMail1(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe, final String nameExam) {
+    String _xblockexpression = null;
+    {
+      Objects.<String>requireNonNull(sender, "Erreur : L\'expediteur donner doit etre non Null");
+      Objects.<String>requireNonNull(senderPassword, "Erreur : Le mot de passe de l\'expediteur donner doit etre non Null");
+      Objects.<String>requireNonNull(recipient, "Erreur : Le destinataire donner doit etre non Null");
+      Objects.<String>requireNonNull(titleMail, "Erreur : Le titre du mail ne doit pas etre Null");
+      Objects.<String>requireNonNull(messageMail, "Erreur : Le message du mail ne doit pas etre Null");
+      Objects.<String>requireNonNull(pieceJointe, "Erreur : La piece Jointe du mail ne doit pas etre Null");
+      boolean _checkEmailFormat = SendMailTls.checkEmailFormat(sender);
+      boolean _not = (!_checkEmailFormat);
+      if (_not) {
+        throw new IllegalArgumentException("email is not in a valid format");
+      }
+      final Properties props = new Properties();
+      final String host = ConfigurationManager.instance.getMailHost();
+      final String port = ConfigurationManager.instance.getMailHost();
+      Objects.<String>requireNonNull(host, "Erreur : Le type d\'adresse mail n\'est pas présent dans le fichier configuration");
+      Objects.<String>requireNonNull(port, 
+        "Erreur : Le port de l\'adresse mail n\'est pas présent dans le fichier configuration");
+      props.put("mail.smtp.auth", "true");
+      props.put("mail.smtp.localhost", "ScanExam");
+      props.put("mail.smtp.starttls.enable", "true");
+      props.put("mail.smtp.host", host);
+      props.put("mail.smtp.port", port);
+      String nom = null;
+      String mail = "";
+      try {
+        File cheminInfo = new File((nameExam + ".txt"));
+        FileReader fx = new FileReader(cheminInfo);
+        BufferedReader f = new BufferedReader(fx);
+        String _readLine = f.readLine();
+        String _plus = (_readLine + ".xls");
+        File informationMail = new File(_plus);
+        POIFSFileSystem doc = new POIFSFileSystem(informationMail);
+        HSSFWorkbook wb = new HSSFWorkbook(doc);
+        HSSFSheet sheet = wb.getSheetAt(0);
+        int x = 0;
+        HSSFRow row = sheet.getRow(x);
+        HSSFCell cell = row.getCell(0);
+        boolean trouve = false;
+        while (((!com.google.common.base.Objects.equal(cell.getStringCellValue(), "")) && (!trouve))) {
+          if ((com.google.common.base.Objects.equal(cell.getStringCellValue(), recipient) && 
+            recipient.matches("[0-9]+"))) {
+            cell = row.getCell(1);
+            mail = cell.getStringCellValue();
+            cell = row.getCell(2);
+            nom = cell.getStringCellValue();
+            trouve = true;
+          } else {
+            String _stringCellValue = cell.getStringCellValue();
+            boolean _equals = com.google.common.base.Objects.equal(_stringCellValue, recipient);
+            if (_equals) {
+              nom = recipient;
               cell = row.getCell(1);
               mail = cell.getStringCellValue();
-              cell = row.getCell(2);
-              nom = cell.getStringCellValue();
               trouve = true;
             } else {
-              String _stringCellValue = cell.getStringCellValue();
-              boolean _equals = com.google.common.base.Objects.equal(_stringCellValue, recipient);
-              if (_equals) {
-                nom = recipient;
-                cell = row.getCell(1);
-                mail = cell.getStringCellValue();
-                trouve = true;
-              } else {
-                x++;
-                row = sheet.getRow(x);
-                cell = row.getCell(0);
-              }
+              x++;
+              row = sheet.getRow(x);
+              cell = row.getCell(0);
             }
           }
+        }
+      } catch (final Throwable _t) {
+        if (_t instanceof FileNotFoundException) {
+          final FileNotFoundException e = (FileNotFoundException)_t;
+          e.printStackTrace();
+        } else if (_t instanceof IOException) {
+          final IOException e_1 = (IOException)_t;
+          e_1.printStackTrace();
+        } else {
+          throw Exceptions.sneakyThrow(_t);
+        }
+      }
+      boolean equals = com.google.common.base.Objects.equal(mail, "");
+      String _xifexpression = null;
+      if (equals) {
+        _xifexpression = InputOutput.<String>println("Le numero d\'etudiant ou le nom ne correspond a aucune adresse mail");
+      } else {
+        final Session session = Session.getInstance(props, new Authenticator() {
+          @Override
+          protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(sender, senderPassword);
+          }
+        });
+        try {
+          final MimeMessage message = new MimeMessage(session);
+          InternetAddress _internetAddress = new InternetAddress(sender);
+          message.setFrom(_internetAddress);
+          message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mail));
+          message.setSubject(titleMail);
+          MimeBodyPart messageBodyPart = new MimeBodyPart();
+          messageBodyPart.setText((messageMail + nom));
+          MimeMultipart multipart = new MimeMultipart();
+          multipart.addBodyPart(messageBodyPart);
+          boolean _notEquals = (!com.google.common.base.Objects.equal(pieceJointe, ""));
+          if (_notEquals) {
+            MimeBodyPart _mimeBodyPart = new MimeBodyPart();
+            messageBodyPart = _mimeBodyPart;
+            FileDataSource source = new FileDataSource(pieceJointe);
+            DataHandler _dataHandler = new DataHandler(source);
+            messageBodyPart.setDataHandler(_dataHandler);
+            messageBodyPart.setFileName(pieceJointe);
+            multipart.addBodyPart(messageBodyPart);
+          }
+          message.setContent(multipart);
+          message.setHeader("X-Mailer", "ScanExam");
+          Date _date = new Date();
+          message.setSentDate(_date);
+          session.setDebug(true);
+          Transport.send(message);
+          Logger.getGlobal().info("Message envoyé !");
         } catch (final Throwable _t) {
-          if (_t instanceof FileNotFoundException) {
-            final FileNotFoundException e = (FileNotFoundException)_t;
+          if (_t instanceof MessagingException) {
+            final MessagingException e = (MessagingException)_t;
             e.printStackTrace();
-          } else if (_t instanceof IOException) {
-            final IOException e_1 = (IOException)_t;
-            e_1.printStackTrace();
           } else {
             throw Exceptions.sneakyThrow(_t);
           }
         }
-        boolean equals = com.google.common.base.Objects.equal(mail, "");
-        String _xifexpression = null;
-        if (equals) {
-          _xifexpression = InputOutput.<String>println("Le numero d\'etudiant ou le nom ne correspond a aucune adresse mail");
-        } else {
-          final Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-              return new PasswordAuthentication(sender, senderPassword);
-            }
-          });
-          try {
-            final MimeMessage message = new MimeMessage(session);
-            InternetAddress _internetAddress = new InternetAddress(sender);
-            message.setFrom(_internetAddress);
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mail));
-            message.setSubject(titleMail);
-            MimeBodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText((messageMail + nom));
-            MimeMultipart multipart = new MimeMultipart();
-            multipart.addBodyPart(messageBodyPart);
-            boolean _notEquals = (!com.google.common.base.Objects.equal(pieceJointe, ""));
-            if (_notEquals) {
-              MimeBodyPart _mimeBodyPart = new MimeBodyPart();
-              messageBodyPart = _mimeBodyPart;
-              FileDataSource source = new FileDataSource(pieceJointe);
-              DataHandler _dataHandler = new DataHandler(source);
-              messageBodyPart.setDataHandler(_dataHandler);
-              messageBodyPart.setFileName(pieceJointe);
-              multipart.addBodyPart(messageBodyPart);
-            }
-            message.setContent(multipart);
-            message.setHeader("X-Mailer", "ScanExam");
-            Date _date = new Date();
-            message.setSentDate(_date);
-            session.setDebug(true);
-            Transport.send(message);
-            Logger.getGlobal().info("Message envoyé !");
-          } catch (final Throwable _t) {
-            if (_t instanceof MessagingException) {
-              final MessagingException e = (MessagingException)_t;
-              e.printStackTrace();
-            } else {
-              throw Exceptions.sneakyThrow(_t);
-            }
-          }
-        }
-        _xblockexpression = _xifexpression;
       }
-      return _xblockexpression;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
+      _xblockexpression = _xifexpression;
     }
+    return _xblockexpression;
   }
 }

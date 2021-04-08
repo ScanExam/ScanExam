@@ -3,3 +3,4 @@
 *.xtendbin
 /foo.xmi
 .java_trace
+/config.xmi

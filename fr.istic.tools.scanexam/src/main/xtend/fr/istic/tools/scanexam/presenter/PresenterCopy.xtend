@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.presenter
 
 import java.util.Objects
-import java.util.LinkedList
 
 /**
  * CLass representing a presenter of an exam copy or subject in 

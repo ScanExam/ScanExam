@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.launcher;
 
+import com.sun.javafx.css.StyleManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
@@ -59,7 +60,8 @@ public class LauncherFX extends Application implements Launcher {
     controllerRoot.setCorrector(graduatorRoot);
     controllerRoot.setEditor(editorRoot);
     final Scene rootScene = new Scene(mainRoot, 1280, 720);
-    rootScene.getStylesheets().add("viewResources/MyStyle.css");
+    Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+    StyleManager.getInstance().addUserAgentStylesheet("viewResources/MyStyle.css");
     controllerGraduator.init();
     controllerEditor.init();
     controllerRoot.setCorrectorController(controllerGraduator);
