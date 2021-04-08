@@ -37,7 +37,6 @@ class QuestionOptionsEditor extends VBox {
 	Label questionId
 	Label page
 	Label questionScale
-	Label questionWeight
 	Label questionCoords
 	Label questionDescription // TODO replace with htlm display
 	Button remove
@@ -60,17 +59,22 @@ class QuestionOptionsEditor extends VBox {
 		var l2 = new Label(translate("question.id"))
 		var l3 = new Label(translate("question.page"))
 		var l4 = new Label(translate("question.scale"))
-		var l5 = new Label(translate("question.coefficient"))
 		var l6 = new Label(translate("question.position"))
 		var l7 = new Label(translate("question.description"))
 		grid.add(l1, 0, 0)
 		grid.add(l2, 0, 1)
 		grid.add(l3, 0, 2)
 		grid.add(l4, 0, 3)
-		grid.add(l5, 0, 4)
-		grid.add(l6, 0, 5)
-		grid.add(l7, 0, 6)
-
+		grid.add(l6, 0, 4)
+		grid.add(l7, 0, 5)
+		
+		val editIcon1 = new Label("\u270E")
+		val editIcon2 = new Label("\u270E")
+		editIcon1.styleClass.add("unicodeLabel")
+		editIcon2.styleClass.add("unicodeLabel")
+		grid.add(editIcon1,2,0)
+		grid.add(editIcon2,2,3)
+		
 		renameField = new TextField
 		scaleField = new TextField
 		formatter = new TextFormatter(new NumberStringConverter)
@@ -80,7 +84,6 @@ class QuestionOptionsEditor extends VBox {
 		questionId = new Label()
 		page = new Label();
 		questionScale = new Label();
-		questionWeight = new Label();
 		questionCoords = new Label();
 		questionDescription = new Label();
 		remove = new Button(translate("question.remove"));
@@ -89,9 +92,8 @@ class QuestionOptionsEditor extends VBox {
 		grid.add(questionId, 1, 1)
 		grid.add(page, 1, 2)
 		grid.add(questionScale, 1, 3)
-		grid.add(questionWeight, 1, 4)
-		grid.add(questionCoords, 1, 5)
-		grid.add(questionDescription, 1, 6)
+		grid.add(questionCoords, 1, 4)
+		grid.add(questionDescription, 1, 5)
 
 		children.addAll(grid, remove)
 		hideAll
@@ -117,7 +119,6 @@ class QuestionOptionsEditor extends VBox {
 		questionId.text = "" + item.questionId
 		questionScale.text = "" + item.scale
 		scaleField.text = "" + item.scale
-		questionWeight.text = "" + item.weight;
 		questionCoords.text = "X:" + item.zone.x + "\nY:" + item.zone.y + "\nH:" + item.zone.height + "\nW:" +
 			item.zone.width
 		questionDescription.text = "No description";

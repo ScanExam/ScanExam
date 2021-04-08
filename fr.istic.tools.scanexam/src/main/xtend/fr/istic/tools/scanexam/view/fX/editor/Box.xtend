@@ -115,12 +115,12 @@ class Box extends Rectangle {
 			return false
 		}
 		def checkOnCorner(){
-			
+		
 		}
 		
 		def setupEvents(){
-			var zone = this
-			zone.onMouseClicked = new EventHandler<MouseEvent> {
+			val zone = this
+			zone.onMousePressed = new EventHandler<MouseEvent> {
 			
 				override handle(MouseEvent event) {
 					var onNorth = checkOnNorthBorder(event)
@@ -128,6 +128,16 @@ class Box extends Rectangle {
 					var onEast = checkOnEastBorder(event)
 					var onWest = checkOnWestBorder(event)
 					pane.controller.selectQuestion(questionItem)
+					pane.controller.setToResizeTool()
+					pane.controller.edgeLoc = EdgeLocation.NONE
+					if (onNorth) pane.controller.edgeLoc = EdgeLocation.NORTH
+					if (onSouth) pane.controller.edgeLoc = EdgeLocation.SOUTH
+					if (onEast) pane.controller.edgeLoc = EdgeLocation.EAST
+					if (onWest) pane.controller.edgeLoc = EdgeLocation.WEST
+					if (onNorth && onEast) pane.controller.edgeLoc = EdgeLocation.NORTHEAST
+					if (onNorth && onWest) pane.controller.edgeLoc = EdgeLocation.NORTHWEST
+					if (onSouth && onEast) pane.controller.edgeLoc = EdgeLocation.SOUTHEAST
+					if (onSouth && onWest) pane.controller.edgeLoc = EdgeLocation.SOUTHWEST
 				}
 			}
 			zone.onMouseMoved = new EventHandler<MouseEvent> {
@@ -137,18 +147,15 @@ class Box extends Rectangle {
 					var onSouth = checkOnSouthBorder(event)
 					var onEast = checkOnEastBorder(event)
 					var onWest = checkOnWestBorder(event)
-					if (onNorth || onSouth) {
-						cursor = Cursor.V_RESIZE
-					}
-					if (onEast || onWest) {
-						cursor = Cursor.H_RESIZE
-					}
-					if (onSouth && onEast) {
-						cursor = Cursor.NW_RESIZE
-					}
-					if (!(onEast || onWest || onNorth || onSouth)) {
-						cursor = Cursor.DEFAULT
-					}
+					cursor = Cursor.DEFAULT
+					if (onNorth)  cursor =Cursor.V_RESIZE
+					if (onSouth)  cursor =Cursor.V_RESIZE
+					if (onEast) cursor = Cursor.H_RESIZE
+					if (onWest) cursor = Cursor.H_RESIZE
+					if (onNorth && onEast) cursor = Cursor.NE_RESIZE
+					if (onNorth && onWest) cursor = Cursor.NW_RESIZE
+					if (onSouth && onEast) cursor = Cursor.NW_RESIZE
+					if (onSouth && onWest) cursor = Cursor.NE_RESIZE
 				}
 			}
 		}

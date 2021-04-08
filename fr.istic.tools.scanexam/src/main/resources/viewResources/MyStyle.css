@@ -132,6 +132,12 @@
 	-fx-background-insets: 0px;
 }
 
+.toggle-button {
+	-fx-border-color : lightgrey;
+	-fx-border-width: 1px;
+	-fx-background-insets: 0px;
+}
+
 .check-box > .box {
 	-fx-border-color : lightgrey;
 	-fx-border-width: 1px;
@@ -141,4 +147,9 @@
 	-fx-pref-width: Infinity;
 } 
 .clickableArea {
+	
+}
+.unicodeLabel {
+	-fx-font-size: 20;
+	-fx-font-family: Arial;
 }

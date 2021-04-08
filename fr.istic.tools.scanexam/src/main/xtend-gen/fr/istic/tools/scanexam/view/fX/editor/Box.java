@@ -1,6 +1,8 @@
 package fr.istic.tools.scanexam.view.fX.editor;
 
 import fr.istic.tools.scanexam.view.fX.FXSettings;
+import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fX.editor.EdgeLocation;
 import fr.istic.tools.scanexam.view.fX.editor.PdfPane;
 import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
 import javafx.event.EventHandler;
@@ -114,8 +116,8 @@ public class Box extends Rectangle {
   }
   
   public void setupEvents() {
-    Box zone = this;
-    zone.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    final Box zone = this;
+    zone.setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(final MouseEvent event) {
         boolean onNorth = Box.this.checkOnNorthBorder(event);
@@ -123,6 +125,41 @@ public class Box extends Rectangle {
         boolean onEast = Box.this.checkOnEastBorder(event);
         boolean onWest = Box.this.checkOnWestBorder(event);
         Box.this.pane.getController().selectQuestion(Box.this.questionItem);
+        Box.this.pane.getController().setToResizeTool();
+        ControllerFXEditor _controller = Box.this.pane.getController();
+        _controller.setEdgeLoc(EdgeLocation.NONE);
+        if (onNorth) {
+          ControllerFXEditor _controller_1 = Box.this.pane.getController();
+          _controller_1.setEdgeLoc(EdgeLocation.NORTH);
+        }
+        if (onSouth) {
+          ControllerFXEditor _controller_2 = Box.this.pane.getController();
+          _controller_2.setEdgeLoc(EdgeLocation.SOUTH);
+        }
+        if (onEast) {
+          ControllerFXEditor _controller_3 = Box.this.pane.getController();
+          _controller_3.setEdgeLoc(EdgeLocation.EAST);
+        }
+        if (onWest) {
+          ControllerFXEditor _controller_4 = Box.this.pane.getController();
+          _controller_4.setEdgeLoc(EdgeLocation.WEST);
+        }
+        if ((onNorth && onEast)) {
+          ControllerFXEditor _controller_5 = Box.this.pane.getController();
+          _controller_5.setEdgeLoc(EdgeLocation.NORTHEAST);
+        }
+        if ((onNorth && onWest)) {
+          ControllerFXEditor _controller_6 = Box.this.pane.getController();
+          _controller_6.setEdgeLoc(EdgeLocation.NORTHWEST);
+        }
+        if ((onSouth && onEast)) {
+          ControllerFXEditor _controller_7 = Box.this.pane.getController();
+          _controller_7.setEdgeLoc(EdgeLocation.SOUTHEAST);
+        }
+        if ((onSouth && onWest)) {
+          ControllerFXEditor _controller_8 = Box.this.pane.getController();
+          _controller_8.setEdgeLoc(EdgeLocation.SOUTHWEST);
+        }
       }
     });
     zone.setOnMouseMoved(new EventHandler<MouseEvent>() {
@@ -132,17 +169,30 @@ public class Box extends Rectangle {
         boolean onSouth = Box.this.checkOnSouthBorder(event);
         boolean onEast = Box.this.checkOnEastBorder(event);
         boolean onWest = Box.this.checkOnWestBorder(event);
-        if ((onNorth || onSouth)) {
+        Box.this.setCursor(Cursor.DEFAULT);
+        if (onNorth) {
           Box.this.setCursor(Cursor.V_RESIZE);
         }
-        if ((onEast || onWest)) {
+        if (onSouth) {
+          Box.this.setCursor(Cursor.V_RESIZE);
+        }
+        if (onEast) {
           Box.this.setCursor(Cursor.H_RESIZE);
+        }
+        if (onWest) {
+          Box.this.setCursor(Cursor.H_RESIZE);
+        }
+        if ((onNorth && onEast)) {
+          Box.this.setCursor(Cursor.NE_RESIZE);
+        }
+        if ((onNorth && onWest)) {
+          Box.this.setCursor(Cursor.NW_RESIZE);
         }
         if ((onSouth && onEast)) {
           Box.this.setCursor(Cursor.NW_RESIZE);
         }
-        if ((!(((onEast || onWest) || onNorth) || onSouth))) {
-          Box.this.setCursor(Cursor.DEFAULT);
+        if ((onSouth && onWest)) {
+          Box.this.setCursor(Cursor.NE_RESIZE);
         }
       }
     });

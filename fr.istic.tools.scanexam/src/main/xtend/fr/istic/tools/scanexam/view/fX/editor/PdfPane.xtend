@@ -54,6 +54,7 @@ class PdfPane extends Pane {
 	def getController(){
 		controller
 	}
+	
 	//---------------------//
 	
 	//---Methods---//

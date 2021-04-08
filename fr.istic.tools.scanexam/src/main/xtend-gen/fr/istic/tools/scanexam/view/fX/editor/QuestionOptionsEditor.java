@@ -49,8 +49,6 @@ public class QuestionOptionsEditor extends VBox {
   
   private Label questionScale;
   
-  private Label questionWeight;
-  
   private Label questionCoords;
   
   private Label questionDescription;
@@ -76,19 +74,22 @@ public class QuestionOptionsEditor extends VBox {
     Label l3 = new Label(_translate_2);
     String _translate_3 = LanguageManager.translate("question.scale");
     Label l4 = new Label(_translate_3);
-    String _translate_4 = LanguageManager.translate("question.coefficient");
-    Label l5 = new Label(_translate_4);
-    String _translate_5 = LanguageManager.translate("question.position");
-    Label l6 = new Label(_translate_5);
-    String _translate_6 = LanguageManager.translate("question.description");
-    Label l7 = new Label(_translate_6);
+    String _translate_4 = LanguageManager.translate("question.position");
+    Label l6 = new Label(_translate_4);
+    String _translate_5 = LanguageManager.translate("question.description");
+    Label l7 = new Label(_translate_5);
     this.grid.add(l1, 0, 0);
     this.grid.add(l2, 0, 1);
     this.grid.add(l3, 0, 2);
     this.grid.add(l4, 0, 3);
-    this.grid.add(l5, 0, 4);
-    this.grid.add(l6, 0, 5);
-    this.grid.add(l7, 0, 6);
+    this.grid.add(l6, 0, 4);
+    this.grid.add(l7, 0, 5);
+    final Label editIcon1 = new Label("✎");
+    final Label editIcon2 = new Label("✎");
+    editIcon1.getStyleClass().add("unicodeLabel");
+    editIcon2.getStyleClass().add("unicodeLabel");
+    this.grid.add(editIcon1, 2, 0);
+    this.grid.add(editIcon2, 2, 3);
     TextField _textField = new TextField();
     this.renameField = _textField;
     TextField _textField_1 = new TextField();
@@ -106,21 +107,18 @@ public class QuestionOptionsEditor extends VBox {
     Label _label_3 = new Label();
     this.questionScale = _label_3;
     Label _label_4 = new Label();
-    this.questionWeight = _label_4;
+    this.questionCoords = _label_4;
     Label _label_5 = new Label();
-    this.questionCoords = _label_5;
-    Label _label_6 = new Label();
-    this.questionDescription = _label_6;
-    String _translate_7 = LanguageManager.translate("question.remove");
-    Button _button = new Button(_translate_7);
+    this.questionDescription = _label_5;
+    String _translate_6 = LanguageManager.translate("question.remove");
+    Button _button = new Button(_translate_6);
     this.remove = _button;
     this.grid.add(this.questionName, 1, 0);
     this.grid.add(this.questionId, 1, 1);
     this.grid.add(this.page, 1, 2);
     this.grid.add(this.questionScale, 1, 3);
-    this.grid.add(this.questionWeight, 1, 4);
-    this.grid.add(this.questionCoords, 1, 5);
-    this.grid.add(this.questionDescription, 1, 6);
+    this.grid.add(this.questionCoords, 1, 4);
+    this.grid.add(this.questionDescription, 1, 5);
     this.getChildren().addAll(this.grid, this.remove);
     this.hideAll();
     this.setupEvents();
@@ -147,21 +145,18 @@ public class QuestionOptionsEditor extends VBox {
     float _scale_1 = item.getScale();
     String _plus_3 = ("" + Float.valueOf(_scale_1));
     this.scaleField.setText(_plus_3);
-    int _weight = item.getWeight();
-    String _plus_4 = ("" + Integer.valueOf(_weight));
-    this.questionWeight.setText(_plus_4);
     double _x = item.getZone().getX();
-    String _plus_5 = ("X:" + Double.valueOf(_x));
-    String _plus_6 = (_plus_5 + "\nY:");
+    String _plus_4 = ("X:" + Double.valueOf(_x));
+    String _plus_5 = (_plus_4 + "\nY:");
     double _y = item.getZone().getY();
-    String _plus_7 = (_plus_6 + Double.valueOf(_y));
-    String _plus_8 = (_plus_7 + "\nH:");
+    String _plus_6 = (_plus_5 + Double.valueOf(_y));
+    String _plus_7 = (_plus_6 + "\nH:");
     double _height = item.getZone().getHeight();
-    String _plus_9 = (_plus_8 + Double.valueOf(_height));
-    String _plus_10 = (_plus_9 + "\nW:");
+    String _plus_8 = (_plus_7 + Double.valueOf(_height));
+    String _plus_9 = (_plus_8 + "\nW:");
     double _width = item.getZone().getWidth();
-    String _plus_11 = (_plus_10 + Double.valueOf(_width));
-    this.questionCoords.setText(_plus_11);
+    String _plus_10 = (_plus_9 + Double.valueOf(_width));
+    this.questionCoords.setText(_plus_10);
     this.questionDescription.setText("No description");
   }
   

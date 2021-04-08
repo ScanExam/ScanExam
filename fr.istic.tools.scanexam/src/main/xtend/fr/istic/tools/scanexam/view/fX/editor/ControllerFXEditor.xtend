@@ -49,12 +49,15 @@ class ControllerFXEditor {
 		QR_AREA,
 		MOVE_CAMERA_TOOL,
 		MOVE_TOOL,
-		RESIZE_TOOL
-
+		RESIZE_TOOL	
 	}
 	
 	def getSelectedTool(){
 		this.currentTool
+	}
+	
+	def setSelectedTool(SelectedTool tool){
+		currentTool = tool
 	}
 
 	// ** FXML TAGS **//	
@@ -176,6 +179,7 @@ class ControllerFXEditor {
 			questionEditor.hideAll
 			return
 		}
+		currentRectangle = item.zone
 		questionList.select(item)
 		questionEditor.select(item)
 	}
@@ -237,7 +241,10 @@ class ControllerFXEditor {
 	var objectOriginY = 0d;
 
 	Box currentRectangle = null;
-
+	EdgeLocation edge = null;
+	def setEdgeLoc(EdgeLocation edge){
+		this.edge = edge
+	}
 	/**
 	 * Called when we click and drag on the pdf with the create question too selected
 	 * will not create the question if the zone is too small
@@ -320,14 +327,60 @@ class ControllerFXEditor {
 		var mousePositionY = Math.max(FXSettings.BOX_BORDER_THICKNESS,
 			Math.min(e.y, maxY - FXSettings.BOX_BORDER_THICKNESS));
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
-			
+			mouseOriginX = mousePositionX
+			mouseOriginY = mousePositionY
+			objectOriginX = currentRectangle.width
+			objectOriginY = currentRectangle.height
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
-			currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
+			switch edge {
+				case SOUTH : {
+					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
+				}
+	
+				case EAST : {
+					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
+				}
+				case NORTH: {
+					currentRectangle.y(Math.min(mousePositionY,maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
+				}
+				case WEST: {				
+					currentRectangle.x(Math.min(mousePositionX,maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
+				}
+				case NORTHEAST: {
+					currentRectangle.y(Math.min(mousePositionY,maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
+					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
+				}
+				case NORTHWEST: {
+					currentRectangle.y(Math.min(mousePositionY,maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
+					currentRectangle.x(Math.min(mousePositionX,maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
+				}
+				case SOUTHEAST: {
+					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
+					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
+					
+				}
+				case SOUTHWEST: {
+					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
+					currentRectangle.x(Math.min(mousePositionX,maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
+				}
+				case NONE: {
+					currentRectangle.x(Math.min(mousePositionX,maxX - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+					currentRectangle.y(Math.min(mousePositionY,maxY - FXSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+				}
+			}
+			
+			
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			//resizeBox(currentRectangle)
+			setToNoTool
+			questionList.updateInModel(currentRectangle.questionItem)
 		}
 	}
 
