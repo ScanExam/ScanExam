@@ -21,7 +21,7 @@ class GraduationAdapterSwing implements AdapterGraduation {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	/*View de editor */
-	var EditorViewSwing viewEdit
+	var EditionViewSwing viewEdit
 	
 	/* Presenter de la correction d'exman */
 	var PresenterGraduation graduationPresenter
@@ -104,7 +104,7 @@ class GraduationAdapterSwing implements AdapterGraduation {
 	/**
 	 * Change la vue de l'éditeur
 	 */
-	def void setViewEditor(EditorViewSwing view){
+	def void setViewEditor(EditionViewSwing view){
 		this.viewEdit = view
 	}
 	

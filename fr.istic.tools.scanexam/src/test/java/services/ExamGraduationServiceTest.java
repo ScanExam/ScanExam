@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import com.beust.jcommander.internal.Lists;
 
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
-import fr.istic.tools.scanexam.io.TemplateIO;
+import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import fr.istic.tools.scanexam.presenter.PresenterGraduation;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
@@ -39,7 +39,7 @@ public class ExamGraduationServiceTest
 	{
 		service = new ServiceGraduation();
 		presenter = jailBreak(service);
-		Optional<CreationTemplate> editionTemplate = TemplateIO.loadCreationTemplate(XMI_PATH);
+		Optional<CreationTemplate> editionTemplate = TemplateIo.loadCreationTemplate(XMI_PATH);
 		ExamSingleton.instance = editionTemplate.get().getExam();
 	}
 	

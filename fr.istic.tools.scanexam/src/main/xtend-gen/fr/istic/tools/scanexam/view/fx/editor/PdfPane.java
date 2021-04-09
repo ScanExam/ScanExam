@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.view.fx.editor.Box;
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,7 +11,7 @@ import javafx.scene.layout.Pane;
 
 @SuppressWarnings("all")
 public class PdfPane extends Pane {
-  public PdfPane(final ControllerFXEditor controller) {
+  public PdfPane(final ControllerFxEdition controller) {
     super();
     this.controller = controller;
     ImageView _imageView = new ImageView();
@@ -27,7 +27,7 @@ public class PdfPane extends Pane {
   
   private Image currentImage;
   
-  private ControllerFXEditor controller;
+  private ControllerFxEdition controller;
   
   public Image setImage(final Image image) {
     Image _xblockexpression = null;
@@ -69,7 +69,7 @@ public class PdfPane extends Pane {
     return _xifexpression;
   }
   
-  public ControllerFXEditor getController() {
+  public ControllerFxEdition getController() {
     return this.controller;
   }
   

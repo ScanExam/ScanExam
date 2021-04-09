@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.editor
 
-import fr.istic.tools.scanexam.view.fx.FXSettings
+import fr.istic.tools.scanexam.view.fx.FxSettings
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.input.MouseEvent
@@ -11,12 +11,12 @@ class Box extends Rectangle {
 	
 		
 		//---Controller---//
-		new(QuestionItemEditor item,double x, double y , double width , double height) {
+		new(QuestionItemEdition item,double x, double y , double width , double height) {
 			super(x,y,width,height)
 			this.questionItem = item
-			this.strokeWidth = FXSettings.BOX_BORDER_THICKNESS
-			this.stroke = FXSettings.BOX_BORDER_NORMAL_COLOR
-			this.fill = FXSettings.BOX_NORMAL_COLOR
+			this.strokeWidth = FxSettings.BOX_BORDER_THICKNESS
+			this.stroke = FxSettings.BOX_BORDER_NORMAL_COLOR
+			this.fill = FxSettings.BOX_NORMAL_COLOR
 			
 		}
 		new(double x, double y , double width , double height) {
@@ -25,7 +25,7 @@ class Box extends Rectangle {
 		//----------------//
 		
 		//---FX vars---//
-		QuestionItemEditor questionItem;
+		QuestionItemEdition questionItem;
 		PdfPane pane;
 		//-------------//
 		
@@ -34,7 +34,7 @@ class Box extends Rectangle {
 			questionItem
 		}
 		
-		def setQuestionItem(QuestionItemEditor item){
+		def setQuestionItem(QuestionItemEdition item){
 			questionItem = item
 		}
 		
@@ -51,12 +51,12 @@ class Box extends Rectangle {
 		
 		def setFocus(boolean b){
 			if (b) {
-				this.stroke = FXSettings.BOX_BORDER_HIGHLIGHT_COLOR
-				this.fill = FXSettings.BOX_HIGHLIGHT_COLOR
+				this.stroke = FxSettings.BOX_BORDER_HIGHLIGHT_COLOR
+				this.fill = FxSettings.BOX_HIGHLIGHT_COLOR
 			}
 			else {
-				this.stroke = FXSettings.BOX_BORDER_NORMAL_COLOR
-				this.fill = FXSettings.BOX_NORMAL_COLOR
+				this.stroke = FxSettings.BOX_BORDER_NORMAL_COLOR
+				this.fill = FxSettings.BOX_NORMAL_COLOR
 			}
 		}
 		
@@ -81,8 +81,8 @@ class Box extends Rectangle {
 		}
 		
 		def checkOnNorthBorder(MouseEvent e){
-			if (e.x > this.x - FXSettings.ZONE_RESIZE_TOLERANCE && e.x < this.x + this.width + FXSettings.ZONE_RESIZE_TOLERANCE ) {
-				if (e.y > this.y - FXSettings.ZONE_RESIZE_TOLERANCE && e.y < this.y + FXSettings.ZONE_RESIZE_TOLERANCE) {
+			if (e.x > this.x - FxSettings.ZONE_RESIZE_TOLERANCE && e.x < this.x + this.width + FxSettings.ZONE_RESIZE_TOLERANCE ) {
+				if (e.y > this.y - FxSettings.ZONE_RESIZE_TOLERANCE && e.y < this.y + FxSettings.ZONE_RESIZE_TOLERANCE) {
 					return true
 				}
 			}
@@ -90,8 +90,8 @@ class Box extends Rectangle {
 		}
 		
 		def checkOnSouthBorder(MouseEvent e) {
-			if (e.x > this.x - FXSettings.ZONE_RESIZE_TOLERANCE && e.x < this.x + this.width + FXSettings.ZONE_RESIZE_TOLERANCE ) {
-				if (e.y > this.y - FXSettings.ZONE_RESIZE_TOLERANCE + this.height && e.y < this.y + FXSettings.ZONE_RESIZE_TOLERANCE + this.height) {
+			if (e.x > this.x - FxSettings.ZONE_RESIZE_TOLERANCE && e.x < this.x + this.width + FxSettings.ZONE_RESIZE_TOLERANCE ) {
+				if (e.y > this.y - FxSettings.ZONE_RESIZE_TOLERANCE + this.height && e.y < this.y + FxSettings.ZONE_RESIZE_TOLERANCE + this.height) {
 					return true
 				}
 			}
@@ -99,16 +99,16 @@ class Box extends Rectangle {
 		}
 		
 		def checkOnWestBorder(MouseEvent e) {
-			if (e.x > this.x - FXSettings.ZONE_RESIZE_TOLERANCE && e.x < this.x + FXSettings.ZONE_RESIZE_TOLERANCE ) {
-				if (e.y > this.y - FXSettings.ZONE_RESIZE_TOLERANCE && e.y < this.y + FXSettings.ZONE_RESIZE_TOLERANCE + this.height) {
+			if (e.x > this.x - FxSettings.ZONE_RESIZE_TOLERANCE && e.x < this.x + FxSettings.ZONE_RESIZE_TOLERANCE ) {
+				if (e.y > this.y - FxSettings.ZONE_RESIZE_TOLERANCE && e.y < this.y + FxSettings.ZONE_RESIZE_TOLERANCE + this.height) {
 					return true
 				}
 			}
 			return false
 		}
 		def checkOnEastBorder(MouseEvent e) {
-			if (e.x > this.x - FXSettings.ZONE_RESIZE_TOLERANCE + this.width && e.x < this.x + this.width + FXSettings.ZONE_RESIZE_TOLERANCE + this.width ) {
-				if (e.y > this.y - FXSettings.ZONE_RESIZE_TOLERANCE && e.y < this.y + FXSettings.ZONE_RESIZE_TOLERANCE + this.height) {
+			if (e.x > this.x - FxSettings.ZONE_RESIZE_TOLERANCE + this.width && e.x < this.x + this.width + FxSettings.ZONE_RESIZE_TOLERANCE + this.width ) {
+				if (e.y > this.y - FxSettings.ZONE_RESIZE_TOLERANCE && e.y < this.y + FxSettings.ZONE_RESIZE_TOLERANCE + this.height) {
 					return true
 				}
 			}

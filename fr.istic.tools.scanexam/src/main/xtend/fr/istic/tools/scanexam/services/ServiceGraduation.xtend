@@ -7,7 +7,7 @@ import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
-import fr.istic.tools.scanexam.io.TemplateIO
+import fr.istic.tools.scanexam.io.TemplateIo
 import fr.istic.tools.scanexam.utils.Tuple3
 import java.util.ArrayList
 import java.util.Collection
@@ -68,7 +68,7 @@ class ServiceGraduation extends Service
 	 */
 	def boolean openCorrectionTemplate(String xmiFile)
 	{
-		val correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile) 
+		val correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile) 
 		
 		if (correctionTemplate.present) 
         {
@@ -87,7 +87,7 @@ class ServiceGraduation extends Service
 	 */
 	def boolean openCreationTemplate(String xmiFile) 
 	{
-		val editionTemplate = TemplateIO.loadCreationTemplate(xmiFile) 
+		val editionTemplate = TemplateIo.loadCreationTemplate(xmiFile) 
 		
 		if (editionTemplate.present) 
         {

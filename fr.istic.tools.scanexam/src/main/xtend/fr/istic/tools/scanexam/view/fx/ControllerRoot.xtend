@@ -2,8 +2,8 @@ package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Node
@@ -11,8 +11,8 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.Tab
-import javafx.stage.Stage
 import javafx.scene.image.Image
+import javafx.stage.Stage
 
 class ControllerRoot {
 	
@@ -23,13 +23,13 @@ class ControllerRoot {
 	@FXML
 	CheckMenuItem autoZoom;
 	
-	ControllerFXCorrector corrector;
-	ControllerFXEditor editor;
+	ControllerFxGraduation corrector;
+	ControllerFxEdition editor;
 	
-	def setEditorController(ControllerFXEditor editor){
+	def setEditorController(ControllerFxEdition editor){
 		this.editor = editor;
 	}
-	def setCorrectorController(ControllerFXCorrector corrector){
+	def setCorrectorController(ControllerFxGraduation corrector){
 		this.corrector = corrector;
 	}
 	

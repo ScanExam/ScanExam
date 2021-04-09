@@ -2,8 +2,8 @@ package fr.istic.tools.scanexam.launcher;
 
 import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
-import fr.istic.tools.scanexam.view.swing.EditorAdapterSwing;
-import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
+import fr.istic.tools.scanexam.view.swing.EditionAdapterSwing;
+import fr.istic.tools.scanexam.view.swing.EditionViewSwing;
 import fr.istic.tools.scanexam.view.swing.GraduationAdapterSwing;
 import java.awt.EventQueue;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -17,7 +17,7 @@ public class LauncherSwing implements Launcher {
   /**
    * METHODES
    */
-  private static EditorAdapterSwing edit = new EditorAdapterSwing();
+  private static EditionAdapterSwing edit = new EditionAdapterSwing();
   
   private static GraduationAdapterSwing grad;
   
@@ -45,7 +45,7 @@ public class LauncherSwing implements Launcher {
     PresenterBindings.linkEditorPresenter(LauncherSwing.edit);
   }
   
-  public static void swapToGraduator(final EditorViewSwing view) {
+  public static void swapToGraduator(final EditionViewSwing view) {
     GraduationAdapterSwing _graduationAdapterSwing = new GraduationAdapterSwing();
     LauncherSwing.grad = _graduationAdapterSwing;
     LauncherSwing.grad.setViewEditor(view);

@@ -10,7 +10,7 @@ import javafx.scene.input.ScrollEvent
 class PdfPane extends Pane {
 	
 	//---Controller---//
-	new(ControllerFXEditor controller){
+	new(ControllerFxEdition controller){
 		super()
 		this.controller = controller
 		imageView = new ImageView()
@@ -25,7 +25,7 @@ class PdfPane extends Pane {
 	//---FX vars---//
 	ImageView imageView
 	Image currentImage
-	ControllerFXEditor controller
+	ControllerFxEdition controller
 	//-------------//
 	
 	//---GETTERS/SETTERS---//

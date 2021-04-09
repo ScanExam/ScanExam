@@ -10,7 +10,7 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
-import fr.istic.tools.scanexam.io.TemplateIO;
+import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
@@ -78,7 +78,7 @@ public class ServiceGraduation extends Service {
    * @returns "true" si le fichier a bien été chargé, "false"
    */
   public boolean openCorrectionTemplate(final String xmiFile) {
-    final Optional<CorrectionTemplate> correctionTemplate = TemplateIO.loadCorrectionTemplate(xmiFile);
+    final Optional<CorrectionTemplate> correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile);
     boolean _isPresent = correctionTemplate.isPresent();
     if (_isPresent) {
       this.correctionTemplate = correctionTemplate.get();
@@ -94,7 +94,7 @@ public class ServiceGraduation extends Service {
    * @returns "true" si le fichier a bien été chargé, "false"
    */
   public boolean openCreationTemplate(final String xmiFile) {
-    final Optional<CreationTemplate> editionTemplate = TemplateIO.loadCreationTemplate(xmiFile);
+    final Optional<CreationTemplate> editionTemplate = TemplateIo.loadCreationTemplate(xmiFile);
     boolean _isPresent = editionTemplate.isPresent();
     if (_isPresent) {
       this.creationTemplate = editionTemplate.get();

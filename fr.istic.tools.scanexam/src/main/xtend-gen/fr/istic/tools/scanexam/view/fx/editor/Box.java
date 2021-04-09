@@ -1,10 +1,10 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
-import fr.istic.tools.scanexam.view.fx.FXSettings;
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
 import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEditor;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -13,27 +13,27 @@ import javafx.scene.shape.Rectangle;
 
 @SuppressWarnings("all")
 public class Box extends Rectangle {
-  public Box(final QuestionItemEditor item, final double x, final double y, final double width, final double height) {
+  public Box(final QuestionItemEdition item, final double x, final double y, final double width, final double height) {
     super(x, y, width, height);
     this.questionItem = item;
-    this.setStrokeWidth(FXSettings.BOX_BORDER_THICKNESS);
-    this.setStroke(FXSettings.BOX_BORDER_NORMAL_COLOR);
-    this.setFill(FXSettings.BOX_NORMAL_COLOR);
+    this.setStrokeWidth(FxSettings.BOX_BORDER_THICKNESS);
+    this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+    this.setFill(FxSettings.BOX_NORMAL_COLOR);
   }
   
   public Box(final double x, final double y, final double width, final double height) {
     this(null, x, y, width, height);
   }
   
-  private QuestionItemEditor questionItem;
+  private QuestionItemEdition questionItem;
   
   private PdfPane pane;
   
-  public QuestionItemEditor getQuestionItem() {
+  public QuestionItemEdition getQuestionItem() {
     return this.questionItem;
   }
   
-  public QuestionItemEditor setQuestionItem(final QuestionItemEditor item) {
+  public QuestionItemEdition setQuestionItem(final QuestionItemEdition item) {
     return this.questionItem = item;
   }
   
@@ -47,11 +47,11 @@ public class Box extends Rectangle {
   
   public void setFocus(final boolean b) {
     if (b) {
-      this.setStroke(FXSettings.BOX_BORDER_HIGHLIGHT_COLOR);
-      this.setFill(FXSettings.BOX_HIGHLIGHT_COLOR);
+      this.setStroke(FxSettings.BOX_BORDER_HIGHLIGHT_COLOR);
+      this.setFill(FxSettings.BOX_HIGHLIGHT_COLOR);
     } else {
-      this.setStroke(FXSettings.BOX_BORDER_NORMAL_COLOR);
-      this.setFill(FXSettings.BOX_NORMAL_COLOR);
+      this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+      this.setFill(FxSettings.BOX_NORMAL_COLOR);
     }
   }
   
@@ -76,8 +76,8 @@ public class Box extends Rectangle {
   }
   
   public boolean checkOnNorthBorder(final MouseEvent e) {
-    if (((e.getX() > (this.getX() - FXSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < ((this.getX() + this.getWidth()) + FXSettings.ZONE_RESIZE_TOLERANCE)))) {
-      if (((e.getY() > (this.getY() - FXSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < (this.getY() + FXSettings.ZONE_RESIZE_TOLERANCE)))) {
+    if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < ((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
+      if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < (this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
         return true;
       }
     }
@@ -85,8 +85,8 @@ public class Box extends Rectangle {
   }
   
   public boolean checkOnSouthBorder(final MouseEvent e) {
-    if (((e.getX() > (this.getX() - FXSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < ((this.getX() + this.getWidth()) + FXSettings.ZONE_RESIZE_TOLERANCE)))) {
-      if (((e.getY() > ((this.getY() - FXSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())) && (e.getY() < ((this.getY() + FXSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
+    if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < ((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
+      if (((e.getY() > ((this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())) && (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
         return true;
       }
     }
@@ -94,8 +94,8 @@ public class Box extends Rectangle {
   }
   
   public boolean checkOnWestBorder(final MouseEvent e) {
-    if (((e.getX() > (this.getX() - FXSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < (this.getX() + FXSettings.ZONE_RESIZE_TOLERANCE)))) {
-      if (((e.getY() > (this.getY() - FXSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < ((this.getY() + FXSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
+    if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < (this.getX() + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
+      if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
         return true;
       }
     }
@@ -103,8 +103,8 @@ public class Box extends Rectangle {
   }
   
   public boolean checkOnEastBorder(final MouseEvent e) {
-    if (((e.getX() > ((this.getX() - FXSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())) && (e.getX() < (((this.getX() + this.getWidth()) + FXSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())))) {
-      if (((e.getY() > (this.getY() - FXSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < ((this.getY() + FXSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
+    if (((e.getX() > ((this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())) && (e.getX() < (((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())))) {
+      if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
         return true;
       }
     }
@@ -126,38 +126,38 @@ public class Box extends Rectangle {
         boolean onWest = Box.this.checkOnWestBorder(event);
         Box.this.pane.getController().selectQuestion(Box.this.questionItem);
         Box.this.pane.getController().setToResizeTool();
-        ControllerFXEditor _controller = Box.this.pane.getController();
+        ControllerFxEdition _controller = Box.this.pane.getController();
         _controller.setEdgeLoc(EdgeLocation.NONE);
         if (onNorth) {
-          ControllerFXEditor _controller_1 = Box.this.pane.getController();
+          ControllerFxEdition _controller_1 = Box.this.pane.getController();
           _controller_1.setEdgeLoc(EdgeLocation.NORTH);
         }
         if (onSouth) {
-          ControllerFXEditor _controller_2 = Box.this.pane.getController();
+          ControllerFxEdition _controller_2 = Box.this.pane.getController();
           _controller_2.setEdgeLoc(EdgeLocation.SOUTH);
         }
         if (onEast) {
-          ControllerFXEditor _controller_3 = Box.this.pane.getController();
+          ControllerFxEdition _controller_3 = Box.this.pane.getController();
           _controller_3.setEdgeLoc(EdgeLocation.EAST);
         }
         if (onWest) {
-          ControllerFXEditor _controller_4 = Box.this.pane.getController();
+          ControllerFxEdition _controller_4 = Box.this.pane.getController();
           _controller_4.setEdgeLoc(EdgeLocation.WEST);
         }
         if ((onNorth && onEast)) {
-          ControllerFXEditor _controller_5 = Box.this.pane.getController();
+          ControllerFxEdition _controller_5 = Box.this.pane.getController();
           _controller_5.setEdgeLoc(EdgeLocation.NORTHEAST);
         }
         if ((onNorth && onWest)) {
-          ControllerFXEditor _controller_6 = Box.this.pane.getController();
+          ControllerFxEdition _controller_6 = Box.this.pane.getController();
           _controller_6.setEdgeLoc(EdgeLocation.NORTHWEST);
         }
         if ((onSouth && onEast)) {
-          ControllerFXEditor _controller_7 = Box.this.pane.getController();
+          ControllerFxEdition _controller_7 = Box.this.pane.getController();
           _controller_7.setEdgeLoc(EdgeLocation.SOUTHEAST);
         }
         if ((onSouth && onWest)) {
-          ControllerFXEditor _controller_8 = Box.this.pane.getController();
+          ControllerFxEdition _controller_8 = Box.this.pane.getController();
           _controller_8.setEdgeLoc(EdgeLocation.SOUTHWEST);
         }
       }

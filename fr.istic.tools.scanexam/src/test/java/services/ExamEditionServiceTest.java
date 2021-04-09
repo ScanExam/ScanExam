@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import com.beust.jcommander.internal.Lists;
 
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
-import fr.istic.tools.scanexam.io.TemplateIO;
+import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.services.ServiceEdition;
@@ -105,7 +105,7 @@ public class ExamEditionServiceTest
 	void addQuestionTest() 
 	{
 		//ouverture du fichier
-		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 		
 		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
 		
@@ -123,7 +123,7 @@ public class ExamEditionServiceTest
 	void removeQuestionTest() 
 	{
 		//ouverture du fichier
-		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 		
 		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
 		
@@ -142,7 +142,7 @@ public class ExamEditionServiceTest
 	void nextPageTest() 
 	{
 		//ouverture du fichier
-		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = presenter.getPresenterPdf().currentPdfPageNumber();
 		presenter.getPresenterPdf().nextPdfPage();
@@ -161,7 +161,7 @@ public class ExamEditionServiceTest
 	void previousPageTest() 
 	{
 		//ouverture du fichier
-		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		int oldPage = presenter.getPresenterPdf().currentPdfPageNumber();
 		presenter.getPresenterPdf().previousPdfPage();
@@ -179,7 +179,7 @@ public class ExamEditionServiceTest
 	void loadTest() 
 	{
 		//Ouverture du fichier
-		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		assertEquals(presenter.getPresenterPdf().currentPdfPageNumber(), 6);
 	}
@@ -190,7 +190,7 @@ public class ExamEditionServiceTest
 	void loadTestRobustesse() 
 	{
 		//load d'un fichier qui n'existe pas
-		Assertions.assertThrows(FileNotFoundException.class, () -> TemplateIO.loadCreationTemplate("src/test/resources/resources_service/NoExiste.xmi"));
+		Assertions.assertThrows(FileNotFoundException.class, () -> TemplateIo.loadCreationTemplate("src/test/resources/resources_service/NoExiste.xmi"));
 	}
 
 	@Test
@@ -205,7 +205,7 @@ public class ExamEditionServiceTest
 
 		service.save(presenter.getPresenterPdf().getPdfOutputStream(),new File("src/test/resources/resources_service/sampleExiste.xmi"));
 
-		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
+		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
 		//Verification que le changement est toujours d'actualité
 		assertNull(service.getQuestionZone(pageNumber,id));

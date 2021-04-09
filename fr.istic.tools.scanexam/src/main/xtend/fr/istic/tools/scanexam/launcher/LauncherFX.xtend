@@ -4,16 +4,16 @@ import com.sun.javafx.css.StyleManager
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.presenter.PresenterBindings
 import fr.istic.tools.scanexam.utils.ResourcesUtils
+import fr.istic.tools.scanexam.view.fx.AdapterFxEdition
+import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation
 import fr.istic.tools.scanexam.view.fx.ControllerRoot
-import fr.istic.tools.scanexam.view.fx.EditorAdapterFX
-import fr.istic.tools.scanexam.view.fx.GraduationAdapterFX
-import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import javafx.application.Application
+import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
-import javafx.fxml.FXMLLoader
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -47,11 +47,11 @@ class LauncherFX extends Application implements Launcher {
 			val graduatorRoot = graduatorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.FXML"));
 			
 			
-			val controllerEditor = (editorLoader.controller as ControllerFXEditor);
-			val controllerGraduator = (graduatorLoader.controller as ControllerFXCorrector);
+			val controllerEditor = (editorLoader.controller as ControllerFxEdition);
+			val controllerGraduator = (graduatorLoader.controller as ControllerFxGraduation);
 			var controllerRoot = (rootLoader.controller as ControllerRoot);
 		
-			controllerEditor.editorAdapterFX = edit;
+			controllerEditor.adapterFxEdition = edit;
 			edit.controllerFXCreator =  controllerEditor;
 			
 			controllerGraduator.adapterCorrection = grad;
@@ -81,12 +81,12 @@ class LauncherFX extends Application implements Launcher {
 			primaryStage.show();
 	}
 	
-	static EditorAdapterFX edit; 
-	static GraduationAdapterFX grad;
+	static AdapterFxEdition edit; 
+	static AdapterFxGraduation grad;
 	
 	override launch() {
-		edit = new EditorAdapterFX();
-		grad = new GraduationAdapterFX();
+		edit = new AdapterFxEdition();
+		grad = new AdapterFxGraduation();
 		PresenterBindings.linkEditorPresenter(edit);
 		PresenterBindings.linkGraduationPresenter(grad);
 		launchApp(null);

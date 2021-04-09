@@ -5,11 +5,11 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fx.AdapterFxEdition;
+import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
 import fr.istic.tools.scanexam.view.fx.ControllerRoot;
-import fr.istic.tools.scanexam.view.fx.EditorAdapterFX;
-import fr.istic.tools.scanexam.view.fx.GraduationAdapterFX;
-import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector;
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import java.io.InputStream;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -48,12 +48,12 @@ public class LauncherFX extends Application implements Launcher {
     final Node editorRoot = editorLoader.<Node>load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.FXML"));
     final Node graduatorRoot = graduatorLoader.<Node>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.FXML"));
     Object _controller = editorLoader.<Object>getController();
-    final ControllerFXEditor controllerEditor = ((ControllerFXEditor) _controller);
+    final ControllerFxEdition controllerEditor = ((ControllerFxEdition) _controller);
     Object _controller_1 = graduatorLoader.<Object>getController();
-    final ControllerFXCorrector controllerGraduator = ((ControllerFXCorrector) _controller_1);
+    final ControllerFxGraduation controllerGraduator = ((ControllerFxGraduation) _controller_1);
     Object _controller_2 = rootLoader.<Object>getController();
     ControllerRoot controllerRoot = ((ControllerRoot) _controller_2);
-    controllerEditor.setEditorAdapterFX(LauncherFX.edit);
+    controllerEditor.setAdapterFxEdition(LauncherFX.edit);
     LauncherFX.edit.setControllerFXCreator(controllerEditor);
     controllerGraduator.setAdapterCorrection(LauncherFX.grad);
     LauncherFX.grad.setController(controllerGraduator);
@@ -77,16 +77,16 @@ public class LauncherFX extends Application implements Launcher {
     primaryStage.show();
   }
   
-  private static EditorAdapterFX edit;
+  private static AdapterFxEdition edit;
   
-  private static GraduationAdapterFX grad;
+  private static AdapterFxGraduation grad;
   
   @Override
   public void launch() {
-    EditorAdapterFX _editorAdapterFX = new EditorAdapterFX();
-    LauncherFX.edit = _editorAdapterFX;
-    GraduationAdapterFX _graduationAdapterFX = new GraduationAdapterFX();
-    LauncherFX.grad = _graduationAdapterFX;
+    AdapterFxEdition _adapterFxEdition = new AdapterFxEdition();
+    LauncherFX.edit = _adapterFxEdition;
+    AdapterFxGraduation _adapterFxGraduation = new AdapterFxGraduation();
+    LauncherFX.grad = _adapterFxGraduation;
     PresenterBindings.linkEditorPresenter(LauncherFX.edit);
     PresenterBindings.linkGraduationPresenter(LauncherFX.grad);
     LauncherFX.launchApp(null);

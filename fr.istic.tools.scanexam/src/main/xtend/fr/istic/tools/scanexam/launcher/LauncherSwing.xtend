@@ -3,8 +3,8 @@ package fr.istic.tools.scanexam.launcher
 import fr.istic.tools.scanexam.presenter.PresenterBindings
 import java.awt.EventQueue
 import fr.istic.tools.scanexam.view.swing.GraduationAdapterSwing
-import fr.istic.tools.scanexam.view.swing.EditorAdapterSwing
-import fr.istic.tools.scanexam.view.swing.EditorViewSwing
+import fr.istic.tools.scanexam.view.swing.EditionAdapterSwing
+import fr.istic.tools.scanexam.view.swing.EditionViewSwing
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie Swing
@@ -17,7 +17,7 @@ class LauncherSwing implements Launcher {
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
-	static EditorAdapterSwing edit= new EditorAdapterSwing
+	static EditionAdapterSwing edit= new EditionAdapterSwing
 	static GraduationAdapterSwing grad
 	 
 	/** 
@@ -39,7 +39,7 @@ class LauncherSwing implements Launcher {
 		
 	}
 	
-	static def  swapToGraduator(EditorViewSwing view){
+	static def  swapToGraduator(EditionViewSwing view){
 		grad = new GraduationAdapterSwing
 		grad.setViewEditor = view
 		PresenterBindings.linkGraduationPresenter(grad)

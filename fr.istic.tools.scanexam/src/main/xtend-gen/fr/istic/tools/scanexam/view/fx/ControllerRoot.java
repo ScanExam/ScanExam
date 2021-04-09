@@ -2,8 +2,8 @@ package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector;
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import java.io.InputStream;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,15 +28,15 @@ public class ControllerRoot {
   @FXML
   private CheckMenuItem autoZoom;
   
-  private ControllerFXCorrector corrector;
+  private ControllerFxGraduation corrector;
   
-  private ControllerFXEditor editor;
+  private ControllerFxEdition editor;
   
-  public ControllerFXEditor setEditorController(final ControllerFXEditor editor) {
+  public ControllerFxEdition setEditorController(final ControllerFxEdition editor) {
     return this.editor = editor;
   }
   
-  public ControllerFXCorrector setCorrectorController(final ControllerFXCorrector corrector) {
+  public ControllerFxGraduation setCorrectorController(final ControllerFxGraduation corrector) {
     return this.corrector = corrector;
   }
   

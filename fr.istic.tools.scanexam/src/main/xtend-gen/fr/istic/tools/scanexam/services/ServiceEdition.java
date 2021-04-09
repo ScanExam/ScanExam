@@ -7,7 +7,7 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
-import fr.istic.tools.scanexam.io.TemplateIO;
+import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import java.io.ByteArrayInputStream;
@@ -114,14 +114,14 @@ public class ServiceEdition extends Service {
       this.template.setEncodedDocument(_string);
       outputStream.close();
       this.template.setExam(ExamSingleton.instance);
-      TemplateIO.save(path, this.template);
+      TemplateIo.save(path, this.template);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
   public Optional<ByteArrayInputStream> open(final String xmiPath) {
-    final Optional<CreationTemplate> creationTemplate = TemplateIO.loadCreationTemplate(xmiPath);
+    final Optional<CreationTemplate> creationTemplate = TemplateIo.loadCreationTemplate(xmiPath);
     boolean _isPresent = creationTemplate.isPresent();
     if (_isPresent) {
       this.template = creationTemplate.get();

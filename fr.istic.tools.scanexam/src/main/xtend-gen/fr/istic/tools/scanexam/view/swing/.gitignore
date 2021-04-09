@@ -6,8 +6,8 @@
 /QuestionPanel.java
 /AdapterSwingPdfAndBoxPanel.java
 /Box.java
-/EditorAdapterSwing.java
-/EditorViewSwing.java
+/EditionAdapterSwing.java
+/EditionViewSwing.java
 /GraduationAdapterSwing.java
 /GraduationViewSwing.java
 /ImagePanel.java

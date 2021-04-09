@@ -3,7 +3,7 @@ package fr.istic.tools.scanexam.view.swing;
 import fr.istic.tools.scanexam.presenter.PresenterGraduation;
 import fr.istic.tools.scanexam.view.AdapterGraduation;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
-import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
+import fr.istic.tools.scanexam.view.swing.EditionViewSwing;
 import fr.istic.tools.scanexam.view.swing.GraduationViewSwing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +25,7 @@ public class GraduationAdapterSwing implements AdapterGraduation {
   /**
    * View de editor
    */
-  private EditorViewSwing viewEdit;
+  private EditionViewSwing viewEdit;
   
   /**
    * Presenter de la correction d'exman
@@ -117,7 +117,7 @@ public class GraduationAdapterSwing implements AdapterGraduation {
   /**
    * Change la vue de l'éditeur
    */
-  public void setViewEditor(final EditorViewSwing view) {
+  public void setViewEditor(final EditionViewSwing view) {
     this.viewEdit = view;
   }
   

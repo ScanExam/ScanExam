@@ -3,7 +3,7 @@ package fr.istic.tools.scanexam.services
 import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory
-import fr.istic.tools.scanexam.io.TemplateIO
+import fr.istic.tools.scanexam.io.TemplateIo
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.Base64
@@ -101,12 +101,12 @@ class ServiceEdition extends Service // TODO : renommer
 
 		template.exam = ExamSingleton.instance
 
-		TemplateIO.save(path,template);
+		TemplateIo.save(path,template);
 	}
 	
 	def Optional<ByteArrayInputStream> open(String xmiPath) 
 	{
-		val creationTemplate = TemplateIO.loadCreationTemplate(xmiPath)
+		val creationTemplate = TemplateIo.loadCreationTemplate(xmiPath)
 
         if (creationTemplate.present) 
         {
