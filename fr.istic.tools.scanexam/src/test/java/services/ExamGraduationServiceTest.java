@@ -18,10 +18,9 @@ import com.beust.jcommander.internal.Lists;
 
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIo;
-import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import fr.istic.tools.scanexam.presenter.PresenterGraduation;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
 import fr.istic.tools.scanexam.services.ExamSingleton;
+import fr.istic.tools.scanexam.services.ServiceGraduation;
 
 
 public class ExamGraduationServiceTest 

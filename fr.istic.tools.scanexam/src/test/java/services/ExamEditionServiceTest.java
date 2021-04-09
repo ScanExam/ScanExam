@@ -10,10 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.poi.ss.formula.functions.T;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,12 +20,9 @@ import org.junit.jupiter.api.Test;
 
 import com.beust.jcommander.internal.Lists;
 
-import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.presenter.PresenterEdition;
-import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.services.ServiceEdition;
-import fr.istic.tools.scanexam.view.Adapter;
 
 public class ExamEditionServiceTest 
 {
