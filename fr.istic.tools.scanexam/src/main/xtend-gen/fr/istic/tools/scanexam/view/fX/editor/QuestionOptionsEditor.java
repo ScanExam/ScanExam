@@ -8,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -16,7 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.NumberStringConverter;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * [JavaFX] Détail d'une question
@@ -92,12 +95,18 @@ public class QuestionOptionsEditor extends VBox {
     this.grid.add(editIcon2, 2, 3);
     TextField _textField = new TextField();
     this.renameField = _textField;
+    double _prefWidth = this.grid.getPrefWidth();
+    double _multiply = (_prefWidth * 0.7);
+    this.renameField.setPrefWidth(_multiply);
     TextField _textField_1 = new TextField();
     this.scaleField = _textField_1;
     NumberStringConverter _numberStringConverter = new NumberStringConverter();
     TextFormatter<Number> _textFormatter = new TextFormatter<Number>(_numberStringConverter);
     this.formatter = _textFormatter;
     this.scaleField.setTextFormatter(this.formatter);
+    double _prefWidth_1 = this.grid.getPrefWidth();
+    double _multiply_1 = (_prefWidth_1 * 0.7);
+    this.scaleField.setPrefWidth(_multiply_1);
     Label _label = new Label();
     this.questionName = _label;
     Label _label_1 = new Label();
@@ -177,12 +186,22 @@ public class QuestionOptionsEditor extends VBox {
       this.grid.add(this.renameField, 1, 0);
       this.renameField.requestFocus();
       this.renameField.selectAll();
+      final Function1<Node, Boolean> _function = (Node n) -> {
+        return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
+      };
+      Node _findFirst = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function);
+      _findFirst.setVisible(false);
     } else {
       boolean _contains = this.grid.getChildren().contains(this.questionName);
       boolean _not = (!_contains);
       if (_not) {
         this.grid.getChildren().remove(this.renameField);
         this.grid.add(this.questionName, 1, 0);
+        final Function1<Node, Boolean> _function_1 = (Node n) -> {
+          return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
+        };
+        Node _findFirst_1 = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function_1);
+        _findFirst_1.setVisible(true);
       }
     }
   }
@@ -196,12 +215,22 @@ public class QuestionOptionsEditor extends VBox {
       this.grid.add(this.scaleField, 1, 3);
       this.scaleField.requestFocus();
       this.scaleField.selectAll();
+      final Function1<Node, Boolean> _function = (Node n) -> {
+        return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
+      };
+      Node _findFirst = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function);
+      _findFirst.setVisible(false);
     } else {
       boolean _contains = this.grid.getChildren().contains(this.questionScale);
       boolean _not = (!_contains);
       if (_not) {
         this.grid.getChildren().remove(this.scaleField);
         this.grid.add(this.questionScale, 1, 3);
+        final Function1<Node, Boolean> _function_1 = (Node n) -> {
+          return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
+        };
+        Node _findFirst_1 = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function_1);
+        _findFirst_1.setVisible(true);
       }
     }
   }
@@ -233,6 +262,14 @@ public class QuestionOptionsEditor extends VBox {
         QuestionOptionsEditor.this.controller.selectQuestion(null);
       }
     });
+    final Function1<Node, Boolean> _function = (Node n) -> {
+      return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
+    };
+    Node _findFirst = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function);
+    final EventHandler<MouseEvent> _function_1 = (MouseEvent e) -> {
+      this.toggleRename(true);
+    };
+    _findFirst.setOnMouseClicked(_function_1);
     this.questionName.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
       public void handle(final MouseEvent event) {
@@ -264,6 +301,14 @@ public class QuestionOptionsEditor extends VBox {
         }
       }
     });
+    final Function1<Node, Boolean> _function_2 = (Node n) -> {
+      return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
+    };
+    Node _findFirst_1 = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function_2);
+    final EventHandler<MouseEvent> _function_3 = (MouseEvent e) -> {
+      this.toggleRescale(true);
+    };
+    _findFirst_1.setOnMouseClicked(_function_3);
     this.scaleField.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent event) {

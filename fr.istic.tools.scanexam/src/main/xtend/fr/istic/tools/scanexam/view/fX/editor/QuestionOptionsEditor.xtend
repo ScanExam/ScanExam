@@ -72,13 +72,16 @@ class QuestionOptionsEditor extends VBox {
 		val editIcon2 = new Label("\u270E")
 		editIcon1.styleClass.add("unicodeLabel")
 		editIcon2.styleClass.add("unicodeLabel")
+		
 		grid.add(editIcon1,2,0)
 		grid.add(editIcon2,2,3)
 		
 		renameField = new TextField
+		renameField.prefWidth = grid.prefWidth * 0.7
 		scaleField = new TextField
 		formatter = new TextFormatter(new NumberStringConverter)
 		scaleField.setTextFormatter(formatter)
+		scaleField.prefWidth = grid.prefWidth * 0.7
 
 		questionName = new Label();
 		questionId = new Label()
@@ -87,7 +90,7 @@ class QuestionOptionsEditor extends VBox {
 		questionCoords = new Label();
 		questionDescription = new Label();
 		remove = new Button(translate("question.remove"));
-
+		
 		grid.add(questionName, 1, 0)
 		grid.add(questionId, 1, 1)
 		grid.add(page, 1, 2)
@@ -141,10 +144,12 @@ class QuestionOptionsEditor extends VBox {
 			grid.add(renameField, 1, 0);
 			renameField.requestFocus
 			renameField.selectAll
+			grid.children.findFirst[n | n !== null && GridPane.getRowIndex(n) == 0 && GridPane.getColumnIndex(n) == 2].visible = false
 		} else {
 			if (!grid.children.contains(questionName)) {
 				grid.children.remove(renameField);
 				grid.add(questionName, 1, 0);
+				grid.children.findFirst[n | n !== null && GridPane.getRowIndex(n) == 0 && GridPane.getColumnIndex(n) == 2].visible = true
 			}
 		}
 	}
@@ -158,10 +163,12 @@ class QuestionOptionsEditor extends VBox {
 			grid.add(scaleField, 1, 3);
 			scaleField.requestFocus
 			scaleField.selectAll
+			grid.children.findFirst[n | n !== null && GridPane.getRowIndex(n) == 3 && GridPane.getColumnIndex(n) == 2].visible = false
 		} else {
 			if (!grid.children.contains(questionScale)) {
 				grid.children.remove(scaleField);
 				grid.add(questionScale, 1, 3);
+				grid.children.findFirst[n | n !== null && GridPane.getRowIndex(n) == 3 && GridPane.getColumnIndex(n) == 2].visible = true
 			}
 		}
 	}
@@ -194,6 +201,8 @@ class QuestionOptionsEditor extends VBox {
 			}
 
 		}
+		
+		grid.children.findFirst[n | n !== null && GridPane.getRowIndex(n) == 0 && GridPane.getColumnIndex(n) == 2].onMouseClicked = [e | toggleRename(true)]
 
 		questionName.onMouseClicked = new EventHandler<MouseEvent>() {
 
@@ -233,6 +242,8 @@ class QuestionOptionsEditor extends VBox {
 			}
 
 		})
+
+		grid.children.findFirst[n | n !== null && GridPane.getRowIndex(n) == 3 && GridPane.getColumnIndex(n) == 2].onMouseClicked = [e | toggleRescale(true)]
 
 		scaleField.onAction = new EventHandler<ActionEvent>() {
 
