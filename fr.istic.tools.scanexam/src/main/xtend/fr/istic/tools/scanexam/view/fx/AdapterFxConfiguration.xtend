@@ -168,8 +168,10 @@ class AdapterFxConfiguration implements Initializable {
 		val Task<LoginResult> task = [
 			{
 				mainPane.scene.setCursor(Cursor.WAIT)
+				mainPane.disable = true
 				val result = presConfig.checkLogin(txtFldEmail.text, pwdFldEmailPassword.text, txtFldEmailHost.text,
 					txtFldEmailPort.text)
+				mainPane.disable = false
 				mainPane.scene.setCursor(Cursor.DEFAULT)
 				result
 			}

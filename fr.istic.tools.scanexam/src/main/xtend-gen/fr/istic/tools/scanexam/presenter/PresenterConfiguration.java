@@ -114,7 +114,25 @@ public class PresenterConfiguration {
    * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
    */
   public SendMailTls.LoginResult checkLogin(final String name, final String password, final String host, final String port) {
-    return SendMailTls.checkLogin(name, password, host, Integer.parseInt(port));
+    String _xifexpression = null;
+    if ((name == null)) {
+      _xifexpression = "";
+    } else {
+      _xifexpression = name;
+    }
+    String _xifexpression_1 = null;
+    if ((password == null)) {
+      _xifexpression_1 = "";
+    } else {
+      _xifexpression_1 = password;
+    }
+    String _xifexpression_2 = null;
+    if ((host == null)) {
+      _xifexpression_2 = "";
+    } else {
+      _xifexpression_2 = host;
+    }
+    return SendMailTls.checkLogin(_xifexpression, _xifexpression_1, _xifexpression_2, Integer.parseInt(port));
   }
   
   /**

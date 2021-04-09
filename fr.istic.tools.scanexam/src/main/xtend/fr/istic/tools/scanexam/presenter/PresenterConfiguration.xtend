@@ -106,7 +106,7 @@ class PresenterConfiguration {
 	 * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
 	 */
 	def SendMailTls.LoginResult checkLogin(String name, String password, String host, String port) {
-		return SendMailTls.checkLogin(name, password, host, Integer.parseInt(port))
+		return SendMailTls.checkLogin(name === null ? "" : name, password === null ? "" : password, host === null ? "" : host, Integer.parseInt(port))
 	}
 
 	// ----------------------------------------------------------------------------------------------------

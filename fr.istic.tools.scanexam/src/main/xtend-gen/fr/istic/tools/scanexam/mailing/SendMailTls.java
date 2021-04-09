@@ -123,15 +123,17 @@ public class SendMailTls {
   public static SendMailTls.LoginResult checkLogin(final String name, final String password, final String host, final int port) {
     Objects.<String>requireNonNull(name);
     Objects.<String>requireNonNull(password);
-    final Properties props = new Properties();
     Objects.<String>requireNonNull(host, "Erreur : Le type d\'adresse mail n\'est pas présent dans le fichier configuration");
     Objects.<Integer>requireNonNull(Integer.valueOf(port), 
       "Erreur : Le port de l\'adresse mail n\'est pas présent dans le fichier configuration");
+    final Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.localhost", "ScanExam");
     props.put("mail.smtp.starttls.enable", "true");
     props.put("mail.smtp.host", host);
     props.put("mail.smtp.port", Integer.valueOf(port));
+    props.put("mail.smtps.timeout", "5000");
+    props.put("mail.smtps.connectiontimeout", "5000");
     try {
       final Session session = Session.getInstance(props, new Authenticator() {
         @Override

@@ -107,6 +107,7 @@ public class ControllerRoot {
       _icons.add(_image);
       Scene _scene = new Scene(view, 384, 280);
       dialog.setScene(_scene);
+      dialog.setResizable(false);
       dialog.show();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

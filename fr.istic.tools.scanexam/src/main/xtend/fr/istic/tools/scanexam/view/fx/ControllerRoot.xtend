@@ -83,6 +83,7 @@ class ControllerRoot {
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 384, 280))
+		dialog.setResizable(false);
 		dialog.show
 	}
 	

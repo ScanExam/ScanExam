@@ -118,19 +118,20 @@ class SendMailTls {
 	def static LoginResult checkLogin(String name, String password, String host, int port) {
 		Objects.requireNonNull(name)
 		Objects.requireNonNull(password)
-		
-		val props = new Properties()
-
 		Objects.requireNonNull(host, "Erreur : Le type d'adresse mail n'est pas présent dans le fichier configuration")
 		Objects.requireNonNull(port,
 			"Erreur : Le port de l'adresse mail n'est pas présent dans le fichier configuration")
 
+		val props = new Properties()
+		
 		// Propriété du mail
 		props.put("mail.smtp.auth", "true")
 		props.put("mail.smtp.localhost", "ScanExam")
 		props.put("mail.smtp.starttls.enable", "true")
 		props.put("mail.smtp.host", host)
 		props.put("mail.smtp.port", port)
+		props.put("mail.smtps.timeout", "5000")
+		props.put("mail.smtps.connectiontimeout", "5000");    
 
 		try {
 			val session = Session.getInstance(props, new Authenticator() {
