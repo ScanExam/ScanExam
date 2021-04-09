@@ -36,8 +36,8 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   
   private PDDocument doc;
   
-  public PdfReaderWithoutQrCodeImpl(final PDDocument doc, final int nbPages, final int nbCopies) {
-    this.doc = doc;
+  public PdfReaderWithoutQrCodeImpl(final PDDocument document, final int nbPages, final int nbCopies) {
+    this.doc = document;
     this.nbPagesInSheet = nbPages;
     this.nbSheetsTotal = nbCopies;
     HashSet<Copie> _hashSet = new HashSet<Copie>();

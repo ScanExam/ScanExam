@@ -4,17 +4,33 @@ import java.io.InputStream
 import java.io.File
 import java.util.Objects
 import fr.istic.tools.scanexam.services.Service
-import fr.istic.tools.scanexam.services.ExamEditionService
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.rendering.ImageType
+import org.apache.pdfbox.rendering.PDFRenderer
+import java.io.ByteArrayOutputStream
+import java.io.ByteArrayInputStream
 
 /** 
  * Controlleur du pdf
  * @author Julien Cochet
  */
-class PresenterPdf {
+class PresenterPdf 
+{
+	/**
+	 * Pdf chargé
+	 */
+	 PDDocument document;
 	/**
 	 * presenter used for the edition of an exam
 	 * @author Benjamin Danlos
 	 */
+	 /**
+	 * Index de la page courante du modèle d'exam
+	 */
+	protected int pdfPageIndex
+	
+	
 	Presenter presenter
 	
 	
@@ -74,39 +90,85 @@ class PresenterPdf {
     	this.presenter
     }
     
+	
+		/**
+	 * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
+	 * @param page Numéro de page où se rendre
+	 */
+	def goToPdfPage(int page) {
+		if(page >= 0 && page < document.pages.size) {
+			pdfPageIndex = page
+		}
+	}
 	def getCurrentPdfPage()
 	{
-		print(service.currentPdfPageNumber)
-		return service.getCurrentPdfPage
+		pageToImage(document.pages.get(pdfPageIndex));
 	}
-	def void nextPdfPage(){
-		service.nextPdfPage
-	}
-	def void previousPdfPage(){
-		service.previousPdfPage
-	}
-	def void goToPdfPage(int page) {
-		service.goToPdfPage(page)
-	}
-	def int totalPdfPageNumber(){
-		service.getPdfsize
-	}
-	def int currentPdfPageNumber(){
-		service.currentPageNumber
-	}
-	def choosePdfPage(int i){}
-	
-	def getDocument() 
+	def nextPdfPage() 
 	{
-		service.document
+		println("-"+pdfPageIndex + "-")
+		if (pdfPageIndex + 1 < document.pages.size) 
+		{
+			pdfPageIndex++
+		}
+
 	}
-	def create(File file){
+	
+	
+	/**
+	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+	 */
+	def previousPdfPage() 
+	{
+		 if (pdfPageIndex > 0) 
+		 {
+		 	pdfPageIndex--;
+		 }
+	}
+	
+	def int currentPdfPageNumber()
+	{
+		return pdfPageIndex
+	}
+	
+	def pageToImage(PDPage page)
+	{
+		val renderer = new PDFRenderer(document);
+		val bufferedImage = renderer.renderImageWithDPI(pdfPageIndex, 300, ImageType.RGB);
+		bufferedImage
+	}	
+	
+	
+	def create(File file) 
+	{
 		Objects.requireNonNull(file)
-		(service as ExamEditionService).create(file)
+		
+		document = PDDocument.load(file)
+		
+		service.onDocumentLoad(document.pages.size);
+	}
+	
+	def create(ByteArrayInputStream stream)
+	{
+		document = PDDocument.load(stream)
 	}
 	
 	
-	def boolean atCorrectPage(int page){
-		return page == service.currentPdfPageNumber
+	def boolean atCorrectPage(int page)
+	{
+		return page == currentPdfPageNumber
 	}
+	
+	def getPdfPageCount()
+	{
+		document.pages.size;
+	}
+	
+	def getPdfOutputStream() 
+	{
+		val outputStream = new ByteArrayOutputStream();
+		document.save(outputStream);
+		outputStream
+	}
+	
 }

@@ -1,10 +1,10 @@
-package fr.istic.tools.scanexam.view.fX.corrector
+package fr.istic.tools.scanexam.view.fx.corrector
 
 import javafx.event.EventHandler
 import javafx.scene.control.Label
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.VBox
-import fr.istic.tools.scanexam.view.fX.FXSettings
+import fr.istic.tools.scanexam.view.fx.FXSettings
 import javafx.scene.paint.Color
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii

@@ -1,10 +1,10 @@
-package fr.istic.tools.scanexam.view.fX.corrector;
+package fr.istic.tools.scanexam.view.fx.corrector;
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.QuestionItemCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentItemCorrector;
-import fr.istic.tools.scanexam.view.fX.editor.HTMLView;
+import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector;
+import fr.istic.tools.scanexam.view.fx.corrector.QuestionItemCorrector;
+import fr.istic.tools.scanexam.view.fx.corrector.StudentItemCorrector;
+import fr.istic.tools.scanexam.view.fx.editor.HTMLView;
 import java.io.InputStream;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -212,7 +212,7 @@ public class Grader extends VBox {
         Stage stage = new Stage();
         stage.initStyle(StageStyle.DECORATED);
         stage.setTitle("Editeur HTML");
-        InputStream inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.fxml");
+        InputStream inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.FXML");
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = fxmlLoader.<Parent>load(inputLayout);
         Scene scene = new Scene(root, 640, 480);

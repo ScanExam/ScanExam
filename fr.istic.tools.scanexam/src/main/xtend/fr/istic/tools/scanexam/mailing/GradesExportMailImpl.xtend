@@ -1,17 +1,17 @@
 package fr.istic.tools.scanexam.mailing
 
-import fr.istic.tools.scanexam.services.ExamGraduationService
 import java.io.File
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.Collection
 import fr.istic.tools.scanexam.core.config.Config
 import java.util.logging.Logger
+import fr.istic.tools.scanexam.services.ServiceGraduation
 
 class GradesExportMailImpl implements GradesExportMail {
 
-	static ExamGraduationService service
+	static ServiceGraduation service
 
-	new(ExamGraduationService serv) {
+	new(ServiceGraduation serv) {
 		service = serv
 	}
 	

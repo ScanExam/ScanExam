@@ -15,7 +15,7 @@ class TestAreaDemo extends Application {
 		
 		
 		
-  		var VBox root = FXMLLoader.load(getClass().getResource("./resources/viewResources/text.fxml"));
+  		var VBox root = FXMLLoader.load(getClass().getResource("./resources/viewResources/text.FXML"));
         root.setPadding(new Insets(10));
         root.setSpacing(5);
         

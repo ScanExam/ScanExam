@@ -1,10 +1,10 @@
-package fr.istic.tools.scanexam.view.fX.editor;
+package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.editor.Box;
-import fr.istic.tools.scanexam.view.fX.editor.BoxType;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionListEditor;
+import fr.istic.tools.scanexam.view.fx.FXSettings;
+import fr.istic.tools.scanexam.view.fx.editor.Box;
+import fr.istic.tools.scanexam.view.fx.editor.BoxType;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionListEditor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

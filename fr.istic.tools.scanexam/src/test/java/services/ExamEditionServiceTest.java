@@ -8,39 +8,67 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.poi.ss.formula.functions.T;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import com.beust.jcommander.internal.Lists;
+
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIO;
-import fr.istic.tools.scanexam.services.ExamEditionService;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
+import fr.istic.tools.scanexam.presenter.PresenterBindings;
+import fr.istic.tools.scanexam.services.ServiceEdition;
+import fr.istic.tools.scanexam.view.Adapter;
 
 public class ExamEditionServiceTest 
 {
-	ExamEditionService session;
-
+	ServiceEdition service;
+	
+	PresenterEdition presenter;
+	
 	@BeforeEach
 	void init() 
 	{
-		session = new ExamEditionService();
+		service = new ServiceEdition();
+		
+		presenter = jailBreak(service);
 		
 	}
-
+	
+	private PresenterEdition jailBreak(Object... args) {
+		try { 
+			final Class<?>[] argClasses = Lists.newArrayList(args).stream()
+					.map(o -> o.getClass())
+					.toArray(Class<?>[]::new);
+			Constructor<PresenterEdition> method = PresenterEdition.class.getConstructor( argClasses);
+			method.setAccessible(true);
+			return (PresenterEdition)method.newInstance(args);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@Test
 	@DisplayName("Test - Ouverture d'un fichier XMI")
 	void openTest() 
 	{
 		//Ouverture du fichier
-		session.open("src/test/resources/resources_service/sample.xmi");
+		service.open("src/test/resources/resources_service/sample.xmi");
 
 		//Verification du nombre de page et du nom de l'examen ouvert
-		assertEquals(session.currentPdfPageNumber(), 6);
-		assertEquals(session.getExamName(), "PFO_december_19");
+		assertEquals(presenter.getPresenterPdf().currentPdfPageNumber(), 6);
+		assertEquals(service.getExamName(), "PFO_december_19");
 	}
 
 	@Test
@@ -50,7 +78,7 @@ public class ExamEditionServiceTest
 	void openTestRobustesse() 
 	{
 		//ouverture d'un fichier qui n'existe pas
-		Assertions.assertThrows(FileNotFoundException.class, () -> session.open("test/robustesse/sampleNoExiste.xmi"));
+		Assertions.assertThrows(FileNotFoundException.class, () -> service.open("test/robustesse/sampleNoExiste.xmi"));
 	}
 
 
@@ -58,7 +86,7 @@ public class ExamEditionServiceTest
 	@DisplayName("Test - Création d'un nouveaux projet")
 	void createTest() throws IOException 
 	{
-		session.create(new File("src/test/resources/resources_service/pfo_example.pdf"));
+		presenter.load("src/test/resources/resources_service/pfo_example.pdf");
 
 		//ArrayList<BufferedImage> pages = new ArrayList<BufferedImage>();
 
@@ -66,7 +94,7 @@ public class ExamEditionServiceTest
 		PDDocument document = PDDocument.load(new File("src/test/resources/resources_service/pfo_example.pdf"));
 
 		//verification que le nombre de page est identique
-		assertEquals(session.getCurrentPdfPage(),document.getNumberOfPages());
+		assertEquals(presenter.getPresenterPdf().getCurrentPdfPage(),document.getNumberOfPages());
 
 		//ajouter une ligne qui verifie que currentPdfPath = file.absolutePath
 	}
@@ -78,13 +106,15 @@ public class ExamEditionServiceTest
 	{
 		//ouverture du fichier
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
-
-		assertNull(session.getQuestionZone(7));
+		
+		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
+		
+		assertNull(service.getQuestionZone(pageNumber,7));
 
 		//Ajoute de la question
-		final int id = session.createQuestion(2, 2, 2, 2);
+		final int id = service.createQuestion(pageNumber,2, 2, 2, 2);
 
-		assertNotNull(session.getQuestionZone(id));
+		assertNotNull(service.getQuestionZone(pageNumber,id));
 	}
 
 
@@ -94,15 +124,17 @@ public class ExamEditionServiceTest
 	{
 		//ouverture du fichier
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
-
+		
+		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
+		
 		//Creation d'une question
-		final int id = session.createQuestion(2, 2, 2, 2);
+		final int id = service.createQuestion(pageNumber,2, 2, 2, 2);
 
-		assertNotNull(session.getQuestionZone(id));
+		assertNotNull(service.getQuestionZone(pageNumber,id));
 
-		session.removeQuestion(id);
+		service.removeQuestion(id);
 
-		assertNull(session.getQuestionZone(id));
+		assertNull(service.getQuestionZone(pageNumber,id));
 	}
 
 	@Test
@@ -112,11 +144,11 @@ public class ExamEditionServiceTest
 		//ouverture du fichier
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		int oldPage = session.getCurrentPageNumber();
-		session.nextPdfPage();
-		int newPage = session.getCurrentPageNumber();
+		int oldPage = presenter.getPresenterPdf().currentPdfPageNumber();
+		presenter.getPresenterPdf().nextPdfPage();
+		int newPage = presenter.getPresenterPdf().currentPdfPageNumber();
 
-		if(oldPage == session.currentPdfPageNumber()) {
+		if(oldPage == presenter.getPresenterPdf().currentPdfPageNumber()) {
 			assertEquals(1, newPage);
 		}else {
 			assertEquals(oldPage, newPage-1);
@@ -131,12 +163,12 @@ public class ExamEditionServiceTest
 		//ouverture du fichier
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		int oldPage = session.currentPdfPageNumber();
-		session.previousPage();
-		int newPage = session.currentPdfPageNumber();
+		int oldPage = presenter.getPresenterPdf().currentPdfPageNumber();
+		presenter.getPresenterPdf().previousPdfPage();
+		int newPage = presenter.getPresenterPdf().currentPdfPageNumber();
 
 		if(oldPage == 1) {
-			assertEquals(session.getPdfsize(), newPage);
+			assertEquals(presenter.getPresenterPdf().getPdfPageCount(), newPage);
 		}else {
 			assertEquals(oldPage-1, newPage);
 		}
@@ -149,7 +181,7 @@ public class ExamEditionServiceTest
 		//Ouverture du fichier
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		assertEquals(session.getCurrentPdfPage(), 6);
+		assertEquals(presenter.getPresenterPdf().currentPdfPageNumber(), 6);
 	}
 
 
@@ -165,16 +197,17 @@ public class ExamEditionServiceTest
 	@DisplayName("Test - Sauvegarde d'un fichier")
 	void saveTest() 
 	{
+		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
+		
+		final int id = service.createQuestion(pageNumber,2, 2, 2, 2);
 
-		final int id = session.createQuestion(2, 2, 2, 2);
+		assertNull(service.getQuestionZone(pageNumber,id));
 
-		assertNull(session.getQuestionZone(id));
-
-		session.save("src/test/resources/resources_service/sampleExiste.xmi");
+		service.save(presenter.getPresenterPdf().getPdfOutputStream(),new File("src/test/resources/resources_service/sampleExiste.xmi"));
 
 		TemplateIO.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		//Verification que le changement est toujours d'actualiter
-		assertNull(session.getQuestionZone(id));
+		//Verification que le changement est toujours d'actualité
+		assertNull(service.getQuestionZone(pageNumber,id));
 	}
 }

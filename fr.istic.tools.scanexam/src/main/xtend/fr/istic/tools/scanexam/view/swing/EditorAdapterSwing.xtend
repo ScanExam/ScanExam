@@ -1,21 +1,21 @@
 package fr.istic.tools.scanexam.view.swing
 
 import fr.istic.tools.scanexam.launcher.LauncherSwing
-import fr.istic.tools.scanexam.presenter.EditorPresenter
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine
-import fr.istic.tools.scanexam.view.EditorAdapter
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
 import java.io.IOException
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
+import fr.istic.tools.scanexam.presenter.PresenterEdition
+import fr.istic.tools.scanexam.view.AdapterEdition
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
  * @author Julien Cochet
  */
-class EditorAdapterSwing implements EditorAdapter {
+class EditorAdapterSwing implements AdapterEdition {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -24,7 +24,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	// ----------------------------------------------------------------------------------------------------
 	
 	/* Presenter de la création d'exman */
-	var EditorPresenter editorPresenter
+	var PresenterEdition editorPresenter
 	
 	/* Vue de la création d'exman */
 	var EditorViewSwing view
@@ -146,7 +146,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	        
 	        // Mise à jour de la liste des pages
 			view.cmbBxPage.removeAll
-			for (i : 1 ..< editorPresenter.getPresenterPdf.totalPdfPageNumber) {
+			for (i : 1 ..< editorPresenter.getPresenterPdf.getPdfPageCount) {
 				view.cmbBxPage.addItem(i)
 			}
 			view.cmbBxPage.addActionListener(new ActionListener() {
@@ -174,7 +174,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	    
         var int ret = fc.showSaveDialog(null)
         if(ret == JFileChooser.APPROVE_OPTION) { // validation
-            presenter.save(fc.getSelectedFile().path)
+            presenter.save(fc.getSelectedFile())
         } 
 	}
 	
@@ -205,7 +205,7 @@ class EditorAdapterSwing implements EditorAdapter {
 	}
 	
 	
-	override setPresenter(EditorPresenter presenter) {
+	override setPresenter(PresenterEdition presenter) {
 		editorPresenter = presenter
 		adapterPdfAndBox.presenterPdf = presenter
 		adapterPdfAndBox.presenterQst = presenter.presenterQuestionZone

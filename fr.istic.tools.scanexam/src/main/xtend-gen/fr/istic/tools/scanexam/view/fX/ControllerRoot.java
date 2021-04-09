@@ -1,9 +1,9 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector;
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
 import java.io.InputStream;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -78,7 +78,7 @@ public class ControllerRoot {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.FXML"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"));
       ObservableList<Image> _icons = dialog.getIcons();
@@ -98,7 +98,7 @@ public class ControllerRoot {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.fxml"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.FXML"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"));
       ObservableList<Image> _icons = dialog.getIcons();
@@ -118,7 +118,7 @@ public class ControllerRoot {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.FXML"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
       ObservableList<Image> _icons = dialog.getIcons();

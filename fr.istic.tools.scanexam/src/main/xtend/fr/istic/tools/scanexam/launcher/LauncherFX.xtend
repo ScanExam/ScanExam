@@ -4,16 +4,16 @@ import com.sun.javafx.css.StyleManager
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.presenter.PresenterBindings
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fX.ControllerRoot
-import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
-import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
-import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor
+import fr.istic.tools.scanexam.view.fx.ControllerRoot
+import fr.istic.tools.scanexam.view.fx.EditorAdapterFX
+import fr.istic.tools.scanexam.view.fx.GraduationAdapterFX
+import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor
 import javafx.application.Application
-import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import javafx.fxml.FXMLLoader
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -42,9 +42,9 @@ class LauncherFX extends Application implements Launcher {
 			graduatorLoader.setResources(LanguageManager.currentBundle);
 			rootLoader.setResources(LanguageManager.currentBundle);
 			
-			val mainRoot = rootLoader.load(ResourcesUtils.getInputStreamResource("viewResources/RootUI.fxml"));
-			val editorRoot = editorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
-			val graduatorRoot = graduatorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
+			val mainRoot = rootLoader.load(ResourcesUtils.getInputStreamResource("viewResources/RootUI.FXML"));
+			val editorRoot = editorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.FXML"));
+			val graduatorRoot = graduatorLoader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.FXML"));
 			
 			
 			val controllerEditor = (editorLoader.controller as ControllerFXEditor);

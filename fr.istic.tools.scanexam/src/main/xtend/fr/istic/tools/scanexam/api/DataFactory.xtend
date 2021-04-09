@@ -8,7 +8,7 @@ import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.List
-import java.util.ArrayList
+
 
 /**
  * Factory qui crée des objets de type Data: {@link Rectangle},   {@link StudentSheet},  {@link Grade},  {@link GradeScale}, {@link Question}

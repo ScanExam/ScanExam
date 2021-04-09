@@ -2,7 +2,7 @@ package fr.istic.tools.scanexam.export;
 
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.GradesExport;
-import fr.istic.tools.scanexam.services.ExamGraduationService;
+import fr.istic.tools.scanexam.services.ServiceGraduation;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
@@ -16,9 +16,9 @@ import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 @SuppressWarnings("all")
 public class GradesExportImpl implements GradesExport {
-  private ExamGraduationService service;
+  private ServiceGraduation service;
   
-  public GradesExportImpl(final ExamGraduationService serv) {
+  public GradesExportImpl(final ServiceGraduation serv) {
     this.service = serv;
   }
   

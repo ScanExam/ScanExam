@@ -1,7 +1,7 @@
-package fr.istic.tools.scanexam.view.fX.editor;
+package fr.istic.tools.scanexam.view.fx.editor;
 
-import fr.istic.tools.scanexam.view.fX.editor.Box;
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fx.editor.Box;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

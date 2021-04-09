@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 public class TestAreaDemo extends Application {
   @Override
   public void start(final Stage primaryStage) throws Exception {
-    VBox root = FXMLLoader.<VBox>load(this.getClass().getResource("./resources/viewResources/text.fxml"));
+    VBox root = FXMLLoader.<VBox>load(this.getClass().getResource("./resources/viewResources/text.FXML"));
     Insets _insets = new Insets(10);
     root.setPadding(_insets);
     root.setSpacing(5);

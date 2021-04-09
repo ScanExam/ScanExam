@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX.corrector
+package fr.istic.tools.scanexam.view.fx.corrector
 
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
@@ -19,7 +19,7 @@ import fr.istic.tools.scanexam.utils.ResourcesUtils
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.input.MouseButton
-import fr.istic.tools.scanexam.view.fX.editor.HTMLView
+import fr.istic.tools.scanexam.view.fx.editor.HTMLView
 import javafx.stage.StageStyle
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Level
@@ -320,8 +320,8 @@ class Grader extends VBox {
 			var stage = new Stage();
 			stage.initStyle(StageStyle.DECORATED);
 	        stage.setTitle("Editeur HTML");
-			//layout = ClassLoader.getSystemResource("resources_utils/HTML.fxml");
-			var inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.fxml")
+			//layout = ClassLoader.getSystemResource("resources_utils/HTML.FXML");
+			var inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.FXML")
 			var fxmlLoader = new FXMLLoader
 	        var root = fxmlLoader.load(inputLayout);
 	        var scene = new Scene(root, 640, 480);

@@ -1,15 +1,15 @@
-package fr.istic.tools.scanexam.view.fX.corrector;
+package fr.istic.tools.scanexam.view.fx.corrector;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX;
-import fr.istic.tools.scanexam.view.fX.corrector.Grader;
-import fr.istic.tools.scanexam.view.fX.corrector.QuestionItemCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.QuestionListCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentDetails;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentItemCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentListCorrector;
+import fr.istic.tools.scanexam.view.fx.FXSettings;
+import fr.istic.tools.scanexam.view.fx.GraduationAdapterFX;
+import fr.istic.tools.scanexam.view.fx.corrector.Grader;
+import fr.istic.tools.scanexam.view.fx.corrector.QuestionItemCorrector;
+import fr.istic.tools.scanexam.view.fx.corrector.QuestionListCorrector;
+import fr.istic.tools.scanexam.view.fx.corrector.StudentDetails;
+import fr.istic.tools.scanexam.view.fx.corrector.StudentItemCorrector;
+import fr.istic.tools.scanexam.view.fx.corrector.StudentListCorrector;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -544,7 +544,7 @@ public class ControllerFXCorrector {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.corrector.getPresenter().openCorrectionPdf(file.getPath());
+      this.corrector.getPresenter().openCorrectionPdf(file);
       this.renderCorrectedCopy();
       this.renderStudentCopy();
       this.loadQuestions();

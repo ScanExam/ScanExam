@@ -1,17 +1,17 @@
-package fr.istic.tools.scanexam.view.fX.editor;
+package fr.istic.tools.scanexam.view.fx.editor;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
-import fr.istic.tools.scanexam.view.fX.EditorAdapterFX;
-import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.editor.Box;
-import fr.istic.tools.scanexam.view.fX.editor.EdgeLocation;
-import fr.istic.tools.scanexam.view.fX.editor.PdfPane;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionListEditor;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionOptionsEditor;
+import fr.istic.tools.scanexam.view.fx.EditorAdapterFX;
+import fr.istic.tools.scanexam.view.fx.FXSettings;
+import fr.istic.tools.scanexam.view.fx.editor.Box;
+import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
+import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEditor;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionListEditor;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEditor;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
@@ -639,7 +639,7 @@ public class ControllerFXEditor {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.editor.getPresenter().save(file.getPath());
+      this.editor.getPresenter().save(file);
     } else {
       this.logger.warn("File not chosen");
     }
@@ -687,7 +687,7 @@ public class ControllerFXEditor {
    * called to load each question from the model into the vue
    */
   public void loadBoxes() {
-    for (int p = 0; (p < this.editor.getPresenter().getPresenterPdf().totalPdfPageNumber()); p++) {
+    for (int p = 0; (p < this.editor.getPresenter().getPresenterPdf().getPdfPageCount()); p++) {
       {
         LinkedList<Integer> ids = this.editor.getPresenter().getPresenterQuestionZone().initLoading(p);
         for (final int i : ids) {
@@ -724,7 +724,7 @@ public class ControllerFXEditor {
   public void initPageSelection() {
     this.pageChoice.getItems().clear();
     PresenterPdf pdfPresenter = this.editor.getPresenter().getPresenterPdf();
-    for (int i = 1; (i <= pdfPresenter.totalPdfPageNumber()); i++) {
+    for (int i = 1; (i <= pdfPresenter.getPdfPageCount()); i++) {
       boolean _contains = this.pageChoice.getItems().contains(Integer.valueOf(i));
       boolean _not = (!_contains);
       if (_not) {
@@ -747,8 +747,8 @@ public class ControllerFXEditor {
     int _plus = (_currentPdfPageNumber + 1);
     String _plus_1 = (_translate + Integer.valueOf(_plus));
     String _plus_2 = (_plus_1 + " / ");
-    int _talPdfPageNumber = this.editor.getPresenter().getPresenterPdf().totalPdfPageNumber();
-    String _plus_3 = (_plus_2 + Integer.valueOf(_talPdfPageNumber));
+    int _pdfPageCount = this.editor.getPresenter().getPresenterPdf().getPdfPageCount();
+    String _plus_3 = (_plus_2 + Integer.valueOf(_pdfPageCount));
     this.pageNumberLabel.setText(_plus_3);
     int _currentPdfPageNumber_1 = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
     int _plus_4 = (_currentPdfPageNumber_1 + 1);

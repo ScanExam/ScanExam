@@ -1,9 +1,9 @@
-package fr.istic.tools.scanexam.view.fX.corrector
+package fr.istic.tools.scanexam.view.fx.corrector
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
 import fr.istic.tools.scanexam.services.ExamSingleton
-import fr.istic.tools.scanexam.view.fX.FXSettings
-import fr.istic.tools.scanexam.view.fX.GraduationAdapterFX
+import fr.istic.tools.scanexam.view.fx.FXSettings
+import fr.istic.tools.scanexam.view.fx.GraduationAdapterFX
 import java.io.File
 import java.io.IOException
 import java.util.Arrays
@@ -423,7 +423,7 @@ class ControllerFXCorrector {
 			"Documents");
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 		if (file !== null) {
-			corrector.presenter.openCorrectionPdf(file.path);
+			corrector.presenter.openCorrectionPdf(file);
 			renderCorrectedCopy();
 			renderStudentCopy();
 			loadQuestions();

@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import java.util.Objects;
 
 /**
@@ -12,16 +12,16 @@ public class PresenterQRCode {
   /**
    * Presenter for the creation view
    */
-  private EditorPresenter presenter;
+  private PresenterEdition presenter;
   
   /**
    * setter for the PresenterVueCreation attribute
    * @param {@link PresenterVueCreation} pres instance of the presenter (not null)
    */
-  public EditorPresenter setPresenterVueCreation(final EditorPresenter pres) {
-    EditorPresenter _xblockexpression = null;
+  public PresenterEdition setPresenterVueCreation(final PresenterEdition pres) {
+    PresenterEdition _xblockexpression = null;
     {
-      Objects.<EditorPresenter>requireNonNull(pres);
+      Objects.<PresenterEdition>requireNonNull(pres);
       _xblockexpression = this.presenter = pres;
     }
     return _xblockexpression;
@@ -30,7 +30,7 @@ public class PresenterQRCode {
   /**
    * @return current {@link PresenterVueCreation}
    */
-  public EditorPresenter getPresenterVueCreation() {
+  public PresenterEdition getPresenterVueCreation() {
     return this.presenter;
   }
 }

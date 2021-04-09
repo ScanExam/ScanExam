@@ -1,19 +1,19 @@
 package fr.istic.tools.scanexam.view.swing
 
-import fr.istic.tools.scanexam.presenter.GraduationPresenter
-import fr.istic.tools.scanexam.view.GraduationAdapter
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
 import java.io.IOException
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
+import fr.istic.tools.scanexam.presenter.PresenterGraduation
+import fr.istic.tools.scanexam.view.AdapterGraduation
 
 /** 
  * Controlleur swing de la fenêtre de création d'examen
  * @author Julien Cochet
  */
-class GraduationAdapterSwing implements GraduationAdapter {
+class GraduationAdapterSwing implements AdapterGraduation {
 	
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -24,7 +24,7 @@ class GraduationAdapterSwing implements GraduationAdapter {
 	var EditorViewSwing viewEdit
 	
 	/* Presenter de la correction d'exman */
-	var GraduationPresenter graduationPresenter
+	var PresenterGraduation graduationPresenter
 	
 	/* Vue de la création d'exman */
 	var GraduationViewSwing view
@@ -125,7 +125,7 @@ class GraduationAdapterSwing implements GraduationAdapter {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
-	override setPresenter(GraduationPresenter presenter) {
+	override setPresenter(PresenterGraduation presenter) {
 		graduationPresenter = presenter
 		adapterPdf.presenterPdf = presenter
 	}

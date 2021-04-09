@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.view.fx
 
 import javafx.scene.input.KeyCode
 import javafx.scene.paint.Color

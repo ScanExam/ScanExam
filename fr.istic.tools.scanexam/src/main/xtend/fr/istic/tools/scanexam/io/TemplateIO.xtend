@@ -10,6 +10,7 @@ import org.eclipse.emf.common.util.URI
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import org.eclipse.emf.ecore.EObject
 import fr.istic.tools.scanexam.core.CorePackage
+import java.io.File
 
 class TemplateIO 
 {
@@ -64,9 +65,8 @@ class TemplateIO
     }
     
     
-    def static void save(String path,EObject obj)
+    def static void save(File file,EObject obj)
     {
-		
 		val resourceSet = new ResourceSetImpl();
 		val _extensionToFactoryMap = resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		val _xMIResourceFactoryImpl = new XMIResourceFactoryImpl()
@@ -75,7 +75,7 @@ class TemplateIO
 		resourceSet.getPackageRegistry().put(TemplatesPackage.eNS_URI, TemplatesPackage.eINSTANCE);
 	
 			
-		val resource = resourceSet.createResource(URI.createFileURI(path))
+		val resource = resourceSet.createResource(URI.createFileURI(file.absolutePath))
 		resource.getContents().add(obj);
 		resource.save(null);
 	}

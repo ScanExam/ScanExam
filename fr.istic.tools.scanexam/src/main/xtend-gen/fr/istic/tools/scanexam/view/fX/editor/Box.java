@@ -1,10 +1,10 @@
-package fr.istic.tools.scanexam.view.fX.editor;
+package fr.istic.tools.scanexam.view.fx.editor;
 
-import fr.istic.tools.scanexam.view.fX.FXSettings;
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
-import fr.istic.tools.scanexam.view.fX.editor.EdgeLocation;
-import fr.istic.tools.scanexam.view.fX.editor.PdfPane;
-import fr.istic.tools.scanexam.view.fX.editor.QuestionItemEditor;
+import fr.istic.tools.scanexam.view.fx.FXSettings;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
+import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEditor;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;

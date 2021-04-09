@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX.editor;
+package fr.istic.tools.scanexam.view.fx.editor;
 
 import javafx.fxml.FXML;
 import javafx.scene.web.HTMLEditor;

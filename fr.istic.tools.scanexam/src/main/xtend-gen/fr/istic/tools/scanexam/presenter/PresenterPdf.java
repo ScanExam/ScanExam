@@ -1,14 +1,20 @@
 package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.presenter.Presenter;
-import fr.istic.tools.scanexam.services.ExamEditionService;
 import fr.istic.tools.scanexam.services.Service;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Controlleur du pdf
@@ -17,9 +23,15 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 @SuppressWarnings("all")
 public class PresenterPdf {
   /**
-   * presenter used for the edition of an exam
-   * @author Benjamin Danlos
+   * Pdf chargé
    */
+  private PDDocument document;
+  
+  /**
+   * Index de la page courante du modèle d'exam
+   */
+  protected int pdfPageIndex;
+  
   private Presenter presenter;
   
   /**
@@ -79,46 +91,104 @@ public class PresenterPdf {
     return this.presenter;
   }
   
+  /**
+   * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
+   * @param page Numéro de page où se rendre
+   */
+  public int goToPdfPage(final int page) {
+    int _xifexpression = (int) 0;
+    if (((page >= 0) && (page < IterableExtensions.size(this.document.getPages())))) {
+      _xifexpression = this.pdfPageIndex = page;
+    }
+    return _xifexpression;
+  }
+  
   public BufferedImage getCurrentPdfPage() {
-    InputOutput.<Integer>print(Integer.valueOf(this.service.currentPdfPageNumber()));
-    return this.service.getCurrentPdfPage();
+    return this.pageToImage(this.document.getPages().get(this.pdfPageIndex));
   }
   
-  public void nextPdfPage() {
-    this.service.nextPdfPage();
+  public int nextPdfPage() {
+    int _xblockexpression = (int) 0;
+    {
+      InputOutput.<String>println((("-" + Integer.valueOf(this.pdfPageIndex)) + "-"));
+      int _xifexpression = (int) 0;
+      int _size = IterableExtensions.size(this.document.getPages());
+      boolean _lessThan = ((this.pdfPageIndex + 1) < _size);
+      if (_lessThan) {
+        _xifexpression = this.pdfPageIndex++;
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
   }
   
-  public void previousPdfPage() {
-    this.service.previousPdfPage();
-  }
-  
-  public void goToPdfPage(final int page) {
-    this.service.goToPdfPage(page);
-  }
-  
-  public int totalPdfPageNumber() {
-    return this.service.getPdfsize();
+  /**
+   * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+   */
+  public int previousPdfPage() {
+    int _xifexpression = (int) 0;
+    if ((this.pdfPageIndex > 0)) {
+      _xifexpression = this.pdfPageIndex--;
+    }
+    return _xifexpression;
   }
   
   public int currentPdfPageNumber() {
-    return this.service.getCurrentPageNumber();
+    return this.pdfPageIndex;
   }
   
-  public Object choosePdfPage(final int i) {
-    return null;
-  }
-  
-  public PDDocument getDocument() {
-    return this.service.getDocument();
+  public BufferedImage pageToImage(final PDPage page) {
+    try {
+      BufferedImage _xblockexpression = null;
+      {
+        final PDFRenderer renderer = new PDFRenderer(this.document);
+        final BufferedImage bufferedImage = renderer.renderImageWithDPI(this.pdfPageIndex, 300, ImageType.RGB);
+        _xblockexpression = bufferedImage;
+      }
+      return _xblockexpression;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   public void create(final File file) {
-    Objects.<File>requireNonNull(file);
-    ((ExamEditionService) this.service).create(file);
+    try {
+      Objects.<File>requireNonNull(file);
+      this.document = PDDocument.load(file);
+      this.service.onDocumentLoad(IterableExtensions.size(this.document.getPages()));
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public PDDocument create(final ByteArrayInputStream stream) {
+    try {
+      return this.document = PDDocument.load(stream);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   public boolean atCorrectPage(final int page) {
-    int _currentPdfPageNumber = this.service.currentPdfPageNumber();
+    int _currentPdfPageNumber = this.currentPdfPageNumber();
     return (page == _currentPdfPageNumber);
+  }
+  
+  public int getPdfPageCount() {
+    return IterableExtensions.size(this.document.getPages());
+  }
+  
+  public ByteArrayOutputStream getPdfOutputStream() {
+    try {
+      ByteArrayOutputStream _xblockexpression = null;
+      {
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        this.document.save(outputStream);
+        _xblockexpression = outputStream;
+      }
+      return _xblockexpression;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
 }

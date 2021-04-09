@@ -2,8 +2,8 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
-import fr.istic.tools.scanexam.services.ExamEditionService;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
+import fr.istic.tools.scanexam.services.ServiceEdition;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -19,13 +19,13 @@ public class PresenterQuestionZone {
   /**
    * Presenter for the creation view
    */
-  private EditorPresenter presenter;
+  private PresenterEdition presenter;
   
-  private ExamEditionService service;
+  private ServiceEdition service;
   
-  public PresenterQuestionZone(final ExamEditionService s, final EditorPresenter p) {
-    Objects.<ExamEditionService>requireNonNull(s);
-    Objects.<EditorPresenter>requireNonNull(p);
+  public PresenterQuestionZone(final ServiceEdition s, final PresenterEdition p) {
+    Objects.<ServiceEdition>requireNonNull(s);
+    Objects.<PresenterEdition>requireNonNull(p);
     this.service = s;
     this.presenter = p;
   }
@@ -34,10 +34,10 @@ public class PresenterQuestionZone {
    * setter for the PresenterVueCreation attribute
    * @param {@link PresenterVueCreation} pres instance of the presenter (not null)
    */
-  public EditorPresenter setPresenterVueCreation(final EditorPresenter pres) {
-    EditorPresenter _xblockexpression = null;
+  public PresenterEdition setPresenterVueCreation(final PresenterEdition pres) {
+    PresenterEdition _xblockexpression = null;
     {
-      Objects.<EditorPresenter>requireNonNull(pres);
+      Objects.<PresenterEdition>requireNonNull(pres);
       _xblockexpression = this.presenter = pres;
     }
     return _xblockexpression;
@@ -46,12 +46,12 @@ public class PresenterQuestionZone {
   /**
    * @return current {@link PresenterVueCreation}
    */
-  public EditorPresenter getPresenterVueCreation() {
+  public PresenterEdition getPresenterVueCreation() {
     return this.presenter;
   }
   
   public int createQuestion(final double x, final double y, final double height, final double width) {
-    return this.service.createQuestion(((float) x), ((float) y), ((float) height), ((float) width));
+    return this.service.createQuestion(this.presenter.getPresenterPdf().pdfPageIndex, ((float) x), ((float) y), ((float) height), ((float) width));
   }
   
   public void removeQuestion(final int ID) {

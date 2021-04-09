@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
 import java.util.Objects
-import fr.istic.tools.scanexam.services.ExamGraduationService
+import fr.istic.tools.scanexam.services.ServiceGraduation
 
 /**
  * CLass representing a presenter of question in 
@@ -13,19 +13,19 @@ class PresenterQuestion {
 	/**
 	 * Association with the model via the Service API
 	 */
-	ExamGraduationService service
+	ServiceGraduation service
 	
 	/**
 	 * Presenter for the correction view
 	 */
-	GraduationPresenter presenterCorrection
+	PresenterGraduation presenterCorrection
 	
 	/**
 	 * Constructor
 	 * @param {@link ExamGraduationService} (not null)
 	 * Constructs a QuestionPresenter object.
 	 */
-	new(ExamGraduationService service){
+	new(ServiceGraduation service){
 		Objects.requireNonNull(service)
 		this.service = service
 	}
@@ -34,7 +34,7 @@ class PresenterQuestion {
 	 * setter for the PresenterVueCorrection attribute
 	 * @param {@link PresenterVueCorrection} pres instance of the presenter (not null) 
 	 */
-	def setPresenterVueCorrection(GraduationPresenter pres){
+	def setPresenterVueCorrection(PresenterGraduation pres){
 		Objects.requireNonNull(pres)
 		presenterCorrection = pres
 	}

@@ -1,9 +1,9 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.mailing.SendMailTls.LoginResult
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration
-import fr.istic.tools.scanexam.view.fX.utils.ShakeEffect
+import fr.istic.tools.scanexam.view.fx.utils.ShakeEffect
 import java.net.URL
 import java.util.ResourceBundle
 import java.util.regex.Pattern
@@ -11,8 +11,8 @@ import javafx.collections.FXCollections
 import javafx.concurrent.Service
 import javafx.concurrent.Task
 import javafx.css.PseudoClass
-import javafx.fxml.FXML
-import javafx.fxml.Initializable
+
+
 import javafx.scene.Cursor
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
@@ -25,6 +25,8 @@ import javafx.scene.image.Image
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import fr.istic.tools.scanexam.utils.ResourcesUtils
+import javafx.fxml.FXML
+import javafx.fxml.Initializable
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX

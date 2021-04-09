@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX.editor
+package fr.istic.tools.scanexam.view.fx.editor
 
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue

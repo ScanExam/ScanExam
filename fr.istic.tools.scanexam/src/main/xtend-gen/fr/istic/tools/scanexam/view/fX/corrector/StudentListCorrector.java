@@ -1,7 +1,7 @@
-package fr.istic.tools.scanexam.view.fX.corrector;
+package fr.istic.tools.scanexam.view.fx.corrector;
 
-import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector;
-import fr.istic.tools.scanexam.view.fX.corrector.StudentItemCorrector;
+import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector;
+import fr.istic.tools.scanexam.view.fx.corrector.StudentItemCorrector;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;

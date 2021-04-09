@@ -1,15 +1,15 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.presenter.GraduationPresenter;
-import fr.istic.tools.scanexam.view.GraduationAdapter;
-import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector;
+import fr.istic.tools.scanexam.presenter.PresenterGraduation;
+import fr.istic.tools.scanexam.view.AdapterGraduation;
+import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector;
 import java.io.File;
 import java.util.List;
 
 @SuppressWarnings("all")
-public class GraduationAdapterFX implements GraduationAdapter {
-  private GraduationPresenter presenter;
+public class GraduationAdapterFX implements AdapterGraduation {
+  private PresenterGraduation presenter;
   
   private ControllerFXCorrector corrector;
   
@@ -42,12 +42,12 @@ public class GraduationAdapterFX implements GraduationAdapter {
   }
   
   @Override
-  public void setPresenter(final GraduationPresenter presenter) {
+  public void setPresenter(final PresenterGraduation presenter) {
     this.presenter = presenter;
   }
   
   @Override
-  public GraduationPresenter getPresenter() {
+  public PresenterGraduation getPresenter() {
     return this.presenter;
   }
 }

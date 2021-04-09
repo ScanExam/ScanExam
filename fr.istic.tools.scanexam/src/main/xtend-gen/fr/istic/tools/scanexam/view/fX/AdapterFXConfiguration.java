@@ -1,11 +1,11 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.view.fx;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.mailing.SendMailTls;
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fX.utils.ShakeEffect;
+import fr.istic.tools.scanexam.view.fx.utils.ShakeEffect;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;

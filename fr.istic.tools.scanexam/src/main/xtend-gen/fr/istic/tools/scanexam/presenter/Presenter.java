@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.PresenterMarkingScheme;
+import fr.istic.tools.scanexam.presenter.PresenterGradeScale;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 
 /**
@@ -11,5 +11,5 @@ import fr.istic.tools.scanexam.presenter.PresenterPdf;
 public interface Presenter {
   PresenterPdf getPresenterPdf();
   
-  PresenterMarkingScheme getPresenterMarkingScheme();
+  PresenterGradeScale getPresenterMarkingScheme();
 }

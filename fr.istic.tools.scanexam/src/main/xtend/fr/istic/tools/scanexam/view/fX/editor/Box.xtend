@@ -1,6 +1,6 @@
-package fr.istic.tools.scanexam.view.fX.editor
+package fr.istic.tools.scanexam.view.fx.editor
 
-import fr.istic.tools.scanexam.view.fX.FXSettings
+import fr.istic.tools.scanexam.view.fx.FXSettings
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.input.MouseEvent

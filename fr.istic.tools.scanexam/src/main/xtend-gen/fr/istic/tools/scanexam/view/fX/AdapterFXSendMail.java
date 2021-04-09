@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.presenter.PresenterSendMail;
 import javafx.fxml.FXML;

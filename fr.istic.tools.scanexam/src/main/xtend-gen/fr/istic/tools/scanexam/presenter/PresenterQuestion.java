@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.GraduationPresenter;
-import fr.istic.tools.scanexam.services.ExamGraduationService;
+import fr.istic.tools.scanexam.presenter.PresenterGraduation;
+import fr.istic.tools.scanexam.services.ServiceGraduation;
 import java.util.Objects;
 
 /**
@@ -14,20 +14,20 @@ public class PresenterQuestion {
   /**
    * Association with the model via the Service API
    */
-  private ExamGraduationService service;
+  private ServiceGraduation service;
   
   /**
    * Presenter for the correction view
    */
-  private GraduationPresenter presenterCorrection;
+  private PresenterGraduation presenterCorrection;
   
   /**
    * Constructor
    * @param {@link ExamGraduationService} (not null)
    * Constructs a QuestionPresenter object.
    */
-  public PresenterQuestion(final ExamGraduationService service) {
-    Objects.<ExamGraduationService>requireNonNull(service);
+  public PresenterQuestion(final ServiceGraduation service) {
+    Objects.<ServiceGraduation>requireNonNull(service);
     this.service = service;
   }
   
@@ -35,10 +35,10 @@ public class PresenterQuestion {
    * setter for the PresenterVueCorrection attribute
    * @param {@link PresenterVueCorrection} pres instance of the presenter (not null)
    */
-  public GraduationPresenter setPresenterVueCorrection(final GraduationPresenter pres) {
-    GraduationPresenter _xblockexpression = null;
+  public PresenterGraduation setPresenterVueCorrection(final PresenterGraduation pres) {
+    PresenterGraduation _xblockexpression = null;
     {
-      Objects.<GraduationPresenter>requireNonNull(pres);
+      Objects.<PresenterGraduation>requireNonNull(pres);
       _xblockexpression = this.presenterCorrection = pres;
     }
     return _xblockexpression;
@@ -47,7 +47,7 @@ public class PresenterQuestion {
   /**
    * @return current {@link PresenterVueCreation}
    */
-  public GraduationPresenter getPresenterVueCorrection() {
+  public PresenterGraduation getPresenterVueCorrection() {
     return this.presenterCorrection;
   }
   

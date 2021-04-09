@@ -1,22 +1,22 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
-import fr.istic.tools.scanexam.presenter.GraduationPresenter;
-import fr.istic.tools.scanexam.services.ExamEditionService;
-import fr.istic.tools.scanexam.services.ExamGraduationService;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
+import fr.istic.tools.scanexam.presenter.PresenterGraduation;
+import fr.istic.tools.scanexam.services.ServiceEdition;
+import fr.istic.tools.scanexam.services.ServiceGraduation;
 import fr.istic.tools.scanexam.view.Adapter;
 
 @SuppressWarnings("all")
 public class PresenterBindings {
-  public static void linkEditorPresenter(final Adapter<EditorPresenter> adapter) {
-    final ExamEditionService service = new ExamEditionService();
-    final EditorPresenter presenter = new EditorPresenter(adapter, service);
+  public static void linkEditorPresenter(final Adapter<PresenterEdition> adapter) {
+    final ServiceEdition service = new ServiceEdition();
+    final PresenterEdition presenter = new PresenterEdition(adapter, service);
     adapter.setPresenter(presenter);
   }
   
-  public static void linkGraduationPresenter(final Adapter<GraduationPresenter> adapter) {
-    final ExamGraduationService service = new ExamGraduationService();
-    final GraduationPresenter presenter = new GraduationPresenter(adapter, service);
+  public static void linkGraduationPresenter(final Adapter<PresenterGraduation> adapter) {
+    final ServiceGraduation service = new ServiceGraduation();
+    final PresenterGraduation presenter = new PresenterGraduation(adapter, service);
     adapter.setPresenter(presenter);
   }
 }

@@ -1,9 +1,9 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor
+import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Node
@@ -66,7 +66,7 @@ class ControllerRoot {
 	def loadStudentList() { 
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.FXML"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
@@ -78,7 +78,7 @@ class ControllerRoot {
 	def updateConfig() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.fxml"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.FXML"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
@@ -90,7 +90,7 @@ class ControllerRoot {
 	def sendMail(){
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.FXML"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));

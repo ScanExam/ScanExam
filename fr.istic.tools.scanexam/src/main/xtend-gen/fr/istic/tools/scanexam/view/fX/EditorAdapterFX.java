@@ -1,17 +1,17 @@
-package fr.istic.tools.scanexam.view.fX;
+package fr.istic.tools.scanexam.view.fx;
 
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
-import fr.istic.tools.scanexam.view.EditorAdapter;
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
+import fr.istic.tools.scanexam.view.AdapterEdition;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor;
 
 @SuppressWarnings("all")
-public class EditorAdapterFX implements EditorAdapter {
-  private EditorPresenter presenter;
+public class EditorAdapterFX implements AdapterEdition {
+  private PresenterEdition presenter;
   
   private ControllerFXEditor controller;
   
   @Override
-  public void setPresenter(final EditorPresenter presenter) {
+  public void setPresenter(final PresenterEdition presenter) {
     this.presenter = presenter;
   }
   
@@ -20,7 +20,7 @@ public class EditorAdapterFX implements EditorAdapter {
   }
   
   @Override
-  public EditorPresenter getPresenter() {
+  public PresenterEdition getPresenter() {
     return this.presenter;
   }
 }

@@ -1,9 +1,9 @@
 package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.launcher.LauncherSwing;
-import fr.istic.tools.scanexam.presenter.EditorPresenter;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import fr.istic.tools.scanexam.presenter.SelectionStateMachine;
-import fr.istic.tools.scanexam.view.EditorAdapter;
+import fr.istic.tools.scanexam.view.AdapterEdition;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
 import fr.istic.tools.scanexam.view.swing.BoxList;
 import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
@@ -24,11 +24,11 @@ import org.eclipse.xtext.xbase.lib.ExclusiveRange;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class EditorAdapterSwing implements EditorAdapter {
+public class EditorAdapterSwing implements AdapterEdition {
   /**
    * Presenter de la création d'exman
    */
-  private EditorPresenter editorPresenter;
+  private PresenterEdition editorPresenter;
   
   /**
    * Vue de la création d'exman
@@ -157,8 +157,8 @@ public class EditorAdapterSwing implements EditorAdapter {
         this.editorPresenter.getPresenterPdf().create(selectedFile);
         this.adapterPdfAndBox.refreshPdf();
         this.view.getCmbBxPage().removeAll();
-        int _talPdfPageNumber = this.editorPresenter.getPresenterPdf().totalPdfPageNumber();
-        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(1, _talPdfPageNumber, true);
+        int _pdfPageCount = this.editorPresenter.getPresenterPdf().getPdfPageCount();
+        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(1, _pdfPageCount, true);
         for (final Integer i : _doubleDotLessThan) {
           this.view.getCmbBxPage().addItem(i);
         }
@@ -188,7 +188,7 @@ public class EditorAdapterSwing implements EditorAdapter {
     fc.setFileFilter(filter);
     int ret = fc.showSaveDialog(null);
     if ((ret == JFileChooser.APPROVE_OPTION)) {
-      this.getPresenter().save(fc.getSelectedFile().getPath());
+      this.getPresenter().save(fc.getSelectedFile());
     }
   }
   
@@ -218,14 +218,14 @@ public class EditorAdapterSwing implements EditorAdapter {
   }
   
   @Override
-  public void setPresenter(final EditorPresenter presenter) {
+  public void setPresenter(final PresenterEdition presenter) {
     this.editorPresenter = presenter;
     this.adapterPdfAndBox.presenterPdf = presenter;
     this.adapterPdfAndBox.setPresenterQst(presenter.getPresenterQuestionZone());
   }
   
   @Override
-  public EditorPresenter getPresenter() {
+  public PresenterEdition getPresenter() {
     return this.editorPresenter;
   }
 }

@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.presenter.GraduationPresenter;
-import fr.istic.tools.scanexam.view.GraduationAdapter;
+import fr.istic.tools.scanexam.presenter.PresenterGraduation;
+import fr.istic.tools.scanexam.view.AdapterGraduation;
 import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
 import fr.istic.tools.scanexam.view.swing.EditorViewSwing;
 import fr.istic.tools.scanexam.view.swing.GraduationViewSwing;
@@ -21,7 +21,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class GraduationAdapterSwing implements GraduationAdapter {
+public class GraduationAdapterSwing implements AdapterGraduation {
   /**
    * View de editor
    */
@@ -30,7 +30,7 @@ public class GraduationAdapterSwing implements GraduationAdapter {
   /**
    * Presenter de la correction d'exman
    */
-  private GraduationPresenter graduationPresenter;
+  private PresenterGraduation graduationPresenter;
   
   /**
    * Vue de la création d'exman
@@ -142,13 +142,13 @@ public class GraduationAdapterSwing implements GraduationAdapter {
   }
   
   @Override
-  public void setPresenter(final GraduationPresenter presenter) {
+  public void setPresenter(final PresenterGraduation presenter) {
     this.graduationPresenter = presenter;
     this.adapterPdf.presenterPdf = presenter;
   }
   
   @Override
-  public GraduationPresenter getPresenter() {
+  public PresenterGraduation getPresenter() {
     return this.getPresenter();
   }
 }

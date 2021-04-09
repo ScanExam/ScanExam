@@ -1,8 +1,8 @@
-package fr.istic.tools.scanexam.view.fX.editor;
+package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
-import fr.istic.tools.scanexam.view.fX.EditorAdapterFX
-import fr.istic.tools.scanexam.view.fX.FXSettings
+import fr.istic.tools.scanexam.view.fx.EditorAdapterFX
+import fr.istic.tools.scanexam.view.fx.FXSettings
 import java.io.File
 import java.util.Arrays
 import javafx.embed.swing.SwingFXUtils
@@ -522,7 +522,7 @@ class ControllerFXEditor {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			editor.presenter.save(file.path);
+			editor.presenter.save(file);
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -553,7 +553,7 @@ class ControllerFXEditor {
 	 */
 	def loadBoxes() {
 		
-		for (var p = 0;p < editor.presenter.getPresenterPdf.totalPdfPageNumber;p++) {
+		for (var p = 0;p < editor.presenter.getPresenterPdf.getPdfPageCount;p++) {
 			var ids = editor.presenter.presenterQuestionZone.initLoading(p)
 			for (int i:ids) {
 				
@@ -583,7 +583,7 @@ class ControllerFXEditor {
 	def initPageSelection() {
 		pageChoice.items.clear
 		var pdfPresenter = editor.presenter.getPresenterPdf()
-		for (var i = 1; i<=pdfPresenter.totalPdfPageNumber(); i++) {
+		for (var i = 1; i<=pdfPresenter.getPdfPageCount(); i++) {
 			//println(i)
 			if (!pageChoice.items.contains(i)) {
 				pageChoice.getItems().add(i)
@@ -603,7 +603,7 @@ class ControllerFXEditor {
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
 		
-		pageNumberLabel.text = translate("label.page") + (editor.presenter.getPresenterPdf.currentPdfPageNumber + 1) + " / " + editor.presenter.getPresenterPdf.totalPdfPageNumber
+		pageNumberLabel.text = translate("label.page") + (editor.presenter.getPresenterPdf.currentPdfPageNumber + 1) + " / " + editor.presenter.getPresenterPdf.getPdfPageCount
 		pageChoice.value = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1
 	}
 

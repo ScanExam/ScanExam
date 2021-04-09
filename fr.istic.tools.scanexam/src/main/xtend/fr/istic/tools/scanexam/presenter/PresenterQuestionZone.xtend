@@ -1,10 +1,10 @@
 package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.core.Question
-import fr.istic.tools.scanexam.services.ExamEditionService
 import java.util.LinkedList
 import java.util.Objects
 import java.util.List
+import fr.istic.tools.scanexam.services.ServiceEdition
 
 /**
  * Class to manage conversions of the view's questions 
@@ -15,10 +15,10 @@ class PresenterQuestionZone {
 	/**
 	 * Presenter for the creation view
 	 */
-	EditorPresenter presenter 
-	ExamEditionService service
+	PresenterEdition presenter 
+	ServiceEdition service
 	
-	new(ExamEditionService s , EditorPresenter p) {
+	new(ServiceEdition s , PresenterEdition p) {
 		Objects.requireNonNull(s)
 		Objects.requireNonNull(p)
 		service = s
@@ -29,7 +29,7 @@ class PresenterQuestionZone {
 	 * setter for the PresenterVueCreation attribute
 	 * @param {@link PresenterVueCreation} pres instance of the presenter (not null) 
 	 */
-	def setPresenterVueCreation(EditorPresenter pres){
+	def setPresenterVueCreation(PresenterEdition pres){
 		Objects.requireNonNull(pres)
 		presenter = pres
 	}
@@ -40,8 +40,9 @@ class PresenterQuestionZone {
 		presenter
 	}
 	
-	def int createQuestion(double x, double y, double height, double width){
-		service.createQuestion(x as float,y as float,height as float,width as float)
+	def int createQuestion(double x, double y, double height, double width)
+	{
+		service.createQuestion(presenter.presenterPdf.pdfPageIndex,x as float,y as float,height as float,width as float)
 	}
 	
 	def void removeQuestion(int ID) {

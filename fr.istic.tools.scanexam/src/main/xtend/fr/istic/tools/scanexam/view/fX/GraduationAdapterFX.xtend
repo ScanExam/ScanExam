@@ -1,14 +1,14 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.view.fx
 
-import fr.istic.tools.scanexam.presenter.GraduationPresenter
-import fr.istic.tools.scanexam.view.GraduationAdapter
 import java.io.File
 import fr.istic.tools.scanexam.core.Question
-import fr.istic.tools.scanexam.view.fX.corrector.ControllerFXCorrector
+import fr.istic.tools.scanexam.view.fx.corrector.ControllerFXCorrector
+import fr.istic.tools.scanexam.presenter.PresenterGraduation
+import fr.istic.tools.scanexam.view.AdapterGraduation
 
-class GraduationAdapterFX implements GraduationAdapter {
+class GraduationAdapterFX implements AdapterGraduation {
 	
-	GraduationPresenter presenter;
+	PresenterGraduation presenter;
 	ControllerFXCorrector corrector;
 	
 	def void setController(ControllerFXCorrector controller){
@@ -39,7 +39,7 @@ class GraduationAdapterFX implements GraduationAdapter {
 		
 	}
 	
-	override setPresenter(GraduationPresenter presenter) {
+	override setPresenter(PresenterGraduation presenter) {
 		this.presenter = presenter
 	}
 	override getPresenter() {

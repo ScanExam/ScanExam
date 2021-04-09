@@ -21,8 +21,8 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	int nbPagesInPdf
 	PDDocument doc
 
-	new(PDDocument doc, int nbPages, int nbCopies) {
-		this.doc = doc
+	new(PDDocument document, int nbPages, int nbCopies) {
+		this.doc = document;
 		this.nbPagesInSheet = nbPages
 		this.nbSheetsTotal = nbCopies
 

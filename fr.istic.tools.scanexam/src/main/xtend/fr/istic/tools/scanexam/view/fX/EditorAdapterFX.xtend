@@ -1,16 +1,15 @@
-package fr.istic.tools.scanexam.view.fX
+package fr.istic.tools.scanexam.view.fx
 
-import fr.istic.tools.scanexam.presenter.EditorPresenter
-import fr.istic.tools.scanexam.view.EditorAdapter
-import fr.istic.tools.scanexam.view.fX.editor.ControllerFXEditor
-import fr.istic.tools.scanexam.view.fX.editor.Box
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFXEditor
+import fr.istic.tools.scanexam.presenter.PresenterEdition
+import fr.istic.tools.scanexam.view.AdapterEdition
 
-class EditorAdapterFX implements EditorAdapter {
+class EditorAdapterFX implements AdapterEdition {
 	
-	EditorPresenter presenter;
+	PresenterEdition presenter;
 	ControllerFXEditor controller;
 	
-	override setPresenter(EditorPresenter presenter)
+	override setPresenter(PresenterEdition presenter)
 	{
 		this.presenter = presenter
 	}	

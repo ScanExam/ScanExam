@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fX.corrector
+package fr.istic.tools.scanexam.view.fx.corrector
 
 import javafx.scene.control.Label
 import javafx.scene.layout.GridPane
