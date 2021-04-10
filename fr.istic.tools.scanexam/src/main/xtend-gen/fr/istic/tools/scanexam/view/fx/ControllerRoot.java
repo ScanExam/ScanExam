@@ -1,7 +1,9 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fx.AdapterFxConfiguration;
 import fr.istic.tools.scanexam.view.fx.AdapterFxStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
@@ -86,8 +88,7 @@ public class ControllerRoot {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      AdapterFxStudentListLoader _controller = loader.<AdapterFxStudentListLoader>getController();
-      _controller.setPresenterStudentListLoader(this.corrector.getAdapter().getPresenter().getPresenterStudenList());
+      loader.<AdapterFxStudentListLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterStudenList());
       Scene _scene = new Scene(view, 384, 160);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -109,6 +110,9 @@ public class ControllerRoot {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
+      AdapterFxConfiguration _controller = loader.<AdapterFxConfiguration>getController();
+      PresenterConfiguration _presenterConfiguration = new PresenterConfiguration();
+      _controller.initialize(_presenterConfiguration);
       Scene _scene = new Scene(view, 384, 280);
       dialog.setScene(_scene);
       dialog.setResizable(false);

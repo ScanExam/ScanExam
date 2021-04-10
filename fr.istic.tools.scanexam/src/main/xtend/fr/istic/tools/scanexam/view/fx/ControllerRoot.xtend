@@ -13,6 +13,7 @@ import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.Tab
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import fr.istic.tools.scanexam.presenter.PresenterConfiguration
 
 class ControllerRoot {
 	
@@ -70,7 +71,7 @@ class ControllerRoot {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<AdapterFxStudentListLoader>controller.presenterStudentListLoader = corrector.adapter.presenter.presenterStudenList
+		loader.<AdapterFxStudentListLoader>controller.initialize(corrector.adapter.presenter.presenterStudenList)
 		dialog.setScene(new Scene(view, 384, 160))
 		dialog.setResizable(false);
 		dialog.show
@@ -84,6 +85,8 @@ class ControllerRoot {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		//FIXME pas terrible que le contrôleur instancie un présenteur
+		loader.<AdapterFxConfiguration>controller.initialize(new PresenterConfiguration)
 		dialog.setScene(new Scene(view, 384, 280))
 		dialog.setResizable(false);
 		dialog.show

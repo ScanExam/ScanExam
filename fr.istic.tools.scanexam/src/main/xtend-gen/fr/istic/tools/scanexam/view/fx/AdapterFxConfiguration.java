@@ -7,8 +7,6 @@ import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
@@ -21,7 +19,6 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -41,7 +38,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class AdapterFxConfiguration implements Initializable {
+public class AdapterFxConfiguration {
   /**
    * Controlleur de la configuration
    */
@@ -96,18 +93,16 @@ public class AdapterFxConfiguration implements Initializable {
   public Button btnCheckMail;
   
   /**
-   * Constructeur. Initialise les différents champs avec la valeur actuelle de la configuration
+   * Initialise les différents champs avec la valeur actuelle de la configuration
    */
-  @Override
-  public void initialize(final URL location, final ResourceBundle resources) {
-    PresenterConfiguration _presenterConfiguration = new PresenterConfiguration();
-    this.presConfig = _presenterConfiguration;
-    this.cmbBxLanguage.setValue(this.presConfig.getLanguage());
-    this.txtFldEmail.setText(this.presConfig.getEmail());
-    this.pwdFldEmailPassword.setText(this.presConfig.getEmailPassword());
-    this.txtFldEmailHost.setText(this.presConfig.getMailHost());
-    this.txtFldEmailPort.setText(this.presConfig.getMailPort());
-    this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(this.presConfig.getLanguages()));
+  public void initialize(final PresenterConfiguration presConfig) {
+    this.presConfig = presConfig;
+    this.cmbBxLanguage.setValue(presConfig.getLanguage());
+    this.txtFldEmail.setText(presConfig.getEmail());
+    this.pwdFldEmailPassword.setText(presConfig.getEmailPassword());
+    this.txtFldEmailHost.setText(presConfig.getMailHost());
+    this.txtFldEmailPort.setText(presConfig.getMailPort());
+    this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(presConfig.getLanguages()));
     final UnaryOperator<TextFormatter.Change> _function = (TextFormatter.Change change) -> {
       TextFormatter.Change _xifexpression = null;
       boolean _matches = Pattern.compile("\\d*").matcher(change.getText()).matches();

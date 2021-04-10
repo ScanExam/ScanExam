@@ -5,14 +5,11 @@ import fr.istic.tools.scanexam.mailing.SendMailTls.LoginResult
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer
-import java.net.URL
-import java.util.ResourceBundle
 import java.util.regex.Pattern
 import javafx.collections.FXCollections
 import javafx.concurrent.Service
 import javafx.concurrent.Task
 import javafx.fxml.FXML
-import javafx.fxml.Initializable
 import javafx.scene.Cursor
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
@@ -30,7 +27,7 @@ import javafx.stage.Stage
  * Classe pour gérer la fenêtre de configuration en JavaFX
  * @author Julien Cochet
  */
-class AdapterFxConfiguration implements Initializable {
+class AdapterFxConfiguration {
 
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -78,10 +75,10 @@ class AdapterFxConfiguration implements Initializable {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	/**
-	 * Constructeur. Initialise les différents champs avec la valeur actuelle de la configuration
+	 * Initialise les différents champs avec la valeur actuelle de la configuration
 	 */
-	override initialize(URL location, ResourceBundle resources) {
-		presConfig = new PresenterConfiguration
+	def initialize(PresenterConfiguration presConfig) {
+		this.presConfig = presConfig
 
 		cmbBxLanguage.value = presConfig.language
 		txtFldEmail.text = presConfig.email
@@ -96,7 +93,7 @@ class AdapterFxConfiguration implements Initializable {
 		txtFldEmailPort.focusedProperty.addListener [ obs, oldVal, newVal |
 			!newVal ? txtFldEmailPort.text.equals("") ? txtFldEmailPort.text = "0"
 		]
-		txtFldEmail.focusedProperty.addListener[obs, oldVal, newVal|!newVal ? verifyMailAddress]
+		txtFldEmail.focusedProperty.addListener[obs, oldVal, newVal | !newVal ? verifyMailAddress]
 
 		btnCheckMail.onAction = [e|checkMail()]
 	}
