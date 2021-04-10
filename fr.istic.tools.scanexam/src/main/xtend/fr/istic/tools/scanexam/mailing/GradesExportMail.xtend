@@ -20,5 +20,5 @@ interface GradesExportMail {
 	 */
 	def void exportGradesMail(File pdf)
 	
-	def void exportGradesMail1(File pdf, String mail, String mdp, int taille,String nameExam, Collection<StudentSheet> studentSheetss)
+	def void exportGradesMail1(File pdf, String mail, String mdp, int taille,String nameExam, Collection<StudentSheet> studentSheets)
 }

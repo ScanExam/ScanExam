@@ -12,6 +12,7 @@ import fr.istic.tools.scanexam.utils.Tuple3
 import java.util.ArrayList
 import java.util.Collection
 import java.util.List
+import java.util.Objects
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
@@ -393,6 +394,36 @@ class ServiceGraduation extends Service
 	}
 	
 	
+	/**
+	 * Défini le chemin d'accès vers la liste de tous les étudiants
+	 * @param le chemin d'accès vers cette liste (non null)
+	 */
+	def setStudentListPath(String path) {
+		Objects.requireNonNull(path)
+		correctionTemplate.studentListPath = path
+	}
 	
+	/**
+	 * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
+	 */
+	def String getStudentListPath() {
+		return correctionTemplate.studentListPath
+	}
+	
+	/**
+	 * Défini la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
+	 * @param la position initialede cette liste (non null)
+	 */
+	def setStudentListShift(String shift) {
+		Objects.requireNonNull(shift)
+		correctionTemplate.studentListShift = shift
+	}
+	
+	/**
+	 * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
+	 */
+	def String getStudentListShift() {
+		return correctionTemplate.studentListShift
+	}
 	
 }

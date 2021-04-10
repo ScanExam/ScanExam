@@ -43,7 +43,9 @@ class Comment {
 }
 
 class TextComment extends Comment {
-	op String getText()
+	String text
+	float pointerX
+	float pointerY
 }
 
 class HandwritingComment {

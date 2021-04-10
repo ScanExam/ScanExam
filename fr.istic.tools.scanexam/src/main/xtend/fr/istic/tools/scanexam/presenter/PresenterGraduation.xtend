@@ -31,6 +31,7 @@ class PresenterGraduation implements Presenter
 	PresenterGradeScale presMarkingScheme
 	PresenterGraduation graduationPresenter;
 	PresenterPdf presPdf 
+	PresenterStudentListLoader studentListPresenter
 	ServiceGraduation service;
 	
 	Adapter<PresenterGraduation> adapter;
@@ -42,6 +43,7 @@ class PresenterGraduation implements Presenter
 		
 		presPdf = new PresenterPdf(service, this)
 		presQuestion = new PresenterQuestion(service)
+		studentListPresenter = new PresenterStudentListLoader(service)
 	}
 	new(Adapter<PresenterGraduation> adapter,ServiceGraduation service) 
 	{
@@ -99,7 +101,12 @@ class PresenterGraduation implements Presenter
 	}
 	
 
-	
+	/**
+	 * @return current {@link PresenterStudentListLoader} 
+	 */
+	def PresenterStudentListLoader getPresenterStudenList() {
+		studentListPresenter
+	}
 	
 	
 	def void openEditionTemplate(String path){

@@ -70,7 +70,9 @@ class ControllerRoot {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<AdapterFxStudentListLoader>controller.presenterStudentListLoader = corrector.adapter.presenter.presenterStudenList
 		dialog.setScene(new Scene(view, 384, 160))
+		dialog.setResizable(false);
 		dialog.show
 	}
 	
@@ -96,6 +98,7 @@ class ControllerRoot {
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 672, 416))
+		dialog.setResizable(false);
 		dialog.show
 	}
 	

@@ -16,5 +16,5 @@ public interface GradesExportMail {
    */
   void exportGradesMail(final File pdf);
   
-  void exportGradesMail1(final File pdf, final String mail, final String mdp, final int taille, final String nameExam, final Collection<StudentSheet> studentSheetss);
+  void exportGradesMail1(final File pdf, final String mail, final String mdp, final int taille, final String nameExam, final Collection<StudentSheet> studentSheets);
 }

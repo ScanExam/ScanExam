@@ -20,6 +20,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getExam <em>Exam</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListPath <em>Student List Path</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListShift <em>Student List Shift</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentsheets <em>Studentsheets</em>}</li>
  * </ul>
  *
@@ -71,6 +73,51 @@ public interface CorrectionTemplate extends EObject {
 	 * @generated
 	 */
 	void setExam(Exam value);
+
+	/**
+	 * Returns the value of the '<em><b>Student List Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Student List Path</em>' attribute.
+	 * @see #setStudentListPath(String)
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate_StudentListPath()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getStudentListPath();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListPath <em>Student List Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Student List Path</em>' attribute.
+	 * @see #getStudentListPath()
+	 * @generated
+	 */
+	void setStudentListPath(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Student List Shift</b></em>' attribute.
+	 * The default value is <code>"A1"</code>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Student List Shift</em>' attribute.
+	 * @see #setStudentListShift(String)
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate_StudentListShift()
+	 * @model default="A1" unique="false"
+	 * @generated
+	 */
+	String getStudentListShift();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListShift <em>Student List Shift</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Student List Shift</em>' attribute.
+	 * @see #getStudentListShift()
+	 * @generated
+	 */
+	void setStudentListShift(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Studentsheets</b></em>' containment reference list.

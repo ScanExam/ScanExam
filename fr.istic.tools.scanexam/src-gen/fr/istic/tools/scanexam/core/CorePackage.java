@@ -462,22 +462,40 @@ public interface CorePackage extends EPackage {
 	int TEXT_COMMENT__Y = COMMENT__Y;
 
 	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_COMMENT__TEXT = COMMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Pointer X</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_COMMENT__POINTER_X = COMMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Pointer Y</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_COMMENT__POINTER_Y = COMMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Text Comment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEXT_COMMENT_FEATURE_COUNT = COMMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The operation id for the '<em>Get Text</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEXT_COMMENT___GET_TEXT = COMMENT_OPERATION_COUNT + 0;
+	int TEXT_COMMENT_FEATURE_COUNT = COMMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Text Comment</em>' class.
@@ -486,7 +504,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEXT_COMMENT_OPERATION_COUNT = COMMENT_OPERATION_COUNT + 1;
+	int TEXT_COMMENT_OPERATION_COUNT = COMMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.HandwritingCommentImpl <em>Handwriting Comment</em>}' class.
@@ -937,14 +955,37 @@ public interface CorePackage extends EPackage {
 	EClass getTextComment();
 
 	/**
-	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.TextComment#getText() <em>Get Text</em>}' operation.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.TextComment#getText <em>Text</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Text</em>' operation.
+	 * @return the meta object for the attribute '<em>Text</em>'.
 	 * @see fr.istic.tools.scanexam.core.TextComment#getText()
+	 * @see #getTextComment()
 	 * @generated
 	 */
-	EOperation getTextComment__GetText();
+	EAttribute getTextComment_Text();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.TextComment#getPointerX <em>Pointer X</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pointer X</em>'.
+	 * @see fr.istic.tools.scanexam.core.TextComment#getPointerX()
+	 * @see #getTextComment()
+	 * @generated
+	 */
+	EAttribute getTextComment_PointerX();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.TextComment#getPointerY <em>Pointer Y</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pointer Y</em>'.
+	 * @see fr.istic.tools.scanexam.core.TextComment#getPointerY()
+	 * @see #getTextComment()
+	 * @generated
+	 */
+	EAttribute getTextComment_PointerY();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.HandwritingComment <em>Handwriting Comment</em>}'.
@@ -1316,12 +1357,28 @@ public interface CorePackage extends EPackage {
 		EClass TEXT_COMMENT = eINSTANCE.getTextComment();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Text</b></em>' operation.
+		 * The meta object literal for the '<em><b>Text</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TEXT_COMMENT___GET_TEXT = eINSTANCE.getTextComment__GetText();
+		EAttribute TEXT_COMMENT__TEXT = eINSTANCE.getTextComment_Text();
+
+		/**
+		 * The meta object literal for the '<em><b>Pointer X</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TEXT_COMMENT__POINTER_X = eINSTANCE.getTextComment_PointerX();
+
+		/**
+		 * The meta object literal for the '<em><b>Pointer Y</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TEXT_COMMENT__POINTER_Y = eINSTANCE.getTextComment_PointerY();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.HandwritingCommentImpl <em>Handwriting Comment</em>}' class.

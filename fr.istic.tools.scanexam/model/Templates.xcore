@@ -8,6 +8,8 @@ class CorrectionTemplate
 {
 	 String encodedDocument
 	 contains Exam exam
+	 String studentListPath
+	 String studentListShift = "A1"
 	 contains StudentSheet[] studentsheets
 }
 class CreationTemplate 

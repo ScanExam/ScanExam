@@ -9,6 +9,7 @@ import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterGradeScale;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
+import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
@@ -45,6 +46,8 @@ public class PresenterGraduation implements Presenter {
   
   private PresenterPdf presPdf;
   
+  private PresenterStudentListLoader studentListPresenter;
+  
   private ServiceGraduation service;
   
   private Adapter<PresenterGraduation> adapter;
@@ -56,6 +59,8 @@ public class PresenterGraduation implements Presenter {
     this.presPdf = _presenterPdf;
     PresenterQuestion _presenterQuestion = new PresenterQuestion(service);
     this.presQuestion = _presenterQuestion;
+    PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
+    this.studentListPresenter = _presenterStudentListLoader;
   }
   
   public PresenterGraduation(final Adapter<PresenterGraduation> adapter, final ServiceGraduation service) {
@@ -96,6 +101,13 @@ public class PresenterGraduation implements Presenter {
   @Override
   public PresenterPdf getPresenterPdf() {
     return this.presPdf;
+  }
+  
+  /**
+   * @return current {@link PresenterStudentListLoader}
+   */
+  public PresenterStudentListLoader getPresenterStudenList() {
+    return this.studentListPresenter;
   }
   
   public void openEditionTemplate(final String path) {

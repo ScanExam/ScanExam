@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.services.ExamSingleton;
+import fr.istic.tools.scanexam.view.AdapterGraduation;
 import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.graduation.Grader;
@@ -263,6 +264,10 @@ public class ControllerFxGraduation {
   @FXML
   public void mainMouseEvent(final MouseEvent e) {
     this.chooseMouseAction(e);
+  }
+  
+  public AdapterGraduation getAdapter() {
+    return this.corrector;
   }
   
   private ControllerFxGraduation.SelectedTool currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;

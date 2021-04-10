@@ -5,7 +5,7 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.mailing.SendMailTls;
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.utils.ShakeEffect;
+import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,7 +18,6 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -30,6 +29,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -180,14 +180,16 @@ public class AdapterFxConfiguration implements Initializable {
    * Si non, bloque la validation du formulaire (jusqu'à syntaxe valide ou textfield vide).
    */
   public void verifyMailAddress() {
-    final PseudoClass errorClass = PseudoClass.getPseudoClass("wrong-format");
     if ((((this.txtFldEmail.getText() != null) && (!Objects.equal(this.txtFldEmail.getText(), ""))) && (!this.presConfig.checkEmailFormat(this.txtFldEmail.getText())))) {
-      this.txtFldEmail.pseudoClassStateChanged(errorClass, true);
-      ShakeEffect.shake(this.txtFldEmail);
+      BadFormatDisplayer.dispBadFormatView(this.txtFldEmail, true);
       this.btnSave.setDisable(true);
+      String _translate = LanguageManager.translate("config.info.email");
+      Tooltip _tooltip = new Tooltip(_translate);
+      this.txtFldEmail.setTooltip(_tooltip);
     } else {
-      this.txtFldEmail.pseudoClassStateChanged(errorClass, false);
+      BadFormatDisplayer.dispBadFormatView(this.txtFldEmail, false);
       this.btnSave.setDisable(false);
+      this.txtFldEmail.setTooltip(null);
       if (((this.txtFldEmail.getText() != null) && (!Objects.equal(this.txtFldEmail.getText(), "")))) {
         final Pair<String, String> infos = this.presConfig.getSmtpInfos(this.txtFldEmail.getText());
         if (((this.txtFldEmailHost.getText() == null) || Objects.equal(this.txtFldEmailHost.getText(), ""))) {

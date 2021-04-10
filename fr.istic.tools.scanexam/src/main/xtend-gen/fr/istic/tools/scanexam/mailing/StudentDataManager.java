@@ -1,22 +1,19 @@
 package fr.istic.tools.scanexam.mailing;
 
-import com.google.common.base.Objects;
-import fr.istic.tools.scanexam.services.Service;
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -26,32 +23,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
  */
 @SuppressWarnings("all")
 public class StudentDataManager {
-  private static Service service;
-  
-  public StudentDataManager(final Service serv) {
-    StudentDataManager.service = serv;
-  }
-  
   private static Map<String, String> mapNomEtudiant = new HashMap<String, String>();
-  
-  /**
-   * Enregistre le chemin d'accés
-   * @Param files Fichier XLS contenant le nom étudiant (ou numéro étudiant) et l'adresse mail
-   * @author Arthur & Antoine
-   */
-  public static void save(final File files) {
-    try {
-      String chemin = files.getAbsolutePath();
-      String _examName = StudentDataManager.service.getExamName();
-      String nom = (_examName + ".txt");
-      PrintWriter writer = new PrintWriter(nom, "UTF-8");
-      writer.println(chemin);
-      writer.close();
-      StudentDataManager.loadData("A1");
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
   
   /**
    * Charge les données contenues dans le fichier permetant de lier les numéro étudiant ou nom étudiant à l'adresse mail
@@ -59,33 +31,24 @@ public class StudentDataManager {
    * @param startXY point situant le début des données pour lire le nom et prénom
    * @author Arthur & Antoine
    */
-  public static void loadData(final String startXY) {
+  public static void loadData(final File file, final String startXY) {
     try {
-      String _examName = StudentDataManager.service.getExamName();
-      String _plus = (_examName + ".txt");
-      File cheminInfo = new File(_plus);
-      FileReader fx = new FileReader(cheminInfo);
-      BufferedReader f = new BufferedReader(fx);
-      String _readLine = f.readLine();
-      String _plus_1 = (_readLine + ".xls");
-      File informationMail = new File(_plus_1);
-      POIFSFileSystem doc = new POIFSFileSystem(informationMail);
-      HSSFWorkbook wb = new HSSFWorkbook(doc);
-      HSSFSheet sheet = wb.getSheetAt(0);
+      FileInputStream _fileInputStream = new FileInputStream(file);
+      final Workbook wb = WorkbookFactory.create(_fileInputStream);
+      Sheet sheet = wb.getSheetAt(0);
       Pair<Integer, Integer> pair = StudentDataManager.convertExcelCoord(startXY);
       int x = (pair.getKey()).intValue();
       int y = (pair.getValue()).intValue();
-      Logger.getGlobal().info(((("Début du tableau dans le fichier XLS: " + Integer.valueOf(x)) + " : ") + Integer.valueOf(y)));
-      HSSFRow row = sheet.getRow(y);
-      HSSFCell cell = row.getCell(x);
-      String nom = "";
-      String mail = "";
-      while ((!Objects.equal(cell.getStringCellValue(), ""))) {
+      Logger.getGlobal().info(((("Début du tableau dans le fichier XLSX: " + Integer.valueOf(x)) + " : ") + Integer.valueOf(y)));
+      Row row = sheet.getRow(y);
+      while ((row != null)) {
         {
-          nom = cell.getStringCellValue();
-          mail = row.getCell((y + 1)).getStringCellValue();
+          final Cell cell = row.getCell(x);
+          final String nom = cell.getStringCellValue();
+          final String mail = row.getCell((x + 1)).getStringCellValue();
           StudentDataManager.mapNomEtudiant.put(nom, mail);
-          x++;
+          y++;
+          row = sheet.getRow(y);
         }
       }
     } catch (final Throwable _t) {
@@ -107,49 +70,71 @@ public class StudentDataManager {
   }
   
   /**
-   * @return Liste de tout les noms d'élèves contenu dans le fichier fourni par l'utilisateur
+   * @return Liste de tout les noms d'élèves contenu dans le fichier fourni par l'utilisateur, null si aucun fichier fourni
    * @author Antoine
    */
-  public static List<String> getAllNames() {
-    StudentDataManager.loadData("A0");
-    return IterableExtensions.<String>toList(StudentDataManager.mapNomEtudiant.values());
+  public static Optional<List<String>> getAllNames() {
+    Optional<List<String>> _xifexpression = null;
+    boolean _isEmpty = StudentDataManager.mapNomEtudiant.isEmpty();
+    if (_isEmpty) {
+      _xifexpression = Optional.<List<String>>empty();
+    } else {
+      _xifexpression = Optional.<List<String>>of(IterableExtensions.<String>toList(StudentDataManager.mapNomEtudiant.values()));
+    }
+    return _xifexpression;
   }
   
   /**
    * @return Map de tout les noms d'élèves -> adresse mail, contenu dans le fichier fourni par l'utilisateur
    * @author Antoine
    */
-  public static Map<String, String> getNameToMailMap() {
-    StudentDataManager.loadData("A0");
-    return StudentDataManager.mapNomEtudiant;
+  public static Optional<Map<String, String>> getNameToMailMap() {
+    Optional<Map<String, String>> _xifexpression = null;
+    boolean _isEmpty = StudentDataManager.mapNomEtudiant.isEmpty();
+    if (_isEmpty) {
+      _xifexpression = Optional.<Map<String, String>>empty();
+    } else {
+      _xifexpression = Optional.<Map<String, String>>of(StudentDataManager.mapNomEtudiant);
+    }
+    return _xifexpression;
   }
   
   public static Pair<Integer, Integer> convertExcelCoord(final String data) {
+    final String[] xy = data.split("(?<=[A-Z]++)");
     int x = 0;
     int y = 0;
-    data.toLowerCase();
-    int _length = data.length();
-    boolean _greaterThan = (_length > 2);
-    if (_greaterThan) {
-      int i = 0;
-      boolean intZone = false;
-      while (((i < data.length()) || intZone)) {
-        {
-          char ch = data.charAt(i);
-          if (((ch >= 'a') && (ch <= 'z'))) {
-            int _x = x;
-            x = (_x + (ch - 'a'));
-          } else {
-            intZone = true;
-          }
-          i++;
-        }
-      }
-      int _parseInt = Integer.parseInt(data.substring(i, data.length()));
+    try {
+      int _parseInt = Integer.parseInt(xy[1]);
       int _minus = (_parseInt - 1);
       y = _minus;
+    } catch (final Throwable _t) {
+      if (_t instanceof NumberFormatException) {
+        final NumberFormatException e = (NumberFormatException)_t;
+        e.printStackTrace();
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
+    final String xTemp = (xy[0]).toLowerCase();
+    int i = 0;
+    while (((x <= 16_384) && (i < xTemp.length()))) {
+      int _x = x;
+      char _charAt = xTemp.charAt(i);
+      int _minus = (_charAt - 'a');
+      int _plusPlus = i++;
+      double _pow = Math.pow(26, _plusPlus);
+      int _multiply = (_minus * ((int) _pow));
+      x = (_x + _multiply);
     }
     Logger.getGlobal().info("Conversion coord Excel vers Pair<Interger,Integer> terminé.");
+    if ((y >= 1_048_576)) {
+      String _plus = (Integer.valueOf(x) + " exceeds the legal number of rows: 1 048 576");
+      throw new IllegalArgumentException(_plus);
+    }
+    if ((x > 1_048_576)) {
+      String _plus_1 = (Integer.valueOf(x) + " exceeds the legal number of columns: 16 384");
+      throw new IllegalArgumentException(_plus_1);
+    }
     return new Pair<Integer, Integer>(Integer.valueOf(x), Integer.valueOf(y));
   }
 }

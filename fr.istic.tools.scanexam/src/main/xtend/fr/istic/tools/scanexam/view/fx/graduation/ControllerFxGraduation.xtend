@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.view.AdapterGraduation
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -38,6 +39,8 @@ class ControllerFxGraduation {
 	 * High level Controllers to access the Presenters
 	 */
 	AdapterFxGraduation corrector;
+	
+	
 
 	/**
 	 * setter for the ControllerVueCorrection attribute
@@ -210,6 +213,11 @@ class ControllerFxGraduation {
 	
 	//-----------------------//
 	
+	
+	//FIXME Pas terrible de mettre cela en public mais ControllerRoot n'a accès a aucun Presenter
+	def AdapterGraduation getAdapter() {
+		return corrector
+	}
 	
 	
 	//--- LOCAL VARIABLES ---//

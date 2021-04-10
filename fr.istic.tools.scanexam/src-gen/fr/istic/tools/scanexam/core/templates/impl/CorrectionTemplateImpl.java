@@ -34,6 +34,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getExam <em>Exam</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentListPath <em>Student List Path</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentListShift <em>Student List Shift</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentsheets <em>Studentsheets</em>}</li>
  * </ul>
  *
@@ -69,6 +71,46 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected Exam exam;
+
+	/**
+	 * The default value of the '{@link #getStudentListPath() <em>Student List Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStudentListPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String STUDENT_LIST_PATH_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getStudentListPath() <em>Student List Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStudentListPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected String studentListPath = STUDENT_LIST_PATH_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getStudentListShift() <em>Student List Shift</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStudentListShift()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String STUDENT_LIST_SHIFT_EDEFAULT = "A1";
+
+	/**
+	 * The cached value of the '{@link #getStudentListShift() <em>Student List Shift</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStudentListShift()
+	 * @generated
+	 * @ordered
+	 */
+	protected String studentListShift = STUDENT_LIST_SHIFT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getStudentsheets() <em>Studentsheets</em>}' containment reference list.
@@ -168,6 +210,48 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getStudentListPath() {
+		return studentListPath;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setStudentListPath(String newStudentListPath) {
+		String oldStudentListPath = studentListPath;
+		studentListPath = newStudentListPath;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH, oldStudentListPath, studentListPath));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getStudentListShift() {
+		return studentListShift;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setStudentListShift(String newStudentListShift) {
+		String oldStudentListShift = studentListShift;
+		studentListShift = newStudentListShift;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT, oldStudentListShift, studentListShift));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<StudentSheet> getStudentsheets() {
 		if (studentsheets == null) {
 			studentsheets = new EObjectContainmentEList<StudentSheet>(StudentSheet.class, this, TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS);
@@ -203,6 +287,10 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return getEncodedDocument();
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				return getExam();
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
+				return getStudentListPath();
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
+				return getStudentListShift();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return getStudentsheets();
 		}
@@ -223,6 +311,12 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				setExam((Exam)newValue);
+				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
+				setStudentListPath((String)newValue);
+				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
+				setStudentListShift((String)newValue);
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
@@ -246,6 +340,12 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				setExam((Exam)null);
 				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
+				setStudentListPath(STUDENT_LIST_PATH_EDEFAULT);
+				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
+				setStudentListShift(STUDENT_LIST_SHIFT_EDEFAULT);
+				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
 				return;
@@ -265,6 +365,10 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
 				return exam != null;
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
+				return STUDENT_LIST_PATH_EDEFAULT == null ? studentListPath != null : !STUDENT_LIST_PATH_EDEFAULT.equals(studentListPath);
+			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
+				return STUDENT_LIST_SHIFT_EDEFAULT == null ? studentListShift != null : !STUDENT_LIST_SHIFT_EDEFAULT.equals(studentListShift);
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return studentsheets != null && !studentsheets.isEmpty();
 		}
@@ -283,6 +387,10 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (encodedDocument: ");
 		result.append(encodedDocument);
+		result.append(", studentListPath: ");
+		result.append(studentListPath);
+		result.append(", studentListShift: ");
+		result.append(studentListShift);
 		result.append(')');
 		return result.toString();
 	}

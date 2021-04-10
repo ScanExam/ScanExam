@@ -430,8 +430,26 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTextComment__GetText() {
-		return textCommentEClass.getEOperations().get(0);
+	public EAttribute getTextComment_Text() {
+		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTextComment_PointerX() {
+		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTextComment_PointerY() {
+		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -587,7 +605,9 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(commentEClass, COMMENT__Y);
 
 		textCommentEClass = createEClass(TEXT_COMMENT);
-		createEOperation(textCommentEClass, TEXT_COMMENT___GET_TEXT);
+		createEAttribute(textCommentEClass, TEXT_COMMENT__TEXT);
+		createEAttribute(textCommentEClass, TEXT_COMMENT__POINTER_X);
+		createEAttribute(textCommentEClass, TEXT_COMMENT__POINTER_Y);
 
 		handwritingCommentEClass = createEClass(HANDWRITING_COMMENT);
 
@@ -672,8 +692,9 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEAttribute(getComment_Y(), theEcorePackage.getEFloat(), "y", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(textCommentEClass, TextComment.class, "TextComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getTextComment__GetText(), theEcorePackage.getEString(), "getText", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEAttribute(getTextComment_Text(), theEcorePackage.getEString(), "text", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTextComment_PointerX(), theEcorePackage.getEFloat(), "pointerX", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTextComment_PointerY(), theEcorePackage.getEFloat(), "pointerY", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(handwritingCommentEClass, HandwritingComment.class, "HandwritingComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

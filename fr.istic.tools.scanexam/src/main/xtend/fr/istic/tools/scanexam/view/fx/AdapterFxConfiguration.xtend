@@ -3,16 +3,16 @@ package fr.istic.tools.scanexam.view.fx
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.mailing.SendMailTls.LoginResult
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration
-import fr.istic.tools.scanexam.view.fx.utils.ShakeEffect
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer
 import java.net.URL
 import java.util.ResourceBundle
 import java.util.regex.Pattern
 import javafx.collections.FXCollections
 import javafx.concurrent.Service
 import javafx.concurrent.Task
-import javafx.css.PseudoClass
-
-
+import javafx.fxml.FXML
+import javafx.fxml.Initializable
 import javafx.scene.Cursor
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
@@ -21,12 +21,10 @@ import javafx.scene.control.ComboBox
 import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
 import javafx.scene.control.TextFormatter
+import javafx.scene.control.Tooltip
 import javafx.scene.image.Image
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
-import fr.istic.tools.scanexam.utils.ResourcesUtils
-import javafx.fxml.FXML
-import javafx.fxml.Initializable
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX
@@ -139,14 +137,15 @@ class AdapterFxConfiguration implements Initializable {
 	 * Si non, bloque la validation du formulaire (jusqu'à syntaxe valide ou textfield vide).
 	 */
 	def void verifyMailAddress() {
-		val PseudoClass errorClass = PseudoClass.getPseudoClass("wrong-format")
+		
 		if (txtFldEmail.text !== null && txtFldEmail.text != "" && !presConfig.checkEmailFormat(txtFldEmail.text)) {
-			txtFldEmail.pseudoClassStateChanged(errorClass, true)
-			ShakeEffect.shake(txtFldEmail)
+			BadFormatDisplayer.dispBadFormatView(txtFldEmail, true)
 			btnSave.disable = true
+			txtFldEmail.tooltip = new Tooltip(LanguageManager.translate("config.info.email"))
 		} else {
-			txtFldEmail.pseudoClassStateChanged(errorClass, false)
+			BadFormatDisplayer.dispBadFormatView(txtFldEmail, false)
 			btnSave.disable = false
+			txtFldEmail.tooltip = null
 			if (txtFldEmail.text !== null && txtFldEmail.text != "") {
 				val infos = presConfig.getSmtpInfos(txtFldEmail.text)
 				if (txtFldEmailHost.text === null || txtFldEmailHost.text == "")

@@ -23,7 +23,8 @@ public class GradesExportMailImpl implements GradesExportMail {
   
   @Override
   public void exportGradesMail(final File pdf) {
-    this.exportGradesMail1(pdf, GradesExportMailImpl.instance.getEmail(), GradesExportMailImpl.instance.getEmailPassword(), GradesExportMailImpl.service.getStudentSheets().size(), GradesExportMailImpl.service.getExamName(), GradesExportMailImpl.service.getStudentSheets());
+    this.exportGradesMail1(pdf, GradesExportMailImpl.instance.getEmail(), GradesExportMailImpl.instance.getEmailPassword(), GradesExportMailImpl.service.getStudentSheets().size(), GradesExportMailImpl.service.getExamName(), 
+      GradesExportMailImpl.service.getStudentSheets());
   }
   
   @Override

@@ -50,15 +50,6 @@ public class SendMailTls {
     HOST_NOT_FOUND;
   }
   
-  /**
-   * La fonction sendMail va chercher dans le fichier configMailFile pour trouver le port et les smtp (host) de l'adresse mail donnée puis qui ce charge d'envoier le mail
-   * @param sender : Adresse mail de l'expediteur qui ne doit pas etre null
-   * @param senderPassword : Mot de passe de l'expediteur qui ne doit pas etre nul
-   * @param recipient : Adresse mail du destinataire qui ne doit pas etre null
-   * @param titleMail : Titre du mail qui ne doit pas etre null
-   * @param messageMail : Contenu du mail
-   * @param pieceJointe : piece jointe du mail
-   */
   private static Service service;
   
   public SendMailTls(final Service serv) {
@@ -81,6 +72,15 @@ public class SendMailTls {
     }
   }
   
+  /**
+   * La fonction sendMail va chercher dans le fichier configMailFile pour trouver le port et les smtp (host) de l'adresse mail donnée puis qui ce charge d'envoier le mail
+   * @param sender : Adresse mail de l'expediteur qui ne doit pas etre null
+   * @param senderPassword : Mot de passe de l'expediteur qui ne doit pas etre nul
+   * @param recipient : Adresse mail du destinataire qui ne doit pas etre null
+   * @param titleMail : Titre du mail qui ne doit pas etre null
+   * @param messageMail : Contenu du mail
+   * @param pieceJointe : piece jointe du mail
+   */
   public static String sendMail(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe) {
     return SendMailTls.sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, SendMailTls.service.getExamName());
   }

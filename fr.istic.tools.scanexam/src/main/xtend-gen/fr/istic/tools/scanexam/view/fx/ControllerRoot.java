@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fx.AdapterFxStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import java.io.InputStream;
@@ -85,8 +86,11 @@ public class ControllerRoot {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
+      AdapterFxStudentListLoader _controller = loader.<AdapterFxStudentListLoader>getController();
+      _controller.setPresenterStudentListLoader(this.corrector.getAdapter().getPresenter().getPresenterStudenList());
       Scene _scene = new Scene(view, 384, 160);
       dialog.setScene(_scene);
+      dialog.setResizable(false);
       dialog.show();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -128,6 +132,7 @@ public class ControllerRoot {
       _icons.add(_image);
       Scene _scene = new Scene(view, 672, 416);
       dialog.setScene(_scene);
+      dialog.setResizable(false);
       dialog.show();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

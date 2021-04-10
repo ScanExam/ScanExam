@@ -17,6 +17,7 @@ import fr.istic.tools.scanexam.utils.Tuple3;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
@@ -444,6 +445,38 @@ public class ServiceGraduation extends Service {
    */
   public boolean valideGradeEntry(final int questionId, final GradeEntry gradeAdd) {
     return true;
+  }
+  
+  /**
+   * Défini le chemin d'accès vers la liste de tous les étudiants
+   * @param le chemin d'accès vers cette liste (non null)
+   */
+  public void setStudentListPath(final String path) {
+    Objects.<String>requireNonNull(path);
+    this.correctionTemplate.setStudentListPath(path);
+  }
+  
+  /**
+   * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
+   */
+  public String getStudentListPath() {
+    return this.correctionTemplate.getStudentListPath();
+  }
+  
+  /**
+   * Défini la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
+   * @param la position initialede cette liste (non null)
+   */
+  public void setStudentListShift(final String shift) {
+    Objects.<String>requireNonNull(shift);
+    this.correctionTemplate.setStudentListShift(shift);
+  }
+  
+  /**
+   * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
+   */
+  public String getStudentListShift() {
+    return this.correctionTemplate.getStudentListShift();
   }
   
   @Pure
