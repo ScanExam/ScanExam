@@ -4,17 +4,17 @@ import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader
 import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader.LoadState
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer
+import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
+import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
 import java.io.File
 import java.util.Arrays
+import java.util.Optional
 import java.util.regex.Pattern
 import javafx.fxml.FXML
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.Button
-import javafx.scene.control.TextField
 import javafx.scene.control.TextFormatter
-import javafx.scene.control.Tooltip
 import javafx.scene.image.Image
 import javafx.scene.layout.Pane
 import javafx.stage.FileChooser
@@ -49,20 +49,15 @@ class AdapterFxStudentListLoader {
 
 	/* Champ du fichier à charger */
 	@FXML
-	public TextField txtFldFile
+	public FormattedTextField txtFldFile
 
 	/* Champ de la première casse */
 	@FXML
-	public TextField txtFldFirstCell
+	public FormattedTextField txtFldFirstCell
 	
 	/* Bouton de validation */
 	@FXML
 	public Button btnOk
-	
-	/*
-	 * Caractérise les erreurs dans le formulaire. Si au moins l'une des valeurs est à true, alors le bouton de validation est bloqué  
-	 */
-	val boolean[] errors = newBooleanArrayOfSize(2)
 	
 
 	// ----------------------------------------------------------------------------------------------------
@@ -75,8 +70,6 @@ class AdapterFxStudentListLoader {
 	@FXML
 	def void saveAndQuit() {
 		val state = presStudentList.loadFile(new File(txtFldFile.text), txtFldFirstCell.text)
-		verifyFilePath
-		verifyFirstCell
 		if(!btnOk.disable)
 			dispDialog(state)
 		quit
@@ -109,54 +102,8 @@ class AdapterFxStudentListLoader {
 		} else {
 			logger.warn("File not chosen")
 		}
-			verifyFilePath
 	}
 	
-	/**
-	 * Vérifie la syntaxe de la cellule spécifiée par l'utilisateur, et refuse l'entrée si celle-ci n'est pas valide
-	 */
-	private def verifyFirstCell() {
-		if(!cellPattern.matcher(txtFldFirstCell.text).matches && txtFldFirstCell.text != "") {
-			BadFormatDisplayer.dispBadFormatView(txtFldFirstCell, true)
-			errors.set(1, true)
-			txtFldFirstCell.tooltip = new Tooltip(LanguageManager.translate("studentlist.info.badCellFormat"));
-		} else {
-			BadFormatDisplayer.dispBadFormatView(txtFldFirstCell, false)
-			errors.set(0, false)
-			txtFldFirstCell.tooltip = null
-		}
-		updateLockingState
-	}
-	
-	
-	/**
-	 * Vérifie si le chemin spécifié par l'utilisateur pointe bien vers un fichier du bon format, refuse l'entrée si cela n'est pas le cas
-	 */
-	private def verifyFilePath() {
-		val file = new File(txtFldFile.text)
-		val rightFormat = supportedFormat.map[f | f.substring(1)].findFirst[f | file.name.endsWith(f)] !== null
-		if((!file.exists || !file.isFile || !rightFormat) && txtFldFile.text != "") {
-			BadFormatDisplayer.dispBadFormatView(txtFldFile, true)
-			errors.set(1, true)
-			if(!file.exists)
-				txtFldFile.tooltip = new Tooltip(LanguageManager.translate("studentlist.info.fileNotExist"))
-			else
-				txtFldFile.tooltip = new Tooltip(LanguageManager.translate("studentlist.info.fileNotValid"))
-		} else {
-			BadFormatDisplayer.dispBadFormatView(txtFldFile, false)
-			errors.set(1, false)
-			txtFldFile.tooltip = null
-		}
-		updateLockingState
-	}
-	
-	/**
-	 * Actualise l'état de l'interface en bloquant ou non le bouton de validation si il y a des erreurs
-	 */
-	private def updateLockingState() {
-		btnOk.disable = errors.get(0) || errors.get(1)
-	}
-
 	/**
 	 * Initialise le contrôleur
 	 */
@@ -171,11 +118,12 @@ class AdapterFxStudentListLoader {
 			change
 		]
 		
-		txtFldFirstCell.focusedProperty.addListener[obs, oldVal, newVal|!newVal ? verifyFirstCell]
-		txtFldFile.focusedProperty.addListener[obs, oldVal, newVal|!newVal ? verifyFilePath]
-		txtFldFirstCell.focusedProperty.addListener [ obs, oldVal, newVal |
-			!newVal ? txtFldFirstCell.text.equals("") ? txtFldFirstCell.text = "A1"
-		]
+		btnOk.disableProperty.bind(txtFldFile.wrongFormattedProperty.or(txtFldFirstCell.wrongFormattedProperty))
+		
+		txtFldFirstCell.addFormatValidator(text | !cellPattern.matcher(txtFldFirstCell.text).matches ? Optional.of("studentlist.info.badCellFormat") : Optional.empty)
+		
+		txtFldFile.addFormatValidator(text | supportedFormat.map[f | f.substring(1)].findFirst[f | text.endsWith(f)] !== null ? Optional.empty : Optional.of("studentlist.info.fileNotValid"))
+		txtFldFile.addFormatValidator(new ValidFilePathValidator)
 	}
 	
 	/**

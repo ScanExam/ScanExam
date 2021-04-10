@@ -99,14 +99,6 @@ public class PresenterConfiguration {
   }
   
   /**
-   * @param email un string
-   * @return true si <i>email</i> est une adresse email valide, false sinon
-   */
-  public boolean checkEmailFormat(final String email) {
-    return SendMailTls.checkEmailFormat(email);
-  }
-  
-  /**
    * @param name l'adresse mail du login
    * @param password le mot de passe du login
    * @param host l'host SMTP

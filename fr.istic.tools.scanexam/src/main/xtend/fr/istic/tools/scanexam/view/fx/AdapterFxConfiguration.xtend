@@ -4,8 +4,8 @@ import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.mailing.SendMailTls.LoginResult
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer
-import java.util.regex.Pattern
+import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
+import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator
 import javafx.collections.FXCollections
 import javafx.concurrent.Service
 import javafx.concurrent.Task
@@ -17,8 +17,6 @@ import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
-import javafx.scene.control.TextFormatter
-import javafx.scene.control.Tooltip
 import javafx.scene.image.Image
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
@@ -47,7 +45,7 @@ class AdapterFxConfiguration {
 
 	/* Champ de l'email */
 	@FXML
-	public TextField txtFldEmail
+	public FormattedTextField txtFldEmail
 
 	/* Champ du mot de passe de l'email */
 	@FXML
@@ -87,13 +85,10 @@ class AdapterFxConfiguration {
 		txtFldEmailPort.text = presConfig.mailPort
 
 		cmbBxLanguage.items = FXCollections.observableArrayList(presConfig.languages)
-		txtFldEmailPort.textFormatter = new TextFormatter<String> [ change |
-			Pattern.compile("\\d*").matcher(change.text).matches() ? change : null
-		]
-		txtFldEmailPort.focusedProperty.addListener [ obs, oldVal, newVal |
-			!newVal ? txtFldEmailPort.text.equals("") ? txtFldEmailPort.text = "0"
-		]
-		txtFldEmail.focusedProperty.addListener[obs, oldVal, newVal | !newVal ? verifyMailAddress]
+
+		txtFldEmail.addFormatValidator(new EmailValidator)
+		txtFldEmail.focusedProperty.addListener( value, oldVal, newVal | !newVal && !txtFldEmail.wrongFormatted ? completeHostInfos)
+		btnSave.disableProperty.bind(txtFldEmail.wrongFormattedProperty)
 
 		btnCheckMail.onAction = [e|checkMail()]
 	}
@@ -111,10 +106,10 @@ class AdapterFxConfiguration {
 			alert.setHeaderText(LanguageManager.translate("config.restartDialog.text"))
 			alert.showAndWait
 		}
-	quit
-}
+		quit
+	}
 
-@FXML
+	@FXML
 	def void quit() {
 		val Stage stage = mainPane.scene.window as Stage
 		stage.close();
@@ -129,27 +124,16 @@ class AdapterFxConfiguration {
 		this.presConfig = presConfig
 	}
 
-	/**
-	 * Vérifie si l'adresse mail saisie est syntaxiquement valide. Si oui, remplie automatiquement le port et l'host si ceux-ci sont connus.
-	 * Si non, bloque la validation du formulaire (jusqu'à syntaxe valide ou textfield vide).
+	/** 
+	 * Complète les informations de l'hôte à partir de l'adresse mail saisie par l'utilisateur, à condition que l'hôte soit connu
 	 */
-	def void verifyMailAddress() {
-		
-		if (txtFldEmail.text !== null && txtFldEmail.text != "" && !presConfig.checkEmailFormat(txtFldEmail.text)) {
-			BadFormatDisplayer.dispBadFormatView(txtFldEmail, true)
-			btnSave.disable = true
-			txtFldEmail.tooltip = new Tooltip(LanguageManager.translate("config.info.email"))
-		} else {
-			BadFormatDisplayer.dispBadFormatView(txtFldEmail, false)
-			btnSave.disable = false
-			txtFldEmail.tooltip = null
-			if (txtFldEmail.text !== null && txtFldEmail.text != "") {
-				val infos = presConfig.getSmtpInfos(txtFldEmail.text)
-				if (txtFldEmailHost.text === null || txtFldEmailHost.text == "")
-					txtFldEmailHost.text = infos.key
-				if (txtFldEmailPort.text === null || txtFldEmailPort.text == "0")
-					txtFldEmailPort.text = infos.value
-			}
+	private def void completeHostInfos() {
+		if (txtFldEmail.text != "") {
+			val infos = presConfig.getSmtpInfos(txtFldEmail.text)
+			if (txtFldEmailHost.text === null || txtFldEmailHost.text == "")
+				txtFldEmailHost.text = infos.key
+			if (txtFldEmailPort.text === null || txtFldEmailPort.text == "0")
+				txtFldEmailPort.text = infos.value
 		}
 	}
 
@@ -160,7 +144,7 @@ class AdapterFxConfiguration {
 	 * @param port le port SMTP
 	 * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
 	 */
-	def void checkMail() {
+	private def void checkMail() {
 		val Task<LoginResult> task = [
 			{
 				mainPane.scene.setCursor(Cursor.WAIT)
@@ -181,7 +165,7 @@ class AdapterFxConfiguration {
 	 * Affiche une boîte de dialogue prévenant l'utilisateur de la réussite ou non de la connexion à son adresse mail
 	 * @param result un LoginResult
 	 */
-	def void sendCheckMailResult(LoginResult result) {
+	private def void sendCheckMailResult(LoginResult result) {
 		val alert = new Alert(AlertType.NONE)
 		val stage = alert.getDialogPane().getScene().getWindow() as Stage
 		stage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))

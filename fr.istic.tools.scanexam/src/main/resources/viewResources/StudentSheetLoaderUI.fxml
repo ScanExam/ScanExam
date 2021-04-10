@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="405.0" prefWidth="384.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerFxStudentSheetLoader">
+   <children>
+      <VBox spacing="5.0">
+         <children>
+            <Label text="%studentSheetLoader.cat.examTempate">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Separator prefWidth="200.0" />
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </VBox>
+      <Group>
+         <children>
+            <RadioButton fx:id="rbUseLoaded" mnemonicParsing="false" selected="true" text="%studentSheetLoader.useLoadedModel">
+               <toggleGroup>
+                  <ToggleGroup fx:id="templateMode" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rbLoadModel" layoutY="37.0" mnemonicParsing="false" text="%studentSheetLoader.loadNewModel" toggleGroup="$templateMode" />
+         </children>
+      </Group>
+      <HBox fx:id="hBoxLoad" alignment="CENTER" disable="true" spacing="30.0">
+         <children>
+            <TextField fx:id="txtFldFile" disable="false" />
+            <Button fx:id="btnBrowse" disable="false" mnemonicParsing="false" text="%button.browser" />
+         </children>
+      </HBox>
+      <VBox layoutX="10.0" layoutY="20.0" spacing="5.0">
+         <children>
+            <Label text="%studentSheetLoader.cat.graduation">
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Separator prefWidth="200.0" />
+         </children>
+      </VBox>
+      <GridPane hgap="20.0" prefHeight="507.0" prefWidth="375.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="127.0" minWidth="10.0" prefWidth="116.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="112.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="76.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="%studentSheetLoader.graduationName" textAlignment="RIGHT" GridPane.rowIndex="1" />
+            <TextField prefHeight="25.0" prefWidth="175.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <Label layoutX="10.0" layoutY="26.0" text="%studentSheetLoader.loadStudentSheet" textAlignment="RIGHT" />
+            <TextField fx:id="txtFldFile1" disable="false" GridPane.columnIndex="1" />
+            <Button fx:id="btnBrowse1" disable="false" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="%button.browser" GridPane.columnIndex="2" />
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </GridPane>
+      <Separator prefWidth="200.0" />
+      <HBox alignment="CENTER" spacing="80.0">
+         <children>
+      		<Button mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
+      		<Button fx:id="btnOk" mnemonicParsing="false" onAction="#saveAndQuit" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" top="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

@@ -86,7 +86,7 @@ public class SendMailTls {
   }
   
   /**
-   * @param email une adresse email (non nulle)
+   * @param email une adresse email valide (non null)
    * @return une paire composée de l'Host et du Port SMTP pour cette adresse mail, si ceux-ci se trouvent dans le fichier mailing/configMailFile.properties
    * @throw IllegalArgumentException si l'adresse mail n'est pas sous un format valide
    */
@@ -97,11 +97,6 @@ public class SendMailTls {
       final Properties props = new Properties();
       props.load(file);
       file.close();
-      boolean _checkEmailFormat = SendMailTls.checkEmailFormat(email);
-      boolean _not = (!_checkEmailFormat);
-      if (_not) {
-        throw new IllegalArgumentException("email is not in a valid format");
-      }
       int _indexOf = email.indexOf("@");
       int _plus = (_indexOf + 1);
       String typeMail = email.substring(_plus, email.length());
@@ -160,15 +155,6 @@ public class SendMailTls {
     }
   }
   
-  /**
-   * @param email un string
-   * @return true si <i>email</i> est une adresse email valide, false sinon
-   */
-  public static boolean checkEmailFormat(final String email) {
-    final String emailRegex = "(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-    return email.matches(emailRegex);
-  }
-  
   public static String sendMail1(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe, final String nameExam) {
     String _xblockexpression = null;
     {
@@ -178,11 +164,6 @@ public class SendMailTls {
       Objects.<String>requireNonNull(titleMail, "Erreur : Le titre du mail ne doit pas etre Null");
       Objects.<String>requireNonNull(messageMail, "Erreur : Le message du mail ne doit pas etre Null");
       Objects.<String>requireNonNull(pieceJointe, "Erreur : La piece Jointe du mail ne doit pas etre Null");
-      boolean _checkEmailFormat = SendMailTls.checkEmailFormat(sender);
-      boolean _not = (!_checkEmailFormat);
-      if (_not) {
-        throw new IllegalArgumentException("email is not in a valid format");
-      }
       final Properties props = new Properties();
       final String host = ConfigurationManager.instance.getMailHost();
       final String port = ConfigurationManager.instance.getMailHost();

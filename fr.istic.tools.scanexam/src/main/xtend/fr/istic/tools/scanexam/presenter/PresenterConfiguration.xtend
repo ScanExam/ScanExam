@@ -89,14 +89,6 @@ class PresenterConfiguration {
 		val name = locale.getDisplayName(locale)
 		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase()
 	}
-
-	/**
- 	 * @param email un string
- 	 * @return true si <i>email</i> est une adresse email valide, false sinon
- 	 */
-	def boolean checkEmailFormat(String email) {
-		SendMailTls.checkEmailFormat(email)
-	}
 	
 	/**
 	 * @param name l'adresse mail du login

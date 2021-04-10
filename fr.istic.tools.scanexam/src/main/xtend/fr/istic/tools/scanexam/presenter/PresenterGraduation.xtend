@@ -32,6 +32,7 @@ class PresenterGraduation implements Presenter
 	PresenterGraduation graduationPresenter;
 	PresenterPdf presPdf 
 	PresenterStudentListLoader studentListPresenter
+	PresenterStudentSheetLoader studentSheetPresenter
 	ServiceGraduation service;
 	
 	Adapter<PresenterGraduation> adapter;
@@ -44,6 +45,7 @@ class PresenterGraduation implements Presenter
 		presPdf = new PresenterPdf(service, this)
 		presQuestion = new PresenterQuestion(service)
 		studentListPresenter = new PresenterStudentListLoader(service)
+		studentSheetPresenter = new PresenterStudentSheetLoader(service)
 	}
 	new(Adapter<PresenterGraduation> adapter,ServiceGraduation service) 
 	{
@@ -104,8 +106,15 @@ class PresenterGraduation implements Presenter
 	/**
 	 * @return current {@link PresenterStudentListLoader} 
 	 */
-	def PresenterStudentListLoader getPresenterStudenList() {
+	def PresenterStudentListLoader getPresenterStudentList() {
 		studentListPresenter
+	}
+	
+	/**
+	 * @return current {@link PresenterStudentSheetLoader} 
+	 */
+	def PresenterStudentSheetLoader getPresenterStudentSheet() {
+		studentSheetPresenter
 	}
 	
 	
@@ -249,6 +258,8 @@ class PresenterGraduation implements Presenter
 	}
 	
 	List<Question> questions
+	
+	
 	/**
 	 * Loads the next question into questionToLoad
 	 * if there is a new question, return true,

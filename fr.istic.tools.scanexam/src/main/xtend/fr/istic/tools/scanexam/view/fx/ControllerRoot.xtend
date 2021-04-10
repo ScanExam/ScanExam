@@ -58,10 +58,6 @@ class ControllerRoot {
 	def SaveTemplatePressed(){
 		editor.saveTemplatePressed
 	}
-	@FXML
-	def LoadStudentCopiesPressed(){
-		
-	}
 	
 	@FXML
 	def loadStudentList() { 
@@ -71,7 +67,7 @@ class ControllerRoot {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<AdapterFxStudentListLoader>controller.initialize(corrector.adapter.presenter.presenterStudenList)
+		loader.<AdapterFxStudentListLoader>controller.initialize(corrector.adapter.presenter.presenterStudentList)
 		dialog.setScene(new Scene(view, 384, 160))
 		dialog.setResizable(false);
 		dialog.show
@@ -101,6 +97,20 @@ class ControllerRoot {
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 672, 416))
+		dialog.setResizable(false);
+		dialog.show
+	}
+	
+	@FXML
+	def loadStudentCopiesPressed() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetLoaderUI.FXML"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerFxStudentSheetLoader>controller.initialize(corrector.adapter.presenter.presenterStudentSheet)
+		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show
 	}

@@ -4,22 +4,21 @@ import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer;
+import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
+import fr.istic.tools.scanexam.view.fx.component.validator.FormatValidator;
+import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -63,24 +62,19 @@ public class AdapterFxStudentListLoader {
    * Champ du fichier à charger
    */
   @FXML
-  public TextField txtFldFile;
+  public FormattedTextField txtFldFile;
   
   /**
    * Champ de la première casse
    */
   @FXML
-  public TextField txtFldFirstCell;
+  public FormattedTextField txtFldFirstCell;
   
   /**
    * Bouton de validation
    */
   @FXML
   public Button btnOk;
-  
-  /**
-   * Caractérise les erreurs dans le formulaire. Si au moins l'une des valeurs est à true, alors le bouton de validation est bloqué
-   */
-  private final boolean[] errors = new boolean[2];
   
   /**
    * METHODES
@@ -90,8 +84,6 @@ public class AdapterFxStudentListLoader {
     String _text = this.txtFldFile.getText();
     File _file = new File(_text);
     final PresenterStudentListLoader.LoadState state = this.presStudentList.loadFile(_file, this.txtFldFirstCell.getText());
-    this.verifyFilePath();
-    this.verifyFirstCell();
     boolean _isDisable = this.btnOk.isDisable();
     boolean _not = (!_isDisable);
     if (_not) {
@@ -138,68 +130,6 @@ public class AdapterFxStudentListLoader {
     } else {
       AdapterFxStudentListLoader.logger.warn("File not chosen");
     }
-    this.verifyFilePath();
-  }
-  
-  /**
-   * Vérifie la syntaxe de la cellule spécifiée par l'utilisateur, et refuse l'entrée si celle-ci n'est pas valide
-   */
-  private void verifyFirstCell() {
-    if (((!AdapterFxStudentListLoader.cellPattern.matcher(this.txtFldFirstCell.getText()).matches()) && (!Objects.equal(this.txtFldFirstCell.getText(), "")))) {
-      BadFormatDisplayer.dispBadFormatView(this.txtFldFirstCell, true);
-      this.errors[1] = true;
-      String _translate = LanguageManager.translate("studentlist.info.badCellFormat");
-      Tooltip _tooltip = new Tooltip(_translate);
-      this.txtFldFirstCell.setTooltip(_tooltip);
-    } else {
-      BadFormatDisplayer.dispBadFormatView(this.txtFldFirstCell, false);
-      this.errors[0] = false;
-      this.txtFldFirstCell.setTooltip(null);
-    }
-    this.updateLockingState();
-  }
-  
-  /**
-   * Vérifie si le chemin spécifié par l'utilisateur pointe bien vers un fichier du bon format, refuse l'entrée si cela n'est pas le cas
-   */
-  private void verifyFilePath() {
-    String _text = this.txtFldFile.getText();
-    final File file = new File(_text);
-    final Function1<String, String> _function = (String f) -> {
-      return f.substring(1);
-    };
-    final Function1<String, Boolean> _function_1 = (String f) -> {
-      return Boolean.valueOf(file.getName().endsWith(f));
-    };
-    String _findFirst = IterableExtensions.<String>findFirst(ListExtensions.<String, String>map(AdapterFxStudentListLoader.supportedFormat, _function), _function_1);
-    final boolean rightFormat = (_findFirst != null);
-    if (((((!file.exists()) || (!file.isFile())) || (!rightFormat)) && (!Objects.equal(this.txtFldFile.getText(), "")))) {
-      BadFormatDisplayer.dispBadFormatView(this.txtFldFile, true);
-      this.errors[1] = true;
-      boolean _exists = file.exists();
-      boolean _not = (!_exists);
-      if (_not) {
-        String _translate = LanguageManager.translate("studentlist.info.fileNotExist");
-        Tooltip _tooltip = new Tooltip(_translate);
-        this.txtFldFile.setTooltip(_tooltip);
-      } else {
-        String _translate_1 = LanguageManager.translate("studentlist.info.fileNotValid");
-        Tooltip _tooltip_1 = new Tooltip(_translate_1);
-        this.txtFldFile.setTooltip(_tooltip_1);
-      }
-    } else {
-      BadFormatDisplayer.dispBadFormatView(this.txtFldFile, false);
-      this.errors[1] = false;
-      this.txtFldFile.setTooltip(null);
-    }
-    this.updateLockingState();
-  }
-  
-  /**
-   * Actualise l'état de l'interface en bloquant ou non le bouton de validation si il y a des erreurs
-   */
-  private void updateLockingState() {
-    this.btnOk.setDisable((this.errors[0] || this.errors[1]));
   }
   
   /**
@@ -219,27 +149,39 @@ public class AdapterFxStudentListLoader {
     };
     TextFormatter<String> _textFormatter = new TextFormatter<String>(_function);
     this.txtFldFirstCell.setTextFormatter(_textFormatter);
-    final ChangeListener<Boolean> _function_1 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
-      if ((!(newVal).booleanValue())) {
-        this.verifyFirstCell();
+    this.btnOk.disableProperty().bind(this.txtFldFile.wrongFormattedProperty().or(this.txtFldFirstCell.wrongFormattedProperty()));
+    final FormatValidator _function_1 = (String text) -> {
+      Optional<String> _xifexpression = null;
+      boolean _matches = AdapterFxStudentListLoader.cellPattern.matcher(this.txtFldFirstCell.getText()).matches();
+      boolean _not = (!_matches);
+      if (_not) {
+        _xifexpression = Optional.<String>of("studentlist.info.badCellFormat");
+      } else {
+        _xifexpression = Optional.<String>empty();
       }
+      return _xifexpression;
     };
-    this.txtFldFirstCell.focusedProperty().addListener(_function_1);
-    final ChangeListener<Boolean> _function_2 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
-      if ((!(newVal).booleanValue())) {
-        this.verifyFilePath();
+    this.txtFldFirstCell.addFormatValidator(_function_1);
+    final FormatValidator _function_2 = (String text) -> {
+      Optional<String> _xifexpression = null;
+      final Function1<String, String> _function_3 = (String f) -> {
+        return f.substring(1);
+      };
+      final Function1<String, Boolean> _function_4 = (String f) -> {
+        return Boolean.valueOf(text.endsWith(f));
+      };
+      String _findFirst = IterableExtensions.<String>findFirst(ListExtensions.<String, String>map(AdapterFxStudentListLoader.supportedFormat, _function_3), _function_4);
+      boolean _tripleNotEquals = (_findFirst != null);
+      if (_tripleNotEquals) {
+        _xifexpression = Optional.<String>empty();
+      } else {
+        _xifexpression = Optional.<String>of("studentlist.info.fileNotValid");
       }
+      return _xifexpression;
     };
-    this.txtFldFile.focusedProperty().addListener(_function_2);
-    final ChangeListener<Boolean> _function_3 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
-      if ((!(newVal).booleanValue())) {
-        boolean _equals = this.txtFldFirstCell.getText().equals("");
-        if (_equals) {
-          this.txtFldFirstCell.setText("A1");
-        }
-      }
-    };
-    this.txtFldFirstCell.focusedProperty().addListener(_function_3);
+    this.txtFldFile.addFormatValidator(_function_2);
+    ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator();
+    this.txtFldFile.addFormatValidator(_validFilePathValidator);
   }
   
   /**
