@@ -4,7 +4,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.layout.Priority
 import javafx.scene.Node
 
-class QuestionListEditor extends VBox {
+class QuestionListEdition extends VBox {
 	
 	//---Controller---//
 	new(ControllerFxEdition controller) {

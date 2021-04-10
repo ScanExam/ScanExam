@@ -13,8 +13,8 @@ import javafx.scene.layout.VBox;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
-public class QuestionListEditor extends VBox {
-  public QuestionListEditor(final ControllerFxEdition controller) {
+public class QuestionListEdition extends VBox {
+  public QuestionListEdition(final ControllerFxEdition controller) {
     this.controller = controller;
     VBox.setVgrow(this, Priority.ALWAYS);
   }

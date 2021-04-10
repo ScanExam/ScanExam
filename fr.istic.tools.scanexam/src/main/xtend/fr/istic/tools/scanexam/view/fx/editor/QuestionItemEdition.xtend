@@ -55,7 +55,7 @@ class QuestionItemEdition extends VBox {
 	
 	//--- Other Vars---//
 	/*the container of all the question items */
-	QuestionListEditor list
+	QuestionListEdition list
 
 	//----------------------------------------------------------------------------------------------------
 	/*
@@ -63,7 +63,7 @@ class QuestionItemEdition extends VBox {
 	 */
 	//----------------------------------------------------------------------------------------------------
 	
-	new(QuestionListEditor list, Box zone) {
+	new(QuestionListEdition list, Box zone) {
 		super()
 		top = new HBox
 		middle = new HBox
@@ -93,13 +93,13 @@ class QuestionItemEdition extends VBox {
 		setupEvents(this)
 	}
 
-	new(QuestionListEditor list, Box zone, BoxType type, int page) {
+	new(QuestionListEdition list, Box zone, BoxType type, int page) {
 		this(list, zone);
 		this.type = type
 		this.page = page
 	}
 
-	new(QuestionListEditor list, Box zone, String name, int page, int id) {
+	new(QuestionListEdition list, Box zone, String name, int page, int id) {
 		this(list, zone)
 		this.name.text = name
 		this.page = page

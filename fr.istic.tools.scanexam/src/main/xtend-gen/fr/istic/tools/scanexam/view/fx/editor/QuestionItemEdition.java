@@ -4,7 +4,7 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
 import fr.istic.tools.scanexam.view.fx.editor.BoxType;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionListEditor;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -78,12 +78,12 @@ public class QuestionItemEdition extends VBox {
   /**
    * the container of all the question items
    */
-  private QuestionListEditor list;
+  private QuestionListEdition list;
   
   /**
    * CONSTRUCTEURS
    */
-  public QuestionItemEdition(final QuestionListEditor list, final Box zone) {
+  public QuestionItemEdition(final QuestionListEdition list, final Box zone) {
     super();
     HBox _hBox = new HBox();
     this.top = _hBox;
@@ -112,13 +112,13 @@ public class QuestionItemEdition extends VBox {
     this.setupEvents(this);
   }
   
-  public QuestionItemEdition(final QuestionListEditor list, final Box zone, final BoxType type, final int page) {
+  public QuestionItemEdition(final QuestionListEdition list, final Box zone, final BoxType type, final int page) {
     this(list, zone);
     this.type = type;
     this.page = page;
   }
   
-  public QuestionItemEdition(final QuestionListEditor list, final Box zone, final String name, final int page, final int id) {
+  public QuestionItemEdition(final QuestionListEdition list, final Box zone, final String name, final int page, final int id) {
     this(list, zone);
     this.name.setText(name);
     this.page = page;

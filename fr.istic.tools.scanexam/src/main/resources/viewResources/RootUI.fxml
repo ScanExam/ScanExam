@@ -6,13 +6,14 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerRoot">
+<VBox prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerRoot">
 	<children>
 		<MenuBar>
 			<menus>
@@ -21,10 +22,12 @@
 						<MenuItem mnemonicParsing="false" onAction="#createNewTemplatePressed" text="%menu.file.new" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="%menu.file.loadTemplate" />
 						<MenuItem mnemonicParsing="false" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
-						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.loadStudentCopies" />
-						<MenuItem disable="true" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
+						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.saveGraduation" />
+						<MenuItem disable="true" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
 					</items>
 				</Menu>
@@ -36,7 +39,7 @@
 				</Menu>
 				<Menu mnemonicParsing="false" text="%menu.view">
 					<items>
-						<CheckMenuItem fx:id="autoZoom" mnemonicParsing="false" selected="true" onAction="#toggleAutoZoom" text="%menu.view.autozoom" />
+						<CheckMenuItem fx:id="autoZoom" mnemonicParsing="false" onAction="#toggleAutoZoom" selected="true" text="%menu.view.autozoom" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.view.resetzoom" />
 					</items>
 				</Menu>
