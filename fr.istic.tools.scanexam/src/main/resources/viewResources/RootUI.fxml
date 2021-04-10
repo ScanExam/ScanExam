@@ -26,7 +26,7 @@
 						<MenuItem disable="false" mnemonicParsing="false" onAction="#loadStudentCopiesPressed" text="%menu.file.loadStudentSheet" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.saveGraduation" />
-						<MenuItem disable="false" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
+						<MenuItem disable="true" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
 					</items>
