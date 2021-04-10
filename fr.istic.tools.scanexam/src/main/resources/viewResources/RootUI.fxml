@@ -16,20 +16,15 @@
 	<children>
 		<MenuBar>
 			<menus>
-				<Menu mnemonicParsing="false" text="File editor">
+				<Menu mnemonicParsing="false" text="%menu.file">
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#createNewTemplatePressed" text="%menu.file.new" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="%menu.file.loadTemplate" />
 						<MenuItem mnemonicParsing="false" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
-						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="File graduation">
-					<items>
-						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadTemplate" />
+						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.loadStudentCopies" />
-						<MenuItem mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
-						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.save" />
+						<MenuItem disable="true" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
+						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.saveGraduation" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
 					</items>
 				</Menu>
