@@ -46,6 +46,8 @@ abstract class Service
 	}
 
 
-	
+	def boolean hasExamLoaded() {
+		ExamSingleton.instance !== null
+	}
 	
 }

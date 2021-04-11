@@ -48,4 +48,8 @@ public abstract class Service {
   
   public void onDocumentLoad(final int pdfPageCount) {
   }
+  
+  public boolean hasExamLoaded() {
+    return (ExamSingleton.instance != null);
+  }
 }

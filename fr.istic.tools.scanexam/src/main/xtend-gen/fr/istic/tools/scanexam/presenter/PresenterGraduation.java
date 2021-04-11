@@ -7,10 +7,10 @@ import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterGradeScale;
+import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
-import fr.istic.tools.scanexam.presenter.PresenterStudentSheetLoader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
@@ -49,7 +49,7 @@ public class PresenterGraduation implements Presenter {
   
   private PresenterStudentListLoader studentListPresenter;
   
-  private PresenterStudentSheetLoader studentSheetPresenter;
+  private PresenterGraduationLoader studentSheetPresenter;
   
   private ServiceGraduation service;
   
@@ -64,8 +64,8 @@ public class PresenterGraduation implements Presenter {
     this.presQuestion = _presenterQuestion;
     PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
     this.studentListPresenter = _presenterStudentListLoader;
-    PresenterStudentSheetLoader _presenterStudentSheetLoader = new PresenterStudentSheetLoader(service);
-    this.studentSheetPresenter = _presenterStudentSheetLoader;
+    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(service);
+    this.studentSheetPresenter = _presenterGraduationLoader;
   }
   
   public PresenterGraduation(final Adapter<PresenterGraduation> adapter, final ServiceGraduation service) {
@@ -118,7 +118,7 @@ public class PresenterGraduation implements Presenter {
   /**
    * @return current {@link PresenterStudentSheetLoader}
    */
-  public PresenterStudentSheetLoader getPresenterStudentSheet() {
+  public PresenterGraduationLoader getPresenterStudentSheet() {
     return this.studentSheetPresenter;
   }
   

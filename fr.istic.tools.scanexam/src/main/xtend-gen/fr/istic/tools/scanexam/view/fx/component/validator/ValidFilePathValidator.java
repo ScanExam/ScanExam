@@ -9,6 +9,22 @@ import java.util.Optional;
  */
 @SuppressWarnings("all")
 public class ValidFilePathValidator implements FormatValidator {
+  private final String suffix;
+  
+  /**
+   * @param endWith le string par lequel le Path doit finir
+   */
+  public ValidFilePathValidator(final String suffix) {
+    this.suffix = suffix;
+  }
+  
+  /**
+   * Construit un nouveau Validateur de chemin d'accès
+   */
+  public ValidFilePathValidator() {
+    this("");
+  }
+  
   @Override
   public Optional<String> validate(final String toValidate) {
     final File file = new File(toValidate);
@@ -17,9 +33,7 @@ public class ValidFilePathValidator implements FormatValidator {
     if (_not) {
       return Optional.<String>of("studentlist.info.fileNotExist");
     } else {
-      boolean _isFile = file.isFile();
-      boolean _not_1 = (!_isFile);
-      if (_not_1) {
+      if (((!file.isFile()) || (!toValidate.endsWith(this.suffix)))) {
         return Optional.<String>of("studentlist.info.fileNotValid");
       } else {
         return Optional.<String>empty();

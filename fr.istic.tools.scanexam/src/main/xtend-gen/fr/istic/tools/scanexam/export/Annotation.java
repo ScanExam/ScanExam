@@ -18,15 +18,23 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 public class Annotation {
   public static void main(final String[] args) {
     try {
-      File _file = new File("/Users/leo/Documents/pfo_example.pdf");
+      File _file = new File("src/main/resources/resources_annotation/pfo_example.pdf");
       PDDocument document = PDDocument.load(_file);
+      Annotation.annotationPDF(document, 0, 0, 0, 0, 0);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public static void annotationPDF(final PDDocument document, final int pageNoted, final float lowerLeftX, final float lowerLeftY, final float upperLeftX, final float upperRightY) {
+    try {
       float inch = 72;
-      float[] rgb = { 0, 0, 1 };
+      float[] rgb = { (0 / 255f), (0 / 255f), (0 / 255f) };
       PDColor color = new PDColor(rgb, PDDeviceRGB.INSTANCE);
-      PDPage page = document.getPage(0);
+      PDPage page = document.getPage(pageNoted);
       List<PDAnnotation> annotations = page.getAnnotations();
       PDBorderStyleDictionary borderThick = new PDBorderStyleDictionary();
-      borderThick.setWidth((inch / 12));
+      borderThick.setWidth((inch / 20));
       PDBorderStyleDictionary borderThin = new PDBorderStyleDictionary();
       borderThin.setWidth((inch / 72));
       PDBorderStyleDictionary borderULine = new PDBorderStyleDictionary();
@@ -35,24 +43,15 @@ public class Annotation {
       float pw = page.getMediaBox().getUpperRightX();
       float ph = page.getMediaBox().getUpperRightY();
       PDRectangle position = new PDRectangle();
-      PDAnnotationSquareCircle aCircle = new PDAnnotationSquareCircle(PDAnnotationSquareCircle.SUB_TYPE_CIRCLE);
-      aCircle.setContents("Circle Annotation");
-      aCircle.setColor(color);
-      aCircle.setBorderStyle(borderThin);
-      PDRectangle _pDRectangle = new PDRectangle();
-      position = _pDRectangle;
-      position.setLowerLeftX(inch);
-      position.setLowerLeftY(((ph - (3 * inch)) - inch));
-      position.setUpperRightX((2 * inch));
-      position.setUpperRightY((ph - (3 * inch)));
-      aCircle.setRectangle(position);
-      annotations.add(aCircle);
+      float[] snow = { (255 / 255f), (250 / 255f), (250 / 255f) };
+      PDColor interieurColor = new PDColor(snow, PDDeviceRGB.INSTANCE);
       PDAnnotationSquareCircle aSquare = new PDAnnotationSquareCircle(PDAnnotationSquareCircle.SUB_TYPE_SQUARE);
       aSquare.setContents("Square Annotation");
+      aSquare.setInteriorColor(interieurColor);
       aSquare.setColor(color);
       aSquare.setBorderStyle(borderThick);
-      PDRectangle _pDRectangle_1 = new PDRectangle();
-      position = _pDRectangle_1;
+      PDRectangle _pDRectangle = new PDRectangle();
+      position = _pDRectangle;
       position.setLowerLeftX((pw - (2 * inch)));
       position.setLowerLeftY(((ph - (3.5f * inch)) - inch));
       position.setUpperRightX((pw - inch));
@@ -63,8 +62,8 @@ public class Annotation {
       aLine.setEndPointEndingStyle(PDAnnotationLine.LE_OPEN_ARROW);
       aLine.setContents("Circle->Square");
       aLine.setCaption(true);
-      PDRectangle _pDRectangle_2 = new PDRectangle();
-      position = _pDRectangle_2;
+      PDRectangle _pDRectangle_1 = new PDRectangle();
+      position = _pDRectangle_1;
       position.setLowerLeftX((2 * inch));
       position.setLowerLeftY(((ph - (3.5f * inch)) - inch));
       position.setUpperRightX(((pw - inch) - inch));
@@ -79,7 +78,7 @@ public class Annotation {
       aLine.setBorderStyle(borderThick);
       aLine.setColor(color);
       annotations.add(aLine);
-      File file = new File("/Users/leo/Documents/pfo_example_annotation.pdf");
+      File file = new File("src/main/resources/resources_annotation/pfo_example_annotation.pdf");
       document.save(file);
       Desktop.getDesktop().open(file);
       document.close();

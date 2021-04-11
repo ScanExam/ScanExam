@@ -23,9 +23,12 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
+import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -34,6 +37,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * Représente un TextField à formattage.
  * Ce formattage peut être stricte (vérifié à chaque changement sur le composant) ou seulement testé lorsque le composant perd le focus.
  * Si le formattage est mauvais, le composant rentre en état de "Mauvais Format".
+ * Le composant ne peut pas être en état "Mauvais Format" si il est désactivé, son état est recalculé à chaque réactivation du composant
  * @author Théo Giraudet
  */
 @SuppressWarnings("all")
@@ -67,6 +71,14 @@ public class FormattedTextField extends TextField {
     this.wrongFormatted.addListener(_function);
     HashMap<FormatValidator, Boolean> _hashMap = new HashMap<FormatValidator, Boolean>();
     this.validators = _hashMap;
+    final ChangeListener<Boolean> _function_1 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      if ((newVal).booleanValue()) {
+        this.setWrongFormatted(false);
+      } else {
+        this.updateState();
+      }
+    };
+    this.disabledProperty().addListener(_function_1);
   }
   
   /**
@@ -191,6 +203,7 @@ public class FormattedTextField extends TextField {
   
   /**
    * @param validator un FormatValidator (non null) à appliquer sur le contenu du composant lorsque celui-ci perd le focus.
+   * Les FormatValidator sont aussi testé sur le contenu à chaque changement sur le texte si celui-ci n'a pas le focus
    * Si un seul des FormatValidator refuse le contenu du composant, le composant rentre alors en état "Mauvais Format".
    * Si la valeur du composant est une chaîne vide, et que le composant accepte les chaînes vides, alors les Validators seront ignorés
    */
@@ -199,25 +212,47 @@ public class FormattedTextField extends TextField {
     this.validators.put(validator, Boolean.valueOf(true));
     final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
       if ((!(newVal).booleanValue())) {
-        boolean _not = (!((this.acceptEmpty.getValue()).booleanValue() && com.google.common.base.Objects.equal(this.getText(), "")));
-        if (_not) {
-          final Optional<String> result = validator.validate(this.getText());
-          this.validators.put(validator, Boolean.valueOf(result.isEmpty()));
-          final Consumer<String> _function_1 = (String msg) -> {
-            this.onValidatorFail(msg);
-          };
-          result.ifPresent(_function_1);
-        } else {
-          this.validators.put(validator, Boolean.valueOf(true));
-        }
-        this.updateState();
+        this.evaluateValidator(validator);
       }
     };
     this.focusedProperty().addListener(_function);
+    final ChangeListener<String> _function_1 = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
+      if (((!com.google.common.base.Objects.equal(oldVal, newVal)) && (!this.isFocused()))) {
+        this.evaluateValidator(validator);
+      }
+    };
+    this.textProperty().addListener(_function_1);
+    final EventHandler<KeyEvent> _function_2 = (KeyEvent event) -> {
+      KeyCode _code = event.getCode();
+      boolean _tripleEquals = (_code == KeyCode.ENTER);
+      if (_tripleEquals) {
+        this.evaluateValidator(validator);
+      }
+    };
+    this.setOnKeyPressed(_function_2);
   }
   
   /**
-   * Recalcule l'état du composant, puis le met à jour
+   * Évaluation du contenu du composant par le FormatValidator. Si celui-ci échoue à évaluer le contenu, le composant entre en état "Mauvais Format"
+   * @param validator le Format Validator
+   */
+  private void evaluateValidator(final FormatValidator validator) {
+    boolean _not = (!((this.acceptEmpty.getValue()).booleanValue() && com.google.common.base.Objects.equal(this.getText(), "")));
+    if (_not) {
+      final Optional<String> result = validator.validate(this.getText());
+      this.validators.put(validator, Boolean.valueOf(result.isEmpty()));
+      final Consumer<String> _function = (String msg) -> {
+        this.onValidatorFail(msg);
+      };
+      result.ifPresent(_function);
+    } else {
+      this.validators.put(validator, Boolean.valueOf(true));
+    }
+    this.updateState();
+  }
+  
+  /**
+   * Recalcule l'état du composant
    */
   public void updateState() {
     final Function1<Boolean, Boolean> _function = (Boolean b) -> {
@@ -228,7 +263,10 @@ public class FormattedTextField extends TextField {
     this.wrongFormatted.setValue(Boolean.valueOf(_tripleNotEquals));
   }
   
-  public void updateView() {
+  /**
+   * Met à jour l'état du composant
+   */
+  private void updateView() {
     Boolean _value = this.wrongFormatted.getValue();
     if ((_value).booleanValue()) {
       this.pseudoClassStateChanged(this.errorClass, true);
@@ -246,6 +284,15 @@ public class FormattedTextField extends TextField {
     String _translate = LanguageManager.translate(failMsg);
     Tooltip _tooltip = new Tooltip(_translate);
     this.setTooltip(_tooltip);
+  }
+  
+  /**
+   * Secoue le composant si elle est vide est activée
+   */
+  public void shakeIfEmpty() {
+    if (((!this.isDisabled()) && ((this.getText() == null) || com.google.common.base.Objects.equal(this.getText(), "")))) {
+      this.shake();
+    }
   }
   
   /**
