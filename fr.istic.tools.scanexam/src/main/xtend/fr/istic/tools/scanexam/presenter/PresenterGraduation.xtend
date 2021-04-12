@@ -33,6 +33,7 @@ class PresenterGraduation implements Presenter
 	PresenterPdf presPdf 
 	PresenterStudentListLoader studentListPresenter
 	PresenterGraduationLoader studentSheetPresenter
+	PresenterCorrectionLoader correctionLoaderPresenter
 	ServiceGraduation service;
 	
 	Adapter<PresenterGraduation> adapter;
@@ -46,6 +47,7 @@ class PresenterGraduation implements Presenter
 		presQuestion = new PresenterQuestion(service)
 		studentListPresenter = new PresenterStudentListLoader(service)
 		studentSheetPresenter = new PresenterGraduationLoader(service)
+		correctionLoaderPresenter = new PresenterCorrectionLoader(service)
 	}
 	new(Adapter<PresenterGraduation> adapter,ServiceGraduation service) 
 	{
@@ -117,6 +119,12 @@ class PresenterGraduation implements Presenter
 		studentSheetPresenter
 	}
 	
+	/**
+	 * @return current {@link PresenterCorrectionLoader} 
+	 */
+	def PresenterCorrectionLoader getPresenterCorrectionLoader() {
+		correctionLoaderPresenter
+	}
 	
 	def void openEditionTemplate(String path){
 		service.openCreationTemplate(path)

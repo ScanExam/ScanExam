@@ -6,6 +6,7 @@ import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.AdapterFxConfiguration;
 import fr.istic.tools.scanexam.view.fx.AdapterFxStudentListLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerCorrectionLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
@@ -64,7 +65,24 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void loadTemplatePressedCorrector() {
-    this.corrector.loadPressed();
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectionLoaderUI.FXML"));
+      final Stage dialog = new Stage();
+      dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"));
+      ObservableList<Image> _icons = dialog.getIcons();
+      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
+      Image _image = new Image(_inputStreamResource);
+      _icons.add(_image);
+      loader.<ControllerCorrectionLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterCorrectionLoader());
+      Scene _scene = new Scene(view, 384, 355);
+      dialog.setScene(_scene);
+      dialog.setResizable(false);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @FXML
