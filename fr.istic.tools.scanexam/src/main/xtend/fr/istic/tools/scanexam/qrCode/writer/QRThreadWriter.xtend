@@ -8,19 +8,17 @@ class QRThreadWriter extends Thread implements Runnable {
 	int borneInf
 	int borneMax
 	PDDocument docSujetMaitre
-	int numThread
 	int nbPages
 	CountDownLatch countDown
 	CountDownLatch countDownMain
 	String name
 	String pathImage
 
-	new(QRCodeGeneratorImpl gen, int inf, int max, PDDocument docSujetMaitre, int numThread, int nbPages, CountDownLatch countDown, CountDownLatch countDownMain, String name, String pathImage) {
+	new(QRCodeGeneratorImpl gen, int inf, int max, PDDocument docSujetMaitre, int nbPages, CountDownLatch countDown, CountDownLatch countDownMain, String name, String pathImage) {
 		this.generator = gen
 		this.borneInf = inf;
 		this.borneMax = max
 		this.docSujetMaitre = docSujetMaitre
-		this.numThread = numThread
 		this.nbPages = nbPages
 		this.countDown = countDown
 		this.countDownMain = countDownMain
@@ -31,7 +29,7 @@ class QRThreadWriter extends Thread implements Runnable {
 	override run() {
 		countDownMain.await();
 		for (i : borneInf ..< borneMax) {
-			generator.insertQRCodeInSubject(name, docSujetMaitre, i, numThread, nbPages, pathImage)
+			generator.insertQRCodeInSubject(name, docSujetMaitre, i, nbPages, pathImage)
 		}
 		countDown.countDown
 	}
