@@ -67,7 +67,7 @@ public class PresenterGraduation implements Presenter {
     this.presQuestion = _presenterQuestion;
     PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
     this.studentListPresenter = _presenterStudentListLoader;
-    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(service);
+    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(service, null);
     this.studentSheetPresenter = _presenterGraduationLoader;
     PresenterCorrectionLoader _presenterCorrectionLoader = new PresenterCorrectionLoader(service);
     this.correctionLoaderPresenter = _presenterCorrectionLoader;
