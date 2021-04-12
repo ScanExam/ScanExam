@@ -186,10 +186,8 @@ public class QuestionOptionsEdition extends VBox {
       this.grid.add(this.renameField, 1, 0);
       this.renameField.requestFocus();
       this.renameField.selectAll();
-      final Function1<Node, Boolean> _function = new Function1<Node, Boolean>() {
-        public Boolean apply(final Node n) {
-          return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
-        }
+      final Function1<Node, Boolean> _function = (Node n) -> {
+        return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
       };
       Node _findFirst = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function);
       _findFirst.setVisible(false);
@@ -199,10 +197,8 @@ public class QuestionOptionsEdition extends VBox {
       if (_not) {
         this.grid.getChildren().remove(this.renameField);
         this.grid.add(this.questionName, 1, 0);
-        final Function1<Node, Boolean> _function_1 = new Function1<Node, Boolean>() {
-          public Boolean apply(final Node n) {
-            return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
-          }
+        final Function1<Node, Boolean> _function_1 = (Node n) -> {
+          return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
         };
         Node _findFirst_1 = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function_1);
         _findFirst_1.setVisible(true);
@@ -219,10 +215,8 @@ public class QuestionOptionsEdition extends VBox {
       this.grid.add(this.scaleField, 1, 3);
       this.scaleField.requestFocus();
       this.scaleField.selectAll();
-      final Function1<Node, Boolean> _function = new Function1<Node, Boolean>() {
-        public Boolean apply(final Node n) {
-          return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
-        }
+      final Function1<Node, Boolean> _function = (Node n) -> {
+        return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
       };
       Node _findFirst = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function);
       _findFirst.setVisible(false);
@@ -232,10 +226,8 @@ public class QuestionOptionsEdition extends VBox {
       if (_not) {
         this.grid.getChildren().remove(this.scaleField);
         this.grid.add(this.questionScale, 1, 3);
-        final Function1<Node, Boolean> _function_1 = new Function1<Node, Boolean>() {
-          public Boolean apply(final Node n) {
-            return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
-          }
+        final Function1<Node, Boolean> _function_1 = (Node n) -> {
+          return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
         };
         Node _findFirst_1 = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function_1);
         _findFirst_1.setVisible(true);
@@ -263,35 +255,35 @@ public class QuestionOptionsEdition extends VBox {
   
   public void setupEvents() {
     this.remove.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         QuestionOptionsEdition.this.controller.getQuestionList().remove(QuestionOptionsEdition.this.currentItem);
         QuestionOptionsEdition.this.controller.getMainPane().removeZone(QuestionOptionsEdition.this.currentItem.getZone());
         QuestionOptionsEdition.this.controller.selectQuestion(null);
       }
     });
-    final Function1<Node, Boolean> _function = new Function1<Node, Boolean>() {
-      public Boolean apply(final Node n) {
-        return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
-      }
+    final Function1<Node, Boolean> _function = (Node n) -> {
+      return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 0)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
     };
     Node _findFirst = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function);
-    final EventHandler<MouseEvent> _function_1 = new EventHandler<MouseEvent>() {
-      public void handle(final MouseEvent e) {
-        QuestionOptionsEdition.this.toggleRename(true);
-      }
+    final EventHandler<MouseEvent> _function_1 = (MouseEvent e) -> {
+      this.toggleRename(true);
     };
     _findFirst.setOnMouseClicked(_function_1);
     this.questionName.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
       public void handle(final MouseEvent event) {
         QuestionOptionsEdition.this.toggleRename(true);
       }
     });
     this.questionScale.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
       public void handle(final MouseEvent event) {
         QuestionOptionsEdition.this.toggleRescale(true);
       }
     });
     this.renameField.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         InputOutput.<String>print("Rename actions\n");
         QuestionOptionsEdition.this.commitRename();
@@ -300,6 +292,7 @@ public class QuestionOptionsEdition extends VBox {
     });
     ReadOnlyBooleanProperty _focusedProperty = this.renameField.focusedProperty();
     _focusedProperty.addListener(new ChangeListener<Boolean>() {
+      @Override
       public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
         if ((!(newValue).booleanValue())) {
           InputOutput.<String>print("Rename actions\n");
@@ -308,19 +301,16 @@ public class QuestionOptionsEdition extends VBox {
         }
       }
     });
-    final Function1<Node, Boolean> _function_2 = new Function1<Node, Boolean>() {
-      public Boolean apply(final Node n) {
-        return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
-      }
+    final Function1<Node, Boolean> _function_2 = (Node n) -> {
+      return Boolean.valueOf((((n != null) && ((GridPane.getRowIndex(n)).intValue() == 3)) && ((GridPane.getColumnIndex(n)).intValue() == 2)));
     };
     Node _findFirst_1 = IterableExtensions.<Node>findFirst(this.grid.getChildren(), _function_2);
-    final EventHandler<MouseEvent> _function_3 = new EventHandler<MouseEvent>() {
-      public void handle(final MouseEvent e) {
-        QuestionOptionsEdition.this.toggleRescale(true);
-      }
+    final EventHandler<MouseEvent> _function_3 = (MouseEvent e) -> {
+      this.toggleRescale(true);
     };
     _findFirst_1.setOnMouseClicked(_function_3);
     this.scaleField.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         InputOutput.<String>print("Rescale actions\n");
         QuestionOptionsEdition.this.commitRescale();
@@ -329,6 +319,7 @@ public class QuestionOptionsEdition extends VBox {
     });
     ReadOnlyBooleanProperty _focusedProperty_1 = this.scaleField.focusedProperty();
     _focusedProperty_1.addListener(new ChangeListener<Boolean>() {
+      @Override
       public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
         if ((!(newValue).booleanValue())) {
           InputOutput.<String>print("Rescale actions\n");

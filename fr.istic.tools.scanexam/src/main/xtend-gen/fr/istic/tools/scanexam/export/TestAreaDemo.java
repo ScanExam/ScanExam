@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 @SuppressWarnings("all")
 public class TestAreaDemo extends Application {
+  @Override
   public void start(final Stage primaryStage) throws Exception {
     VBox root = FXMLLoader.<VBox>load(this.getClass().getResource("./resources/viewResources/text.FXML"));
     Insets _insets = new Insets(10);

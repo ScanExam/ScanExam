@@ -20,16 +20,20 @@ public class AdapterFxGraduation implements AdapterGraduation {
   public void loadFile(final File file) {
   }
   
+  @Override
   public void nextQuestion() {
   }
   
+  @Override
   public void previousQuestion() {
   }
   
+  @Override
   public List<String> questionNames() {
     return null;
   }
   
+  @Override
   public void thisQuestion(final int index) {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
@@ -37,10 +41,12 @@ public class AdapterFxGraduation implements AdapterGraduation {
   public void showQuestion(final Question question) {
   }
   
+  @Override
   public void setPresenter(final PresenterGraduation presenter) {
     this.presenter = presenter;
   }
   
+  @Override
   public PresenterGraduation getPresenter() {
     return this.presenter;
   }

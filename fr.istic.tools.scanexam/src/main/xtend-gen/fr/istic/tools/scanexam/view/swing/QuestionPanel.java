@@ -70,6 +70,7 @@ public class QuestionPanel extends JPanel {
    */
   private void addActionListeners(final Box box, final AdapterSwingBox adapterBox, final QuestionPanel qstPanel, final ListOfQuestionsPanel listQstPanel) {
     this.btnRemove.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         adapterBox.deleteBox(box);
         listQstPanel.remove(qstPanel);
@@ -77,11 +78,13 @@ public class QuestionPanel extends JPanel {
       }
     });
     this.btnMove.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         SelectionStateMachine.setState(SelectionStateMachine.MOVE);
       }
     });
     this.btnResize.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         SelectionStateMachine.setState(SelectionStateMachine.RESIZE);
       }

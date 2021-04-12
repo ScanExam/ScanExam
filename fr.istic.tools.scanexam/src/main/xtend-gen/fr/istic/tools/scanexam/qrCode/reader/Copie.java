@@ -57,6 +57,7 @@ public class Copie {
     return 0;
   }
   
+  @Override
   public String toString() {
     String res = (("Copie " + Integer.valueOf(this.numCopie)) + "[\n");
     int _length = ((Object[])Conversions.unwrapArray(this.setPages, Object.class)).length;

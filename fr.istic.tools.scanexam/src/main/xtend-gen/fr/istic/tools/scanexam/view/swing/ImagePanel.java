@@ -34,6 +34,7 @@ public class ImagePanel extends JPanel {
   /**
    * Affichage graphique
    */
+  @Override
   protected void paintComponent(final Graphics g) {
     super.paintComponent(g);
     if ((this.image != null)) {

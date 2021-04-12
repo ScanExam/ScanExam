@@ -65,21 +65,17 @@ public class FormattedTextField extends TextField {
     this.setDefaultValue("");
     this.setText(this.defaultValue.getValue());
     this.errorClass = PseudoClass.getPseudoClass("wrong-format");
-    final ChangeListener<Boolean> _function = new ChangeListener<Boolean>() {
-      public void changed(final ObservableValue<? extends Boolean> obs, final Boolean oldVal, final Boolean newVal) {
-        FormattedTextField.this.updateView();
-      }
+    final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      this.updateView();
     };
     this.wrongFormatted.addListener(_function);
     HashMap<FormatValidator, Boolean> _hashMap = new HashMap<FormatValidator, Boolean>();
     this.validators = _hashMap;
-    final ChangeListener<Boolean> _function_1 = new ChangeListener<Boolean>() {
-      public void changed(final ObservableValue<? extends Boolean> obs, final Boolean oldVal, final Boolean newVal) {
-        if ((newVal).booleanValue()) {
-          FormattedTextField.this.setWrongFormatted(false);
-        } else {
-          FormattedTextField.this.updateState();
-        }
+    final ChangeListener<Boolean> _function_1 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      if ((newVal).booleanValue()) {
+        this.setWrongFormatted(false);
+      } else {
+        this.updateState();
       }
     };
     this.disabledProperty().addListener(_function_1);
@@ -134,17 +130,15 @@ public class FormattedTextField extends TextField {
   public void setStrictFormat(final String formatter) {
     Objects.<String>requireNonNull(formatter);
     this.pattern = Pattern.compile(formatter);
-    final UnaryOperator<TextFormatter.Change> _function = new UnaryOperator<TextFormatter.Change>() {
-      public TextFormatter.Change apply(final TextFormatter.Change change) {
-        TextFormatter.Change _xifexpression = null;
-        boolean _matches = FormattedTextField.this.pattern.matcher(change.getText()).matches();
-        if (_matches) {
-          _xifexpression = change;
-        } else {
-          _xifexpression = null;
-        }
-        return _xifexpression;
+    final UnaryOperator<TextFormatter.Change> _function = (TextFormatter.Change change) -> {
+      TextFormatter.Change _xifexpression = null;
+      boolean _matches = this.pattern.matcher(change.getText()).matches();
+      if (_matches) {
+        _xifexpression = change;
+      } else {
+        _xifexpression = null;
       }
+      return _xifexpression;
     };
     TextFormatter<String> _textFormatter = new TextFormatter<String>(_function);
     this.setTextFormatter(_textFormatter);
@@ -179,11 +173,9 @@ public class FormattedTextField extends TextField {
     boolean _matches = this.pattern.matcher(value).matches();
     if (_matches) {
       this.defaultValue.setValue(value);
-      final ChangeListener<Boolean> _function = new ChangeListener<Boolean>() {
-        public void changed(final ObservableValue<? extends Boolean> obs, final Boolean oldVal, final Boolean newVal) {
-          if (((!(newVal).booleanValue()) && ((FormattedTextField.this.getText() == null) || com.google.common.base.Objects.equal(FormattedTextField.this.getText(), "")))) {
-            FormattedTextField.this.setText(FormattedTextField.this.defaultValue.getValue());
-          }
+      final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+        if (((!(newVal).booleanValue()) && ((this.getText() == null) || com.google.common.base.Objects.equal(this.getText(), "")))) {
+          this.setText(this.defaultValue.getValue());
         }
       };
       this.focusedProperty().addListener(_function);
@@ -218,29 +210,23 @@ public class FormattedTextField extends TextField {
   public void addFormatValidator(final FormatValidator validator) {
     Objects.<FormatValidator>requireNonNull(validator);
     this.validators.put(validator, Boolean.valueOf(true));
-    final ChangeListener<Boolean> _function = new ChangeListener<Boolean>() {
-      public void changed(final ObservableValue<? extends Boolean> obs, final Boolean oldVal, final Boolean newVal) {
-        if ((!(newVal).booleanValue())) {
-          FormattedTextField.this.evaluateValidator(validator);
-        }
+    final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      if ((!(newVal).booleanValue())) {
+        this.evaluateValidator(validator);
       }
     };
     this.focusedProperty().addListener(_function);
-    final ChangeListener<String> _function_1 = new ChangeListener<String>() {
-      public void changed(final ObservableValue<? extends String> obs, final String oldVal, final String newVal) {
-        if (((!com.google.common.base.Objects.equal(oldVal, newVal)) && (!FormattedTextField.this.isFocused()))) {
-          FormattedTextField.this.evaluateValidator(validator);
-        }
+    final ChangeListener<String> _function_1 = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
+      if (((!com.google.common.base.Objects.equal(oldVal, newVal)) && (!this.isFocused()))) {
+        this.evaluateValidator(validator);
       }
     };
     this.textProperty().addListener(_function_1);
-    final EventHandler<KeyEvent> _function_2 = new EventHandler<KeyEvent>() {
-      public void handle(final KeyEvent event) {
-        KeyCode _code = event.getCode();
-        boolean _tripleEquals = (_code == KeyCode.ENTER);
-        if (_tripleEquals) {
-          FormattedTextField.this.evaluateValidator(validator);
-        }
+    final EventHandler<KeyEvent> _function_2 = (KeyEvent event) -> {
+      KeyCode _code = event.getCode();
+      boolean _tripleEquals = (_code == KeyCode.ENTER);
+      if (_tripleEquals) {
+        this.evaluateValidator(validator);
       }
     };
     this.setOnKeyPressed(_function_2);
@@ -255,10 +241,8 @@ public class FormattedTextField extends TextField {
     if (_not) {
       final Optional<String> result = validator.validate(this.getText());
       this.validators.put(validator, Boolean.valueOf(result.isEmpty()));
-      final Consumer<String> _function = new Consumer<String>() {
-        public void accept(final String msg) {
-          FormattedTextField.this.onValidatorFail(msg);
-        }
+      final Consumer<String> _function = (String msg) -> {
+        this.onValidatorFail(msg);
       };
       result.ifPresent(_function);
     } else {
@@ -271,10 +255,8 @@ public class FormattedTextField extends TextField {
    * Recalcule l'état du composant
    */
   public void updateState() {
-    final Function1<Boolean, Boolean> _function = new Function1<Boolean, Boolean>() {
-      public Boolean apply(final Boolean b) {
-        return Boolean.valueOf((!(b).booleanValue()));
-      }
+    final Function1<Boolean, Boolean> _function = (Boolean b) -> {
+      return Boolean.valueOf((!(b).booleanValue()));
     };
     Boolean _findFirst = IterableExtensions.<Boolean>findFirst(this.validators.values(), _function);
     boolean _tripleNotEquals = (_findFirst != null);

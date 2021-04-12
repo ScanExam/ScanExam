@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
+import fr.istic.tools.scanexam.view.AdapterEdition
 import fr.istic.tools.scanexam.view.fx.AdapterFxEdition
 import fr.istic.tools.scanexam.view.fx.FxSettings
 import java.io.File
@@ -207,6 +208,11 @@ class ControllerFxEdition {
 		    renderDocument
 		]);
 		
+	}
+	
+	//FIXME Pas terrible de mettre cela en public mais ControllerRoot n'a accès a aucun Presenter
+	def AdapterEdition getAdapter() {
+		return editor
 	}
 
 

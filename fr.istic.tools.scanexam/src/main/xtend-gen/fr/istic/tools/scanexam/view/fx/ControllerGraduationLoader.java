@@ -117,25 +117,19 @@ public class ControllerGraduationLoader {
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
     ValidFilePathValidator _validFilePathValidator_1 = new ValidFilePathValidator(".pdf");
     this.txtFldFileGraduation.addFormatValidator(_validFilePathValidator_1);
-    final EventHandler<MouseEvent> _function = new EventHandler<MouseEvent>() {
-      public void handle(final MouseEvent e) {
-        boolean _isDisabled = ControllerGraduationLoader.this.btnOk.isDisabled();
-        if (_isDisabled) {
-          ControllerGraduationLoader.this.shakeEmptyComponents();
-        }
+    final EventHandler<MouseEvent> _function = (MouseEvent e) -> {
+      boolean _isDisabled = this.btnOk.isDisabled();
+      if (_isDisabled) {
+        this.shakeEmptyComponents();
       }
     };
     this.hoverPane.setOnMouseEntered(_function);
-    final EventHandler<ActionEvent> _function_1 = new EventHandler<ActionEvent>() {
-      public void handle(final ActionEvent e) {
-        ControllerGraduationLoader.this.loadFile("*.xmi", "file.format.xmi", ControllerGraduationLoader.this.txtFldFile);
-      }
+    final EventHandler<ActionEvent> _function_1 = (ActionEvent e) -> {
+      this.loadFile("*.xmi", "file.format.xmi", this.txtFldFile);
     };
     this.btnBrowse.setOnAction(_function_1);
-    final EventHandler<ActionEvent> _function_2 = new EventHandler<ActionEvent>() {
-      public void handle(final ActionEvent e) {
-        ControllerGraduationLoader.this.loadFile("*.pdf", "file.format.pdf", ControllerGraduationLoader.this.txtFldFileGraduation);
-      }
+    final EventHandler<ActionEvent> _function_2 = (ActionEvent e) -> {
+      this.loadFile("*.pdf", "file.format.pdf", this.txtFldFileGraduation);
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
     boolean _hasTemplateLoaded = this.presStudentListLoader.hasTemplateLoaded();
@@ -203,8 +197,21 @@ public class ControllerGraduationLoader {
   
   @FXML
   public Object saveAndQuit() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nInvalid number of arguments. The method loadStudentSheets(String) is not applicable for the arguments (String,int)");
+    Object _xifexpression = null;
+    boolean _loadTemplate = this.presStudentListLoader.loadTemplate(this.txtFldFile.getText());
+    if (_loadTemplate) {
+      Object _xifexpression_1 = null;
+      boolean _loadStudentSheets = this.presStudentListLoader.loadStudentSheets(this.txtFldFileGraduation.getText());
+      if (_loadStudentSheets) {
+        this.quit();
+      } else {
+        _xifexpression_1 = null;
+      }
+      _xifexpression = _xifexpression_1;
+    } else {
+      this.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
+    }
+    return _xifexpression;
   }
   
   /**

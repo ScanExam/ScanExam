@@ -7,10 +7,12 @@ import java.util.List;
 
 @SuppressWarnings("all")
 public class QuestionNotCorrectedFilter implements BasicFilter<Grade> {
+  @Override
   public List<FilterParam<?>> getParams() {
     return List.<FilterParam<?>>of();
   }
   
+  @Override
   public boolean test(final Grade t) {
     return t.getEntries().isEmpty();
   }

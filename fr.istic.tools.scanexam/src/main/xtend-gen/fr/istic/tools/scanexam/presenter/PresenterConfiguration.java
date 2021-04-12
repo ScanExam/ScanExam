@@ -40,10 +40,8 @@ public class PresenterConfiguration {
    */
   public boolean updateConfig(final String language, final String email, final String emailPassword, final String emailHost, final String emailPort) {
     boolean needToRestart = false;
-    final Function1<Locale, Boolean> _function = new Function1<Locale, Boolean>() {
-      public Boolean apply(final Locale locale) {
-        return Boolean.valueOf(language.equals(PresenterConfiguration.this.toDisplayName(locale)));
-      }
+    final Function1<Locale, Boolean> _function = (Locale locale) -> {
+      return Boolean.valueOf(language.equals(this.toDisplayName(locale)));
     };
     final Locale newLocale = IterableExtensions.<Locale>findFirst(LanguageManager.getSupportedLocales(), _function);
     if ((newLocale == null)) {
@@ -83,10 +81,8 @@ public class PresenterConfiguration {
   }
   
   public Collection<String> getLanguages() {
-    final Function1<Locale, String> _function = new Function1<Locale, String>() {
-      public String apply(final Locale local) {
-        return PresenterConfiguration.this.toDisplayName(local);
-      }
+    final Function1<Locale, String> _function = (Locale local) -> {
+      return this.toDisplayName(local);
     };
     return IterableExtensions.<String>toList(IterableExtensions.<Locale, String>map(LanguageManager.getSupportedLocales(), _function));
   }

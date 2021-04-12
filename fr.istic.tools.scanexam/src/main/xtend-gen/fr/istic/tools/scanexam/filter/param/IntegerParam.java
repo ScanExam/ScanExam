@@ -21,6 +21,7 @@ public class IntegerParam implements FilterParam<Integer> {
     this.nameCode = nameCode;
   }
   
+  @Override
   public ParamParseResult parse(final String string) {
     try {
       final int value = Integer.parseInt(string);
@@ -37,14 +38,17 @@ public class IntegerParam implements FilterParam<Integer> {
     }
   }
   
+  @Override
   public String getStringPattern() {
     return "[0-9]+";
   }
   
+  @Override
   public Integer getValue() {
     return this.value;
   }
   
+  @Override
   public String getNameCode() {
     return this.nameCode;
   }

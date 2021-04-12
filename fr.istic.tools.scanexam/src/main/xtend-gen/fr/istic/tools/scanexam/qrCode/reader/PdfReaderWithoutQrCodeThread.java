@@ -28,6 +28,7 @@ public class PdfReaderWithoutQrCodeThread extends Thread implements Runnable {
     this.countDownMain = countDownMain;
   }
   
+  @Override
   public void run() {
     try {
       this.countDownMain.await();

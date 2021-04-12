@@ -131,6 +131,7 @@ public class SendMailTls {
     props.put("mail.smtps.connectiontimeout", "5000");
     try {
       final Session session = Session.getInstance(props, new Authenticator() {
+        @Override
         protected PasswordAuthentication getPasswordAuthentication() {
           return new PasswordAuthentication(name, password);
         }
@@ -230,6 +231,7 @@ public class SendMailTls {
         _xifexpression = InputOutput.<String>println("Le numero d\'etudiant ou le nom ne correspond a aucune adresse mail");
       } else {
         final Session session = Session.getInstance(props, new Authenticator() {
+          @Override
           protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(sender, senderPassword);
           }

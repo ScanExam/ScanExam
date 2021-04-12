@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
+import fr.istic.tools.scanexam.view.AdapterEdition;
 import fr.istic.tools.scanexam.view.fx.AdapterFxEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
@@ -216,15 +217,17 @@ public class ControllerFxEdition {
     QuestionOptionsEdition _questionOptionsEdition = new QuestionOptionsEdition(this);
     this.questionEditor = _questionOptionsEdition;
     this.gradeListContainer.setContent(this.questionEditor);
-    final EventHandler<ActionEvent> _function = new EventHandler<ActionEvent>() {
-      public void handle(final ActionEvent event) {
-        PresenterPdf pdfPresenter = ControllerFxEdition.this.editor.getPresenter().getPresenterPdf();
-        int selectedIndex = ControllerFxEdition.this.pageChoice.getSelectionModel().getSelectedIndex();
-        pdfPresenter.goToPdfPage(selectedIndex);
-        ControllerFxEdition.this.renderDocument();
-      }
+    final EventHandler<ActionEvent> _function = (ActionEvent event) -> {
+      PresenterPdf pdfPresenter = this.editor.getPresenter().getPresenterPdf();
+      int selectedIndex = this.pageChoice.getSelectionModel().getSelectedIndex();
+      pdfPresenter.goToPdfPage(selectedIndex);
+      this.renderDocument();
     };
     this.pageChoice.setOnAction(_function);
+  }
+  
+  public AdapterEdition getAdapter() {
+    return this.editor;
   }
   
   public void chooseMouseAction(final MouseEvent e) {

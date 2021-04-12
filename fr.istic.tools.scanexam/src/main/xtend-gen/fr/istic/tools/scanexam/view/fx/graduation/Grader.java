@@ -171,6 +171,7 @@ public class Grader extends VBox {
     public void setupEvents() {
       final Grader.GradeItem me = this;
       this.check.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
         public void handle(final ActionEvent event) {
           boolean _isSelected = GradeItem.this.check.isSelected();
           if (_isSelected) {
@@ -181,11 +182,13 @@ public class Grader extends VBox {
         }
       });
       this.remove.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
         public void handle(final ActionEvent event) {
           GradeItem.this.grader.removeGradeEntry(me);
         }
       });
       this.text.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
         public void handle(final MouseEvent event) {
           if ((!HTMLView.isHTMLEditorOpen)) {
             boolean _equals = event.getButton().equals(MouseButton.PRIMARY);
@@ -216,10 +219,8 @@ public class Grader extends VBox {
         Scene scene = new Scene(root, 640, 480);
         stage.setScene(scene);
         stage.show();
-        final EventHandler<WindowEvent> _function = new EventHandler<WindowEvent>() {
-          public void handle(final WindowEvent event) {
-            HTMLView.isHTMLEditorOpen = false;
-          }
+        final EventHandler<WindowEvent> _function = (WindowEvent event) -> {
+          HTMLView.isHTMLEditorOpen = false;
         };
         stage.setOnHiding(_function);
       } catch (Throwable _e) {
@@ -406,11 +407,13 @@ public class Grader extends VBox {
   
   public void setupEvents() {
     this.add.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         Grader.this.createNewGradeEntry();
       }
     });
     this.editMode.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
       public void handle(final ActionEvent event) {
         Grader.this.toggleEditMode((!Grader.this.editable));
       }

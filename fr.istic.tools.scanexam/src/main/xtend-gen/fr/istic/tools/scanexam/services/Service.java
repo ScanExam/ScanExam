@@ -29,11 +29,9 @@ public abstract class Service {
     EList<Page> _pages = ExamSingleton.instance.getPages();
     for (final Page page : _pages) {
       {
-        final Function1<Question, Boolean> _function = new Function1<Question, Boolean>() {
-          public Boolean apply(final Question question) {
-            int _id = question.getId();
-            return Boolean.valueOf((_id == id));
-          }
+        final Function1<Question, Boolean> _function = (Question question) -> {
+          int _id = question.getId();
+          return Boolean.valueOf((_id == id));
         };
         final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
         if ((question != null)) {

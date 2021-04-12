@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
-import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.AdapterFxConfiguration;
 import fr.istic.tools.scanexam.view.fx.AdapterFxStudentListLoader;
@@ -196,9 +195,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      ControllerStudentSheetExport _controller = loader.<ControllerStudentSheetExport>getController();
-      PresenterStudentSheetExport _presenterStudentSheetExport = new PresenterStudentSheetExport();
-      _controller.initialize(_presenterStudentSheetExport);
+      loader.<ControllerStudentSheetExport>getController().initialize(this.editor.getAdapter().getPresenter().getPresenterStudentSheetExport());
       Scene _scene = new Scene(view, 384, 107);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -213,6 +210,7 @@ public class ControllerRoot implements Initializable {
     return this.corrector.setToAutoZoom(Boolean.valueOf(this.autoZoom.isSelected()));
   }
   
+  @Override
   public void initialize(final URL location, final ResourceBundle resources) {
   }
 }

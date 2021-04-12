@@ -129,10 +129,8 @@ public class ExportExamToPdf {
    * Export Collection of Temp PDF File
    */
   public static Collection<File> exportToCollection(final PDDocument pdf, final Collection<StudentSheet> sheets) {
-    final Function<StudentSheet, File> _function = new Function<StudentSheet, File>() {
-      public File apply(final StudentSheet s) {
-        return ExportExamToPdf.exportToTempFile(pdf, s);
-      }
+    final Function<StudentSheet, File> _function = (StudentSheet s) -> {
+      return ExportExamToPdf.exportToTempFile(pdf, s);
     };
     return sheets.stream().<File>map(_function).collect(Collectors.<File>toList());
   }

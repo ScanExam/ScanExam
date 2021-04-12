@@ -10,6 +10,7 @@ public class AdapterFxEdition implements AdapterEdition {
   
   private ControllerFxEdition controller;
   
+  @Override
   public void setPresenter(final PresenterEdition presenter) {
     this.presenter = presenter;
   }
@@ -18,6 +19,7 @@ public class AdapterFxEdition implements AdapterEdition {
     this.controller = controller;
   }
   
+  @Override
   public PresenterEdition getPresenter() {
     return this.presenter;
   }

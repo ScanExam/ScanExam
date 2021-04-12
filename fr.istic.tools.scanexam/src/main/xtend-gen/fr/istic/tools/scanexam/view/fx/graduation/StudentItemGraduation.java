@@ -60,6 +60,7 @@ public class StudentItemGraduation extends VBox {
   public void setupEvents() {
     final StudentItemGraduation item = this;
     this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
       public void handle(final MouseEvent event) {
         StudentItemGraduation.this.list.getController().selectStudent(item);
       }

@@ -60,6 +60,7 @@ public class GraduationAdapterSwing implements AdapterGraduation {
   private void addActionListeners() {
     JMenuItem _mnItemLoad = this.view.getMnItemLoad();
     _mnItemLoad.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         try {
           GraduationAdapterSwing.this.openFile();
@@ -70,12 +71,14 @@ public class GraduationAdapterSwing implements AdapterGraduation {
     });
     JButton _btnDown = this.view.getBtnDown();
     _btnDown.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         GraduationAdapterSwing.this.view.showContentDown();
       }
     });
     JMenuItem _mnItemSwap = this.view.getMnItemSwap();
     _mnItemSwap.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         GraduationAdapterSwing.this.swapToEditor();
       }
@@ -118,27 +121,33 @@ public class GraduationAdapterSwing implements AdapterGraduation {
     this.viewEdit = view;
   }
   
+  @Override
   public List<String> questionNames() {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
   
+  @Override
   public void nextQuestion() {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
   
+  @Override
   public void previousQuestion() {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
   
+  @Override
   public void thisQuestion(final int index) {
     throw new UnsupportedOperationException("TODO: auto-generated method stub");
   }
   
+  @Override
   public void setPresenter(final PresenterGraduation presenter) {
     this.graduationPresenter = presenter;
     this.adapterPdf.presenterPdf = presenter;
   }
   
+  @Override
   public PresenterGraduation getPresenter() {
     return this.getPresenter();
   }

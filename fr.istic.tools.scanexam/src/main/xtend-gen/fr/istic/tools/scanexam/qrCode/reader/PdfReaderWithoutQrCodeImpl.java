@@ -47,6 +47,7 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   /**
    * Lit le PDF spécifié
    */
+  @Override
   public boolean readPDf() {
     try {
       this.nbPagesInPdf = this.doc.getNumberOfPages();
@@ -189,10 +190,8 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
    */
   public Set<Copie> getCompleteCopies() {
     Set<Copie> completeCopies = new HashSet<Copie>();
-    final Predicate<Copie> _function = new Predicate<Copie>() {
-      public boolean test(final Copie copie) {
-        return copie.isCopyComplete(PdfReaderWithoutQrCodeImpl.this.nbPagesInSheet);
-      }
+    final Predicate<Copie> _function = (Copie copie) -> {
+      return copie.isCopyComplete(this.nbPagesInSheet);
     };
     completeCopies = this.sheets.stream().filter(_function).collect(Collectors.<Copie>toSet());
     return completeCopies;
@@ -224,10 +223,12 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
     return this.sheets;
   }
   
+  @Override
   public boolean isFinished() {
     return true;
   }
   
+  @Override
   public Collection<StudentSheet> getCompleteStudentSheets() {
     final Set<StudentSheet> res = new HashSet<StudentSheet>();
     Set<Copie> temp = new HashSet<Copie>();
@@ -255,6 +256,7 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
     return res;
   }
   
+  @Override
   public Collection<StudentSheet> getUncompleteStudentSheets() {
     final Set<StudentSheet> res = new HashSet<StudentSheet>();
     Set<Copie> temp = new HashSet<Copie>();
@@ -290,6 +292,7 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
    * Renvoie le nombre de total de pages du PDF de toutes les copies
    * @return le nombre de pages du PDF source
    */
+  @Override
   public int getNbPagesPdf() {
     return this.nbPagesInPdf;
   }
@@ -298,6 +301,7 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
    * Renvoie le nombre de pages traitées par la lecture du PDF
    * @return le nombre de pages que le reader a lu du PDF source
    */
+  @Override
   public int getNbPagesTreated() {
     int res = 0;
     int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;

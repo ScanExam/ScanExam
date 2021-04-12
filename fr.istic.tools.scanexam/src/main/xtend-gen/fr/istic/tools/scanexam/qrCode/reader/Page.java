@@ -23,6 +23,7 @@ public class Page {
     return this.numPageInPDF;
   }
   
+  @Override
   public String toString() {
     return (((("[" + Integer.valueOf(this.numPageInSubject)) + ", ") + Integer.valueOf(this.numPageInPDF)) + "]");
   }

@@ -2,10 +2,11 @@ package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration
-import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
+import java.net.URL
+import java.util.ResourceBundle
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
@@ -16,8 +17,6 @@ import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.Tab
 import javafx.scene.image.Image
 import javafx.stage.Stage
-import java.net.URL
-import java.util.ResourceBundle
 
 class ControllerRoot implements Initializable {
 	
@@ -138,7 +137,7 @@ class ControllerRoot implements Initializable {
 		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		//FIXME pas terrible que le contrôleur instancie un présenteur
-		loader.<ControllerStudentSheetExport>controller.initialize(new PresenterStudentSheetExport)
+		loader.<ControllerStudentSheetExport>controller.initialize(editor.adapter.presenter.presenterStudentSheetExport)
 		dialog.setScene(new Scene(view, 384, 107))
 		dialog.setResizable(false);
 		dialog.show

@@ -19,10 +19,12 @@ public class GradeFilter implements BasicFilter<StudentSheet> {
     this.maxBound = _integerParam_1;
   }
   
+  @Override
   public List<FilterParam<?>> getParams() {
     return List.<FilterParam<?>>of(this.minBound, this.maxBound);
   }
   
+  @Override
   public boolean test(final StudentSheet t) {
     return ((t.computeGrade() >= (this.minBound.getValue()).intValue()) && (t.computeGrade() <= (this.maxBound.getValue()).intValue()));
   }

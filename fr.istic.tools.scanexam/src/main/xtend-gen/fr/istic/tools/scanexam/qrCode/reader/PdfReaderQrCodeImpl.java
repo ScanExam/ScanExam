@@ -58,6 +58,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     this.sheets = _hashSet;
   }
   
+  @Override
   public boolean readPDf() {
     try {
       this.nbPagesInPdf = this.doc.getNumberOfPages();
@@ -172,10 +173,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    */
   public Set<Copie> getCompleteCopies() {
     Set<Copie> completeCopies = new HashSet<Copie>();
-    final Predicate<Copie> _function = new Predicate<Copie>() {
-      public boolean test(final Copie copie) {
-        return copie.isCopyComplete(PdfReaderQrCodeImpl.this.nbPagesInSheet);
-      }
+    final Predicate<Copie> _function = (Copie copie) -> {
+      return copie.isCopyComplete(this.nbPagesInSheet);
     };
     completeCopies = this.sheets.stream().filter(_function).collect(Collectors.<Copie>toSet());
     return completeCopies;
@@ -243,6 +242,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * Renvoie la collection des copies complètes uniquement au format de l'API
    * @return la collection des copies complètes au format de l'API
    */
+  @Override
   public Collection<StudentSheet> getCompleteStudentSheets() {
     final Set<StudentSheet> res = new HashSet<StudentSheet>();
     Set<Copie> temp = new HashSet<Copie>();
@@ -276,6 +276,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * Les copies manquantes sont signalées par la présence d'un -1 en numéro de page
    * @return la collection des copies incomplètes au format de l'API
    */
+  @Override
   public Collection<StudentSheet> getUncompleteStudentSheets() {
     final Set<StudentSheet> res = new HashSet<StudentSheet>();
     Set<Copie> temp = new HashSet<Copie>();
@@ -312,6 +313,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * Renvoie le nombre de total de pages du PDF de toutes les copies
    * @return le nombre de pages du PDF source
    */
+  @Override
   public int getNbPagesPdf() {
     return this.nbPagesInPdf;
   }
@@ -320,6 +322,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * Renvoie le nombre de pages traitées par la lecture du PDF
    * @return le nombre de pages que le reader a lu du PDF source
    */
+  @Override
   public int getNbPagesTreated() {
     int res = 0;
     synchronized (this.sheets) {
@@ -334,6 +337,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return res;
   }
   
+  @Override
   public boolean isFinished() {
     return this.isFinished;
   }

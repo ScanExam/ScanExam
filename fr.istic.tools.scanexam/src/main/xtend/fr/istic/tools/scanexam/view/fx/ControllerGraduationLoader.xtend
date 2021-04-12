@@ -160,7 +160,7 @@ class ControllerGraduationLoader {
 	@FXML
 	def saveAndQuit() {
 		if (presStudentListLoader.loadTemplate(txtFldFile.text)) {
-			if(presStudentListLoader.loadStudentSheets(txtFldFileGraduation.text, 0)) {
+			if(presStudentListLoader.loadStudentSheets(txtFldFileGraduation.text)) {
 				quit
 			} else {}
 				//sendDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)

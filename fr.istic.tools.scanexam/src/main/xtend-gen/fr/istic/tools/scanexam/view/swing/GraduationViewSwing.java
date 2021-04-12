@@ -393,6 +393,7 @@ public class GraduationViewSwing {
     this.btnPrevPaper = _jButton;
     this.spltPnPaper.setLeftComponent(this.btnPrevPaper);
     this.btnPrevPaper.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         if (((GraduationViewSwing.this.currentPage > 0) && (GraduationViewSwing.this.currentPage <= GraduationViewSwing.this.totalPage))) {
           GraduationViewSwing.this.currentPage--;
@@ -408,6 +409,7 @@ public class GraduationViewSwing {
     this.btnNextPaper = _jButton_1;
     this.spltPnPaper.setRightComponent(this.btnNextPaper);
     this.btnNextPaper.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(final ActionEvent e) {
         if ((GraduationViewSwing.this.currentPage < GraduationViewSwing.this.totalPage)) {
           GraduationViewSwing.this.currentPage++;

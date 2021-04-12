@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +30,9 @@ public class StudentDataManager {
   
   private static final Logger logger = LogManager.getLogger();
   
-  private static final int MAX_ROW = 1048576;
+  private static final int MAX_ROW = 1_048_576;
   
-  private static final int MAX_COLUMN = 16384;
+  private static final int MAX_COLUMN = 16_384;
   
   /**
    * Charge les données contenues dans le fichier permetant de lier les numéro étudiant ou nom étudiant à l'adresse mail
@@ -42,19 +41,17 @@ public class StudentDataManager {
    * @author Arthur & Antoine
    */
   public static void loadData(final File file, final String startXY) {
-    List<Throwable> _ts = new ArrayList<Throwable>();
-    Workbook wb = null;
-    try {
-      wb = new Function0<Workbook>() {
-        public Workbook apply() {
-          try {
-            FileInputStream _fileInputStream = new FileInputStream(file);
-            return WorkbookFactory.create(_fileInputStream);
-          } catch (Throwable _e) {
-            throw Exceptions.sneakyThrow(_e);
-          }
+    try (final Workbook wb = new Function0<Workbook>() {
+      @Override
+      public Workbook apply() {
+        try {
+          FileInputStream _fileInputStream = new FileInputStream(file);
+          return WorkbookFactory.create(_fileInputStream);
+        } catch (Throwable _e) {
+          throw Exceptions.sneakyThrow(_e);
         }
-      }.apply();
+      }
+    }.apply()) {
       Sheet sheet = wb.getSheetAt(0);
       Pair<Integer, Integer> pair = StudentDataManager.parseCoords(startXY);
       int x = (pair.getKey()).intValue();
@@ -79,18 +76,8 @@ public class StudentDataManager {
         final IOException e_1 = (IOException)_t;
         e_1.printStackTrace();
       } else {
-        _ts.add(_t);
         throw Exceptions.sneakyThrow(_t);
       }
-    } finally {
-      if (wb != null) {
-        try {
-          wb.close();
-        } catch (Throwable _t_1) {
-          _ts.add(_t_1);
-        }
-      }
-      if(!_ts.isEmpty()) throw Exceptions.sneakyThrow(_ts.get(0));
     }
     int _size = StudentDataManager.mapNomEtudiant.size();
     String _plus = ("Datas loaded: " + Integer.valueOf(_size));

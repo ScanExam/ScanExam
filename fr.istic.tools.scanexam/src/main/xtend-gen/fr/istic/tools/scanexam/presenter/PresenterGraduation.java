@@ -59,8 +59,18 @@ public class PresenterGraduation implements Presenter {
   private Adapter<PresenterGraduation> adapter;
   
   public PresenterGraduation(final ServiceGraduation service) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nInvalid number of arguments. The constructor PresenterGraduationLoader(ServiceGraduation) is not applicable for the arguments (ServiceGraduation,null)");
+    Objects.<ServiceGraduation>requireNonNull(service);
+    this.service = service;
+    PresenterPdf _presenterPdf = new PresenterPdf(service, this);
+    this.presPdf = _presenterPdf;
+    PresenterQuestion _presenterQuestion = new PresenterQuestion(service);
+    this.presQuestion = _presenterQuestion;
+    PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
+    this.studentListPresenter = _presenterStudentListLoader;
+    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(service);
+    this.studentSheetPresenter = _presenterGraduationLoader;
+    PresenterCorrectionLoader _presenterCorrectionLoader = new PresenterCorrectionLoader(service);
+    this.correctionLoaderPresenter = _presenterCorrectionLoader;
   }
   
   public PresenterGraduation(final Adapter<PresenterGraduation> adapter, final ServiceGraduation service) {
@@ -86,6 +96,7 @@ public class PresenterGraduation implements Presenter {
   /**
    * @return current {@link PresenterMarkingScheme}
    */
+  @Override
   public PresenterGradeScale getPresenterMarkingScheme() {
     return this.presMarkingScheme;
   }
@@ -97,6 +108,7 @@ public class PresenterGraduation implements Presenter {
     return this.graduationPresenter;
   }
   
+  @Override
   public PresenterPdf getPresenterPdf() {
     return this.presPdf;
   }

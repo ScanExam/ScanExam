@@ -88,20 +88,24 @@ public class AdapterSwingPdfPanel {
     this.view = Optional.<JPanel>empty();
     this.lastClickPoint = Optional.<Point>empty();
     this.mouseHandler = new MouseAdapter() {
+      @Override
       public void mousePressed(final MouseEvent e) {
         if ((((e.getButton() == 2) || (e.getButton() == 3)) || ((e.getButton() == 1) && (SelectionStateMachine.getState() == SelectionStateMachine.IDLE)))) {
           AdapterSwingPdfPanel.this.lastClickPoint = Optional.<Point>of(e.getPoint());
         }
       }
       
+      @Override
       public void mouseReleased(final MouseEvent e) {
         AdapterSwingPdfPanel.this.lastClickPoint = Optional.<Point>empty();
       }
       
+      @Override
       public void mouseDragged(final MouseEvent e) {
         AdapterSwingPdfPanel.this.moveOrigin(e);
       }
       
+      @Override
       public void mouseWheelMoved(final MouseWheelEvent e) {
         AdapterSwingPdfPanel.this.incrScale(e.getWheelRotation());
       }

@@ -23,6 +23,7 @@ public class PdfReaderThreadManager extends Thread implements Runnable {
     this.reader = reader;
   }
   
+  @Override
   public void run() {
     try {
       final ExecutorService service = Executors.newFixedThreadPool(4);
