@@ -216,6 +216,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
 	/**
 	 * Renvoie la collection des copies incomplètes uniquement au format de l'API
+	 * Les copies manquantes sont signalées par la présence d'un -1 en numéro de page
 	 * @return la collection des copies incomplètes au format de l'API
 	 */
 	override getUncompleteStudentSheets() {
@@ -229,6 +230,9 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
+			for (e : 0 ..< nbPagesInSheet) {
+				pagesArray.set(e, -1)
+			}
 
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
 				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject,

@@ -26,7 +26,9 @@ public class QRThreadWriter extends Thread implements Runnable {
   
   private String name;
   
-  public QRThreadWriter(final QRCodeGeneratorImpl gen, final int inf, final int max, final PDDocument docSujetMaitre, final int numThread, final int nbPages, final CountDownLatch countDown, final CountDownLatch countDownMain, final String name) {
+  private String pathImage;
+  
+  public QRThreadWriter(final QRCodeGeneratorImpl gen, final int inf, final int max, final PDDocument docSujetMaitre, final int numThread, final int nbPages, final CountDownLatch countDown, final CountDownLatch countDownMain, final String name, final String pathImage) {
     this.generator = gen;
     this.borneInf = inf;
     this.borneMax = max;
@@ -36,6 +38,7 @@ public class QRThreadWriter extends Thread implements Runnable {
     this.countDown = countDown;
     this.countDownMain = countDownMain;
     this.name = name;
+    this.pathImage = pathImage;
   }
   
   @Override
@@ -44,7 +47,7 @@ public class QRThreadWriter extends Thread implements Runnable {
       this.countDownMain.await();
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(this.borneInf, this.borneMax, true);
       for (final Integer i : _doubleDotLessThan) {
-        this.generator.insertQRCodeInSubject(this.name, this.docSujetMaitre, (i).intValue(), this.numThread, this.nbPages);
+        this.generator.insertQRCodeInSubject(this.name, this.docSujetMaitre, (i).intValue(), this.numThread, this.nbPages, this.pathImage);
       }
       this.countDown.countDown();
     } catch (Throwable _e) {

@@ -273,6 +273,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   /**
    * Renvoie la collection des copies incomplètes uniquement au format de l'API
+   * Les copies manquantes sont signalées par la présence d'un -1 en numéro de page
    * @return la collection des copies incomplètes au format de l'API
    */
   @Override
@@ -289,10 +290,14 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
         final Set<Copie> _converted_temp_1 = (Set<Copie>)temp;
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
         final int[] pagesArray = new int[this.nbPagesInSheet];
+        ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, this.nbPagesInSheet, true);
+        for (final Integer e : _doubleDotLessThan_1) {
+          pagesArray[(e).intValue()] = (-1);
+        }
         final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
         int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
-        ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
-        for (final Integer j : _doubleDotLessThan_1) {
+        ExclusiveRange _doubleDotLessThan_2 = new ExclusiveRange(0, _length_1, true);
+        for (final Integer j : _doubleDotLessThan_2) {
           final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
           final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
           pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 

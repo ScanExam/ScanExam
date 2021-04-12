@@ -8,9 +8,9 @@ public interface QRCodeGenerator {
    * Créer toutes les copies d'examen en y insérant les QrCodes correspondant dans chaque pages
    * 
    * @param inputFile Chemin du sujet maitre
+   * @param outputPath chemin de sortie
+   * @param idExam l'id de l'examen
    * @param nbCopies Nombre de copies de l'examen souhaité
-   * 
-   * @return true si l'opération s'est bien déroulée
    */
-  boolean createAllExamCopies(final InputStream inputFile, final int nbCopie);
+  void createAllExamCopies(final InputStream inputFile, final InputStream outputPath, final String idExam, final int nbCopie);
 }

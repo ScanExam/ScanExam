@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.reader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +9,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,16 +22,16 @@ import fr.istic.tools.scanexam.utils.ResourcesUtils;
 
 public class TestReaderWithQRCode {
 
-	PdfReader readerGood;
-	PdfReader readerDirty;
-	int nbPages = 8;
-	int nbCopies = 4;
+	static PdfReader readerGood;
+	static PdfReader readerDirty;
+	static int nbPages = 8;
+	static int nbCopies = 4;
 
-	PDDocument docGood;
-	PDDocument docDirty;
+	static PDDocument docGood;
+	static PDDocument docDirty;
 	
-	@BeforeEach
-	void init() throws IOException {
+	@BeforeAll
+	static void init() throws IOException, InterruptedException {
 		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("QRCode/pfo_example_Inserted_Good.pdf");
 		if (inStreamGood != null) {
 			docGood = PDDocument.load(inStreamGood);
@@ -42,14 +41,25 @@ public class TestReaderWithQRCode {
 		if (inStreamDirty != null) {
 			docDirty = PDDocument.load(inStreamDirty);
 			readerDirty = new PdfReaderQrCodeImpl(docDirty, nbPages, nbCopies);
-			}
+		}
+		
+		readerGood.readPDf();
+		while(!readerGood.isFinished()) {
+			TimeUnit.SECONDS.sleep(3);
+		}
+		
+		readerDirty.readPDf();
+		while(!readerDirty.isFinished()) {
+			TimeUnit.SECONDS.sleep(3);
+		}
 	}
 
-	@AfterEach
-	void close() throws IOException{
+	@AfterAll
+	static void close() throws IOException{
 		docGood.close();
 		docDirty.close();
 	}
+	
 	/*
 	@Test
 	@DisplayName("Test de lecture d'un pdf complet")
@@ -61,57 +71,32 @@ public class TestReaderWithQRCode {
 	@DisplayName("Test de lecture d'un pdf ou il manque une page")
 	void readPdfTestDirty() {
 		assertTrue(readerDirty.readPDf());
-	}
-	*/
+	}*/
+	
 	@Test
 	@DisplayName("Test getNbPagesPdf dans le pdf complet")
 	void getNbPagesPdfTestGood() throws InterruptedException {
-		assertTrue(readerGood.readPDf());
-		while(!readerGood.isFinished()) {
-			TimeUnit.SECONDS.sleep(3);
-			System.out.println(readerGood.isFinished());
-			System.out.println(readerGood.getNbPagesTreated() + " / " + nbCopies * nbPages);
-		}
+
 		assertEquals(nbCopies * nbPages, readerGood.getNbPagesPdf());
 	}
 
 	@Test
 	@DisplayName("Test getNbPagesPdf dans un pdf incomplet")
-	void getNbPagesPdfTestDirty() throws InterruptedException {
-		assertTrue(readerDirty.readPDf());
-		while(!readerDirty.isFinished()) {
-			TimeUnit.SECONDS.sleep(3);
-			System.out.println(readerDirty.isFinished());
-			System.out.println(readerDirty.getNbPagesTreated() + " / " + nbCopies * nbPages);
-		}
+	void getNbPagesPdfTestDirty() {
+		
 		assertEquals(nbCopies * nbPages - 1, readerDirty.getNbPagesPdf());
 	}
 	
 	@Test
 	@DisplayName("Test getNbPagesTraitee")
-	void getNbPagesTraiteePdfTest() throws InterruptedException {
-		assertEquals(0, readerGood.getNbPagesTreated());
-		assertTrue(readerGood.readPDf());
-		
-		while(!readerGood.isFinished()) {
-			TimeUnit.SECONDS.sleep(3);
-			System.out.println(readerGood.isFinished());
-			System.out.println(readerGood.getNbPagesTreated() + " / " + nbCopies * nbPages);
-		}
+	void getNbPagesTraiteePdfTest(){
 		
 		assertEquals(nbCopies * nbPages, readerGood.getNbPagesTreated());
 	}
 	
 	@Test
 	@DisplayName("Test du renvoi de la structure des copies complètes au format de l'API quand toutes les pages sont là")
-	void getCompleteStudentSheetsTestGood() throws InterruptedException  {
-		assertEquals(true, readerGood.readPDf());
-		while(!readerGood.isFinished()) {
-			TimeUnit.SECONDS.sleep(3);
-			System.out.println(readerGood.isFinished());
-			System.out.println(readerGood.getNbPagesTreated() + " / " + nbCopies * nbPages);
-		}
-		//TODO faire un truc plus propre
+	void getCompleteStudentSheetsTestGood() {
 		
 		DataFactory dF = new DataFactory();
 		List<StudentSheet> collection = new ArrayList<>();
@@ -148,15 +133,7 @@ public class TestReaderWithQRCode {
 
 	@Test
 	@DisplayName("Test du renvoi de la structure des copies complètes au format de l'API quand il manque une page")
-	void getCompleteStundentSheetsTestDirty() throws InterruptedException {
-		assertEquals(true, readerDirty.readPDf());
-		
-		while(!readerDirty.isFinished()) {
-			TimeUnit.SECONDS.sleep(3);
-			System.out.println(readerDirty.isFinished());
-			System.out.println(readerDirty.getNbPagesTreated() + " / " + nbCopies * nbPages);
-		}
-		
+	void getCompleteStundentSheetsTestDirty() {
 		
 		DataFactory dF = new DataFactory();
 		List<StudentSheet> collection = new ArrayList<>();
@@ -179,7 +156,6 @@ public class TestReaderWithQRCode {
 		for(StudentSheet stdSh : arr){
 			try{
 				StudentSheet temp = collection.get(stdSh.getId());
-				
 				bool &= stdSh.getPosPage().containsAll(temp.getPosPage());
 				bool &= temp.getPosPage().containsAll(stdSh.getPosPage());
 				
@@ -191,18 +167,47 @@ public class TestReaderWithQRCode {
 		bool &= arr.size() == collection.size();
 		assertEquals(false, bool);
 	}
-	/*
-	//FIXME trouver ou il y a un print des copies
+	
+	
 	@Test
 	@DisplayName("Test du renvoi des copies non complètes sur un examen complet")
 	void getUncompleteStudentSheetsGood() {
-		assertTrue(readerGood.readPDf());
 		assertEquals(0, readerGood.getUncompleteStudentSheets().size());
-	}*/
-	/*
+	}
+	
+	
 	@Test
 	@DisplayName("Test du renvoi des copies non complètes sur un examen non complet")
 	void getUncompleteStudentSheetsDirty() {
-		//TODO
-	}*/
+		DataFactory dF = new DataFactory();
+		List<StudentSheet> collection = new ArrayList<>();
+		
+		List<Integer> pages = new ArrayList<>();
+		for(int j = 8; j <= 14; j++) {
+			if(j==12)
+				pages.add(-1);
+			pages.add(j);
+		}
+
+		collection.add(dF.createStudentSheet(1, pages));
+		
+		List<StudentSheet> arr = new ArrayList<>(readerDirty.getUncompleteStudentSheets());
+		
+		boolean bool = true;
+		
+		for(int e = 0; e < arr.size(); e++){
+			try{
+				StudentSheet temp = collection.get(e);
+				
+				bool &= arr.get(e).getPosPage().containsAll(temp.getPosPage());
+				bool &= temp.getPosPage().containsAll(arr.get(e).getPosPage());
+				
+			}catch(IndexOutOfBoundsException p ) {
+				bool &= false;
+			}
+		}
+		
+		bool &= arr.size() == collection.size();
+		assertEquals(true, bool);
+	}
 }

@@ -8,9 +8,9 @@ interface QRCodeGenerator {
 	 * Créer toutes les copies d'examen en y insérant les QrCodes correspondant dans chaque pages
 	 * 
 	 * @param inputFile Chemin du sujet maitre
+	 * @param outputPath chemin de sortie
+	 * @param idExam l'id de l'examen
 	 * @param nbCopies Nombre de copies de l'examen souhaité
-	 * 
-	 * @return true si l'opération s'est bien déroulée
 	 */
-	def boolean createAllExamCopies(InputStream inputFile, int nbCopie)
+	def void createAllExamCopies(InputStream inputFile, InputStream outputPath, String idExam, int nbCopie)
 }

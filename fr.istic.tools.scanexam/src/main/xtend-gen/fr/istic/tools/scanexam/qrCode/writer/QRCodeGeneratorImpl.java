@@ -28,7 +28,6 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class QRCodeGeneratorImpl implements QRCodeGenerator {
@@ -36,53 +35,45 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * Créer toutes les copies d'examen en y insérant les QrCodes correspondant dans chaque pages
    * 
    * @param inputFile Chemin du sujet maitre
+   * @param outputPath chemin de sortie
+   * @param idExam l'id de l'examen
    * @param nbCopies Nombre de copies de l'examen souhaité
-   * 
-   * @return true si l'opération s'est bien déroulée
    */
   @Override
-  public boolean createAllExamCopies(final InputStream inputFile, final int nbCopie) {
+  public void createAllExamCopies(final InputStream inputFile, final InputStream outputPath, final String idExam, final int nbCopie) {
     try {
-      final StringWriter stringWriter = new StringWriter();
-      IOUtils.copy(inputFile, stringWriter, "UTF-8");
-      final String input = stringWriter.toString().substring(2);
-      int _lastIndexOf = input.lastIndexOf("/");
-      int _plus = (_lastIndexOf + 1);
-      final String base = input.substring(_plus, input.lastIndexOf("."));
-      final String outputFile = (("./src/main/resources/QRCode/" + base) + "_Inserted.pdf");
+      final StringWriter stringWriterInput = new StringWriter();
+      IOUtils.copy(inputFile, stringWriterInput, "UTF-8");
+      final String input = stringWriterInput.toString();
       File _file = new File(input);
       final PDDocument doc = PDDocument.load(_file);
       final int nbPages = doc.getNumberOfPages();
       final PDFMergerUtility PDFmerger = new PDFMergerUtility();
       final MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly();
-      PDFmerger.setDestinationFileName(outputFile);
+      final StringWriter stringWriterOutput = new StringWriter();
+      IOUtils.copy(outputPath, stringWriterOutput, "UTF-8");
+      String output = stringWriterOutput.toString();
+      String _output = output;
+      output = (_output + (("/" + idExam) + ".pdf"));
+      PDFmerger.setDestinationFileName(output);
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbCopie, true);
       for (final Integer i : _doubleDotLessThan) {
         PDFmerger.addSource(input);
       }
-      final File f2 = new File(outputFile);
+      final File f2 = new File(output);
       memUsSett.setTempDir(f2);
       PDFmerger.mergeDocuments(memUsSett);
       final PDDocument docSujetMaitre = PDDocument.load(f2);
-      this.createThread(base, nbCopie, docSujetMaitre, nbPages);
-      docSujetMaitre.save(outputFile);
-      ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(1, 5, true);
-      for (final Integer i_1 : _doubleDotLessThan_1) {
-        {
-          final File png = new File((("./src/main/resources/QRCode/QRCode" + i_1) + ".png"));
-          png.delete();
-        }
-      }
+      this.createThread(idExam, nbCopie, docSujetMaitre, nbPages);
+      docSujetMaitre.save(output);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
         e.printStackTrace();
-        return false;
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
     }
-    return true;
   }
   
   /**
@@ -178,25 +169,40 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       final ExecutorService service = Executors.newFixedThreadPool(4);
       final CountDownLatch LatchMain = new CountDownLatch(1);
       if ((nbCopie <= 4)) {
+        File qrcode = File.createTempFile("qrcode", ".png");
         final CountDownLatch LatchThreads = new CountDownLatch(1);
-        QRThreadWriter _qRThreadWriter = new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, 1, nbPage, LatchThreads, LatchMain, name);
+        String _absolutePath = qrcode.getAbsolutePath();
+        QRThreadWriter _qRThreadWriter = new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, 1, nbPage, LatchThreads, LatchMain, name, _absolutePath);
         service.execute(_qRThreadWriter);
         LatchMain.countDown();
         LatchThreads.await();
         service.shutdown();
+        qrcode.deleteOnExit();
       } else {
         final CountDownLatch LatchThreads_1 = new CountDownLatch(4);
-        QRThreadWriter _qRThreadWriter_1 = new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage, LatchThreads_1, LatchMain, name);
+        File qrcode1 = File.createTempFile("qrcode1", ".png");
+        File qrcode2 = File.createTempFile("qrcode2", ".png");
+        File qrcode3 = File.createTempFile("qrcode3", ".png");
+        File qrcode4 = File.createTempFile("qrcode4", ".png");
+        String _absolutePath_1 = qrcode1.getAbsolutePath();
+        QRThreadWriter _qRThreadWriter_1 = new QRThreadWriter(this, 0, (nbCopie / 4), docSujetMaitre, 1, nbPage, LatchThreads_1, LatchMain, name, _absolutePath_1);
         service.execute(_qRThreadWriter_1);
-        QRThreadWriter _qRThreadWriter_2 = new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, 2, nbPage, LatchThreads_1, LatchMain, name);
+        String _absolutePath_2 = qrcode2.getAbsolutePath();
+        QRThreadWriter _qRThreadWriter_2 = new QRThreadWriter(this, (nbCopie / 4), (nbCopie / 2), docSujetMaitre, 2, nbPage, LatchThreads_1, LatchMain, name, _absolutePath_2);
         service.execute(_qRThreadWriter_2);
-        QRThreadWriter _qRThreadWriter_3 = new QRThreadWriter(this, (nbCopie / 2), (3 * (nbCopie / 4)), docSujetMaitre, 3, nbPage, LatchThreads_1, LatchMain, name);
+        String _absolutePath_3 = qrcode3.getAbsolutePath();
+        QRThreadWriter _qRThreadWriter_3 = new QRThreadWriter(this, (nbCopie / 2), ((3 * nbCopie) / 4), docSujetMaitre, 3, nbPage, LatchThreads_1, LatchMain, name, _absolutePath_3);
         service.execute(_qRThreadWriter_3);
-        QRThreadWriter _qRThreadWriter_4 = new QRThreadWriter(this, ((3 * nbCopie) / 4), nbCopie, docSujetMaitre, 4, nbPage, LatchThreads_1, LatchMain, name);
+        String _absolutePath_4 = qrcode4.getAbsolutePath();
+        QRThreadWriter _qRThreadWriter_4 = new QRThreadWriter(this, ((3 * nbCopie) / 4), nbCopie, docSujetMaitre, 4, nbPage, LatchThreads_1, LatchMain, name, _absolutePath_4);
         service.execute(_qRThreadWriter_4);
         LatchMain.countDown();
         LatchThreads_1.await();
         service.shutdown();
+        qrcode1.deleteOnExit();
+        qrcode2.deleteOnExit();
+        qrcode3.deleteOnExit();
+        qrcode4.deleteOnExit();
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -212,10 +218,10 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param numThread le nombre de threads à executer
    * @param nbPagesSuject le nombre de page du sujet maître
    */
-  public void insertQRCodeInSubject(final String name, final PDDocument docSujetMaitre, final int numCopie, final int numThread, final int nbPagesSujet) {
+  public void insertQRCodeInSubject(final String name, final PDDocument docSujetMaitre, final int numCopie, final int numThread, final int nbPagesSujet, final String pathImage) {
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbPagesSujet, true);
     for (final Integer i : _doubleDotLessThan) {
-      this.insertQRCodeInPage(name, (i).intValue(), docSujetMaitre, Integer.valueOf(numThread).toString(), numCopie, nbPagesSujet);
+      this.insertQRCodeInPage(name, (i).intValue(), docSujetMaitre, Integer.valueOf(numThread).toString(), numCopie, nbPagesSujet, pathImage);
     }
   }
   
@@ -227,12 +233,9 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param numThread le nombre de threads à executer
    * @param nbPagesSuject le nombre de page du sujet maître
    */
-  public void insertQRCodeInPage(final String name, final int numPage, final PDDocument doc, final String nbThread, final int numCopie, final int nbPagesSujet) {
+  public void insertQRCodeInPage(final String name, final int numPage, final PDDocument doc, final String nbThread, final int numCopie, final int nbPagesSujet, final String pathImage) {
     try {
       final String stringAEncoder = ((((name + "_") + Integer.valueOf(numCopie)) + "_") + Integer.valueOf(numPage));
-      String _string = nbThread.toString();
-      String _plus = ("./src/main/resources/QRCode/QRCode" + _string);
-      final String pathImage = (_plus + ".png");
       this.generateQRCodeImage(stringAEncoder, 350, 350, pathImage);
       final PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc);
       final float scale = 0.3f;
@@ -260,19 +263,11 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   public static void main(final String[] arg) {
-    try {
-      final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
-      byte[] _bytes = "./src/main/resources/QRCode/pfo_example.pdf".getBytes();
-      final InputStream input = new ByteArrayInputStream(_bytes);
-      gen.createAllExamCopies(input, 4);
-      final String in = "./src/main/resources/QRCode/pfo_example_Inserted.pdf";
-      final File f = new File(in);
-      final PDDocument doc = PDDocument.load(f);
-      final File desti = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf");
-      doc.save(desti);
-      InputOutput.<String>println("Done");
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+    final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
+    byte[] _bytes = "D:/dataScanExam/in/pfo_example.pdf".getBytes();
+    final InputStream input = new ByteArrayInputStream(_bytes);
+    byte[] _bytes_1 = "D:/dataScanExam/out".getBytes();
+    final InputStream output = new ByteArrayInputStream(_bytes_1);
+    gen.createAllExamCopies(input, output, "42PFO2021", 8);
   }
 }

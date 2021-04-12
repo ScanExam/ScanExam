@@ -23,7 +23,7 @@ class PdfReaderThreadManager extends Thread implements Runnable {
 
 		service.execute(new PdfReaderQrCodeThread(reader, 0, (nbPage / 4), pdfRenderer, latchThreads))
 		service.execute(new PdfReaderQrCodeThread(reader, (nbPage / 4), (nbPage / 2), pdfRenderer, latchThreads))
-		service.execute(new PdfReaderQrCodeThread(reader, (nbPage / 2), 3 * (nbPage / 4), pdfRenderer, latchThreads))
+		service.execute(new PdfReaderQrCodeThread(reader, (nbPage / 2), (3 * nbPage / 4), pdfRenderer, latchThreads))
 		service.execute(new PdfReaderQrCodeThread(reader, (3 * nbPage / 4), nbPage, pdfRenderer, latchThreads))
 
 		latchThreads.await()
