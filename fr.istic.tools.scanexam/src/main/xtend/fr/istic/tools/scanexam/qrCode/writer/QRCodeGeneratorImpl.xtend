@@ -26,6 +26,8 @@ import org.apache.commons.io.IOUtils
 import java.io.ByteArrayInputStream
 import java.io.OutputStream
 import java.io.ByteArrayOutputStream
+import java.nio.file.Files
+import org.apache.commons.io.FileUtils
 
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
@@ -47,8 +49,9 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 			IOUtils.copy(inputFile, stringWriterInput, "UTF-8")
 
-			val String input = stringWriterInput.toString()
-			val PDDocument doc = PDDocument.load(new File(input))
+			//val String input = stringWriterInput.toString()
+			val PDDocument doc = PDDocument.load(inputFile)
+			
 			val int nbPages = doc.numberOfPages
 			val PDFMergerUtility PDFmerger = new PDFMergerUtility()
 
@@ -61,7 +64,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 			PDFmerger.setDestinationFileName(output);
 
 			for (i : 0 ..< nbCopie) {
-				PDFmerger.addSource(input)
+				PDFmerger.addSource(inputFile)
 			}
 
 			val File f2 = new File(output)
@@ -213,9 +216,14 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
 		val InputStream input = new ByteArrayInputStream("D:/dataScanExam/in/pfo_example.pdf".getBytes())
+		
+		val InputStream input2 = new ByteArrayInputStream(Files.readAllBytes(Path.of("D:/dataScanExam/in/pfo_example.pdf")))
+		
+		//FileUtils.readFileToByteArray(File input)
+		
 		val OutputStream output = new ByteArrayOutputStream()
 		output.write("D:/dataScanExam/out".getBytes())
-		gen.createAllExamCopies(input, output, "42PFO2021", 8)
+		gen.createAllExamCopies(input2, output, "42PFO2021", 8)
 
 	/*
 	 * val String in = "./src/main/resources/QRCode/pfo_example_Inserted.pdf"
