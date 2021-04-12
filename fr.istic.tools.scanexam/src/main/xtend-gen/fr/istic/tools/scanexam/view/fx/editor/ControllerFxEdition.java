@@ -10,7 +10,7 @@ import fr.istic.tools.scanexam.view.fx.editor.Box;
 import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
 import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionListEditor;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -99,7 +99,7 @@ public class ControllerFxEdition {
   @FXML
   private ToggleButton createBoxButton;
   
-  private QuestionListEditor questionList;
+  private QuestionListEdition questionList;
   
   private QuestionOptionsEdition questionEditor;
   
@@ -188,7 +188,7 @@ public class ControllerFxEdition {
     return this.mainPane;
   }
   
-  public QuestionListEditor getQuestionList() {
+  public QuestionListEdition getQuestionList() {
     return this.questionList;
   }
   
@@ -210,8 +210,8 @@ public class ControllerFxEdition {
     PdfPane _pdfPane = new PdfPane(this);
     this.mainPane = _pdfPane;
     this.mainPaneContainer.getChildren().add(this.mainPane);
-    QuestionListEditor _questionListEditor = new QuestionListEditor(this);
-    this.questionList = _questionListEditor;
+    QuestionListEdition _questionListEdition = new QuestionListEdition(this);
+    this.questionList = _questionListEdition;
     this.questionListContainer.setContent(this.questionList);
     QuestionOptionsEdition _questionOptionsEdition = new QuestionOptionsEdition(this);
     this.questionEditor = _questionOptionsEdition;

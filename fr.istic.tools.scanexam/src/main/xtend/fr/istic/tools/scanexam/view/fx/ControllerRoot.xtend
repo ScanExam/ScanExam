@@ -1,11 +1,14 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.presenter.PresenterConfiguration
+import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
+import javafx.fxml.Initializable
 import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
@@ -13,8 +16,10 @@ import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.Tab
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import java.net.URL
+import java.util.ResourceBundle
 
-class ControllerRoot {
+class ControllerRoot implements Initializable {
 	
 	@FXML
 	Tab correctorTab;
@@ -57,10 +62,6 @@ class ControllerRoot {
 	def SaveTemplatePressed(){
 		editor.saveTemplatePressed
 	}
-	@FXML
-	def LoadStudentCopiesPressed(){
-		
-	}
 	
 	@FXML
 	def loadStudentList() { 
@@ -70,7 +71,7 @@ class ControllerRoot {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<AdapterFxStudentListLoader>controller.presenterStudentListLoader = corrector.adapter.presenter.presenterStudenList
+		loader.<AdapterFxStudentListLoader>controller.initialize(corrector.adapter.presenter.presenterStudentList)
 		dialog.setScene(new Scene(view, 384, 160))
 		dialog.setResizable(false);
 		dialog.show
@@ -84,6 +85,8 @@ class ControllerRoot {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		//FIXME pas terrible que le contrôleur instancie un présenteur
+		loader.<AdapterFxConfiguration>controller.initialize(new PresenterConfiguration)
 		dialog.setScene(new Scene(view, 384, 280))
 		dialog.setResizable(false);
 		dialog.show
@@ -103,11 +106,40 @@ class ControllerRoot {
 	}
 	
 	@FXML
+	def loadStudentCopiesPressed() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetLoaderUI.FXML"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerGraduationLoader>controller.initialize(corrector.adapter.presenter.presenterStudentSheet)
+		dialog.setScene(new Scene(view, 384, 405))
+		dialog.setResizable(false);
+		dialog.show
+	}
+	
+	@FXML
+	def exportToSheets() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetExportUI.FXML"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		//FIXME pas terrible que le contrôleur instancie un présenteur
+		loader.<ControllerStudentSheetExport>controller.initialize(new PresenterStudentSheetExport)
+		dialog.setScene(new Scene(view, 384, 107))
+		dialog.setResizable(false);
+		dialog.show
+	}
+	
+	@FXML
 	def toggleAutoZoom(){
 		corrector.toAutoZoom = autoZoom.selected
 	}
 	
-	
-	
+	override initialize(URL location, ResourceBundle resources) {
+	}
 	
 }

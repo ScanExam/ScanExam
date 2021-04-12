@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import fr.istic.tools.scanexam.view.fx.component.FormattedTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainPane" alignment="CENTER" prefHeight="280.0" prefWidth="384.0" spacing="15.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.AdapterFxConfiguration">
+<VBox fx:id="mainPane" alignment="CENTER" prefHeight="280.0" prefWidth="384.0" spacing="15.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.AdapterFxConfiguration">
    <children>
       <HBox alignment="CENTER" spacing="20.0">
          <children>
@@ -20,7 +21,7 @@
       <HBox alignment="CENTER" spacing="20.0">
          <children>
             <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="112.0" text="%config.email" />
-            <TextField fx:id="txtFldEmail" prefHeight="25.0" prefWidth="192.0" />
+            <FormattedTextField fx:id="txtFldEmail" prefHeight="25.0" prefWidth="192.0" wrongFormatted="false" />
          </children>
       </HBox>
       <HBox alignment="CENTER" spacing="20.0">
@@ -38,7 +39,7 @@
       <HBox alignment="CENTER" spacing="20.0">
          <children>
             <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="112.0" text="%config.emailPort" />
-            <TextField fx:id="txtFldEmailPort" prefHeight="25.0" prefWidth="192.0" />
+            <FormattedTextField fx:id="txtFldEmailPort" defaultValue="0" prefHeight="25.0" prefWidth="192.0" strictFormat="\\d*" />
          </children>
       </HBox>
       <HBox alignment="CENTER" spacing="30.0">

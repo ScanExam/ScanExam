@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import fr.istic.tools.scanexam.view.fx.component.FormattedTextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="mainPane" alignment="CENTER" prefHeight="107.0" prefWidth="384.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport">
+   <children>
+      <HBox alignment="CENTER" spacing="20.0">
+         <children>
+            <Label text="%exportStudentSheet.numberSheet" />
+            <FormattedTextField fx:id="txtFlbNbSheet" defaultValue="1" prefHeight="25.0" prefWidth="50.0" strictFormat="\\d*" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="80.0">
+         <children>
+      		<Button mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
+           	<Button fx:id="btnExport" mnemonicParsing="false" onAction="#exportAndQuit" prefHeight="25.0" prefWidth="84.0" text="%button.export" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

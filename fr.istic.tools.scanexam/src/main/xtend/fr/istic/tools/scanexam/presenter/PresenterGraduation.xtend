@@ -3,17 +3,17 @@ package fr.istic.tools.scanexam.presenter
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.GradesExportImpl
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import fr.istic.tools.scanexam.services.ExamSingleton
+import fr.istic.tools.scanexam.services.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
 import fr.istic.tools.scanexam.view.Adapter
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.LinkedList
 import java.util.List
 import java.util.Objects
-import java.io.File
 import org.apache.pdfbox.pdmodel.PDDocument
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
-import java.io.ByteArrayOutputStream
-import fr.istic.tools.scanexam.services.ServiceGraduation
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -32,6 +32,7 @@ class PresenterGraduation implements Presenter
 	PresenterGraduation graduationPresenter;
 	PresenterPdf presPdf 
 	PresenterStudentListLoader studentListPresenter
+	PresenterGraduationLoader studentSheetPresenter
 	ServiceGraduation service;
 	
 	Adapter<PresenterGraduation> adapter;
@@ -44,6 +45,7 @@ class PresenterGraduation implements Presenter
 		presPdf = new PresenterPdf(service, this)
 		presQuestion = new PresenterQuestion(service)
 		studentListPresenter = new PresenterStudentListLoader(service)
+		studentSheetPresenter = new PresenterGraduationLoader(service)
 	}
 	new(Adapter<PresenterGraduation> adapter,ServiceGraduation service) 
 	{
@@ -104,8 +106,15 @@ class PresenterGraduation implements Presenter
 	/**
 	 * @return current {@link PresenterStudentListLoader} 
 	 */
-	def PresenterStudentListLoader getPresenterStudenList() {
+	def PresenterStudentListLoader getPresenterStudentList() {
 		studentListPresenter
+	}
+	
+	/**
+	 * @return current {@link PresenterStudentSheetLoader} 
+	 */
+	def PresenterGraduationLoader getPresenterStudentSheet() {
+		studentSheetPresenter
 	}
 	
 	
@@ -249,6 +258,8 @@ class PresenterGraduation implements Presenter
 	}
 	
 	List<Question> questions
+	
+	
 	/**
 	 * Loads the next question into questionToLoad
 	 * if there is a new question, return true,

@@ -80,7 +80,7 @@ class ControllerFxEdition {
 	@FXML
 	ToggleButton createBoxButton;
 	
-	QuestionListEditor questionList;
+	QuestionListEdition questionList;
 	
 	QuestionOptionsEdition questionEditor;
 	
@@ -190,7 +190,7 @@ class ControllerFxEdition {
 		mainPane = new PdfPane(this);
 		mainPaneContainer.children.add(mainPane)
 		
-		questionList = new QuestionListEditor(this);
+		questionList = new QuestionListEdition(this);
 		questionListContainer.content = questionList
 		
 		questionEditor = new QuestionOptionsEdition(this);

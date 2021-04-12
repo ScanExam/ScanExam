@@ -7,6 +7,7 @@ import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterGradeScale;
+import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
@@ -48,6 +49,8 @@ public class PresenterGraduation implements Presenter {
   
   private PresenterStudentListLoader studentListPresenter;
   
+  private PresenterGraduationLoader studentSheetPresenter;
+  
   private ServiceGraduation service;
   
   private Adapter<PresenterGraduation> adapter;
@@ -61,6 +64,8 @@ public class PresenterGraduation implements Presenter {
     this.presQuestion = _presenterQuestion;
     PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
     this.studentListPresenter = _presenterStudentListLoader;
+    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(service);
+    this.studentSheetPresenter = _presenterGraduationLoader;
   }
   
   public PresenterGraduation(final Adapter<PresenterGraduation> adapter, final ServiceGraduation service) {
@@ -106,8 +111,15 @@ public class PresenterGraduation implements Presenter {
   /**
    * @return current {@link PresenterStudentListLoader}
    */
-  public PresenterStudentListLoader getPresenterStudenList() {
+  public PresenterStudentListLoader getPresenterStudentList() {
     return this.studentListPresenter;
+  }
+  
+  /**
+   * @return current {@link PresenterStudentSheetLoader}
+   */
+  public PresenterGraduationLoader getPresenterStudentSheet() {
+    return this.studentSheetPresenter;
   }
   
   public void openEditionTemplate(final String path) {

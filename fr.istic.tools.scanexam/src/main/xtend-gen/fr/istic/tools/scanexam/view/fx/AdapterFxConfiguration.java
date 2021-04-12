@@ -5,12 +5,9 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.mailing.SendMailTls;
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.utils.BadFormatDisplayer;
+import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
+import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,15 +18,12 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -41,7 +35,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class AdapterFxConfiguration implements Initializable {
+public class AdapterFxConfiguration {
   /**
    * Controlleur de la configuration
    */
@@ -63,7 +57,7 @@ public class AdapterFxConfiguration implements Initializable {
    * Champ de l'email
    */
   @FXML
-  public TextField txtFldEmail;
+  public FormattedTextField txtFldEmail;
   
   /**
    * Champ du mot de passe de l'email
@@ -96,49 +90,29 @@ public class AdapterFxConfiguration implements Initializable {
   public Button btnCheckMail;
   
   /**
-   * Constructeur. Initialise les différents champs avec la valeur actuelle de la configuration
+   * Initialise les différents champs avec la valeur actuelle de la configuration
    */
-  @Override
-  public void initialize(final URL location, final ResourceBundle resources) {
-    PresenterConfiguration _presenterConfiguration = new PresenterConfiguration();
-    this.presConfig = _presenterConfiguration;
-    this.cmbBxLanguage.setValue(this.presConfig.getLanguage());
-    this.txtFldEmail.setText(this.presConfig.getEmail());
-    this.pwdFldEmailPassword.setText(this.presConfig.getEmailPassword());
-    this.txtFldEmailHost.setText(this.presConfig.getMailHost());
-    this.txtFldEmailPort.setText(this.presConfig.getMailPort());
-    this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(this.presConfig.getLanguages()));
-    final UnaryOperator<TextFormatter.Change> _function = (TextFormatter.Change change) -> {
-      TextFormatter.Change _xifexpression = null;
-      boolean _matches = Pattern.compile("\\d*").matcher(change.getText()).matches();
-      if (_matches) {
-        _xifexpression = change;
-      } else {
-        _xifexpression = null;
-      }
-      return _xifexpression;
-    };
-    TextFormatter<String> _textFormatter = new TextFormatter<String>(_function);
-    this.txtFldEmailPort.setTextFormatter(_textFormatter);
-    final ChangeListener<Boolean> _function_1 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
-      if ((!(newVal).booleanValue())) {
-        boolean _equals = this.txtFldEmailPort.getText().equals("");
-        if (_equals) {
-          this.txtFldEmailPort.setText("0");
-        }
+  public void initialize(final PresenterConfiguration presConfig) {
+    this.presConfig = presConfig;
+    this.cmbBxLanguage.setValue(presConfig.getLanguage());
+    this.txtFldEmail.setText(presConfig.getEmail());
+    this.pwdFldEmailPassword.setText(presConfig.getEmailPassword());
+    this.txtFldEmailHost.setText(presConfig.getMailHost());
+    this.txtFldEmailPort.setText(presConfig.getMailPort());
+    this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(presConfig.getLanguages()));
+    EmailValidator _emailValidator = new EmailValidator();
+    this.txtFldEmail.addFormatValidator(_emailValidator);
+    final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> value, Boolean oldVal, Boolean newVal) -> {
+      if (((!(newVal).booleanValue()) && (!this.txtFldEmail.getWrongFormatted()))) {
+        this.completeHostInfos();
       }
     };
-    this.txtFldEmailPort.focusedProperty().addListener(_function_1);
-    final ChangeListener<Boolean> _function_2 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
-      if ((!(newVal).booleanValue())) {
-        this.verifyMailAddress();
-      }
-    };
-    this.txtFldEmail.focusedProperty().addListener(_function_2);
-    final EventHandler<ActionEvent> _function_3 = (ActionEvent e) -> {
+    this.txtFldEmail.focusedProperty().addListener(_function);
+    this.btnSave.disableProperty().bind(this.txtFldEmail.wrongFormattedProperty());
+    final EventHandler<ActionEvent> _function_1 = (ActionEvent e) -> {
       this.checkMail();
     };
-    this.btnCheckMail.setOnAction(_function_3);
+    this.btnCheckMail.setOnAction(_function_1);
   }
   
   @FXML
@@ -176,28 +150,18 @@ public class AdapterFxConfiguration implements Initializable {
   }
   
   /**
-   * Vérifie si l'adresse mail saisie est syntaxiquement valide. Si oui, remplie automatiquement le port et l'host si ceux-ci sont connus.
-   * Si non, bloque la validation du formulaire (jusqu'à syntaxe valide ou textfield vide).
+   * Complète les informations de l'hôte à partir de l'adresse mail saisie par l'utilisateur, à condition que l'hôte soit connu
    */
-  public void verifyMailAddress() {
-    if ((((this.txtFldEmail.getText() != null) && (!Objects.equal(this.txtFldEmail.getText(), ""))) && (!this.presConfig.checkEmailFormat(this.txtFldEmail.getText())))) {
-      BadFormatDisplayer.dispBadFormatView(this.txtFldEmail, true);
-      this.btnSave.setDisable(true);
-      String _translate = LanguageManager.translate("config.info.email");
-      Tooltip _tooltip = new Tooltip(_translate);
-      this.txtFldEmail.setTooltip(_tooltip);
-    } else {
-      BadFormatDisplayer.dispBadFormatView(this.txtFldEmail, false);
-      this.btnSave.setDisable(false);
-      this.txtFldEmail.setTooltip(null);
-      if (((this.txtFldEmail.getText() != null) && (!Objects.equal(this.txtFldEmail.getText(), "")))) {
-        final Pair<String, String> infos = this.presConfig.getSmtpInfos(this.txtFldEmail.getText());
-        if (((this.txtFldEmailHost.getText() == null) || Objects.equal(this.txtFldEmailHost.getText(), ""))) {
-          this.txtFldEmailHost.setText(infos.getKey());
-        }
-        if (((this.txtFldEmailPort.getText() == null) || Objects.equal(this.txtFldEmailPort.getText(), "0"))) {
-          this.txtFldEmailPort.setText(infos.getValue());
-        }
+  private void completeHostInfos() {
+    String _text = this.txtFldEmail.getText();
+    boolean _notEquals = (!Objects.equal(_text, ""));
+    if (_notEquals) {
+      final Pair<String, String> infos = this.presConfig.getSmtpInfos(this.txtFldEmail.getText());
+      if (((this.txtFldEmailHost.getText() == null) || Objects.equal(this.txtFldEmailHost.getText(), ""))) {
+        this.txtFldEmailHost.setText(infos.getKey());
+      }
+      if (((this.txtFldEmailPort.getText() == null) || Objects.equal(this.txtFldEmailPort.getText(), "0"))) {
+        this.txtFldEmailPort.setText(infos.getValue());
       }
     }
   }
@@ -209,7 +173,7 @@ public class AdapterFxConfiguration implements Initializable {
    * @param port le port SMTP
    * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
    */
-  public void checkMail() {
+  private void checkMail() {
     final Task<SendMailTls.LoginResult> _function = new Task<SendMailTls.LoginResult>() {
       @Override
       protected SendMailTls.LoginResult call() throws Exception {
@@ -245,7 +209,7 @@ public class AdapterFxConfiguration implements Initializable {
    * Affiche une boîte de dialogue prévenant l'utilisateur de la réussite ou non de la connexion à son adresse mail
    * @param result un LoginResult
    */
-  public void sendCheckMailResult(final SendMailTls.LoginResult result) {
+  private void sendCheckMailResult(final SendMailTls.LoginResult result) {
     final Alert alert = new Alert(Alert.AlertType.NONE);
     Window _window = alert.getDialogPane().getScene().getWindow();
     final Stage stage = ((Stage) _window);
