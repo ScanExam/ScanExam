@@ -7,10 +7,10 @@ import java.util.List
 class GraduationInProgressFilter implements BasicFilter<StudentSheet> {
 	
 	override List<FilterParam<?>> getParams() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		return List.of()
 	}
 	
 	override test(StudentSheet t) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		t.isGraded
 	}	
 }

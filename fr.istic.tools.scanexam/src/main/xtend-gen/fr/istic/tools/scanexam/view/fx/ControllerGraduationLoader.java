@@ -201,7 +201,7 @@ public class ControllerGraduationLoader {
     boolean _loadTemplate = this.presStudentListLoader.loadTemplate(this.txtFldFile.getText());
     if (_loadTemplate) {
       Object _xifexpression_1 = null;
-      boolean _loadStudentSheets = this.presStudentListLoader.loadStudentSheets(this.txtFldFileGraduation.getText());
+      boolean _loadStudentSheets = this.presStudentListLoader.loadStudentSheets(this.txtFldFileGraduation.getText(), 0);
       if (_loadStudentSheets) {
         this.quit();
       } else {

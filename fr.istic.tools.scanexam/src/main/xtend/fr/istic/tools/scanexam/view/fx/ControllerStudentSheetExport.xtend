@@ -44,7 +44,7 @@ class ControllerStudentSheetExport {
 	def exportAndQuit() {
 		val fileOpt = loadFolder
 		if(fileOpt.isPresent) {
-			if(presenter.export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
+			//if(presenter.export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
 				quit
 		}
 	}

@@ -547,6 +547,15 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getStudentSheet__IsGraded() {
+		return studentSheetEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CoreFactory getCoreFactory() {
 		return (CoreFactory)getEFactoryInstance();
 	}
@@ -621,6 +630,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(studentSheetEClass, STUDENT_SHEET__POS_PAGE);
 		createEReference(studentSheetEClass, STUDENT_SHEET__GRADES);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___COMPUTE_GRADE);
+		createEOperation(studentSheetEClass, STUDENT_SHEET___IS_GRADED);
 	}
 
 	/**
@@ -709,6 +719,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEReference(getStudentSheet_Grades(), this.getGrade(), null, "grades", null, 0, -1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getStudentSheet__ComputeGrade(), theEcorePackage.getEFloat(), "computeGrade", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getStudentSheet__IsGraded(), theEcorePackage.getEBoolean(), "isGraded", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

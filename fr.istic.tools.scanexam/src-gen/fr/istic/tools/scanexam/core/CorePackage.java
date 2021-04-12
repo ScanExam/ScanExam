@@ -645,13 +645,22 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET___COMPUTE_GRADE = 0;
 
 	/**
+	 * The operation id for the '<em>Is Graded</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET___IS_GRADED = 1;
+
+	/**
 	 * The number of operations of the '<em>Student Sheet</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_OPERATION_COUNT = 1;
+	int STUDENT_SHEET_OPERATION_COUNT = 2;
 
 
 	/**
@@ -1094,6 +1103,16 @@ public interface CorePackage extends EPackage {
 	EOperation getStudentSheet__ComputeGrade();
 
 	/**
+	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.StudentSheet#isGraded() <em>Is Graded</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Graded</em>' operation.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#isGraded()
+	 * @generated
+	 */
+	EOperation getStudentSheet__IsGraded();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1465,6 +1484,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STUDENT_SHEET___COMPUTE_GRADE = eINSTANCE.getStudentSheet__ComputeGrade();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Graded</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STUDENT_SHEET___IS_GRADED = eINSTANCE.getStudentSheet__IsGraded();
 
 	}
 

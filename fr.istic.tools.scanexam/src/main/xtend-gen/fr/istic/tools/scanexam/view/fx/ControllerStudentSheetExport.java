@@ -64,10 +64,7 @@ public class ControllerStudentSheetExport {
     final Optional<File> fileOpt = this.loadFolder();
     boolean _isPresent = fileOpt.isPresent();
     if (_isPresent) {
-      boolean _export = this.presenter.export(fileOpt.get(), Integer.parseInt(this.txtFlbNbSheet.getText()));
-      if (_export) {
-        this.quit();
-      }
+      this.quit();
     }
   }
   

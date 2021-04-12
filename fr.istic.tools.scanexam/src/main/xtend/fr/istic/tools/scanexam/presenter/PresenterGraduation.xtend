@@ -46,7 +46,7 @@ class PresenterGraduation implements Presenter
 		presPdf = new PresenterPdf(service, this)
 		presQuestion = new PresenterQuestion(service)
 		studentListPresenter = new PresenterStudentListLoader(service)
-		studentSheetPresenter = new PresenterGraduationLoader(service)
+		studentSheetPresenter = new PresenterGraduationLoader(service, null)
 		correctionLoaderPresenter = new PresenterCorrectionLoader(service)
 	}
 	new(Adapter<PresenterGraduation> adapter,ServiceGraduation service) 
