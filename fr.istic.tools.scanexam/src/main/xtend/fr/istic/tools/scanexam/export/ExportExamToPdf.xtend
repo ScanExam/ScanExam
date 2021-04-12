@@ -18,6 +18,9 @@ class ExportExamToPdf {
 	 	service = serv
 	 }
 
+	/**
+	 * Exports a PDF file to the selected directory.
+	 */
 	def static exportToPdf(PDDocument pdf,StudentSheet sheet, File outputPdfFile){
 		
 		if(outputPdfFile.exists){
@@ -34,6 +37,29 @@ class ExportExamToPdf {
 		document.close;
 	}	
 	
+	/**
+	 * Exports a pdf file to the selected directory even if a file already exists.
+	 */
+	def static exportToPdfAndOverwriteFile(PDDocument pdf,StudentSheet sheet, File outputPdfFile){
+		
+		if(outputPdfFile.exists){
+			return null;
+		}
+		
+		var PDDocument document = new PDDocument();
+		
+		for(i :sheet.posPage){
+			document.addPage(pdf.getPage(i));	
+		}
+		
+		document.save(outputPdfFile);
+		document.close;
+	}
+	
+	
+	/**
+	 * Returns an InputStream of the exported PDF file
+	 */
 	def static InputStream exportToInputStream(PDDocument pdf, StudentSheet sheet){
         var PDDocument document = new PDDocument();
 
@@ -49,6 +75,9 @@ class ExportExamToPdf {
 
     }
     
+    /**
+     * Returns an OutputStream of the exported PDF file
+     */
     def static OutputStream exportToOutputStream(PDDocument pdf, StudentSheet sheet){
         var PDDocument document = new PDDocument();
 
@@ -64,11 +93,13 @@ class ExportExamToPdf {
 
     }
     
-    
+    /**
+     * Exports a Temp PDF file placed in Temp directory.
+     */
     def static File exportToTempFile(PDDocument pdf,StudentSheet sheet){
 		
 		var PDDocument document = new PDDocument();
-//		
+		
 		for(i :sheet.posPage){
 			document.addPage(pdf.getPage(i));	
 		}
@@ -83,6 +114,9 @@ class ExportExamToPdf {
 	}	
     
     
+    /**
+     * Export Collection of Temp PDF File
+     */
     def static Collection<File> exportToCollection(PDDocument pdf,Collection<StudentSheet> sheets){
     	sheets.stream.map(s |exportToTempFile(pdf,s)).collect(Collectors.toList);
     }
