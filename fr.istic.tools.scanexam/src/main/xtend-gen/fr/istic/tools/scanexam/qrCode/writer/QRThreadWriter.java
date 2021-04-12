@@ -38,7 +38,6 @@ public class QRThreadWriter extends Thread implements Runnable {
     this.pathImage = pathImage;
   }
   
-  @Override
   public void run() {
     try {
       this.countDownMain.await();

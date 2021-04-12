@@ -126,7 +126,6 @@ public class QuestionItemGraduation extends VBox {
   public void setupEvents() {
     final QuestionItemGraduation me = this;
     this.setOnMouseClicked(new EventHandler<MouseEvent>() {
-      @Override
       public void handle(final MouseEvent event) {
         QuestionItemGraduation.this.list.getController().selectQuestion(me);
       }

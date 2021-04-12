@@ -102,15 +102,19 @@ public class AdapterFxConfiguration {
     this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(presConfig.getLanguages()));
     EmailValidator _emailValidator = new EmailValidator();
     this.txtFldEmail.addFormatValidator(_emailValidator);
-    final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> value, Boolean oldVal, Boolean newVal) -> {
-      if (((!(newVal).booleanValue()) && (!this.txtFldEmail.getWrongFormatted()))) {
-        this.completeHostInfos();
+    final ChangeListener<Boolean> _function = new ChangeListener<Boolean>() {
+      public void changed(final ObservableValue<? extends Boolean> value, final Boolean oldVal, final Boolean newVal) {
+        if (((!(newVal).booleanValue()) && (!AdapterFxConfiguration.this.txtFldEmail.getWrongFormatted()))) {
+          AdapterFxConfiguration.this.completeHostInfos();
+        }
       }
     };
     this.txtFldEmail.focusedProperty().addListener(_function);
     this.btnSave.disableProperty().bind(this.txtFldEmail.wrongFormattedProperty());
-    final EventHandler<ActionEvent> _function_1 = (ActionEvent e) -> {
-      this.checkMail();
+    final EventHandler<ActionEvent> _function_1 = new EventHandler<ActionEvent>() {
+      public void handle(final ActionEvent e) {
+        AdapterFxConfiguration.this.checkMail();
+      }
     };
     this.btnCheckMail.setOnAction(_function_1);
   }
@@ -198,8 +202,10 @@ public class AdapterFxConfiguration {
       }
     };
     final Service<SendMailTls.LoginResult> service = _function_1;
-    final EventHandler<WorkerStateEvent> _function_2 = (WorkerStateEvent e) -> {
-      this.sendCheckMailResult(service.getValue());
+    final EventHandler<WorkerStateEvent> _function_2 = new EventHandler<WorkerStateEvent>() {
+      public void handle(final WorkerStateEvent e) {
+        AdapterFxConfiguration.this.sendCheckMailResult(service.getValue());
+      }
     };
     service.setOnSucceeded(_function_2);
     service.start();

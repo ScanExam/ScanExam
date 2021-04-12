@@ -213,7 +213,6 @@ public class ControllerRoot implements Initializable {
     return this.corrector.setToAutoZoom(Boolean.valueOf(this.autoZoom.isSelected()));
   }
   
-  @Override
   public void initialize(final URL location, final ResourceBundle resources) {
   }
 }

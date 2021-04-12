@@ -434,70 +434,74 @@ public class ControllerFxGraduation {
   }
   
   public void binds(final Node n) {
-    final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
-      KeyCode _code = event.getCode();
-      boolean _matched = false;
-      if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
-        _matched=true;
-        this.nextQuestionPressed();
-      }
-      if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+    final EventHandler<KeyEvent> _function = new EventHandler<KeyEvent>() {
+      public void handle(final KeyEvent event) {
+        KeyCode _code = event.getCode();
+        boolean _matched = false;
+        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
           _matched=true;
-          this.prevQuestionPressed();
+          ControllerFxGraduation.this.nextQuestionPressed();
         }
-      }
-      if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
-          _matched=true;
-          this.prevStudentPressed();
+        if (!_matched) {
+          if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+            _matched=true;
+            ControllerFxGraduation.this.prevQuestionPressed();
+          }
         }
-      }
-      if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
-          _matched=true;
-          this.nextStudentPressed();
+        if (!_matched) {
+          if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
+            _matched=true;
+            ControllerFxGraduation.this.prevStudentPressed();
+          }
         }
+        if (!_matched) {
+          if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
+            _matched=true;
+            ControllerFxGraduation.this.nextStudentPressed();
+          }
+        }
+        if (!_matched) {
+          ControllerFxGraduation.logger.warn("Key not supported.");
+        }
+        event.consume();
       }
-      if (!_matched) {
-        ControllerFxGraduation.logger.warn("Key not supported.");
-      }
-      event.consume();
     };
     n.setOnKeyPressed(_function);
   }
   
   public void setKeybinds() {
     Scene s = this.mainPane.getScene();
-    final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
-      KeyCode _code = event.getCode();
-      boolean _matched = false;
-      if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
-        _matched=true;
-        this.nextQuestionPressed();
-      }
-      if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+    final EventHandler<KeyEvent> _function = new EventHandler<KeyEvent>() {
+      public void handle(final KeyEvent event) {
+        KeyCode _code = event.getCode();
+        boolean _matched = false;
+        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
           _matched=true;
-          this.prevQuestionPressed();
+          ControllerFxGraduation.this.nextQuestionPressed();
         }
-      }
-      if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
-          _matched=true;
-          this.prevStudentPressed();
+        if (!_matched) {
+          if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+            _matched=true;
+            ControllerFxGraduation.this.prevQuestionPressed();
+          }
         }
-      }
-      if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
-          _matched=true;
-          this.nextStudentPressed();
+        if (!_matched) {
+          if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
+            _matched=true;
+            ControllerFxGraduation.this.prevStudentPressed();
+          }
         }
+        if (!_matched) {
+          if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
+            _matched=true;
+            ControllerFxGraduation.this.nextStudentPressed();
+          }
+        }
+        if (!_matched) {
+          ControllerFxGraduation.logger.warn("Key not supported.");
+        }
+        event.consume();
       }
-      if (!_matched) {
-        ControllerFxGraduation.logger.warn("Key not supported.");
-      }
-      event.consume();
     };
     s.setOnKeyPressed(_function);
     this.binds(this.scrollMain);

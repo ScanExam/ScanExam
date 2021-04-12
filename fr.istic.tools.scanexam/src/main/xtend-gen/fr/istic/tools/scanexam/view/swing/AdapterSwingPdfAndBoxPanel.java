@@ -51,7 +51,6 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
    * Déplacement du pdf
    * @param e Mouvement de la souris
    */
-  @Override
   public void moveOrigin(final MouseEvent e) {
     boolean _isPresent = this.lastClickPoint.isPresent();
     if (_isPresent) {
@@ -75,7 +74,6 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
    * Incremente l'échelle
    * @param value Valeur à ajouter
    */
-  @Override
   public void incrScale(final int value) {
     if (((this.scale + value) < 1)) {
       this.scale = 1;
@@ -115,7 +113,6 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
    * Lie la vue de au panel
    * @param view Vue swing
    */
-  @Override
   public void setView(final JPanel view) {
     this.view = Optional.<JPanel>of(view);
     this.adapterBox.setView(this.view.get());
@@ -125,7 +122,6 @@ public class AdapterSwingPdfAndBoxPanel extends AdapterSwingPdfPanel {
    * Change la mise à l'échelle. Soit par rapport à la hauteur ou la largueur
    * @param scaleOnWidth Indique si la mise à l'échelle se fait par rapport à la hauteur ou la largueur
    */
-  @Override
   public void setScaleOnWidth(final boolean scaleOnWidth) {
     if ((this.pdf != null)) {
       super.setScaleOnWidth(scaleOnWidth);

@@ -21,13 +21,11 @@ public class GradesExportMailImpl implements GradesExportMail {
   
   private static Config instance;
   
-  @Override
   public void exportGradesMail(final File pdf) {
     this.exportGradesMail1(pdf, GradesExportMailImpl.instance.getEmail(), GradesExportMailImpl.instance.getEmailPassword(), GradesExportMailImpl.service.getStudentSheets().size(), GradesExportMailImpl.service.getExamName(), 
       GradesExportMailImpl.service.getStudentSheets());
   }
   
-  @Override
   public void exportGradesMail1(final File pdf, final String mail, final String mdp, final int taille, final String nameExam, final Collection<StudentSheet> studentSheetss) {
     final SendMailXtend mailSender = new SendMailXtend();
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, taille, true);

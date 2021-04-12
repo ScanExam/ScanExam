@@ -139,45 +139,55 @@ public class AdapterFxStudentListLoader {
     this.presStudentList = presStudentList;
     this.txtFldFile.setText(presStudentList.getStudentListPath());
     this.txtFldFirstCell.setText(presStudentList.getStudentListShift());
-    final UnaryOperator<TextFormatter.Change> _function = (TextFormatter.Change change) -> {
-      TextFormatter.Change _xblockexpression = null;
-      {
-        change.setText(change.getText().toUpperCase());
-        _xblockexpression = change;
+    final UnaryOperator<TextFormatter.Change> _function = new UnaryOperator<TextFormatter.Change>() {
+      public TextFormatter.Change apply(final TextFormatter.Change change) {
+        TextFormatter.Change _xblockexpression = null;
+        {
+          change.setText(change.getText().toUpperCase());
+          _xblockexpression = change;
+        }
+        return _xblockexpression;
       }
-      return _xblockexpression;
     };
     TextFormatter<String> _textFormatter = new TextFormatter<String>(_function);
     this.txtFldFirstCell.setTextFormatter(_textFormatter);
     this.btnOk.disableProperty().bind(this.txtFldFile.wrongFormattedProperty().or(this.txtFldFirstCell.wrongFormattedProperty()));
-    final FormatValidator _function_1 = (String text) -> {
-      Optional<String> _xifexpression = null;
-      boolean _matches = AdapterFxStudentListLoader.cellPattern.matcher(this.txtFldFirstCell.getText()).matches();
-      boolean _not = (!_matches);
-      if (_not) {
-        _xifexpression = Optional.<String>of("studentlist.info.badCellFormat");
-      } else {
-        _xifexpression = Optional.<String>empty();
+    final FormatValidator _function_1 = new FormatValidator() {
+      public Optional<String> validate(final String text) {
+        Optional<String> _xifexpression = null;
+        boolean _matches = AdapterFxStudentListLoader.cellPattern.matcher(AdapterFxStudentListLoader.this.txtFldFirstCell.getText()).matches();
+        boolean _not = (!_matches);
+        if (_not) {
+          _xifexpression = Optional.<String>of("studentlist.info.badCellFormat");
+        } else {
+          _xifexpression = Optional.<String>empty();
+        }
+        return _xifexpression;
       }
-      return _xifexpression;
     };
     this.txtFldFirstCell.addFormatValidator(_function_1);
-    final FormatValidator _function_2 = (String text) -> {
-      Optional<String> _xifexpression = null;
-      final Function1<String, String> _function_3 = (String f) -> {
-        return f.substring(1);
-      };
-      final Function1<String, Boolean> _function_4 = (String f) -> {
-        return Boolean.valueOf(text.endsWith(f));
-      };
-      String _findFirst = IterableExtensions.<String>findFirst(ListExtensions.<String, String>map(AdapterFxStudentListLoader.supportedFormat, _function_3), _function_4);
-      boolean _tripleNotEquals = (_findFirst != null);
-      if (_tripleNotEquals) {
-        _xifexpression = Optional.<String>empty();
-      } else {
-        _xifexpression = Optional.<String>of("studentlist.info.fileNotValid");
+    final FormatValidator _function_2 = new FormatValidator() {
+      public Optional<String> validate(final String text) {
+        Optional<String> _xifexpression = null;
+        final Function1<String, String> _function = new Function1<String, String>() {
+          public String apply(final String f) {
+            return f.substring(1);
+          }
+        };
+        final Function1<String, Boolean> _function_1 = new Function1<String, Boolean>() {
+          public Boolean apply(final String f) {
+            return Boolean.valueOf(text.endsWith(f));
+          }
+        };
+        String _findFirst = IterableExtensions.<String>findFirst(ListExtensions.<String, String>map(AdapterFxStudentListLoader.supportedFormat, _function), _function_1);
+        boolean _tripleNotEquals = (_findFirst != null);
+        if (_tripleNotEquals) {
+          _xifexpression = Optional.<String>empty();
+        } else {
+          _xifexpression = Optional.<String>of("studentlist.info.fileNotValid");
+        }
+        return _xifexpression;
       }
-      return _xifexpression;
     };
     this.txtFldFile.addFormatValidator(_function_2);
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator();

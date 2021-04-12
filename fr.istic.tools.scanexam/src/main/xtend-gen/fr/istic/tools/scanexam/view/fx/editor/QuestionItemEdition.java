@@ -142,14 +142,12 @@ public class QuestionItemEdition extends VBox {
   
   public void setupEvents(final QuestionItemEdition item) {
     this.remove.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
       public void handle(final ActionEvent event) {
         QuestionItemEdition.this.list.removeQuestion(item);
         QuestionItemEdition.this.list.getController().selectQuestion(null);
       }
     });
     this.setOnMouseClicked(new EventHandler<MouseEvent>() {
-      @Override
       public void handle(final MouseEvent event) {
         QuestionItemEdition.this.list.getController().selectQuestion(item);
       }

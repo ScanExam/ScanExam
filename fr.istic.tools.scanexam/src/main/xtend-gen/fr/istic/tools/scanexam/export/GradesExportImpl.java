@@ -25,7 +25,6 @@ public class GradesExportImpl implements GradesExport {
   /**
    * Méthode qui créer un fichier Excel et qui le remplit avec les noms des étudiants et leurs notes
    */
-  @Override
   public void exportGrades() {
     this.exportGradesPrivate(this.service.getStudentSheets(), this.service.getExamName());
   }

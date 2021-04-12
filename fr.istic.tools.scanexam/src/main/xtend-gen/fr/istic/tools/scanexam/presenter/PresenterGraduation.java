@@ -96,7 +96,6 @@ public class PresenterGraduation implements Presenter {
   /**
    * @return current {@link PresenterMarkingScheme}
    */
-  @Override
   public PresenterGradeScale getPresenterMarkingScheme() {
     return this.presMarkingScheme;
   }
@@ -108,7 +107,6 @@ public class PresenterGraduation implements Presenter {
     return this.graduationPresenter;
   }
   
-  @Override
   public PresenterPdf getPresenterPdf() {
     return this.presPdf;
   }

@@ -21,6 +21,9 @@ public class ExportExamToPdf {
     ExportExamToPdf.service = serv;
   }
   
+  /**
+   * Exports a PDF file to the selected directory.
+   */
   public static Object exportToPdf(final PDDocument pdf, final StudentSheet sheet, final File outputPdfFile) {
     try {
       boolean _exists = outputPdfFile.exists();
@@ -40,6 +43,31 @@ public class ExportExamToPdf {
     }
   }
   
+  /**
+   * Exports a pdf file to the selected directory even if a file already exists.
+   */
+  public static Object exportToPdfAndOverwriteFile(final PDDocument pdf, final StudentSheet sheet, final File outputPdfFile) {
+    try {
+      boolean _exists = outputPdfFile.exists();
+      if (_exists) {
+        return null;
+      }
+      PDDocument document = new PDDocument();
+      EList<Integer> _posPage = sheet.getPosPage();
+      for (final Integer i : _posPage) {
+        document.addPage(pdf.getPage((i).intValue()));
+      }
+      document.save(outputPdfFile);
+      document.close();
+      return null;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * Returns an InputStream of the exported PDF file
+   */
   public static InputStream exportToInputStream(final PDDocument pdf, final StudentSheet sheet) {
     try {
       PDDocument document = new PDDocument();
@@ -56,6 +84,9 @@ public class ExportExamToPdf {
     }
   }
   
+  /**
+   * Returns an OutputStream of the exported PDF file
+   */
   public static OutputStream exportToOutputStream(final PDDocument pdf, final StudentSheet sheet) {
     try {
       PDDocument document = new PDDocument();
@@ -72,6 +103,9 @@ public class ExportExamToPdf {
     }
   }
   
+  /**
+   * Exports a Temp PDF file placed in Temp directory.
+   */
   public static File exportToTempFile(final PDDocument pdf, final StudentSheet sheet) {
     try {
       PDDocument document = new PDDocument();
@@ -91,9 +125,14 @@ public class ExportExamToPdf {
     }
   }
   
+  /**
+   * Export Collection of Temp PDF File
+   */
   public static Collection<File> exportToCollection(final PDDocument pdf, final Collection<StudentSheet> sheets) {
-    final Function<StudentSheet, File> _function = (StudentSheet s) -> {
-      return ExportExamToPdf.exportToTempFile(pdf, s);
+    final Function<StudentSheet, File> _function = new Function<StudentSheet, File>() {
+      public File apply(final StudentSheet s) {
+        return ExportExamToPdf.exportToTempFile(pdf, s);
+      }
     };
     return sheets.stream().<File>map(_function).collect(Collectors.<File>toList());
   }

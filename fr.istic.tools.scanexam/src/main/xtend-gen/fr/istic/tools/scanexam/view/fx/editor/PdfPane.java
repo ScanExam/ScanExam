@@ -97,25 +97,21 @@ public class PdfPane extends Pane {
   
   public void setupEvents() {
     this.setOnMousePressed(new EventHandler<MouseEvent>() {
-      @Override
       public void handle(final MouseEvent event) {
         PdfPane.this.controller.mainMouseEvent(event);
       }
     });
     this.setOnMouseDragged(new EventHandler<MouseEvent>() {
-      @Override
       public void handle(final MouseEvent event) {
         PdfPane.this.controller.mainMouseEvent(event);
       }
     });
     this.setOnMouseReleased(new EventHandler<MouseEvent>() {
-      @Override
       public void handle(final MouseEvent event) {
         PdfPane.this.controller.mainMouseEvent(event);
       }
     });
     this.setOnScroll(new EventHandler<ScrollEvent>() {
-      @Override
       public void handle(final ScrollEvent event) {
         PdfPane.this.controller.ZoomImage(event);
       }

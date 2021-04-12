@@ -113,8 +113,10 @@ public class LanguageManager {
     int _size = LanguageManager.locales.size();
     boolean _greaterThan_1 = (_size > 0);
     if (_greaterThan_1) {
-      final Function<Locale, String> _function = (Locale l) -> {
-        return l.getDisplayName();
+      final Function<Locale, String> _function = new Function<Locale, String>() {
+        public String apply(final Locale l) {
+          return l.getDisplayName();
+        }
       };
       String _collect = LanguageManager.locales.stream().<String>map(_function).collect(Collectors.joining(", "));
       String _plus_1 = (_collect + " pre-loaded.");
@@ -161,8 +163,10 @@ public class LanguageManager {
     if (_contains) {
       _xifexpression = language;
     } else {
-      final Function1<Locale, Boolean> _function = (Locale l) -> {
-        return Boolean.valueOf(l.getLanguage().equals(language.getLanguage()));
+      final Function1<Locale, Boolean> _function = new Function1<Locale, Boolean>() {
+        public Boolean apply(final Locale l) {
+          return Boolean.valueOf(l.getLanguage().equals(language.getLanguage()));
+        }
       };
       _xifexpression = IterableExtensions.<Locale>findFirst(LanguageManager.locales, _function);
     }

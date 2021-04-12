@@ -144,7 +144,6 @@ public class Box {
    * Retranscrit les informations de la boîte sous forme de String
    * @return Informations de la boîte
    */
-  @Override
   public String toString() {
     return ((((((((((((("Box#" + Integer.valueOf(this.id)) + " \"") + this.title) + "\", ") + Double.valueOf(this.x)) + ", ") + Double.valueOf(this.y)) + ", ") + Double.valueOf(this.width)) + ", ") + Double.valueOf(this.height)) + ", on page ") + Integer.valueOf(this.nbPage));
   }

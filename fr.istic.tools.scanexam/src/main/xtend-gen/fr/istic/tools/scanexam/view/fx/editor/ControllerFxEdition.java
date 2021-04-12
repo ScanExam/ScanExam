@@ -216,11 +216,13 @@ public class ControllerFxEdition {
     QuestionOptionsEdition _questionOptionsEdition = new QuestionOptionsEdition(this);
     this.questionEditor = _questionOptionsEdition;
     this.gradeListContainer.setContent(this.questionEditor);
-    final EventHandler<ActionEvent> _function = (ActionEvent event) -> {
-      PresenterPdf pdfPresenter = this.editor.getPresenter().getPresenterPdf();
-      int selectedIndex = this.pageChoice.getSelectionModel().getSelectedIndex();
-      pdfPresenter.goToPdfPage(selectedIndex);
-      this.renderDocument();
+    final EventHandler<ActionEvent> _function = new EventHandler<ActionEvent>() {
+      public void handle(final ActionEvent event) {
+        PresenterPdf pdfPresenter = ControllerFxEdition.this.editor.getPresenter().getPresenterPdf();
+        int selectedIndex = ControllerFxEdition.this.pageChoice.getSelectionModel().getSelectedIndex();
+        pdfPresenter.goToPdfPage(selectedIndex);
+        ControllerFxEdition.this.renderDocument();
+      }
     };
     this.pageChoice.setOnAction(_function);
   }

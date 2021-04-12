@@ -30,7 +30,6 @@ public class OrFilter<T extends Object> implements OperatorFilter<T> {
    * Ajoute un nouveau prédicat à la disjonction
    * @param filter un prédicat à ajouter
    */
-  @Override
   public void addFilter(final Predicate<T> filter) {
     Objects.<Predicate<T>>requireNonNull(filter);
     this.filters.add(filter);
@@ -40,12 +39,13 @@ public class OrFilter<T extends Object> implements OperatorFilter<T> {
    * @param t une valeur sur laquelle appliquer le prédicat
    * @return true si l'évaluation de <i>t</i> par au moins l'un des prédicats du filtre renvoie vrai, false sinon
    */
-  @Override
   public boolean test(final T t) {
     boolean _xblockexpression = false;
     {
-      final Function2<Predicate<T>, Predicate<T>, Predicate<T>> _function = (Predicate<T> acc, Predicate<T> elem) -> {
-        return acc.or(elem);
+      final Function2<Predicate<T>, Predicate<T>, Predicate<T>> _function = new Function2<Predicate<T>, Predicate<T>, Predicate<T>>() {
+        public Predicate<T> apply(final Predicate<T> acc, final Predicate<T> elem) {
+          return acc.or(elem);
+        }
       };
       final Predicate<T> bigOr = IterableExtensions.<Predicate<T>>reduce(this.filters, _function);
       _xblockexpression = bigOr.test(t);

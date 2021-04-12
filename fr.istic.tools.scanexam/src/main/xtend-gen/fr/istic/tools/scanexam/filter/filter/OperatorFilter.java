@@ -20,9 +20,11 @@ public interface OperatorFilter<T extends Object> extends Predicate<T> {
    * Ajoute une liste de filtre à la liste des filtres sur lequel appliquer l'opérateur courant
    * @param filters une liste de filtre à ajouter à la liste
    */
-  default void addFilters(final List<Predicate<T>> filters) {
-    final Consumer<Predicate<T>> _function = (Predicate<T> filter) -> {
-      this.addFilter(filter);
+  void addFilters(final List<Predicate<T>> filters) {
+    final Consumer<Predicate<T>> _function = new Consumer<Predicate<T>>() {
+      public void accept(final Predicate<T> filter) {
+        OperatorFilter.this.addFilter(filter);
+      }
     };
     filters.forEach(_function);
   }

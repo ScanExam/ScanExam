@@ -26,7 +26,6 @@ public class PdfReaderQrCodeThread extends Thread implements Runnable {
     this.countDown = countDown;
   }
   
-  @Override
   public void run() {
     try {
       this.reader.readQRCodeImage(this.pdf, this.borneInf, this.borneMax);

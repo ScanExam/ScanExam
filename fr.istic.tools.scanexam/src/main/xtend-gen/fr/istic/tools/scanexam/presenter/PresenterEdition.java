@@ -70,12 +70,10 @@ public class PresenterEdition implements Presenter {
   /**
    * @return current {@link PresenterMarkingScheme}
    */
-  @Override
   public PresenterGradeScale getPresenterMarkingScheme() {
     return this.presMarkingScheme;
   }
   
-  @Override
   public PresenterPdf getPresenterPdf() {
     return this.presPdf;
   }

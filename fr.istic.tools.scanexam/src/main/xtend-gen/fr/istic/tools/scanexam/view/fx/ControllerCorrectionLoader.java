@@ -111,19 +111,25 @@ public class ControllerCorrectionLoader {
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
     ValidFilePathValidator _validFilePathValidator_1 = new ValidFilePathValidator(".xmi");
     this.txtFldFileGraduation.addFormatValidator(_validFilePathValidator_1);
-    final EventHandler<MouseEvent> _function = (MouseEvent e) -> {
-      boolean _isDisabled = this.btnOk.isDisabled();
-      if (_isDisabled) {
-        this.shakeEmptyComponents();
+    final EventHandler<MouseEvent> _function = new EventHandler<MouseEvent>() {
+      public void handle(final MouseEvent e) {
+        boolean _isDisabled = ControllerCorrectionLoader.this.btnOk.isDisabled();
+        if (_isDisabled) {
+          ControllerCorrectionLoader.this.shakeEmptyComponents();
+        }
       }
     };
     this.hoverPane.setOnMouseEntered(_function);
-    final EventHandler<ActionEvent> _function_1 = (ActionEvent e) -> {
-      this.loadFile("*.xmi", "file.format.xmi", this.txtFldFile);
+    final EventHandler<ActionEvent> _function_1 = new EventHandler<ActionEvent>() {
+      public void handle(final ActionEvent e) {
+        ControllerCorrectionLoader.this.loadFile("*.xmi", "file.format.xmi", ControllerCorrectionLoader.this.txtFldFile);
+      }
     };
     this.btnBrowse.setOnAction(_function_1);
-    final EventHandler<ActionEvent> _function_2 = (ActionEvent e) -> {
-      this.loadFile("*.xmi", "file.format.xmi", this.txtFldFileGraduation);
+    final EventHandler<ActionEvent> _function_2 = new EventHandler<ActionEvent>() {
+      public void handle(final ActionEvent e) {
+        ControllerCorrectionLoader.this.loadFile("*.xmi", "file.format.xmi", ControllerCorrectionLoader.this.txtFldFileGraduation);
+      }
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
     boolean _hasTemplateLoaded = this.presCorrectLoader.hasTemplateLoaded();

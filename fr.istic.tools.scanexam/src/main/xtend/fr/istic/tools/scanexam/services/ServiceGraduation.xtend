@@ -16,6 +16,8 @@ import java.util.Objects
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import java.util.Base64
+import java.io.ByteArrayInputStream
 
 class ServiceGraduation extends Service
 {
@@ -424,6 +426,12 @@ class ServiceGraduation extends Service
 	 */
 	def String getStudentListShift() {
 		return correctionTemplate.studentListShift
+	}
+	
+	def getEditionPdfInputStream()
+	 {
+		 val decoded = Base64.getDecoder().decode(creationTemplate.encodedDocument);
+         return new ByteArrayInputStream(decoded);
 	}
 	
 }

@@ -14,7 +14,9 @@ import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -165,9 +167,11 @@ public class ServiceGraduation extends Service {
    */
   public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
     final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-    final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
-      int _id = step.getId();
-      return Boolean.valueOf((_id == gradeEntryId));
+    final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
+      public Boolean apply(final GradeEntry step) {
+        int _id = step.getId();
+        return Boolean.valueOf((_id == gradeEntryId));
+      }
     };
     final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
     if ((scaleEntry != null)) {
@@ -185,9 +189,11 @@ public class ServiceGraduation extends Service {
     boolean _xblockexpression = false;
     {
       final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-      final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
-        int _id = step.getId();
-        return Boolean.valueOf((_id == gradeEntryId));
+      final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
+        public Boolean apply(final GradeEntry step) {
+          int _id = step.getId();
+          return Boolean.valueOf((_id == gradeEntryId));
+        }
       };
       final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
       boolean _xifexpression = false;
@@ -214,9 +220,11 @@ public class ServiceGraduation extends Service {
   }
   
   public int getAbsolutePageNumber(final int studentId, final int offset) {
-    final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
-      int _id = x.getId();
-      return Boolean.valueOf((_id == studentId));
+    final Function1<StudentSheet, Boolean> _function = new Function1<StudentSheet, Boolean>() {
+      public Boolean apply(final StudentSheet x) {
+        int _id = x.getId();
+        return Boolean.valueOf((_id == studentId));
+      }
     };
     final Integer pageId = IterableExtensions.<StudentSheet>findFirst(this.studentSheets, _function).getPosPage().get(0);
     InputOutput.<String>print(("\nPageid = " + Integer.valueOf(((pageId).intValue() + offset))));
@@ -282,9 +290,11 @@ public class ServiceGraduation extends Service {
   }
   
   public Question getCurrentQuestion() {
-    final Function1<Question, Boolean> _function = (Question x) -> {
-      int _id = x.getId();
-      return Boolean.valueOf((_id == this.currentQuestionIndex));
+    final Function1<Question, Boolean> _function = new Function1<Question, Boolean>() {
+      public Boolean apply(final Question x) {
+        int _id = x.getId();
+        return Boolean.valueOf((_id == ServiceGraduation.this.currentQuestionIndex));
+      }
     };
     return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
   }
@@ -316,9 +326,11 @@ public class ServiceGraduation extends Service {
     EList<Page> _pages = ExamSingleton.instance.getPages();
     for (final Page page : _pages) {
       {
-        final Function1<Question, Boolean> _function = (Question question) -> {
-          int _id = question.getId();
-          return Boolean.valueOf((_id == id));
+        final Function1<Question, Boolean> _function = new Function1<Question, Boolean>() {
+          public Boolean apply(final Question question) {
+            int _id = question.getId();
+            return Boolean.valueOf((_id == id));
+          }
         };
         final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
         if ((question != null)) {
@@ -352,9 +364,11 @@ public class ServiceGraduation extends Service {
    * @return boolean indique si les points on bien ete attribuer
    */
   public boolean addGradeEntry(final int questionId, final int gradeEntryId) {
-    final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
-      int _id = entry.getId();
-      return Boolean.valueOf((_id == gradeEntryId));
+    final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
+      public Boolean apply(final GradeEntry entry) {
+        int _id = entry.getId();
+        return Boolean.valueOf((_id == gradeEntryId));
+      }
     };
     final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
     boolean _valideGradeEntry = this.valideGradeEntry(questionId, gradeEntry);
@@ -376,9 +390,11 @@ public class ServiceGraduation extends Service {
     boolean _xblockexpression = false;
     {
       final EList<GradeEntry> entries = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries();
-      final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
-        int _id = entry.getId();
-        return Boolean.valueOf((_id == gradeEntryId));
+      final Function1<GradeEntry, Boolean> _function = new Function1<GradeEntry, Boolean>() {
+        public Boolean apply(final GradeEntry entry) {
+          int _id = entry.getId();
+          return Boolean.valueOf((_id == gradeEntryId));
+        }
       };
       final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(entries, _function);
       _xblockexpression = entries.remove(gradeEntry);
@@ -406,8 +422,10 @@ public class ServiceGraduation extends Service {
       if (_greaterThan_1) {
         return new ArrayList<Integer>();
       }
-      final Function1<GradeEntry, Integer> _function = (GradeEntry entry) -> {
-        return Integer.valueOf(entry.getId());
+      final Function1<GradeEntry, Integer> _function = new Function1<GradeEntry, Integer>() {
+        public Integer apply(final GradeEntry entry) {
+          return Integer.valueOf(entry.getId());
+        }
       };
       _xblockexpression = ListExtensions.<GradeEntry, Integer>map(sheet.getGrades().get(questionId).getEntries(), _function);
     }
@@ -422,8 +440,10 @@ public class ServiceGraduation extends Service {
     GradeScale _gradeScale = this.getQuestion(questionId).getGradeScale();
     boolean _tripleNotEquals = (_gradeScale != null);
     if (_tripleNotEquals) {
-      final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = (GradeEntry entry) -> {
-        return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
+      final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = new Function1<GradeEntry, Tuple3<Integer, String, Float>>() {
+        public Tuple3<Integer, String, Float> apply(final GradeEntry entry) {
+          return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
+        }
       };
       return ListExtensions.<GradeEntry, Tuple3<Integer, String, Float>>map(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
     }
@@ -477,6 +497,11 @@ public class ServiceGraduation extends Service {
    */
   public String getStudentListShift() {
     return this.correctionTemplate.getStudentListShift();
+  }
+  
+  public ByteArrayInputStream getEditionPdfInputStream() {
+    final byte[] decoded = Base64.getDecoder().decode(this.creationTemplate.getEncodedDocument());
+    return new ByteArrayInputStream(decoded);
   }
   
   @Pure

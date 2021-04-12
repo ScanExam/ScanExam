@@ -49,7 +49,6 @@ public class PdfAndBoxPanel extends PdfPanel {
   /**
    * Affichage graphique
    */
-  @Override
   protected void paintComponent(final Graphics g) {
     super.paintComponent(g);
     Graphics _create = g.create();

@@ -127,11 +127,15 @@ public class ServiceEdition extends Service {
       this.template = creationTemplate.get();
       ExamSingleton.instance = creationTemplate.get().getExam();
       final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
-      final Function<Page, Integer> _function = (Page page) -> {
-        return Integer.valueOf(page.getQuestions().size());
+      final Function<Page, Integer> _function = new Function<Page, Integer>() {
+        public Integer apply(final Page page) {
+          return Integer.valueOf(page.getQuestions().size());
+        }
       };
-      final BinaryOperator<Integer> _function_1 = (Integer acc, Integer num) -> {
-        return Integer.valueOf(((acc).intValue() + (num).intValue()));
+      final BinaryOperator<Integer> _function_1 = new BinaryOperator<Integer>() {
+        public Integer apply(final Integer acc, final Integer num) {
+          return Integer.valueOf(((acc).intValue() + (num).intValue()));
+        }
       };
       Integer _get = ExamSingleton.instance.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
       int _plus = ((_get).intValue() + 1);
@@ -155,7 +159,6 @@ public class ServiceEdition extends Service {
     this.questionId = 0;
   }
   
-  @Override
   public void onDocumentLoad(final int pdfPageCount) {
     this.createTemplate(pdfPageCount);
   }
