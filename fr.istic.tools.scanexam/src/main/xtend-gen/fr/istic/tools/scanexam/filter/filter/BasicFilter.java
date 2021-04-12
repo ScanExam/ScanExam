@@ -25,7 +25,7 @@ public interface BasicFilter<T extends Object> extends Predicate<T> {
    * Un enfant est un BasicFilter dont l'état dépend du filtre courant ou devant exister si ce filtre existe.<br/>
    * Un filtre peut ne pas avoir d'enfant, dans ce cas, le retour est vide
    */
-  default Collection<BasicFilter<?>> getChildren() {
+  Collection<BasicFilter<?>> getChildren() {
     return Set.<BasicFilter<?>>of();
   }
   
@@ -33,6 +33,6 @@ public interface BasicFilter<T extends Object> extends Predicate<T> {
    * @param l'ensemble des enfants du filtre courant
    * Un enfant est un BasicFilter dont l'état dépend du filtre courant ou devant exister si ce filtre existe.<br/>
    */
-  default void setChildren(final Collection<BasicFilter<?>> children) {
+  void setChildren(final Collection<BasicFilter<?>> children) {
   }
 }

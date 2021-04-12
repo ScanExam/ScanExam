@@ -59,18 +59,8 @@ public class PresenterGraduation implements Presenter {
   private Adapter<PresenterGraduation> adapter;
   
   public PresenterGraduation(final ServiceGraduation service) {
-    Objects.<ServiceGraduation>requireNonNull(service);
-    this.service = service;
-    PresenterPdf _presenterPdf = new PresenterPdf(service, this);
-    this.presPdf = _presenterPdf;
-    PresenterQuestion _presenterQuestion = new PresenterQuestion(service);
-    this.presQuestion = _presenterQuestion;
-    PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
-    this.studentListPresenter = _presenterStudentListLoader;
-    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(service, null);
-    this.studentSheetPresenter = _presenterGraduationLoader;
-    PresenterCorrectionLoader _presenterCorrectionLoader = new PresenterCorrectionLoader(service);
-    this.correctionLoaderPresenter = _presenterCorrectionLoader;
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The constructor PresenterGraduationLoader(ServiceGraduation) is not applicable for the arguments (ServiceGraduation,null)");
   }
   
   public PresenterGraduation(final Adapter<PresenterGraduation> adapter, final ServiceGraduation service) {

@@ -44,16 +44,18 @@ public class ControllerStudentSheetExport {
    */
   public void initialize(final PresenterStudentSheetExport presenter) {
     this.presenter = presenter;
-    final FormatValidator _function = (String str) -> {
-      Optional<String> _xifexpression = null;
-      int _parseInt = Integer.parseInt(str);
-      boolean _greaterThan = (_parseInt > 0);
-      if (_greaterThan) {
-        _xifexpression = Optional.<String>empty();
-      } else {
-        _xifexpression = Optional.<String>of("exportStudentSheet.errorZeroValue");
+    final FormatValidator _function = new FormatValidator() {
+      public Optional<String> validate(final String str) {
+        Optional<String> _xifexpression = null;
+        int _parseInt = Integer.parseInt(str);
+        boolean _greaterThan = (_parseInt > 0);
+        if (_greaterThan) {
+          _xifexpression = Optional.<String>empty();
+        } else {
+          _xifexpression = Optional.<String>of("exportStudentSheet.errorZeroValue");
+        }
+        return _xifexpression;
       }
-      return _xifexpression;
     };
     this.txtFlbNbSheet.addFormatValidator(_function);
     this.btnExport.disableProperty().bind(this.txtFlbNbSheet.wrongFormattedProperty());

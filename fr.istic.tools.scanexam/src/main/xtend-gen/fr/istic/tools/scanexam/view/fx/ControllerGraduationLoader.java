@@ -203,21 +203,8 @@ public class ControllerGraduationLoader {
   
   @FXML
   public Object saveAndQuit() {
-    Object _xifexpression = null;
-    boolean _loadTemplate = this.presStudentListLoader.loadTemplate(this.txtFldFile.getText());
-    if (_loadTemplate) {
-      Object _xifexpression_1 = null;
-      boolean _loadStudentSheets = this.presStudentListLoader.loadStudentSheets(this.txtFldFileGraduation.getText(), 0);
-      if (_loadStudentSheets) {
-        this.quit();
-      } else {
-        _xifexpression_1 = null;
-      }
-      _xifexpression = _xifexpression_1;
-    } else {
-      this.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
-    }
-    return _xifexpression;
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The method loadStudentSheets(String) is not applicable for the arguments (String,int)");
   }
   
   /**
