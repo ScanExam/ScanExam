@@ -14,6 +14,7 @@ import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.CheckMenuItem
+import javafx.scene.control.MenuItem
 import javafx.scene.control.Tab
 import javafx.scene.image.Image
 import javafx.stage.Stage
@@ -26,6 +27,11 @@ class ControllerRoot implements Initializable {
 	Tab editorTab;
 	@FXML
 	CheckMenuItem autoZoom;
+	/* BUTTONS */
+	@FXML
+	MenuItem saveCorrectionButton;
+	@FXML
+	MenuItem saveTemplateButton;
 	
 	ControllerFxGraduation corrector;
 	ControllerFxEdition editor;
@@ -143,11 +149,23 @@ class ControllerRoot implements Initializable {
 	}
 	
 	@FXML
+	def saveCorrection(){
+		corrector.saveExam
+	}
+	
+	@FXML
 	def toggleAutoZoom(){
 		corrector.toAutoZoom = autoZoom.selected
 	}
 	
+	
+	def init(){
+		saveCorrectionButton.disableProperty.bind(corrector.loadedModel.not);
+		saveTemplateButton.disableProperty.bind(editor.loadedModel.not)
+	}
+	
 	override initialize(URL location, ResourceBundle resources) {
+		
 	}
 	
 }
