@@ -48,12 +48,12 @@ class Page
 class Comment {
 	float x
 	float y
+	float pointerX
+	float pointerY
 }
 
 class TextComment extends Comment {
 	String text
-	float pointerX
-	float pointerY
 }
 
 class HandwritingComment {
