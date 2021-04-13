@@ -237,7 +237,7 @@ class PresenterGraduation implements Presenter
 	
 	/* SAVING  */
 	def saveTemplate(String path){
-		service.saveCorrectionTemplate(path)
+		service.saveCorrectionTemplate(path,presPdf.pdfOutputStream)
 	}
 	
 	
