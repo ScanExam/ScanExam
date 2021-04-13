@@ -10,36 +10,19 @@ import java.util.ArrayList
 
 class ExportPdfWithAnnotations {
 
-	static var ArrayList<Ligne> listLine = new ArrayList<Ligne>
-
 	def static void main(String[] args) {
 		
-		
-		listLine.add(new Ligne(50f, 100f, 400f, 400f))
-		
-		listLine.add(new Ligne(100f, 100f, 400f, 400f))
-		
-		listLine.add(new Ligne(150f, 100f, 400f, 400f))
-		
-		listLine.add(new Ligne(200f, 100f, 400f, 400f))
-		
-		listLine.add(new Ligne(250f, 100f, 400f, 400f))
-		
-		listLine.add(new Ligne(300f, 100f, 400f, 400f))
 		
 
 		var PDDocument document = PDDocument.load(new File("src/main/resources/resources_annotation/pfo_example.pdf"));
 
 		//textAnnotationWithArrowAbsoluteCoords(document, 0, 0, 350, 400, 400, "fffffffffffffffffffffffffffffffffffffff")
-		annotationDrawLinePDF(document,0,listLine)
 
-		// test passé: Aperçu, Adobe, chrome, safari
 		// Closing the document
 		document.close();
 	}
 
-	def static void textAnnotationWithArrowAbsoluteCoords(PDDocument document, int nbPage, float pointerAbsoluteX,
-		float pointerAbsoluteY, float textAbsoluteX, float textAbsoluteY, String t) {
+	def static void textAnnotationWithArrowAbsoluteCoords(PDDocument document, int nbPage, float pointerAbsoluteX,float pointerAbsoluteY, float textAbsoluteX, float textAbsoluteY, String t) {
 		// Remove Newlines
 		var String text = t.replace("\n", "").replace("\r", "");
 
@@ -122,6 +105,8 @@ class ExportPdfWithAnnotations {
 		Desktop.getDesktop().open(file);
 
 	}
+	
+	/* 
 
 	def static void annotationDrawLinePDF(PDDocument document, int nbPage, ArrayList<Ligne> listLine) {
 
@@ -151,4 +136,5 @@ class ExportPdfWithAnnotations {
 	// var float originAbsoluteX,float originAbsoluteY,float destinationAbsoluteX,float destinationAbsoluteY
 	}
 
+	*/
 }
