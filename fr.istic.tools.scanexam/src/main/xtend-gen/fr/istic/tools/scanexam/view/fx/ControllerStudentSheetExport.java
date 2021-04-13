@@ -1,14 +1,16 @@
 package fr.istic.tools.scanexam.view.fx;
 
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.FormatValidator;
 import java.io.File;
 import java.util.Optional;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
@@ -83,14 +85,18 @@ public class ControllerStudentSheetExport {
    * @return le chemin du dossier sélectionné par l'utilisateur, Optional.empty si aucun dossier sélectionné
    */
   private Optional<File> loadFolder() {
-    DirectoryChooser directoryChooser = new DirectoryChooser();
+    FileChooser fileChooser = new FileChooser();
+    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+    String _translate = LanguageManager.translate("file.format.pdf");
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter(_translate, "*.pdf");
+    _extensionFilters.add(_extensionFilter);
     String _property = System.getProperty("user.home");
     String _property_1 = System.getProperty("file.separator");
     String _plus = (_property + _property_1);
     String _plus_1 = (_plus + "Documents");
     File _file = new File(_plus_1);
-    directoryChooser.setInitialDirectory(_file);
-    File file = directoryChooser.showDialog(this.mainPane.getScene().getWindow());
+    fileChooser.setInitialDirectory(_file);
+    File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
       return Optional.<File>of(file);
     } else {

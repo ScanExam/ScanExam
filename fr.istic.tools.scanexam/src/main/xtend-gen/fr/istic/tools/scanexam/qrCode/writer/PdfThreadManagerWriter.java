@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.qrCode.writer;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import fr.istic.tools.scanexam.qrCode.writer.QRThreadWriter;
 import java.io.File;
+import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,9 +23,9 @@ public class PdfThreadManagerWriter extends Thread implements Runnable {
   
   private String examID;
   
-  private String output;
+  private OutputStream output;
   
-  public PdfThreadManagerWriter(final int nbPage, final PDDocument docSujetMaitre, final QRCodeGeneratorImpl writer, final int nbCopie, final String examID, final String output) {
+  public PdfThreadManagerWriter(final int nbPage, final PDDocument docSujetMaitre, final QRCodeGeneratorImpl writer, final int nbCopie, final String examID, final OutputStream output) {
     this.nbPage = nbPage;
     this.docSujetMaitre = docSujetMaitre;
     this.writer = writer;
