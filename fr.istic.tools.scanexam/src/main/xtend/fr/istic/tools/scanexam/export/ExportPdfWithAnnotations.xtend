@@ -16,13 +16,13 @@ class ExportPdfWithAnnotations {
 
 		var PDDocument document = PDDocument.load(new File("src/main/resources/resources_annotation/pfo_example.pdf"));
 
-		//textAnnotationWithArrowAbsoluteCoords(document, 0, 0, 350, 400, 400, "fffffffffffffffffffffffffffffffffffffff")
+		textAnnotationWithArrowAbsoluteCoords(document, 0, 0, 350, 400, 400, "fffffffffffffffffffffffffffffffffffffff", "10/20")
 
 		// Closing the document
 		document.close();
 	}
 
-	def static void textAnnotationWithArrowAbsoluteCoords(PDDocument document, int nbPage, float pointerAbsoluteX,float pointerAbsoluteY, float textAbsoluteX, float textAbsoluteY, String t) {
+	def static void textAnnotationWithArrowAbsoluteCoords(PDDocument document, int nbPage, float pointerAbsoluteX,float pointerAbsoluteY, float textAbsoluteX, float textAbsoluteY, String t, String note) {
 		// Remove Newlines
 		var String text = t.replace("\n", "").replace("\r", "");
 
@@ -96,7 +96,11 @@ class ExportPdfWithAnnotations {
 
 		contentStream.endText();
 		contentStream.fill();
-
+		
+		contentStream.beginText();
+		contentStream.newLineAtOffset(0, page.mediaBox.height-10);
+		contentStream.showText(note);
+		contentStream.endText();
 		contentStream.close();
 
 		var File file = new File("src/main/resources/resources_annotation/pfo_example_annotation.pdf");
