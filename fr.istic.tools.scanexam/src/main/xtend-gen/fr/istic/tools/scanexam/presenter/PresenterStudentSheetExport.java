@@ -4,10 +4,8 @@ import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import fr.istic.tools.scanexam.services.ServiceEdition;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 
 @SuppressWarnings("all")
 public class PresenterStudentSheetExport {
@@ -21,18 +19,21 @@ public class PresenterStudentSheetExport {
   }
   
   public boolean export(final File file, final int number) {
-    try {
-      boolean _xblockexpression = false;
-      {
-        final QRCodeGenerator generator = new QRCodeGeneratorImpl();
-        InputStream _pdfInputStream = this.presPdf.getPdfInputStream();
-        FileOutputStream _fileOutputStream = new FileOutputStream(file);
-        generator.createAllExamCopies(_pdfInputStream, _fileOutputStream, this.service.getExamName(), number);
-        _xblockexpression = true;
+    boolean _xblockexpression = false;
+    {
+      final QRCodeGenerator generator = new QRCodeGeneratorImpl();
+      ByteArrayInputStream _pdfInputStream = this.presPdf.getPdfInputStream();
+      String _xifexpression = null;
+      String _examName = this.service.getExamName();
+      boolean _tripleEquals = (_examName == null);
+      if (_tripleEquals) {
+        _xifexpression = "foo";
+      } else {
+        _xifexpression = this.service.getExamName();
       }
-      return _xblockexpression;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
+      generator.createAllExamCopies(_pdfInputStream, file, _xifexpression, number);
+      _xblockexpression = true;
     }
+    return _xblockexpression;
   }
 }

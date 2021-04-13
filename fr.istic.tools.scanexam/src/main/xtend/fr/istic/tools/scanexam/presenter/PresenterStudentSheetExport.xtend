@@ -18,7 +18,7 @@ class PresenterStudentSheetExport {
 	
 	def boolean export(File file, int number) {
 		val QRCodeGenerator generator = new QRCodeGeneratorImpl
-		generator.createAllExamCopies(presPdf.getPdfInputStream, new FileOutputStream(file), service.examName, number)
+		generator.createAllExamCopies(presPdf.getPdfInputStream, file, service.examName===null?"foo":service.examName, number)
 		true
 	}	
 }

@@ -10,6 +10,9 @@ import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
+import javafx.stage.FileChooser
+import javafx.stage.FileChooser.ExtensionFilter
+import fr.istic.tools.scanexam.config.LanguageManager
 
 class ControllerStudentSheetExport {
 
@@ -61,10 +64,11 @@ class ControllerStudentSheetExport {
 	 * @return le chemin du dossier sélectionné par l'utilisateur, Optional.empty si aucun dossier sélectionné
 	 */
 	private def Optional<File> loadFolder() {
-		var directoryChooser = new DirectoryChooser
-		directoryChooser.initialDirectory = new File(
+		var fileChooser = new FileChooser
+		fileChooser.extensionFilters.add(new ExtensionFilter(LanguageManager.translate("file.format.pdf"), "*.pdf"))
+		fileChooser.initialDirectory = new File(
 				System.getProperty("user.home") + System.getProperty("file.separator") + "Documents")
-		var file = directoryChooser.showDialog(mainPane.scene.window)
+		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 		if (file !== null) {
 			return Optional.of(file)
 		} else {

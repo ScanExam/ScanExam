@@ -53,7 +53,7 @@ class PresenterPdf
 	protected int height
 	
 	/* InputStream du pdf */
-	protected InputStream pdfInput
+	protected ByteArrayInputStream pdfInput
 	// ----------------------------------------------------------------------------------------------------
 	/** 
 	 * CONSTRUCTEUR

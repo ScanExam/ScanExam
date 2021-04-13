@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -54,7 +53,7 @@ public class PresenterPdf {
   /**
    * InputStream du pdf
    */
-  protected InputStream pdfInput;
+  protected ByteArrayInputStream pdfInput;
   
   /**
    * Constructor
@@ -205,7 +204,7 @@ public class PresenterPdf {
   /**
    * @return un InputStream vers le PDF
    */
-  public InputStream getPdfInputStream() {
+  public ByteArrayInputStream getPdfInputStream() {
     return this.pdfInput;
   }
 }

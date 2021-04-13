@@ -9,19 +9,17 @@ import fr.istic.tools.scanexam.qrCode.writer.PdfThreadManagerWriter;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRThreadWriter;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -46,29 +44,29 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param nbCopies Nombre de copies de l'examen souhaité
    */
   @Override
-  public void createAllExamCopies(final InputStream inputFile, final OutputStream outputStream, final String idExam, final int nbCopie) {
+  public void createAllExamCopies(final InputStream inputFile, final File outFile, final String idExam, final int nbCopie) {
     try {
-      final StringWriter stringWriterInput = new StringWriter();
-      IOUtils.copy(inputFile, stringWriterInput, "UTF-8");
-      final PDDocument doc = PDDocument.load(inputFile);
+      final byte[] byteArray = new byte[inputFile.available()];
+      inputFile.read(byteArray);
+      final File temp = File.createTempFile("pdfTemp", ".pdf");
+      final OutputStream oS = new FileOutputStream(temp);
+      oS.write(byteArray);
+      oS.close();
+      final PDDocument doc = PDDocument.load(temp);
       final int nbPages = doc.getNumberOfPages();
-      final PDFMergerUtility PDFmerger = new PDFMergerUtility();
       final MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly();
-      String _string = outputStream.toString();
-      final File outpath = new File(_string);
-      String output = outpath.getAbsolutePath();
-      String _output = output;
-      output = (_output + (("/" + idExam) + ".pdf"));
-      PDFmerger.setDestinationFileName(output);
+      PDFMergerUtility ut = new PDFMergerUtility();
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbCopie, true);
       for (final Integer i : _doubleDotLessThan) {
-        PDFmerger.addSource(inputFile);
+        ut.addSource(temp);
       }
-      final File f2 = new File(output);
-      memUsSett.setTempDir(f2);
-      PDFmerger.mergeDocuments(memUsSett);
-      final PDDocument docSujetMaitre = PDDocument.load(f2);
-      this.createThread(idExam, nbCopie, docSujetMaitre, nbPages, output);
+      ut.setDestinationFileName(outFile.getAbsolutePath());
+      memUsSett.setTempDir(temp);
+      ut.mergeDocuments(memUsSett);
+      final PDDocument docSujetMaitre = PDDocument.load(outFile);
+      FileOutputStream _fileOutputStream = new FileOutputStream(outFile);
+      this.createThread(idExam, nbCopie, docSujetMaitre, nbPages, _fileOutputStream);
+      temp.deleteOnExit();
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -167,7 +165,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param docSujetMaitre document dans lequel insÃ©rer les Codes
    * @param nbPages nombre de pages du sujet Maitre
    */
-  public void createThread(final String examID, final int nbCopie, final PDDocument docSujetMaitre, final int nbPage, final String output) {
+  public void createThread(final String examID, final int nbCopie, final PDDocument docSujetMaitre, final int nbPage, final OutputStream output) {
     try {
       if ((nbCopie <= 4)) {
         final ExecutorService service = Executors.newFixedThreadPool(1);
@@ -253,9 +251,9 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   public static void main(final String[] arg) {
     try {
       final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
-      byte[] _readAllBytes = Files.readAllBytes(Path.of("C:/Users/Skinz/Documents/impots 2020.pdf"));
+      byte[] _readAllBytes = Files.readAllBytes(Path.of("D:/dataScanExam/in/pfo_example.pdf"));
       final InputStream input2 = new ByteArrayInputStream(_readAllBytes);
-      final OutputStream output = new ByteArrayOutputStream();
+      final File output = new File("D:/dataScanExam/out/melanie.pdf");
       gen.createAllExamCopies(input2, output, "42PFO2021", 8);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

@@ -5,6 +5,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import org.apache.pdfbox.pdmodel.PDDocument
 import java.io.File
+import java.io.OutputStream
 
 class PdfThreadManagerWriter extends Thread implements Runnable {
 
@@ -13,9 +14,9 @@ class PdfThreadManagerWriter extends Thread implements Runnable {
 	QRCodeGeneratorImpl writer
 	int nbCopie
 	String examID
-	String output
+	OutputStream output
 
-	new(int nbPage, PDDocument docSujetMaitre, QRCodeGeneratorImpl writer, int nbCopie, String examID, String output) {
+	new(int nbPage, PDDocument docSujetMaitre, QRCodeGeneratorImpl writer, int nbCopie, String examID, OutputStream output) {
 		this.nbPage = nbPage
 		this.docSujetMaitre = docSujetMaitre
 		this.writer = writer
