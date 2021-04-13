@@ -4,19 +4,21 @@ import java.io.File
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.font.PDType1Font
 import java.awt.Desktop
 import java.util.ArrayList
+import java.awt.Color
+import fr.istic.tools.scanexam.core.Line
+import org.apache.pdfbox.pdmodel.font.PDType0Font
+import fr.istic.tools.scanexam.utils.ResourcesUtils
 
 class ExportPdfWithAnnotations {
-
 	def static void main(String[] args) {
 		
 		
 
 		var PDDocument document = PDDocument.load(new File("src/main/resources/resources_annotation/pfo_example.pdf"));
 
-		textAnnotationWithArrowAbsoluteCoords(document, 0, 0, 350, 400, 400, "fffffffffffffffffffffffffffffffffffffff", "10/20")
+		textAnnotationWithArrowAbsoluteCoords(document, 0, 100, 350, 400, 400, "ffffffff", "10/20")
 
 		// Closing the document
 		document.close();
@@ -24,6 +26,7 @@ class ExportPdfWithAnnotations {
 
 	def static void textAnnotationWithArrowAbsoluteCoords(PDDocument document, int nbPage, float pointerAbsoluteX,float pointerAbsoluteY, float textAbsoluteX, float textAbsoluteY, String t, String note) {
 		// Remove Newlines
+
 		var String text = t.replace("\n", "").replace("\r", "");
 
 		// Retrieving a page of the PDF Document
@@ -67,21 +70,24 @@ class ExportPdfWithAnnotations {
 		// Drawing pointer line
 		contentStream.moveTo(pointerAbsoluteX, pointerAbsoluteY)
 		contentStream.lineTo(textAbsoluteX + (rectangleWidth / 2), textAbsoluteY)
+		contentStream.setNonStrokingColor(Color.decode("#0093ff"))
 		contentStream.stroke()
 		contentStream.fill();
 
 		// Draw rectangle
 		contentStream.addRect(rectangleBottomLeftCornerX - 2, rectangleBottomLeftCornerY - 2, rectangleWidth + 4,
 			rectangleHeight + 4)
-		contentStream.setNonStrokingColor(36 / 255f, 35 / 255f, 35 / 255f)
+		contentStream.setNonStrokingColor(Color.decode("#000000"))
 		contentStream.fill();
 
 		contentStream.addRect(rectangleBottomLeftCornerX, rectangleBottomLeftCornerY, rectangleWidth, rectangleHeight)
-		contentStream.setNonStrokingColor(248 / 255f, 244 / 255f, 243 / 255f)
+		contentStream.setNonStrokingColor(Color.decode("#ffffff"))
 		contentStream.fill();
 
-		contentStream.setNonStrokingColor(36 / 255f, 35 / 255f, 35 / 255f)
-		contentStream.setFont(PDType1Font.TIMES_ROMAN, 8);
+		contentStream.setNonStrokingColor(Color.decode("#000000"))
+		//contentStream.setFont(PDType1Font.TIMES_ROMAN, 8);
+		
+		contentStream.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
 		contentStream.setLeading(7f);
 		contentStream.beginText();
 		contentStream.newLineAtOffset(textAbsoluteX, textAbsoluteY);
@@ -110,23 +116,31 @@ class ExportPdfWithAnnotations {
 
 	}
 	
-	/* 
+	def static float[] convertHexaToRGBFloat(String hexaColor){
+		var Color color = Color.decode(hexaColor)
+		#[color.getRed() as float/255,color.getGreen() as float/255,color.getBlue() as float/255]
+	}
+	
+	
+	
+	
 
-	def static void annotationDrawLinePDF(PDDocument document, int nbPage, ArrayList<Ligne> listLine) {
+	def static void annotationDrawLinePDF(PDDocument document, int nbPage, ArrayList<Line> listLine) {
 
 		var PDPage page = document.getPage(nbPage);
 		var PDPageContentStream contentStream = new PDPageContentStream(document, page,
 			PDPageContentStream.AppendMode.APPEND, true, true)
 
 		for (i : 0 ..< listLine.size) {
-			var Ligne lineTMP = listLine.get(i)
-			var float originAbsoluteX = lineTMP.originAbsoluteX
-			var float originAbsoluteY = lineTMP.originAbsoluteY
-			var float destinationAbsoluteX = lineTMP.destinationAbsoluteX
-			var float destinationAbsoluteY = lineTMP.destinationAbsoluteY
+			var Line lineTMP = listLine.get(i)
+			var float originAbsoluteX = lineTMP.x1
+			var float originAbsoluteY = lineTMP.y1
+			var float destinationAbsoluteX = lineTMP.x2
+			var float destinationAbsoluteY = lineTMP.y2
 
 			contentStream.moveTo(originAbsoluteX, originAbsoluteY)
 			contentStream.lineTo(destinationAbsoluteX, destinationAbsoluteY)
+			contentStream.setNonStrokingColor(Color.decode("#0093ff"))
 			contentStream.stroke()
 			contentStream.fill();
 		}
@@ -137,8 +151,7 @@ class ExportPdfWithAnnotations {
 		document.save(file);
 		Desktop.getDesktop().open(file);
 
-	// var float originAbsoluteX,float originAbsoluteY,float destinationAbsoluteX,float destinationAbsoluteY
 	}
 
-	*/
+	
 }
