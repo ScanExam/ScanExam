@@ -9,6 +9,7 @@ import fr.istic.tools.scanexam.presenter.PresenterCopy;
 import fr.istic.tools.scanexam.presenter.PresenterCorrectionLoader;
 import fr.istic.tools.scanexam.presenter.PresenterGradeScale;
 import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
+import fr.istic.tools.scanexam.presenter.PresenterImportExportXMI;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestion;
 import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
@@ -54,6 +55,8 @@ public class PresenterGraduation implements Presenter {
   
   private PresenterCorrectionLoader correctionLoaderPresenter;
   
+  private PresenterImportExportXMI importExportPresenter;
+  
   private ServiceGraduation service;
   
   private Adapter<PresenterGraduation> adapter;
@@ -61,16 +64,18 @@ public class PresenterGraduation implements Presenter {
   public PresenterGraduation(final ServiceGraduation service) {
     Objects.<ServiceGraduation>requireNonNull(service);
     this.service = service;
+    PresenterImportExportXMI _presenterImportExportXMI = new PresenterImportExportXMI(service);
+    this.importExportPresenter = _presenterImportExportXMI;
+    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(this.importExportPresenter, service);
+    this.studentSheetPresenter = _presenterGraduationLoader;
+    PresenterCorrectionLoader _presenterCorrectionLoader = new PresenterCorrectionLoader(service);
+    this.correctionLoaderPresenter = _presenterCorrectionLoader;
     PresenterPdf _presenterPdf = new PresenterPdf(service, this);
     this.presPdf = _presenterPdf;
     PresenterQuestion _presenterQuestion = new PresenterQuestion(service);
     this.presQuestion = _presenterQuestion;
     PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
     this.studentListPresenter = _presenterStudentListLoader;
-    PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(service);
-    this.studentSheetPresenter = _presenterGraduationLoader;
-    PresenterCorrectionLoader _presenterCorrectionLoader = new PresenterCorrectionLoader(service);
-    this.correctionLoaderPresenter = _presenterCorrectionLoader;
   }
   
   public PresenterGraduation(final Adapter<PresenterGraduation> adapter, final ServiceGraduation service) {

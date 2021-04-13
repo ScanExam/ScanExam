@@ -173,6 +173,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
+      System.out.println(this.corrector.getAdapter().getPresenter().getPresenterStudentSheet());
       loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterStudentSheet());
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);

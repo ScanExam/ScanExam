@@ -94,7 +94,6 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		//FIXME pas terrible que le contrôleur instancie un présenteur
 		loader.<AdapterFxConfiguration>controller.initialize(new PresenterConfiguration)
 		dialog.setScene(new Scene(view, 384, 280))
 		dialog.setResizable(false);
@@ -122,6 +121,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		System.out.println(corrector.adapter.presenter.presenterStudentSheet);
 		loader.<ControllerGraduationLoader>controller.initialize(corrector.adapter.presenter.presenterStudentSheet)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
@@ -136,7 +136,6 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		//FIXME pas terrible que le contrôleur instancie un présenteur
 		loader.<ControllerStudentSheetExport>controller.initialize(editor.adapter.presenter.presenterStudentSheetExport)
 		dialog.setScene(new Scene(view, 384, 107))
 		dialog.setResizable(false);

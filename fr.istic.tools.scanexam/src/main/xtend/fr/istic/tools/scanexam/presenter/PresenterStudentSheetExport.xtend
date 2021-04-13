@@ -4,7 +4,6 @@ import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl
 import fr.istic.tools.scanexam.services.ServiceEdition
 import java.io.File
-import java.io.FileOutputStream
 
 class PresenterStudentSheetExport {
 	

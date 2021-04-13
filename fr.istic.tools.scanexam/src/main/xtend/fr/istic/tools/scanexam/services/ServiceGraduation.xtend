@@ -69,7 +69,7 @@ class ServiceGraduation extends Service
 		correctionTemplate.encodedDocument = new String(encoded);
 		pdfOutputStream.close();
 
-		 correctionTemplate.studentsheets.clear()
+		correctionTemplate.studentsheets.clear()
 		correctionTemplate.studentsheets.addAll(studentSheets);
 		
 		TemplateIo.save(new File(path), correctionTemplate);

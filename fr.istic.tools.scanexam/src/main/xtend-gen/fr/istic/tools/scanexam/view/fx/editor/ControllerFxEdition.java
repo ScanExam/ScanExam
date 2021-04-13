@@ -685,11 +685,8 @@ public class ControllerFxEdition {
       if ((file != null)) {
         boolean _xblockexpression_1 = false;
         {
-          this.clearVue();
           this.editor.getPresenter().load(file.getPath());
-          this.renderDocument();
-          this.loadBoxes();
-          _xblockexpression_1 = this.postLoad();
+          _xblockexpression_1 = this.render();
         }
         _xifexpression = _xblockexpression_1;
       } else {
@@ -698,6 +695,17 @@ public class ControllerFxEdition {
       _xblockexpression = _xifexpression;
     }
     return Boolean.valueOf(_xblockexpression);
+  }
+  
+  public boolean render() {
+    boolean _xblockexpression = false;
+    {
+      this.clearVue();
+      this.renderDocument();
+      this.loadBoxes();
+      _xblockexpression = this.postLoad();
+    }
+    return _xblockexpression;
   }
   
   /**

@@ -37,6 +37,8 @@ class PresenterGraduation implements Presenter
 	PresenterStudentListLoader studentListPresenter
 	PresenterGraduationLoader studentSheetPresenter
 	PresenterCorrectionLoader correctionLoaderPresenter
+	PresenterImportExportXMI importExportPresenter
+	
 	ServiceGraduation service;
 	
 	Adapter<PresenterGraduation> adapter;
@@ -46,11 +48,16 @@ class PresenterGraduation implements Presenter
 		Objects.requireNonNull(service)
 		this.service = service
 		
+		importExportPresenter = new PresenterImportExportXMI(service)
+		studentSheetPresenter = new PresenterGraduationLoader(importExportPresenter,service);
+		
+		correctionLoaderPresenter = new PresenterCorrectionLoader(service)
 		presPdf = new PresenterPdf(service, this)
 		presQuestion = new PresenterQuestion(service)
+	
 		studentListPresenter = new PresenterStudentListLoader(service)
-		studentSheetPresenter = new PresenterGraduationLoader(service)
-		correctionLoaderPresenter = new PresenterCorrectionLoader(service)
+		
+	
 	}
 	new(Adapter<PresenterGraduation> adapter,ServiceGraduation service) 
 	{

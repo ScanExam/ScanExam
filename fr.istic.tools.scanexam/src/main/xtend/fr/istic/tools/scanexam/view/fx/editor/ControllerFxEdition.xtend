@@ -148,6 +148,7 @@ class ControllerFxEdition {
 	@FXML
 	def void loadTemplatePressed() {
 		loadTemplate();
+		
 	}
 
 	@FXML
@@ -559,14 +560,22 @@ class ControllerFxEdition {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			clearVue
+			
 			editor.presenter.load(file.path);
-			renderDocument();
-			loadBoxes();
-			postLoad
+			render();
+			
 		} else {
 			logger.warn("File not chosen")
 		}
+		
+		
+	}
+	def render()
+	{
+		clearVue
+		renderDocument();
+		loadBoxes();
+		postLoad
 	}
 	/**
 	 * called to load each question from the model into the vue

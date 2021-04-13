@@ -8,16 +8,21 @@ class PresenterGraduationLoader {
 	
 	val ServiceGraduation service
 	
-	new(ServiceGraduation graduation) {
+	val PresenterImportExportXMI presenterXMI;
+	
+	new (PresenterImportExportXMI presenterXMI,ServiceGraduation graduation)
+	{
+
+		this.presenterXMI = presenterXMI;
 		service = graduation
 	}
-	
+	 
 	def boolean hasTemplateLoaded() {
 		return service.hasExamLoaded
 	}
 	
 	def boolean loadTemplate(String path) {
-		service.openCreationTemplate(path)
+		presenterXMI.loadExamCreationTemplate(path)
 	}
 	
 	def boolean loadStudentSheets(String path) {
