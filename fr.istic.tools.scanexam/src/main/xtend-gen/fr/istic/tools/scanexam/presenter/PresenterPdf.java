@@ -7,6 +7,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -154,6 +156,9 @@ public class PresenterPdf {
   public void create(final File file) {
     try {
       Objects.<File>requireNonNull(file);
+      byte[] _readAllBytes = Files.readAllBytes(Path.of(file.getAbsolutePath()));
+      ByteArrayInputStream _byteArrayInputStream = new ByteArrayInputStream(_readAllBytes);
+      this.pdfInput = _byteArrayInputStream;
       this.document = PDDocument.load(file);
       this.service.onDocumentLoad(IterableExtensions.size(this.document.getPages()));
     } catch (Throwable _e) {
@@ -163,7 +168,12 @@ public class PresenterPdf {
   
   public PDDocument create(final ByteArrayInputStream stream) {
     try {
-      return this.document = PDDocument.load(stream);
+      PDDocument _xblockexpression = null;
+      {
+        this.pdfInput = stream;
+        _xblockexpression = this.document = PDDocument.load(stream);
+      }
+      return _xblockexpression;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -190,5 +200,12 @@ public class PresenterPdf {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  /**
+   * @return un InputStream vers le PDF
+   */
+  public InputStream getPdfInputStream() {
+    return this.pdfInput;
   }
 }

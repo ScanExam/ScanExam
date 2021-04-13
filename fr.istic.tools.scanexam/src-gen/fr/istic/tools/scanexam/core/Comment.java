@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.Comment#getX <em>X</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.Comment#getY <em>Y</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.Comment#getPointerX <em>Pointer X</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.Comment#getPointerY <em>Pointer Y</em>}</li>
  * </ul>
  *
  * @see fr.istic.tools.scanexam.core.CorePackage#getComment()
@@ -65,5 +67,49 @@ public interface Comment extends EObject {
 	 * @generated
 	 */
 	void setY(float value);
+
+	/**
+	 * Returns the value of the '<em><b>Pointer X</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Pointer X</em>' attribute.
+	 * @see #setPointerX(float)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getComment_PointerX()
+	 * @model unique="false"
+	 * @generated
+	 */
+	float getPointerX();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.Comment#getPointerX <em>Pointer X</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Pointer X</em>' attribute.
+	 * @see #getPointerX()
+	 * @generated
+	 */
+	void setPointerX(float value);
+
+	/**
+	 * Returns the value of the '<em><b>Pointer Y</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Pointer Y</em>' attribute.
+	 * @see #setPointerY(float)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getComment_PointerY()
+	 * @model unique="false"
+	 * @generated
+	 */
+	float getPointerY();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.Comment#getPointerY <em>Pointer Y</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Pointer Y</em>' attribute.
+	 * @see #getPointerY()
+	 * @generated
+	 */
+	void setPointerY(float value);
 
 } // Comment

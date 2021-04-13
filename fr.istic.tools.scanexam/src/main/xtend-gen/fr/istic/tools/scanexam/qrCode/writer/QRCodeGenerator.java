@@ -14,4 +14,6 @@ public interface QRCodeGenerator {
    * @param nbCopies Nombre de copies de l'examen souhaité
    */
   void createAllExamCopies(final InputStream inputFile, final OutputStream outputPath, final String idExam, final int nbCopie);
+  
+  boolean isFinished();
 }

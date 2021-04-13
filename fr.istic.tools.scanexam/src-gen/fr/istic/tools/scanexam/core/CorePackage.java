@@ -425,13 +425,31 @@ public interface CorePackage extends EPackage {
 	int COMMENT__Y = 1;
 
 	/**
+	 * The feature id for the '<em><b>Pointer X</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__POINTER_X = 2;
+
+	/**
+	 * The feature id for the '<em><b>Pointer Y</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__POINTER_Y = 3;
+
+	/**
 	 * The number of structural features of the '<em>Comment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_FEATURE_COUNT = 2;
+	int COMMENT_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Comment</em>' class.
@@ -471,6 +489,24 @@ public interface CorePackage extends EPackage {
 	int TEXT_COMMENT__Y = COMMENT__Y;
 
 	/**
+	 * The feature id for the '<em><b>Pointer X</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_COMMENT__POINTER_X = COMMENT__POINTER_X;
+
+	/**
+	 * The feature id for the '<em><b>Pointer Y</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_COMMENT__POINTER_Y = COMMENT__POINTER_Y;
+
+	/**
 	 * The feature id for the '<em><b>Text</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -480,31 +516,13 @@ public interface CorePackage extends EPackage {
 	int TEXT_COMMENT__TEXT = COMMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Pointer X</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEXT_COMMENT__POINTER_X = COMMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Pointer Y</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TEXT_COMMENT__POINTER_Y = COMMENT_FEATURE_COUNT + 2;
-
-	/**
 	 * The number of structural features of the '<em>Text Comment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEXT_COMMENT_FEATURE_COUNT = COMMENT_FEATURE_COUNT + 3;
+	int TEXT_COMMENT_FEATURE_COUNT = COMMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Text Comment</em>' class.
@@ -1064,6 +1082,28 @@ public interface CorePackage extends EPackage {
 	EAttribute getComment_Y();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Comment#getPointerX <em>Pointer X</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pointer X</em>'.
+	 * @see fr.istic.tools.scanexam.core.Comment#getPointerX()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EAttribute getComment_PointerX();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Comment#getPointerY <em>Pointer Y</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Pointer Y</em>'.
+	 * @see fr.istic.tools.scanexam.core.Comment#getPointerY()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EAttribute getComment_PointerY();
+
+	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.TextComment <em>Text Comment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1083,28 +1123,6 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTextComment_Text();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.TextComment#getPointerX <em>Pointer X</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Pointer X</em>'.
-	 * @see fr.istic.tools.scanexam.core.TextComment#getPointerX()
-	 * @see #getTextComment()
-	 * @generated
-	 */
-	EAttribute getTextComment_PointerX();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.TextComment#getPointerY <em>Pointer Y</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Pointer Y</em>'.
-	 * @see fr.istic.tools.scanexam.core.TextComment#getPointerY()
-	 * @see #getTextComment()
-	 * @generated
-	 */
-	EAttribute getTextComment_PointerY();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.HandwritingComment <em>Handwriting Comment</em>}'.
@@ -1571,6 +1589,22 @@ public interface CorePackage extends EPackage {
 		EAttribute COMMENT__Y = eINSTANCE.getComment_Y();
 
 		/**
+		 * The meta object literal for the '<em><b>Pointer X</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMMENT__POINTER_X = eINSTANCE.getComment_PointerX();
+
+		/**
+		 * The meta object literal for the '<em><b>Pointer Y</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMMENT__POINTER_Y = eINSTANCE.getComment_PointerY();
+
+		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.TextCommentImpl <em>Text Comment</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1587,22 +1621,6 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TEXT_COMMENT__TEXT = eINSTANCE.getTextComment_Text();
-
-		/**
-		 * The meta object literal for the '<em><b>Pointer X</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TEXT_COMMENT__POINTER_X = eINSTANCE.getTextComment_PointerX();
-
-		/**
-		 * The meta object literal for the '<em><b>Pointer Y</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TEXT_COMMENT__POINTER_Y = eINSTANCE.getTextComment_PointerY();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.HandwritingCommentImpl <em>Handwriting Comment</em>}' class.

@@ -9,14 +9,16 @@ import java.io.FileOutputStream
 class PresenterStudentSheetExport {
 	
 	val ServiceEdition service
+	val PresenterPdf presPdf
 	
-	new(ServiceEdition edition) {
-		service = edition
+	new(ServiceEdition edition, PresenterPdf presPdf) {
+		this.service = edition
+		this.presPdf = presPdf 
 	}
 	
 	def boolean export(File file, int number) {
 		val QRCodeGenerator generator = new QRCodeGeneratorImpl
-		generator.createAllExamCopies(service.editionPdfInputStream, new FileOutputStream(file), service.examName, number)
+		generator.createAllExamCopies(presPdf.getPdfInputStream, new FileOutputStream(file), service.examName, number)
 		true
 	}	
 }

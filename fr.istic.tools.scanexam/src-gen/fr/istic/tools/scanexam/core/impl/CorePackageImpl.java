@@ -438,6 +438,24 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getComment_PointerX() {
+		return (EAttribute)commentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getComment_PointerY() {
+		return (EAttribute)commentEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTextComment() {
 		return textCommentEClass;
 	}
@@ -449,24 +467,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 */
 	public EAttribute getTextComment_Text() {
 		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTextComment_PointerX() {
-		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTextComment_PointerY() {
-		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -702,11 +702,11 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		commentEClass = createEClass(COMMENT);
 		createEAttribute(commentEClass, COMMENT__X);
 		createEAttribute(commentEClass, COMMENT__Y);
+		createEAttribute(commentEClass, COMMENT__POINTER_X);
+		createEAttribute(commentEClass, COMMENT__POINTER_Y);
 
 		textCommentEClass = createEClass(TEXT_COMMENT);
 		createEAttribute(textCommentEClass, TEXT_COMMENT__TEXT);
-		createEAttribute(textCommentEClass, TEXT_COMMENT__POINTER_X);
-		createEAttribute(textCommentEClass, TEXT_COMMENT__POINTER_Y);
 
 		handwritingCommentEClass = createEClass(HANDWRITING_COMMENT);
 		createEReference(handwritingCommentEClass, HANDWRITING_COMMENT__LINES);
@@ -801,11 +801,11 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getComment_X(), theEcorePackage.getEFloat(), "x", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_Y(), theEcorePackage.getEFloat(), "y", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_PointerX(), theEcorePackage.getEFloat(), "pointerX", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_PointerY(), theEcorePackage.getEFloat(), "pointerY", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(textCommentEClass, TextComment.class, "TextComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTextComment_Text(), theEcorePackage.getEString(), "text", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTextComment_PointerX(), theEcorePackage.getEFloat(), "pointerX", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTextComment_PointerY(), theEcorePackage.getEFloat(), "pointerY", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(handwritingCommentEClass, HandwritingComment.class, "HandwritingComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getHandwritingComment_Lines(), this.getLine(), null, "lines", null, 0, -1, HandwritingComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

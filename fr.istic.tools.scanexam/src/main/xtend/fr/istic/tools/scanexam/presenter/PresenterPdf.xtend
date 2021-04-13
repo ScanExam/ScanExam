@@ -1,15 +1,17 @@
 package fr.istic.tools.scanexam.presenter
 
-import java.io.InputStream
-import java.io.File
-import java.util.Objects
 import fr.istic.tools.scanexam.services.Service
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.Objects
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
-import java.io.ByteArrayOutputStream
-import java.io.ByteArrayInputStream
 
 /** 
  * Controlleur du pdf
@@ -142,14 +144,16 @@ class PresenterPdf
 	def create(File file) 
 	{
 		Objects.requireNonNull(file)
-		
+		pdfInput = new ByteArrayInputStream(Files.readAllBytes(Path.of(file.absolutePath)))
 		document = PDDocument.load(file)
 		
 		service.onDocumentLoad(document.pages.size);
 	}
 	
+	
 	def create(ByteArrayInputStream stream)
 	{
+		pdfInput = stream
 		document = PDDocument.load(stream)
 	}
 	
@@ -169,6 +173,13 @@ class PresenterPdf
 		val outputStream = new ByteArrayOutputStream();
 		document.save(outputStream);
 		outputStream
+	}
+	
+	/**
+	 * @return un InputStream vers le PDF
+	 */
+	def getPdfInputStream() {
+		pdfInput
 	}
 	
 }
