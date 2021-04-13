@@ -103,6 +103,15 @@ public interface CoreFactory extends EFactory {
 	HandwritingComment createHandwritingComment();
 
 	/**
+	 * Returns a new object of class '<em>Line</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Line</em>'.
+	 * @generated
+	 */
+	Line createLine();
+
+	/**
 	 * Returns a new object of class '<em>Grade</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

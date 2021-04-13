@@ -333,13 +333,22 @@ public interface CorePackage extends EPackage {
 	int EXAM_FEATURE_COUNT = 3;
 
 	/**
+	 * The operation id for the '<em>Compute Max Grade</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXAM___COMPUTE_MAX_GRADE = 0;
+
+	/**
 	 * The number of operations of the '<em>Exam</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_OPERATION_COUNT = 0;
+	int EXAM_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
@@ -517,13 +526,22 @@ public interface CorePackage extends EPackage {
 	int HANDWRITING_COMMENT = 8;
 
 	/**
+	 * The feature id for the '<em><b>Lines</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HANDWRITING_COMMENT__LINES = 0;
+
+	/**
 	 * The number of structural features of the '<em>Handwriting Comment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int HANDWRITING_COMMENT_FEATURE_COUNT = 0;
+	int HANDWRITING_COMMENT_FEATURE_COUNT = 1;
 
 	/**
 	 * The number of operations of the '<em>Handwriting Comment</em>' class.
@@ -535,6 +553,88 @@ public interface CorePackage extends EPackage {
 	int HANDWRITING_COMMENT_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.LineImpl <em>Line</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.istic.tools.scanexam.core.impl.LineImpl
+	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getLine()
+	 * @generated
+	 */
+	int LINE = 9;
+
+	/**
+	 * The feature id for the '<em><b>X1</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE__X1 = 0;
+
+	/**
+	 * The feature id for the '<em><b>Y1</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE__Y1 = 1;
+
+	/**
+	 * The feature id for the '<em><b>X2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE__X2 = 2;
+
+	/**
+	 * The feature id for the '<em><b>Y2</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE__Y2 = 3;
+
+	/**
+	 * The feature id for the '<em><b>Thinkness</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE__THINKNESS = 4;
+
+	/**
+	 * The feature id for the '<em><b>Color</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE__COLOR = 5;
+
+	/**
+	 * The number of structural features of the '<em>Line</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE_FEATURE_COUNT = 6;
+
+	/**
+	 * The number of operations of the '<em>Line</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LINE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.GradeImpl <em>Grade</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -542,7 +642,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getGrade()
 	 * @generated
 	 */
-	int GRADE = 9;
+	int GRADE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Entries</b></em>' reference list.
@@ -588,7 +688,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getStudentSheet()
 	 * @generated
 	 */
-	int STUDENT_SHEET = 10;
+	int STUDENT_SHEET = 11;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -890,6 +990,16 @@ public interface CorePackage extends EPackage {
 	EReference getExam_Pages();
 
 	/**
+	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.Exam#computeMaxGrade() <em>Compute Max Grade</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Compute Max Grade</em>' operation.
+	 * @see fr.istic.tools.scanexam.core.Exam#computeMaxGrade()
+	 * @generated
+	 */
+	EOperation getExam__ComputeMaxGrade();
+
+	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Page <em>Page</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1005,6 +1115,93 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EClass getHandwritingComment();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.HandwritingComment#getLines <em>Lines</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Lines</em>'.
+	 * @see fr.istic.tools.scanexam.core.HandwritingComment#getLines()
+	 * @see #getHandwritingComment()
+	 * @generated
+	 */
+	EReference getHandwritingComment_Lines();
+
+	/**
+	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Line <em>Line</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Line</em>'.
+	 * @see fr.istic.tools.scanexam.core.Line
+	 * @generated
+	 */
+	EClass getLine();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Line#getX1 <em>X1</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>X1</em>'.
+	 * @see fr.istic.tools.scanexam.core.Line#getX1()
+	 * @see #getLine()
+	 * @generated
+	 */
+	EAttribute getLine_X1();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Line#getY1 <em>Y1</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Y1</em>'.
+	 * @see fr.istic.tools.scanexam.core.Line#getY1()
+	 * @see #getLine()
+	 * @generated
+	 */
+	EAttribute getLine_Y1();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Line#getX2 <em>X2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>X2</em>'.
+	 * @see fr.istic.tools.scanexam.core.Line#getX2()
+	 * @see #getLine()
+	 * @generated
+	 */
+	EAttribute getLine_X2();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Line#getY2 <em>Y2</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Y2</em>'.
+	 * @see fr.istic.tools.scanexam.core.Line#getY2()
+	 * @see #getLine()
+	 * @generated
+	 */
+	EAttribute getLine_Y2();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Line#getThinkness <em>Thinkness</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Thinkness</em>'.
+	 * @see fr.istic.tools.scanexam.core.Line#getThinkness()
+	 * @see #getLine()
+	 * @generated
+	 */
+	EAttribute getLine_Thinkness();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Line#getColor <em>Color</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Color</em>'.
+	 * @see fr.istic.tools.scanexam.core.Line#getColor()
+	 * @see #getLine()
+	 * @generated
+	 */
+	EAttribute getLine_Color();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Grade <em>Grade</em>}'.
@@ -1314,6 +1511,14 @@ public interface CorePackage extends EPackage {
 		EReference EXAM__PAGES = eINSTANCE.getExam_Pages();
 
 		/**
+		 * The meta object literal for the '<em><b>Compute Max Grade</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXAM___COMPUTE_MAX_GRADE = eINSTANCE.getExam__ComputeMaxGrade();
+
+		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.PageImpl <em>Page</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1408,6 +1613,72 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EClass HANDWRITING_COMMENT = eINSTANCE.getHandwritingComment();
+
+		/**
+		 * The meta object literal for the '<em><b>Lines</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference HANDWRITING_COMMENT__LINES = eINSTANCE.getHandwritingComment_Lines();
+
+		/**
+		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.LineImpl <em>Line</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.istic.tools.scanexam.core.impl.LineImpl
+		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getLine()
+		 * @generated
+		 */
+		EClass LINE = eINSTANCE.getLine();
+
+		/**
+		 * The meta object literal for the '<em><b>X1</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LINE__X1 = eINSTANCE.getLine_X1();
+
+		/**
+		 * The meta object literal for the '<em><b>Y1</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LINE__Y1 = eINSTANCE.getLine_Y1();
+
+		/**
+		 * The meta object literal for the '<em><b>X2</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LINE__X2 = eINSTANCE.getLine_X2();
+
+		/**
+		 * The meta object literal for the '<em><b>Y2</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LINE__Y2 = eINSTANCE.getLine_Y2();
+
+		/**
+		 * The meta object literal for the '<em><b>Thinkness</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LINE__THINKNESS = eINSTANCE.getLine_Thinkness();
+
+		/**
+		 * The meta object literal for the '<em><b>Color</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LINE__COLOR = eINSTANCE.getLine_Color();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.GradeImpl <em>Grade</em>}' class.

@@ -104,6 +104,10 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 				return createHandwritingCommentAdapter();
 			}
 			@Override
+			public Adapter caseLine(Line object) {
+				return createLineAdapter();
+			}
+			@Override
 			public Adapter caseGrade(Grade object) {
 				return createGradeAdapter();
 			}
@@ -254,6 +258,20 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createHandwritingCommentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.Line <em>Line</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see fr.istic.tools.scanexam.core.Line
+	 * @generated
+	 */
+	public Adapter createLineAdapter() {
 		return null;
 	}
 

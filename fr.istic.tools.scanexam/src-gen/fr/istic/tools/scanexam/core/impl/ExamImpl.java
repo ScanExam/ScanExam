@@ -5,6 +5,9 @@ package fr.istic.tools.scanexam.core.impl;
 import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Page;
+import fr.istic.tools.scanexam.core.Question;
+
+import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
 
@@ -21,6 +24,13 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.Functions.Function2;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -166,6 +176,36 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public float computeMaxGrade() {
+		float _xblockexpression = (float) 0;
+		{
+			float grade = 0f;
+			EList<Page> _pages = this.getPages();
+			for (final Page page : _pages) {
+				float _grade = grade;
+				final Function1<Question, Float> _function = new Function1<Question, Float>() {
+					public Float apply(final Question q) {
+						return Float.valueOf(q.getGradeScale().getMaxPoint());
+					}
+				};
+				final Function2<Float, Float, Float> _function_1 = new Function2<Float, Float, Float>() {
+					public Float apply(final Float acc, final Float v) {
+						return Float.valueOf(((v).floatValue() + (acc).floatValue()));
+					}
+				};
+				Float _reduce = IterableExtensions.<Float>reduce(XcoreEListExtensions.<Question, Float>map(page.getQuestions(), _function), _function_1);
+				grade = (_grade + (_reduce).floatValue());
+			}
+			_xblockexpression = grade;
+		}
+		return _xblockexpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -253,6 +293,20 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 				return pages != null && !pages.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case CorePackage.EXAM___COMPUTE_MAX_GRADE:
+				return computeMaxGrade();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
