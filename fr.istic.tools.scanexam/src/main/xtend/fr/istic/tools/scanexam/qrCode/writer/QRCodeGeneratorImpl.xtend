@@ -1,34 +1,35 @@
 package fr.istic.tools.scanexam.qrCode.writer
 
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.WriterException
-import com.google.zxing.client.j2se.MatrixToImageWriter
-import com.google.zxing.common.BitMatrix
-import com.google.zxing.qrcode.QRCodeWriter
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-import java.io.StringWriter
 import java.nio.file.FileSystems
-import java.nio.file.Files
+
 import java.nio.file.Path
-import java.util.concurrent.CountDownLatch
+import com.google.zxing.qrcode.QRCodeWriter
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.common.BitMatrix
+import com.google.zxing.client.j2se.MatrixToImageWriter
+import com.google.zxing.WriterException
+import java.io.IOException
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode
+import java.io.File
+import org.apache.pdfbox.multipdf.PDFMergerUtility
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import org.apache.commons.io.IOUtils
 import org.apache.pdfbox.io.MemoryUsageSetting
-import org.apache.pdfbox.multipdf.PDFMergerUtility
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.pdmodel.PDPage
-import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import java.util.concurrent.CountDownLatch
+import java.io.InputStream
+import java.io.StringWriter
+import org.apache.commons.io.IOUtils
+import java.io.ByteArrayInputStream
+import java.io.OutputStream
+import java.io.ByteArrayOutputStream
+import java.nio.file.Files
+import org.apache.commons.io.FileUtils
 
 class QRCodeGeneratorImpl implements QRCodeGenerator {
-
 
 	boolean isFinished
 
@@ -42,45 +43,43 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 */
 	override createAllExamCopies(InputStream inputFile, OutputStream outputStream, String idExam, int nbCopie) {
 
-		try {
-			val StringWriter stringWriterInput = new StringWriter()
+        try {
+            val PDDocument doc = PDDocument.load(inputFile)
+            
+            val int nbPages = doc.numberOfPages
 
-			IOUtils.copy(inputFile, stringWriterInput, "UTF-8")
+            val MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly()
 
-			//val String input = stringWriterInput.toString()
-			val PDDocument doc = PDDocument.load(inputFile)
-			
-			val int nbPages = doc.numberOfPages
-			val PDFMergerUtility PDFmerger = new PDFMergerUtility()
+            val File f2 = File.createTempFile(idExam, ".pdf")
 
-			val MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly()
+            var PDFMergerUtility ut = new PDFMergerUtility()
+            
 
-			val File outpath = new File(outputStream.toString)
-			var String output = outpath.absolutePath
-			output += "/" + idExam + ".pdf"
+            for (i : 0 ..< nbCopie) {
+                ut.addSource(inputFile)
+            }
+            
+            ut.destinationStream = outputStream
 
-			PDFmerger.setDestinationFileName(output);
+            println(memUsSett.tempDir)
+            
+            memUsSett.tempDir = f2
+            
+            println(memUsSett.tempDir)
+            
+            //ut.mergeDocuments(MemoryUsageSetting.setupTempFileOnly())
+            ut.mergeDocuments(memUsSett)
+            
 
-			for (i : 0 ..< nbCopie) {
-				PDFmerger.addSource(inputFile)
-			}
+            val PDDocument docSujetMaitre = PDDocument.load(inputFile)
+            createThread(idExam, nbCopie, docSujetMaitre, nbPages, outputStream)
+            f2.deleteOnExit
 
-			val File f2 = new File(output)
-
-			memUsSett.tempDir = f2
-
-			PDFmerger.mergeDocuments(memUsSett)
-
-			val PDDocument docSujetMaitre = PDDocument.load(f2)
-			createThread(idExam, nbCopie, docSujetMaitre, nbPages, output)
-
-		} // fin try
-		catch (Exception e) {
-			e.printStackTrace()
-		}
-	}
-
-
+        } // fin try
+        catch (Exception e) {
+            e.printStackTrace()
+        }
+    }
 
 	/**
 	 * CrÃ©e un QRCode (21 * 21 carrÃ©s) de taille width * height encryptant la chaine text.
@@ -139,8 +138,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
-	def createThread(String examID, int nbCopie, PDDocument docSujetMaitre, int nbPage, String output) {
-		
+	def createThread(String examID, int nbCopie, PDDocument docSujetMaitre, int nbPage, OutputStream output) {
 
 		if (nbCopie <= 4) {
 			val ExecutorService service = Executors.newFixedThreadPool(1)
@@ -155,9 +153,9 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 			qrcode.deleteOnExit
 		} else {
 
-			val PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, this, nbCopie, examID, output)
+			val PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, this, nbCopie,
+				examID, output)
 			manager.start
-		
 
 		}
 
@@ -203,24 +201,25 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 		}
 	}
 
-	override isFinished(){
+	override isFinished() {
 		return isFinished
 	}
-	
-	def setFinished(boolean bool){
+
+	def setFinished(boolean bool) {
 		this.isFinished = bool
 	}
 
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
-		
-		
-		val InputStream input2 = new ByteArrayInputStream(Files.readAllBytes(Path.of("C:/Users/Skinz/Documents/impots 2020.pdf")))
-				
-		//FileUtils.readFileToByteArray(File input)
+		val InputStream input = new ByteArrayInputStream("D:/dataScanExam/in/pfo_example.pdf".getBytes())
 
+		val InputStream input2 = new ByteArrayInputStream(
+			Files.readAllBytes(Path.of("D:/dataScanExam/in/pfo_example.pdf")))
+
+		// FileUtils.readFileToByteArray(File input)
 		val OutputStream output = new ByteArrayOutputStream()
+		output.write("D:/dataScanExam/out".getBytes())
 		gen.createAllExamCopies(input2, output, "42PFO2021", 8)
 
 	/*
