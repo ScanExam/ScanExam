@@ -46,6 +46,7 @@ class Page
 	contains Question[] questions
 }
 class Comment {
+	int pageId
 	float x
 	float y
 	float pointerX
@@ -57,6 +58,7 @@ class TextComment extends Comment {
 }
 
 class HandwritingComment {
+	int pageId
 	contains Line[] lines
 }
 

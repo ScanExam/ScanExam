@@ -407,13 +407,22 @@ public interface CorePackage extends EPackage {
 	int COMMENT = 6;
 
 	/**
+	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__PAGE_ID = 0;
+
+	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__X = 0;
+	int COMMENT__X = 1;
 
 	/**
 	 * The feature id for the '<em><b>Y</b></em>' attribute.
@@ -422,7 +431,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__Y = 1;
+	int COMMENT__Y = 2;
 
 	/**
 	 * The feature id for the '<em><b>Pointer X</b></em>' attribute.
@@ -431,7 +440,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__POINTER_X = 2;
+	int COMMENT__POINTER_X = 3;
 
 	/**
 	 * The feature id for the '<em><b>Pointer Y</b></em>' attribute.
@@ -440,7 +449,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__POINTER_Y = 3;
+	int COMMENT__POINTER_Y = 4;
 
 	/**
 	 * The number of structural features of the '<em>Comment</em>' class.
@@ -449,7 +458,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_FEATURE_COUNT = 4;
+	int COMMENT_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Comment</em>' class.
@@ -469,6 +478,15 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	int TEXT_COMMENT = 7;
+
+	/**
+	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_COMMENT__PAGE_ID = COMMENT__PAGE_ID;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -544,13 +562,22 @@ public interface CorePackage extends EPackage {
 	int HANDWRITING_COMMENT = 8;
 
 	/**
+	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HANDWRITING_COMMENT__PAGE_ID = 0;
+
+	/**
 	 * The feature id for the '<em><b>Lines</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int HANDWRITING_COMMENT__LINES = 0;
+	int HANDWRITING_COMMENT__LINES = 1;
 
 	/**
 	 * The number of structural features of the '<em>Handwriting Comment</em>' class.
@@ -559,7 +586,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HANDWRITING_COMMENT_FEATURE_COUNT = 1;
+	int HANDWRITING_COMMENT_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Handwriting Comment</em>' class.
@@ -1060,6 +1087,17 @@ public interface CorePackage extends EPackage {
 	EClass getComment();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Comment#getPageId <em>Page Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Page Id</em>'.
+	 * @see fr.istic.tools.scanexam.core.Comment#getPageId()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EAttribute getComment_PageId();
+
+	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Comment#getX <em>X</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1133,6 +1171,17 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EClass getHandwritingComment();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.HandwritingComment#getPageId <em>Page Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Page Id</em>'.
+	 * @see fr.istic.tools.scanexam.core.HandwritingComment#getPageId()
+	 * @see #getHandwritingComment()
+	 * @generated
+	 */
+	EAttribute getHandwritingComment_PageId();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.HandwritingComment#getLines <em>Lines</em>}'.
@@ -1573,6 +1622,14 @@ public interface CorePackage extends EPackage {
 		EClass COMMENT = eINSTANCE.getComment();
 
 		/**
+		 * The meta object literal for the '<em><b>Page Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMMENT__PAGE_ID = eINSTANCE.getComment_PageId();
+
+		/**
 		 * The meta object literal for the '<em><b>X</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1631,6 +1688,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EClass HANDWRITING_COMMENT = eINSTANCE.getHandwritingComment();
+
+		/**
+		 * The meta object literal for the '<em><b>Page Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute HANDWRITING_COMMENT__PAGE_ID = eINSTANCE.getHandwritingComment_PageId();
 
 		/**
 		 * The meta object literal for the '<em><b>Lines</b></em>' containment reference list feature.
