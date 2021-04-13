@@ -14,4 +14,6 @@ interface QRCodeGenerator {
 	 * @param nbCopies Nombre de copies de l'examen souhaité
 	 */
 	def void createAllExamCopies(InputStream inputFile, OutputStream outputPath, String idExam, int nbCopie)
+	
+	def boolean isFinished()
 }
