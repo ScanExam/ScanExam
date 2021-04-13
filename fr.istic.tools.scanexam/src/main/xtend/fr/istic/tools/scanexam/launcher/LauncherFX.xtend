@@ -72,7 +72,7 @@ class LauncherFX extends Application implements Launcher {
 			controllerEditor.init
 			controllerRoot.correctorController = controllerGraduator
 			controllerRoot.editorController = controllerEditor
-		
+			controllerRoot.init
 			primaryStage.setTitle("ScanExam");
 			primaryStage.setScene(rootScene);
 			primaryStage.setMinHeight(720);

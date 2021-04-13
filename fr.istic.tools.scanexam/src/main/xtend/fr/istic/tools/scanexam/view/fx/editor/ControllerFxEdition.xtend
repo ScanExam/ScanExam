@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.BooleanProperty
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class ControllerFxEdition {
 
@@ -43,7 +44,8 @@ class ControllerFxEdition {
 	double maxX;
 	double maxY;
 	var pdfLoaded = false;
-	BooleanProperty modelLoaded = new SimpleBooleanProperty(this,"Is a model loaded",false)
+	
+	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a model loaded",false);
 
 	var logger = LogManager.logger
 
@@ -219,9 +221,10 @@ class ControllerFxEdition {
 		    renderDocument
 		]);
 		
-		nextPageButton.disableProperty.bind(modelLoaded.not)
-		previousPageButton.disableProperty.bind(modelLoaded.not)
-		createBoxButton.disableProperty.bind(modelLoaded.not)
+		nextPageButton.disableProperty.bind(loadedModel.not)
+		previousPageButton.disableProperty.bind(loadedModel.not)
+		createBoxButton.disableProperty.bind(loadedModel.not)
+		pageChoice.disableProperty.bind(loadedModel.not)
 	}
 	
 	//FIXME Pas terrible de mettre cela en public mais ControllerRoot n'a accès a aucun Presenter
@@ -323,6 +326,8 @@ class ControllerFxEdition {
  * Called when we click on a pdf with the move tool selected
  * the box is limited to inside the pdf
  */
+ 	double offsetX;
+ 	double offsetY;
 	def void moveBox(MouseEvent e) {
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
 			Math.min(e.x, maxX - FxSettings.BOX_BORDER_THICKNESS));
@@ -330,11 +335,12 @@ class ControllerFxEdition {
 			Math.min(e.y, maxY - FxSettings.BOX_BORDER_THICKNESS));
 
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
+			
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			currentRectangle.x(Math.min(mousePositionX,
+			currentRectangle.x(Math.min(mousePositionX + offsetX,
 				maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
-			currentRectangle.y(Math.min(mousePositionY,
+			currentRectangle.y(Math.min(mousePositionY + offsetY,
 				maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
@@ -351,6 +357,8 @@ class ControllerFxEdition {
 			mouseOriginY = mousePositionY
 			objectOriginX = currentRectangle.width
 			objectOriginY = currentRectangle.height
+			offsetX = mousePositionX - currentRectangle.x
+			offsetY = mousePositionY - currentRectangle.y
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 			switch edge {
@@ -391,8 +399,8 @@ class ControllerFxEdition {
 					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
 				}
 				case NONE: {
-					currentRectangle.x(Math.min(mousePositionX,maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
-					currentRectangle.y(Math.min(mousePositionY,maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+					currentRectangle.x(Math.max(Math.min(mousePositionX - offsetX,maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width),FxSettings.BOX_BORDER_THICKNESS))
+					currentRectangle.y(Math.max(Math.min(mousePositionY - offsetY,maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height),FxSettings.BOX_BORDER_THICKNESS))
 				}
 			}
 			
@@ -592,7 +600,7 @@ class ControllerFxEdition {
 	}
 	
 	def postLoad(){
-		modelLoaded.set(true)
+		loadedModel.set(true)
 		pdfLoaded = true;
 	}
 

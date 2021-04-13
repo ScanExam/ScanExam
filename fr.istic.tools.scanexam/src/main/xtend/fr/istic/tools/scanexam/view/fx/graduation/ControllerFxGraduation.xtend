@@ -29,6 +29,7 @@ import org.apache.logging.log4j.LogManager
 import fr.istic.tools.scanexam.view.AdapterGraduation
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
+import org.eclipse.xtend.lib.annotations.Accessors
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -60,7 +61,7 @@ class ControllerFxGraduation {
 		corrector
 	}
 	
-	BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
+	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
 	
 	Grader grader;
 	QuestionListGraduation questionList;
@@ -411,9 +412,7 @@ class ControllerFxGraduation {
 	
 	
 	def void load(){
-		loadedModel.set(false)
-		loadTemplate();
-		loadStudentPdfs();
+		loadedModel.set(true)
 	}
 	
 	/**
@@ -466,6 +465,7 @@ class ControllerFxGraduation {
 			logger.warn("File not chosen")
 		}
 	}
+
 	
 	def loaded(){
 		renderCorrectedCopy();
