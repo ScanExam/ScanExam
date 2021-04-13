@@ -253,12 +253,9 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   public static void main(final String[] arg) {
     try {
       final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
-      byte[] _bytes = "D:/dataScanExam/in/pfo_example.pdf".getBytes();
-      final InputStream input = new ByteArrayInputStream(_bytes);
-      byte[] _readAllBytes = Files.readAllBytes(Path.of("D:/dataScanExam/in/pfo_example.pdf"));
+      byte[] _readAllBytes = Files.readAllBytes(Path.of("C:/Users/Skinz/Documents/impots 2020.pdf"));
       final InputStream input2 = new ByteArrayInputStream(_readAllBytes);
       final OutputStream output = new ByteArrayOutputStream();
-      output.write("D:/dataScanExam/out".getBytes());
       gen.createAllExamCopies(input2, output, "42PFO2021", 8);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

@@ -244,8 +244,9 @@ public class PresenterGraduation implements Presenter {
   /**
    * SAVING
    */
-  public Object saveTemplate(final String path) {
-    return this.service.saveCorrectionTemplate(path);
+  public void saveTemplate(final String path) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The method saveCorrectionTemplate(String, ByteArrayOutputStream) is not applicable for the arguments (String)");
   }
   
   /**

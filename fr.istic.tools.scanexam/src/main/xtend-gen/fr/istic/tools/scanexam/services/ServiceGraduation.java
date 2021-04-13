@@ -14,7 +14,10 @@ import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -69,8 +72,19 @@ public class ServiceGraduation extends Service {
    * Sauvegarde le fichier de correction d'examen sur le disque.
    * @params path L'emplacement de sauvegarde du fichier.
    */
-  public Object saveCorrectionTemplate(final String path) {
-    return null;
+  public void saveCorrectionTemplate(final String path, final ByteArrayOutputStream pdfOutputStream) {
+    try {
+      final byte[] encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
+      String _string = new String(encoded);
+      this.correctionTemplate.setEncodedDocument(_string);
+      pdfOutputStream.close();
+      this.correctionTemplate.getStudentsheets().clear();
+      this.correctionTemplate.getStudentsheets().addAll(this.studentSheets);
+      File _file = new File(path);
+      TemplateIo.save(_file, this.correctionTemplate);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   /**

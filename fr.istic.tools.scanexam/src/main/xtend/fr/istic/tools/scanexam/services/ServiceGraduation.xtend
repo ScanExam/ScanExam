@@ -16,6 +16,11 @@ import java.util.Objects
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
+import java.io.File
+import java.util.Base64
+import java.io.OutputStream
+import java.io.ByteArrayOutputStream
+import org.eclipse.emf.common.util.EList
 
 class ServiceGraduation extends Service
 {
@@ -58,9 +63,16 @@ class ServiceGraduation extends Service
 	 * Sauvegarde le fichier de correction d'examen sur le disque.
 	 * @params path L'emplacement de sauvegarde du fichier.
 	 */
-	def saveCorrectionTemplate(String path) 
+	def saveCorrectionTemplate(String path,ByteArrayOutputStream pdfOutputStream) 
 	{
-		// TODO (sauvegarde le XMI de correction)
+		val encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
+		correctionTemplate.encodedDocument = new String(encoded);
+		pdfOutputStream.close();
+
+		 correctionTemplate.studentsheets.clear()
+		correctionTemplate.studentsheets.addAll(studentSheets);
+		
+		TemplateIo.save(new File(path), correctionTemplate);
 	}
 	/**
 	 * Charge un fichier de correction d'examen a partir du disque.
