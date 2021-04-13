@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
+import fr.istic.tools.scanexam.view.AdapterEdition;
 import fr.istic.tools.scanexam.view.fx.AdapterFxEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
@@ -223,6 +224,10 @@ public class ControllerFxEdition {
       this.renderDocument();
     };
     this.pageChoice.setOnAction(_function);
+  }
+  
+  public AdapterEdition getAdapter() {
+    return this.editor;
   }
   
   public void chooseMouseAction(final MouseEvent e) {

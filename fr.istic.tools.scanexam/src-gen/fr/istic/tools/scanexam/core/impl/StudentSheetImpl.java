@@ -30,6 +30,10 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Student Sheet</b></em>'.
@@ -225,6 +229,21 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isGraded() {
+		final Function1<Grade, Boolean> _function = new Function1<Grade, Boolean>() {
+			public Boolean apply(final Grade g) {
+				return Boolean.valueOf(g.getEntries().isEmpty());
+			}
+		};
+		Grade _findFirst = IterableExtensions.<Grade>findFirst(this.getGrades(), _function);
+		return (_findFirst == null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -335,6 +354,8 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 		switch (operationID) {
 			case CorePackage.STUDENT_SHEET___COMPUTE_GRADE:
 				return computeGrade();
+			case CorePackage.STUDENT_SHEET___IS_GRADED:
+				return isGraded();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

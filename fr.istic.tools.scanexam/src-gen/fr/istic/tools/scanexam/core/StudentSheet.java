@@ -102,4 +102,12 @@ public interface StudentSheet extends EObject {
 	 */
 	float computeGrade();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isGraded();
+
 } // StudentSheet

@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl
 import fr.istic.tools.scanexam.services.ServiceGraduation
 
 class PresenterGraduationLoader {
@@ -19,8 +21,8 @@ class PresenterGraduationLoader {
 	}
 	
 	def boolean loadStudentSheets(String path) {
-		
-		
+		val QRCodeGenerator generator = new QRCodeGeneratorImpl()
+		//generator.createAllExamCopies(service.editionPdfInputStream, new FileOutputStream(new File(path)), service.examName, quantity)
 		true
 	}
 	

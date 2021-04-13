@@ -49,7 +49,7 @@ class TextComment extends Comment {
 }
 
 class HandwritingComment {
-	// TODO
+	//TODO
 }
 
 class Grade {
@@ -77,4 +77,8 @@ class StudentSheet {
 		return result
 	}
 	
+	op boolean isGraded() {
+		grades.findFirst[g | g.entries.isEmpty] === null
+	}
+		
 }

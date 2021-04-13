@@ -169,6 +169,11 @@ public class ServiceEdition extends Service {
     return ExamSingleton.getQuestion(pageIndex, questionIndex).getZone();
   }
   
+  public ByteArrayInputStream getEditionPdfInputStream() {
+    final byte[] decoded = Base64.getDecoder().decode(this.template.getEncodedDocument());
+    return new ByteArrayInputStream(decoded);
+  }
+  
   @Pure
   public int getQuestionId() {
     return this.questionId;

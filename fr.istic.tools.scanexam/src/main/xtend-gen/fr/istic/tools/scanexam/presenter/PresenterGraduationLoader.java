@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
 
 @SuppressWarnings("all")
@@ -19,6 +21,11 @@ public class PresenterGraduationLoader {
   }
   
   public boolean loadStudentSheets(final String path) {
-    return true;
+    boolean _xblockexpression = false;
+    {
+      final QRCodeGenerator generator = new QRCodeGeneratorImpl();
+      _xblockexpression = true;
+    }
+    return _xblockexpression;
   }
 }

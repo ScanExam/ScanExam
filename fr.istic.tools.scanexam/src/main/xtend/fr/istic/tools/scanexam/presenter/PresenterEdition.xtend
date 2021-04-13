@@ -1,9 +1,9 @@
 package fr.istic.tools.scanexam.presenter
 
-import fr.istic.tools.scanexam.view.Adapter
-import java.util.Objects
-import java.io.File
 import fr.istic.tools.scanexam.services.ServiceEdition
+import fr.istic.tools.scanexam.view.Adapter
+import java.io.File
+import java.util.Objects
 
 /**
  * Class defining the presenter for the exam creation view(s)
@@ -21,6 +21,7 @@ class PresenterEdition implements Presenter
 	PresenterGradeScale presMarkingScheme
 	ServiceEdition service
 	PresenterPdf presPdf
+	PresenterStudentSheetExport sheetExport
 	Adapter<PresenterEdition> adapter
 	
 	private new(ServiceEdition service)
@@ -31,6 +32,7 @@ class PresenterEdition implements Presenter
 		presPdf = new PresenterPdf(service, this)
 		presQuestionZone =  new PresenterQuestionZone(service,this)
 		presMarkingScheme = new PresenterGradeScale(service, this)
+		sheetExport = new PresenterStudentSheetExport(service)
 	}
 	new(Adapter<PresenterEdition> adapter,ServiceEdition service) 
 	{
@@ -64,6 +66,13 @@ class PresenterEdition implements Presenter
 		presQuestionZone
 	}
 	
+	/**
+	 * @return current {@link StudentSheetExport}
+	 */
+	def getPresenterStudentSheetExport() {
+		return sheetExport
+	}
+	
 	
 	/**
 	 * @return current {@link PresenterMarkingScheme} 
@@ -71,6 +80,8 @@ class PresenterEdition implements Presenter
 	override getPresenterMarkingScheme(){
 		presMarkingScheme
 	}
+	
+	
 	
 	override getPresenterPdf(){
 		presPdf

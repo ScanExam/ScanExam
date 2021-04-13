@@ -5,6 +5,7 @@ import fr.istic.tools.scanexam.presenter.PresenterGradeScale;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQRCode;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
+import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
 import fr.istic.tools.scanexam.services.ServiceEdition;
 import fr.istic.tools.scanexam.view.Adapter;
 import java.io.ByteArrayInputStream;
@@ -34,6 +35,8 @@ public class PresenterEdition implements Presenter {
   
   private PresenterPdf presPdf;
   
+  private PresenterStudentSheetExport sheetExport;
+  
   private Adapter<PresenterEdition> adapter;
   
   private PresenterEdition(final ServiceEdition service) {
@@ -45,6 +48,8 @@ public class PresenterEdition implements Presenter {
     this.presQuestionZone = _presenterQuestionZone;
     PresenterGradeScale _presenterGradeScale = new PresenterGradeScale(service, this);
     this.presMarkingScheme = _presenterGradeScale;
+    PresenterStudentSheetExport _presenterStudentSheetExport = new PresenterStudentSheetExport(service);
+    this.sheetExport = _presenterStudentSheetExport;
   }
   
   public PresenterEdition(final Adapter<PresenterEdition> adapter, final ServiceEdition service) {
@@ -65,6 +70,13 @@ public class PresenterEdition implements Presenter {
    */
   public PresenterQuestionZone getPresenterQuestionZone() {
     return this.presQuestionZone;
+  }
+  
+  /**
+   * @return current {@link StudentSheetExport}
+   */
+  public PresenterStudentSheetExport getPresenterStudentSheetExport() {
+    return this.sheetExport;
   }
   
   /**

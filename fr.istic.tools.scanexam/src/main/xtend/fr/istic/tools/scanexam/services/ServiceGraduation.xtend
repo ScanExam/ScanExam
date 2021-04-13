@@ -425,5 +425,4 @@ class ServiceGraduation extends Service
 	def String getStudentListShift() {
 		return correctionTemplate.studentListShift
 	}
-	
 }
