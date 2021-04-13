@@ -2,8 +2,10 @@ package fr.istic.tools.scanexam.view.fx.graduation
 
 import javafx.scene.layout.VBox
 import javafx.scene.Node
+import org.apache.logging.log4j.LogManager
 
 class StudentListGraduation extends VBox {
+	static val logger = LogManager.logger
 	new(ControllerFxGraduation controller){
 		this.controller = controller
 		currentIndex = 0;
@@ -42,6 +44,11 @@ class StudentListGraduation extends VBox {
 	
 	def clearItems(){
 		children.clear
+	}
+	
+	def updateInModel(StudentItemGraduation item) {
+		logger.info("Updating " + item + " to model")
+		controller.adapter.presenter.renameStudent(item.studentId,item.studentName)
 	}
 	
 	/**

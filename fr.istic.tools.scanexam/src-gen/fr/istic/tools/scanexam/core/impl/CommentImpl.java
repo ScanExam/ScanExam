@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getX <em>X</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getY <em>Y</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getPointerX <em>Pointer X</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getPointerY <em>Pointer Y</em>}</li>
  * </ul>
  *
  * @generated
@@ -66,6 +68,46 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * @ordered
 	 */
 	protected float y = Y_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getPointerX() <em>Pointer X</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPointerX()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final float POINTER_X_EDEFAULT = 0.0F;
+
+	/**
+	 * The cached value of the '{@link #getPointerX() <em>Pointer X</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPointerX()
+	 * @generated
+	 * @ordered
+	 */
+	protected float pointerX = POINTER_X_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getPointerY() <em>Pointer Y</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPointerY()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final float POINTER_Y_EDEFAULT = 0.0F;
+
+	/**
+	 * The cached value of the '{@link #getPointerY() <em>Pointer Y</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPointerY()
+	 * @generated
+	 * @ordered
+	 */
+	protected float pointerY = POINTER_Y_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -133,6 +175,48 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public float getPointerX() {
+		return pointerX;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPointerX(float newPointerX) {
+		float oldPointerX = pointerX;
+		pointerX = newPointerX;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.COMMENT__POINTER_X, oldPointerX, pointerX));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public float getPointerY() {
+		return pointerY;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPointerY(float newPointerY) {
+		float oldPointerY = pointerY;
+		pointerY = newPointerY;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.COMMENT__POINTER_Y, oldPointerY, pointerY));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -140,6 +224,10 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 				return getX();
 			case CorePackage.COMMENT__Y:
 				return getY();
+			case CorePackage.COMMENT__POINTER_X:
+				return getPointerX();
+			case CorePackage.COMMENT__POINTER_Y:
+				return getPointerY();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -157,6 +245,12 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 				return;
 			case CorePackage.COMMENT__Y:
 				setY((Float)newValue);
+				return;
+			case CorePackage.COMMENT__POINTER_X:
+				setPointerX((Float)newValue);
+				return;
+			case CorePackage.COMMENT__POINTER_Y:
+				setPointerY((Float)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -176,6 +270,12 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			case CorePackage.COMMENT__Y:
 				setY(Y_EDEFAULT);
 				return;
+			case CorePackage.COMMENT__POINTER_X:
+				setPointerX(POINTER_X_EDEFAULT);
+				return;
+			case CorePackage.COMMENT__POINTER_Y:
+				setPointerY(POINTER_Y_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -192,6 +292,10 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 				return x != X_EDEFAULT;
 			case CorePackage.COMMENT__Y:
 				return y != Y_EDEFAULT;
+			case CorePackage.COMMENT__POINTER_X:
+				return pointerX != POINTER_X_EDEFAULT;
+			case CorePackage.COMMENT__POINTER_Y:
+				return pointerY != POINTER_Y_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -210,6 +314,10 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		result.append(x);
 		result.append(", y: ");
 		result.append(y);
+		result.append(", pointerX: ");
+		result.append(pointerX);
+		result.append(", pointerY: ");
+		result.append(pointerY);
 		result.append(')');
 		return result.toString();
 	}

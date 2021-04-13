@@ -241,11 +241,24 @@ public class PresenterGraduation implements Presenter {
     return this.service.removeEntry(questionId, gradeEntryId);
   }
   
+  /**
+   * SAVING
+   */
+  public Object saveTemplate(final String path) {
+    return this.service.saveCorrectionTemplate(path);
+  }
+  
+  /**
+   * STUDENTS
+   */
+  public List<String> getStudentsSuggestedNames(final String start) {
+    return List.<String>of("Theo G", "Marius truc", "Stefan Locke", "Julien Cochet", "Stephen R", "Steven D");
+  }
+  
   public LinkedList<Integer> getStudentIds() {
     LinkedList<Integer> _xblockexpression = null;
     {
       Collection<StudentSheet> list = this.service.getStudentSheets();
-      InputOutput.<Integer>print(Integer.valueOf(list.size()));
       LinkedList<Integer> result = new LinkedList<Integer>();
       for (final StudentSheet s : list) {
         result.add(Integer.valueOf(s.getId()));
@@ -255,12 +268,16 @@ public class PresenterGraduation implements Presenter {
     return _xblockexpression;
   }
   
+  public void renameStudent(final int studentId, final String newname) {
+    this.service.renameStudent(newname);
+  }
+  
   public int getAbsolutePage(final int studentId, final int pageNumber) {
     return this.service.getAbsolutePageNumber(studentId, pageNumber);
   }
   
   /**
-   * --LOADING NEW TEMPLATE--
+   * --LOADING TEMPLATE--
    */
   public LinkedList<Integer> initLoading(final int pageNumber) {
     LinkedList<Integer> _xblockexpression = null;
@@ -327,7 +344,6 @@ public class PresenterGraduation implements Presenter {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getHeigth();
-          InputOutput.<String>print(("h = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;
@@ -344,7 +360,6 @@ public class PresenterGraduation implements Presenter {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getWidth();
-          InputOutput.<String>print(("w = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;

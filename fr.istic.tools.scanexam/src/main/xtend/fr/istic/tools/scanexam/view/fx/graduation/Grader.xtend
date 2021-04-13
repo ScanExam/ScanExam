@@ -77,7 +77,6 @@ class Grader extends VBox {
 		var ids = controller.adapterCorrection.presenter.getEntryIds(qItem.questionId);
 		// Finds all the selected entries for this student/question
 		var sids = controller.adapterCorrection.presenter.getSelectedEntryIds(qItem.questionId)
-		print("\nlist :" + sids + "\n")
 		for (Integer i : ids) {
 			var g = new GradeItem(this);
 			g.setItemId(i);
@@ -97,7 +96,7 @@ class Grader extends VBox {
 	}
 
 	def createNewGradeEntry() {
-		logger.log(Level.INFO, "Creating new GradeEntry")
+		logger.info("Creating new GradeEntry")
 		var entry = new GradeItem(this);
 		itemContainer.children.add(entry)
 		addEntryToModel(entry, controller.questionList.currentItem);
@@ -145,17 +144,16 @@ class Grader extends VBox {
 	}
 
 	def addPoints(GradeItem item) {
-		logger.log(Level.INFO, "Adding points")
+		logger.info("Adding points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		addPointsOf(item)
 		controller.adapterCorrection.presenter.applyGrade(controller.questionList.currentItem.questionId, item.id)
-		print("\nAdding points ");
+		
 	}
 
 	def removePoints(GradeItem item) {
-		logger.log(Level.INFO, "Removing points, not Imp")
+		logger.log(Level.INFO, "Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		removePointsOf(item)
 		controller.adapterCorrection.presenter.removeGrade(controller.questionList.currentItem.questionId, item.id)
-		print("\nRemoving points ");
 	}
 
 	def clearDisplay() {
@@ -201,6 +199,7 @@ class Grader extends VBox {
 			worthField = new TextField(worth.text)
 			worthField.padding = new Insets(0, 0, 0, 10)
 			worthField.maxWidth = 25;
+			worthField.styleClass.add("mytext-field")
 
 			remove = new Button("Remove entry");
 

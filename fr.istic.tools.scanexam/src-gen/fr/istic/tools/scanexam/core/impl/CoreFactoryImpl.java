@@ -65,6 +65,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 			case CorePackage.COMMENT: return createComment();
 			case CorePackage.TEXT_COMMENT: return createTextComment();
 			case CorePackage.HANDWRITING_COMMENT: return createHandwritingComment();
+			case CorePackage.LINE: return createLine();
 			case CorePackage.GRADE: return createGrade();
 			case CorePackage.STUDENT_SHEET: return createStudentSheet();
 			default:
@@ -160,6 +161,16 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	public HandwritingComment createHandwritingComment() {
 		HandwritingCommentImpl handwritingComment = new HandwritingCommentImpl();
 		return handwritingComment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Line createLine() {
+		LineImpl line = new LineImpl();
+		return line;
 	}
 
 	/**

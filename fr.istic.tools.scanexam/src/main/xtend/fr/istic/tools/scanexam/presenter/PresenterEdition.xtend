@@ -32,7 +32,7 @@ class PresenterEdition implements Presenter
 		presPdf = new PresenterPdf(service, this)
 		presQuestionZone =  new PresenterQuestionZone(service,this)
 		presMarkingScheme = new PresenterGradeScale(service, this)
-		sheetExport = new PresenterStudentSheetExport(service)
+		sheetExport = new PresenterStudentSheetExport(service, presPdf)
 	}
 	new(Adapter<PresenterEdition> adapter,ServiceEdition service) 
 	{

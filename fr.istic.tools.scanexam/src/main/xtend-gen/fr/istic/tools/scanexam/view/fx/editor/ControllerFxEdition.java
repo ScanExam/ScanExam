@@ -18,6 +18,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -26,6 +28,7 @@ import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -37,7 +40,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class ControllerFxEdition {
@@ -73,6 +75,8 @@ public class ControllerFxEdition {
   
   private boolean pdfLoaded = false;
   
+  private BooleanProperty modelLoaded = new SimpleBooleanProperty(this, "Is a model loaded", false);
+  
   private Logger logger = LogManager.getLogger();
   
   public ControllerFxEdition.SelectedTool getSelectedTool() {
@@ -82,6 +86,15 @@ public class ControllerFxEdition {
   public ControllerFxEdition.SelectedTool setSelectedTool(final ControllerFxEdition.SelectedTool tool) {
     return this.currentTool = tool;
   }
+  
+  @FXML
+  private ToggleButton createBoxButton;
+  
+  @FXML
+  private Button nextPageButton;
+  
+  @FXML
+  private Button previousPageButton;
   
   private PdfPane mainPane;
   
@@ -96,9 +109,6 @@ public class ControllerFxEdition {
   
   @FXML
   private Label pageNumberLabel;
-  
-  @FXML
-  private ToggleButton createBoxButton;
   
   private QuestionListEdition questionList;
   
@@ -218,12 +228,14 @@ public class ControllerFxEdition {
     this.questionEditor = _questionOptionsEdition;
     this.gradeListContainer.setContent(this.questionEditor);
     final EventHandler<ActionEvent> _function = (ActionEvent event) -> {
-      PresenterPdf pdfPresenter = this.editor.getPresenter().getPresenterPdf();
       int selectedIndex = this.pageChoice.getSelectionModel().getSelectedIndex();
-      pdfPresenter.goToPdfPage(selectedIndex);
+      this.selectPage(selectedIndex);
       this.renderDocument();
     };
     this.pageChoice.setOnAction(_function);
+    this.nextPageButton.disableProperty().bind(this.modelLoaded.not());
+    this.previousPageButton.disableProperty().bind(this.modelLoaded.not());
+    this.createBoxButton.disableProperty().bind(this.modelLoaded.not());
   }
   
   public AdapterEdition getAdapter() {
@@ -706,9 +718,6 @@ public class ControllerFxEdition {
             double _questionHeight = this.editor.getPresenter().getPresenterQuestionZone().questionHeight(i);
             double _multiply_3 = (_questionHeight * this.maxY);
             Box box = new Box(_multiply, _multiply_1, _multiply_2, _multiply_3);
-            double _questionWidth_1 = this.editor.getPresenter().getPresenterQuestionZone().questionWidth(i);
-            String _plus = ((("loading width for " + Integer.valueOf(i)) + " = ") + Double.valueOf(_questionWidth_1));
-            InputOutput.<String>print(_plus);
             this.mainPane.addZone(box);
             this.questionList.loadQuestion(box, this.editor.getPresenter().getPresenterQuestionZone().questionName(i), p, i, this.editor.getPresenter().getPresenterQuestionZone().questionWorth(i));
           }
@@ -719,7 +728,12 @@ public class ControllerFxEdition {
   }
   
   public boolean postLoad() {
-    return this.pdfLoaded = true;
+    boolean _xblockexpression = false;
+    {
+      this.modelLoaded.set(true);
+      _xblockexpression = this.pdfLoaded = true;
+    }
+    return _xblockexpression;
   }
   
   /**

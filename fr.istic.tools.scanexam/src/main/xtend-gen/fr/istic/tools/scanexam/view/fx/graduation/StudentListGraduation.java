@@ -5,9 +5,13 @@ import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("all")
 public class StudentListGraduation extends VBox {
+  private static final Logger logger = LogManager.getLogger();
+  
   public StudentListGraduation(final ControllerFxGraduation controller) {
     this.controller = controller;
     this.currentIndex = 0;
@@ -47,6 +51,11 @@ public class StudentListGraduation extends VBox {
   
   public void clearItems() {
     this.getChildren().clear();
+  }
+  
+  public void updateInModel(final StudentItemGraduation item) {
+    StudentListGraduation.logger.info((("Updating " + item) + " to model"));
+    this.controller.getAdapter().getPresenter().renameStudent(item.getStudentId(), item.getStudentName());
   }
   
   /**

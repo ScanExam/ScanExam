@@ -48,7 +48,7 @@ public class PresenterEdition implements Presenter {
     this.presQuestionZone = _presenterQuestionZone;
     PresenterGradeScale _presenterGradeScale = new PresenterGradeScale(service, this);
     this.presMarkingScheme = _presenterGradeScale;
-    PresenterStudentSheetExport _presenterStudentSheetExport = new PresenterStudentSheetExport(service);
+    PresenterStudentSheetExport _presenterStudentSheetExport = new PresenterStudentSheetExport(service, this.presPdf);
     this.sheetExport = _presenterStudentSheetExport;
   }
   

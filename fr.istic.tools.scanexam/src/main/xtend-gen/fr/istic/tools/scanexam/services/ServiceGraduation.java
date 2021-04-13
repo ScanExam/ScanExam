@@ -112,16 +112,20 @@ public class ServiceGraduation extends Service {
    */
   public boolean initializeCorrection(final Collection<StudentSheet> studentSheets) {
     try {
-      int index = 0;
       for (final StudentSheet sheet : studentSheets) {
-        {
-          final Page examPage = ExamSingleton.getPage(index);
-          index++;
-          for (int i = 0; (i < (examPage.getQuestions().size() + 1)); i++) {
-            sheet.getGrades().add(CoreFactory.eINSTANCE.createGrade());
+        for (int i = 0; (i < ExamSingleton.getTemplatePageAmount()); i++) {
+          {
+            final Page examPage = ExamSingleton.getPage(i);
+            int _size = examPage.getQuestions().size();
+            String _plus = ("test size : " + Integer.valueOf(_size));
+            InputOutput.<String>println(_plus);
+            for (int j = 0; (j < examPage.getQuestions().size()); j++) {
+              sheet.getGrades().add(CoreFactory.eINSTANCE.createGrade());
+            }
           }
         }
       }
+      this.studentSheets = studentSheets;
       return true;
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {

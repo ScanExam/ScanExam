@@ -31,6 +31,14 @@ class Exam {
 	int ^id
 	String name
 	contains Page[] pages
+	
+	op float computeMaxGrade() {
+		var float grade = 0f
+		for(page: pages) {
+			grade += page.questions.map[q | q.gradeScale.maxPoint].reduce[acc, v | v + acc]
+		}
+		grade
+	}
 }
 class Page 
 {
@@ -40,17 +48,26 @@ class Page
 class Comment {
 	float x
 	float y
-}
-
-class TextComment extends Comment {
-	String text
 	float pointerX
 	float pointerY
 }
 
-class HandwritingComment {
-	//TODO
+class TextComment extends Comment {
+	String text
 }
+
+class HandwritingComment {
+	contains Line[] lines
+}
+
+class Line {
+	float x1 
+	float y1 
+	float x2 
+	float y2
+	float thinkness
+	String color //hexa
+	}
 
 class Grade {
 	refers GradeEntry[] entries

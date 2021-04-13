@@ -1,39 +1,46 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
+import fr.istic.tools.scanexam.view.fx.FxSettings
 import javafx.event.EventHandler
+import javafx.geometry.Insets
 import javafx.scene.control.Label
 import javafx.scene.input.MouseEvent
-import javafx.scene.layout.VBox
-import fr.istic.tools.scanexam.view.fx.FxSettings
-import javafx.scene.paint.Color
+import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
-import javafx.geometry.Insets
-import javafx.scene.layout.Background
+import javafx.scene.layout.HBox
+import javafx.scene.paint.Color
 
-class StudentItemGraduation extends VBox {
-	int studentId;
+class StudentItemGraduation extends HBox {
 	new(int studentId) {
 		super()
-		this.studentId = studentId;
-		name = new Label(studentId + "");
-		this.children.add(name);
+		this.studentId = new Label(studentId+ "");
+		name = new Label("NOT SET");
+		this.children.addAll(this.studentId,name);
 		
 		this.styleClass.add("ListItem")
-		setupEvents
+		setupEvents()
 	}
+	
 	StudentListGraduation list;
 	Label name;
+	Label studentId;
 	//---GETTERS/SETTERS---//
 	
 	def setList(StudentListGraduation list) {
 		this.list = list;
 	}
 	def setStudentId(int id){
-		studentId = id
+		studentId.text = id + ""
 	}
 	def getStudentId(){
-		studentId
+		Integer.parseInt(studentId.text)
+	}
+	def getStudentName(){
+		this.name.text
+	}
+	def setStudentName(String name){
+		this.name.text = name
 	}
 	
 	//---METHODS---//

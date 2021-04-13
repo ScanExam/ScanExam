@@ -81,4 +81,12 @@ public interface Exam extends EObject {
 	 */
 	EList<Page> getPages();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false"
+	 * @generated
+	 */
+	float computeMaxGrade();
+
 } // Exam

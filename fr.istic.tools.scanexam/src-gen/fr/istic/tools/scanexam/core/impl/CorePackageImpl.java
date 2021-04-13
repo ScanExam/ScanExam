@@ -10,6 +10,7 @@ import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.HandwritingComment;
+import fr.istic.tools.scanexam.core.Line;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
@@ -94,6 +95,13 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	private EClass handwritingCommentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass lineEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -367,6 +375,15 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getExam__ComputeMaxGrade() {
+		return examEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getPage() {
 		return pageEClass;
 	}
@@ -421,6 +438,24 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getComment_PointerX() {
+		return (EAttribute)commentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getComment_PointerY() {
+		return (EAttribute)commentEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTextComment() {
 		return textCommentEClass;
 	}
@@ -439,26 +474,80 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTextComment_PointerX() {
-		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTextComment_PointerY() {
-		return (EAttribute)textCommentEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getHandwritingComment() {
 		return handwritingCommentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getHandwritingComment_Lines() {
+		return (EReference)handwritingCommentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getLine() {
+		return lineEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLine_X1() {
+		return (EAttribute)lineEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLine_Y1() {
+		return (EAttribute)lineEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLine_X2() {
+		return (EAttribute)lineEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLine_Y2() {
+		return (EAttribute)lineEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLine_Thinkness() {
+		return (EAttribute)lineEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLine_Color() {
+		return (EAttribute)lineEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -604,6 +693,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(examEClass, EXAM__ID);
 		createEAttribute(examEClass, EXAM__NAME);
 		createEReference(examEClass, EXAM__PAGES);
+		createEOperation(examEClass, EXAM___COMPUTE_MAX_GRADE);
 
 		pageEClass = createEClass(PAGE);
 		createEAttribute(pageEClass, PAGE__ID);
@@ -612,13 +702,22 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		commentEClass = createEClass(COMMENT);
 		createEAttribute(commentEClass, COMMENT__X);
 		createEAttribute(commentEClass, COMMENT__Y);
+		createEAttribute(commentEClass, COMMENT__POINTER_X);
+		createEAttribute(commentEClass, COMMENT__POINTER_Y);
 
 		textCommentEClass = createEClass(TEXT_COMMENT);
 		createEAttribute(textCommentEClass, TEXT_COMMENT__TEXT);
-		createEAttribute(textCommentEClass, TEXT_COMMENT__POINTER_X);
-		createEAttribute(textCommentEClass, TEXT_COMMENT__POINTER_Y);
 
 		handwritingCommentEClass = createEClass(HANDWRITING_COMMENT);
+		createEReference(handwritingCommentEClass, HANDWRITING_COMMENT__LINES);
+
+		lineEClass = createEClass(LINE);
+		createEAttribute(lineEClass, LINE__X1);
+		createEAttribute(lineEClass, LINE__Y1);
+		createEAttribute(lineEClass, LINE__X2);
+		createEAttribute(lineEClass, LINE__Y2);
+		createEAttribute(lineEClass, LINE__THINKNESS);
+		createEAttribute(lineEClass, LINE__COLOR);
 
 		gradeEClass = createEClass(GRADE);
 		createEReference(gradeEClass, GRADE__ENTRIES);
@@ -693,6 +792,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEAttribute(getExam_Name(), theEcorePackage.getEString(), "name", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExam_Pages(), this.getPage(), null, "pages", null, 0, -1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEOperation(getExam__ComputeMaxGrade(), theEcorePackage.getEFloat(), "computeMaxGrade", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(pageEClass, Page.class, "Page", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPage_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPage_Questions(), this.getQuestion(), null, "questions", null, 0, -1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -700,13 +801,22 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getComment_X(), theEcorePackage.getEFloat(), "x", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_Y(), theEcorePackage.getEFloat(), "y", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_PointerX(), theEcorePackage.getEFloat(), "pointerX", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_PointerY(), theEcorePackage.getEFloat(), "pointerY", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(textCommentEClass, TextComment.class, "TextComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTextComment_Text(), theEcorePackage.getEString(), "text", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTextComment_PointerX(), theEcorePackage.getEFloat(), "pointerX", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTextComment_PointerY(), theEcorePackage.getEFloat(), "pointerY", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(handwritingCommentEClass, HandwritingComment.class, "HandwritingComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getHandwritingComment_Lines(), this.getLine(), null, "lines", null, 0, -1, HandwritingComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(lineEClass, Line.class, "Line", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLine_X1(), theEcorePackage.getEFloat(), "x1", null, 0, 1, Line.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLine_Y1(), theEcorePackage.getEFloat(), "y1", null, 0, 1, Line.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLine_X2(), theEcorePackage.getEFloat(), "x2", null, 0, 1, Line.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLine_Y2(), theEcorePackage.getEFloat(), "y2", null, 0, 1, Line.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLine_Thinkness(), theEcorePackage.getEFloat(), "thinkness", null, 0, 1, Line.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLine_Color(), theEcorePackage.getEString(), "color", null, 0, 1, Line.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(gradeEClass, Grade.class, "Grade", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGrade_Entries(), this.getGradeEntry(), null, "entries", null, 0, -1, Grade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
