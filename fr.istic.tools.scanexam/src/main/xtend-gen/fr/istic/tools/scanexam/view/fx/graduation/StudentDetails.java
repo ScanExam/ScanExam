@@ -1,33 +1,46 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
+import fr.istic.tools.scanexam.view.fx.utils.RenameFieldSuggests;
+import java.util.LinkedList;
+import java.util.List;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class StudentDetails extends VBox {
-  public StudentDetails() {
+  public StudentDetails(final ControllerFxGraduation controller) {
+    this.controller = controller;
     Label nameRow = new Label("Student name :");
     Label idRow = new Label("Student Id :");
     GridPane _gridPane = new GridPane();
     this.grid = _gridPane;
     this.grid.add(nameRow, 0, 0);
     this.grid.add(idRow, 0, 1);
+    RenameFieldSuggests _renameFieldSuggests = new RenameFieldSuggests();
+    this.name = _renameFieldSuggests;
     Label _label = new Label();
-    this.nameLabel = _label;
-    Label _label_1 = new Label();
-    this.idLabel = _label_1;
-    this.grid.add(this.nameLabel, 1, 0);
+    this.idLabel = _label;
+    this.grid.add(this.name, 1, 0);
     this.grid.add(this.idLabel, 1, 1);
     this.getChildren().add(this.grid);
+    this.setupEvents();
   }
+  
+  private LinkedList<String> nameList;
   
   private GridPane grid;
   
-  private Label nameLabel;
+  private RenameFieldSuggests name;
   
   private Label idLabel;
+  
+  private ControllerFxGraduation controller;
   
   private StudentItemGraduation currentItem;
   
@@ -43,7 +56,7 @@ public class StudentDetails extends VBox {
   }
   
   private void setName() {
-    this.nameLabel.setText("TOTO");
+    this.name.setText(this.currentItem.getStudentName());
   }
   
   private void setId() {
@@ -52,7 +65,28 @@ public class StudentDetails extends VBox {
     this.idLabel.setText(_plus);
   }
   
-  public Object setupEvents() {
-    return null;
+  public void commitRename() {
+    String _text = this.name.getText();
+    String _plus = ("Renaming to" + _text);
+    InputOutput.<String>println(_plus);
+    this.currentItem.setStudentName(this.name.getText());
+    this.controller.getStudentList().updateInModel(this.currentItem);
+  }
+  
+  public void findSuggestions(final String start) {
+    InputOutput.<String>println("Changing");
+    List<String> l = this.controller.getAdapter().getPresenter().getStudentsSuggestedNames(start);
+    this.name.showSuggestion(l);
+  }
+  
+  public void setupEvents() {
+    final ChangeListener<String> _function = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
+      this.commitRename();
+    };
+    this.name.getTextProperty().addListener(_function);
+    final ChangeListener<String> _function_1 = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
+      this.findSuggestions(newVal);
+    };
+    this.name.getFieldTextProperty().addListener(_function_1);
   }
 }

@@ -1,12 +1,17 @@
 package fr.istic.tools.scanexam.export;
 
+import fr.istic.tools.scanexam.core.Line;
+import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
+import java.util.ArrayList;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 @SuppressWarnings("all")
 public class ExportPdfWithAnnotations {
@@ -14,7 +19,7 @@ public class ExportPdfWithAnnotations {
     try {
       File _file = new File("src/main/resources/resources_annotation/pfo_example.pdf");
       PDDocument document = PDDocument.load(_file);
-      ExportPdfWithAnnotations.textAnnotationWithArrowAbsoluteCoords(document, 0, 0, 350, 400, 400, "fffffffffffffffffffffffffffffffffffffff", "10/20");
+      ExportPdfWithAnnotations.textAnnotationWithArrowAbsoluteCoords(document, 0, 100, 350, 400, 400, "ffffffff", "10/20");
       document.close();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -53,17 +58,18 @@ public class ExportPdfWithAnnotations {
       }
       contentStream.moveTo(pointerAbsoluteX, pointerAbsoluteY);
       contentStream.lineTo((textAbsoluteX + (rectangleWidth / 2)), textAbsoluteY);
+      contentStream.setNonStrokingColor(Color.decode("#0093ff"));
       contentStream.stroke();
       contentStream.fill();
       contentStream.addRect((rectangleBottomLeftCornerX - 2), (rectangleBottomLeftCornerY - 2), (rectangleWidth + 4), 
         (rectangleHeight + 4));
-      contentStream.setNonStrokingColor((36 / 255f), (35 / 255f), (35 / 255f));
+      contentStream.setNonStrokingColor(Color.decode("#000000"));
       contentStream.fill();
       contentStream.addRect(rectangleBottomLeftCornerX, rectangleBottomLeftCornerY, rectangleWidth, rectangleHeight);
-      contentStream.setNonStrokingColor((248 / 255f), (244 / 255f), (243 / 255f));
+      contentStream.setNonStrokingColor(Color.decode("#ffffff"));
       contentStream.fill();
-      contentStream.setNonStrokingColor((36 / 255f), (35 / 255f), (35 / 255f));
-      contentStream.setFont(PDType1Font.TIMES_ROMAN, 8);
+      contentStream.setNonStrokingColor(Color.decode("#000000"));
+      contentStream.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
       contentStream.setLeading(7f);
       contentStream.beginText();
       contentStream.newLineAtOffset(textAbsoluteX, textAbsoluteY);
@@ -96,6 +102,51 @@ public class ExportPdfWithAnnotations {
       contentStream.newLineAtOffset(0, _minus);
       contentStream.showText(note);
       contentStream.endText();
+      contentStream.close();
+      File file = new File("src/main/resources/resources_annotation/pfo_example_annotation.pdf");
+      document.save(file);
+      Desktop.getDesktop().open(file);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public static float[] convertHexaToRGBFloat(final String hexaColor) {
+    float[] _xblockexpression = null;
+    {
+      Color color = Color.decode(hexaColor);
+      int _red = color.getRed();
+      float _divide = (((float) _red) / 255);
+      int _green = color.getGreen();
+      float _divide_1 = (((float) _green) / 255);
+      int _blue = color.getBlue();
+      float _divide_2 = (((float) _blue) / 255);
+      _xblockexpression = new float[] { _divide, _divide_1, _divide_2 };
+    }
+    return _xblockexpression;
+  }
+  
+  public static void annotationDrawLinePDF(final PDDocument document, final int nbPage, final ArrayList<Line> listLine) {
+    try {
+      PDPage page = document.getPage(nbPage);
+      PDPageContentStream contentStream = new PDPageContentStream(document, page, 
+        PDPageContentStream.AppendMode.APPEND, true, true);
+      int _size = listLine.size();
+      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
+      for (final Integer i : _doubleDotLessThan) {
+        {
+          Line lineTMP = listLine.get((i).intValue());
+          float originAbsoluteX = lineTMP.getX1();
+          float originAbsoluteY = lineTMP.getY1();
+          float destinationAbsoluteX = lineTMP.getX2();
+          float destinationAbsoluteY = lineTMP.getY2();
+          contentStream.moveTo(originAbsoluteX, originAbsoluteY);
+          contentStream.lineTo(destinationAbsoluteX, destinationAbsoluteY);
+          contentStream.setNonStrokingColor(Color.decode("#0093ff"));
+          contentStream.stroke();
+          contentStream.fill();
+        }
+      }
       contentStream.close();
       File file = new File("src/main/resources/resources_annotation/pfo_example_annotation.pdf");
       document.save(file);

@@ -9,20 +9,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 @SuppressWarnings("all")
-public class StudentItemGraduation extends VBox {
-  private int studentId;
-  
+public class StudentItemGraduation extends HBox {
   public StudentItemGraduation(final int studentId) {
     super();
-    this.studentId = studentId;
     String _plus = (Integer.valueOf(studentId) + "");
     Label _label = new Label(_plus);
-    this.name = _label;
-    this.getChildren().add(this.name);
+    this.studentId = _label;
+    Label _label_1 = new Label("NOT SET");
+    this.name = _label_1;
+    this.getChildren().addAll(this.studentId, this.name);
     this.getStyleClass().add("ListItem");
     this.setupEvents();
   }
@@ -31,16 +30,27 @@ public class StudentItemGraduation extends VBox {
   
   private Label name;
   
+  private Label studentId;
+  
   public StudentListGraduation setList(final StudentListGraduation list) {
     return this.list = list;
   }
   
-  public int setStudentId(final int id) {
-    return this.studentId = id;
+  public void setStudentId(final int id) {
+    String _plus = (Integer.valueOf(id) + "");
+    this.studentId.setText(_plus);
   }
   
   public int getStudentId() {
-    return this.studentId;
+    return Integer.parseInt(this.studentId.getText());
+  }
+  
+  public String getStudentName() {
+    return this.name.getText();
+  }
+  
+  public void setStudentName(final String name) {
+    this.name.setText(name);
   }
   
   public void setFocus(final boolean b) {

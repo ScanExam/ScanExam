@@ -67,8 +67,8 @@
                   </VBox>
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#prevStudentPressed" text="&lt;&lt;" />
-                        <Button mnemonicParsing="false" onAction="#nextStudentPressed" text="&gt;&gt;" />
+                        <Button fx:id="prevStudentButton" mnemonicParsing="false" onAction="#prevStudentPressed" text="&lt;&lt;" />
+                        <Button fx:id="nextStudentButton" mnemonicParsing="false" onAction="#nextStudentPressed" text="&gt;&gt;" />
                      </children>
                   </HBox>
                </children>
@@ -171,8 +171,8 @@
                   </VBox>
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#prevQuestionPressed" text="last question" />
-                        <Button mnemonicParsing="false" onAction="#nextQuestionPressed" text="Next Question" />
+                        <Button fx:id="prevQuestionButton" mnemonicParsing="false" onAction="#prevQuestionPressed" text="last question" />
+                        <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#nextQuestionPressed" text="Next Question" />
                      </children>
                   </HBox>
                </children>

@@ -10,6 +10,7 @@ import javafx.embed.swing.SwingFXUtils
 import javafx.fxml.FXML
 import javafx.scene.Cursor
 import javafx.scene.Node
+import javafx.scene.control.Button
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
@@ -23,6 +24,8 @@ import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.BooleanProperty
 
 class ControllerFxEdition {
 
@@ -40,6 +43,7 @@ class ControllerFxEdition {
 	double maxX;
 	double maxY;
 	var pdfLoaded = false;
+	BooleanProperty modelLoaded = new SimpleBooleanProperty(this,"Is a model loaded",false)
 
 	var logger = LogManager.logger
 
@@ -63,6 +67,15 @@ class ControllerFxEdition {
 
 	// ** FXML TAGS **//	
 	
+	//**FXML CONTROLS**//
+	@FXML
+	ToggleButton createBoxButton;
+	@FXML
+	Button nextPageButton;
+	@FXML
+	Button previousPageButton;
+	
+	
 	PdfPane mainPane;
 
 	@FXML
@@ -78,8 +91,7 @@ class ControllerFxEdition {
 	@FXML
 	Label pageNumberLabel;
 	
-	@FXML
-	ToggleButton createBoxButton;
+	
 	
 	QuestionListEdition questionList;
 	
@@ -200,14 +212,16 @@ class ControllerFxEdition {
 		
 		//Permet de définir pour chaque item de pageChoice une action : aller à la page sélectionnée
 		pageChoice.setOnAction([ event |
-			var pdfPresenter = editor.presenter.getPresenterPdf()
 		    var selectedIndex = pageChoice.getSelectionModel().getSelectedIndex();
 		    //var selectedItem = pageChoice.getSelectionModel().getSelectedItem();
 		    
-		    pdfPresenter.goToPdfPage(selectedIndex)
+		   	selectPage(selectedIndex)
 		    renderDocument
 		]);
 		
+		nextPageButton.disableProperty.bind(modelLoaded.not)
+		previousPageButton.disableProperty.bind(modelLoaded.not)
+		createBoxButton.disableProperty.bind(modelLoaded.not)
 	}
 	
 	//FIXME Pas terrible de mettre cela en public mais ControllerRoot n'a accès a aucun Presenter
@@ -569,7 +583,6 @@ class ControllerFxEdition {
 					editor.presenter.presenterQuestionZone.questionWidth(i) * maxX,
 					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY		
 				)
-				print("loading width for " + i + " = " + editor.presenter.presenterQuestionZone.questionWidth(i));
 				mainPane.addZone(box);
 				questionList.loadQuestion(box,editor.presenter.presenterQuestionZone.questionName(i),p,i,editor.presenter.presenterQuestionZone.questionWorth(i))
 			}
@@ -579,6 +592,7 @@ class ControllerFxEdition {
 	}
 	
 	def postLoad(){
+		modelLoaded.set(true)
 		pdfLoaded = true;
 	}
 

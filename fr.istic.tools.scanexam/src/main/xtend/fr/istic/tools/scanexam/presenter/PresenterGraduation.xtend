@@ -14,6 +14,9 @@ import java.util.LinkedList
 import java.util.List
 import java.util.Objects
 import org.apache.pdfbox.pdmodel.PDDocument
+import fr.istic.tools.scanexam.mailing.StudentDataManager
+import jdk.internal.joptsimple.internal.OptionNameMap
+import java.util.Optional
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -232,12 +235,27 @@ class PresenterGraduation implements Presenter
 	
 	
 	
+	/* SAVING  */
+	def saveTemplate(String path){
+		service.saveCorrectionTemplate(path)
+	}
 	
 	
+	
+	/* STUDENTS */
+	
+	def List<String> getStudentsSuggestedNames(String start){
+		/*var l = StudentDataManager.allNames
+		if (l == Optional.empty) {
+			List.of("","")
+		}else {
+			l.get
+		}*/
+		List.of("Theo G","Marius truc","Stefan Locke","Julien Cochet","Stephen R","Steven D")
+	}
 	
 	def LinkedList<Integer> getStudentIds(){
 		var list = service.studentSheets
-		print(list.size)
 		var result = new LinkedList<Integer>()
 		for (StudentSheet s : list) {
 			result.add(s.id);
@@ -245,12 +263,16 @@ class PresenterGraduation implements Presenter
 		result
 	}
 	
+	def renameStudent(int studentId,String newname){
+		service.renameStudent(newname)
+	}
+	
 	
 	def int getAbsolutePage(int studentId,int pageNumber){
 		service.getAbsolutePageNumber(studentId,pageNumber);
 	}
 	
-	/* --LOADING NEW TEMPLATE--  */
+	/* --LOADING TEMPLATE--  */
 	
 	def LinkedList<Integer> initLoading(int pageNumber){
 		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
@@ -300,7 +322,6 @@ class PresenterGraduation implements Presenter
 		for (Question q : questions) {
 			if (q.id == id) {
 				result = q.zone.heigth
-				print("h = " + result)
 			}
 		}
 		result
@@ -311,7 +332,6 @@ class PresenterGraduation implements Presenter
 		for (Question q : questions) {
 			if (q.id == id) {
 				result = q.zone.width
-				print("w = " + result)
 			}
 		}
 		result

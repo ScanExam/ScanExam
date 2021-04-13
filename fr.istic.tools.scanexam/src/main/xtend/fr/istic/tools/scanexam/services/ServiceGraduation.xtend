@@ -109,22 +109,23 @@ class ServiceGraduation extends Service
 	{
 		try
 		{
-		
+			
         	
-        	var index =0;
         	for (StudentSheet sheet : studentSheets)
         	{
-        		val examPage = ExamSingleton.getPage(index);
+        		for (var i = 0; i < ExamSingleton.templatePageAmount; i++) {
+	        		val examPage = ExamSingleton.getPage(i);
+	        		
+	        		println( "test size : " + examPage.questions.size)
+	        		for (var j = 0;j< examPage.questions.size;j++) //TODO +1?
+	        		{
+	        			sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
+	        		}
         		
-        		index ++;
-        		
-        		for (var i = 0;i< examPage.questions.size+1;i++)
-        		{
-        			sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
         		}
         		
         	}
-        	
+        	this.studentSheets = studentSheets
         	return true
 		}
 		catch (Exception ex)
@@ -306,7 +307,6 @@ class ServiceGraduation extends Service
 		if(valideGradeEntry(questionId,gradeEntry))
 		{
 			val sheet = studentSheets.get(currentSheetIndex);
-			
 			
 			sheet.grades.get(questionId).entries.add(gradeEntry)
 			return true

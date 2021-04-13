@@ -33,7 +33,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class Grader extends VBox {
@@ -68,6 +67,7 @@ public class Grader extends VBox {
       Insets _insets_3 = new Insets(0, 0, 0, 10);
       this.worthField.setPadding(_insets_3);
       this.worthField.setMaxWidth(25);
+      this.worthField.getStyleClass().add("mytext-field");
       Button _button = new Button("Remove entry");
       this.remove = _button;
       Insets _insets_4 = new Insets(0, 0, 10, 0);
@@ -282,7 +282,6 @@ public class Grader extends VBox {
     this.maxPoints.setText(_plus);
     List<Integer> ids = this.controller.getAdapterCorrection().getPresenter().getEntryIds(qItem.getQuestionId());
     List<Integer> sids = this.controller.getAdapterCorrection().getPresenter().getSelectedEntryIds(qItem.getQuestionId());
-    InputOutput.<String>print((("\nlist :" + sids) + "\n"));
     for (final Integer i : ids) {
       {
         Grader.GradeItem g = new Grader.GradeItem(this);
@@ -303,7 +302,7 @@ public class Grader extends VBox {
   }
   
   public void createNewGradeEntry() {
-    Grader.logger.log(Level.INFO, "Creating new GradeEntry");
+    Grader.logger.info("Creating new GradeEntry");
     Grader.GradeItem entry = new Grader.GradeItem(this);
     this.itemContainer.getChildren().add(entry);
     this.addEntryToModel(entry, this.controller.getQuestionList().getCurrentItem());
@@ -345,24 +344,36 @@ public class Grader extends VBox {
     return this.controller.getAdapterCorrection().getPresenter().removeEntry(qItem.getQuestionId(), item.id);
   }
   
-  public String addPoints(final Grader.GradeItem item) {
-    String _xblockexpression = null;
+  public boolean addPoints(final Grader.GradeItem item) {
+    boolean _xblockexpression = false;
     {
-      Grader.logger.log(Level.INFO, "Adding points");
+      int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
+      String _plus = ("Adding points for Student ID :" + Integer.valueOf(_studentId));
+      String _plus_1 = (_plus + ", for Questions ID :");
+      int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
+      String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
+      String _plus_3 = (_plus_2 + ", for Entry ID :");
+      String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
+      Grader.logger.info(_plus_4);
       this.addPointsOf(item);
-      this.controller.getAdapterCorrection().getPresenter().applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
-      _xblockexpression = InputOutput.<String>print("\nAdding points ");
+      _xblockexpression = this.controller.getAdapterCorrection().getPresenter().applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
     }
     return _xblockexpression;
   }
   
-  public String removePoints(final Grader.GradeItem item) {
-    String _xblockexpression = null;
+  public boolean removePoints(final Grader.GradeItem item) {
+    boolean _xblockexpression = false;
     {
-      Grader.logger.log(Level.INFO, "Removing points, not Imp");
+      int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
+      String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
+      String _plus_1 = (_plus + ", for Questions ID :");
+      int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
+      String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
+      String _plus_3 = (_plus_2 + ", for Entry ID :");
+      String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
+      Grader.logger.log(Level.INFO, _plus_4);
       this.removePointsOf(item);
-      this.controller.getAdapterCorrection().getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
-      _xblockexpression = InputOutput.<String>print("\nRemoving points ");
+      _xblockexpression = this.controller.getAdapterCorrection().getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
     }
     return _xblockexpression;
   }

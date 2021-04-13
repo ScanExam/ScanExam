@@ -27,6 +27,8 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import fr.istic.tools.scanexam.view.AdapterGraduation
+import javafx.beans.property.BooleanProperty
+import javafx.beans.property.SimpleBooleanProperty
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -57,7 +59,9 @@ class ControllerFxGraduation {
 	def getAdapterCorrection() {
 		corrector
 	}
-	boolean LoadedModel = false;
+	
+	BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
+	
 	Grader grader;
 	QuestionListGraduation questionList;
 	StudentListGraduation studentList;
@@ -105,6 +109,14 @@ class ControllerFxGraduation {
 	public HBox graderContainer;
 	@FXML
 	public Label instructionLabel;
+	@FXML
+	public Button nextStudentButton;
+	@FXML
+	public Button prevStudentButton;
+	@FXML
+	public Button nextQuestionButton;
+	@FXML
+	public Button prevQuestionButton;
 	
 
 	@FXML
@@ -116,7 +128,7 @@ class ControllerFxGraduation {
 	 */
 	@FXML
 	def void savePressed() {
-		println("Saving method");
+		logger.info("Save Called")
 	}
 
 	/**
@@ -124,7 +136,7 @@ class ControllerFxGraduation {
 	 */
 	@FXML
 	def void saveAsPressed() {
-		println("Saving as method");
+		logger.info("Save as Called")
 	}
 
 	/**
@@ -140,7 +152,8 @@ class ControllerFxGraduation {
 	 */
 	@FXML
 	def void importPressed() {
-		println("Import method");
+		logger.info("Import Called")
+
 	}
 
 	//XXX À améliorer
@@ -158,8 +171,8 @@ class ControllerFxGraduation {
 	 */
 	@FXML
 	def void nextQuestionPressed() {
-		println("Next question method");
-		if (LoadedModel)
+		logger.info("Next Question Called")
+		if (loadedModel.value)
 		nextQuestion
 	}
 
@@ -168,8 +181,8 @@ class ControllerFxGraduation {
 	 */
 	@FXML
 	def void prevQuestionPressed() {
-		println("Previous question method");
-		if (LoadedModel)
+		logger.info("Previous Question Called")
+		if (loadedModel.value)
 		previousQuestion
 	}
 
@@ -178,8 +191,8 @@ class ControllerFxGraduation {
 	 */
 	@FXML
 	def void nextStudentPressed() {
-		println("Next student method");
-		if (LoadedModel)
+		logger.info("Next Student Called")
+		if (loadedModel.value)
 		nextStudent
 	}
 
@@ -188,17 +201,9 @@ class ControllerFxGraduation {
 	 */
 	@FXML
 	def void prevStudentPressed() {
-		println("Previous student method");
-		if (LoadedModel)
+		logger.info("Previous Student Called")
+		if (loadedModel.value)
 		previousStudent
-	}
-
-	/**
-	 * Called when a grade update button is pressed
-	 */
-	@FXML
-	def void saveGradeButtonPressed() {
-		println("save Grade method : " + gradeSpinner.getValue() + "/" + totalGradeSpinner.getValue);
 	}
 
 	@FXML
@@ -228,11 +233,7 @@ class ControllerFxGraduation {
 	}
 	SelectedTool currentTool = SelectedTool.NO_TOOL;
 	
-	boolean pdfLoaded = false;
-	
-	double maxX; //la taille de l'image courrante
-	double maxY;
-	
+
 
 	
 	double imageWidth;
@@ -352,15 +353,25 @@ class ControllerFxGraduation {
 		
 		grader = new Grader(this);
 		graderContainer.children.add(grader);
-		grader.visible = false;
 		
-		studentDetails = new StudentDetails();
+		
+		studentDetails = new StudentDetails(this);
 		studentDetailsContainer.children.add(studentDetails)
 		binds(root);
 		binds(scrollMain);
 		binds(scrollBis);
 		
+		unLoaded();
+		
+		loadedModel.addListener([obs,oldVal,newVal | newVal ? loaded() : unLoaded()])
+		
+		nextQuestionButton.disableProperty.bind(loadedModel.not)
+		prevQuestionButton.disableProperty.bind(loadedModel.not)
+		prevStudentButton.disableProperty.bind(loadedModel.not)
+		nextStudentButton.disableProperty.bind(loadedModel.not)
+		
 	}
+	
 	def void binds(Node n) {
 		n.setOnKeyPressed([ event |
 			{
@@ -400,6 +411,7 @@ class ControllerFxGraduation {
 	
 	
 	def void load(){
+		loadedModel.set(false)
 		loadTemplate();
 		loadStudentPdfs();
 	}
@@ -432,11 +444,7 @@ class ControllerFxGraduation {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 		if (file !== null) {
 			corrector.presenter.openCorrectionPdf(file);
-			renderCorrectedCopy();
-			renderStudentCopy();
-			loadQuestions();
-			loadStudents();
-			postLoad();
+			loadedModel.set(true);
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -451,13 +459,30 @@ class ControllerFxGraduation {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			//TODO
+			adapter.presenter.saveTemplate(file.path)
+			logger.info("Saving correction file")
 		} 
 		else {
 			logger.warn("File not chosen")
 		}
 	}
 	
+	def loaded(){
+		renderCorrectedCopy();
+		renderStudentCopy();
+		loadQuestions();
+		loadStudents();
+		postLoad();
+	}
+	
+	def unLoaded(){
+		grader.visible = false;
+		studentDetails.visible = false;
+		instructionLabel.visible = true;
+		questionList.clearItems
+		studentList.clearItems
+		
+	}
 	
 	def void loadQuestions() {
 		for (var p = 0;p < ExamSingleton.instance.pages.size;p++) {
@@ -488,9 +513,9 @@ class ControllerFxGraduation {
 	}
 	
 	def void postLoad(){
-		LoadedModel = true
 		instructionLabel.visible = false;
 		grader.visible = true;
+		questionDetails.visible = true;
 		setSelectedQuestion
 		setSelectedStudent
 	}
@@ -502,7 +527,6 @@ class ControllerFxGraduation {
 	def void renderStudentCopy(){		
 		var image = corrector.presenter.presenterPdf.currentPdfPage
 		imview.image = SwingFXUtils.toFXImage(image, null);
-		pdfLoaded = true;
 		imageWidth = image.width
 		imageHeight = image.height
 	}

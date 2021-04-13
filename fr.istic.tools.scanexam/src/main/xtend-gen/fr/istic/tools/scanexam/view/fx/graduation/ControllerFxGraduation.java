@@ -18,6 +18,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
@@ -79,7 +83,7 @@ public class ControllerFxGraduation {
     return this.corrector;
   }
   
-  private boolean LoadedModel = false;
+  private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a template loaded", false);
   
   private Grader grader;
   
@@ -154,6 +158,18 @@ public class ControllerFxGraduation {
   public Label instructionLabel;
   
   @FXML
+  public Button nextStudentButton;
+  
+  @FXML
+  public Button prevStudentButton;
+  
+  @FXML
+  public Button nextQuestionButton;
+  
+  @FXML
+  public Button prevQuestionButton;
+  
+  @FXML
   public Object Pressed() {
     return null;
   }
@@ -163,7 +179,7 @@ public class ControllerFxGraduation {
    */
   @FXML
   public void savePressed() {
-    InputOutput.<String>println("Saving method");
+    ControllerFxGraduation.logger.info("Save Called");
   }
   
   /**
@@ -171,7 +187,7 @@ public class ControllerFxGraduation {
    */
   @FXML
   public void saveAsPressed() {
-    InputOutput.<String>println("Saving as method");
+    ControllerFxGraduation.logger.info("Save as Called");
   }
   
   /**
@@ -187,7 +203,7 @@ public class ControllerFxGraduation {
    */
   @FXML
   public void importPressed() {
-    InputOutput.<String>println("Import method");
+    ControllerFxGraduation.logger.info("Import Called");
   }
   
   /**
@@ -204,8 +220,9 @@ public class ControllerFxGraduation {
    */
   @FXML
   public void nextQuestionPressed() {
-    InputOutput.<String>println("Next question method");
-    if (this.LoadedModel) {
+    ControllerFxGraduation.logger.info("Next Question Called");
+    Boolean _value = this.loadedModel.getValue();
+    if ((_value).booleanValue()) {
       this.nextQuestion();
     }
   }
@@ -215,8 +232,9 @@ public class ControllerFxGraduation {
    */
   @FXML
   public void prevQuestionPressed() {
-    InputOutput.<String>println("Previous question method");
-    if (this.LoadedModel) {
+    ControllerFxGraduation.logger.info("Previous Question Called");
+    Boolean _value = this.loadedModel.getValue();
+    if ((_value).booleanValue()) {
       this.previousQuestion();
     }
   }
@@ -226,8 +244,9 @@ public class ControllerFxGraduation {
    */
   @FXML
   public void nextStudentPressed() {
-    InputOutput.<String>println("Next student method");
-    if (this.LoadedModel) {
+    ControllerFxGraduation.logger.info("Next Student Called");
+    Boolean _value = this.loadedModel.getValue();
+    if ((_value).booleanValue()) {
       this.nextStudent();
     }
   }
@@ -237,23 +256,11 @@ public class ControllerFxGraduation {
    */
   @FXML
   public void prevStudentPressed() {
-    InputOutput.<String>println("Previous student method");
-    if (this.LoadedModel) {
+    ControllerFxGraduation.logger.info("Previous Student Called");
+    Boolean _value = this.loadedModel.getValue();
+    if ((_value).booleanValue()) {
       this.previousStudent();
     }
-  }
-  
-  /**
-   * Called when a grade update button is pressed
-   */
-  @FXML
-  public void saveGradeButtonPressed() {
-    Double _value = this.gradeSpinner.getValue();
-    String _plus = ("save Grade method : " + _value);
-    String _plus_1 = (_plus + "/");
-    Double _value_1 = this.totalGradeSpinner.getValue();
-    String _plus_2 = (_plus_1 + _value_1);
-    InputOutput.<String>println(_plus_2);
   }
   
   @FXML
@@ -271,12 +278,6 @@ public class ControllerFxGraduation {
   }
   
   private ControllerFxGraduation.SelectedTool currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
-  
-  private boolean pdfLoaded = false;
-  
-  private double maxX;
-  
-  private double maxY;
   
   private double imageWidth;
   
@@ -424,13 +425,25 @@ public class ControllerFxGraduation {
     Grader _grader = new Grader(this);
     this.grader = _grader;
     this.graderContainer.getChildren().add(this.grader);
-    this.grader.setVisible(false);
-    StudentDetails _studentDetails = new StudentDetails();
+    StudentDetails _studentDetails = new StudentDetails(this);
     this.studentDetails = _studentDetails;
     this.studentDetailsContainer.getChildren().add(this.studentDetails);
     this.binds(this.root);
     this.binds(this.scrollMain);
     this.binds(this.scrollBis);
+    this.unLoaded();
+    final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      if ((newVal).booleanValue()) {
+        this.loaded();
+      } else {
+        this.unLoaded();
+      }
+    };
+    this.loadedModel.addListener(_function);
+    this.nextQuestionButton.disableProperty().bind(this.loadedModel.not());
+    this.prevQuestionButton.disableProperty().bind(this.loadedModel.not());
+    this.prevStudentButton.disableProperty().bind(this.loadedModel.not());
+    this.nextStudentButton.disableProperty().bind(this.loadedModel.not());
   }
   
   public void binds(final Node n) {
@@ -505,6 +518,7 @@ public class ControllerFxGraduation {
   }
   
   public void load() {
+    this.loadedModel.set(false);
     this.loadTemplate();
     this.loadStudentPdfs();
   }
@@ -550,11 +564,7 @@ public class ControllerFxGraduation {
     File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
       this.corrector.getPresenter().openCorrectionPdf(file);
-      this.renderCorrectedCopy();
-      this.renderStudentCopy();
-      this.loadQuestions();
-      this.loadStudents();
-      this.postLoad();
+      this.loadedModel.set(true);
     } else {
       ControllerFxGraduation.logger.warn("File not chosen");
     }
@@ -575,9 +585,27 @@ public class ControllerFxGraduation {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
+      this.getAdapter().getPresenter().saveTemplate(file.getPath());
+      ControllerFxGraduation.logger.info("Saving correction file");
     } else {
       ControllerFxGraduation.logger.warn("File not chosen");
     }
+  }
+  
+  public void loaded() {
+    this.renderCorrectedCopy();
+    this.renderStudentCopy();
+    this.loadQuestions();
+    this.loadStudents();
+    this.postLoad();
+  }
+  
+  public void unLoaded() {
+    this.grader.setVisible(false);
+    this.studentDetails.setVisible(false);
+    this.instructionLabel.setVisible(true);
+    this.questionList.clearItems();
+    this.studentList.clearItems();
   }
   
   public void loadQuestions() {
@@ -619,9 +647,9 @@ public class ControllerFxGraduation {
   }
   
   public void postLoad() {
-    this.LoadedModel = true;
     this.instructionLabel.setVisible(false);
     this.grader.setVisible(true);
+    this.questionDetails.setVisible(true);
     this.setSelectedQuestion();
     this.setSelectedStudent();
   }
@@ -629,7 +657,6 @@ public class ControllerFxGraduation {
   public void renderStudentCopy() {
     BufferedImage image = this.corrector.getPresenter().getPresenterPdf().getCurrentPdfPage();
     this.imview.setImage(SwingFXUtils.toFXImage(image, null));
-    this.pdfLoaded = true;
     this.imageWidth = image.getWidth();
     this.imageHeight = image.getHeight();
   }
