@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link fr.istic.tools.scanexam.core.Comment#getPageId <em>Page Id</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.Comment#getX <em>X</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.Comment#getY <em>Y</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.Comment#getPointerX <em>Pointer X</em>}</li>
@@ -24,6 +25,28 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Comment extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Page Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Page Id</em>' attribute.
+	 * @see #setPageId(int)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getComment_PageId()
+	 * @model unique="false"
+	 * @generated
+	 */
+	int getPageId();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.Comment#getPageId <em>Page Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Page Id</em>' attribute.
+	 * @see #getPageId()
+	 * @generated
+	 */
+	void setPageId(int value);
+
 	/**
 	 * Returns the value of the '<em><b>X</b></em>' attribute.
 	 * <!-- begin-user-doc -->

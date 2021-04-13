@@ -420,7 +420,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_X() {
+	public EAttribute getComment_PageId() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -429,7 +429,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_Y() {
+	public EAttribute getComment_X() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -438,7 +438,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_PointerX() {
+	public EAttribute getComment_Y() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -447,8 +447,17 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_PointerY() {
+	public EAttribute getComment_PointerX() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getComment_PointerY() {
+		return (EAttribute)commentEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -483,8 +492,17 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getHandwritingComment_PageId() {
+		return (EAttribute)handwritingCommentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getHandwritingComment_Lines() {
-		return (EReference)handwritingCommentEClass.getEStructuralFeatures().get(0);
+		return (EReference)handwritingCommentEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -700,6 +718,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEReference(pageEClass, PAGE__QUESTIONS);
 
 		commentEClass = createEClass(COMMENT);
+		createEAttribute(commentEClass, COMMENT__PAGE_ID);
 		createEAttribute(commentEClass, COMMENT__X);
 		createEAttribute(commentEClass, COMMENT__Y);
 		createEAttribute(commentEClass, COMMENT__POINTER_X);
@@ -709,6 +728,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(textCommentEClass, TEXT_COMMENT__TEXT);
 
 		handwritingCommentEClass = createEClass(HANDWRITING_COMMENT);
+		createEAttribute(handwritingCommentEClass, HANDWRITING_COMMENT__PAGE_ID);
 		createEReference(handwritingCommentEClass, HANDWRITING_COMMENT__LINES);
 
 		lineEClass = createEClass(LINE);
@@ -799,6 +819,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEReference(getPage_Questions(), this.getQuestion(), null, "questions", null, 0, -1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getComment_PageId(), theEcorePackage.getEInt(), "pageId", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_X(), theEcorePackage.getEFloat(), "x", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_Y(), theEcorePackage.getEFloat(), "y", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_PointerX(), theEcorePackage.getEFloat(), "pointerX", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -808,6 +829,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEAttribute(getTextComment_Text(), theEcorePackage.getEString(), "text", null, 0, 1, TextComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(handwritingCommentEClass, HandwritingComment.class, "HandwritingComment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getHandwritingComment_PageId(), theEcorePackage.getEInt(), "pageId", null, 0, 1, HandwritingComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getHandwritingComment_Lines(), this.getLine(), null, "lines", null, 0, -1, HandwritingComment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(lineEClass, Line.class, "Line", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
