@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.export
 
 import org.apache.pdfbox.pdmodel.PDDocument
+
 import java.io.File
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary
 import org.apache.pdfbox.pdmodel.PDPage
@@ -16,13 +17,16 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLine
 import java.awt.Desktop
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationText
 
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationTextMarkup
+
 class Annotation {
 	static var PDColor WHITEPDFBOX = new PDColor(#[255 / 255f, 255 / 255f, 255 / 255f], PDDeviceRGB.INSTANCE);
-	static var PDColor REDPDFBOX = new PDColor(#[255 / 255f, 0 / 255f, 0 / 255f], PDDeviceRGB.INSTANCE);
-	static var PDColor GREENPDFBOX = new PDColor(#[0 / 255f, 200 / 255f, 0 / 255f], PDDeviceRGB.INSTANCE);
-	static var PDColor BLUEPDFBOX = new PDColor(#[0 / 255f, 0 / 255f, 255 / 255f], PDDeviceRGB.INSTANCE);
+	//static var PDColor REDPDFBOX = new PDColor(#[255 / 255f, 0 / 255f, 0 / 255f], PDDeviceRGB.INSTANCE);
+//	static var PDColor GREENPDFBOX = new PDColor(#[0 / 255f, 200 / 255f, 0 / 255f], PDDeviceRGB.INSTANCE);
+	//static var PDColor BLUEPDFBOX = new PDColor(#[0 / 255f, 0 / 255f, 255 / 255f], PDDeviceRGB.INSTANCE);
 	static var PDColor BLACKPDFBOX = new PDColor(#[0 / 255f, 0 / 255f, 0 / 255f], PDDeviceRGB.INSTANCE);
 	static var float INCH = 72
+	
 	
 	
 	def static void main(String[] args) {
@@ -31,11 +35,14 @@ class Annotation {
 		
 		annotationPDFWithArrow(document,0,0,0,0,0)
 		
+		//annotationLinePDF(document,0,150,150,250,250)
+		
 	}
 		
 	def static void annotationPDFWithArrow(PDDocument document,int pageNoted,float lowerLeftX,float lowerLeftY,float upperLeftX,float upperRightY)	{
 
 		var PDPage page = document.getPage(pageNoted)
+		
 
 		var List<PDAnnotation> annotations = page.getAnnotations();
 
@@ -56,6 +63,8 @@ class Annotation {
 		aSquare.interiorColor = WHITEPDFBOX
 		aSquare.setColor(BLACKPDFBOX) // Outline in red, not setting a fill
 		aSquare.setBorderStyle(borderThick)
+		
+		
 
 		// Place the annotation on the page, we'll make this 1" (72points) square
 		// 3.5" down, 1" in from the right on the page
@@ -65,6 +74,25 @@ class Annotation {
 		position.setUpperRightX(pw - INCH); // 1" in from right
 		position.setUpperRightY(ph - (3.5f * INCH)); // 3.5" down
 		aSquare.setRectangle(position);
+		
+		var PDAnnotationTextMarkup txtMark = new PDAnnotationTextMarkup(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT)
+	
+		var  float[] quads = newFloatArrayOfSize(8)
+ 	    
+ 	     quads.set(0,position.getLowerLeftX())
+ 	     
+         quads.set(1,position.getUpperRightY()-2)  // y1
+         quads.set(2,position.getUpperRightX()) // x2
+         quads.set(3,quads.get(1)) // y2
+         quads.set(4,quads.get(0)) // x3
+         quads.set(5,position.getLowerLeftY()-2) // y3
+         quads.set(6,quads.get(2)) // x4
+         quads.set(7,quads.get(5) )// y5
+		 txtMark.setQuadPoints(quads);
+         txtMark.setContents("Highlighted since it's important");
+         txtMark.setRectangle(position)
+         
+         annotations.add(txtMark);
 
 		// add to the annotations on the page
 		annotations.add(aSquare);
@@ -76,11 +104,12 @@ class Annotation {
 		aLine.setContents("Circle->Square");
 		aLine.setCaption(true); // Make the contents a caption on the line
 		// Set the rectangle containing the line
-		position = new PDRectangle(); // Reuse the variable, but note it's a new object!
+		/*position = new PDRectangle(); // Reuse the variable, but note it's a new object!
 		position.setLowerLeftX(2 * INCH); // 1" in + width of circle
 		position.setLowerLeftY(ph - (3.5f * INCH) - INCH); // 1" height, 3.5" down
 		position.setUpperRightX(pw - INCH - INCH); // 1" in from right, and width of square
 		position.setUpperRightY(ph - (3 * INCH)); // 3" down (top of circle)
+		*/
 		aLine.setRectangle(position);
 
 		// Now set the line position itself
@@ -145,8 +174,42 @@ class Annotation {
 
 		document.close()
 	}
-	
-	
-	
+	def static void annotationLinePDF(PDDocument document,int currentPage,float pointerX,float pointerY, float linkX,  float linkY){
+		
+		var PDPage page = document.getPage(currentPage)
+		var List<PDAnnotation> annotations = page.getAnnotations();
+		
+		var PDAnnotationLine aLine = new PDAnnotationLine();
+		
+		aLine.setEndPointEndingStyle(PDAnnotationLine.LE_OPEN_ARROW);
+		aLine.setContents("Circle->Square");
+		aLine.setCaption(true);
+				
+		var float[] linepos = newFloatArrayOfSize(4)
+		linepos.set(0,pointerX)
+		linepos.set(1,pointerY)
+		linepos.set(2,linkX)
+		linepos.set(3,linkY)
+		aLine.setLine(linepos);
+		
+		
+		var PDBorderStyleDictionary borderThick = new PDBorderStyleDictionary()
+		borderThick.setWidth(12)
+		aLine.setColor(BLACKPDFBOX);
+		
+		annotations.add(aLine)
+		
+		
+		var File file = new File("src/main/resources/resources_annotation/pfo_example_annotation.pdf");
+
+		document.save(file)
+		Desktop.getDesktop().open(file);
+
+		document.close()
+				
+				
+		
+		
+	}
 	
 }
