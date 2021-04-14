@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderThreadManager extends Thread implements Runnable {
@@ -39,9 +38,6 @@ public class PdfReaderThreadManager extends Thread implements Runnable {
       PdfReaderQrCodeThread _pdfReaderQrCodeThread_3 = new PdfReaderQrCodeThread(this.reader, ((3 * this.nbPage) / 4), this.nbPage, pdf, latchThreads);
       service.execute(_pdfReaderQrCodeThread_3);
       latchThreads.await();
-      long _count = latchThreads.getCount();
-      String _plus = ("Fermeture du Thread Manager : " + Long.valueOf(_count));
-      InputOutput.<String>println(_plus);
       this.reader.setFinished(true);
       service.shutdown();
       this.doc.close();

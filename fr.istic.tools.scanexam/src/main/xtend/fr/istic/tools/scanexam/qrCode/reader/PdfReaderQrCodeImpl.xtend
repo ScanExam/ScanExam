@@ -26,9 +26,11 @@ import java.util.List
 import java.util.ArrayList
 import java.util.Collections
 import java.io.InputStream
+import org.apache.logging.log4j.LogManager
 
 class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
+	val logger = LogManager.logger
 	Set<Copie> sheets
 	int nbPagesInSheet
 	int nbPagesInPdf
@@ -50,7 +52,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 			this.nbPagesInPdf = doc.numberOfPages
 			createThread(doc.numberOfPages, doc)
 		} catch (Exception e) {
-			e.printStackTrace
+			logger.error("Cannot read PDF", e)
 			return false
 		}
 		return true
@@ -93,7 +95,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 			val Result result = mfr.decodeWithState(bitmap)
 			return result.getText()
 		} catch (NotFoundException e) {
-			System.out.println("There is no QR code in the image")
+			logger.error("No QR in this image", e)
 			return ""
 		}
 	}

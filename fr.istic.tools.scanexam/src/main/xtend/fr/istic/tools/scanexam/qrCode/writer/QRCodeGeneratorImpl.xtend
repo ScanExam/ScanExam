@@ -24,11 +24,13 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import org.apache.logging.log4j.LogManager
 
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 	boolean isFinished
-
+	val logger = LogManager.logger
+	
 	/**
 	 * Créer toutes les copies d'examen en y insérant les QrCodes correspondant dans chaque pages
 	 * 
@@ -85,13 +87,13 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
         } // fin try
         catch (Exception e) {
-            e.printStackTrace()
+            logger.error("Cannot insert QR codes", e)
         }
     }
 
 	/**
-	 * CrÃ©e un QRCode (21 * 21 carrÃ©s) de taille width * height encryptant la chaine text.
-	 * Un fichier PNG du QRCode est crÃ©e en suivant le filePath
+	 * Créé un QRCode (21 * 21 carrés) de taille width * height chiffrant la chaine text.
+	 * Un fichier PNG du QRCode est créé en suivant le filePath
 	 * @param text Le texte a encoder 
 	 * @param width  Largeur de l'image 
 	 * @param height Hauteur de l'image
@@ -107,7 +109,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 			val Path path = FileSystems.getDefault().getPath(filePath)
 			MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path)
 		} catch (WriterException | IOException e) {
-			e.printStackTrace
+			logger.error("Cannot generate QR code", e)
 		}
 	}
 
@@ -116,8 +118,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * l'enregistre dans outputFile
 	 * 
 	 * @param inputFile  Chemin du pdf cible
-	 * @param imagePath  Chemin de l'image a insÃ©rer
-	 * @param outputFile Chemin du fichier a Ã©crire
+	 * @param imagePath  Chemin de l'image a insérer
+	 * @param outputFile Chemin du fichier a écrire
 	 * 
 	 * @throws IOException If there is an error writing the data.
 	 */
@@ -135,14 +137,14 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 			}
 			doc.save(outputFile);
 		} catch (IOException e) {
-			e.printStackTrace()
+			logger.error("Cannot print QR code in page", e)
 		}
 	}
 
 	/**
 	 * @param name l'intitulé du document
-	 * @param nbCopies nombre de copies dÃ©sirÃ©es
-	 * @param docSujetMaitre document dans lequel insÃ©rer les Codes
+	 * @param nbCopies nombre de copies désirées
+	 * @param docSujetMaitre document dans lequel insérer les Codes
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
@@ -172,7 +174,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	}
 
 	/**
-	 * InsÃ¨re le QRCode sur chaque pages d'un sujet (en changeant le numÃ©ro de page sur chacunes des pages)
+	 * Insère le QRCode sur chaque pages d'un sujet (en changeant le numéro de page sur chacunes des pages)
 	 * 
 	 * @param name l'intitulé du document
 	 * @param docSujetMaitre le sujet maitre
@@ -189,7 +191,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	}
 
 	/**
-	 * InÃ¨sre un QRCode sur une page
+	 * Inèsre un QRCode sur une page
 	 * @param name l'intitulé du document
 	 * @param docSujetMaitre le sujet maitre
 	 * @param numCopie le nombre de copies souhaitées

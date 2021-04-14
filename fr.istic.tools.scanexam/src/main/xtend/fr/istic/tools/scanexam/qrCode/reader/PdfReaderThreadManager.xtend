@@ -28,7 +28,6 @@ class PdfReaderThreadManager extends Thread implements Runnable {
 		service.execute(new PdfReaderQrCodeThread(reader, (3 * nbPage / 4), nbPage, pdf, latchThreads))
 
 		latchThreads.await()
-		println("Fermeture du Thread Manager : " + latchThreads.count)
 		reader.setFinished(true)
 		service.shutdown()
 		doc.close

@@ -5,6 +5,9 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import fr.istic.tools.scanexam.qrCode.writer.PdfThreadManagerWriter;
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
+import fr.istic.tools.scanexam.qrCode.writer.QRThreadWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +20,8 @@ import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -32,6 +37,8 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 @SuppressWarnings("all")
 public class QRCodeGeneratorImpl implements QRCodeGenerator {
   private boolean isFinished;
+  
+  private final Logger logger = LogManager.getLogger();
   
   /**
    * Créer toutes les copies d'examen en y insérant les QrCodes correspondant dans chaque pages
@@ -69,7 +76,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
-        e.printStackTrace();
+        this.logger.error("Cannot insert QR codes", e);
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
@@ -77,8 +84,8 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   /**
-   * CrÃ©e un QRCode (21 * 21 carrÃ©s) de taille width * height encryptant la chaine text.
-   * Un fichier PNG du QRCode est crÃ©e en suivant le filePath
+   * Créé un QRCode (21 * 21 carrés) de taille width * height chiffrant la chaine text.
+   * Un fichier PNG du QRCode est créé en suivant le filePath
    * @param text Le texte a encoder
    * @param width  Largeur de l'image
    * @param height Hauteur de l'image
@@ -96,7 +103,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
     } catch (final Throwable _t) {
       if (_t instanceof WriterException || _t instanceof IOException) {
         final Exception e = (Exception)_t;
-        e.printStackTrace();
+        this.logger.error("Cannot generate QR code", e);
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
@@ -108,8 +115,8 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * l'enregistre dans outputFile
    * 
    * @param inputFile  Chemin du pdf cible
-   * @param imagePath  Chemin de l'image a insÃ©rer
-   * @param outputFile Chemin du fichier a Ã©crire
+   * @param imagePath  Chemin de l'image a insérer
+   * @param outputFile Chemin du fichier a écrire
    * 
    * @throws IOException If there is an error writing the data.
    */
@@ -151,7 +158,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
     } catch (final Throwable _t) {
       if (_t instanceof IOException) {
         final IOException e = (IOException)_t;
-        e.printStackTrace();
+        this.logger.error("Cannot print QR code in page", e);
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
@@ -160,8 +167,8 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   
   /**
    * @param name l'intitulé du document
-   * @param nbCopies nombre de copies dÃ©sirÃ©es
-   * @param docSujetMaitre document dans lequel insÃ©rer les Codes
+   * @param nbCopies nombre de copies désirées
+   * @param docSujetMaitre document dans lequel insérer les Codes
    * @param nbPages nombre de pages du sujet Maitre
    */
   public void createThread(final String examID, final int nbCopie, final PDDocument docSujetMaitre, final PDDocument doc, final int nbPage, final OutputStream output) {
@@ -187,7 +194,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   /**
-   * InsÃ¨re le QRCode sur chaque pages d'un sujet (en changeant le numÃ©ro de page sur chacunes des pages)
+   * Insère le QRCode sur chaque pages d'un sujet (en changeant le numéro de page sur chacunes des pages)
    * 
    * @param name l'intitulé du document
    * @param docSujetMaitre le sujet maitre
@@ -203,7 +210,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   /**
-   * InÃ¨sre un QRCode sur une page
+   * Inèsre un QRCode sur une page
    * @param name l'intitulé du document
    * @param docSujetMaitre le sujet maitre
    * @param numCopie le nombre de copies souhaitées

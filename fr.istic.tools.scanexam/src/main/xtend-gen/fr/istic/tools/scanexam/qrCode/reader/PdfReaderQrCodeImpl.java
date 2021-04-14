@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -39,6 +41,8 @@ import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 @SuppressWarnings("all")
 public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
+  private final Logger logger = LogManager.getLogger();
+  
   private Set<Copie> sheets;
   
   private int nbPagesInSheet;
@@ -72,7 +76,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
-        e.printStackTrace();
+        this.logger.error("Cannot read PDF", e);
         return false;
       } else {
         throw Exceptions.sneakyThrow(_t);
@@ -123,7 +127,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
       return result.getText();
     } catch (final Throwable _t) {
       if (_t instanceof NotFoundException) {
-        System.out.println("There is no QR code in the image");
+        final NotFoundException e = (NotFoundException)_t;
+        this.logger.error("No QR in this image", e);
         return "";
       } else {
         throw Exceptions.sneakyThrow(_t);

@@ -4,7 +4,6 @@ import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
 import java.util.concurrent.CountDownLatch;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderQrCodeThread extends Thread implements Runnable {
@@ -31,9 +30,6 @@ public class PdfReaderQrCodeThread extends Thread implements Runnable {
     try {
       this.reader.readQRCodeImage(this.pdf, this.borneInf, this.borneMax);
       this.countDown.countDown();
-      long _count = this.countDown.getCount();
-      String _plus = ("Fermeture du Thread de Lecture: " + Long.valueOf(_count));
-      InputOutput.<String>println(_plus);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
