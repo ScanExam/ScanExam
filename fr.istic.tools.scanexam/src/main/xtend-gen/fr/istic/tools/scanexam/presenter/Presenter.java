@@ -7,6 +7,4 @@ package fr.istic.tools.scanexam.presenter;
 @SuppressWarnings("all")
 public interface Presenter {
   PresenterPdf getPresenterPdf();
-  
-  PresenterGradeScale getPresenterMarkingScheme();
 }

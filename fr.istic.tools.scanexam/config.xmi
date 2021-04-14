@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="ASCII"?>
+<config:Config xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:config="fr.istic.tools.scanexam.core.config" language="fr" mailPort="5"/>

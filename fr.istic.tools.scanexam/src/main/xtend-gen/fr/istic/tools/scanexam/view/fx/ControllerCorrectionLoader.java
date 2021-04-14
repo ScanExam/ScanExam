@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterCorrectionLoader;
+import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
@@ -93,7 +93,7 @@ public class ControllerCorrectionLoader {
   @FXML
   private Pane hoverPane;
   
-  private PresenterCorrectionLoader presCorrectLoader;
+  private PresenterGraduationLoader presGraduationLoader;
   
   private static final Logger logger = LogManager.getLogger();
   
@@ -101,8 +101,8 @@ public class ControllerCorrectionLoader {
    * Initialise le composant avec le presenter composé en paramètre
    * @param loader le presenter
    */
-  public void initialize(final PresenterCorrectionLoader loader) {
-    this.presCorrectLoader = loader;
+  public void initialize(final PresenterGraduationLoader loader) {
+    this.presGraduationLoader = loader;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
       this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(
@@ -126,7 +126,7 @@ public class ControllerCorrectionLoader {
       this.loadFile("*.xmi", "file.format.xmi", this.txtFldFileGraduation);
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
-    boolean _hasTemplateLoaded = this.presCorrectLoader.hasTemplateLoaded();
+    boolean _hasTemplateLoaded = this.presGraduationLoader.hasTemplateLoaded();
     boolean _not = (!_hasTemplateLoaded);
     if (_not) {
       this.rbUseLoaded.setDisable(true);
@@ -191,10 +191,10 @@ public class ControllerCorrectionLoader {
   @FXML
   public Object saveAndQuit() {
     Object _xifexpression = null;
-    boolean _loadTemplate = this.presCorrectLoader.loadTemplate(this.txtFldFile.getText());
+    boolean _loadTemplate = this.presGraduationLoader.loadTemplate(this.txtFldFile.getText());
     if (_loadTemplate) {
       Object _xifexpression_1 = null;
-      boolean _loadCorrection = this.presCorrectLoader.loadCorrection(this.txtFldFileGraduation.getText());
+      boolean _loadCorrection = this.presGraduationLoader.loadCorrection(this.txtFldFileGraduation.getText());
       if (_loadCorrection) {
         this.quit();
       } else {

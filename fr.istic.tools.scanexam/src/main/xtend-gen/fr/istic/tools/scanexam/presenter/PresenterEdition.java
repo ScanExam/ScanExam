@@ -19,11 +19,7 @@ public class PresenterEdition implements Presenter {
    * Bidirectional associations with the concrete presenters
    * and main controller of the view
    */
-  private PresenterQRCode presQRCode;
-  
   private PresenterQuestionZone presQuestionZone;
-  
-  private PresenterGradeScale presMarkingScheme;
   
   private ServiceEdition service;
   
@@ -40,8 +36,6 @@ public class PresenterEdition implements Presenter {
     this.presPdf = _presenterPdf;
     PresenterQuestionZone _presenterQuestionZone = new PresenterQuestionZone(service, this);
     this.presQuestionZone = _presenterQuestionZone;
-    PresenterGradeScale _presenterGradeScale = new PresenterGradeScale(service, this);
-    this.presMarkingScheme = _presenterGradeScale;
     PresenterStudentSheetExport _presenterStudentSheetExport = new PresenterStudentSheetExport(service, this.presPdf);
     this.sheetExport = _presenterStudentSheetExport;
   }
@@ -50,13 +44,6 @@ public class PresenterEdition implements Presenter {
     this(service);
     Objects.<Adapter<PresenterEdition>>requireNonNull(adapter);
     this.adapter = adapter;
-  }
-  
-  /**
-   * @return current {@link PresenterQRCode}
-   */
-  public PresenterQRCode getPresenterQRCode() {
-    return this.presQRCode;
   }
   
   /**
@@ -71,14 +58,6 @@ public class PresenterEdition implements Presenter {
    */
   public PresenterStudentSheetExport getPresenterStudentSheetExport() {
     return this.sheetExport;
-  }
-  
-  /**
-   * @return current {@link PresenterMarkingScheme}
-   */
-  @Override
-  public PresenterGradeScale getPresenterMarkingScheme() {
-    return this.presMarkingScheme;
   }
   
   @Override

@@ -8,5 +8,4 @@ package fr.istic.tools.scanexam.presenter
 interface Presenter {
 	
 	def PresenterPdf getPresenterPdf()
-	def PresenterGradeScale getPresenterMarkingScheme()
 }

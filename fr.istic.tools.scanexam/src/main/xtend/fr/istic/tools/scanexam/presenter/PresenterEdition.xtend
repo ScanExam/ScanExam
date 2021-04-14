@@ -16,9 +16,7 @@ class PresenterEdition implements Presenter
 	 * Bidirectional associations with the concrete presenters
 	 * and main controller of the view
 	 */
-	PresenterQRCode presQRCode
 	PresenterQuestionZone presQuestionZone
-	PresenterGradeScale presMarkingScheme
 	ServiceEdition service
 	PresenterPdf presPdf
 	PresenterStudentSheetExport sheetExport
@@ -31,7 +29,6 @@ class PresenterEdition implements Presenter
 		
 		presPdf = new PresenterPdf(service, this)
 		presQuestionZone =  new PresenterQuestionZone(service,this)
-		presMarkingScheme = new PresenterGradeScale(service, this)
 		sheetExport = new PresenterStudentSheetExport(service, presPdf)
 	}
 	new(Adapter<PresenterEdition> adapter,ServiceEdition service) 
@@ -49,15 +46,6 @@ class PresenterEdition implements Presenter
 			EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance())
 		}*/
 	}
-
-
-	/**
-	 * @return current {@link PresenterQRCode} 
-	 */
-	def getPresenterQRCode(){
-		presQRCode
-	}
-	
 	
 	/**
 	 * @return current {@link PresenterQuestionZone} 
@@ -72,15 +60,6 @@ class PresenterEdition implements Presenter
 	def getPresenterStudentSheetExport() {
 		return sheetExport
 	}
-	
-	
-	/**
-	 * @return current {@link PresenterMarkingScheme} 
-	 */
-	override getPresenterMarkingScheme(){
-		presMarkingScheme
-	}
-	
 	
 	
 	override getPresenterPdf(){

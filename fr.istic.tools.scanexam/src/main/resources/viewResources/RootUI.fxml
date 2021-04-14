@@ -22,7 +22,7 @@
 						<MenuItem mnemonicParsing="false" onAction="#createNewTemplatePressed" text="%menu.file.new" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="%menu.file.loadTemplate" />
 						<MenuItem mnemonicParsing="false" fx:id="saveTemplateButton" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
-						<MenuItem mnemonicParsing="false" onAction="#exportToSheets" text="%menu.file.exportToExam" />
+						<MenuItem mnemonicParsing="false" fx:id="exportToExamButton" onAction="#exportToSheets" text="%menu.file.exportToExam" />
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="false" mnemonicParsing="false" onAction="#loadStudentCopiesPressed" text="%menu.file.loadStudentSheet" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />

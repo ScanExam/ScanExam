@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.presenter.PresenterCorrectionLoader
+import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
@@ -68,7 +68,7 @@ class ControllerCorrectionLoader {
 	@FXML
 	var Pane hoverPane
 
-	var PresenterCorrectionLoader presCorrectLoader;
+	var PresenterGraduationLoader presGraduationLoader;
 
 	static val logger = LogManager.logger
 
@@ -76,8 +76,8 @@ class ControllerCorrectionLoader {
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(PresenterCorrectionLoader loader) {
-		presCorrectLoader = loader
+	def initialize(PresenterGraduationLoader loader) {
+		presGraduationLoader = loader
 		hBoxLoad.disableProperty.bind(rbLoadModel.selectedProperty.not)
 
 		// Condition pour que le bouton de validation soit désactivé :
@@ -102,7 +102,7 @@ class ControllerCorrectionLoader {
 		btnBrowseGraduation.onAction = [e|loadFile("*.xmi", "file.format.xmi", txtFldFileGraduation)]
 
 		// Si aucun examen n'est chargé, désactiver le RadioButton "Utiliser le modèle chargé"
-		if (!presCorrectLoader.hasTemplateLoaded) {
+		if (!presGraduationLoader.hasTemplateLoaded) {
 			rbUseLoaded.disable = true
 			rbLoadModel.selected = true
 		}
@@ -153,8 +153,8 @@ class ControllerCorrectionLoader {
 
 	@FXML
 	def saveAndQuit() {
-		if (presCorrectLoader.loadTemplate(txtFldFile.text)) {
-			if(presCorrectLoader.loadCorrection(txtFldFileGraduation.text)) {
+		if (presGraduationLoader.loadTemplate(txtFldFile.text)) {
+			if(presGraduationLoader.loadCorrection(txtFldFileGraduation.text)) {
 				quit
 			} else {}
 				//sendDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)

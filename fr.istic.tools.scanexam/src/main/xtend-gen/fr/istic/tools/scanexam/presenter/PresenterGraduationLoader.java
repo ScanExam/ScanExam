@@ -31,4 +31,8 @@ public class PresenterGraduationLoader {
     }
     return _xblockexpression;
   }
+  
+  public boolean loadCorrection(final String path) {
+    return true;
+  }
 }

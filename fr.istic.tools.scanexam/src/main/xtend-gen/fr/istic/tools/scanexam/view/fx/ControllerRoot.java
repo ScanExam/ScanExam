@@ -42,6 +42,9 @@ public class ControllerRoot implements Initializable {
   @FXML
   private MenuItem saveTemplateButton;
   
+  @FXML
+  private MenuItem exportToExamButton;
+  
   private ControllerFxGraduation corrector;
   
   private ControllerFxEdition editor;
@@ -79,7 +82,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerCorrectionLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterCorrectionLoader());
+      loader.<ControllerCorrectionLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader());
       Scene _scene = new Scene(view, 384, 355);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -178,8 +181,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      System.out.println(this.corrector.getAdapter().getPresenter().getPresenterStudentSheet());
-      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterStudentSheet());
+      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader());
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -224,6 +226,7 @@ public class ControllerRoot implements Initializable {
   public void init() {
     this.saveGraduationButton.disableProperty().bind(this.corrector.getLoadedModel().not());
     this.saveTemplateButton.disableProperty().bind(this.editor.getLoadedModel().not());
+    this.exportToExamButton.disableProperty().bind(this.editor.getLoadedModel().not());
   }
   
   @Override

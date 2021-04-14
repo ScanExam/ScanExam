@@ -32,19 +32,13 @@ public class PresenterGraduation implements Presenter {
    */
   private PresenterQuestion presQuestion;
   
-  private PresenterCopy presCopy;
-  
-  private PresenterGradeScale presMarkingScheme;
-  
   private PresenterGraduation graduationPresenter;
   
   private PresenterPdf presPdf;
   
   private PresenterStudentListLoader studentListPresenter;
   
-  private PresenterGraduationLoader studentSheetPresenter;
-  
-  private PresenterCorrectionLoader correctionLoaderPresenter;
+  private PresenterGraduationLoader graduationLoaderPresenter;
   
   private PresenterImportExportXMI importExportPresenter;
   
@@ -58,9 +52,7 @@ public class PresenterGraduation implements Presenter {
     PresenterImportExportXMI _presenterImportExportXMI = new PresenterImportExportXMI(service);
     this.importExportPresenter = _presenterImportExportXMI;
     PresenterGraduationLoader _presenterGraduationLoader = new PresenterGraduationLoader(this.importExportPresenter, service);
-    this.studentSheetPresenter = _presenterGraduationLoader;
-    PresenterCorrectionLoader _presenterCorrectionLoader = new PresenterCorrectionLoader(service);
-    this.correctionLoaderPresenter = _presenterCorrectionLoader;
+    this.graduationLoaderPresenter = _presenterGraduationLoader;
     PresenterPdf _presenterPdf = new PresenterPdf(service, this);
     this.presPdf = _presenterPdf;
     PresenterQuestion _presenterQuestion = new PresenterQuestion(service);
@@ -80,21 +72,6 @@ public class PresenterGraduation implements Presenter {
    */
   public PresenterQuestion getPresenterQuestion() {
     return this.presQuestion;
-  }
-  
-  /**
-   * @return current {@link PresenterCopy}
-   */
-  public PresenterCopy getPresenterCopy() {
-    return this.presCopy;
-  }
-  
-  /**
-   * @return current {@link PresenterMarkingScheme}
-   */
-  @Override
-  public PresenterGradeScale getPresenterMarkingScheme() {
-    return this.presMarkingScheme;
   }
   
   /**
@@ -119,15 +96,8 @@ public class PresenterGraduation implements Presenter {
   /**
    * @return current {@link PresenterStudentSheetLoader}
    */
-  public PresenterGraduationLoader getPresenterStudentSheet() {
-    return this.studentSheetPresenter;
-  }
-  
-  /**
-   * @return current {@link PresenterCorrectionLoader}
-   */
-  public PresenterCorrectionLoader getPresenterCorrectionLoader() {
-    return this.correctionLoaderPresenter;
+  public PresenterGraduationLoader getPresenterGraduationLoader() {
+    return this.graduationLoaderPresenter;
   }
   
   public void openEditionTemplate(final String path) {

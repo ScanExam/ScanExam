@@ -31,4 +31,8 @@ class PresenterGraduationLoader {
 		true
 	}
 	
+	def boolean loadCorrection(String path) {
+		true
+	}
+	
 }

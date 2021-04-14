@@ -32,6 +32,8 @@ class ControllerRoot implements Initializable {
 	MenuItem saveGraduationButton;
 	@FXML
 	MenuItem saveTemplateButton;
+	@FXML
+	MenuItem exportToExamButton;
 	
 	ControllerFxGraduation corrector;
 	ControllerFxEdition editor;
@@ -63,7 +65,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		loader.<ControllerCorrectionLoader>controller.initialize(corrector.adapter.presenter.getPresenterCorrectionLoader)
+		loader.<ControllerCorrectionLoader>controller.initialize(corrector.adapter.presenter.getPresenterGraduationLoader)
 		dialog.setScene(new Scene(view, 384, 355))
 		dialog.setResizable(false)
 		dialog.show
@@ -127,8 +129,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		System.out.println(corrector.adapter.presenter.presenterStudentSheet);
-		loader.<ControllerGraduationLoader>controller.initialize(corrector.adapter.presenter.presenterStudentSheet)
+		loader.<ControllerGraduationLoader>controller.initialize(corrector.adapter.presenter.getPresenterGraduationLoader)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show
@@ -160,8 +161,9 @@ class ControllerRoot implements Initializable {
 	
 	
 	def init(){
-		saveGraduationButton.disableProperty.bind(corrector.loadedModel.not);
+		saveGraduationButton.disableProperty.bind(corrector.loadedModel.not)
 		saveTemplateButton.disableProperty.bind(editor.loadedModel.not)
+		exportToExamButton.disableProperty.bind(editor.loadedModel.not)
 	}
 	
 	override initialize(URL location, ResourceBundle resources) {

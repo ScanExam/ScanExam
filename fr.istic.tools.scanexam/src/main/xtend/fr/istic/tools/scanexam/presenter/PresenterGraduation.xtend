@@ -14,9 +14,6 @@ import java.util.LinkedList
 import java.util.List
 import java.util.Objects
 import org.apache.pdfbox.pdmodel.PDDocument
-import fr.istic.tools.scanexam.mailing.StudentDataManager
-import jdk.internal.joptsimple.internal.OptionNameMap
-import java.util.Optional
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -30,13 +27,10 @@ class PresenterGraduation implements Presenter
 	 * and main controller of the view
 	 */
 	PresenterQuestion presQuestion
-	PresenterCopy presCopy
-	PresenterGradeScale presMarkingScheme
 	PresenterGraduation graduationPresenter;
 	PresenterPdf presPdf 
 	PresenterStudentListLoader studentListPresenter
-	PresenterGraduationLoader studentSheetPresenter
-	PresenterCorrectionLoader correctionLoaderPresenter
+	PresenterGraduationLoader graduationLoaderPresenter
 	PresenterImportExportXMI importExportPresenter
 	
 	ServiceGraduation service;
@@ -49,9 +43,8 @@ class PresenterGraduation implements Presenter
 		this.service = service
 		
 		importExportPresenter = new PresenterImportExportXMI(service)
-		studentSheetPresenter = new PresenterGraduationLoader(importExportPresenter,service);
+		graduationLoaderPresenter = new PresenterGraduationLoader(importExportPresenter,service);
 		
-		correctionLoaderPresenter = new PresenterCorrectionLoader(service)
 		presPdf = new PresenterPdf(service, this)
 		presQuestion = new PresenterQuestion(service)
 	
@@ -85,24 +78,6 @@ class PresenterGraduation implements Presenter
 	def getPresenterQuestion(){
 		presQuestion
 	}
-	
-	
-	/**
-	 * @return current {@link PresenterCopy} 
-	 */
-	def getPresenterCopy(){
-		presCopy
-	}
-	
-
-	/**
-	 * @return current {@link PresenterMarkingScheme} 
-	 */
-	override getPresenterMarkingScheme(){
-		presMarkingScheme
-	}
-	
-	
 	/**
 	 * @return current {@link ControllerVueCorrection} 
 	 */
@@ -125,15 +100,8 @@ class PresenterGraduation implements Presenter
 	/**
 	 * @return current {@link PresenterStudentSheetLoader} 
 	 */
-	def PresenterGraduationLoader getPresenterStudentSheet() {
-		studentSheetPresenter
-	}
-	
-	/**
-	 * @return current {@link PresenterCorrectionLoader} 
-	 */
-	def PresenterCorrectionLoader getPresenterCorrectionLoader() {
-		correctionLoaderPresenter
+	def PresenterGraduationLoader getPresenterGraduationLoader() {
+		graduationLoaderPresenter
 	}
 	
 	def void openEditionTemplate(String path){
