@@ -152,7 +152,12 @@ public class PresenterPdf {
     }
   }
   
-  public void create(final File file) {
+  /**
+   * Crée le modèle de l'examen
+   * @param name Nom du modèle d'examen
+   * @param file Fichier du modèle d'examen
+   */
+  public void create(final String name, final File file) {
     try {
       Objects.<File>requireNonNull(file);
       byte[] _readAllBytes = Files.readAllBytes(Path.of(file.getAbsolutePath()));
@@ -160,6 +165,7 @@ public class PresenterPdf {
       this.pdfInput = _byteArrayInputStream;
       this.document = PDDocument.load(file);
       this.service.onDocumentLoad(IterableExtensions.size(this.document.getPages()));
+      this.service.setExamName(name);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

@@ -19,6 +19,7 @@ class PresenterEdition implements Presenter
 	PresenterQuestionZone presQuestionZone
 	ServiceEdition service
 	PresenterPdf presPdf
+	PresenterTemplateCreator templateCreatorPresenter
 	PresenterStudentSheetExport sheetExport
 	Adapter<PresenterEdition> adapter
 	
@@ -28,6 +29,7 @@ class PresenterEdition implements Presenter
 		this.service = service
 		
 		presPdf = new PresenterPdf(service, this)
+		templateCreatorPresenter = new PresenterTemplateCreator(this)
 		presQuestionZone =  new PresenterQuestionZone(service,this)
 		sheetExport = new PresenterStudentSheetExport(service, presPdf)
 	}
@@ -52,6 +54,13 @@ class PresenterEdition implements Presenter
 	 */
 	def getPresenterQuestionZone(){
 		presQuestionZone
+	}
+	
+	/**
+	 * @return current {@link PresenterTemplateCreator} 
+	 */
+	def PresenterTemplateCreator getPresenterTemplateCreator() {
+		templateCreatorPresenter
 	}
 	
 	/**

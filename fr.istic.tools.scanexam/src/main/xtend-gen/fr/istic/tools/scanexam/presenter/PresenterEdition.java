@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
+import fr.istic.tools.scanexam.presenter.PresenterTemplateCreator;
 import fr.istic.tools.scanexam.services.ServiceEdition;
 import fr.istic.tools.scanexam.view.Adapter;
 import java.io.ByteArrayInputStream;
@@ -29,6 +30,8 @@ public class PresenterEdition implements Presenter {
   
   private PresenterPdf presPdf;
   
+  private PresenterTemplateCreator templateCreatorPresenter;
+  
   private PresenterStudentSheetExport sheetExport;
   
   private Adapter<PresenterEdition> adapter;
@@ -38,6 +41,8 @@ public class PresenterEdition implements Presenter {
     this.service = service;
     PresenterPdf _presenterPdf = new PresenterPdf(service, this);
     this.presPdf = _presenterPdf;
+    PresenterTemplateCreator _presenterTemplateCreator = new PresenterTemplateCreator(this);
+    this.templateCreatorPresenter = _presenterTemplateCreator;
     PresenterQuestionZone _presenterQuestionZone = new PresenterQuestionZone(service, this);
     this.presQuestionZone = _presenterQuestionZone;
     PresenterStudentSheetExport _presenterStudentSheetExport = new PresenterStudentSheetExport(service, this.presPdf);
@@ -55,6 +60,13 @@ public class PresenterEdition implements Presenter {
    */
   public PresenterQuestionZone getPresenterQuestionZone() {
     return this.presQuestionZone;
+  }
+  
+  /**
+   * @return current {@link PresenterTemplateCreator}
+   */
+  public PresenterTemplateCreator getPresenterTemplateCreator() {
+    return this.templateCreatorPresenter;
   }
   
   /**

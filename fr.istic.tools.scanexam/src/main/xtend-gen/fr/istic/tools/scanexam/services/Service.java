@@ -52,4 +52,12 @@ public abstract class Service {
   public boolean hasExamLoaded() {
     return (ExamSingleton.instance != null);
   }
+  
+  /**
+   * Met à jour le nom de l'examen
+   * @param name Nouevau nom de l'examen
+   */
+  public void setExamName(final String name) {
+    ExamSingleton.instance.setName(name);
+  }
 }

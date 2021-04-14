@@ -50,4 +50,12 @@ abstract class Service
 		ExamSingleton.instance !== null
 	}
 	
+	/**
+	 * Met à jour le nom de l'examen
+	 * @param name Nouevau nom de l'examen
+	 */
+	def void setExamName(String name) {
+		ExamSingleton.instance.name = name
+	}
+	
 }

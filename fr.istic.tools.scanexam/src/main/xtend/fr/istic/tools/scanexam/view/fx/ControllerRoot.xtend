@@ -72,9 +72,19 @@ class ControllerRoot implements Initializable {
 	}
 	
 	@FXML
-	def createNewTemplatePressed(){
-		editor.newTemplatePressed
+	def createNewTemplatePressed() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.FXML"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.new"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerTemplateCreator>controller.initialize(editor.adapter.presenter.getPresenterTemplateCreator, editor)
+		dialog.setScene(new Scene(view, 384, 155))
+		dialog.setResizable(false);
+		dialog.show
 	}
+	
 	@FXML
 	def SaveTemplatePressed(){
 		editor.saveTemplatePressed

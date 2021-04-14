@@ -8,6 +8,7 @@ import fr.istic.tools.scanexam.view.fx.AdapterFxStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerCorrectionLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
+import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import java.io.InputStream;
@@ -99,7 +100,24 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void createNewTemplatePressed() {
-    this.editor.newTemplatePressed();
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.FXML"));
+      final Stage dialog = new Stage();
+      dialog.setTitle(LanguageManager.translate("menu.file.new"));
+      ObservableList<Image> _icons = dialog.getIcons();
+      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
+      Image _image = new Image(_inputStreamResource);
+      _icons.add(_image);
+      loader.<ControllerTemplateCreator>getController().initialize(this.editor.getAdapter().getPresenter().getPresenterTemplateCreator(), this.editor);
+      Scene _scene = new Scene(view, 384, 155);
+      dialog.setScene(_scene);
+      dialog.setResizable(false);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @FXML
