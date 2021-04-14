@@ -22,31 +22,33 @@ import java.util.stream.Collectors
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
-import java.io.File
+import java.util.List
+import java.util.ArrayList
+import java.util.Collections
+import java.io.InputStream
 
 class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
 	Set<Copie> sheets
-	int nbSheetsTotal
 	int nbPagesInSheet
 	int nbPagesInPdf
 	PDDocument doc
 	boolean isFinished
+	
+	int missingSheets
 
-	new(PDDocument doc, int nbPages, int nbCopies) {
-		this.doc = doc
+	new(InputStream input, int nbPages) {
+		this.doc = PDDocument.load(input)
 		this.nbPagesInSheet = nbPages
-		this.nbSheetsTotal = nbCopies
 		this.isFinished = false
-
+		missingSheets = 0
 		sheets = new HashSet<Copie>()
 	}
 
 	override readPDf() {
 		try {
 			this.nbPagesInPdf = doc.numberOfPages
-			val PDFRenderer pdf = new PDFRenderer(doc)
-			createThread(doc.numberOfPages, pdf)
+			createThread(doc.numberOfPages, doc)
 		} catch (Exception e) {
 			e.printStackTrace
 			return false
@@ -57,15 +59,12 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	def void readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
 		for (page : startPages ..< endPages) {
 			val BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB)
-			// val int taille = (bim.getHeight() * 0.3f) as int
-			// val BufferedImage dest = bim.getSubimage(0, bim.getHeight() -  taille , taille, taille)
 			val Pattern pattern = Pattern.compile("_")
 			val String[] items = pattern.split(decodeQRCodeBuffered(bim))
 
 			val Copie cop = new Copie(Integer.parseInt(items.get(items.size - 2)), page,
 				Integer.parseInt(items.get(items.size - 1)))
 
-			// WARNING Possible racecondtion dans addCopie
 			synchronized (sheets) {
 				addCopie(cop)
 			}
@@ -105,9 +104,9 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param docSujetMaitre document dans lequel insérer les Codes
 	 *  
 	 */
-	def createThread(int nbPage, PDFRenderer pdfRenderer) {
+	def createThread(int nbPage, PDDocument doc) {
 
-		val PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, pdfRenderer, this)
+		val PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, this)
 		manager.start
 	}
 
@@ -117,10 +116,21 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 */
 	def boolean isExamenComplete() {
 		var boolean ret = true
+		var List<Integer> idSheets = new ArrayList<Integer>()
+		
 		for (i : 0 ..< sheets.length) {
 			ret = ret && sheets.get(i).isCopyComplete(nbPagesInSheet)
+			idSheets.add(sheets.get(i).numCopie)
 		}
-		return ret && (nbSheetsTotal == sheets.length)
+		
+		Collections.sort(idSheets, [a, b |
+			a - b
+		])
+		
+		missingSheets = Math.abs(idSheets.get(idSheets.size - 1) - (idSheets.size - 1))
+		ret = ret && (missingSheets == 0)
+		
+		return ret
 	}
 
 	/**
@@ -275,16 +285,20 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		this.isFinished = bool
 	}
 
-	def static void main(String[] arg) {
+	/*def static void main(String[] arg) {
 		val File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf")
 		val PDDocument doc = PDDocument.load(pdf)
-		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8, 32)
-
+		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8)
+		
 		qrcodeReader.readPDf
+		
+		
 		println("le threads principal continue")
 
 		while (qrcodeReader.getNbPagesTreated != qrcodeReader.getNbPagesPdf) {
 		}
-	}
+		
+		qrcodeReader.isExamenComplete
+	}*/
 
 }

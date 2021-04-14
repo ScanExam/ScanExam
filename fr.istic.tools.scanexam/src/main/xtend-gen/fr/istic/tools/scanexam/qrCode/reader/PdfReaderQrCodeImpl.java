@@ -16,9 +16,12 @@ import fr.istic.tools.scanexam.qrCode.reader.Page;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCode;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderThreadManager;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,13 +36,10 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   private Set<Copie> sheets;
-  
-  private int nbSheetsTotal;
   
   private int nbPagesInSheet;
   
@@ -49,21 +49,26 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private boolean isFinished;
   
-  public PdfReaderQrCodeImpl(final PDDocument doc, final int nbPages, final int nbCopies) {
-    this.doc = doc;
-    this.nbPagesInSheet = nbPages;
-    this.nbSheetsTotal = nbCopies;
-    this.isFinished = false;
-    HashSet<Copie> _hashSet = new HashSet<Copie>();
-    this.sheets = _hashSet;
+  private int missingSheets;
+  
+  public PdfReaderQrCodeImpl(final InputStream input, final int nbPages) {
+    try {
+      this.doc = PDDocument.load(input);
+      this.nbPagesInSheet = nbPages;
+      this.isFinished = false;
+      this.missingSheets = 0;
+      HashSet<Copie> _hashSet = new HashSet<Copie>();
+      this.sheets = _hashSet;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @Override
   public boolean readPDf() {
     try {
       this.nbPagesInPdf = this.doc.getNumberOfPages();
-      final PDFRenderer pdf = new PDFRenderer(this.doc);
-      this.createThread(this.doc.getNumberOfPages(), pdf);
+      this.createThread(this.doc.getNumberOfPages(), this.doc);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -130,8 +135,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param nbCopies nombre de copies désirées
    * @param docSujetMaitre document dans lequel insérer les Codes
    */
-  public void createThread(final int nbPage, final PDFRenderer pdfRenderer) {
-    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, pdfRenderer, this);
+  public void createThread(final int nbPage, final PDDocument doc) {
+    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, this);
     manager.start();
   }
   
@@ -141,12 +146,28 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    */
   public boolean isExamenComplete() {
     boolean ret = true;
+    List<Integer> idSheets = new ArrayList<Integer>();
     int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
     for (final Integer i : _doubleDotLessThan) {
-      ret = (ret && (((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[(i).intValue()]).isCopyComplete(this.nbPagesInSheet));
+      {
+        ret = (ret && (((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[(i).intValue()]).isCopyComplete(this.nbPagesInSheet));
+        idSheets.add(Integer.valueOf((((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[(i).intValue()]).getNumCopie()));
+      }
     }
-    return (ret && (this.nbSheetsTotal == ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length));
+    final Comparator<Integer> _function = (Integer a, Integer b) -> {
+      return ((a).intValue() - (b).intValue());
+    };
+    Collections.<Integer>sort(idSheets, _function);
+    int _size = idSheets.size();
+    int _minus = (_size - 1);
+    Integer _get = idSheets.get(_minus);
+    int _size_1 = idSheets.size();
+    int _minus_1 = (_size_1 - 1);
+    int _minus_2 = ((_get).intValue() - _minus_1);
+    this.missingSheets = Math.abs(_minus_2);
+    ret = (ret && (this.missingSheets == 0));
+    return ret;
   }
   
   /**
@@ -344,19 +365,5 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   public boolean setFinished(final boolean bool) {
     return this.isFinished = bool;
-  }
-  
-  public static void main(final String[] arg) {
-    try {
-      final File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf");
-      final PDDocument doc = PDDocument.load(pdf);
-      final PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8, 32);
-      qrcodeReader.readPDf();
-      InputOutput.<String>println("le threads principal continue");
-      while ((qrcodeReader.getNbPagesTreated() != qrcodeReader.getNbPagesPdf())) {
-      }
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
   }
 }

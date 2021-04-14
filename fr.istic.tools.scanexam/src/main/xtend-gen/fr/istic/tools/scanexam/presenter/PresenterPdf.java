@@ -1,10 +1,12 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.services.Service;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -52,7 +54,7 @@ public class PresenterPdf {
   /**
    * InputStream du pdf
    */
-  protected ByteArrayInputStream pdfInput;
+  protected ByteArrayOutputStream pdfOutput;
   
   /**
    * Constructor
@@ -160,8 +162,10 @@ public class PresenterPdf {
     try {
       Objects.<File>requireNonNull(file);
       byte[] _readAllBytes = Files.readAllBytes(Path.of(file.getAbsolutePath()));
-      ByteArrayInputStream _byteArrayInputStream = new ByteArrayInputStream(_readAllBytes);
-      this.pdfInput = _byteArrayInputStream;
+      final InputStream input = new ByteArrayInputStream(_readAllBytes);
+      ByteArrayOutputStream _byteArrayOutputStream = new ByteArrayOutputStream();
+      this.pdfOutput = _byteArrayOutputStream;
+      input.transferTo(this.pdfOutput);
       this.document = PDDocument.load(file);
       this.service.onDocumentLoad(IterableExtensions.size(this.document.getPages()));
       this.service.setExamName(name);
@@ -174,7 +178,9 @@ public class PresenterPdf {
     try {
       PDDocument _xblockexpression = null;
       {
-        this.pdfInput = stream;
+        ByteArrayOutputStream _byteArrayOutputStream = new ByteArrayOutputStream();
+        this.pdfOutput = _byteArrayOutputStream;
+        stream.transferTo(this.pdfOutput);
         _xblockexpression = this.document = PDDocument.load(stream);
       }
       return _xblockexpression;
@@ -210,6 +216,7 @@ public class PresenterPdf {
    * @return un InputStream vers le PDF
    */
   public ByteArrayInputStream getPdfInputStream() {
-    return this.pdfInput;
+    byte[] _byteArray = this.pdfOutput.toByteArray();
+    return new ByteArrayInputStream(_byteArray);
   }
 }

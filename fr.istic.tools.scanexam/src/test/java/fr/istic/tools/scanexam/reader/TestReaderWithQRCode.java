@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -27,20 +26,20 @@ public class TestReaderWithQRCode {
 	static int nbPages = 8;
 	static int nbCopies = 4;
 
-	static PDDocument docGood;
-	static PDDocument docDirty;
+	//static PDDocument docGood;
+	//static PDDocument docDirty;
 	
 	@BeforeAll
 	static void init() throws IOException, InterruptedException {
 		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("QRCode/pfo_example_Inserted_Good.pdf");
 		if (inStreamGood != null) {
-			docGood = PDDocument.load(inStreamGood);
-			readerGood = new PdfReaderQrCodeImpl(docGood, nbPages, nbCopies);
+			//docGood = PDDocument.load(inStreamGood);
+			readerGood = new PdfReaderQrCodeImpl(inStreamGood, nbPages);
 		}
 		InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("QRCode/pfo_example_Inserted_Dirty.pdf");
 		if (inStreamDirty != null) {
-			docDirty = PDDocument.load(inStreamDirty);
-			readerDirty = new PdfReaderQrCodeImpl(docDirty, nbPages, nbCopies);
+			//docDirty = PDDocument.load(inStreamDirty);
+			readerDirty = new PdfReaderQrCodeImpl(inStreamDirty, nbPages);
 		}
 		
 		readerGood.readPDf();
@@ -56,22 +55,9 @@ public class TestReaderWithQRCode {
 
 	@AfterAll
 	static void close() throws IOException{
-		docGood.close();
-		docDirty.close();
+		//docGood.close();
+		//docDirty.close();
 	}
-	
-	/*
-	@Test
-	@DisplayName("Test de lecture d'un pdf complet")
-	void readPdfTestGood() {
-		assertTrue(readerGood.readPDf());
-	}
-	
-	@Test
-	@DisplayName("Test de lecture d'un pdf ou il manque une page")
-	void readPdfTestDirty() {
-		assertTrue(readerDirty.readPDf());
-	}*/
 	
 	@Test
 	@DisplayName("Test getNbPagesPdf dans le pdf complet")
@@ -125,7 +111,6 @@ public class TestReaderWithQRCode {
 				bool &= false;
 			}
 		}
-		
 		bool &= arr.size() == collection.size();
 		
 		assertEquals(true, bool);

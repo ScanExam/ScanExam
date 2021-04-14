@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
+import java.io.InputStream
 
 /** 
  * Controlleur du pdf
@@ -48,7 +49,7 @@ class PresenterPdf {
 	protected int height
 
 	/* InputStream du pdf */
-	protected ByteArrayInputStream pdfInput
+	protected ByteArrayOutputStream pdfOutput
 
 	// ----------------------------------------------------------------------------------------------------
 	/** 
@@ -136,7 +137,9 @@ class PresenterPdf {
 	 */
 	def create(String name, File file) {
 		Objects.requireNonNull(file)
-		pdfInput = new ByteArrayInputStream(Files.readAllBytes(Path.of(file.absolutePath)))
+		val InputStream input = new ByteArrayInputStream(Files.readAllBytes(Path.of(file.absolutePath)))
+		pdfOutput = new ByteArrayOutputStream()
+		input.transferTo(pdfOutput)
 		document = PDDocument.load(file)
 
 		service.onDocumentLoad(document.pages.size);
@@ -144,7 +147,8 @@ class PresenterPdf {
 	}
 
 	def create(ByteArrayInputStream stream) {
-		pdfInput = stream
+		pdfOutput = new ByteArrayOutputStream()
+		stream.transferTo(pdfOutput)
 		document = PDDocument.load(stream)
 	}
 
@@ -166,7 +170,7 @@ class PresenterPdf {
 	 * @return un InputStream vers le PDF
 	 */
 	def getPdfInputStream() {
-		pdfInput
+		return new ByteArrayInputStream(pdfOutput.toByteArray)
 	}
 
 }

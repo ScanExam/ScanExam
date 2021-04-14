@@ -1,34 +1,29 @@
 package fr.istic.tools.scanexam.qrCode.writer
 
-import java.nio.file.FileSystems
-
-import java.nio.file.Path
-import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.BarcodeFormat
-import com.google.zxing.common.BitMatrix
-import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.WriterException
-import java.io.IOException
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
-import org.apache.pdfbox.pdmodel.PDPage
-import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode
+import com.google.zxing.client.j2se.MatrixToImageWriter
+import com.google.zxing.common.BitMatrix
+import com.google.zxing.qrcode.QRCodeWriter
+import java.io.ByteArrayInputStream
 import java.io.File
-import org.apache.pdfbox.multipdf.PDFMergerUtility
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import org.apache.pdfbox.io.MemoryUsageSetting
-import java.util.concurrent.CountDownLatch
-import java.io.InputStream
-import java.io.StringWriter
-import org.apache.commons.io.IOUtils
-import java.io.ByteArrayInputStream
-import java.io.OutputStream
-import java.io.ByteArrayOutputStream
-import java.nio.file.Files
-import org.apache.commons.io.FileUtils
-import java.io.FileOutputStream
+import org.apache.pdfbox.multipdf.PDFMergerUtility
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
@@ -49,6 +44,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
             val byte[] byteArray = newByteArrayOfSize(inputFile.available)
             
             inputFile.read(byteArray)
+            
+            println(inputFile)
             
             val File temp = File.createTempFile("pdfTemp",".pdf")
 			temp.deleteOnExit            
