@@ -3,11 +3,6 @@ package fr.istic.tools.scanexam.view.fx;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.AdapterFxConfiguration;
-import fr.istic.tools.scanexam.view.fx.AdapterFxStudentListLoader;
-import fr.istic.tools.scanexam.view.fx.ControllerCorrectionLoader;
-import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
-import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import java.io.InputStream;
@@ -21,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -36,6 +32,15 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   private CheckMenuItem autoZoom;
+  
+  /**
+   * BUTTONS
+   */
+  @FXML
+  private MenuItem saveGraduationButton;
+  
+  @FXML
+  private MenuItem saveTemplateButton;
   
   private ControllerFxGraduation corrector;
   
@@ -207,8 +212,18 @@ public class ControllerRoot implements Initializable {
   }
   
   @FXML
+  public void saveCorrection() {
+    this.corrector.saveExam();
+  }
+  
+  @FXML
   public boolean toggleAutoZoom() {
     return this.corrector.setToAutoZoom(Boolean.valueOf(this.autoZoom.isSelected()));
+  }
+  
+  public void init() {
+    this.saveGraduationButton.disableProperty().bind(this.corrector.getLoadedModel().not());
+    this.saveTemplateButton.disableProperty().bind(this.editor.getLoadedModel().not());
   }
   
   @Override

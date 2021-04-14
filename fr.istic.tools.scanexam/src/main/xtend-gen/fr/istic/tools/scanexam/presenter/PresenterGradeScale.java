@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.services.ServiceEdition;
 import java.util.Objects;
 

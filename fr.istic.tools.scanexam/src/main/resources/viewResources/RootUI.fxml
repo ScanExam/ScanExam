@@ -21,12 +21,12 @@
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#createNewTemplatePressed" text="%menu.file.new" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="%menu.file.loadTemplate" />
-						<MenuItem mnemonicParsing="false" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
+						<MenuItem mnemonicParsing="false" fx:id="saveTemplateButton" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
 						<MenuItem mnemonicParsing="false" onAction="#exportToSheets" text="%menu.file.exportToExam" />
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="false" mnemonicParsing="false" onAction="#loadStudentCopiesPressed" text="%menu.file.loadStudentSheet" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
-						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.saveGraduation" />
+						<MenuItem disable="true" fx:id="saveGraduationButton" mnemonicParsing="false" text="%menu.file.saveGraduation" />
 						<MenuItem disable="true" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />

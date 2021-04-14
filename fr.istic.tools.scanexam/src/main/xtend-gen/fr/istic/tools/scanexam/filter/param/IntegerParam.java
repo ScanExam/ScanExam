@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.filter.param;
 
-import fr.istic.tools.scanexam.filter.param.FilterParam;
-import fr.istic.tools.scanexam.filter.param.ParamParseResult;
 import javax.annotation.Nullable;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 

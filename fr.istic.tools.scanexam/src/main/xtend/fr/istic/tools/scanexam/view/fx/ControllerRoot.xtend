@@ -29,7 +29,7 @@ class ControllerRoot implements Initializable {
 	CheckMenuItem autoZoom;
 	/* BUTTONS */
 	@FXML
-	MenuItem saveCorrectionButton;
+	MenuItem saveGraduationButton;
 	@FXML
 	MenuItem saveTemplateButton;
 	
@@ -160,7 +160,7 @@ class ControllerRoot implements Initializable {
 	
 	
 	def init(){
-		saveCorrectionButton.disableProperty.bind(corrector.loadedModel.not);
+		saveGraduationButton.disableProperty.bind(corrector.loadedModel.not);
 		saveTemplateButton.disableProperty.bind(editor.loadedModel.not)
 	}
 	

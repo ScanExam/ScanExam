@@ -21,7 +21,7 @@ class Main
 	
 	def static void main(String[] args)
 	{
-		
+	
 		Configurator.setAllLevels(LogManager.rootLogger.getName, Level.ALL)
 		ConfigurationManager.init
 		LanguageManager.init(ConfigurationManager.instance.language)

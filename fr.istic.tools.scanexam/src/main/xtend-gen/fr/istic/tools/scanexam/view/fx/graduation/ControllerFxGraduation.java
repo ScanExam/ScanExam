@@ -5,12 +5,6 @@ import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.view.AdapterGraduation;
 import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
-import fr.istic.tools.scanexam.view.fx.graduation.Grader;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +40,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
  * Class used by the JavaFX library as a controller for the view.
@@ -83,6 +79,7 @@ public class ControllerFxGraduation {
     return this.corrector;
   }
   
+  @Accessors
   private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a template loaded", false);
   
   private Grader grader;
@@ -518,9 +515,7 @@ public class ControllerFxGraduation {
   }
   
   public void load() {
-    this.loadedModel.set(false);
-    this.loadTemplate();
-    this.loadStudentPdfs();
+    this.loadedModel.set(true);
   }
   
   /**
@@ -770,5 +765,14 @@ public class ControllerFxGraduation {
     InputOutput.<String>print((("\npage Number" + Integer.valueOf(pageNumber)) + "\n"));
     this.corrector.getPresenter().getPresenterPdf().goToPdfPage(pageNumber);
     this.renderStudentCopy();
+  }
+  
+  @Pure
+  public BooleanProperty getLoadedModel() {
+    return this.loadedModel;
+  }
+  
+  public void setLoadedModel(final BooleanProperty loadedModel) {
+    this.loadedModel = loadedModel;
   }
 }

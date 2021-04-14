@@ -11,8 +11,6 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIo;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

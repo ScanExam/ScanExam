@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import fr.istic.tools.scanexam.view.fx.utils.RenameFieldSuggests;
 import java.util.LinkedList;
 import java.util.List;

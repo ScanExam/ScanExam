@@ -7,12 +7,6 @@ import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.view.AdapterEdition;
 import fr.istic.tools.scanexam.view.fx.AdapterFxEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
-import fr.istic.tools.scanexam.view.fx.editor.Box;
-import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
-import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
@@ -40,6 +34,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.xtend.lib.annotations.Accessors;
+import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
 public class ControllerFxEdition {
@@ -75,7 +71,8 @@ public class ControllerFxEdition {
   
   private boolean pdfLoaded = false;
   
-  private BooleanProperty modelLoaded = new SimpleBooleanProperty(this, "Is a model loaded", false);
+  @Accessors
+  private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
   
   private Logger logger = LogManager.getLogger();
   
@@ -233,9 +230,10 @@ public class ControllerFxEdition {
       this.renderDocument();
     };
     this.pageChoice.setOnAction(_function);
-    this.nextPageButton.disableProperty().bind(this.modelLoaded.not());
-    this.previousPageButton.disableProperty().bind(this.modelLoaded.not());
-    this.createBoxButton.disableProperty().bind(this.modelLoaded.not());
+    this.nextPageButton.disableProperty().bind(this.loadedModel.not());
+    this.previousPageButton.disableProperty().bind(this.loadedModel.not());
+    this.createBoxButton.disableProperty().bind(this.loadedModel.not());
+    this.pageChoice.disableProperty().bind(this.loadedModel.not());
   }
   
   public AdapterEdition getAdapter() {
@@ -345,6 +343,10 @@ public class ControllerFxEdition {
    * Called when we click on a pdf with the move tool selected
    * the box is limited to inside the pdf
    */
+  private double offsetX;
+  
+  private double offsetY;
+  
   public void moveBox(final MouseEvent e) {
     double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
       Math.min(e.getX(), (this.maxX - FxSettings.BOX_BORDER_THICKNESS)));
@@ -359,12 +361,10 @@ public class ControllerFxEdition {
     if (_equals_1) {
       double _width = this.currentRectangle.getWidth();
       double _minus = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width);
-      this.currentRectangle.x(
-        Math.min(mousePositionX, _minus));
+      this.currentRectangle.x(Math.min((mousePositionX + this.offsetX), _minus));
       double _height = this.currentRectangle.getHeight();
       double _minus_1 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height);
-      this.currentRectangle.y(
-        Math.min(mousePositionY, _minus_1));
+      this.currentRectangle.y(Math.min((mousePositionY + this.offsetY), _minus_1));
     }
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
@@ -384,6 +384,12 @@ public class ControllerFxEdition {
       this.mouseOriginY = mousePositionY;
       this.objectOriginX = this.currentRectangle.getWidth();
       this.objectOriginY = this.currentRectangle.getHeight();
+      double _x = this.currentRectangle.getX();
+      double _minus = (mousePositionX - _x);
+      this.offsetX = _minus;
+      double _y = this.currentRectangle.getY();
+      double _minus_1 = (mousePositionY - _y);
+      this.offsetY = _minus_1;
     }
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
@@ -392,88 +398,88 @@ public class ControllerFxEdition {
       if (edge != null) {
         switch (edge) {
           case SOUTH:
-            double _y = this.currentRectangle.getY();
-            double _minus = (_y - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus));
+            double _y_1 = this.currentRectangle.getY();
+            double _minus_2 = (_y_1 - mousePositionY);
+            this.currentRectangle.height(Math.abs(_minus_2));
             break;
           case EAST:
-            double _x = this.currentRectangle.getX();
-            double _minus_1 = (_x - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_1));
+            double _x_1 = this.currentRectangle.getX();
+            double _minus_3 = (_x_1 - mousePositionX);
+            this.currentRectangle.width(Math.abs(_minus_3));
             break;
           case NORTH:
             double _height = this.currentRectangle.getHeight();
-            double _minus_2 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_2));
-            double _y_1 = this.currentRectangle.getY();
-            double _minus_3 = (_y_1 - this.mouseOriginY);
-            double _minus_4 = (this.objectOriginY - _minus_3);
-            this.currentRectangle.height(Math.abs(_minus_4));
+            double _minus_4 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height);
+            this.currentRectangle.y(Math.min(mousePositionY, _minus_4));
+            double _y_2 = this.currentRectangle.getY();
+            double _minus_5 = (_y_2 - this.mouseOriginY);
+            double _minus_6 = (this.objectOriginY - _minus_5);
+            this.currentRectangle.height(Math.abs(_minus_6));
             break;
           case WEST:
             double _width = this.currentRectangle.getWidth();
-            double _minus_5 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_5));
-            double _x_1 = this.currentRectangle.getX();
-            double _minus_6 = (_x_1 - this.mouseOriginX);
-            double _minus_7 = (this.objectOriginX - _minus_6);
-            this.currentRectangle.width(Math.abs(_minus_7));
+            double _minus_7 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width);
+            this.currentRectangle.x(Math.min(mousePositionX, _minus_7));
+            double _x_2 = this.currentRectangle.getX();
+            double _minus_8 = (_x_2 - this.mouseOriginX);
+            double _minus_9 = (this.objectOriginX - _minus_8);
+            this.currentRectangle.width(Math.abs(_minus_9));
             break;
           case NORTHEAST:
             double _height_1 = this.currentRectangle.getHeight();
-            double _minus_8 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_1);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_8));
-            double _y_2 = this.currentRectangle.getY();
-            double _minus_9 = (_y_2 - this.mouseOriginY);
-            double _minus_10 = (this.objectOriginY - _minus_9);
-            this.currentRectangle.height(Math.abs(_minus_10));
-            double _x_2 = this.currentRectangle.getX();
-            double _minus_11 = (_x_2 - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_11));
+            double _minus_10 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_1);
+            this.currentRectangle.y(Math.min(mousePositionY, _minus_10));
+            double _y_3 = this.currentRectangle.getY();
+            double _minus_11 = (_y_3 - this.mouseOriginY);
+            double _minus_12 = (this.objectOriginY - _minus_11);
+            this.currentRectangle.height(Math.abs(_minus_12));
+            double _x_3 = this.currentRectangle.getX();
+            double _minus_13 = (_x_3 - mousePositionX);
+            this.currentRectangle.width(Math.abs(_minus_13));
             break;
           case NORTHWEST:
             double _height_2 = this.currentRectangle.getHeight();
-            double _minus_12 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_2);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_12));
-            double _y_3 = this.currentRectangle.getY();
-            double _minus_13 = (_y_3 - this.mouseOriginY);
-            double _minus_14 = (this.objectOriginY - _minus_13);
-            this.currentRectangle.height(Math.abs(_minus_14));
-            double _width_1 = this.currentRectangle.getWidth();
-            double _minus_15 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_1);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_15));
-            double _x_3 = this.currentRectangle.getX();
-            double _minus_16 = (_x_3 - this.mouseOriginX);
-            double _minus_17 = (this.objectOriginX - _minus_16);
-            this.currentRectangle.width(Math.abs(_minus_17));
-            break;
-          case SOUTHEAST:
+            double _minus_14 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_2);
+            this.currentRectangle.y(Math.min(mousePositionY, _minus_14));
             double _y_4 = this.currentRectangle.getY();
-            double _minus_18 = (_y_4 - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus_18));
+            double _minus_15 = (_y_4 - this.mouseOriginY);
+            double _minus_16 = (this.objectOriginY - _minus_15);
+            this.currentRectangle.height(Math.abs(_minus_16));
+            double _width_1 = this.currentRectangle.getWidth();
+            double _minus_17 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_1);
+            this.currentRectangle.x(Math.min(mousePositionX, _minus_17));
             double _x_4 = this.currentRectangle.getX();
-            double _minus_19 = (_x_4 - mousePositionX);
+            double _minus_18 = (_x_4 - this.mouseOriginX);
+            double _minus_19 = (this.objectOriginX - _minus_18);
             this.currentRectangle.width(Math.abs(_minus_19));
             break;
-          case SOUTHWEST:
+          case SOUTHEAST:
             double _y_5 = this.currentRectangle.getY();
             double _minus_20 = (_y_5 - mousePositionY);
             this.currentRectangle.height(Math.abs(_minus_20));
-            double _width_2 = this.currentRectangle.getWidth();
-            double _minus_21 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_2);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_21));
             double _x_5 = this.currentRectangle.getX();
-            double _minus_22 = (_x_5 - this.mouseOriginX);
-            double _minus_23 = (this.objectOriginX - _minus_22);
-            this.currentRectangle.width(Math.abs(_minus_23));
+            double _minus_21 = (_x_5 - mousePositionX);
+            this.currentRectangle.width(Math.abs(_minus_21));
+            break;
+          case SOUTHWEST:
+            double _y_6 = this.currentRectangle.getY();
+            double _minus_22 = (_y_6 - mousePositionY);
+            this.currentRectangle.height(Math.abs(_minus_22));
+            double _width_2 = this.currentRectangle.getWidth();
+            double _minus_23 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_2);
+            this.currentRectangle.x(Math.min(mousePositionX, _minus_23));
+            double _x_6 = this.currentRectangle.getX();
+            double _minus_24 = (_x_6 - this.mouseOriginX);
+            double _minus_25 = (this.objectOriginX - _minus_24);
+            this.currentRectangle.width(Math.abs(_minus_25));
             break;
           case NONE:
             double _width_3 = this.currentRectangle.getWidth();
-            double _minus_24 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_3);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_24));
+            double _minus_26 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_3);
+            this.currentRectangle.x(Math.max(Math.min((mousePositionX - this.offsetX), _minus_26), FxSettings.BOX_BORDER_THICKNESS));
             double _height_3 = this.currentRectangle.getHeight();
-            double _minus_25 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_3);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_25));
+            double _minus_27 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_3);
+            this.currentRectangle.y(Math.max(Math.min((mousePositionY - this.offsetY), _minus_27), FxSettings.BOX_BORDER_THICKNESS));
             break;
           default:
             break;
@@ -738,7 +744,7 @@ public class ControllerFxEdition {
   public boolean postLoad() {
     boolean _xblockexpression = false;
     {
-      this.modelLoaded.set(true);
+      this.loadedModel.set(true);
       _xblockexpression = this.pdfLoaded = true;
     }
     return _xblockexpression;
@@ -818,5 +824,14 @@ public class ControllerFxEdition {
     this.mainPane.clear();
     this.questionList.clear();
     this.questionEditor.hideAll();
+  }
+  
+  @Pure
+  public BooleanProperty getLoadedModel() {
+    return this.loadedModel;
+  }
+  
+  public void setLoadedModel(final BooleanProperty loadedModel) {
+    this.loadedModel = loadedModel;
   }
 }
