@@ -7,8 +7,20 @@ import java.util.concurrent.TimeoutException;
 import org.junit.After;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.service.query.NodeQuery;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX;
+import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
@@ -16,11 +28,80 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+
 class InterfaceFXTest extends ApplicationTest {
 
+	/**
+	 * EMPLACEMENT DES BOUTONS
+	 * package fr.istic.tools.scanexam.view.fx.editor; -> ControllerFxEdition
+	 * package fr.istic.tools.scanexam.view.fx.graduation -> ControllerFxGraduation
+	 * 
+	 * Fichier fxml : src/main/resources/viewResources
+	 * ConfigUI
+	 */
 
 	@SuppressWarnings("unused")
 	private String localisationFileSave = "";
+	
+	//ROOTUI
+	private MenuItem createNewTemplate;
+	private MenuItem loadTemplate;
+	private MenuItem SaveTemplate;
+	private MenuItem exportToSheets;
+	
+	//ConfigUI
+	private Button configSaveAndQuit;
+	private Button configQuit;
+	
+	//
+	
+	//Barre
+	private Button save;//
+	private Button load;//
+	private Button export;//
+	
+	//CorrectorUI
+	private VBox root;
+	private Pane topPane;
+	private Button topButtonHidden;
+	private Button botButtonHidden;
+	private Button botButtonActive;
+	private Pane bottomPane;
+	private Pane mainPaneGradiation;
+	private Pane parentPane;
+	private ScrollPane studentListContainer;
+	private ScrollPane questionListContainerGradiation;
+	private ImageView imview;
+	private ScrollPane scrollMain;
+	private ScrollPane scrollBis;
+	private VBox studentDetailsContainer;
+	private VBox questionDetails;
+	private Spinner<Double> gradeSpinner;
+	private Spinner<Double> totalGradeSpinner;
+	private HBox graderContainer;
+	private Label instructionLabel;
+	private Button nextStudentButton;//
+	private Button prevStudentButton;//
+	private Button nextQuestionButton;//
+	private Button prevQuestionButton;//
+
+	//EditorUI
+	private ToggleButton createBoxButton;
+	private Button nextPageButton;//
+	private Button previousPageButton;//
+	private PdfPane mainPaneEditor;
+	private ScrollPane questionListContainerEditor;
+	private ScrollPane gradeListContainer;
+	private ChoiceBox<Integer> pageChoice;
+	private Label pageNumberLabel;
+	private QuestionListEdition questionList;
+	private QuestionOptionsEdition questionEditor;
+	private Pane mainPane;//
+
 	
 	@Before
 	public void setUpClass() throws Exception {
@@ -33,12 +114,42 @@ class InterfaceFXTest extends ApplicationTest {
 	@Override
 	public void start(Stage stage) throws Exception {
 		new LauncherFX().start(stage);
+		
+		//RootUI
+		//createNewTemplate = lookup("#createNewTemplatePressed").query();
+		//loadTemplate = lookup("#loadTemplatePressedEditor").queryButton();
+		//SaveTemplate = lookup("#SaveTemplatePressed").queryButton();
+		//exportToSheets = lookup("#exportToSheets").queryButton();
+		
+		//ConfigUI
+		configSaveAndQuit = lookup("#saveAndQuit").queryButton();
+		configQuit = lookup("#quit").queryButton();
+		
+		//Barre
+		save = lookup("#savePressed").queryButton();
+		load = lookup("#loadPressed").queryButton();
+		export = lookup("#exportPressed").queryButton();
+		
+		
+		//CorrectorUI
+		prevQuestionButton = lookup("#prevQuestionPressed").queryButton();
+		nextQuestionButton = lookup("#nextQuestionPressed").queryButton();
+		prevStudentButton = lookup("#prevStudentPressed").queryButton();
+		nextStudentButton = lookup("#nextStudentPressed").queryButton();
+		
+		
+		//EditorUI
+		previousPageButton = lookup("#previousPagePressed").queryButton();
+		nextPageButton = lookup("#nextPagePressed").queryButton();
+		mainPane = lookup("#mainMouseEvent").queryTextFlow();
+		//createBoxButton = lookup("#questionAreaPressed").queryButton();
+		
 	}
 	
 	@DisplayName("Premier Test : Clique Simple")
 	@Test
     public void cliqueSimple() {
-        clickOn();
+        clickOn(prevQuestionButton);
     }
 	
 	/**
