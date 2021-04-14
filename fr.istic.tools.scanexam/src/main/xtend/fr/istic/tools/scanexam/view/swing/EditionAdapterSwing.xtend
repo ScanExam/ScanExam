@@ -139,7 +139,7 @@ class EditionAdapterSwing implements AdapterEdition {
 	        var File selectedFile = fc.getSelectedFile()
 	        
 	        // Envoie du pdf au service
-	        editorPresenter.getPresenterPdf.create(selectedFile)
+	        editorPresenter.getPresenterPdf.create("", selectedFile)
 	        
 	        // Mise à jour du pdf affiché
 	        adapterPdfAndBox.refreshPdf()

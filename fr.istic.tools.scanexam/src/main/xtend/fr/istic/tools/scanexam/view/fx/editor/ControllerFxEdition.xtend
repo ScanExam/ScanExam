@@ -531,7 +531,7 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			clearVue
-			editor.presenter.getPresenterPdf.create(file);
+			editor.presenter.getPresenterPdf.create("", file);
 			renderDocument();
 			postLoad
 		} else {

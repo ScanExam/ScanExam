@@ -97,7 +97,7 @@ class GraduationAdapterSwing implements AdapterGraduation {
 	    } else if (result == JFileChooser.APPROVE_OPTION) {
 	        //open file using 
 	        var File selectedFile = fc.getSelectedFile()
-	        graduationPresenter.getPresenterPdf().create(selectedFile)
+	        graduationPresenter.getPresenterPdf().create("", selectedFile)
 	    }
 	}
 	

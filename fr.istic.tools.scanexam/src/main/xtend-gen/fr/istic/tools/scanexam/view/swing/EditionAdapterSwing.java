@@ -154,7 +154,7 @@ public class EditionAdapterSwing implements AdapterEdition {
     } else {
       if ((result == JFileChooser.APPROVE_OPTION)) {
         File selectedFile = fc.getSelectedFile();
-        this.editorPresenter.getPresenterPdf().create(selectedFile);
+        this.editorPresenter.getPresenterPdf().create("", selectedFile);
         this.adapterPdfAndBox.refreshPdf();
         this.view.getCmbBxPage().removeAll();
         int _pdfPageCount = this.editorPresenter.getPresenterPdf().getPdfPageCount();

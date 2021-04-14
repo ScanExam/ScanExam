@@ -637,7 +637,7 @@ public class ControllerFxEdition {
         boolean _xblockexpression_1 = false;
         {
           this.clearVue();
-          this.editor.getPresenter().getPresenterPdf().create(file);
+          this.editor.getPresenter().getPresenterPdf().create("", file);
           this.renderDocument();
           _xblockexpression_1 = this.postLoad();
         }
