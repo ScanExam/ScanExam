@@ -118,7 +118,7 @@ class PresenterGraduation implements Presenter
 		val document = PDDocument.load(file);
 		val stream = new ByteArrayOutputStream();
 		document.save(stream);
-		presPdf.create(file);
+		presPdf.create("", file);
         val pdfReader = new PdfReaderWithoutQrCodeImpl(document,ExamSingleton.instance.pages.size,3);  
         pdfReader.readPDf();
         val studentSheets = pdfReader.completeStudentSheets

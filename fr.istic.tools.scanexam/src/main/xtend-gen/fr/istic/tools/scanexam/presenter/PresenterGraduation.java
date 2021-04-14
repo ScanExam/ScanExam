@@ -119,7 +119,7 @@ public class PresenterGraduation implements Presenter {
       final PDDocument document = PDDocument.load(file);
       final ByteArrayOutputStream stream = new ByteArrayOutputStream();
       document.save(stream);
-      this.presPdf.create(file);
+      this.presPdf.create("", file);
       int _size = ExamSingleton.instance.getPages().size();
       final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(document, _size, 3);
       pdfReader.readPDf();
