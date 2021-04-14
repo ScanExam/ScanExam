@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fx.utils
+package fr.istic.tools.scanexam.view.fx.component
 
 import javafx.scene.control.Label
 import javafx.scene.control.TextField

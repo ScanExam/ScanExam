@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx
 
+import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import java.io.File
@@ -7,12 +8,10 @@ import java.util.Optional
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.layout.VBox
-import javafx.stage.DirectoryChooser
-import javafx.stage.Stage
-import org.apache.logging.log4j.LogManager
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
-import fr.istic.tools.scanexam.config.LanguageManager
+import javafx.stage.Stage
+import org.apache.logging.log4j.LogManager
 
 class ControllerStudentSheetExport {
 

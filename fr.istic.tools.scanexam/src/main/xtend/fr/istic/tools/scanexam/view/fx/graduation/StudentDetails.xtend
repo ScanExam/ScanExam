@@ -1,11 +1,9 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
-import fr.istic.tools.scanexam.view.fx.utils.RenameField
+import fr.istic.tools.scanexam.view.fx.component.RenameFieldSuggests
 import javafx.scene.control.Label
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
-import java.util.LinkedList
-import fr.istic.tools.scanexam.view.fx.utils.RenameFieldSuggests
 
 class StudentDetails extends VBox {
 	new(ControllerFxGraduation controller){
@@ -28,8 +26,6 @@ class StudentDetails extends VBox {
 		this.children.add(grid)
 		setupEvents
 	}
-	
-	LinkedList<String> nameList
 	
 	GridPane grid;
 	RenameFieldSuggests name;

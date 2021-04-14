@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.view.swing.Box;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

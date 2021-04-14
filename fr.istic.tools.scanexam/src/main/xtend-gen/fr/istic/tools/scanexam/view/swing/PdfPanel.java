@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.swing;
 
-import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JPanel;

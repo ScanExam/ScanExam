@@ -1,10 +1,8 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import fr.istic.tools.scanexam.services.ServiceEdition;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 
 @SuppressWarnings("all")
@@ -22,16 +20,7 @@ public class PresenterStudentSheetExport {
     boolean _xblockexpression = false;
     {
       final QRCodeGenerator generator = new QRCodeGeneratorImpl();
-      ByteArrayInputStream _pdfInputStream = this.presPdf.getPdfInputStream();
-      String _xifexpression = null;
-      String _examName = this.service.getExamName();
-      boolean _tripleEquals = (_examName == null);
-      if (_tripleEquals) {
-        _xifexpression = "foo";
-      } else {
-        _xifexpression = this.service.getExamName();
-      }
-      generator.createAllExamCopies(_pdfInputStream, file, _xifexpression, number);
+      generator.createAllExamCopies(this.presPdf.getPdfInputStream(), file, this.service.getExamName(), number);
       _xblockexpression = true;
     }
     return _xblockexpression;

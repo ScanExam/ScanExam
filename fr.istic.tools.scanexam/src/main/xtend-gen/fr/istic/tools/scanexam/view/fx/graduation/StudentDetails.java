@@ -1,9 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
-import fr.istic.tools.scanexam.view.fx.utils.RenameFieldSuggests;
-import java.util.LinkedList;
+import fr.istic.tools.scanexam.view.fx.component.RenameFieldSuggests;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,8 +28,6 @@ public class StudentDetails extends VBox {
     this.getChildren().add(this.grid);
     this.setupEvents();
   }
-  
-  private LinkedList<String> nameList;
   
   private GridPane grid;
   

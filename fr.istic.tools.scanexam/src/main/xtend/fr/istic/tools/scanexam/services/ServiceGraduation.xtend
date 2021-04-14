@@ -9,18 +9,16 @@ import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.io.TemplateIo
 import fr.istic.tools.scanexam.utils.Tuple3
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.ArrayList
+import java.util.Base64
 import java.util.Collection
 import java.util.List
 import java.util.Objects
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
-import java.io.File
-import java.util.Base64
-import java.io.OutputStream
-import java.io.ByteArrayOutputStream
-import org.eclipse.emf.common.util.EList
 
 class ServiceGraduation extends Service
 {

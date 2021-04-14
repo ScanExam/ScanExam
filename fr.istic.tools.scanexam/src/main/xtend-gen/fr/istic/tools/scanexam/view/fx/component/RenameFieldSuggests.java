@@ -1,6 +1,5 @@
-package fr.istic.tools.scanexam.view.fx.utils;
+package fr.istic.tools.scanexam.view.fx.component;
 
-import fr.istic.tools.scanexam.view.fx.utils.RenameField;
 import java.util.List;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;

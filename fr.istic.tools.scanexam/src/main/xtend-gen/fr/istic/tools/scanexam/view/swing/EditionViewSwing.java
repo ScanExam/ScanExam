@@ -1,10 +1,6 @@
 package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
-import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfAndBoxPanel;
-import fr.istic.tools.scanexam.view.swing.ListOfQuestionsPanel;
-import fr.istic.tools.scanexam.view.swing.PdfAndBoxPanel;
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;

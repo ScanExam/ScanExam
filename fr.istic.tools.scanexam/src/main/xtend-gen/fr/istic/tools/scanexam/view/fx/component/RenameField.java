@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fx.utils;
+package fr.istic.tools.scanexam.view.fx.component;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

@@ -1,8 +1,8 @@
-package fr.istic.tools.scanexam.view.fx.utils
+package fr.istic.tools.scanexam.view.fx.component
 
-import javafx.scene.control.ContextMenu
 import java.util.List
 import javafx.geometry.Side
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.MenuItem
 
 class RenameFieldSuggests extends RenameField {
@@ -14,7 +14,7 @@ class RenameFieldSuggests extends RenameField {
 		entriesPopup = new ContextMenu;
 	}
 	
-	private ContextMenu entriesPopup;
+	ContextMenu entriesPopup;
 	
 	def showSuggestion(List<String> strings){
 		entriesPopup.show(this,Side.BOTTOM,0,0);

@@ -8,8 +8,6 @@ import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
 import fr.istic.tools.scanexam.io.TemplateIo;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
