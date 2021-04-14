@@ -405,6 +405,19 @@ class ServiceGraduation extends Service
 		true //TODO FIX
 	}
 	
+	/**
+	 * @return la note maximal que peut avoir l'étudiant avec les questions auxquels il a répondu 
+	 */
+	def float getMaxGradeForGradedQuestions() {
+		studentSheets.get(currentSheetIndex).grades
+			.indexed
+			.filter[pair | !pair.value.entries.isEmpty]
+			.map[pair | ExamSingleton.getQuestionFromIndex(pair.key)]
+			.filter[o | !o.isEmpty]
+			.map[ o | o.get.gradeScale.maxPoint]
+			.reduce[acc, n | acc + n]
+		
+	}
 	
 	/**
 	 * Défini le chemin d'accès vers la liste de tous les étudiants

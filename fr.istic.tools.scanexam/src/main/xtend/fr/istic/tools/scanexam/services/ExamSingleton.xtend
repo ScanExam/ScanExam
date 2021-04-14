@@ -1,10 +1,11 @@
 package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.core.Exam
-import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.Question
 import java.util.Collection
 import java.util.Collections
+import java.util.Optional
+import fr.istic.tools.scanexam.core.Page
 
 /**
  * A revoir ?
@@ -30,6 +31,16 @@ final class ExamSingleton
 	static def Collection<Question> getQuestions(int pageId)
 	{
 		return Collections.unmodifiableCollection(instance.pages.get(pageId).questions);
+	}
+	
+	/**
+	 * @param absoluteQuestionId la position absolue d'une question dans l'Examen
+	 * @return la Question associée à cette position si elle existe, Optional.empty sinon
+	 */
+	static def Optional<Question> getQuestionFromIndex(int absoluteQuestionId) {
+		return Optional.ofNullable(
+			instance.pages.flatMap[p | p.questions].indexed.findFirst[p | p.key == absoluteQuestionId]
+		).map(q | q.value)
 	}
 	
 	static def int getTemplatePageAmount(){

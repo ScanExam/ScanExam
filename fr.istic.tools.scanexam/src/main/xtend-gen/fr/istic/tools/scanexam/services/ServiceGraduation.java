@@ -25,9 +25,11 @@ import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.Functions.Function2;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
@@ -461,6 +463,30 @@ public class ServiceGraduation extends Service {
    */
   public boolean valideGradeEntry(final int questionId, final GradeEntry gradeAdd) {
     return true;
+  }
+  
+  /**
+   * @return la note maximal que peut avoir l'étudiant avec les questions auxquels il a répondu
+   */
+  public float getMaxGradeForGradedQuestions() {
+    final Function1<Pair<Integer, Grade>, Boolean> _function = (Pair<Integer, Grade> pair) -> {
+      boolean _isEmpty = pair.getValue().getEntries().isEmpty();
+      return Boolean.valueOf((!_isEmpty));
+    };
+    final Function1<Pair<Integer, Grade>, Optional<Question>> _function_1 = (Pair<Integer, Grade> pair) -> {
+      return ExamSingleton.getQuestionFromIndex((pair.getKey()).intValue());
+    };
+    final Function1<Optional<Question>, Boolean> _function_2 = (Optional<Question> o) -> {
+      boolean _isEmpty = o.isEmpty();
+      return Boolean.valueOf((!_isEmpty));
+    };
+    final Function1<Optional<Question>, Float> _function_3 = (Optional<Question> o) -> {
+      return Float.valueOf(o.get().getGradeScale().getMaxPoint());
+    };
+    final Function2<Float, Float, Float> _function_4 = (Float acc, Float n) -> {
+      return Float.valueOf(((acc).floatValue() + (n).floatValue()));
+    };
+    return (float) IterableExtensions.<Float>reduce(IterableExtensions.<Optional<Question>, Float>map(IterableExtensions.<Optional<Question>>filter(IterableExtensions.<Pair<Integer, Grade>, Optional<Question>>map(IterableExtensions.<Pair<Integer, Grade>>filter(IterableExtensions.<Grade>indexed((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades()), _function), _function_1), _function_2), _function_3), _function_4);
   }
   
   /**
