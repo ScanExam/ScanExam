@@ -27,7 +27,7 @@ class PresenterGraduationLoader {
 	
 	def boolean loadStudentSheets(String path) {
 		val QRCodeGenerator generator = new QRCodeGeneratorImpl()
-		//generator.createAllExamCopies(service.editionPdfInputStream, new FileOutputStream(new File(path)), service.examName, quantity)
+		//generator.createAllExamCopies(ExamSingleton., new FileOutputStream(new File(path)), service.examName, quantity)
 		true
 	}
 	

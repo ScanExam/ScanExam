@@ -4,12 +4,7 @@ import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
-import fr.istic.tools.scanexam.presenter.Presenter;
-import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
-import fr.istic.tools.scanexam.presenter.PresenterImportExportXMI;
-import fr.istic.tools.scanexam.presenter.PresenterPdf;
-import fr.istic.tools.scanexam.presenter.PresenterQuestion;
-import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
+import fr.istic.tools.scanexam.mailing.StudentDataManager;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
@@ -21,9 +16,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Class defining the presenter for the exam correction view(s)
@@ -224,7 +222,13 @@ public class PresenterGraduation implements Presenter {
    * STUDENTS
    */
   public List<String> getStudentsSuggestedNames(final String start) {
-    return List.<String>of("Theo G", "Marius truc", "Stefan Locke", "Julien Cochet", "Stephen R", "Steven D");
+    final Function<List<String>, List<String>> _function = (List<String> l) -> {
+      final Function1<String, Boolean> _function_1 = (String n) -> {
+        return Boolean.valueOf(n.toLowerCase().contains(start.toLowerCase()));
+      };
+      return IterableExtensions.<String>toList(IterableExtensions.<String>filter(l, _function_1));
+    };
+    return StudentDataManager.getAllNames().<List<String>>map(_function).orElse(List.<String>of());
   }
   
   public LinkedList<Integer> getStudentIds() {

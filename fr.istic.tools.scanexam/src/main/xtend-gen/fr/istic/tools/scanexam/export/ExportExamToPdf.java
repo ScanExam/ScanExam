@@ -34,10 +34,9 @@ public class ExportExamToPdf {
   /**
    * Exports a PDF file to the selected directory.
    */
-  public static Object exportToPdf(final PDDocument pdf, final StudentSheet sheet, final File outputPdfFile) {
+  public static File exportToPdf(final PDDocument pdf, final StudentSheet sheet, final File outputPdfFile, final Boolean overwriteFile) {
     try {
-      boolean _exists = outputPdfFile.exists();
-      if (_exists) {
+      if ((outputPdfFile.exists() && (!(overwriteFile).booleanValue()))) {
         return null;
       }
       PDDocument document = new PDDocument();
@@ -47,7 +46,7 @@ public class ExportExamToPdf {
       }
       document.save(outputPdfFile);
       document.close();
-      return null;
+      return outputPdfFile;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

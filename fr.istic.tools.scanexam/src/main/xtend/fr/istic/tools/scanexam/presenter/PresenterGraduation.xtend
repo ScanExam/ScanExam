@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.presenter
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.GradesExportImpl
+import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import fr.istic.tools.scanexam.services.ExamSingleton
 import fr.istic.tools.scanexam.services.ServiceGraduation
@@ -220,13 +221,9 @@ class PresenterGraduation implements Presenter
 	/* STUDENTS */
 	
 	def List<String> getStudentsSuggestedNames(String start){
-		/*var l = StudentDataManager.allNames
-		if (l == Optional.empty) {
-			List.of("","")
-		}else {
-			l.get
-		}*/
-		List.of("Theo G","Marius truc","Stefan Locke","Julien Cochet","Stephen R","Steven D")
+		StudentDataManager.allNames
+			.map(l | l.filter[n | n.toLowerCase().contains(start.toLowerCase())].toList)
+			.orElse(List.of())
 	}
 	
 	def LinkedList<Integer> getStudentIds(){
