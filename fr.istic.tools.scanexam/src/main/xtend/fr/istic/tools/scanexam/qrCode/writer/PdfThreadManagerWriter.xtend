@@ -11,18 +11,20 @@ class PdfThreadManagerWriter extends Thread implements Runnable {
 
 	int nbPage
 	PDDocument docSujetMaitre
+	PDDocument doc
 	QRCodeGeneratorImpl writer
 	int nbCopie
 	String examID
 	OutputStream output
 
-	new(int nbPage, PDDocument docSujetMaitre, QRCodeGeneratorImpl writer, int nbCopie, String examID, OutputStream output) {
+	new(int nbPage, PDDocument docSujetMaitre, PDDocument doc, QRCodeGeneratorImpl writer, int nbCopie, String examID, OutputStream output) {
 		this.nbPage = nbPage
 		this.docSujetMaitre = docSujetMaitre
 		this.writer = writer
 		this.nbCopie = nbCopie
 		this.examID = examID
 		this.output = output
+		this.doc = doc
 	}
 
 	override run() {
@@ -51,6 +53,9 @@ class PdfThreadManagerWriter extends Thread implements Runnable {
 		writer.setFinished(true)
 		service.shutdown()
 		docSujetMaitre.save(output)
+		
+		doc.close
+		docSujetMaitre.close
  
 		qrcode0.deleteOnExit
 		qrcode1.deleteOnExit

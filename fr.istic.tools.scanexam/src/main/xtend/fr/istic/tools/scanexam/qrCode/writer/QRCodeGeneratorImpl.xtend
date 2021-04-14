@@ -51,6 +51,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
             inputFile.read(byteArray)
             
             val File temp = File.createTempFile("pdfTemp",".pdf")
+			temp.deleteOnExit            
             val OutputStream oS = new FileOutputStream(temp)
             
             oS.write(byteArray)
@@ -67,7 +68,6 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
             var PDFMergerUtility ut = new PDFMergerUtility()
             
-
             for (i : 0 ..< nbCopie) {
                 ut.addSource(temp)
             }
@@ -79,10 +79,12 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
             //ut.mergeDocuments(MemoryUsageSetting.setupTempFileOnly())
             ut.mergeDocuments(memUsSett)
             
+            
+            
             val PDDocument docSujetMaitre = PDDocument.load(outFile)
 
-            createThread(idExam, nbCopie, docSujetMaitre, nbPages, new FileOutputStream(outFile))
-            temp.deleteOnExit
+            createThread(idExam, nbCopie, docSujetMaitre, doc, nbPages, new FileOutputStream(outFile))
+
 
         } // fin try
         catch (Exception e) {
@@ -147,9 +149,9 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
-	def createThread(String examID, int nbCopie, PDDocument docSujetMaitre, int nbPage, OutputStream output) {
+	def createThread(String examID, int nbCopie, PDDocument docSujetMaitre, PDDocument doc, int nbPage, OutputStream output) {
 
-		if (nbCopie <= 4) {
+		if (nbCopie < 4) {
 			val ExecutorService service = Executors.newFixedThreadPool(1)
 			var File qrcode = File.createTempFile("qrcode", ".png")
 
@@ -158,11 +160,13 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 				new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, nbPage, LatchThreads, examID, qrcode.absolutePath))
 			LatchThreads.await()
 			service.shutdown()
+			
+			docSujetMaitre.save(output)
 
 			qrcode.deleteOnExit
 		} else {
 
-			val PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, this, nbCopie,
+			val PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, doc, this, nbCopie,
 				examID, output)
 			manager.start
 

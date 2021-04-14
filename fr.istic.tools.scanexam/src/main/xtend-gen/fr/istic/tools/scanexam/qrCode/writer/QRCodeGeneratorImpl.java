@@ -49,6 +49,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       final byte[] byteArray = new byte[inputFile.available()];
       inputFile.read(byteArray);
       final File temp = File.createTempFile("pdfTemp", ".pdf");
+      temp.deleteOnExit();
       final OutputStream oS = new FileOutputStream(temp);
       oS.write(byteArray);
       oS.close();
@@ -65,8 +66,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       ut.mergeDocuments(memUsSett);
       final PDDocument docSujetMaitre = PDDocument.load(outFile);
       FileOutputStream _fileOutputStream = new FileOutputStream(outFile);
-      this.createThread(idExam, nbCopie, docSujetMaitre, nbPages, _fileOutputStream);
-      temp.deleteOnExit();
+      this.createThread(idExam, nbCopie, docSujetMaitre, doc, nbPages, _fileOutputStream);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -165,9 +165,9 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param docSujetMaitre document dans lequel insÃ©rer les Codes
    * @param nbPages nombre de pages du sujet Maitre
    */
-  public void createThread(final String examID, final int nbCopie, final PDDocument docSujetMaitre, final int nbPage, final OutputStream output) {
+  public void createThread(final String examID, final int nbCopie, final PDDocument docSujetMaitre, final PDDocument doc, final int nbPage, final OutputStream output) {
     try {
-      if ((nbCopie <= 4)) {
+      if ((nbCopie < 4)) {
         final ExecutorService service = Executors.newFixedThreadPool(1);
         File qrcode = File.createTempFile("qrcode", ".png");
         final CountDownLatch LatchThreads = new CountDownLatch(1);
@@ -176,9 +176,10 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
         service.execute(_qRThreadWriter);
         LatchThreads.await();
         service.shutdown();
+        docSujetMaitre.save(output);
         qrcode.deleteOnExit();
       } else {
-        final PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, this, nbCopie, examID, output);
+        final PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, doc, this, nbCopie, examID, output);
         manager.start();
       }
     } catch (Throwable _e) {
