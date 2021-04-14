@@ -410,7 +410,10 @@ class ControllerFxGraduation {
 	//---FILE MANAGEMENT---//
 	
 	
-	
+	/**
+	 * Sets the state of loaded model to true, triggering a set of listeners
+	 * To be used once the service loads a model 
+	 */
 	def void load(){
 		loadedModel.set(true)
 	}

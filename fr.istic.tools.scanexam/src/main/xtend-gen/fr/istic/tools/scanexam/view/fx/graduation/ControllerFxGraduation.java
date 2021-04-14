@@ -5,6 +5,12 @@ import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.view.AdapterGraduation;
 import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.graduation.Grader;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -514,6 +520,10 @@ public class ControllerFxGraduation {
     this.binds(this.scrollBis);
   }
   
+  /**
+   * Sets the state of loaded model to true, triggering a set of listeners
+   * To be used once the service loads a model
+   */
   public void load() {
     this.loadedModel.set(true);
   }

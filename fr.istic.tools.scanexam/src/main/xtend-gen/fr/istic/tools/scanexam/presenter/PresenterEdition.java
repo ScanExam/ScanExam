@@ -1,5 +1,9 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.presenter.Presenter;
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
+import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
+import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
 import fr.istic.tools.scanexam.services.ServiceEdition;
 import fr.istic.tools.scanexam.view.Adapter;
 import java.io.ByteArrayInputStream;

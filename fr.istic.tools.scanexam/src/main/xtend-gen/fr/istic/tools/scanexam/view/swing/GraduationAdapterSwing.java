@@ -2,6 +2,9 @@ package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.presenter.PresenterGraduation;
 import fr.istic.tools.scanexam.view.AdapterGraduation;
+import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
+import fr.istic.tools.scanexam.view.swing.EditionViewSwing;
+import fr.istic.tools.scanexam.view.swing.GraduationViewSwing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;

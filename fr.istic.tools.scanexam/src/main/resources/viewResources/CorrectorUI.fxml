@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation">
+<VBox fx:id="root" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation">
   <children>
       <HBox>
          <children>
@@ -58,17 +58,22 @@
          <children>
             <VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
                <children>
-                  <Label alignment="CENTER" styleClass="UILabel" text="Students" VBox.vgrow="NEVER" />
+                  <Label alignment="CENTER" styleClass="UILabel" text="%label.students" VBox.vgrow="NEVER" />
                   <ScrollPane fx:id="studentListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
                   <VBox fx:id="studentDetailsContainer" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </VBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label alignment="CENTER" text="%label.students" />
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="prevStudentButton" mnemonicParsing="false" onAction="#prevStudentPressed" text="&lt;&lt;" />
-                        <Button fx:id="nextStudentButton" mnemonicParsing="false" onAction="#nextStudentPressed" text="&gt;&gt;" />
+                        <Button fx:id="prevStudentButton" mnemonicParsing="false" onAction="#prevStudentPressed" prefWidth="75.0" text="%button.previous" />
+                        <Button fx:id="nextStudentButton" mnemonicParsing="false" onAction="#nextStudentPressed" prefWidth="75.0" text="%button.next" />
                      </children>
                   </HBox>
                </children>
@@ -158,7 +163,7 @@
             </AnchorPane>
             <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes">
                <children>
-                  <Label alignment="CENTER" styleClass="UILabel" text="Questions" />
+                  <Label alignment="CENTER" styleClass="UILabel" text="%label.questions" />
                   <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
                   <VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
                      <VBox.margin>
@@ -169,10 +174,15 @@
                      
                                  
                   </VBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label alignment="CENTER" text="%label.questions" />
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="prevQuestionButton" mnemonicParsing="false" onAction="#prevQuestionPressed" text="last question" />
-                        <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#nextQuestionPressed" text="Next Question" />
+                        <Button fx:id="prevQuestionButton" mnemonicParsing="false" onAction="#prevQuestionPressed" prefWidth="75.0" text="%button.previous" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#nextQuestionPressed" prefWidth="75.0" text="%button.next" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>

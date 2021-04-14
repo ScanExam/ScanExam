@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.launcher;
 
 import com.sun.javafx.css.StyleManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterBindings;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.AdapterFxEdition;

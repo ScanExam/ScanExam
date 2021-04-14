@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.qrCode.writer;
 
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import java.util.concurrent.CountDownLatch;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;

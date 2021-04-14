@@ -10,10 +10,9 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="750.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition">
+<VBox prefHeight="750.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition">
    <children>
       <ToolBar>
         <items>
@@ -32,15 +31,16 @@
                <children>
                   <Label styleClass="UILabel" text="%label.questions" />
                   <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" />
+                  <Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" visible="false" />
                   <HBox>
                      <children>
-                        <Button fx:id="previousPageButton" mnemonicParsing="false" onAction="#previousPagePressed" text="%button.previousQuestion" />
-                        <Pane HBox.hgrow="ALWAYS">
+                        <Button fx:id="previousPageButton" mnemonicParsing="false" onAction="#previousPagePressed" prefWidth="75.0" text="%button.previous" />
+                        <AnchorPane HBox.hgrow="ALWAYS">
                            <children>
-                              <ChoiceBox fx:id="pageChoice" prefWidth="50.0" />
-                           </children></Pane>
-                        <Button fx:id="nextPageButton" mnemonicParsing="false" onAction="#nextPagePressed" text="%button.nextQuestion" />
+                              <ChoiceBox fx:id="pageChoice" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                        <Button fx:id="nextPageButton" mnemonicParsing="false" onAction="#nextPagePressed" prefWidth="75.0" text="%button.next" />
                      </children>
                   </HBox>
                </children>
@@ -61,9 +61,9 @@
             </ScrollPane>
             <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
                <children>
-                  <Label styleClass="UILabel" text="Question details" />
+                  <Label styleClass="UILabel" text="%label.questiondetails" />
                   <ScrollPane fx:id="gradeListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <Label text="Exam details" />
+                  <Label styleClass="UILabel" text="%label.examdetails" />
                   <VBox id="examDetails" prefHeight="200.0" prefWidth="100.0" />
                </children>
                <padding>

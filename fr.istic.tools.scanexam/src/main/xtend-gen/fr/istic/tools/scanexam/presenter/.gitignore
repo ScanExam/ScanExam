@@ -1,7 +1,9 @@
-/PresenterImportExportXMI.java
-/PresenterCorrectionLoader.java
+/Presenter.java
+/PresenterBindings.java
 /PresenterEdition.java
 /PresenterGraduation.java
 /PresenterGraduationLoader.java
 /PresenterPdf.java
+/PresenterQuestion.java
+/PresenterQuestionZone.java
 /PresenterStudentSheetExport.java
