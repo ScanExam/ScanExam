@@ -31,9 +31,9 @@ class ExportExamToPdf {
 	/**
 	 * Exports a PDF file to the selected directory.
 	 */
-	def static exportToPdf(PDDocument pdf,StudentSheet sheet, File outputPdfFile){
+	def static File exportToPdf(PDDocument pdf,StudentSheet sheet, File outputPdfFile,Boolean overwriteFile){
 		
-		if(outputPdfFile.exists){
+		if(outputPdfFile.exists && !overwriteFile){
 			return null;
 		}
 		
@@ -45,6 +45,7 @@ class ExportExamToPdf {
 		
 		document.save(outputPdfFile);
 		document.close;
+		return outputPdfFile;
 	}	
 	
 	/**
