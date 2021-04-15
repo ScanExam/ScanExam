@@ -13,70 +13,69 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox prefHeight="750.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition">
-   <children>
-      <ToolBar>
-        <items>
-            <ToggleButton fx:id="createBoxButton" mnemonicParsing="false" onAction="#questionAreaPressed" text="%button.createQuestion" />
-            <Button disable="true" mnemonicParsing="false" onAction="#iDAreaPressed" text="%button.IDarea" />
-            <Button disable="true" mnemonicParsing="false" onAction="#qRArearessed" text="%button.QRarea" />
-            <Button disable="true" mnemonicParsing="false" onAction="#movePressed" text="%button.moveCamera" />
-        </items>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </ToolBar>
-      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-         <children>
-            <VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
-               <children>
-                  <Label styleClass="UILabel" text="%label.questions" />
-                  <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" visible="false" />
-                  <HBox>
-                     <children>
-                        <Button fx:id="previousPageButton" mnemonicParsing="false" onAction="#previousPagePressed" prefWidth="75.0" text="%button.previous" />
-                        <AnchorPane HBox.hgrow="ALWAYS">
-                           <children>
-                              <ChoiceBox fx:id="pageChoice" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children>
-                        </AnchorPane>
-                        <Button fx:id="nextPageButton" mnemonicParsing="false" onAction="#nextPagePressed" prefWidth="75.0" text="%button.next" />
-                     </children>
-                  </HBox>
-               </children>
-               <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </HBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </VBox>
-            <ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
-               <content>
-                  <AnchorPane fx:id="mainPaneContainer" />
-               </content>
-               <cursor>
-                  <Cursor fx:constant="OPEN_HAND" />
-               </cursor>
-            </ScrollPane>
-            <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
-               <children>
-                  <Label styleClass="UILabel" text="%label.questiondetails" />
-                  <ScrollPane fx:id="gradeListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <Label styleClass="UILabel" text="%label.examdetails" />
-                  <VBox id="examDetails" prefHeight="200.0" prefWidth="100.0" />
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-               <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </HBox.margin>
-            </VBox>
-         </children>
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin>
-      </HBox>
-   </children>
+	<children>
+		<ToolBar>
+			<items>
+				<ToggleButton fx:id="createBoxButton" mnemonicParsing="false" onAction="#questionAreaPressed" text="%button.createQuestion" />
+				<Button disable="true" mnemonicParsing="false" onAction="#iDAreaPressed" text="%button.IDarea" />
+				<Button disable="true" mnemonicParsing="false" onAction="#qRArearessed" text="%button.QRarea" />
+			</items>
+			<VBox.margin>
+				<Insets />
+			</VBox.margin>
+		</ToolBar>
+		<HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+			<children>
+				<VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
+					<children>
+						<Label styleClass="UILabel" text="%label.questions" />
+						<ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
+						<Label fx:id="pageNumberLabel" layoutX="12.0" layoutY="4.0" text="Label" visible="false" />
+						<HBox>
+							<children>
+								<Button fx:id="previousPageButton" mnemonicParsing="false" onAction="#previousPagePressed" prefWidth="75.0" text="%button.previous" />
+								<AnchorPane HBox.hgrow="ALWAYS">
+									<children>
+										<ChoiceBox fx:id="pageChoice" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+								<Button fx:id="nextPageButton" mnemonicParsing="false" onAction="#nextPagePressed" prefWidth="75.0" text="%button.next" />
+							</children>
+						</HBox>
+					</children>
+					<HBox.margin>
+						<Insets left="5.0" right="5.0" />
+					</HBox.margin>
+					<padding>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+					</padding>
+				</VBox>
+				<ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+					<content>
+						<AnchorPane fx:id="mainPaneContainer" />
+					</content>
+					<cursor>
+						<Cursor fx:constant="OPEN_HAND" />
+					</cursor>
+				</ScrollPane>
+				<VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" spacing="10.0" styleClass="SideBoxes">
+					<children>
+						<Label styleClass="UILabel" text="%label.questiondetails" />
+						<ScrollPane fx:id="gradeListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
+						<Label styleClass="UILabel" text="%label.examdetails" />
+						<VBox id="examDetails" prefHeight="200.0" prefWidth="100.0" />
+					</children>
+					<padding>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+					</padding>
+					<HBox.margin>
+						<Insets left="5.0" right="5.0" />
+					</HBox.margin>
+				</VBox>
+			</children>
+			<VBox.margin>
+				<Insets top="5.0" />
+			</VBox.margin>
+		</HBox>
+	</children>
 </VBox>

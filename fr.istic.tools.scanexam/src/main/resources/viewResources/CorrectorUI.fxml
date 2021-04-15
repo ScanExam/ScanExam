@@ -15,188 +15,157 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="root" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation">
-  <children>
-      <HBox>
-         <children>
-            <ToolBar maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" HBox.hgrow="SOMETIMES">
-              <items>
-                <Button disable="true" mnemonicParsing="false" text="Button" />
-                  <Button disable="true" mnemonicParsing="false" text="Button" />
-              </items>
-            </ToolBar>
-            <ToolBar prefWidth="200.0" HBox.hgrow="ALWAYS">
-              <items>
-                  <Button disable="true" mnemonicParsing="false" text="Pen" />
-                  <Button disable="true" mnemonicParsing="false" text="Gomme" />
-                  <Button disable="true" mnemonicParsing="false" text="Stamp" />
-                  <Button disable="true" mnemonicParsing="false" text="Thicc" />
-                  <Button disable="true" mnemonicParsing="false" text="Thinn" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#zoomTest" text="Zoom" />
-                  <Button mnemonicParsing="false" onAction="#resetPosition" text="Reset" />
-                  <Button disable="true" mnemonicParsing="false" text="Button" />
-              </items>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </ToolBar>
-            <ToolBar prefWidth="150.0" HBox.hgrow="SOMETIMES">
-               <items>
-                  <Button disable="true" mnemonicParsing="false" onAction="#savePressed" text="save" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#loadPressed" text="Load" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#exportPressed" text="Exp" />
-               </items>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </ToolBar>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
-         <children>
-            <VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label alignment="CENTER" styleClass="UILabel" text="%label.students" VBox.vgrow="NEVER" />
-                  <ScrollPane fx:id="studentListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <VBox fx:id="studentDetailsContainer" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </VBox>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <Label alignment="CENTER" text="%label.students" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" VBox.vgrow="NEVER">
-                     <children>
-                        <Button fx:id="prevStudentButton" mnemonicParsing="false" onAction="#prevStudentPressed" prefWidth="75.0" text="%button.previous" />
-                        <Button fx:id="nextStudentButton" mnemonicParsing="false" onAction="#nextStudentPressed" prefWidth="75.0" text="%button.next" />
-                     </children>
-                  </HBox>
-               </children>
-               <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </HBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </VBox>
-            <AnchorPane fx:id="mainPane" HBox.hgrow="ALWAYS">
-               <children>
-                  <ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <content>
-                        <AnchorPane fx:id="parentPane">
-                           <children>
-                              <Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage">
-                                 <children>
-                                    <ImageView fx:id="imview" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
-                                 </children>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </Pane>
-                              <Label fx:id="instructionLabel" styleClass="InstructionLabel" text="%label.editorInstructions" />
-                           </children>
-                        </AnchorPane>
-                     </content>
-                     <cursor>
-                        <Cursor fx:constant="OPEN_HAND" />
-                     </cursor>
-                  </ScrollPane>
-                  <VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                        <HBox fx:id="graderContainer" prefWidth="200.0" />
-                        <Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                     </children>
-                  </VBox>
-                  <AnchorPane id="CorrectionBackground" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="CorrectionBackground" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                     <children>
-                        <ScrollPane id="correctionScrollPane" fx:id="scrollBis" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <content>
-                              <AnchorPane>
-                                 <children>
-                                    <Pane onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onScroll="#mainMouseEvent" style="-fx-background-color: GREEN;">
-                                       <children>
-                                          <ImageView fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
-                                       </children>
-                                    </Pane>
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                           <cursor>
-                              <Cursor fx:constant="OPEN_HAND" />
-                           </cursor>
-                        </ScrollPane>
-                        <HBox alignment="TOP_CENTER" pickOnBounds="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <Button fx:id="botButtonActive" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0">
-                                 <styleClass>
-                                    <String fx:value="ArrowButton" />
-                                    <String fx:value="TopArrowButton" />
-                                 </styleClass>
-                              </Button>
-                           </children>
-                        </HBox>
-                        <Separator accessibleRole="IMAGE_VIEW" onMouseDragged="#dragBottom" onMousePressed="#dragBottom" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <cursor>
-                              <Cursor fx:constant="V_RESIZE" />
-                           </cursor>
-                        </Separator>
-                     </children></AnchorPane>
-                  <HBox alignment="BOTTOM_CENTER" pickOnBounds="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                     <children>
-                        <Button fx:id="botButtonHidden" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0">
-                           <styleClass>
-                              <String fx:value="ArrowButton" />
-                              <String fx:value="BotArrowButton" />
-                           </styleClass></Button>
-                     </children>
-                  </HBox>
-               </children>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </AnchorPane>
-            <VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes">
-               <children>
-                  <Label alignment="CENTER" styleClass="UILabel" text="%label.questions" />
-                  <ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-                  <VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     
-                                 
-                     
-                                 
-                  </VBox>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <Label alignment="CENTER" text="%label.questions" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" VBox.vgrow="NEVER">
-                     <children>
-                        <Button fx:id="prevQuestionButton" mnemonicParsing="false" onAction="#prevQuestionPressed" prefWidth="75.0" text="%button.previous" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#nextQuestionPressed" prefWidth="75.0" text="%button.next" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-               <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </HBox.margin>
-            </VBox>
-         </children>
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin>
-      </HBox>
-  </children>
+	<children>
+		<ToolBar>
+			<items>
+				<Button mnemonicParsing="false" onAction="#resetPosition" text="%button.unzoom" />
+				<Button mnemonicParsing="false" text="%button.annotation" />
+			</items>
+			<VBox.margin>
+				<Insets />
+			</VBox.margin>
+		</ToolBar>
+		<HBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="640.0" VBox.vgrow="ALWAYS">
+			<children>
+				<VBox alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes" HBox.hgrow="ALWAYS">
+					<children>
+						<Label alignment="CENTER" styleClass="UILabel" text="%label.students" VBox.vgrow="NEVER" />
+						<ScrollPane fx:id="studentListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
+						<VBox fx:id="studentDetailsContainer" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
+							<VBox.margin>
+								<Insets />
+							</VBox.margin>
+						</VBox>
+						<HBox alignment="CENTER">
+							<children>
+								<Label alignment="CENTER" text="%label.students" />
+							</children>
+						</HBox>
+						<HBox alignment="CENTER" VBox.vgrow="NEVER">
+							<children>
+								<Button fx:id="prevStudentButton" mnemonicParsing="false" onAction="#prevStudentPressed" prefWidth="75.0" text="%button.previous" />
+								<Button fx:id="nextStudentButton" mnemonicParsing="false" onAction="#nextStudentPressed" prefWidth="75.0" text="%button.next" />
+							</children>
+						</HBox>
+					</children>
+					<HBox.margin>
+						<Insets left="5.0" right="5.0" />
+					</HBox.margin>
+					<padding>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+					</padding>
+				</VBox>
+				<AnchorPane fx:id="mainPane" HBox.hgrow="ALWAYS">
+					<children>
+						<ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+							<content>
+								<AnchorPane fx:id="parentPane">
+									<children>
+										<Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage">
+											<children>
+												<ImageView fx:id="imview" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
+											</children>
+											<opaqueInsets>
+												<Insets />
+											</opaqueInsets>
+										</Pane>
+										<Label fx:id="instructionLabel" styleClass="InstructionLabel" text="%label.editorInstructions" />
+									</children>
+								</AnchorPane>
+							</content>
+							<cursor>
+								<Cursor fx:constant="OPEN_HAND" />
+							</cursor>
+						</ScrollPane>
+						<VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+							<children>
+								<Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+								<HBox fx:id="graderContainer" prefWidth="200.0" />
+								<Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+							</children>
+						</VBox>
+						<AnchorPane id="CorrectionBackground" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="CorrectionBackground" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+							<children>
+								<ScrollPane id="correctionScrollPane" fx:id="scrollBis" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+									<content>
+										<AnchorPane>
+											<children>
+												<Pane onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onScroll="#mainMouseEvent" style="-fx-background-color: GREEN;">
+													<children>
+														<ImageView fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
+													</children>
+												</Pane>
+											</children>
+										</AnchorPane>
+									</content>
+									<cursor>
+										<Cursor fx:constant="OPEN_HAND" />
+									</cursor>
+								</ScrollPane>
+								<HBox alignment="TOP_CENTER" pickOnBounds="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+									<children>
+										<Button fx:id="botButtonActive" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0">
+											<styleClass>
+												<String fx:value="ArrowButton" />
+												<String fx:value="TopArrowButton" />
+											</styleClass>
+										</Button>
+									</children>
+								</HBox>
+								<Separator accessibleRole="IMAGE_VIEW" onMouseDragged="#dragBottom" onMousePressed="#dragBottom" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+									<cursor>
+										<Cursor fx:constant="V_RESIZE" />
+									</cursor>
+								</Separator>
+							</children>
+						</AnchorPane>
+						<HBox alignment="BOTTOM_CENTER" pickOnBounds="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+							<children>
+								<Button fx:id="botButtonHidden" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0">
+									<styleClass>
+										<String fx:value="ArrowButton" />
+										<String fx:value="BotArrowButton" />
+									</styleClass>
+								</Button>
+							</children>
+						</HBox>
+					</children>
+					<HBox.margin>
+						<Insets />
+					</HBox.margin>
+				</AnchorPane>
+				<VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes">
+					<children>
+						<Label alignment="CENTER" styleClass="UILabel" text="%label.questions" />
+						<ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
+						<VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
+							<VBox.margin>
+								<Insets />
+							</VBox.margin>
+						</VBox>
+						<HBox alignment="CENTER">
+							<children>
+								<Label alignment="CENTER" text="%label.questions" />
+							</children>
+						</HBox>
+						<HBox alignment="CENTER" VBox.vgrow="NEVER">
+							<children>
+								<Button fx:id="prevQuestionButton" mnemonicParsing="false" onAction="#prevQuestionPressed" prefWidth="75.0" text="%button.previous" HBox.hgrow="ALWAYS" />
+								<Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#nextQuestionPressed" prefWidth="75.0" text="%button.next" HBox.hgrow="ALWAYS" />
+							</children>
+						</HBox>
+					</children>
+					<padding>
+						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+					</padding>
+					<HBox.margin>
+						<Insets left="5.0" right="5.0" />
+					</HBox.margin>
+				</VBox>
+			</children>
+			<VBox.margin>
+				<Insets top="5.0" />
+			</VBox.margin>
+		</HBox>
+	</children>
 </VBox>

@@ -44,11 +44,6 @@
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.view.resetzoom" />
 					</items>
 				</Menu>
-				<Menu disable="true" mnemonicParsing="false" text="%menu.help">
-					<items>
-						<MenuItem mnemonicParsing="false" text="%menu.help.about" />
-					</items>
-				</Menu>
 			</menus>
 		</MenuBar>
 		<TabPane side="LEFT" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
@@ -60,12 +55,5 @@
 				<Insets />
 			</opaqueInsets>
 		</TabPane>
-		<HBox styleClass="botBar">
-			<children>
-				<Label text="Label" />
-				<Pane HBox.hgrow="ALWAYS" />
-				<Label text="Label" />
-			</children>
-		</HBox>
 	</children>
 </VBox>
