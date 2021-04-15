@@ -128,6 +128,7 @@
 				</AnchorPane>
 				<VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes">
 					<children>
+                  		<Label fx:id="gradeLabel" alignment="CENTER" layoutX="111.0" layoutY="20.0" styleClass="UILabel" text="%label.grade" />
 						<Label alignment="CENTER" styleClass="UILabel" text="%label.questions" />
 						<ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
 						<VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
