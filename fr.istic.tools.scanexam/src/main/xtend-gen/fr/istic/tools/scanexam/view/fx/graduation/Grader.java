@@ -2,9 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.editor.HTMLView;
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.io.InputStream;
 import java.util.List;
 import javafx.collections.ObservableList;

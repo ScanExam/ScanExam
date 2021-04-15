@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.PresenterGraduation;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
 import java.util.Objects;
 
@@ -78,10 +77,10 @@ public class PresenterQuestion {
   }
   
   public int nextStudent() {
-    return this.service.nextStudent();
+    return this.service.nextSheet();
   }
   
   public int previousStudent() {
-    return this.service.previousStudent();
+    return this.service.previousSheet();
   }
 }

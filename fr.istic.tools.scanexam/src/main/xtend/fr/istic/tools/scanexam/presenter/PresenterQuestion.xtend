@@ -75,10 +75,10 @@ class PresenterQuestion {
 	}
 	
 	def nextStudent(){
-		service.nextStudent
+		service.nextSheet
 	}
 	
 	def previousStudent(){
-		service.previousStudent
+		service.previousSheet
 	}
 }

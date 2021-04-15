@@ -8,8 +8,6 @@ import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
 import fr.istic.tools.scanexam.io.TemplateIo;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,11 +22,8 @@ import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
- * Representer l'état courant de l'interface graphique
- * doit elle être stoquée dans une classe faisant parti de l'API ?
- * 
- * 
- * Factory -> on créer une session en passant la précedente en paramètre.
+ * Classe servant de façade aux données concernant la création du modèle
+ * @author Antoine Degas, Marius Lumbroso, Théo Giraudet
  */
 @SuppressWarnings("all")
 public class ServiceEdition extends Service {
@@ -60,6 +55,12 @@ public class ServiceEdition extends Service {
     return this.questionId++;
   }
   
+  /**
+   * Redimensionne la zone d'une Question
+   * @param id l'ID de la question dont la zone doit être redimensionnée
+   * @param heigth la nouvelle hauteur de la zone
+   * @param width la nouvelle largeur de la zone
+   */
   public void rescaleQuestion(final int id, final float heigth, final float width) {
     final Question question = this.getQuestion(id);
     QuestionZone _zone = question.getZone();
@@ -68,6 +69,12 @@ public class ServiceEdition extends Service {
     _zone_1.setHeigth(heigth);
   }
   
+  /**
+   * Déplace la zone d'une Question
+   * @param id l'ID de la question dont la zone doit être déplacée
+   * @param x la nouvelle position x de la zone
+   * @param y la nouvelle position y de la zone
+   */
   public void moveQuestion(final int id, final float x, final float y) {
     final Question question = this.getQuestion(id);
     QuestionZone _zone = question.getZone();
@@ -76,11 +83,20 @@ public class ServiceEdition extends Service {
     _zone_1.setY(y);
   }
   
+  /**
+   * Renomme la Question
+   * @param id l'ID de la question à renommer
+   * @param name le nouveau nom de la question
+   */
   public void renameQuestion(final int id, final String name) {
     final Question question = this.getQuestion(id);
     question.setName(name);
   }
   
+  /**
+   * Supprime une question
+   * @param id l'ID de la question à supprimer
+   */
   public void removeQuestion(final int id) {
     EList<Page> _pages = ExamSingleton.instance.getPages();
     for (final Page page : _pages) {
@@ -100,13 +116,18 @@ public class ServiceEdition extends Service {
    * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
    * @param maxPoint, note maximal de la question question a ajouter
    */
-  public void modifMaxPoint(final int questionId, final float maxPoint) {
+  public void modifyMaxPoint(final int questionId, final float maxPoint) {
     final GradeScale scale = this.getQuestion(questionId).getGradeScale();
     if ((maxPoint > 0)) {
       scale.setMaxPoint(maxPoint);
     }
   }
   
+  /**
+   * Sauvegarde le fichier modèle d'examen sur le disque
+   * @param path L'emplacement de sauvegarde du fichier
+   * @param pdfOutputStream le contenu du fichier sous forme de Stream
+   */
   public void save(final ByteArrayOutputStream outputStream, final File path) {
     try {
       final byte[] encoded = Base64.getEncoder().encode(outputStream.toByteArray());
@@ -120,6 +141,11 @@ public class ServiceEdition extends Service {
     }
   }
   
+  /**
+   * Charge un fichier modèle d'examen a partir du disque
+   * @params xmiPath L'emplacement du fichier.
+   * @returns un flux vers le contenu du fichier si celui-ci a bien été ouvert, Optional.empty sinon
+   */
   public Optional<ByteArrayInputStream> open(final String xmiPath) {
     final Optional<CreationTemplate> creationTemplate = TemplateIo.loadCreationTemplate(xmiPath);
     boolean _isPresent = creationTemplate.isPresent();
@@ -142,7 +168,12 @@ public class ServiceEdition extends Service {
     return Optional.<ByteArrayInputStream>empty();
   }
   
-  public void createTemplate(final int pageNumber) {
+  /**
+   * Crée un nouveau modèle côté données
+   * @param pageNumber le nombre de pages du modèle
+   */
+  @Override
+  public void onDocumentLoad(final int pageNumber) {
     this.template = TemplatesFactory.eINSTANCE.createCreationTemplate();
     ExamSingleton.instance = CoreFactory.eINSTANCE.createExam();
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, pageNumber, true);
@@ -155,11 +186,6 @@ public class ServiceEdition extends Service {
     this.questionId = 0;
   }
   
-  @Override
-  public void onDocumentLoad(final int pdfPageCount) {
-    this.createTemplate(pdfPageCount);
-  }
-  
   /**
    * Retourne la zone associée à une question
    * @param index Index de la question //FIXME (useless?)
@@ -167,11 +193,6 @@ public class ServiceEdition extends Service {
    */
   public QuestionZone getQuestionZone(final int pageIndex, final int questionIndex) {
     return ExamSingleton.getQuestion(pageIndex, questionIndex).getZone();
-  }
-  
-  public ByteArrayInputStream getEditionPdfInputStream() {
-    final byte[] decoded = Base64.getDecoder().decode(this.template.getEncodedDocument());
-    return new ByteArrayInputStream(decoded);
   }
   
   @Pure

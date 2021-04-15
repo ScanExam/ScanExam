@@ -1,4 +1,4 @@
-package services;
+package fr.istic.tools.scanexam.services;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

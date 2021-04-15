@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.GradesExportImpl
 import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
-import fr.istic.tools.scanexam.services.ExamSingleton
 import fr.istic.tools.scanexam.services.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
 import fr.istic.tools.scanexam.view.Adapter
@@ -117,13 +116,17 @@ class PresenterGraduation implements Presenter
 		(new GradesExportImpl(service)).exportGrades
 	}
 	
+	def int getPageAmount() {
+		return service.pageAmount
+	}
+	
 	def boolean openCorrectionPdf(File file)
 	{
 		val document = PDDocument.load(file);
 		val stream = new ByteArrayOutputStream();
 		document.save(stream);
 		presPdf.create("", file);
-        val pdfReader = new PdfReaderWithoutQrCodeImpl(document,ExamSingleton.instance.pages.size,3);  
+        val pdfReader = new PdfReaderWithoutQrCodeImpl(document, getPageAmount,3);  
         pdfReader.readPDf();
         val studentSheets = pdfReader.completeStudentSheets
 		return service.initializeCorrection(studentSheets) 
@@ -133,11 +136,11 @@ class PresenterGraduation implements Presenter
 	//--- Grade application
 	
 	def applyGrade(int questionId,int gradeId) {
-		service.addGradeEntry(questionId,gradeId);
+		service.assignGradeEntry(questionId,gradeId);
 	}
 	
 	def removeGrade(int questionId,int gradeId) {
-		service.removeGradeEntry(questionId,gradeId);
+		service.retractGradeEntry(questionId,gradeId);
 	}
 	
 	
@@ -260,7 +263,7 @@ class PresenterGraduation implements Presenter
 	}
 	
 	def renameStudent(int studentId,String newname){
-		service.renameStudent(newname)
+		service.assignStudentId(newname)
 	}
 	
 	
@@ -277,10 +280,6 @@ class PresenterGraduation implements Presenter
 			ids.add(q.id)
 		}
 		ids
-	}
-	
-	def getTemplatePageAmount(){
-		ExamSingleton.instance.pages.size
 	}
 	
 	List<Question> questions

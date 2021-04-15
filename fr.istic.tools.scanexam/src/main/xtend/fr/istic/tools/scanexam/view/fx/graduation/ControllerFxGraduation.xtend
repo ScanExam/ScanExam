@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
-import fr.istic.tools.scanexam.services.ExamSingleton
 import fr.istic.tools.scanexam.view.AdapterGraduation
 import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation
 import fr.istic.tools.scanexam.view.fx.FxSettings
@@ -483,7 +482,7 @@ class ControllerFxGraduation {
 	def void loadQuestions() {
 		logger.info("Loading Questions")
 		var currentQuestionId = 0;
-		for (var p = 0;p < ExamSingleton.instance.pages.size;p++) {
+		for (var p = 0;p < corrector.presenter.getPageAmount;p++) {
 			var ids = corrector.presenter.initLoading(p);
 			for (int i:ids) {
 				var question = new QuestionItemGraduation();

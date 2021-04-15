@@ -1,4 +1,4 @@
-package services;
+package fr.istic.tools.scanexam.services;
 
 
 import static org.junit.Assert.assertTrue;
@@ -19,8 +19,6 @@ import com.beust.jcommander.internal.Lists;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.presenter.PresenterGraduation;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
 
 
 public class ExamGraduationServiceTest 

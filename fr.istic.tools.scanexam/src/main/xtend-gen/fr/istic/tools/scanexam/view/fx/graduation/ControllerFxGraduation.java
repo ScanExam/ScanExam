@@ -2,17 +2,9 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
-import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.view.AdapterGraduation;
 import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
-import fr.istic.tools.scanexam.view.fx.graduation.Grader;
-import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -587,7 +579,7 @@ public class ControllerFxGraduation {
   public void loadQuestions() {
     ControllerFxGraduation.logger.info("Loading Questions");
     int currentQuestionId = 0;
-    for (int p = 0; (p < ExamSingleton.instance.getPages().size()); p++) {
+    for (int p = 0; (p < this.corrector.getPresenter().getPageAmount()); p++) {
       {
         LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
         for (final int i : ids) {

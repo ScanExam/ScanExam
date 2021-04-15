@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.api.DataFactory
 import fr.istic.tools.scanexam.core.CoreFactory
-import fr.istic.tools.scanexam.core.Grade
 import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
@@ -20,6 +19,10 @@ import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.services.ExamSingleton.*
 
+/**
+ * Classe servant de façade aux données concernant la correction
+ * @author Antoine Degas, Marius Lumbroso, Théo Giraudet, Thomas Guibert
+ */
 class ServiceGraduation extends Service
 {
 
@@ -59,7 +62,8 @@ class ServiceGraduation extends Service
 
 	/**
 	 * Sauvegarde le fichier de correction d'examen sur le disque.
-	 * @params path L'emplacement de sauvegarde du fichier.
+	 * @param path L'emplacement de sauvegarde du fichier.
+	 * @param pdfOutputStream le contenu du fichier sous forme de Stream
 	 */
 	def saveCorrectionTemplate(String path,ByteArrayOutputStream pdfOutputStream) 
 	{
@@ -72,6 +76,7 @@ class ServiceGraduation extends Service
 		
 		TemplateIo.save(new File(path), correctionTemplate);
 	}
+	
 	/**
 	 * Charge un fichier de correction d'examen a partir du disque.
 	 * @params path L'emplacement du fichier.
@@ -96,54 +101,165 @@ class ServiceGraduation extends Service
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
-	def boolean openCreationTemplate(String xmiFile) 
-	{
-		val editionTemplate = TemplateIo.loadCreationTemplate(xmiFile) 
-		
-		if (editionTemplate.present) 
-        {
-            this.creationTemplate = editionTemplate.get()
-            
-            ExamSingleton.instance = editionTemplate.get().exam
+	def boolean openCreationTemplate(String xmiFile) {
+		val editionTemplate = TemplateIo.loadCreationTemplate(xmiFile)
 
-            return true
-        }
+		if (editionTemplate.present) {
+			this.creationTemplate = editionTemplate.get()
+
+			ExamSingleton.instance = editionTemplate.get().exam
+
+			return true
+		}
 		return false
 	}
-		/**
+	
+	/**
 	 * Charge le document PDF des copies manuscrites,  corrigés
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
-	def boolean initializeCorrection(Collection<StudentSheet> studentSheets)
-	{
-		try
-		{
-			
-        	
-        	for (StudentSheet sheet : studentSheets)
-        	{
-        		for (var i = 0; i < ExamSingleton.templatePageAmount; i++) {
-	        		val examPage = ExamSingleton.getPage(i);
-	        		
-	        		println( "test size : " + examPage.questions.size)
-	        		for (var j = 0;j< examPage.questions.size;j++) //TODO +1?
-	        		{
-	        			sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
-	        		}
-        		
-        		}
-        		
-        	}
-        	this.studentSheets = studentSheets
-        	return true
-		}
-		catch (Exception ex)
-		{
+	def boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
+		try {
+
+			for (StudentSheet sheet : studentSheets) {
+				for (var i = 0; i < ExamSingleton.templatePageAmount; i++) {
+					val examPage = ExamSingleton.getPage(i);
+
+					println("test size : " + examPage.questions.size)
+					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?
+					{
+						sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
+					}
+
+				}
+
+			}
+			this.studentSheets = studentSheets
+			return true
+		} catch (Exception ex) {
 			return false;
 		}
-       
+
 	}
+	
+	//TODO si les pages sont dans le désordre ?
+	def int getAbsolutePageNumber(int studentId, int offset) {
+		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(0);
+		return pageId + offset;
+	}
+	
+	//===================================================
+	//          		 StudentSheet
+	//===================================================
+	
+	/**
+	 * Défini la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+	 */
+	def nextSheet() {
+		if (currentSheetIndex + 1 < studentSheets.size)
+			currentSheetIndex++
+	}
+
+	/**
+	 * Défini la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+	 */
+	def previousSheet() {
+		if (currentSheetIndex > 0)
+			currentSheetIndex--
+	}
+	
+	/**
+	 * Associe un nouveau identifiant d'étudiant à la copie courante
+	 * @param id le nouvel identifiant d'étudiant
+	 */
+	def assignStudentId(String id) {
+		studentSheets.get(currentSheetIndex).studentName = id
+	}
+	
+	//===================================================
+	//          			 Page
+	//===================================================
+	
+	
+	/**
+	 * @return l'index de la page courante du modèle d'exam
+	 */
+	private def getCurrentPage()
+	{
+		return ExamSingleton.getPage(pageIndex);
+	}
+	
+	/**
+	 * Défini la page suivant la page actuelle comme nouvelle page courante
+	 */
+	def nextPage() {
+		if (pageIndex + 1 < ExamSingleton.instance.pages.length)
+			pageIndex++
+	}
+
+	/**
+	 * Défini la page précédant la page actuelle comme nouvelle page courante
+	 */
+	def previousPage() {
+		if (pageIndex > 0) 
+			pageIndex--;
+	}
+	
+	/**
+	 * @return le nombre de pages de l'Examen
+	 */
+	def int getPageAmount() {
+		return ExamSingleton.getTemplatePageAmount
+	}
+	
+	//===================================================
+	//          		  Question
+	//===================================================
+	
+	/**
+	 * Défini la question suivant la question actuelle comme nouvelle question courante
+	 */
+	def nextQuestion()
+	{
+		if (currentQuestionIndex + 1 < currentPage.questions.size)
+			currentQuestionIndex++
+	}
+	
+	/**
+	 * Défini la question précédant la question actuelle comme nouvelle question courante
+	 */
+	def previousQuestion() {
+		if (currentQuestionIndex > 0)
+			currentQuestionIndex--
+	}
+	
+	/**
+	 * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
+	 * Ne fait rien si la question n'existe pas 
+	 * @param id un ID de question
+	 */
+	def selectQuestion(int id) {
+		for(page: ExamSingleton.instance.pages) {
+			val question = page.questions.findFirst[question | question.id == id]
+			if(question !== null) {
+				pageIndex = page.id
+				currentQuestionIndex = question.id
+			}
+		}
+	}
+	
+	
+	/**
+	 * @return le nombre de questions d'une copie d'étudiant
+	 */
+	def numberOfQuestions() {
+		var nbQuestion = 0
+		for (var i = 0; i < creationTemplate.exam.pages.size(); i++)
+			nbQuestion += creationTemplate.exam.pages.get(i).questions.size
+		nbQuestion
+	}
+	
 	//===================================================
 	//                   GradeEntry
 	//===================================================
@@ -194,135 +310,36 @@ class ServiceGraduation extends Service
 			scale.steps.remove(scaleEntry)
 	}
 	
-	
-	def numberOfQuestions ()
-	{
-		var nbQuestion = 0
-		for (var i = 0 ; i < creationTemplate.exam.pages.size(); i++){
-			nbQuestion += creationTemplate.exam.pages.get(i).questions.size
-		}
-		nbQuestion
-	}
-	
-	def int getAbsolutePageNumber(int studentId,int offset)
-	{
-		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(0);
-		print("\nPageid = " + (pageId + offset));
-		return pageId  + offset;
-	}
-	
-	
-	
 	/**
-	 * Passe au prochaine etudiant dans les StudentSheet
+     * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
+	 * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
 	 */
-	def nextStudent() 
-	{
-		if (currentSheetIndex+1 < studentSheets.size)
-			currentSheetIndex++
+	def List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(int questionId) {
+		if (getQuestion(questionId).gradeScale !== null)
+			return getQuestion(questionId).gradeScale.steps.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
+		return List.of
 	}
 	
-	/**
-	 * Passe au etudiant précédent dans les StudentSheet
-	 */
-	def previousStudent() 
-	{
-		if (currentSheetIndex > 0)
-			currentSheetIndex--
-	}
-	
-	def nextPage()
-	{
-		if (pageIndex + 1 < ExamSingleton.instance.pages.length) 
-		{
-			pageIndex++
-		}
-	}
-	def previousPage() 
-	{
-		 if (pageIndex > 0) 
-		 {
-		 	pageIndex--;
-		 }
-	}
-	
-	/**
-	 * Renomme l'étudiant
-	 * @param name le nouveau nom de l'étudiant
-	 */
-	def renameStudent(String name) {
-		studentSheets.get(currentSheetIndex).studentName = name
-	}
+
+	//===========================================================
+	// Manipulation d'un GradeEntry à une note d'un StudentSheet
+	//===========================================================
 	
 	
 	/**
-	 * Index de la page courante du modèle d'exam
-	 */
-	protected def getCurrentPage()
-	{
-		return ExamSingleton.getPage(pageIndex);
-	}
-	def getCurrentQuestion()
-	{
-		return currentPage.questions.findFirst[x | x.id == currentQuestionIndex];
-	}
-	
-	def nextQuestion()
-	{
-		if (currentQuestionIndex + 1 < currentPage.questions.size)
-			currentQuestionIndex++
-	}
-	
-	def previousQuestion() 
-	{
-		if (currentQuestionIndex > 0)
-			currentQuestionIndex--
-	}
-	
-	/**
-	 * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
-	 * Ne fait rien si la question n'existe pas 
-	 * @param id un ID de question
-	 */
-	def selectQuestion(int id) {
-		for(page: ExamSingleton.instance.pages) {
-			val question = page.questions.findFirst[question | question.id == id]
-			if(question !== null) {
-				pageIndex = page.id
-				currentQuestionIndex = question.id
-			}
-		}
-	}
-	
-	
-	def indexOfQuestions (int indexpage , int indexquestion){
-		var indexQuestion =0
-		for (var i = 0 ; i < indexpage-1 ; i++){
-			indexQuestion += creationTemplate.exam.pages.get(i).questions.size
-		}
-		indexQuestion += indexquestion
-		indexQuestion
-	}
-	
-	/**
-	 * Ajoute une (n as GradeItem)entrée à la note d'une question d'une copie
+	 * Ajoute une entrée (GradeItem) à la note d'une question d'une copie
 	 * @param questionId l'ID de la question à laquelle ajouter l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
 	 * @return boolean indique si les points on bien ete attribuer
 	 */
-	def boolean addGradeEntry(int questionId, int gradeEntryId) 
-	{
-		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry | entry.id == gradeEntryId]
-		
-		if(valideGradeEntry(questionId,gradeEntry))
-		{
+	def boolean assignGradeEntry(int questionId, int gradeEntryId) {
+		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry|entry.id == gradeEntryId]
+
+		if (valideGradeEntry(questionId, gradeEntry)) {
 			val sheet = studentSheets.get(currentSheetIndex);
-			
 			sheet.grades.get(questionId).entries.add(gradeEntry)
 			return true
-		}
-		else
-		{
+		} else {
 			return false
 		}
 	}
@@ -332,51 +349,28 @@ class ServiceGraduation extends Service
 	 * @param questionId l'ID de la question à laquelle retirer l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
 	 */
-	def removeGradeEntry(int questionId, int gradeEntryId) {
+	def retractGradeEntry(int questionId, int gradeEntryId) {
 		val entries = studentSheets.get(currentSheetIndex).grades.get(questionId).entries
 		val gradeEntry = entries.findFirst[entry | entry.id == gradeEntryId]
 		entries.remove(gradeEntry)
 	}
 	
     /**
-     * @param l'ID de la question à laquelle récupérer la liste d'entrées
+     * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
 	 * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
 	 */
-	def List<Integer> getQuestionSelectedGradeEntries(int questionId) 
-	{
+	def List<Integer> getQuestionSelectedGradeEntries(int questionId) {
 		if (currentSheetIndex > studentSheets.size - 1)
-		 {
-		 	return new ArrayList<Integer>();
-		 }
-		 
-		 val sheet = studentSheets.get(currentSheetIndex);
-		 
-		 if (questionId > sheet.grades.size-1)
-		 {
-		 	return new ArrayList<Integer>();
-		 }
-		 
-		sheet.grades.get(questionId).entries.map[entry | entry.id]
+			return new ArrayList<Integer>();
+
+		val sheet = studentSheets.get(currentSheetIndex);
+
+		if (questionId > sheet.grades.size - 1)
+			return new ArrayList<Integer>();
+
+		sheet.grades.get(questionId).entries.map[entry|entry.id]
 	}
-	
-	/**
-     * @param l'ID de la question à laquelle récupérer la liste d'entrées
-	 * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
-	 */
-	def List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(int questionId) {
-		if (getQuestion(questionId).gradeScale !== null)//TODO F
-			return getQuestion(questionId).gradeScale.steps.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
-		return List.of
-	}
-	
-	/**
-	 * Ajoute la note a la question courante
-	 */
-	def setGrade (Grade note){
-		studentSheets.get(currentSheetIndex).grades.set(indexOfQuestions(pageIndex,currentQuestionIndex), note);
-	}
-	
-	
+
 	
 	//FIXME : Probleme lorsque la note maximal est modifier pour une note plus basse, risque de depacement
 	/**
@@ -403,10 +397,14 @@ class ServiceGraduation extends Service
 		true //TODO FIX
 	}
 	
+	//===================================================
+	//             Informations sur la copies
+	//===================================================
+	
 	/**
-	 * @return la note maximal que peut avoir l'étudiant avec les questions auxquels il a répondu 
+	 * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu 
 	 */
-	def float getMaxGradeForGradedQuestions() {
+	def float getCurrentMaxGrade() {
 		studentSheets.get(currentSheetIndex).grades
 			.indexed
 			.filter[pair | !pair.value.entries.isEmpty]
@@ -416,6 +414,17 @@ class ServiceGraduation extends Service
 			.reduce[acc, n | acc + n]
 		
 	}
+	
+	/**
+	 * @return la note actuelle de l'étudiant courant
+	 */
+	def float getCurrentGrade() {
+		studentSheets.get(currentSheetIndex).computeGrade
+	}
+	
+	//===================================================
+	//      Information sur la listes des étudiants
+	//===================================================
 	
 	/**
 	 * Défini le chemin d'accès vers la liste de tous les étudiants

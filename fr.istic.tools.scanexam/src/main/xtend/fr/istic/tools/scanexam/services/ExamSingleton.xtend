@@ -8,10 +8,13 @@ import java.util.Optional
 import fr.istic.tools.scanexam.core.Page
 
 /**
- * A revoir ?
+ * Classe permettant de manipuler directement l'Exam
  */
-final class ExamSingleton 
+package final class ExamSingleton 
 {
+	/**
+	 * Instance Singleton de l'Examen
+	 */
 	public static Exam instance = null;
 	
 	 /** Permet de récupérer une Question
@@ -43,10 +46,17 @@ final class ExamSingleton
 		).map(q | q.value)
 	}
 	
+	/**
+	 * @return le nombre de pages de l'Examen
+	 */
 	static def int getTemplatePageAmount(){
 		instance.pages.size
 	}
 
+	/**
+	 * @param pageId l'ID de la page à récupérer
+	 * @return la Page dont l'ID est <i>pageId</i>
+	 */
 	static def Page getPage(int pageId)
 	{
 		return instance.pages.get(pageId);

@@ -5,14 +5,7 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.mailing.StudentDataManager;
-import fr.istic.tools.scanexam.presenter.Presenter;
-import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
-import fr.istic.tools.scanexam.presenter.PresenterImportExportXMI;
-import fr.istic.tools.scanexam.presenter.PresenterPdf;
-import fr.istic.tools.scanexam.presenter.PresenterQuestion;
-import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
-import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.Adapter;
@@ -122,14 +115,18 @@ public class PresenterGraduation implements Presenter {
     new GradesExportImpl(this.service).exportGrades();
   }
   
+  public int getPageAmount() {
+    return this.service.getPageAmount();
+  }
+  
   public boolean openCorrectionPdf(final File file) {
     try {
       final PDDocument document = PDDocument.load(file);
       final ByteArrayOutputStream stream = new ByteArrayOutputStream();
       document.save(stream);
       this.presPdf.create("", file);
-      int _size = ExamSingleton.instance.getPages().size();
-      final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(document, _size, 3);
+      int _pageAmount = this.getPageAmount();
+      final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(document, _pageAmount, 3);
       pdfReader.readPDf();
       final Collection<StudentSheet> studentSheets = pdfReader.getCompleteStudentSheets();
       return this.service.initializeCorrection(studentSheets);
@@ -139,11 +136,11 @@ public class PresenterGraduation implements Presenter {
   }
   
   public boolean applyGrade(final int questionId, final int gradeId) {
-    return this.service.addGradeEntry(questionId, gradeId);
+    return this.service.assignGradeEntry(questionId, gradeId);
   }
   
   public boolean removeGrade(final int questionId, final int gradeId) {
-    return this.service.removeGradeEntry(questionId, gradeId);
+    return this.service.retractGradeEntry(questionId, gradeId);
   }
   
   public List<Integer> getEntryIds(final int questionId) {
@@ -277,7 +274,7 @@ public class PresenterGraduation implements Presenter {
   }
   
   public void renameStudent(final int studentId, final String newname) {
-    this.service.renameStudent(newname);
+    this.service.assignStudentId(newname);
   }
   
   public int getAbsolutePage(final int studentId, final int pageNumber) {
@@ -298,10 +295,6 @@ public class PresenterGraduation implements Presenter {
       _xblockexpression = ids;
     }
     return _xblockexpression;
-  }
-  
-  public int getTemplatePageAmount() {
-    return ExamSingleton.instance.getPages().size();
   }
   
   private List<Question> questions;

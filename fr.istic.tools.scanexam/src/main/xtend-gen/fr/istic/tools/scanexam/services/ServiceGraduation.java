@@ -11,8 +11,6 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIo;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,6 +32,10 @@ import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.eclipse.xtext.xbase.lib.Pure;
 
+/**
+ * Classe servant de façade aux données concernant la correction
+ * @author Antoine Degas, Marius Lumbroso, Théo Giraudet, Thomas Guibert
+ */
 @SuppressWarnings("all")
 public class ServiceGraduation extends Service {
   /**
@@ -72,7 +74,8 @@ public class ServiceGraduation extends Service {
   
   /**
    * Sauvegarde le fichier de correction d'examen sur le disque.
-   * @params path L'emplacement de sauvegarde du fichier.
+   * @param path L'emplacement de sauvegarde du fichier.
+   * @param pdfOutputStream le contenu du fichier sous forme de Stream
    */
   public void saveCorrectionTemplate(final String path, final ByteArrayOutputStream pdfOutputStream) {
     try {
@@ -152,6 +155,149 @@ public class ServiceGraduation extends Service {
     }
   }
   
+  public int getAbsolutePageNumber(final int studentId, final int offset) {
+    final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
+      int _id = x.getId();
+      return Boolean.valueOf((_id == studentId));
+    };
+    final Integer pageId = IterableExtensions.<StudentSheet>findFirst(this.studentSheets, _function).getPosPage().get(0);
+    return ((pageId).intValue() + offset);
+  }
+  
+  /**
+   * Défini la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+   */
+  public int nextSheet() {
+    int _xifexpression = (int) 0;
+    int _size = this.studentSheets.size();
+    boolean _lessThan = ((this.currentSheetIndex + 1) < _size);
+    if (_lessThan) {
+      _xifexpression = this.currentSheetIndex++;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * Défini la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+   */
+  public int previousSheet() {
+    int _xifexpression = (int) 0;
+    if ((this.currentSheetIndex > 0)) {
+      _xifexpression = this.currentSheetIndex--;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * Associe un nouveau identifiant d'étudiant à la copie courante
+   * @param id le nouvel identifiant d'étudiant
+   */
+  public void assignStudentId(final String id) {
+    StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
+    _get.setStudentName(id);
+  }
+  
+  /**
+   * @return l'index de la page courante du modèle d'exam
+   */
+  private Page getCurrentPage() {
+    return ExamSingleton.getPage(this.pageIndex);
+  }
+  
+  /**
+   * Défini la page suivant la page actuelle comme nouvelle page courante
+   */
+  public int nextPage() {
+    int _xifexpression = (int) 0;
+    int _length = ((Object[])Conversions.unwrapArray(ExamSingleton.instance.getPages(), Object.class)).length;
+    boolean _lessThan = ((this.pageIndex + 1) < _length);
+    if (_lessThan) {
+      _xifexpression = this.pageIndex++;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * Défini la page précédant la page actuelle comme nouvelle page courante
+   */
+  public int previousPage() {
+    int _xifexpression = (int) 0;
+    if ((this.pageIndex > 0)) {
+      _xifexpression = this.pageIndex--;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * @return le nombre de pages de l'Examen
+   */
+  public int getPageAmount() {
+    return ExamSingleton.getTemplatePageAmount();
+  }
+  
+  /**
+   * Défini la question suivant la question actuelle comme nouvelle question courante
+   */
+  public int nextQuestion() {
+    int _xifexpression = (int) 0;
+    int _size = this.getCurrentPage().getQuestions().size();
+    boolean _lessThan = ((this.currentQuestionIndex + 1) < _size);
+    if (_lessThan) {
+      _xifexpression = this.currentQuestionIndex++;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * Défini la question précédant la question actuelle comme nouvelle question courante
+   */
+  public int previousQuestion() {
+    int _xifexpression = (int) 0;
+    if ((this.currentQuestionIndex > 0)) {
+      _xifexpression = this.currentQuestionIndex--;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
+   * Ne fait rien si la question n'existe pas
+   * @param id un ID de question
+   */
+  public void selectQuestion(final int id) {
+    EList<Page> _pages = ExamSingleton.instance.getPages();
+    for (final Page page : _pages) {
+      {
+        final Function1<Question, Boolean> _function = (Question question) -> {
+          int _id = question.getId();
+          return Boolean.valueOf((_id == id));
+        };
+        final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
+        if ((question != null)) {
+          this.pageIndex = page.getId();
+          this.currentQuestionIndex = question.getId();
+        }
+      }
+    }
+  }
+  
+  /**
+   * @return le nombre de questions d'une copie d'étudiant
+   */
+  public int numberOfQuestions() {
+    int _xblockexpression = (int) 0;
+    {
+      int nbQuestion = 0;
+      for (int i = 0; (i < this.creationTemplate.getExam().getPages().size()); i++) {
+        int _nbQuestion = nbQuestion;
+        int _size = this.creationTemplate.getExam().getPages().get(i).getQuestions().size();
+        nbQuestion = (_nbQuestion + _size);
+      }
+      _xblockexpression = nbQuestion;
+    }
+    return _xblockexpression;
+  }
+  
   /**
    * Ajoute une nouvelle entrée à la liste des points attribuable à la question
    * @param questionId l'ID de la question dans laquelle ajouter l'entrée
@@ -219,159 +365,29 @@ public class ServiceGraduation extends Service {
     return _xblockexpression;
   }
   
-  public int numberOfQuestions() {
-    int _xblockexpression = (int) 0;
-    {
-      int nbQuestion = 0;
-      for (int i = 0; (i < this.creationTemplate.getExam().getPages().size()); i++) {
-        int _nbQuestion = nbQuestion;
-        int _size = this.creationTemplate.getExam().getPages().get(i).getQuestions().size();
-        nbQuestion = (_nbQuestion + _size);
-      }
-      _xblockexpression = nbQuestion;
-    }
-    return _xblockexpression;
-  }
-  
-  public int getAbsolutePageNumber(final int studentId, final int offset) {
-    final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
-      int _id = x.getId();
-      return Boolean.valueOf((_id == studentId));
-    };
-    final Integer pageId = IterableExtensions.<StudentSheet>findFirst(this.studentSheets, _function).getPosPage().get(0);
-    InputOutput.<String>print(("\nPageid = " + Integer.valueOf(((pageId).intValue() + offset))));
-    return ((pageId).intValue() + offset);
-  }
-  
   /**
-   * Passe au prochaine etudiant dans les StudentSheet
+   * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
+   * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
    */
-  public int nextStudent() {
-    int _xifexpression = (int) 0;
-    int _size = this.studentSheets.size();
-    boolean _lessThan = ((this.currentSheetIndex + 1) < _size);
-    if (_lessThan) {
-      _xifexpression = this.currentSheetIndex++;
+  public List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(final int questionId) {
+    GradeScale _gradeScale = this.getQuestion(questionId).getGradeScale();
+    boolean _tripleNotEquals = (_gradeScale != null);
+    if (_tripleNotEquals) {
+      final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = (GradeEntry entry) -> {
+        return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
+      };
+      return ListExtensions.<GradeEntry, Tuple3<Integer, String, Float>>map(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
     }
-    return _xifexpression;
+    return List.<Tuple3<Integer, String, Float>>of();
   }
   
   /**
-   * Passe au etudiant précédent dans les StudentSheet
-   */
-  public int previousStudent() {
-    int _xifexpression = (int) 0;
-    if ((this.currentSheetIndex > 0)) {
-      _xifexpression = this.currentSheetIndex--;
-    }
-    return _xifexpression;
-  }
-  
-  public int nextPage() {
-    int _xifexpression = (int) 0;
-    int _length = ((Object[])Conversions.unwrapArray(ExamSingleton.instance.getPages(), Object.class)).length;
-    boolean _lessThan = ((this.pageIndex + 1) < _length);
-    if (_lessThan) {
-      _xifexpression = this.pageIndex++;
-    }
-    return _xifexpression;
-  }
-  
-  public int previousPage() {
-    int _xifexpression = (int) 0;
-    if ((this.pageIndex > 0)) {
-      _xifexpression = this.pageIndex--;
-    }
-    return _xifexpression;
-  }
-  
-  /**
-   * Renomme l'étudiant
-   * @param name le nouveau nom de l'étudiant
-   */
-  public void renameStudent(final String name) {
-    StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
-    _get.setStudentName(name);
-  }
-  
-  /**
-   * Index de la page courante du modèle d'exam
-   */
-  protected Page getCurrentPage() {
-    return ExamSingleton.getPage(this.pageIndex);
-  }
-  
-  public Question getCurrentQuestion() {
-    final Function1<Question, Boolean> _function = (Question x) -> {
-      int _id = x.getId();
-      return Boolean.valueOf((_id == this.currentQuestionIndex));
-    };
-    return IterableExtensions.<Question>findFirst(this.getCurrentPage().getQuestions(), _function);
-  }
-  
-  public int nextQuestion() {
-    int _xifexpression = (int) 0;
-    int _size = this.getCurrentPage().getQuestions().size();
-    boolean _lessThan = ((this.currentQuestionIndex + 1) < _size);
-    if (_lessThan) {
-      _xifexpression = this.currentQuestionIndex++;
-    }
-    return _xifexpression;
-  }
-  
-  public int previousQuestion() {
-    int _xifexpression = (int) 0;
-    if ((this.currentQuestionIndex > 0)) {
-      _xifexpression = this.currentQuestionIndex--;
-    }
-    return _xifexpression;
-  }
-  
-  /**
-   * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
-   * Ne fait rien si la question n'existe pas
-   * @param id un ID de question
-   */
-  public void selectQuestion(final int id) {
-    EList<Page> _pages = ExamSingleton.instance.getPages();
-    for (final Page page : _pages) {
-      {
-        final Function1<Question, Boolean> _function = (Question question) -> {
-          int _id = question.getId();
-          return Boolean.valueOf((_id == id));
-        };
-        final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
-        if ((question != null)) {
-          this.pageIndex = page.getId();
-          this.currentQuestionIndex = question.getId();
-        }
-      }
-    }
-  }
-  
-  public int indexOfQuestions(final int indexpage, final int indexquestion) {
-    int _xblockexpression = (int) 0;
-    {
-      int indexQuestion = 0;
-      for (int i = 0; (i < (indexpage - 1)); i++) {
-        int _indexQuestion = indexQuestion;
-        int _size = this.creationTemplate.getExam().getPages().get(i).getQuestions().size();
-        indexQuestion = (_indexQuestion + _size);
-      }
-      int _indexQuestion = indexQuestion;
-      indexQuestion = (_indexQuestion + indexquestion);
-      _xblockexpression = indexQuestion;
-    }
-    return _xblockexpression;
-  }
-  
-  /**
-   * Ajoute une (n as GradeItem)entrée à la note d'une question d'une copie
+   * Ajoute une entrée (GradeItem) à la note d'une question d'une copie
    * @param questionId l'ID de la question à laquelle ajouter l'entrée
    * @param l'ID de l'entrée dans l'Examen
    * @return boolean indique si les points on bien ete attribuer
    */
-  public boolean addGradeEntry(final int questionId, final int gradeEntryId) {
+  public boolean assignGradeEntry(final int questionId, final int gradeEntryId) {
     final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
       int _id = entry.getId();
       return Boolean.valueOf((_id == gradeEntryId));
@@ -392,7 +408,7 @@ public class ServiceGraduation extends Service {
    * @param questionId l'ID de la question à laquelle retirer l'entrée
    * @param l'ID de l'entrée dans l'Examen
    */
-  public boolean removeGradeEntry(final int questionId, final int gradeEntryId) {
+  public boolean retractGradeEntry(final int questionId, final int gradeEntryId) {
     boolean _xblockexpression = false;
     {
       final EList<GradeEntry> entries = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries();
@@ -407,7 +423,7 @@ public class ServiceGraduation extends Service {
   }
   
   /**
-   * @param l'ID de la question à laquelle récupérer la liste d'entrées
+   * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
    * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
    */
   public List<Integer> getQuestionSelectedGradeEntries(final int questionId) {
@@ -435,29 +451,6 @@ public class ServiceGraduation extends Service {
   }
   
   /**
-   * @param l'ID de la question à laquelle récupérer la liste d'entrées
-   * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
-   */
-  public List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(final int questionId) {
-    GradeScale _gradeScale = this.getQuestion(questionId).getGradeScale();
-    boolean _tripleNotEquals = (_gradeScale != null);
-    if (_tripleNotEquals) {
-      final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = (GradeEntry entry) -> {
-        return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
-      };
-      return ListExtensions.<GradeEntry, Tuple3<Integer, String, Float>>map(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
-    }
-    return List.<Tuple3<Integer, String, Float>>of();
-  }
-  
-  /**
-   * Ajoute la note a la question courante
-   */
-  public Grade setGrade(final Grade note) {
-    return (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().set(this.indexOfQuestions(this.pageIndex, this.currentQuestionIndex), note);
-  }
-  
-  /**
    * Verification de la validiter d'une note quand on ajoute un grandEntry
    * Elle doit respecter les condition suivant:
    * -La note doit etre superieur a la note maximal possible
@@ -468,9 +461,9 @@ public class ServiceGraduation extends Service {
   }
   
   /**
-   * @return la note maximal que peut avoir l'étudiant avec les questions auxquels il a répondu
+   * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu
    */
-  public float getMaxGradeForGradedQuestions() {
+  public float getCurrentMaxGrade() {
     final Function1<Pair<Integer, Grade>, Boolean> _function = (Pair<Integer, Grade> pair) -> {
       boolean _isEmpty = pair.getValue().getEntries().isEmpty();
       return Boolean.valueOf((!_isEmpty));
@@ -489,6 +482,13 @@ public class ServiceGraduation extends Service {
       return Float.valueOf(((acc).floatValue() + (n).floatValue()));
     };
     return (float) IterableExtensions.<Float>reduce(IterableExtensions.<Optional<Question>, Float>map(IterableExtensions.<Optional<Question>>filter(IterableExtensions.<Pair<Integer, Grade>, Optional<Question>>map(IterableExtensions.<Pair<Integer, Grade>>filter(IterableExtensions.<Grade>indexed((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades()), _function), _function_1), _function_2), _function_3), _function_4);
+  }
+  
+  /**
+   * @return la note actuelle de l'étudiant courant
+   */
+  public float getCurrentGrade() {
+    return (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).computeGrade();
   }
   
   /**

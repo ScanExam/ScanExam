@@ -69,7 +69,7 @@ class PresenterQuestionZone {
 	}
 	
 	def void changeQuestionWorth(int id,float worth) {
-		service.modifMaxPoint(id,worth)
+		service.modifyMaxPoint(id,worth)
 	}
 	
 	

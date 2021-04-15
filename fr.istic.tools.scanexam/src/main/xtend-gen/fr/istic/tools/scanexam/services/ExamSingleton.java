@@ -13,10 +13,13 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
- * A revoir ?
+ * Classe permettant de manipuler directement l'Exam
  */
 @SuppressWarnings("all")
-public final class ExamSingleton {
+final class ExamSingleton {
+  /**
+   * Instance Singleton de l'Examen
+   */
   public static Exam instance = null;
   
   /**
@@ -57,10 +60,17 @@ public final class ExamSingleton {
       IterableExtensions.<Pair<Integer, Question>>findFirst(IterableExtensions.<Question>indexed(IterableExtensions.<Page, Question>flatMap(ExamSingleton.instance.getPages(), _function)), _function_1)).<Question>map(_function_2);
   }
   
+  /**
+   * @return le nombre de pages de l'Examen
+   */
   public static int getTemplatePageAmount() {
     return ExamSingleton.instance.getPages().size();
   }
   
+  /**
+   * @param pageId l'ID de la page à récupérer
+   * @return la Page dont l'ID est <i>pageId</i>
+   */
   public static Page getPage(final int pageId) {
     return ExamSingleton.instance.getPages().get(pageId);
   }
