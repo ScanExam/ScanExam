@@ -65,7 +65,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		loader.<ControllerCorrectionLoader>controller.initialize(corrector.adapter.presenter.getPresenterGraduationLoader,corrector)
+		loader.<ControllerGraduationLoader>controller.initialize(corrector.adapter.presenter.getPresenterGraduationLoader,corrector)
 		dialog.setScene(new Scene(view, 384, 355))
 		dialog.setResizable(false)
 		dialog.show

@@ -83,12 +83,6 @@ public class ControllerGraduationLoader {
   private Button btnBrowseGraduation;
   
   /**
-   * TextField pour spécifier le nom de la correction
-   */
-  @FXML
-  private FormattedTextField txtFldGraduationName;
-  
-  /**
    * Button de validation du formulaire
    */
   @FXML
@@ -100,7 +94,7 @@ public class ControllerGraduationLoader {
   @FXML
   private Pane hoverPane;
   
-  private PresenterGraduationLoader presStudentListLoader;
+  private PresenterGraduationLoader presGraduationLoader;
   
   private ControllerFxGraduation ctlrFx;
   
@@ -111,15 +105,15 @@ public class ControllerGraduationLoader {
    * @param loader le presenter
    */
   public void initialize(final PresenterGraduationLoader loader, final ControllerFxGraduation controller) {
-    this.presStudentListLoader = loader;
+    this.presGraduationLoader = loader;
     this.ctlrFx = controller;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
-      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldGraduationName.textProperty().isEmpty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(
+      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(
         this.rbLoadModel.selectedProperty().and(this.txtFldFile.textProperty().isEmpty())));
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator(".xmi");
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
-    ValidFilePathValidator _validFilePathValidator_1 = new ValidFilePathValidator(".pdf");
+    ValidFilePathValidator _validFilePathValidator_1 = new ValidFilePathValidator(".xmi");
     this.txtFldFileGraduation.addFormatValidator(_validFilePathValidator_1);
     final EventHandler<MouseEvent> _function = (MouseEvent e) -> {
       boolean _isDisabled = this.btnOk.isDisabled();
@@ -133,10 +127,10 @@ public class ControllerGraduationLoader {
     };
     this.btnBrowse.setOnAction(_function_1);
     final EventHandler<ActionEvent> _function_2 = (ActionEvent e) -> {
-      this.loadFile("*.pdf", "file.format.pdf", this.txtFldFileGraduation);
+      this.loadFile("*.xmi", "file.format.xmi", this.txtFldFileGraduation);
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
-    boolean _hasTemplateLoaded = this.presStudentListLoader.hasTemplateLoaded();
+    boolean _hasTemplateLoaded = this.presGraduationLoader.hasTemplateLoaded();
     boolean _not = (!_hasTemplateLoaded);
     if (_not) {
       this.rbUseLoaded.setDisable(true);
@@ -148,7 +142,6 @@ public class ControllerGraduationLoader {
    * Anime toutes les composants vides
    */
   private void shakeEmptyComponents() {
-    this.txtFldGraduationName.shakeIfEmpty();
     this.txtFldFileGraduation.shakeIfEmpty();
     this.txtFldFile.shakeIfEmpty();
   }
@@ -202,11 +195,10 @@ public class ControllerGraduationLoader {
   @FXML
   public Object saveAndQuit() {
     Object _xifexpression = null;
-    boolean _loadTemplate = this.presStudentListLoader.loadTemplate(this.txtFldFile.getText());
-    if (_loadTemplate) {
+    if ((this.presGraduationLoader.loadTemplate(this.txtFldFile.getText()) || this.txtFldFile.isDisable())) {
       Object _xifexpression_1 = null;
-      boolean _loadStudentSheets = this.presStudentListLoader.loadStudentSheets(this.txtFldFileGraduation.getText());
-      if (_loadStudentSheets) {
+      boolean _loadCorrection = this.presGraduationLoader.loadCorrection(this.txtFldFileGraduation.getText());
+      if (_loadCorrection) {
         this.ctlrFx.load();
         this.quit();
       } else {

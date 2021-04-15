@@ -61,10 +61,6 @@ class ControllerGraduationLoader {
 	@FXML
 	var Button btnBrowseGraduation
 
-	/* TextField pour spécifier le nom de la correction */
-	@FXML
-	var FormattedTextField txtFldGraduationName
-
 	/* Button de validation du formulaire */
 	@FXML
 	var Button btnOk
@@ -73,7 +69,7 @@ class ControllerGraduationLoader {
 	@FXML
 	var Pane hoverPane
 
-	var PresenterGraduationLoader presStudentListLoader;
+	var PresenterGraduationLoader presGraduationLoader;
 	
 	var ControllerFxGraduation ctlrFx;
 
@@ -84,7 +80,7 @@ class ControllerGraduationLoader {
 	 * @param loader le presenter
 	 */
 	def initialize(PresenterGraduationLoader loader,ControllerFxGraduation controller) {
-		presStudentListLoader = loader
+		presGraduationLoader = loader
 		ctlrFx = controller
 		hBoxLoad.disableProperty.bind(rbLoadModel.selectedProperty.not)
 
@@ -94,7 +90,6 @@ class ControllerGraduationLoader {
 		btnOk.disableProperty.bind(
 			txtFldFile.wrongFormattedProperty
 			.or(txtFldFileGraduation.wrongFormattedProperty)
-			.or(txtFldGraduationName.textProperty.isEmpty)
 			.or(txtFldFileGraduation.textProperty.isEmpty)
 			.or(rbLoadModel.selectedProperty
 				.and(txtFldFile.textProperty.isEmpty)
@@ -103,15 +98,15 @@ class ControllerGraduationLoader {
 
 		// Formattage des TextFields		
 		txtFldFile.addFormatValidator(new ValidFilePathValidator(".xmi"))
-		txtFldFileGraduation.addFormatValidator(new ValidFilePathValidator(".pdf"))
+		txtFldFileGraduation.addFormatValidator(new ValidFilePathValidator(".xmi"))
 		hoverPane.onMouseEntered = [e|btnOk.disabled ? shakeEmptyComponents()]
 
 		// Action sur les boutons de chargement de fichiers
 		btnBrowse.onAction = [e|loadFile("*.xmi", "file.format.xmi", txtFldFile)]
-		btnBrowseGraduation.onAction = [e|loadFile("*.pdf", "file.format.pdf", txtFldFileGraduation)]
+		btnBrowseGraduation.onAction = [e|loadFile("*.xmi", "file.format.xmi", txtFldFileGraduation)]
 
 		// Si aucun examen n'est chargé, désactiver le RadioButton "Utiliser le modèle chargé"
-		if (!presStudentListLoader.hasTemplateLoaded) {
+		if (!presGraduationLoader.hasTemplateLoaded) {
 			rbUseLoaded.disable = true
 			rbLoadModel.selected = true
 		}
@@ -121,7 +116,6 @@ class ControllerGraduationLoader {
 	 * Anime toutes les composants vides
 	 */
 	private def shakeEmptyComponents() {
-		txtFldGraduationName.shakeIfEmpty()
 		txtFldFileGraduation.shakeIfEmpty()
 		txtFldFile.shakeIfEmpty()
 	}
@@ -163,8 +157,8 @@ class ControllerGraduationLoader {
 
 	@FXML
 	def saveAndQuit() {
-		if (presStudentListLoader.loadTemplate(txtFldFile.text)) {
-			if(presStudentListLoader.loadStudentSheets(txtFldFileGraduation.text)) {
+		if (presGraduationLoader.loadTemplate(txtFldFile.text) || txtFldFile.isDisable) {
+			if(presGraduationLoader.loadCorrection(txtFldFileGraduation.text)) {
 				ctlrFx.load
 				quit
 			} else {}

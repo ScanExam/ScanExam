@@ -180,7 +180,7 @@ public class PresenterPdf {
         ByteArrayOutputStream _byteArrayOutputStream = new ByteArrayOutputStream();
         this.pdfOutput = _byteArrayOutputStream;
         stream.transferTo(this.pdfOutput);
-        _xblockexpression = this.document = PDDocument.load(stream);
+        _xblockexpression = this.document = PDDocument.load(this.getPdfInputStream());
       }
       return _xblockexpression;
     } catch (Throwable _e) {

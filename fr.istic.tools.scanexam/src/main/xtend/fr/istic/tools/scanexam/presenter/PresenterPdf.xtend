@@ -149,7 +149,7 @@ class PresenterPdf {
 	def create(ByteArrayInputStream stream) {
 		pdfOutput = new ByteArrayOutputStream()
 		stream.transferTo(pdfOutput)
-		document = PDDocument.load(stream)
+		document = PDDocument.load(getPdfInputStream)
 	}
 
 	def boolean atCorrectPage(int page) {
