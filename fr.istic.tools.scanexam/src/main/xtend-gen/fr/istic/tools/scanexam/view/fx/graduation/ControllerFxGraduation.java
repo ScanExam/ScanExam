@@ -5,6 +5,13 @@ import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.view.AdapterGraduation;
 import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.graduation.Grader;
+import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,14 +28,12 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -53,7 +58,9 @@ public class ControllerFxGraduation {
   public enum SelectedTool {
     NO_TOOL,
     
-    MOVE_CAMERA_TOOL;
+    MOVE_CAMERA_TOOL,
+    
+    CREATE_ANOTATION_TOOL;
   }
   
   private static final Logger logger = LogManager.getLogger();
@@ -90,6 +97,8 @@ public class ControllerFxGraduation {
   
   private StudentDetails studentDetails;
   
+  public PdfPaneWithAnotations mainPane;
+  
   private boolean botShow = false;
   
   private boolean autoZoom = true;
@@ -116,9 +125,6 @@ public class ControllerFxGraduation {
   public Pane bottomPane;
   
   @FXML
-  public Pane mainPane;
-  
-  @FXML
   public Pane parentPane;
   
   @FXML
@@ -126,9 +132,6 @@ public class ControllerFxGraduation {
   
   @FXML
   public ScrollPane questionListContainer;
-  
-  @FXML
-  public ImageView imview;
   
   @FXML
   public ScrollPane scrollMain;
@@ -409,10 +412,13 @@ public class ControllerFxGraduation {
     this.mainPane.setScaleY(1);
     this.mainPane.setLayoutX(0);
     this.mainPane.setLayoutY(0);
-    this.imview.setViewport(null);
+    this.mainPane.unZoom();
   }
   
   public void init() {
+    PdfPaneWithAnotations _pdfPaneWithAnotations = new PdfPaneWithAnotations(this);
+    this.mainPane = _pdfPaneWithAnotations;
+    this.parentPane.getChildren().add(this.mainPane);
     QuestionListGraduation _questionListGraduation = new QuestionListGraduation(this);
     this.questionList = _questionListGraduation;
     this.questionListContainer.setContent(this.questionList);
@@ -519,6 +525,8 @@ public class ControllerFxGraduation {
    * To be used once the service loads a model
    */
   public void load() {
+    this.loadTemplate();
+    this.loadStudentPdfs();
     this.loadedModel.set(true);
   }
   
@@ -602,12 +610,32 @@ public class ControllerFxGraduation {
   public void unLoaded() {
     this.grader.setVisible(false);
     this.studentDetails.setVisible(false);
-    this.instructionLabel.setVisible(true);
     this.questionList.clearItems();
     this.studentList.clearItems();
   }
   
+  public void update() {
+    this.loadedModel.set(true);
+    this.questionList.clearItems();
+    this.studentList.clearItems();
+    this.renderCorrectedCopy();
+    this.renderStudentCopy();
+    this.loadQuestions();
+    this.loadStudents();
+    int currentStudentId = 0;
+    int currentQuestionId = 0;
+  }
+  
+  public Object selectQuestionWithId(final int id) {
+    return null;
+  }
+  
+  public Object selectStudentWithId(final int id) {
+    return null;
+  }
+  
   public void loadQuestions() {
+    int currentQuestionId = 0;
     for (int p = 0; (p < ExamSingleton.instance.getPages().size()); p++) {
       {
         LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
@@ -631,6 +659,9 @@ public class ControllerFxGraduation {
             question.setName(this.corrector.getPresenter().questionName(i));
             question.setWorth(Float.valueOf(this.corrector.getPresenter().questionWorth(i)));
             this.questionList.addItem(question);
+            if ((currentQuestionId == i)) {
+              this.selectQuestion(question);
+            }
           }
         }
       }
@@ -638,10 +669,16 @@ public class ControllerFxGraduation {
   }
   
   public void loadStudents() {
+    int currentStudentId = 0;
     LinkedList<Integer> ids = this.corrector.getPresenter().getStudentIds();
     for (final int i : ids) {
-      StudentItemGraduation _studentItemGraduation = new StudentItemGraduation(i);
-      this.studentList.addItem(_studentItemGraduation);
+      {
+        StudentItemGraduation student = new StudentItemGraduation(i);
+        this.studentList.addItem(student);
+        if ((currentStudentId == i)) {
+          this.selectStudent(student);
+        }
+      }
     }
   }
   
@@ -653,9 +690,55 @@ public class ControllerFxGraduation {
     this.setSelectedStudent();
   }
   
+  public boolean createNewAnotation(final MouseEvent e) {
+    boolean _xblockexpression = false;
+    {
+      double _x = e.getX();
+      double _imageViewWidth = this.mainPane.getImageViewWidth();
+      double _minus = (_imageViewWidth - FxSettings.BOX_BORDER_THICKNESS);
+      double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+        Math.min(_x, _minus));
+      double _y = e.getY();
+      double _imageViewHeight = this.mainPane.getImageViewHeight();
+      double _minus_1 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+      double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+        Math.min(_y, _minus_1));
+      _xblockexpression = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
+    }
+    return _xblockexpression;
+  }
+  
+  public Object showAnotations() {
+    return null;
+  }
+  
+  public boolean hideAnotations() {
+    return this.mainPane.removeAllAnotations();
+  }
+  
+  public ControllerFxGraduation.SelectedTool enterAnotationMode() {
+    ControllerFxGraduation.SelectedTool _xblockexpression = null;
+    {
+      this.mainPane.unZoom();
+      this.showAnotations();
+      _xblockexpression = this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+    }
+    return _xblockexpression;
+  }
+  
+  public ControllerFxGraduation.SelectedTool leaveAnotationMode() {
+    ControllerFxGraduation.SelectedTool _xblockexpression = null;
+    {
+      this.hideAnotations();
+      this.mainPane.zoomTo(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getW(), this.questionList.getCurrentItem().getH());
+      _xblockexpression = ControllerFxGraduation.SelectedTool.NO_TOOL;
+    }
+    return _xblockexpression;
+  }
+  
   public void renderStudentCopy() {
     BufferedImage image = this.corrector.getPresenter().getPresenterPdf().getCurrentPdfPage();
-    this.imview.setImage(SwingFXUtils.toFXImage(image, null));
+    this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.imageWidth = image.getWidth();
     this.imageHeight = image.getHeight();
   }
@@ -722,8 +805,7 @@ public class ControllerFxGraduation {
   
   public void setZoomArea(final int x, final int y, final int height, final int width) {
     if (this.autoZoom) {
-      Rectangle2D _rectangle2D = new Rectangle2D(x, y, height, width);
-      this.imview.setViewport(_rectangle2D);
+      this.mainPane.zoomTo(x, y, height, width);
     }
   }
   
@@ -738,8 +820,7 @@ public class ControllerFxGraduation {
   }
   
   public void setZoomArea(final double x, final double y, final double width, final double height) {
-    Rectangle2D _rectangle2D = new Rectangle2D(x, y, width, height);
-    this.imview.setViewport(_rectangle2D);
+    this.mainPane.zoomTo(x, y, height, width);
   }
   
   public void displayQuestion() {

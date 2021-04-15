@@ -55,21 +55,13 @@
 						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
 					</padding>
 				</VBox>
-				<AnchorPane fx:id="mainPane" HBox.hgrow="ALWAYS">
+				<AnchorPane  HBox.hgrow="ALWAYS">
 					<children>
 						<ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<content>
 								<AnchorPane fx:id="parentPane">
 									<children>
-										<Pane fx:id="mainPane" onMouseDragged="#mainMouseEvent" onMousePressed="#mainMouseEvent" onMouseReleased="#mainMouseEvent" onScroll="#ZoomImage">
-											<children>
-												<ImageView fx:id="imview" fitHeight="500.0" fitWidth="500.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
-											</children>
-											<opaqueInsets>
-												<Insets />
-											</opaqueInsets>
-										</Pane>
-										<Label fx:id="instructionLabel" styleClass="InstructionLabel" text="%label.editorInstructions" />
+					
 									</children>
 								</AnchorPane>
 							</content>

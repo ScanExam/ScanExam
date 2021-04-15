@@ -30,6 +30,7 @@ import fr.istic.tools.scanexam.view.AdapterGraduation
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import org.eclipse.xtend.lib.annotations.Accessors
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -67,6 +68,10 @@ class ControllerFxGraduation {
 	QuestionListGraduation questionList;
 	StudentListGraduation studentList;
 	StudentDetails studentDetails;
+	
+	
+	public PdfPaneWithAnotations mainPane;
+
 
 	boolean botShow = false;
 	boolean autoZoom = true;
@@ -84,16 +89,14 @@ class ControllerFxGraduation {
 	public Button botButtonActive;
 	@FXML
 	public Pane bottomPane;
-	@FXML
-	public Pane mainPane;
+	
+	
 	@FXML
 	public Pane parentPane;
 	@FXML
 	public ScrollPane studentListContainer;
 	@FXML
 	public ScrollPane questionListContainer;
-	@FXML
-	public ImageView imview;
 	@FXML
 	public ScrollPane scrollMain;
 	@FXML
@@ -217,6 +220,8 @@ class ControllerFxGraduation {
 		chooseMouseAction(e);
 	}
 	
+	
+	
 	//-----------------------//
 	
 	
@@ -230,7 +235,8 @@ class ControllerFxGraduation {
 	
 	enum SelectedTool {
 		NO_TOOL,
-		MOVE_CAMERA_TOOL
+		MOVE_CAMERA_TOOL,
+		CREATE_ANOTATION_TOOL
 	}
 	SelectedTool currentTool = SelectedTool.NO_TOOL;
 	
@@ -340,12 +346,16 @@ class ControllerFxGraduation {
 		mainPane.scaleY = 1;
 		mainPane.layoutX = 0;
 		mainPane.layoutY = 0;
-		imview.viewport = null;
+		mainPane.unZoom
 	}
 
 	// ---------------------------------//
 	
 	def init(){
+		
+		mainPane = new PdfPaneWithAnotations(this)
+		parentPane.children.add(mainPane)
+		
 		questionList = new QuestionListGraduation(this);
 		questionListContainer.content = questionList
 		
@@ -415,6 +425,8 @@ class ControllerFxGraduation {
 	 * To be used once the service loads a model 
 	 */
 	def void load(){
+		loadTemplate
+		loadStudentPdfs
 		loadedModel.set(true)
 	}
 	
@@ -471,6 +483,7 @@ class ControllerFxGraduation {
 
 	
 	def loaded(){
+		
 		renderCorrectedCopy();
 		renderStudentCopy();
 		loadQuestions();
@@ -481,13 +494,32 @@ class ControllerFxGraduation {
 	def unLoaded(){
 		grader.visible = false;
 		studentDetails.visible = false;
-		instructionLabel.visible = true;
 		questionList.clearItems
 		studentList.clearItems
 		
 	}
+	def update(){
+		loadedModel.set(true)
+		questionList.clearItems
+		studentList.clearItems
+		renderCorrectedCopy();
+		renderStudentCopy();
+		loadQuestions
+		loadStudents
+		var currentStudentId = 0;
+		var currentQuestionId = 0;
+		
+	}
+	
+	def selectQuestionWithId(int id){
+		
+	}
+	def selectStudentWithId(int id){
+		
+	}
 	
 	def void loadQuestions() {
+		var currentQuestionId = 0;
 		for (var p = 0;p < ExamSingleton.instance.pages.size;p++) {
 			var ids = corrector.presenter.initLoading(p);
 			for (int i:ids) {
@@ -501,17 +533,23 @@ class ControllerFxGraduation {
 				question.name = corrector.presenter.questionName(i);
 				question.worth = corrector.presenter.questionWorth(i)
 				questionList.addItem(question)
-				
+				if (currentQuestionId == i) {
+					selectQuestion(question)
+				}
 			}
 		}
 	}
 	
 	def void loadStudents(){
+		var currentStudentId = 0;
 		var ids = corrector.presenter.studentIds
-		//TODO link to service
-		//var ids = new LinkedList<Integer>();
+		
 		for (int i : ids) {
-			studentList.addItem(new StudentItemGraduation(i))
+			var student = new StudentItemGraduation(i)
+			studentList.addItem(student)
+			if (currentStudentId == i) {
+					selectStudent(student)
+				}
 		}
 	}
 	
@@ -525,11 +563,51 @@ class ControllerFxGraduation {
 	
 	//---------------------//
 	
+	
+	//--Anotations--//
+	
+	
+	
+	
+	def createNewAnotation(MouseEvent e){
+		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
+		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
+		mainPane.addNewAnotation(mousePositionX,mousePositionY);
+	
+	}
+
+	def showAnotations(){
+		//On veut prendre les donee de tt les anotations pour la page courante et l'etudiant courrant,
+		//et ajouter ces anotations au mainPane
+	}
+	
+	def hideAnotations(){
+		//On veut enleve tts les anotations de mainPane
+		//
+		mainPane.removeAllAnotations
+	}
+	
+	def enterAnotationMode(){
+		mainPane.unZoom
+		showAnotations
+		currentTool = SelectedTool.CREATE_ANOTATION_TOOL
+	}
+	
+	def leaveAnotationMode(){
+		hideAnotations
+		mainPane.zoomTo(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
+		SelectedTool.NO_TOOL
+	}
+	
+	//-----------------//
+	
 	//---NAVIGATION---//
 	
 	def void renderStudentCopy(){		
 		var image = corrector.presenter.presenterPdf.currentPdfPage
-		imview.image = SwingFXUtils.toFXImage(image, null);
+		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		imageWidth = image.width
 		imageHeight = image.height
 	}
@@ -594,7 +672,7 @@ class ControllerFxGraduation {
 	
 	def void setZoomArea(int x, int y, int height, int width) {
 		if (autoZoom) 
-			imview.viewport = new Rectangle2D(x,y,height,width);
+			mainPane.zoomTo(x,y,height,width)
 	}
 	
 	//----------------//
@@ -609,7 +687,7 @@ class ControllerFxGraduation {
 	}
 
 	def void setZoomArea(double x, double y,double width ,double height) {
-		imview.viewport = new Rectangle2D(x,y,width,height);
+		mainPane.zoomTo(x,y,height,width);
 	}
 
 	def void displayQuestion(){

@@ -2,6 +2,9 @@ package fr.istic.tools.scanexam.view.swing;
 
 import fr.istic.tools.scanexam.presenter.Presenter;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
+import fr.istic.tools.scanexam.view.swing.AdapterSwingBox;
+import fr.istic.tools.scanexam.view.swing.AdapterSwingPdfPanel;
+import fr.istic.tools.scanexam.view.swing.BoxList;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.Optional;

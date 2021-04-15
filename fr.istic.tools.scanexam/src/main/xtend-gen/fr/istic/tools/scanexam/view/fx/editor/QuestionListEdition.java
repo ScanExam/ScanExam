@@ -2,6 +2,10 @@ package fr.istic.tools.scanexam.view.fx.editor;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
+import fr.istic.tools.scanexam.view.fx.editor.Box;
+import fr.istic.tools.scanexam.view.fx.editor.BoxType;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Priority;

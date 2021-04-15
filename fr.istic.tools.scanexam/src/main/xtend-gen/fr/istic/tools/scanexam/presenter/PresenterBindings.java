@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
+import fr.istic.tools.scanexam.presenter.PresenterGraduation;
 import fr.istic.tools.scanexam.services.ServiceEdition;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
 import fr.istic.tools.scanexam.view.Adapter;
