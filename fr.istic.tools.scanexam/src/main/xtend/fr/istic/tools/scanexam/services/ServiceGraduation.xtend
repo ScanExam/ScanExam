@@ -335,7 +335,7 @@ class ServiceGraduation extends Service
 	def boolean assignGradeEntry(int questionId, int gradeEntryId) {
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry|entry.id == gradeEntryId]
 
-		if (valideGradeEntry(questionId, gradeEntry)) {
+		if (validGradeEntry(questionId, gradeEntry)) {
 			val sheet = studentSheets.get(currentSheetIndex);
 			sheet.grades.get(questionId).entries.add(gradeEntry)
 			return true
@@ -374,27 +374,23 @@ class ServiceGraduation extends Service
 	
 	//FIXME : Probleme lorsque la note maximal est modifier pour une note plus basse, risque de depacement
 	/**
-	 * Verification de la validiter d'une note quand on ajoute un grandEntry
-	 * Elle doit respecter les condition suivant:
-	 * -La note doit etre superieur a la note maximal possible
-	 * -La note ne peut etre inferieur a 0
+	 * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
+	 * @return vrai si le nouvelle note est valide, faux sinon
+	 * Pour être valide, la nouvelle note doit respecter les conditions suivantes :
+	 * <ul>
+	 * <li>Être inférieure ou égale à la note maximale possible pour la question</li>
+	 * <li>Ne pas être inferieure à 0</li>
+	 * </ul>
 	 */
-	def boolean valideGradeEntry(int questionId,GradeEntry gradeAdd){
-		/*val gradeMax = getQuestion(questionId).gradeScale.maxPoint
-		val gradeEntry = getQuestion(questionId).gradeScale.steps
+	def boolean validGradeEntry(int questionId,GradeEntry gradeAdd){
+		val gradeMax = getQuestion(questionId).gradeScale.maxPoint
+		val currentGrade = studentSheets.get(currentSheetIndex).grades.get(questionId)
+			.entries
+			.map[e | e.step]
+			.reduce[acc, grade | acc + grade]
 		
-		var gardeCurrent = 0.0
-		for(var i = 0 ; i< gradeEntry.length-1;i++){
-			gardeCurrent = gardeCurrent + gradeEntry.get(i).step
-		}
-		gardeCurrent+= gradeAdd.step
-		
-		if(gardeCurrent < gradeMax || 0 <= gardeCurrent){
-			return true
-		}else{
-			return false
-		}*/
-		true //TODO FIX
+		val newGrade = currentGrade + gradeAdd.step
+		return newGrade <= gradeMax && newGrade >= 0
 	}
 	
 	//===================================================

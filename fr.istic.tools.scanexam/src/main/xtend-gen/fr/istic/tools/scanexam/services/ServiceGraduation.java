@@ -393,8 +393,8 @@ public class ServiceGraduation extends Service {
       return Boolean.valueOf((_id == gradeEntryId));
     };
     final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
-    boolean _valideGradeEntry = this.valideGradeEntry(questionId, gradeEntry);
-    if (_valideGradeEntry) {
+    boolean _validGradeEntry = this.validGradeEntry(questionId, gradeEntry);
+    if (_validGradeEntry) {
       final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
       sheet.getGrades().get(questionId).getEntries().add(gradeEntry);
       return true;
@@ -451,13 +451,26 @@ public class ServiceGraduation extends Service {
   }
   
   /**
-   * Verification de la validiter d'une note quand on ajoute un grandEntry
-   * Elle doit respecter les condition suivant:
-   * -La note doit etre superieur a la note maximal possible
-   * -La note ne peut etre inferieur a 0
+   * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
+   * @return vrai si le nouvelle note est valide, faux sinon
+   * Pour être valide, la nouvelle note doit respecter les conditions suivantes :
+   * <ul>
+   * <li>Être inférieure ou égale à la note maximale possible pour la question</li>
+   * <li>Ne pas être inferieure à 0</li>
+   * </ul>
    */
-  public boolean valideGradeEntry(final int questionId, final GradeEntry gradeAdd) {
-    return true;
+  public boolean validGradeEntry(final int questionId, final GradeEntry gradeAdd) {
+    final float gradeMax = this.getQuestion(questionId).getGradeScale().getMaxPoint();
+    final Function1<GradeEntry, Float> _function = (GradeEntry e) -> {
+      return Float.valueOf(e.getStep());
+    };
+    final Function2<Float, Float, Float> _function_1 = (Float acc, Float grade) -> {
+      return Float.valueOf(((acc).floatValue() + (grade).floatValue()));
+    };
+    final Float currentGrade = IterableExtensions.<Float>reduce(ListExtensions.<GradeEntry, Float>map((((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries(), _function), _function_1);
+    float _step = gradeAdd.getStep();
+    final float newGrade = ((currentGrade).floatValue() + _step);
+    return ((newGrade <= gradeMax) && (newGrade >= 0));
   }
   
   /**
