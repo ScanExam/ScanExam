@@ -68,28 +68,38 @@ class Grader extends VBox {
 	VBox itemContainer;
 	ControllerFxGraduation controller;
 	boolean editable;
-
+	
+	QuestionItemGraduation curentQuestion;
+	StudentItemGraduation currentStudent;
 	def changeGrader(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
 		clearDisplay()
-		maxPoints.text = qItem.worth + "";
-
-		// Loads all the gradeEntries from the model
-		var ids = controller.adapterCorrection.presenter.getEntryIds(qItem.questionId);
-		// Finds all the selected entries for this student/question
-		var sids = controller.adapterCorrection.presenter.getSelectedEntryIds(qItem.questionId)
-		for (Integer i : ids) {
-			var g = new GradeItem(this);
-			g.setItemId(i);
-			g.setText(controller.adapterCorrection.presenter.getEntryText(i, qItem.questionId))
-			g.setWorth(controller.adapterCorrection.presenter.getEntryWorth(i, qItem.questionId))
-			itemContainer.children.add(g);
-			if (sids.contains(i)) {
-				g.selected = true;
-				addPointsOf(g);
-			} else {
-				g.selected = false;
+		curentQuestion = qItem;
+		currentStudent = sItem;
+		
+		if ( curentQuestion !== null && currentStudent !== null ) {
+			maxPoints.text = qItem.worth + "";
+	
+			// Loads all the gradeEntries from the model
+			var ids = controller.adapterCorrection.presenter.getEntryIds(qItem.questionId);
+			// Finds all the selected entries for this student/question
+			var sids = controller.adapterCorrection.presenter.getSelectedEntryIds(qItem.questionId)
+			for (Integer i : ids) {
+				var g = new GradeItem(this);
+				g.setItemId(i);
+				g.setText(controller.adapterCorrection.presenter.getEntryText(i, qItem.questionId))
+				g.setWorth(controller.adapterCorrection.presenter.getEntryWorth(i, qItem.questionId))
+				itemContainer.children.add(g);
+				if (sids.contains(i)) {
+					g.selected = true;
+					addPointsOf(g);
+				} else {
+					g.selected = false;
+				}
+				g.leaveEditMode
 			}
-			g.leaveEditMode
+		}
+		else {
+			logger.warn("The current Question or current Student is null")
 		}
 
 	// create each gradeEntry from the model for the question item for the correct student

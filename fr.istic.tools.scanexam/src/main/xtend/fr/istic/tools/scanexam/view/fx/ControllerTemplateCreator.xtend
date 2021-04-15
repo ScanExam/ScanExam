@@ -134,7 +134,7 @@ class ControllerTemplateCreator {
 			if(presTemplateCreator.checkFilepath(txtFldTemplateFile.text)) {
 				presTemplateCreator.setTemplateName(txtFldTemplateName.text)
 				presTemplateCreator.createTemplate
-				ctrlEditor.render
+				ctrlEditor.render 
 				quit
 			} else {
 				sendDialog(AlertType.ERROR, "templateLoader.dialog.title", "templateLoader.dialog.nameFail", null)

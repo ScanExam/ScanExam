@@ -21,6 +21,7 @@ import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import javax.annotation.Nullable
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 
 /**
  * Contrôleur pour l'UI de chargement d'une correction
@@ -73,6 +74,8 @@ class ControllerGraduationLoader {
 	var Pane hoverPane
 
 	var PresenterGraduationLoader presStudentListLoader;
+	
+	var ControllerFxGraduation ctlrFx;
 
 	static val logger = LogManager.logger
 
@@ -80,8 +83,9 @@ class ControllerGraduationLoader {
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(PresenterGraduationLoader loader) {
+	def initialize(PresenterGraduationLoader loader,ControllerFxGraduation controller) {
 		presStudentListLoader = loader
+		ctlrFx = controller
 		hBoxLoad.disableProperty.bind(rbLoadModel.selectedProperty.not)
 
 		// Condition pour que le bouton de validation soit désactivé :
@@ -161,6 +165,7 @@ class ControllerGraduationLoader {
 	def saveAndQuit() {
 		if (presStudentListLoader.loadTemplate(txtFldFile.text)) {
 			if(presStudentListLoader.loadStudentSheets(txtFldFileGraduation.text)) {
+				ctlrFx.load
 				quit
 			} else {}
 				//sendDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)

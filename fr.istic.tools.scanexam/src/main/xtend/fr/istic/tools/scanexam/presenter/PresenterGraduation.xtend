@@ -14,6 +14,7 @@ import java.io.File
 import java.util.LinkedList
 import java.util.List
 import java.util.Objects
+import org.apache.logging.log4j.LogManager
 import org.apache.pdfbox.pdmodel.PDDocument
 
 /**
@@ -37,6 +38,8 @@ class PresenterGraduation implements Presenter
 	ServiceGraduation service;
 	
 	Adapter<PresenterGraduation> adapter;
+	
+	static val logger = LogManager.logger
 	
 	new(ServiceGraduation service)
 	{
@@ -206,7 +209,23 @@ class PresenterGraduation implements Presenter
 	}
 	
 	
-	
+	/**
+	 * Retourne la note globale de la copie
+	 * @return Note globale de la copie
+	 * //FIXME doit être lié au service
+	 */
+	def float getGlobalGrade() {
+	    return 0.0f
+	}
+	    
+	/**
+	 * Retourne le barème total de l'examen
+	 * @return Barème total de l'examen
+	 * //FIXME doit être lié au service
+	 */
+	def float getGlobalScale() {
+	    return 0.0f
+	}
 	
 	
 	
@@ -226,11 +245,16 @@ class PresenterGraduation implements Presenter
 			.orElse(List.of())
 	}
 	
-	def LinkedList<Integer> getStudentIds(){
+	def LinkedList<Integer> getStudentIds(){ //TODO Change service impl to not return null
 		var list = service.studentSheets
 		var result = new LinkedList<Integer>()
-		for (StudentSheet s : list) {
-			result.add(s.id);
+		if (list !== null) {
+			for (StudentSheet s : list) {
+				result.add(s.id);
+			}
+		}
+		else {
+			logger.warn("Service returned null studentId list")
 		}
 		result
 	}

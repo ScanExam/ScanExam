@@ -23,6 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -55,6 +57,8 @@ public class PresenterGraduation implements Presenter {
   private ServiceGraduation service;
   
   private Adapter<PresenterGraduation> adapter;
+  
+  private static final Logger logger = LogManager.getLogger();
   
   public PresenterGraduation(final ServiceGraduation service) {
     Objects.<ServiceGraduation>requireNonNull(service);
@@ -218,6 +222,24 @@ public class PresenterGraduation implements Presenter {
   }
   
   /**
+   * Retourne la note globale de la copie
+   * @return Note globale de la copie
+   * //FIXME doit être lié au service
+   */
+  public float getGlobalGrade() {
+    return 0.0f;
+  }
+  
+  /**
+   * Retourne le barème total de l'examen
+   * @return Barème total de l'examen
+   * //FIXME doit être lié au service
+   */
+  public float getGlobalScale() {
+    return 0.0f;
+  }
+  
+  /**
    * SAVING
    */
   public void saveTemplate(final String path) {
@@ -242,8 +264,12 @@ public class PresenterGraduation implements Presenter {
     {
       Collection<StudentSheet> list = this.service.getStudentSheets();
       LinkedList<Integer> result = new LinkedList<Integer>();
-      for (final StudentSheet s : list) {
-        result.add(Integer.valueOf(s.getId()));
+      if ((list != null)) {
+        for (final StudentSheet s : list) {
+          result.add(Integer.valueOf(s.getId()));
+        }
+      } else {
+        PresenterGraduation.logger.warn("Service returned null studentId list");
       }
       _xblockexpression = result;
     }

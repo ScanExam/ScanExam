@@ -5,6 +5,7 @@ import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
@@ -101,14 +102,17 @@ public class ControllerGraduationLoader {
   
   private PresenterGraduationLoader presStudentListLoader;
   
+  private ControllerFxGraduation ctlrFx;
+  
   private static final Logger logger = LogManager.getLogger();
   
   /**
    * Initialise le composant avec le presenter composé en paramètre
    * @param loader le presenter
    */
-  public void initialize(final PresenterGraduationLoader loader) {
+  public void initialize(final PresenterGraduationLoader loader, final ControllerFxGraduation controller) {
     this.presStudentListLoader = loader;
+    this.ctlrFx = controller;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
       this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldGraduationName.textProperty().isEmpty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(
@@ -203,6 +207,7 @@ public class ControllerGraduationLoader {
       Object _xifexpression_1 = null;
       boolean _loadStudentSheets = this.presStudentListLoader.loadStudentSheets(this.txtFldFileGraduation.getText());
       if (_loadStudentSheets) {
+        this.ctlrFx.load();
         this.quit();
       } else {
         _xifexpression_1 = null;

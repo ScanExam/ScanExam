@@ -22,6 +22,7 @@ class QuestionListGraduation extends VBox {
 		currentIndex
 	}
 	def  getCurrentItem(){
+		if (noItems) return null
 		children.get(currentIndex) as QuestionItemGraduation
 	}
 	//---------------------//
@@ -42,10 +43,14 @@ class QuestionListGraduation extends VBox {
 		children.clear
 	}
 	
+	def boolean noItems(){
+		return children.isEmpty
+	}
 	/**
 	 * Method used for highlighting
 	 */
 	def focusItem(QuestionItemGraduation item) {
+		if (item === null) return void
 		for (Node n : children) {
 			var question = n as QuestionItemGraduation;
 			question.focus = false

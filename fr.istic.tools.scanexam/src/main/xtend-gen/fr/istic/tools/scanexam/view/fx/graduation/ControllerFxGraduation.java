@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.launcher.LauncherFX;
 import fr.istic.tools.scanexam.services.ExamSingleton;
 import fr.istic.tools.scanexam.view.AdapterGraduation;
@@ -102,6 +103,9 @@ public class ControllerFxGraduation {
   private boolean botShow = false;
   
   private boolean autoZoom = true;
+  
+  @FXML
+  public Label gradeLabel;
   
   @FXML
   public VBox root;
@@ -309,6 +313,8 @@ public class ControllerFxGraduation {
           break;
         case MOVE_CAMERA_TOOL:
           this.moveImage(e);
+          break;
+        case CREATE_ANOTATION_TOOL:
           break;
         default:
           break;
@@ -525,56 +531,7 @@ public class ControllerFxGraduation {
    * To be used once the service loads a model
    */
   public void load() {
-    this.loadTemplate();
-    this.loadStudentPdfs();
     this.loadedModel.set(true);
-  }
-  
-  /**
-   * Opens a Open dialog box
-   * Used to choose a .xmi file representing a already started Graduation
-   */
-  public void loadTemplate() {
-    FileChooser fileChooser = new FileChooser();
-    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    List<String> _asList = Arrays.<String>asList("*.xmi");
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XMI files", _asList);
-    _extensionFilters.add(_extensionFilter);
-    String _property = System.getProperty("user.home");
-    String _property_1 = System.getProperty("file.separator");
-    String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + 
-      "Documents");
-    File _file = new File(_plus_1);
-    fileChooser.setInitialDirectory(_file);
-    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-    if ((file != null)) {
-      this.corrector.getPresenter().openEditionTemplate(file.getPath());
-    } else {
-      ControllerFxGraduation.logger.warn("File not chosen");
-    }
-  }
-  
-  public void loadStudentPdfs() {
-    FileChooser fileChooser = new FileChooser();
-    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    List<String> _asList = Arrays.<String>asList("*.pdf");
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
-    _extensionFilters.add(_extensionFilter);
-    String _property = System.getProperty("user.home");
-    String _property_1 = System.getProperty("file.separator");
-    String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + 
-      "Documents");
-    File _file = new File(_plus_1);
-    fileChooser.setInitialDirectory(_file);
-    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-    if ((file != null)) {
-      this.corrector.getPresenter().openCorrectionPdf(file);
-      this.loadedModel.set(true);
-    } else {
-      ControllerFxGraduation.logger.warn("File not chosen");
-    }
   }
   
   public void saveExam() {
@@ -604,7 +561,8 @@ public class ControllerFxGraduation {
     this.renderStudentCopy();
     this.loadQuestions();
     this.loadStudents();
-    this.postLoad();
+    this.grader.setVisible(true);
+    this.questionDetails.setVisible(true);
   }
   
   public void unLoaded() {
@@ -614,16 +572,8 @@ public class ControllerFxGraduation {
     this.studentList.clearItems();
   }
   
-  public void update() {
-    this.loadedModel.set(true);
-    this.questionList.clearItems();
-    this.studentList.clearItems();
-    this.renderCorrectedCopy();
-    this.renderStudentCopy();
-    this.loadQuestions();
-    this.loadStudents();
-    int currentStudentId = 0;
-    int currentQuestionId = 0;
+  public Object update() {
+    return null;
   }
   
   public Object selectQuestionWithId(final int id) {
@@ -635,6 +585,7 @@ public class ControllerFxGraduation {
   }
   
   public void loadQuestions() {
+    ControllerFxGraduation.logger.info("Loading Questions");
     int currentQuestionId = 0;
     for (int p = 0; (p < ExamSingleton.instance.getPages().size()); p++) {
       {
@@ -659,9 +610,6 @@ public class ControllerFxGraduation {
             question.setName(this.corrector.getPresenter().questionName(i));
             question.setWorth(Float.valueOf(this.corrector.getPresenter().questionWorth(i)));
             this.questionList.addItem(question);
-            if ((currentQuestionId == i)) {
-              this.selectQuestion(question);
-            }
           }
         }
       }
@@ -669,6 +617,7 @@ public class ControllerFxGraduation {
   }
   
   public void loadStudents() {
+    ControllerFxGraduation.logger.info("Loading Students");
     int currentStudentId = 0;
     LinkedList<Integer> ids = this.corrector.getPresenter().getStudentIds();
     for (final int i : ids) {
@@ -680,14 +629,6 @@ public class ControllerFxGraduation {
         }
       }
     }
-  }
-  
-  public void postLoad() {
-    this.instructionLabel.setVisible(false);
-    this.grader.setVisible(true);
-    this.questionDetails.setVisible(true);
-    this.setSelectedQuestion();
-    this.setSelectedStudent();
   }
   
   public boolean createNewAnotation(final MouseEvent e) {
@@ -764,10 +705,15 @@ public class ControllerFxGraduation {
   }
   
   public void setSelectedStudent() {
-    this.focusStudent(this.studentList.getCurrentItem());
-    this.studentDetails.display(this.studentList.getCurrentItem());
-    this.display();
-    this.displayGrader();
+    boolean _noItems = this.studentList.noItems();
+    boolean _not = (!_noItems);
+    if (_not) {
+      this.focusStudent(this.studentList.getCurrentItem());
+      this.display();
+      this.displayGrader();
+    } else {
+      ControllerFxGraduation.logger.warn("The student list is Empty");
+    }
   }
   
   public void nextQuestion() {
@@ -789,18 +735,25 @@ public class ControllerFxGraduation {
   }
   
   public void setSelectedQuestion() {
-    this.focusQuestion(this.questionList.getCurrentItem());
-    this.display();
-    this.displayQuestion();
-    this.displayGrader();
+    boolean _noItems = this.questionList.noItems();
+    boolean _not = (!_noItems);
+    if (_not) {
+      this.focusQuestion(this.questionList.getCurrentItem());
+      this.display();
+      this.displayQuestion();
+      this.displayGrader();
+    } else {
+      ControllerFxGraduation.logger.warn("The question list is Empty");
+    }
   }
   
-  public void focusQuestion(final QuestionItemGraduation item) {
-    this.questionList.focusItem(item);
+  public Class<Void> focusQuestion(final QuestionItemGraduation item) {
+    return this.questionList.focusItem(item);
   }
   
   public void focusStudent(final StudentItemGraduation item) {
     this.studentList.focusItem(item);
+    this.studentDetails.display(item);
   }
   
   public void setZoomArea(final int x, final int y, final int height, final int width) {
@@ -810,12 +763,16 @@ public class ControllerFxGraduation {
   }
   
   public void display() {
-    int i = this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
-    boolean _atCorrectPage = this.corrector.getPresenter().getPresenterPdf().atCorrectPage(i);
-    boolean _not = (!_atCorrectPage);
-    if (_not) {
-      ControllerFxGraduation.logger.warn("changing Page");
-      this.selectPage(this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
+    if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
+      int i = this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
+      boolean _atCorrectPage = this.corrector.getPresenter().getPresenterPdf().atCorrectPage(i);
+      boolean _not = (!_atCorrectPage);
+      if (_not) {
+        ControllerFxGraduation.logger.info("Changing page");
+        this.selectPage(this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
+      }
+    } else {
+      ControllerFxGraduation.logger.warn("Cannot find correct page, student list or question is is empty");
     }
   }
   
@@ -830,7 +787,12 @@ public class ControllerFxGraduation {
   }
   
   public void displayGrader() {
-    this.grader.changeGrader(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
+    if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
+      this.grader.changeGrader(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
+      this.updateGlobalGrade();
+    } else {
+      ControllerFxGraduation.logger.warn("Cannot load grader, student list or question is is empty");
+    }
   }
   
   public void setGrade(final int studentId, final int questionId, final float grade) {
@@ -847,9 +809,22 @@ public class ControllerFxGraduation {
   }
   
   public void selectPage(final int pageNumber) {
-    InputOutput.<String>print((("\npage Number" + Integer.valueOf(pageNumber)) + "\n"));
     this.corrector.getPresenter().getPresenterPdf().goToPdfPage(pageNumber);
     this.renderStudentCopy();
+  }
+  
+  /**
+   * Met à jour la note globale affichée
+   */
+  public void updateGlobalGrade() {
+    String _translate = LanguageManager.translate("label.grade");
+    String _plus = (_translate + " ");
+    float _globalGrade = this.getAdapter().getPresenter().getGlobalGrade();
+    String _plus_1 = (_plus + Float.valueOf(_globalGrade));
+    String _plus_2 = (_plus_1 + "/");
+    float _globalScale = this.getAdapter().getPresenter().getGlobalScale();
+    String _plus_3 = (_plus_2 + Float.valueOf(_globalScale));
+    this.gradeLabel.setText(_plus_3);
   }
   
   @Pure

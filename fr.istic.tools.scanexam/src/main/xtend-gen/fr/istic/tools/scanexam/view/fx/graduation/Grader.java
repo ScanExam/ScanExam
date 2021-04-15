@@ -275,29 +275,39 @@ public class Grader extends VBox {
   
   private boolean editable;
   
+  private QuestionItemGraduation curentQuestion;
+  
+  private StudentItemGraduation currentStudent;
+  
   public void changeGrader(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
     this.clearDisplay();
-    float _worth = qItem.getWorth();
-    String _plus = (Float.valueOf(_worth) + "");
-    this.maxPoints.setText(_plus);
-    List<Integer> ids = this.controller.getAdapterCorrection().getPresenter().getEntryIds(qItem.getQuestionId());
-    List<Integer> sids = this.controller.getAdapterCorrection().getPresenter().getSelectedEntryIds(qItem.getQuestionId());
-    for (final Integer i : ids) {
-      {
-        Grader.GradeItem g = new Grader.GradeItem(this);
-        g.setItemId((i).intValue());
-        g.setText(this.controller.getAdapterCorrection().getPresenter().getEntryText((i).intValue(), qItem.getQuestionId()));
-        g.setWorth(this.controller.getAdapterCorrection().getPresenter().getEntryWorth((i).intValue(), qItem.getQuestionId()));
-        this.itemContainer.getChildren().add(g);
-        boolean _contains = sids.contains(i);
-        if (_contains) {
-          g.setSelected(Boolean.valueOf(true));
-          this.addPointsOf(g);
-        } else {
-          g.setSelected(Boolean.valueOf(false));
+    this.curentQuestion = qItem;
+    this.currentStudent = sItem;
+    if (((this.curentQuestion != null) && (this.currentStudent != null))) {
+      float _worth = qItem.getWorth();
+      String _plus = (Float.valueOf(_worth) + "");
+      this.maxPoints.setText(_plus);
+      List<Integer> ids = this.controller.getAdapterCorrection().getPresenter().getEntryIds(qItem.getQuestionId());
+      List<Integer> sids = this.controller.getAdapterCorrection().getPresenter().getSelectedEntryIds(qItem.getQuestionId());
+      for (final Integer i : ids) {
+        {
+          Grader.GradeItem g = new Grader.GradeItem(this);
+          g.setItemId((i).intValue());
+          g.setText(this.controller.getAdapterCorrection().getPresenter().getEntryText((i).intValue(), qItem.getQuestionId()));
+          g.setWorth(this.controller.getAdapterCorrection().getPresenter().getEntryWorth((i).intValue(), qItem.getQuestionId()));
+          this.itemContainer.getChildren().add(g);
+          boolean _contains = sids.contains(i);
+          if (_contains) {
+            g.setSelected(Boolean.valueOf(true));
+            this.addPointsOf(g);
+          } else {
+            g.setSelected(Boolean.valueOf(false));
+          }
+          g.leaveEditMode();
         }
-        g.leaveEditMode();
       }
+    } else {
+      Grader.logger.warn("The current Question or current Student is null");
     }
   }
   

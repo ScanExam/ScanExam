@@ -28,8 +28,16 @@ public class QuestionListGraduation extends VBox {
   }
   
   public QuestionItemGraduation getCurrentItem() {
-    Node _get = this.getChildren().get(this.currentIndex);
-    return ((QuestionItemGraduation) _get);
+    QuestionItemGraduation _xblockexpression = null;
+    {
+      boolean _noItems = this.noItems();
+      if (_noItems) {
+        return null;
+      }
+      Node _get = this.getChildren().get(this.currentIndex);
+      _xblockexpression = ((QuestionItemGraduation) _get);
+    }
+    return _xblockexpression;
   }
   
   public boolean addItem(final QuestionItemGraduation item) {
@@ -49,10 +57,17 @@ public class QuestionListGraduation extends VBox {
     this.getChildren().clear();
   }
   
+  public boolean noItems() {
+    return this.getChildren().isEmpty();
+  }
+  
   /**
    * Method used for highlighting
    */
-  public void focusItem(final QuestionItemGraduation item) {
+  public Class<Void> focusItem(final QuestionItemGraduation item) {
+    if ((item == null)) {
+      return void.class;
+    }
     ObservableList<Node> _children = this.getChildren();
     for (final Node n : _children) {
       {
@@ -61,6 +76,7 @@ public class QuestionListGraduation extends VBox {
       }
     }
     item.setFocus(true);
+    return null;
   }
   
   public int selectNextItem() {

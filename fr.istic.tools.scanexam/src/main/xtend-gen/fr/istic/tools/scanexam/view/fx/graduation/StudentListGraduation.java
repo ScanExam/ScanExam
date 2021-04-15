@@ -32,8 +32,20 @@ public class StudentListGraduation extends VBox {
   }
   
   public StudentItemGraduation getCurrentItem() {
-    Node _get = this.getChildren().get(this.currentIndex);
-    return ((StudentItemGraduation) _get);
+    StudentItemGraduation _xblockexpression = null;
+    {
+      boolean _noItems = this.noItems();
+      if (_noItems) {
+        return null;
+      }
+      Node _get = this.getChildren().get(this.currentIndex);
+      _xblockexpression = ((StudentItemGraduation) _get);
+    }
+    return _xblockexpression;
+  }
+  
+  public boolean noItems() {
+    return this.getChildren().isEmpty();
   }
   
   public boolean addItem(final StudentItemGraduation item) {
@@ -61,7 +73,10 @@ public class StudentListGraduation extends VBox {
   /**
    * Method used for highlighting
    */
-  public void focusItem(final StudentItemGraduation item) {
+  public Class<Void> focusItem(final StudentItemGraduation item) {
+    if ((item == null)) {
+      return void.class;
+    }
     ObservableList<Node> _children = this.getChildren();
     for (final Node n : _children) {
       {
@@ -70,6 +85,7 @@ public class StudentListGraduation extends VBox {
       }
     }
     item.setFocus(true);
+    return null;
   }
   
   public int selectNextItem() {

@@ -2,21 +2,22 @@ package fr.istic.tools.scanexam.view.fx.graduation
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
 import fr.istic.tools.scanexam.services.ExamSingleton
-import fr.istic.tools.scanexam.view.fx.FxSettings
+import fr.istic.tools.scanexam.view.AdapterGraduation
 import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation
+import fr.istic.tools.scanexam.view.fx.FxSettings
 import java.io.File
 import java.io.IOException
 import java.util.Arrays
 import java.util.Objects
+import javafx.beans.property.BooleanProperty
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.embed.swing.SwingFXUtils
 import javafx.fxml.FXML
-import javafx.geometry.Rectangle2D
 import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Spinner
-import javafx.scene.image.ImageView
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
@@ -26,11 +27,9 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.view.AdapterGraduation
-import javafx.beans.property.BooleanProperty
-import javafx.beans.property.SimpleBooleanProperty
 import org.eclipse.xtend.lib.annotations.Accessors
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
+
+import static fr.istic.tools.scanexam.config.LanguageManager.translate
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -75,6 +74,8 @@ class ControllerFxGraduation {
 
 	boolean botShow = false;
 	boolean autoZoom = true;
+	@FXML
+	public Label gradeLabel
 	@FXML
 	public VBox root;
 	@FXML
@@ -271,6 +272,8 @@ class ControllerFxGraduation {
 			case MOVE_CAMERA_TOOL: {
 				moveImage(e)
 			}
+			case CREATE_ANOTATION_TOOL: {
+			}
 		}
 	}
 	
@@ -425,45 +428,12 @@ class ControllerFxGraduation {
 	 * To be used once the service loads a model 
 	 */
 	def void load(){
-		loadTemplate
-		loadStudentPdfs
 		loadedModel.set(true)
 	}
 	
-	/**
-	 * Opens a Open dialog box
-	 * Used to choose a .xmi file representing a already started Graduation
-	 */
-	 
+	
 	 //path vers template edit
 	 //pathervers tempplate pfsds
-	def void loadTemplate() { 
-		var fileChooser = new FileChooser();
-		fileChooser.extensionFilters.add(new ExtensionFilter("XMI files", Arrays.asList("*.xmi")));
-		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
-			"Documents");
-		var file = fileChooser.showOpenDialog(mainPane.scene.window)
-		if (file !== null) {
-			corrector.presenter.openEditionTemplate(file.path)
-		} else {
-			logger.warn("File not chosen")
-		}
-	}
-	
-	def void loadStudentPdfs(){
-		var fileChooser = new FileChooser();
-		fileChooser.extensionFilters.add(new ExtensionFilter("PDF files", Arrays.asList("*.pdf")));
-		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
-			"Documents");
-		var file = fileChooser.showOpenDialog(mainPane.scene.window)
-		if (file !== null) {
-			corrector.presenter.openCorrectionPdf(file);
-			loadedModel.set(true);
-		} else {
-			logger.warn("File not chosen")
-		}
-	}
-	
 	
 	def void saveExam(){
 		var fileChooser = new FileChooser();
@@ -481,14 +451,14 @@ class ControllerFxGraduation {
 		}
 	}
 
-	
+	//Called after the service has finished loading
 	def loaded(){
-		
 		renderCorrectedCopy();
 		renderStudentCopy();
 		loadQuestions();
 		loadStudents();
-		postLoad();
+		grader.visible = true;
+		questionDetails.visible = true;
 	}
 	
 	def unLoaded(){
@@ -498,16 +468,8 @@ class ControllerFxGraduation {
 		studentList.clearItems
 		
 	}
+	
 	def update(){
-		loadedModel.set(true)
-		questionList.clearItems
-		studentList.clearItems
-		renderCorrectedCopy();
-		renderStudentCopy();
-		loadQuestions
-		loadStudents
-		var currentStudentId = 0;
-		var currentQuestionId = 0;
 		
 	}
 	
@@ -519,6 +481,7 @@ class ControllerFxGraduation {
 	}
 	
 	def void loadQuestions() {
+		logger.info("Loading Questions")
 		var currentQuestionId = 0;
 		for (var p = 0;p < ExamSingleton.instance.pages.size;p++) {
 			var ids = corrector.presenter.initLoading(p);
@@ -533,14 +496,12 @@ class ControllerFxGraduation {
 				question.name = corrector.presenter.questionName(i);
 				question.worth = corrector.presenter.questionWorth(i)
 				questionList.addItem(question)
-				if (currentQuestionId == i) {
-					selectQuestion(question)
-				}
 			}
 		}
 	}
 	
 	def void loadStudents(){
+		logger.info("Loading Students")
 		var currentStudentId = 0;
 		var ids = corrector.presenter.studentIds
 		
@@ -551,14 +512,6 @@ class ControllerFxGraduation {
 					selectStudent(student)
 				}
 		}
-	}
-	
-	def void postLoad(){
-		instructionLabel.visible = false;
-		grader.visible = true;
-		questionDetails.visible = true;
-		setSelectedQuestion
-		setSelectedStudent
 	}
 	
 	//---------------------//
@@ -632,10 +585,13 @@ class ControllerFxGraduation {
 	}
 
 	def void setSelectedStudent(){
-		focusStudent(studentList.currentItem)
-		studentDetails.display(studentList.currentItem)
-		display();
-		displayGrader();
+		if (!studentList.noItems) {
+			focusStudent(studentList.currentItem)
+			display();
+			displayGrader();	
+		}else {
+			logger.warn("The student list is Empty")
+		}
 	}
 
 	def void nextQuestion(){
@@ -655,10 +611,14 @@ class ControllerFxGraduation {
 	}
 
 	def void setSelectedQuestion(){
-		focusQuestion(questionList.currentItem)
-		display();
-		displayQuestion();
-		displayGrader();
+		if (!questionList.noItems) {
+			focusQuestion(questionList.currentItem)
+			display();
+			displayQuestion();
+			displayGrader();
+		}else {
+			logger.warn("The question list is Empty")
+		}
 		
 	}
 	
@@ -668,6 +628,8 @@ class ControllerFxGraduation {
 	
 	def focusStudent(StudentItemGraduation item) {
 		studentList.focusItem(item)
+		studentDetails.display(item)
+		
 	}
 	
 	def void setZoomArea(int x, int y, int height, int width) {
@@ -678,11 +640,17 @@ class ControllerFxGraduation {
 	//----------------//
 	
 	//---DISPLAYING---//
+	
+	//On veut afficher la bonne page, donc on verifie si on est sur la bonne page, si non, on change de page
 	def void display(){
-		var i = corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
-		if (!corrector.presenter.presenterPdf.atCorrectPage(i)){
-			logger.warn("changing Page")
-			selectPage(corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page))
+		if (!studentList.noItems && !questionList.noItems) {
+			var i = corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
+			if (!corrector.presenter.presenterPdf.atCorrectPage(i)){
+				logger.info("Changing page")
+				selectPage(corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page))
+			}
+		}else {
+			logger.warn("Cannot find correct page, student list or question is is empty")
 		}
 	}
 
@@ -696,7 +664,12 @@ class ControllerFxGraduation {
 	}
 	
 	def void displayGrader(){
-		grader.changeGrader(questionList.currentItem,studentList.currentItem);
+		if (!studentList.noItems && !questionList.noItems) {
+			grader.changeGrader(questionList.currentItem,studentList.currentItem);
+			updateGlobalGrade
+		}else {
+			logger.warn("Cannot load grader, student list or question is is empty")
+		}
 	}
 
 	//----------------//
@@ -723,9 +696,17 @@ class ControllerFxGraduation {
 		renderStudentCopy
 	}
 	def void selectPage(int pageNumber) {
-		print("\npage Number" + pageNumber + "\n")
 		corrector.presenter.getPresenterPdf.goToPdfPage(pageNumber)
 		renderStudentCopy
 	}
 	//---------------------//
+	
+	
+	/**
+	 * Met à jour la note globale affichée
+	 */
+	def void updateGlobalGrade() {
+    	gradeLabel.text = translate("label.grade") + " " + adapter.presenter.globalGrade + "/" + adapter.presenter.globalScale
+	}
+	
 }

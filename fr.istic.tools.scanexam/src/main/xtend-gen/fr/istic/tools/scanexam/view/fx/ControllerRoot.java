@@ -88,7 +88,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerCorrectionLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader());
+      loader.<ControllerCorrectionLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader(), this.corrector);
       Scene _scene = new Scene(view, 384, 355);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -204,7 +204,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader());
+      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader(), this.corrector);
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);
       dialog.setResizable(false);
