@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
-import fr.istic.tools.scanexam.presenter.PresenterGraduation;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import java.util.Objects;
 
 /**
@@ -62,26 +61,26 @@ public class PresenterQuestion {
   /**
    * @return next question
    */
-  public int nextQuestion() {
-    return this.service.nextQuestion();
+  public void nextQuestion() {
+    this.service.nextQuestion();
   }
   
   /**
    * @param question is the actual question
    */
-  public int previousQuestion() {
-    return this.service.previousQuestion();
+  public void previousQuestion() {
+    this.service.previousQuestion();
   }
   
   public void selectQuestion(final int questionId) {
     this.service.selectQuestion(questionId);
   }
   
-  public int nextStudent() {
-    return this.service.nextSheet();
+  public void nextStudent() {
+    this.service.nextSheet();
   }
   
-  public int previousStudent() {
-    return this.service.previousSheet();
+  public void previousStudent() {
+    this.service.previousSheet();
   }
 }

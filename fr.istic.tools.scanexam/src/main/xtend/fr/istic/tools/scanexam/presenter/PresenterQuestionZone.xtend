@@ -1,10 +1,10 @@
 package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.services.api.ServiceEdition
 import java.util.LinkedList
-import java.util.Objects
 import java.util.List
-import fr.istic.tools.scanexam.services.ServiceEdition
+import java.util.Objects
 
 /**
  * Class to manage conversions of the view's questions 

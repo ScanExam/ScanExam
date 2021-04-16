@@ -2,7 +2,7 @@ package fr.istic.tools.scanexam.mailing
 
 import com.sun.mail.util.MailConnectException
 import fr.istic.tools.scanexam.config.ConfigurationManager
-import fr.istic.tools.scanexam.services.Service
+import fr.istic.tools.scanexam.services.api.Service
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import java.io.BufferedReader
 import java.io.File
@@ -16,6 +16,7 @@ import java.util.Properties
 import java.util.logging.Logger
 import javax.activation.DataHandler
 import javax.activation.FileDataSource
+import javax.mail.AuthenticationFailedException
 import javax.mail.Authenticator
 import javax.mail.Message
 import javax.mail.MessagingException
@@ -31,7 +32,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow
 import org.apache.poi.hssf.usermodel.HSSFSheet
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.poifs.filesystem.POIFSFileSystem
-import javax.mail.AuthenticationFailedException
 
 /**
  * @author Thomas Guibert

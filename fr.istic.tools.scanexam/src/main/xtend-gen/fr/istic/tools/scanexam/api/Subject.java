@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.api;
 
-import fr.istic.tools.scanexam.api.Observer;
-
 /**
  * Une classe représentant un Sujet à observer.
  * 

@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.mailing.StudentDataManager;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import java.io.File;
 import java.util.Map;
 import java.util.function.Function;

@@ -19,11 +19,12 @@ import com.beust.jcommander.internal.Lists;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.presenter.PresenterGraduation;
+import fr.istic.tools.scanexam.services.api.Service;
 
 
 public class ExamGraduationServiceTest 
 {
-	ServiceGraduation service;
+	Service service;
 	
 	PresenterGraduation presenter;
 	
@@ -34,10 +35,10 @@ public class ExamGraduationServiceTest
 	@BeforeEach
 	void init() 
 	{
-		service = new ServiceGraduation();
+		service = new ServiceImpl();
 		presenter = jailBreak(service);
 		Optional<CreationTemplate> editionTemplate = TemplateIo.loadCreationTemplate(XMI_PATH);
-		ExamSingleton.instance = editionTemplate.get().getExam();
+		service.setExam(editionTemplate.get().getExam());
 	}
 	
 	private PresenterGraduation jailBreak(Object... args) {

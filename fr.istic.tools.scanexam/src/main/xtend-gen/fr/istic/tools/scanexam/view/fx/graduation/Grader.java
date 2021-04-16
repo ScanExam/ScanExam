@@ -2,9 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.editor.HTMLView;
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.io.InputStream;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -318,18 +315,14 @@ public class Grader extends VBox {
     this.addEntryToModel(entry, this.controller.getQuestionList().getCurrentItem());
   }
   
-  public boolean removeGradeEntry(final Grader.GradeItem item) {
-    boolean _xblockexpression = false;
-    {
-      Grader.logger.log(Level.INFO, "Removing GradeEntry");
-      this.itemContainer.getChildren().remove(item);
-      boolean _selected = item.getSelected();
-      if (_selected) {
-        this.removePointsOf(item);
-      }
-      _xblockexpression = this.removeEntryFromModel(item, this.controller.getQuestionList().getCurrentItem());
+  public void removeGradeEntry(final Grader.GradeItem item) {
+    Grader.logger.log(Level.INFO, "Removing GradeEntry");
+    this.itemContainer.getChildren().remove(item);
+    boolean _selected = item.getSelected();
+    if (_selected) {
+      this.removePointsOf(item);
     }
-    return _xblockexpression;
+    this.removeEntryFromModel(item, this.controller.getQuestionList().getCurrentItem());
   }
   
   public void addPointsOf(final Grader.GradeItem item) {
@@ -350,8 +343,8 @@ public class Grader extends VBox {
       Float.parseFloat(item.getWorth()));
   }
   
-  public boolean removeEntryFromModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    return this.controller.getPresenter().removeEntry(qItem.getQuestionId(), item.id);
+  public void removeEntryFromModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
+    this.controller.getPresenter().removeEntry(qItem.getQuestionId(), item.id);
   }
   
   public boolean addPoints(final Grader.GradeItem item) {
@@ -371,21 +364,17 @@ public class Grader extends VBox {
     return _xblockexpression;
   }
   
-  public boolean removePoints(final Grader.GradeItem item) {
-    boolean _xblockexpression = false;
-    {
-      int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
-      String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
-      String _plus_1 = (_plus + ", for Questions ID :");
-      int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
-      String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
-      String _plus_3 = (_plus_2 + ", for Entry ID :");
-      String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
-      Grader.logger.log(Level.INFO, _plus_4);
-      this.removePointsOf(item);
-      _xblockexpression = this.controller.getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
-    }
-    return _xblockexpression;
+  public void removePoints(final Grader.GradeItem item) {
+    int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
+    String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
+    String _plus_1 = (_plus + ", for Questions ID :");
+    int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
+    String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
+    String _plus_3 = (_plus_2 + ", for Entry ID :");
+    String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
+    Grader.logger.log(Level.INFO, _plus_4);
+    this.removePointsOf(item);
+    this.controller.getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
   }
   
   public void clearDisplay() {

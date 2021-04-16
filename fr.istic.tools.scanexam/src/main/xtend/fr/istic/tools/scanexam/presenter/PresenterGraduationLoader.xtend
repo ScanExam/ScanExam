@@ -2,15 +2,15 @@ package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl
-import fr.istic.tools.scanexam.services.ServiceGraduation
+import fr.istic.tools.scanexam.services.api.Service
 
 class PresenterGraduationLoader {
 	
-	val ServiceGraduation service
+	val Service service
 	
 	val PresenterImportExportXMI presenterXMI;
 	
-	new (PresenterImportExportXMI presenterXMI,ServiceGraduation graduation)
+	new (PresenterImportExportXMI presenterXMI,Service graduation)
 	{
 
 		this.presenterXMI = presenterXMI;

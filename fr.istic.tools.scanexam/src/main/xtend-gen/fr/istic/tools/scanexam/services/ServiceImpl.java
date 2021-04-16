@@ -2,30 +2,38 @@ package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.CoreFactory;
+import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
+import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
 import fr.istic.tools.scanexam.io.TemplateIo;
-import fr.istic.tools.scanexam.services.ExamSingleton;
-import fr.istic.tools.scanexam.services.Service;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
 import org.eclipse.xtext.xbase.lib.InputOutput;
@@ -39,7 +47,10 @@ import org.eclipse.xtext.xbase.lib.Pure;
  * @author Antoine Degas, Marius Lumbroso, Théo Giraudet, Thomas Guibert
  */
 @SuppressWarnings("all")
-public class ServiceGraduation extends Service {
+public class ServiceImpl implements ServiceGraduation, ServiceEdition {
+  @Accessors
+  private Exam exam = null;
+  
   /**
    * Index de la page courante du modèle d'exam
    */
@@ -79,6 +90,7 @@ public class ServiceGraduation extends Service {
    * @param path L'emplacement de sauvegarde du fichier.
    * @param pdfOutputStream le contenu du fichier sous forme de Stream
    */
+  @Override
   public void saveCorrectionTemplate(final String path, final ByteArrayOutputStream pdfOutputStream) {
     try {
       final byte[] encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
@@ -99,12 +111,13 @@ public class ServiceGraduation extends Service {
    * @params path L'emplacement du fichier.
    * @returns "true" si le fichier a bien été chargé, "false"
    */
+  @Override
   public boolean openCorrectionTemplate(final String xmiFile) {
     final Optional<CorrectionTemplate> correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile);
     boolean _isPresent = correctionTemplate.isPresent();
     if (_isPresent) {
       this.correctionTemplate = correctionTemplate.get();
-      ExamSingleton.instance = correctionTemplate.get().getExam();
+      this.exam = correctionTemplate.get().getExam();
       return true;
     }
     return false;
@@ -115,12 +128,13 @@ public class ServiceGraduation extends Service {
    * @params path L'emplacement du fichier.
    * @returns "true" si le fichier a bien été chargé, "false"
    */
+  @Override
   public boolean openCreationTemplate(final String xmiFile) {
     final Optional<CreationTemplate> editionTemplate = TemplateIo.loadCreationTemplate(xmiFile);
     boolean _isPresent = editionTemplate.isPresent();
     if (_isPresent) {
       this.creationTemplate = editionTemplate.get();
-      ExamSingleton.instance = editionTemplate.get().getExam();
+      this.exam = editionTemplate.get().getExam();
       return true;
     }
     return false;
@@ -131,12 +145,13 @@ public class ServiceGraduation extends Service {
    * @params path L'emplacement du fichier.
    * @returns "true" si le fichier a bien été chargé, "false"
    */
+  @Override
   public boolean initializeCorrection(final Collection<StudentSheet> studentSheets) {
     try {
       for (final StudentSheet sheet : studentSheets) {
-        for (int i = 0; (i < ExamSingleton.getTemplatePageAmount()); i++) {
+        for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
           {
-            final Page examPage = ExamSingleton.getPage(i);
+            final Page examPage = this.getPage(i);
             int _size = examPage.getQuestions().size();
             String _plus = ("test size : " + Integer.valueOf(_size));
             InputOutput.<String>println(_plus);
@@ -157,6 +172,7 @@ public class ServiceGraduation extends Service {
     }
   }
   
+  @Override
   public int getAbsolutePageNumber(final int studentId, final int offset) {
     final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
       int _id = x.getId();
@@ -169,31 +185,30 @@ public class ServiceGraduation extends Service {
   /**
    * Défini la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
    */
-  public int nextSheet() {
-    int _xifexpression = (int) 0;
+  @Override
+  public void nextSheet() {
     int _size = this.studentSheets.size();
     boolean _lessThan = ((this.currentSheetIndex + 1) < _size);
     if (_lessThan) {
-      _xifexpression = this.currentSheetIndex++;
+      this.currentSheetIndex++;
     }
-    return _xifexpression;
   }
   
   /**
    * Défini la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
    */
-  public int previousSheet() {
-    int _xifexpression = (int) 0;
+  @Override
+  public void previousSheet() {
     if ((this.currentSheetIndex > 0)) {
-      _xifexpression = this.currentSheetIndex--;
+      this.currentSheetIndex--;
     }
-    return _xifexpression;
   }
   
   /**
    * Associe un nouveau identifiant d'étudiant à la copie courante
    * @param id le nouvel identifiant d'étudiant
    */
+  @Override
   public void assignStudentId(final String id) {
     StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex];
     _get.setStudentName(id);
@@ -203,62 +218,59 @@ public class ServiceGraduation extends Service {
    * @return l'index de la page courante du modèle d'exam
    */
   private Page getCurrentPage() {
-    return ExamSingleton.getPage(this.pageIndex);
+    return this.getPage(this.pageIndex);
   }
   
   /**
    * Défini la page suivant la page actuelle comme nouvelle page courante
    */
-  public int nextPage() {
-    int _xifexpression = (int) 0;
-    int _length = ((Object[])Conversions.unwrapArray(ExamSingleton.instance.getPages(), Object.class)).length;
+  @Override
+  public void nextPage() {
+    int _length = ((Object[])Conversions.unwrapArray(this.exam.getPages(), Object.class)).length;
     boolean _lessThan = ((this.pageIndex + 1) < _length);
     if (_lessThan) {
-      _xifexpression = this.pageIndex++;
+      this.pageIndex++;
     }
-    return _xifexpression;
   }
   
   /**
    * Défini la page précédant la page actuelle comme nouvelle page courante
    */
-  public int previousPage() {
-    int _xifexpression = (int) 0;
+  @Override
+  public void previousPage() {
     if ((this.pageIndex > 0)) {
-      _xifexpression = this.pageIndex--;
+      this.pageIndex--;
     }
-    return _xifexpression;
   }
   
   /**
    * @return le nombre de pages de l'Examen
    */
+  @Override
   public int getPageAmount() {
-    return ExamSingleton.getTemplatePageAmount();
+    return this.getTemplatePageAmount();
   }
   
   /**
    * Défini la question suivant la question actuelle comme nouvelle question courante
    */
-  public int nextQuestion() {
-    int _xifexpression = (int) 0;
+  @Override
+  public void nextQuestion() {
     int _size = this.getCurrentPage().getQuestions().size();
     boolean _lessThan = ((this.currentQuestionIndex + 1) < _size);
     if (_lessThan) {
-      _xifexpression = this.currentQuestionIndex++;
+      this.currentQuestionIndex++;
     }
-    return _xifexpression;
   }
   
   /**
    * Défini la question précédant la question actuelle comme nouvelle question courante
    */
-  public int previousQuestion() {
-    int _xifexpression = (int) 0;
+  @Override
+  public void previousQuestion() {
     if ((this.currentQuestionIndex > 0)) {
-      _xifexpression = this.currentQuestionIndex--;
+      this.currentQuestionIndex--;
     }
-    return _xifexpression;
   }
   
   /**
@@ -266,8 +278,9 @@ public class ServiceGraduation extends Service {
    * Ne fait rien si la question n'existe pas
    * @param id un ID de question
    */
+  @Override
   public void selectQuestion(final int id) {
-    EList<Page> _pages = ExamSingleton.instance.getPages();
+    EList<Page> _pages = this.exam.getPages();
     for (final Page page : _pages) {
       {
         final Function1<Question, Boolean> _function = (Question question) -> {
@@ -286,6 +299,7 @@ public class ServiceGraduation extends Service {
   /**
    * @return le nombre de questions d'une copie d'étudiant
    */
+  @Override
   public int numberOfQuestions() {
     int _xblockexpression = (int) 0;
     {
@@ -307,6 +321,7 @@ public class ServiceGraduation extends Service {
    * @param point le nombre de point de l'entrée
    * @return l'ID de l'entrée
    */
+  @Override
   public int addEntry(final int questionId, final String desc, final float point) {
     int _xblockexpression = (int) 0;
     {
@@ -331,6 +346,7 @@ public class ServiceGraduation extends Service {
    * @param desc la nouvelle description de l'entrée
    * @param point le nouveau nombre de point de l'entrée
    */
+  @Override
   public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
     final GradeScale scale = this.getQuestion(questionId).getGradeScale();
     final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
@@ -349,28 +365,24 @@ public class ServiceGraduation extends Service {
    * @param questionId l'ID de la question dans laquelle supprimer l'entrée
    * @param gradeEntryId l'ID de l'entrée à supprimer
    */
-  public boolean removeEntry(final int questionId, final int gradeEntryId) {
-    boolean _xblockexpression = false;
-    {
-      final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-      final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
-        int _id = step.getId();
-        return Boolean.valueOf((_id == gradeEntryId));
-      };
-      final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
-      boolean _xifexpression = false;
-      if ((scaleEntry != null)) {
-        _xifexpression = scale.getSteps().remove(scaleEntry);
-      }
-      _xblockexpression = _xifexpression;
+  @Override
+  public void removeEntry(final int questionId, final int gradeEntryId) {
+    final GradeScale scale = this.getQuestion(questionId).getGradeScale();
+    final Function1<GradeEntry, Boolean> _function = (GradeEntry step) -> {
+      int _id = step.getId();
+      return Boolean.valueOf((_id == gradeEntryId));
+    };
+    final GradeEntry scaleEntry = IterableExtensions.<GradeEntry>findFirst(scale.getSteps(), _function);
+    if ((scaleEntry != null)) {
+      scale.getSteps().remove(scaleEntry);
     }
-    return _xblockexpression;
   }
   
   /**
    * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
    * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
    */
+  @Override
   public List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(final int questionId) {
     GradeScale _gradeScale = this.getQuestion(questionId).getGradeScale();
     boolean _tripleNotEquals = (_gradeScale != null);
@@ -389,6 +401,7 @@ public class ServiceGraduation extends Service {
    * @param l'ID de l'entrée dans l'Examen
    * @return boolean indique si les points on bien ete attribuer
    */
+  @Override
   public boolean assignGradeEntry(final int questionId, final int gradeEntryId) {
     final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
       int _id = entry.getId();
@@ -410,24 +423,22 @@ public class ServiceGraduation extends Service {
    * @param questionId l'ID de la question à laquelle retirer l'entrée
    * @param l'ID de l'entrée dans l'Examen
    */
-  public boolean retractGradeEntry(final int questionId, final int gradeEntryId) {
-    boolean _xblockexpression = false;
-    {
-      final EList<GradeEntry> entries = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries();
-      final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
-        int _id = entry.getId();
-        return Boolean.valueOf((_id == gradeEntryId));
-      };
-      final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(entries, _function);
-      _xblockexpression = entries.remove(gradeEntry);
-    }
-    return _xblockexpression;
+  @Override
+  public void retractGradeEntry(final int questionId, final int gradeEntryId) {
+    final EList<GradeEntry> entries = (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries();
+    final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
+      int _id = entry.getId();
+      return Boolean.valueOf((_id == gradeEntryId));
+    };
+    final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(entries, _function);
+    entries.remove(gradeEntry);
   }
   
   /**
    * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
    * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
    */
+  @Override
   public List<Integer> getQuestionSelectedGradeEntries(final int questionId) {
     List<Integer> _xblockexpression = null;
     {
@@ -461,6 +472,7 @@ public class ServiceGraduation extends Service {
    * <li>Ne pas être inferieure à 0</li>
    * </ul>
    */
+  @Override
   public boolean validGradeEntry(final int questionId, final GradeEntry gradeAdd) {
     final float gradeMax = this.getQuestion(questionId).getGradeScale().getMaxPoint();
     final Function1<GradeEntry, Float> _function = (GradeEntry e) -> {
@@ -478,13 +490,14 @@ public class ServiceGraduation extends Service {
   /**
    * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu
    */
+  @Override
   public float getCurrentMaxGrade() {
     final Function1<Pair<Integer, Grade>, Boolean> _function = (Pair<Integer, Grade> pair) -> {
       boolean _isEmpty = pair.getValue().getEntries().isEmpty();
       return Boolean.valueOf((!_isEmpty));
     };
     final Function1<Pair<Integer, Grade>, Optional<Question>> _function_1 = (Pair<Integer, Grade> pair) -> {
-      return ExamSingleton.getQuestionFromIndex((pair.getKey()).intValue());
+      return this.getQuestionFromIndex((pair.getKey()).intValue());
     };
     final Function1<Optional<Question>, Boolean> _function_2 = (Optional<Question> o) -> {
       boolean _isEmpty = o.isEmpty();
@@ -502,6 +515,7 @@ public class ServiceGraduation extends Service {
   /**
    * @return la note actuelle de l'étudiant courant
    */
+  @Override
   public float getCurrentGrade() {
     return (((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[this.currentSheetIndex]).computeGrade();
   }
@@ -510,6 +524,7 @@ public class ServiceGraduation extends Service {
    * Défini le chemin d'accès vers la liste de tous les étudiants
    * @param le chemin d'accès vers cette liste (non null)
    */
+  @Override
   public void setStudentListPath(final String path) {
     Objects.<String>requireNonNull(path);
     this.correctionTemplate.setStudentListPath(path);
@@ -518,6 +533,7 @@ public class ServiceGraduation extends Service {
   /**
    * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
    */
+  @Override
   public String getStudentListPath() {
     return this.correctionTemplate.getStudentListPath();
   }
@@ -526,6 +542,7 @@ public class ServiceGraduation extends Service {
    * Défini la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
    * @param la position initialede cette liste (non null)
    */
+  @Override
   public void setStudentListShift(final String shift) {
     Objects.<String>requireNonNull(shift);
     this.correctionTemplate.setStudentListShift(shift);
@@ -534,16 +551,333 @@ public class ServiceGraduation extends Service {
   /**
    * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
    */
+  @Override
   public String getStudentListShift() {
     return this.correctionTemplate.getStudentListShift();
   }
   
+  private CreationTemplate template;
+  
+  @Accessors
+  private int questionId;
+  
+  /**
+   * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
+   * @param q Une Question
+   * @param r Un Rectangle
+   * @author degas
+   */
+  @Override
+  public int createQuestion(final int pdfPageIndex, final float x, final float y, final float heigth, final float width) {
+    final Question question = CoreFactory.eINSTANCE.createQuestion();
+    question.setId(this.questionId);
+    question.setGradeScale(CoreFactory.eINSTANCE.createGradeScale());
+    question.setZone(CoreFactory.eINSTANCE.createQuestionZone());
+    QuestionZone _zone = question.getZone();
+    _zone.setX(x);
+    QuestionZone _zone_1 = question.getZone();
+    _zone_1.setY(y);
+    QuestionZone _zone_2 = question.getZone();
+    _zone_2.setWidth(width);
+    QuestionZone _zone_3 = question.getZone();
+    _zone_3.setHeigth(heigth);
+    this.getPage(pdfPageIndex).getQuestions().add(question);
+    return this.questionId++;
+  }
+  
+  /**
+   * Redimensionne la zone d'une Question
+   * @param id l'ID de la question dont la zone doit être redimensionnée
+   * @param heigth la nouvelle hauteur de la zone
+   * @param width la nouvelle largeur de la zone
+   */
+  @Override
+  public void rescaleQuestion(final int id, final float heigth, final float width) {
+    final Question question = this.getQuestion(id);
+    QuestionZone _zone = question.getZone();
+    _zone.setWidth(width);
+    QuestionZone _zone_1 = question.getZone();
+    _zone_1.setHeigth(heigth);
+  }
+  
+  /**
+   * Déplace la zone d'une Question
+   * @param id l'ID de la question dont la zone doit être déplacée
+   * @param x la nouvelle position x de la zone
+   * @param y la nouvelle position y de la zone
+   */
+  @Override
+  public void moveQuestion(final int id, final float x, final float y) {
+    final Question question = this.getQuestion(id);
+    QuestionZone _zone = question.getZone();
+    _zone.setX(x);
+    QuestionZone _zone_1 = question.getZone();
+    _zone_1.setY(y);
+  }
+  
+  /**
+   * Renomme la Question
+   * @param id l'ID de la question à renommer
+   * @param name le nouveau nom de la question
+   */
+  @Override
+  public void renameQuestion(final int id, final String name) {
+    final Question question = this.getQuestion(id);
+    question.setName(name);
+  }
+  
+  /**
+   * Supprime une question
+   * @param id l'ID de la question à supprimer
+   */
+  @Override
+  public void removeQuestion(final int id) {
+    EList<Page> _pages = this.exam.getPages();
+    for (final Page page : _pages) {
+      EList<Question> _questions = page.getQuestions();
+      for (final Question question : _questions) {
+        int _id = question.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          page.getQuestions().remove(question);
+        }
+      }
+    }
+  }
+  
+  /**
+   * Modifie la note maximal que l'on peut attribuer a une question.
+   * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
+   * @param maxPoint, note maximal de la question question a ajouter
+   */
+  @Override
+  public void modifyMaxPoint(final int questionId, final float maxPoint) {
+    final GradeScale scale = this.getQuestion(questionId).getGradeScale();
+    if ((maxPoint > 0)) {
+      scale.setMaxPoint(maxPoint);
+    }
+  }
+  
+  /**
+   * Sauvegarde le fichier modèle d'examen sur le disque
+   * @param path L'emplacement de sauvegarde du fichier
+   * @param pdfOutputStream le contenu du fichier sous forme de Stream
+   */
+  @Override
+  public void save(final ByteArrayOutputStream outputStream, final File path) {
+    try {
+      final byte[] encoded = Base64.getEncoder().encode(outputStream.toByteArray());
+      String _string = new String(encoded);
+      this.template.setEncodedDocument(_string);
+      outputStream.close();
+      this.template.setExam(this.exam);
+      TemplateIo.save(path, this.template);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * Charge un fichier modèle d'examen a partir du disque
+   * @params xmiPath L'emplacement du fichier.
+   * @returns un flux vers le contenu du fichier si celui-ci a bien été ouvert, Optional.empty sinon
+   */
+  @Override
+  public Optional<ByteArrayInputStream> open(final String xmiPath) {
+    final Optional<CreationTemplate> creationTemplate = TemplateIo.loadCreationTemplate(xmiPath);
+    boolean _isPresent = creationTemplate.isPresent();
+    if (_isPresent) {
+      this.template = creationTemplate.get();
+      this.exam = creationTemplate.get().getExam();
+      final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
+      final Function<Page, Integer> _function = (Page page) -> {
+        return Integer.valueOf(page.getQuestions().size());
+      };
+      final BinaryOperator<Integer> _function_1 = (Integer acc, Integer num) -> {
+        return Integer.valueOf(((acc).intValue() + (num).intValue()));
+      };
+      Integer _get = this.exam.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
+      int _plus = ((_get).intValue() + 1);
+      this.questionId = _plus;
+      ByteArrayInputStream _byteArrayInputStream = new ByteArrayInputStream(decoded);
+      return Optional.<ByteArrayInputStream>of(_byteArrayInputStream);
+    }
+    return Optional.<ByteArrayInputStream>empty();
+  }
+  
+  /**
+   * Crée un nouveau modèle côté données
+   * @param pageNumber le nombre de pages du modèle
+   */
+  @Override
+  public void onDocumentLoad(final int pageNumber) {
+    this.template = TemplatesFactory.eINSTANCE.createCreationTemplate();
+    this.exam = CoreFactory.eINSTANCE.createExam();
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, pageNumber, true);
+    for (final Integer i : _doubleDotLessThan) {
+      {
+        final Page page = CoreFactory.eINSTANCE.createPage();
+        this.exam.getPages().add(page);
+      }
+    }
+    this.questionId = 0;
+  }
+  
+  /**
+   * Retourne la zone associée à une question
+   * @param index Index de la question //FIXME (useless?)
+   * @author degas
+   */
+  @Override
+  public QuestionZone getQuestionZone(final int pageIndex, final int questionIndex) {
+    return this.getQuestion(pageIndex, questionIndex).getZone();
+  }
+  
+  /**
+   * Permet de récupérer une Question
+   * @param index Index de la question
+   * @return Question Retourne une instance de Question
+   * @author degas
+   */
+  protected Question getQuestion(final int pageId, final int questionid) {
+    return this.exam.getPages().get(pageId).getQuestions().get(questionid);
+  }
+  
+  /**
+   * Rend la liste des Questions définies dans un Examen
+   * @return List<Question>
+   * @author degas
+   */
+  protected Collection<Question> getQuestions(final int pageId) {
+    return Collections.<Question>unmodifiableCollection(this.exam.getPages().get(pageId).getQuestions());
+  }
+  
+  /**
+   * @param absoluteQuestionId la position absolue d'une question dans l'Examen
+   * @return la Question associée à cette position si elle existe, Optional.empty sinon
+   */
+  protected Optional<Question> getQuestionFromIndex(final int absoluteQuestionId) {
+    final Function1<Page, EList<Question>> _function = (Page p) -> {
+      return p.getQuestions();
+    };
+    final Function1<Pair<Integer, Question>, Boolean> _function_1 = (Pair<Integer, Question> p) -> {
+      Integer _key = p.getKey();
+      return Boolean.valueOf(((_key).intValue() == absoluteQuestionId));
+    };
+    final Function<Pair<Integer, Question>, Question> _function_2 = (Pair<Integer, Question> q) -> {
+      return q.getValue();
+    };
+    return Optional.<Pair<Integer, Question>>ofNullable(
+      IterableExtensions.<Pair<Integer, Question>>findFirst(IterableExtensions.<Question>indexed(IterableExtensions.<Page, Question>flatMap(this.exam.getPages(), _function)), _function_1)).<Question>map(_function_2);
+  }
+  
+  /**
+   * @return le nombre de pages de l'Examen
+   */
+  @Override
+  public int getTemplatePageAmount() {
+    return this.exam.getPages().size();
+  }
+  
+  /**
+   * @param pageId l'ID de la page à récupérer
+   * @return la Page dont l'ID est <i>pageId</i>
+   */
+  protected Page getPage(final int pageId) {
+    return this.exam.getPages().get(pageId);
+  }
+  
+  /**
+   * @return vrai si un modèle d'examen est chargé, false sinon
+   */
+  @Override
+  public boolean hasExamLoaded() {
+    return (this.exam != null);
+  }
+  
+  /**
+   * Met à jour le nom de l'examen
+   * @param name Nouevau nom de l'examen
+   */
+  @Override
+  public void setExamName(final String name) {
+    this.exam.setName(name);
+  }
+  
+  /**
+   * @param pageIndex l'ID d'une page
+   * @return la liste des Questions sur la page dont l'ID est <i>pageIndex</i>
+   */
+  @Override
+  public List<Question> getQuestionAtPage(final int pageIndex) {
+    return this.getPage(pageIndex).getQuestions();
+  }
+  
+  /**
+   * @param l'ID de la Question
+   * @return la Question du modèle correspondant à l'ID spécifié
+   */
+  protected Question getQuestion(final int id) {
+    EList<Page> _pages = this.exam.getPages();
+    for (final Page page : _pages) {
+      {
+        final Function1<Question, Boolean> _function = (Question question) -> {
+          int _id = question.getId();
+          return Boolean.valueOf((_id == id));
+        };
+        final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
+        if ((question != null)) {
+          return question;
+        }
+      }
+    }
+    return null;
+  }
+  
+  /**
+   * @return Identifiant de l'examen
+   * @author degas
+   */
+  @Override
+  public int getExamId() {
+    return this.exam.getId();
+  }
+  
+  /**
+   * @return Nom de l'examen
+   * @author degas
+   */
+  @Override
+  public String getExamName() {
+    return this.exam.getName();
+  }
+  
   @Pure
+  public Exam getExam() {
+    return this.exam;
+  }
+  
+  public void setExam(final Exam exam) {
+    this.exam = exam;
+  }
+  
+  @Pure
+  @Override
   public Collection<StudentSheet> getStudentSheets() {
     return this.studentSheets;
   }
   
   public void setStudentSheets(final Collection<StudentSheet> studentSheets) {
     this.studentSheets = studentSheets;
+  }
+  
+  @Pure
+  @Override
+  public int getQuestionId() {
+    return this.questionId;
+  }
+  
+  public void setQuestionId(final int questionId) {
+    this.questionId = questionId;
   }
 }

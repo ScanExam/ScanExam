@@ -2,11 +2,10 @@ package fr.istic.tools.scanexam.launcher;
 
 import com.sun.javafx.css.StyleManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import fr.istic.tools.scanexam.presenter.PresenterGraduation;
-import fr.istic.tools.scanexam.services.ServiceEdition;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.ControllerRoot;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;

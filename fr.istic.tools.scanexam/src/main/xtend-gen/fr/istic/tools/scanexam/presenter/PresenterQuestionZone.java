@@ -2,8 +2,7 @@ package fr.istic.tools.scanexam.presenter;
 
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
-import fr.istic.tools.scanexam.presenter.PresenterEdition;
-import fr.istic.tools.scanexam.services.ServiceEdition;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;

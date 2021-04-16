@@ -22,7 +22,7 @@ import com.beust.jcommander.internal.Lists;
 
 import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.presenter.PresenterEdition;
-import fr.istic.tools.scanexam.services.ServiceEdition;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
 
 public class ExamEditionServiceTest 
 {
@@ -33,7 +33,7 @@ public class ExamEditionServiceTest
 	@BeforeEach
 	void init() 
 	{
-		service = new ServiceEdition();
+		service = new ServiceImpl();
 		
 		presenter = jailBreak(service);
 		

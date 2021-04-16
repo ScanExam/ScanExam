@@ -5,7 +5,7 @@ import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.GradesExportImpl
 import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
-import fr.istic.tools.scanexam.services.ServiceGraduation
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
 import java.io.ByteArrayOutputStream
 import java.io.File

@@ -5,13 +5,13 @@ import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.Collection
 import fr.istic.tools.scanexam.core.config.Config
 import java.util.logging.Logger
-import fr.istic.tools.scanexam.services.ServiceGraduation
+import fr.istic.tools.scanexam.services.ServiceImpl
 
 class GradesExportMailImpl implements GradesExportMail {
 
-	static ServiceGraduation service
+	static ServiceImpl service
 
-	new(ServiceGraduation serv) {
+	new(ServiceImpl serv) {
 		service = serv
 	}
 

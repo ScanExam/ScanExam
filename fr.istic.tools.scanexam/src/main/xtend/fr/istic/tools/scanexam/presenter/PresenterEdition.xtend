@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.presenter
 
-import fr.istic.tools.scanexam.services.ServiceEdition
+import fr.istic.tools.scanexam.services.api.ServiceEdition
 import java.io.File
 import java.util.Objects
 
@@ -29,7 +29,7 @@ class PresenterEdition implements Presenter
 		
 		presPdf = new PresenterPdf(service, this)
 		templateCreatorPresenter = new PresenterTemplateCreator(this)
-		presQuestionZone =  new PresenterQuestionZone(service,this)
+		presQuestionZone =  new PresenterQuestionZone(service, this)
 		sheetExport = new PresenterStudentSheetExport(service, presPdf)
 	}
 	

@@ -1,15 +1,14 @@
 package fr.istic.tools.scanexam.export
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
+import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.Collection
-import fr.istic.tools.scanexam.core.StudentSheet
-import fr.istic.tools.scanexam.services.ServiceGraduation
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.xssf.usermodel.XSSFSheet
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 class GradesExportImpl implements GradesExport {
     ServiceGraduation service

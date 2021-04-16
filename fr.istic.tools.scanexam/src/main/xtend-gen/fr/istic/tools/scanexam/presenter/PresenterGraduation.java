@@ -5,14 +5,8 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.mailing.StudentDataManager;
-import fr.istic.tools.scanexam.presenter.Presenter;
-import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
-import fr.istic.tools.scanexam.presenter.PresenterImportExportXMI;
-import fr.istic.tools.scanexam.presenter.PresenterPdf;
-import fr.istic.tools.scanexam.presenter.PresenterQuestion;
-import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -136,8 +130,8 @@ public class PresenterGraduation implements Presenter {
     return this.service.assignGradeEntry(questionId, gradeId);
   }
   
-  public boolean removeGrade(final int questionId, final int gradeId) {
-    return this.service.retractGradeEntry(questionId, gradeId);
+  public void removeGrade(final int questionId, final int gradeId) {
+    this.service.retractGradeEntry(questionId, gradeId);
   }
   
   public List<Integer> getEntryIds(final int questionId) {
@@ -211,8 +205,8 @@ public class PresenterGraduation implements Presenter {
    * @param questionId l'ID de la question dans laquelle supprimer l'entrée
    * @param gradeEntryId l'ID de l'entrée à supprimer
    */
-  public boolean removeEntry(final int questionId, final int gradeEntryId) {
-    return this.service.removeEntry(questionId, gradeEntryId);
+  public void removeEntry(final int questionId, final int gradeEntryId) {
+    this.service.removeEntry(questionId, gradeEntryId);
   }
   
   /**
