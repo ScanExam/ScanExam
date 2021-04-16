@@ -65,7 +65,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		loader.<ControllerGraduationLoader>controller.initialize(corrector.adapter.presenter.getPresenterGraduationLoader,corrector)
+		loader.<ControllerGraduationLoader>controller.initialize(corrector.presenter.presenterGraduationLoader,corrector)
 		dialog.setScene(new Scene(view, 384, 355))
 		dialog.setResizable(false)
 		dialog.show
@@ -79,7 +79,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.new"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerTemplateCreator>controller.initialize(editor.adapter.presenter.getPresenterTemplateCreator, editor)
+		loader.<ControllerTemplateCreator>controller.initialize(editor.presenter.getPresenterTemplateCreator, editor)
 		dialog.setScene(new Scene(view, 384, 155))
 		dialog.setResizable(false);
 		dialog.show
@@ -98,7 +98,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<AdapterFxStudentListLoader>controller.initialize(corrector.adapter.presenter.presenterStudentList)
+		loader.<ControllerStudentListLoader>controller.initialize(corrector.presenter.presenterStudentList)
 		dialog.setScene(new Scene(view, 384, 160))
 		dialog.setResizable(false);
 		dialog.show
@@ -112,7 +112,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<AdapterFxConfiguration>controller.initialize(new PresenterConfiguration)
+		loader.<ControllerConfiguration>controller.initialize(new PresenterConfiguration)
 		dialog.setScene(new Scene(view, 384, 280))
 		dialog.setResizable(false);
 		dialog.show
@@ -139,7 +139,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerGraduationLoader>controller.initialize(corrector.adapter.presenter.getPresenterGraduationLoader,corrector)
+		loader.<ControllerGraduationLoader>controller.initialize(corrector.presenter.getPresenterGraduationLoader,corrector)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show
@@ -153,7 +153,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerStudentSheetExport>controller.initialize(editor.adapter.presenter.presenterStudentSheetExport)
+		loader.<ControllerStudentSheetExport>controller.initialize(editor.presenter.presenterStudentSheetExport)
 		dialog.setScene(new Scene(view, 384, 107))
 		dialog.setResizable(false);
 		dialog.show

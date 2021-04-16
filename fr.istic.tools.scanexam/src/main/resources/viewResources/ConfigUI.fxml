@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainPane" alignment="CENTER" prefHeight="280.0" prefWidth="384.0" spacing="15.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.AdapterFxConfiguration">
+<VBox fx:id="mainPane" alignment="CENTER" prefHeight="280.0" prefWidth="384.0" spacing="15.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerConfiguration">
    <children>
       <HBox alignment="CENTER" spacing="20.0">
          <children>

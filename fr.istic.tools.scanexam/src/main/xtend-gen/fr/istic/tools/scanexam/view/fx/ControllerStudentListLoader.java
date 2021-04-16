@@ -35,7 +35,7 @@ import org.eclipse.xtext.xbase.lib.ListExtensions;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class AdapterFxStudentListLoader {
+public class ControllerStudentListLoader {
   /**
    * Logger du programme
    */
@@ -105,7 +105,7 @@ public class AdapterFxStudentListLoader {
   public void loadFile() {
     FileChooser fileChooser = new FileChooser();
     ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("Calc files", AdapterFxStudentListLoader.supportedFormat);
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("Calc files", ControllerStudentListLoader.supportedFormat);
     _extensionFilters.add(_extensionFilter);
     String _text = this.txtFldFile.getText();
     final File specifiedFile = new File(_text);
@@ -128,7 +128,7 @@ public class AdapterFxStudentListLoader {
     if ((file != null)) {
       this.txtFldFile.setText(file.getPath());
     } else {
-      AdapterFxStudentListLoader.logger.warn("File not chosen");
+      ControllerStudentListLoader.logger.warn("File not chosen");
     }
   }
   
@@ -152,7 +152,7 @@ public class AdapterFxStudentListLoader {
     this.btnOk.disableProperty().bind(this.txtFldFile.wrongFormattedProperty().or(this.txtFldFirstCell.wrongFormattedProperty()));
     final FormatValidator _function_1 = (String text) -> {
       Optional<String> _xifexpression = null;
-      boolean _matches = AdapterFxStudentListLoader.cellPattern.matcher(this.txtFldFirstCell.getText()).matches();
+      boolean _matches = ControllerStudentListLoader.cellPattern.matcher(this.txtFldFirstCell.getText()).matches();
       boolean _not = (!_matches);
       if (_not) {
         _xifexpression = Optional.<String>of("studentlist.info.badCellFormat");
@@ -170,7 +170,7 @@ public class AdapterFxStudentListLoader {
       final Function1<String, Boolean> _function_4 = (String f) -> {
         return Boolean.valueOf(text.endsWith(f));
       };
-      String _findFirst = IterableExtensions.<String>findFirst(ListExtensions.<String, String>map(AdapterFxStudentListLoader.supportedFormat, _function_3), _function_4);
+      String _findFirst = IterableExtensions.<String>findFirst(ListExtensions.<String, String>map(ControllerStudentListLoader.supportedFormat, _function_3), _function_4);
       boolean _tripleNotEquals = (_findFirst != null);
       if (_tripleNotEquals) {
         _xifexpression = Optional.<String>empty();

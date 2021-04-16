@@ -25,7 +25,7 @@ import javafx.stage.Stage
  * Classe pour gérer la fenêtre de configuration en JavaFX
  * @author Julien Cochet
  */
-class AdapterFxConfiguration {
+class ControllerConfiguration {
 
 	// ----------------------------------------------------------------------------------------------------
 	/*

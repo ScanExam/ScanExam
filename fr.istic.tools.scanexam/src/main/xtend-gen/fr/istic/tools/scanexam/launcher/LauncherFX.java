@@ -2,10 +2,12 @@ package fr.istic.tools.scanexam.launcher;
 
 import com.sun.javafx.css.StyleManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterBindings;
+import fr.istic.tools.scanexam.launcher.Launcher;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
+import fr.istic.tools.scanexam.presenter.PresenterGraduation;
+import fr.istic.tools.scanexam.services.ServiceEdition;
+import fr.istic.tools.scanexam.services.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.AdapterFxEdition;
-import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
 import fr.istic.tools.scanexam.view.fx.ControllerRoot;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
@@ -25,11 +27,17 @@ import javafx.stage.Stage;
  */
 @SuppressWarnings("all")
 public class LauncherFX extends Application implements Launcher {
+  private static ServiceEdition serviceEdition;
+  
+  private static ServiceGraduation serviceGraduation;
+  
   /**
    * Lancement de l'application FX
    */
-  public static void launchApp(final String[] args) {
-    Application.launch(args);
+  public static void launchApp(final ServiceEdition serviceEdition, final ServiceGraduation serviceGraduation) {
+    LauncherFX.serviceEdition = serviceEdition;
+    LauncherFX.serviceGraduation = serviceGraduation;
+    Application.launch(null);
   }
   
   /**
@@ -52,16 +60,16 @@ public class LauncherFX extends Application implements Launcher {
     final ControllerFxGraduation controllerGraduator = ((ControllerFxGraduation) _controller_1);
     Object _controller_2 = rootLoader.<Object>getController();
     ControllerRoot controllerRoot = ((ControllerRoot) _controller_2);
-    controllerEditor.setAdapterFxEdition(LauncherFX.edit);
-    LauncherFX.edit.setControllerFXCreator(controllerEditor);
-    controllerGraduator.setAdapterCorrection(LauncherFX.grad);
-    LauncherFX.grad.setController(controllerGraduator);
     controllerRoot.setCorrector(graduatorRoot);
     controllerRoot.setEditor(editorRoot);
     final Scene rootScene = new Scene(mainRoot, 1280, 720);
     Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
     StyleManager.getInstance().addUserAgentStylesheet("viewResources/MyStyle.css");
+    PresenterGraduation _presenterGraduation = new PresenterGraduation(LauncherFX.serviceGraduation);
+    controllerGraduator.setPresenter(_presenterGraduation);
     controllerGraduator.init();
+    PresenterEdition _presenterEdition = new PresenterEdition(LauncherFX.serviceEdition);
+    controllerEditor.setPresenter(_presenterEdition);
     controllerEditor.init();
     controllerRoot.setCorrectorController(controllerGraduator);
     controllerRoot.setEditorController(controllerEditor);
@@ -77,26 +85,7 @@ public class LauncherFX extends Application implements Launcher {
     primaryStage.show();
   }
   
-  private static AdapterFxEdition edit;
-  
-  private static AdapterFxGraduation grad;
-  
   @Override
   public void launch() {
-    AdapterFxEdition _adapterFxEdition = new AdapterFxEdition();
-    LauncherFX.edit = _adapterFxEdition;
-    AdapterFxGraduation _adapterFxGraduation = new AdapterFxGraduation();
-    LauncherFX.grad = _adapterFxGraduation;
-    PresenterBindings.linkEditorPresenter(LauncherFX.edit);
-    PresenterBindings.linkGraduationPresenter(LauncherFX.grad);
-    LauncherFX.launchApp(null);
-  }
-  
-  public static Object swapToEditor() {
-    return null;
-  }
-  
-  public static Object swapToGraduator() {
-    return null;
   }
 }

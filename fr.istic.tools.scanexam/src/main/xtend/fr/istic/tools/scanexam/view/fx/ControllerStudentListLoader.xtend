@@ -26,7 +26,7 @@ import org.apache.logging.log4j.LogManager
  * Classe pour charger la liste des étudiant en JavaFX
  * @author Julien Cochet
  */
-class AdapterFxStudentListLoader {
+class ControllerStudentListLoader {
 
 	// ----------------------------------------------------------------------------------------------------
 	/*

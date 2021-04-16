@@ -3,6 +3,11 @@ package fr.istic.tools.scanexam.view.fx;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
+import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
+import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import java.io.InputStream;
@@ -82,7 +87,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader(), this.corrector);
+      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getPresenter().getPresenterGraduationLoader(), this.corrector);
       Scene _scene = new Scene(view, 384, 355);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -104,7 +109,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerTemplateCreator>getController().initialize(this.editor.getAdapter().getPresenter().getPresenterTemplateCreator(), this.editor);
+      loader.<ControllerTemplateCreator>getController().initialize(this.editor.getPresenter().getPresenterTemplateCreator(), this.editor);
       Scene _scene = new Scene(view, 384, 155);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -131,7 +136,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<AdapterFxStudentListLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterStudentList());
+      loader.<ControllerStudentListLoader>getController().initialize(this.corrector.getPresenter().getPresenterStudentList());
       Scene _scene = new Scene(view, 384, 160);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -153,7 +158,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      AdapterFxConfiguration _controller = loader.<AdapterFxConfiguration>getController();
+      ControllerConfiguration _controller = loader.<ControllerConfiguration>getController();
       PresenterConfiguration _presenterConfiguration = new PresenterConfiguration();
       _controller.initialize(_presenterConfiguration);
       Scene _scene = new Scene(view, 384, 280);
@@ -198,7 +203,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getAdapter().getPresenter().getPresenterGraduationLoader(), this.corrector);
+      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getPresenter().getPresenterGraduationLoader(), this.corrector);
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -220,7 +225,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerStudentSheetExport>getController().initialize(this.editor.getAdapter().getPresenter().getPresenterStudentSheetExport());
+      loader.<ControllerStudentSheetExport>getController().initialize(this.editor.getPresenter().getPresenterStudentSheetExport());
       Scene _scene = new Scene(view, 384, 107);
       dialog.setScene(_scene);
       dialog.setResizable(false);

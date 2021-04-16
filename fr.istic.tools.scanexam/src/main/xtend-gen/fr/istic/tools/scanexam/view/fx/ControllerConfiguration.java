@@ -35,7 +35,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class AdapterFxConfiguration {
+public class ControllerConfiguration {
   /**
    * Controlleur de la configuration
    */
@@ -179,12 +179,12 @@ public class AdapterFxConfiguration {
       protected SendMailTls.LoginResult call() throws Exception {
         SendMailTls.LoginResult _xblockexpression = null;
         {
-          AdapterFxConfiguration.this.mainPane.getScene().setCursor(Cursor.WAIT);
-          AdapterFxConfiguration.this.mainPane.setDisable(true);
-          final SendMailTls.LoginResult result = AdapterFxConfiguration.this.presConfig.checkLogin(AdapterFxConfiguration.this.txtFldEmail.getText(), AdapterFxConfiguration.this.pwdFldEmailPassword.getText(), AdapterFxConfiguration.this.txtFldEmailHost.getText(), 
-            AdapterFxConfiguration.this.txtFldEmailPort.getText());
-          AdapterFxConfiguration.this.mainPane.setDisable(false);
-          AdapterFxConfiguration.this.mainPane.getScene().setCursor(Cursor.DEFAULT);
+          ControllerConfiguration.this.mainPane.getScene().setCursor(Cursor.WAIT);
+          ControllerConfiguration.this.mainPane.setDisable(true);
+          final SendMailTls.LoginResult result = ControllerConfiguration.this.presConfig.checkLogin(ControllerConfiguration.this.txtFldEmail.getText(), ControllerConfiguration.this.pwdFldEmailPassword.getText(), ControllerConfiguration.this.txtFldEmailHost.getText(), 
+            ControllerConfiguration.this.txtFldEmailPort.getText());
+          ControllerConfiguration.this.mainPane.setDisable(false);
+          ControllerConfiguration.this.mainPane.getScene().setCursor(Cursor.DEFAULT);
           _xblockexpression = result;
         }
         return _xblockexpression;

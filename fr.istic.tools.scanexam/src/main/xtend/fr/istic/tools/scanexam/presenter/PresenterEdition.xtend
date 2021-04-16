@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.presenter
 
 import fr.istic.tools.scanexam.services.ServiceEdition
-import fr.istic.tools.scanexam.view.Adapter
 import java.io.File
 import java.util.Objects
 
@@ -21,9 +20,9 @@ class PresenterEdition implements Presenter
 	PresenterPdf presPdf
 	PresenterTemplateCreator templateCreatorPresenter
 	PresenterStudentSheetExport sheetExport
-	Adapter<PresenterEdition> adapter
+
 	
-	private new(ServiceEdition service)
+	new(ServiceEdition service)
 	{
 	 	Objects.requireNonNull(service)
 		this.service = service
@@ -33,21 +32,7 @@ class PresenterEdition implements Presenter
 		presQuestionZone =  new PresenterQuestionZone(service,this)
 		sheetExport = new PresenterStudentSheetExport(service, presPdf)
 	}
-	new(Adapter<PresenterEdition> adapter,ServiceEdition service) 
-	{
-		this(service)
-		Objects.requireNonNull(adapter)
-		this.adapter = adapter
-
-		//Verification Switch Service
-		/*if(this.service.getExamInstance() === null){
-			if(!EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance()).equals(null)){
-				this.service.setExamInstance(EditorGraduationSwitchVerification.loadExamInstance)
-			}
-		}else{
-			EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance())
-		}*/
-	}
+	
 	
 	/**
 	 * @return current {@link PresenterQuestionZone} 

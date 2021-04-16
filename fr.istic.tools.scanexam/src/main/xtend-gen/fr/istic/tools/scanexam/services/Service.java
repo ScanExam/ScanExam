@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.services.ExamSingleton;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;

@@ -1,7 +1,11 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.presenter.Presenter;
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
+import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
+import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
+import fr.istic.tools.scanexam.presenter.PresenterTemplateCreator;
 import fr.istic.tools.scanexam.services.ServiceEdition;
-import fr.istic.tools.scanexam.view.Adapter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,9 +33,7 @@ public class PresenterEdition implements Presenter {
   
   private PresenterStudentSheetExport sheetExport;
   
-  private Adapter<PresenterEdition> adapter;
-  
-  private PresenterEdition(final ServiceEdition service) {
+  public PresenterEdition(final ServiceEdition service) {
     Objects.<ServiceEdition>requireNonNull(service);
     this.service = service;
     PresenterPdf _presenterPdf = new PresenterPdf(service, this);
@@ -42,12 +44,6 @@ public class PresenterEdition implements Presenter {
     this.presQuestionZone = _presenterQuestionZone;
     PresenterStudentSheetExport _presenterStudentSheetExport = new PresenterStudentSheetExport(service, this.presPdf);
     this.sheetExport = _presenterStudentSheetExport;
-  }
-  
-  public PresenterEdition(final Adapter<PresenterEdition> adapter, final ServiceEdition service) {
-    this(service);
-    Objects.<Adapter<PresenterEdition>>requireNonNull(adapter);
-    this.adapter = adapter;
   }
   
   /**

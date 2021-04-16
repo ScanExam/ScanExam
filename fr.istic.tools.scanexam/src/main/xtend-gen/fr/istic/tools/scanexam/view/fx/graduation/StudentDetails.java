@@ -1,6 +1,8 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.view.fx.component.RenameFieldSuggests;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -70,7 +72,7 @@ public class StudentDetails extends VBox {
   
   public void findSuggestions(final String start) {
     InputOutput.<String>println("Changing");
-    List<String> l = this.controller.getAdapter().getPresenter().getStudentsSuggestedNames(start);
+    List<String> l = this.controller.getPresenter().getStudentsSuggestedNames(start);
     this.name.showSuggestion(l);
   }
   

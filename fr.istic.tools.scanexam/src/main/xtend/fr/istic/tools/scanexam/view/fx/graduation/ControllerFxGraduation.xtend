@@ -1,8 +1,7 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
-import fr.istic.tools.scanexam.view.AdapterGraduation
-import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation
+import fr.istic.tools.scanexam.presenter.PresenterGraduation
 import fr.istic.tools.scanexam.view.fx.FxSettings
 import java.io.File
 import java.io.IOException
@@ -40,25 +39,8 @@ class ControllerFxGraduation {
 	/**
 	 * High level Controllers to access the Presenters
 	 */
-	AdapterFxGraduation corrector;
-	
-	
+	@Accessors PresenterGraduation presenter;
 
-	/**
-	 * setter for the ControllerVueCorrection attribute
-	 * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null) 
-	 */
-	def void setAdapterCorrection(AdapterFxGraduation adapterCor) {
-		Objects.requireNonNull(adapterCor)
-		corrector = adapterCor
-	}
-
-	/**
-	 * @return current {@link ControllerVueCorrection} 
-	 */
-	def getAdapterCorrection() {
-		corrector
-	}
 	
 	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
 	
@@ -167,7 +149,7 @@ class ControllerFxGraduation {
 	@FXML
 	def void exportPressed() {
 		println("Export method");
-		adapterCorrection.presenter.exportGrades
+		presenter.exportGrades
 	}
 
 	/**
@@ -212,7 +194,7 @@ class ControllerFxGraduation {
 
 	@FXML
 	def void swapToEditorPressed() {
-		LauncherFX.swapToEditor
+	  //FIXME
 	}
 	
 	@FXML
@@ -225,10 +207,7 @@ class ControllerFxGraduation {
 	//-----------------------//
 	
 	
-	//FIXME Pas terrible de mettre cela en public mais ControllerRoot n'a accès a aucun Presenter
-	def AdapterGraduation getAdapter() {
-		return corrector
-	}
+
 	
 	
 	//--- LOCAL VARIABLES ---//
@@ -442,7 +421,7 @@ class ControllerFxGraduation {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			adapter.presenter.saveTemplate(file.path)
+			presenter.saveTemplate(file.path)
 			logger.info("Saving correction file")
 		} 
 		else {
@@ -482,18 +461,18 @@ class ControllerFxGraduation {
 	def void loadQuestions() {
 		logger.info("Loading Questions")
 		var currentQuestionId = 0;
-		for (var p = 0;p < corrector.presenter.getPageAmount;p++) {
-			var ids = corrector.presenter.initLoading(p);
+		for (var p = 0;p < presenter.getPageAmount;p++) {
+			var ids = presenter.initLoading(p);
 			for (int i:ids) {
 				var question = new QuestionItemGraduation();
-				question.x = corrector.presenter.questionX(i) * imageWidth;
-				question.y = corrector.presenter.questionY(i) * imageHeight;
-				question.h = corrector.presenter.questionHeight(i) * imageHeight;
-				question.w = corrector.presenter.questionWidth(i) * imageWidth;
+				question.x = presenter.questionX(i) * imageWidth;
+				question.y = presenter.questionY(i) * imageHeight;
+				question.h = presenter.questionHeight(i) * imageHeight;
+				question.w = presenter.questionWidth(i) * imageWidth;
 				question.page = p
 				question.questionId = i
-				question.name = corrector.presenter.questionName(i);
-				question.worth = corrector.presenter.questionWorth(i)
+				question.name =presenter.questionName(i);
+				question.worth = presenter.questionWorth(i)
 				questionList.addItem(question)
 			}
 		}
@@ -502,7 +481,7 @@ class ControllerFxGraduation {
 	def void loadStudents(){
 		logger.info("Loading Students")
 		var currentStudentId = 0;
-		var ids = corrector.presenter.studentIds
+		var ids = presenter.studentIds
 		
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
@@ -558,7 +537,7 @@ class ControllerFxGraduation {
 	//---NAVIGATION---//
 	
 	def void renderStudentCopy(){		
-		var image = corrector.presenter.presenterPdf.currentPdfPage
+		var image = presenter.presenterPdf.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		imageWidth = image.width
 		imageHeight = image.height
@@ -570,12 +549,12 @@ class ControllerFxGraduation {
 	
 	def void nextStudent(){
 		studentList.selectNextItem
-		adapterCorrection.presenter.presenterQuestion.nextStudent
+		presenter.presenterQuestion.nextStudent
 		setSelectedStudent();
 	}
 	def void previousStudent(){
 		studentList.selectPreviousItem
-		adapterCorrection.presenter.presenterQuestion.previousStudent
+		presenter.presenterQuestion.previousStudent
 		setSelectedStudent();
 	}
 	def void selectStudent(StudentItemGraduation item){
@@ -595,17 +574,17 @@ class ControllerFxGraduation {
 
 	def void nextQuestion(){
 		questionList.selectNextItem
-		adapterCorrection.presenter.presenterQuestion.nextQuestion
+		presenter.presenterQuestion.nextQuestion
 		setSelectedQuestion()
 	}
 	def void previousQuestion(){
 		questionList.selectPreviousItem
-		adapterCorrection.presenter.presenterQuestion.previousQuestion
+		presenter.presenterQuestion.previousQuestion
 		setSelectedQuestion()
 	}
 	def void selectQuestion(QuestionItemGraduation item) {
 		questionList.selectItem(item);
-		adapterCorrection.presenter.presenterQuestion.selectQuestion(item.questionId)
+		presenter.presenterQuestion.selectQuestion(item.questionId)
 		setSelectedQuestion()
 	}
 
@@ -643,10 +622,10 @@ class ControllerFxGraduation {
 	//On veut afficher la bonne page, donc on verifie si on est sur la bonne page, si non, on change de page
 	def void display(){
 		if (!studentList.noItems && !questionList.noItems) {
-			var i = corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
-			if (!corrector.presenter.presenterPdf.atCorrectPage(i)){
+			var i = presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
+			if (!presenter.presenterPdf.atCorrectPage(i)){
 				logger.info("Changing page")
-				selectPage(corrector.presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page))
+				selectPage(presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page))
 			}
 		}else {
 			logger.warn("Cannot find correct page, student list or question is is empty")
@@ -687,15 +666,15 @@ class ControllerFxGraduation {
 	
 	//---PAGE OPERATIONS---//
 	def void nextPage() {
-		corrector.presenter.getPresenterPdf.nextPdfPage
+		presenter.getPresenterPdf.nextPdfPage
 		renderStudentCopy
 	}
 	def void previousPage(){
-		corrector.presenter.getPresenterPdf.previousPdfPage
+		presenter.getPresenterPdf.previousPdfPage
 		renderStudentCopy
 	}
 	def void selectPage(int pageNumber) {
-		corrector.presenter.getPresenterPdf.goToPdfPage(pageNumber)
+		presenter.getPresenterPdf.goToPdfPage(pageNumber)
 		renderStudentCopy
 	}
 	//---------------------//
@@ -705,7 +684,7 @@ class ControllerFxGraduation {
 	 * Met à jour la note globale affichée
 	 */
 	def void updateGlobalGrade() {
-    	gradeLabel.text = translate("label.grade") + " " + adapter.presenter.globalGrade + "/" + adapter.presenter.globalScale
+    	gradeLabel.text = translate("label.grade") + " " + presenter.globalGrade + "/" + presenter.globalScale
 	}
 	
 }

@@ -48,9 +48,9 @@ class QuestionListEdition extends VBox {
 			default: {
 			}
 		}
-		println("page : " + controller.editor.presenter.presenterPdf.currentPdfPageNumber)
+		println("page : " + controller.presenter.presenterPdf.currentPdfPageNumber)
 		var item = new QuestionItemEdition(this, box, type,
-			controller.editor.presenter.presenterPdf.currentPdfPageNumber);
+			controller.presenter.presenterPdf.currentPdfPageNumber);
 
 		addToModel(item)
 		add(item)
@@ -119,20 +119,20 @@ class QuestionListEdition extends VBox {
 
 	//---Model Interactions---//
 	def addToModel(QuestionItemEdition item) {
-		item.questionId = controller.editor.presenter.presenterQuestionZone.createQuestion(item.zone.x/controller.maxX, item.zone.y/controller.maxY,item.zone.height/controller.maxY, item.zone.width/controller.maxX) // TODO convert
+		item.questionId = controller.presenter.presenterQuestionZone.createQuestion(item.zone.x/controller.maxX, item.zone.y/controller.maxY,item.zone.height/controller.maxY, item.zone.width/controller.maxX) // TODO convert
 		updateInModel(item)
 	}
 
 
 	def updateInModel(QuestionItemEdition item) {
-		controller.editor.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x/controller.maxX, item.zone.y/controller.maxY) 
-		controller.editor.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height/controller.maxY,item.zone.width/controller.maxX)
-		controller.editor.presenter.presenterQuestionZone.renameQuestion(item.questionId,item.name)
-		controller.editor.presenter.presenterQuestionZone.changeQuestionWorth(item.questionId,item.scale)
+		controller.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x/controller.maxX, item.zone.y/controller.maxY) 
+		controller.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height/controller.maxY,item.zone.width/controller.maxX)
+		controller.presenter.presenterQuestionZone.renameQuestion(item.questionId,item.name)
+		controller.presenter.presenterQuestionZone.changeQuestionWorth(item.questionId,item.scale)
 	}
 
 	def removeFromModel(QuestionItemEdition item) {
-		controller.editor.presenter.presenterQuestionZone.removeQuestion(item.questionId)
+		controller.presenter.presenterQuestionZone.removeQuestion(item.questionId)
 	}
 	//------------------------//
 	

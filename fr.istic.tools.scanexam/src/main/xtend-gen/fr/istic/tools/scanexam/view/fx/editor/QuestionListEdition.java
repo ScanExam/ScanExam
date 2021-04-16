@@ -25,14 +25,14 @@ public class QuestionListEdition extends VBox {
     return this.controller;
   }
   
-  public boolean loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
+  public Object loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
     boolean _xblockexpression = false;
     {
       QuestionItemEdition item = new QuestionItemEdition(this, box, name, page, id);
       item.setScale(questionWorth);
       _xblockexpression = this.add(item);
     }
-    return _xblockexpression;
+    return Boolean.valueOf(_xblockexpression);
   }
   
   /**
@@ -57,10 +57,10 @@ public class QuestionListEdition extends VBox {
       }
     } else {
     }
-    int _currentPdfPageNumber = this.controller.getEditor().getPresenter().getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber = this.controller.getPresenter().getPresenterPdf().currentPdfPageNumber();
     String _plus = ("page : " + Integer.valueOf(_currentPdfPageNumber));
     InputOutput.<String>println(_plus);
-    int _currentPdfPageNumber_1 = this.controller.getEditor().getPresenter().getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber_1 = this.controller.getPresenter().getPresenterPdf().currentPdfPageNumber();
     QuestionItemEdition item = new QuestionItemEdition(this, box, type, _currentPdfPageNumber_1);
     this.addToModel(item);
     this.add(item);
@@ -133,7 +133,7 @@ public class QuestionListEdition extends VBox {
   }
   
   public void addToModel(final QuestionItemEdition item) {
-    PresenterQuestionZone _presenterQuestionZone = this.controller.getEditor().getPresenter().getPresenterQuestionZone();
+    PresenterQuestionZone _presenterQuestionZone = this.controller.getPresenter().getPresenterQuestionZone();
     double _x = item.getZone().getX();
     double _maxX = this.controller.getMaxX();
     double _divide = (_x / _maxX);
@@ -151,7 +151,7 @@ public class QuestionListEdition extends VBox {
   }
   
   public void updateInModel(final QuestionItemEdition item) {
-    PresenterQuestionZone _presenterQuestionZone = this.controller.getEditor().getPresenter().getPresenterQuestionZone();
+    PresenterQuestionZone _presenterQuestionZone = this.controller.getPresenter().getPresenterQuestionZone();
     int _questionId = item.getQuestionId();
     double _x = item.getZone().getX();
     double _maxX = this.controller.getMaxX();
@@ -160,7 +160,7 @@ public class QuestionListEdition extends VBox {
     double _maxY = this.controller.getMaxY();
     double _divide_1 = (_y / _maxY);
     _presenterQuestionZone.moveQuestion(_questionId, _divide, _divide_1);
-    PresenterQuestionZone _presenterQuestionZone_1 = this.controller.getEditor().getPresenter().getPresenterQuestionZone();
+    PresenterQuestionZone _presenterQuestionZone_1 = this.controller.getPresenter().getPresenterQuestionZone();
     int _questionId_1 = item.getQuestionId();
     double _height = item.getZone().getHeight();
     double _maxY_1 = this.controller.getMaxY();
@@ -169,11 +169,11 @@ public class QuestionListEdition extends VBox {
     double _maxX_1 = this.controller.getMaxX();
     double _divide_3 = (_width / _maxX_1);
     _presenterQuestionZone_1.resizeQuestion(_questionId_1, _divide_2, _divide_3);
-    this.controller.getEditor().getPresenter().getPresenterQuestionZone().renameQuestion(item.getQuestionId(), item.getName());
-    this.controller.getEditor().getPresenter().getPresenterQuestionZone().changeQuestionWorth(item.getQuestionId(), item.getScale());
+    this.controller.getPresenter().getPresenterQuestionZone().renameQuestion(item.getQuestionId(), item.getName());
+    this.controller.getPresenter().getPresenterQuestionZone().changeQuestionWorth(item.getQuestionId(), item.getScale());
   }
   
   public void removeFromModel(final QuestionItemEdition item) {
-    this.controller.getEditor().getPresenter().getPresenterQuestionZone().removeQuestion(item.getQuestionId());
+    this.controller.getPresenter().getPresenterQuestionZone().removeQuestion(item.getQuestionId());
   }
 }

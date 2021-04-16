@@ -2,10 +2,8 @@ package fr.istic.tools.scanexam.view.fx.editor;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.launcher.LauncherFX;
+import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import fr.istic.tools.scanexam.presenter.PresenterPdf;
-import fr.istic.tools.scanexam.view.AdapterEdition;
-import fr.istic.tools.scanexam.view.fx.AdapterFxEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
 import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
@@ -61,14 +59,15 @@ public class ControllerFxEdition {
     RESIZE_TOOL;
   }
   
-  private AdapterFxEdition editor;
+  @Accessors
+  private PresenterEdition presenter;
   
-  public void setAdapterFxEdition(final AdapterFxEdition editor) {
-    this.editor = editor;
+  public void setPresenter(final PresenterEdition presenter) {
+    this.presenter = presenter;
   }
   
-  public AdapterFxEdition getEditor() {
-    return this.editor;
+  public Object getEditor() {
+    return this.getEditor();
   }
   
   private double maxX;
@@ -182,7 +181,6 @@ public class ControllerFxEdition {
   
   @FXML
   public void switchToCorrectorPressed() {
-    LauncherFX.swapToGraduator();
   }
   
   @FXML
@@ -240,10 +238,6 @@ public class ControllerFxEdition {
     this.previousPageButton.disableProperty().bind(this.loadedModel.not());
     this.createBoxButton.disableProperty().bind(this.loadedModel.not());
     this.pageChoice.disableProperty().bind(this.loadedModel.not());
-  }
-  
-  public AdapterEdition getAdapter() {
-    return this.editor;
   }
   
   public void chooseMouseAction(final MouseEvent e) {
@@ -637,7 +631,7 @@ public class ControllerFxEdition {
         boolean _xblockexpression_1 = false;
         {
           this.clearVue();
-          this.editor.getPresenter().getPresenterPdf().create("", file);
+          this.presenter.getPresenterPdf().create("", file);
           this.renderDocument();
           _xblockexpression_1 = this.postLoad();
         }
@@ -668,7 +662,7 @@ public class ControllerFxEdition {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.editor.getPresenter().save(file);
+      this.presenter.save(file);
     } else {
       this.logger.warn("File not chosen");
     }
@@ -697,7 +691,7 @@ public class ControllerFxEdition {
       if ((file != null)) {
         boolean _xblockexpression_1 = false;
         {
-          this.editor.getPresenter().load(file.getPath());
+          this.presenter.load(file.getPath());
           _xblockexpression_1 = this.render();
         }
         _xifexpression = _xblockexpression_1;
@@ -724,27 +718,27 @@ public class ControllerFxEdition {
    * called to load each question from the model into the vue
    */
   public void loadBoxes() {
-    for (int p = 0; (p < this.editor.getPresenter().getPresenterPdf().getPdfPageCount()); p++) {
+    for (int p = 0; (p < this.presenter.getPresenterPdf().getPdfPageCount()); p++) {
       {
-        LinkedList<Integer> ids = this.editor.getPresenter().getPresenterQuestionZone().initLoading(p);
+        LinkedList<Integer> ids = this.presenter.getPresenterQuestionZone().initLoading(p);
         for (final int i : ids) {
           {
-            double _questionX = this.editor.getPresenter().getPresenterQuestionZone().questionX(i);
+            double _questionX = this.presenter.getPresenterQuestionZone().questionX(i);
             double _multiply = (_questionX * this.maxX);
-            double _questionY = this.editor.getPresenter().getPresenterQuestionZone().questionY(i);
+            double _questionY = this.presenter.getPresenterQuestionZone().questionY(i);
             double _multiply_1 = (_questionY * this.maxY);
-            double _questionWidth = this.editor.getPresenter().getPresenterQuestionZone().questionWidth(i);
+            double _questionWidth = this.presenter.getPresenterQuestionZone().questionWidth(i);
             double _multiply_2 = (_questionWidth * this.maxX);
-            double _questionHeight = this.editor.getPresenter().getPresenterQuestionZone().questionHeight(i);
+            double _questionHeight = this.presenter.getPresenterQuestionZone().questionHeight(i);
             double _multiply_3 = (_questionHeight * this.maxY);
             Box box = new Box(_multiply, _multiply_1, _multiply_2, _multiply_3);
             this.mainPane.addZone(box);
-            this.questionList.loadQuestion(box, this.editor.getPresenter().getPresenterQuestionZone().questionName(i), p, i, this.editor.getPresenter().getPresenterQuestionZone().questionWorth(i));
+            this.questionList.loadQuestion(box, this.presenter.getPresenterQuestionZone().questionName(i), p, i, this.presenter.getPresenterQuestionZone().questionWorth(i));
           }
         }
       }
     }
-    this.questionList.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
   }
   
   public boolean postLoad() {
@@ -762,7 +756,7 @@ public class ControllerFxEdition {
    */
   public void initPageSelection() {
     this.pageChoice.getItems().clear();
-    PresenterPdf pdfPresenter = this.editor.getPresenter().getPresenterPdf();
+    PresenterPdf pdfPresenter = this.presenter.getPresenterPdf();
     for (int i = 1; (i <= pdfPresenter.getPdfPageCount()); i++) {
       boolean _contains = this.pageChoice.getItems().contains(Integer.valueOf(i));
       boolean _not = (!_contains);
@@ -777,19 +771,19 @@ public class ControllerFxEdition {
    */
   public void renderDocument() {
     this.initPageSelection();
-    final BufferedImage image = this.editor.getPresenter().getPresenterPdf().getCurrentPdfPage();
+    final BufferedImage image = this.presenter.getPresenterPdf().getCurrentPdfPage();
     this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.maxX = this.mainPane.getImageViewWidth();
     this.maxY = this.mainPane.getImageViewHeight();
     String _translate = LanguageManager.translate("label.page");
-    int _currentPdfPageNumber = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber = this.presenter.getPresenterPdf().currentPdfPageNumber();
     int _plus = (_currentPdfPageNumber + 1);
     String _plus_1 = (_translate + Integer.valueOf(_plus));
     String _plus_2 = (_plus_1 + " / ");
-    int _pdfPageCount = this.editor.getPresenter().getPresenterPdf().getPdfPageCount();
+    int _pdfPageCount = this.presenter.getPresenterPdf().getPdfPageCount();
     String _plus_3 = (_plus_2 + Integer.valueOf(_pdfPageCount));
     this.pageNumberLabel.setText(_plus_3);
-    int _currentPdfPageNumber_1 = this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber_1 = this.presenter.getPresenterPdf().currentPdfPageNumber();
     int _plus_4 = (_currentPdfPageNumber_1 + 1);
     this.pageChoice.setValue(Integer.valueOf(_plus_4));
   }
@@ -798,24 +792,24 @@ public class ControllerFxEdition {
    * changes the selected page to load and then renders it
    */
   public void selectPage(final int pageNumber) {
-    this.editor.getPresenter().getPresenterPdf().goToPdfPage(pageNumber);
+    this.presenter.getPresenterPdf().goToPdfPage(pageNumber);
     this.renderDocument();
-    this.questionList.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
   }
   
   /**
    * goes to the next page of the current pdf
    */
   public void nextPage() {
-    this.editor.getPresenter().getPresenterPdf().nextPdfPage();
+    this.presenter.getPresenterPdf().nextPdfPage();
     this.renderDocument();
-    this.questionList.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
   }
   
   public void previousPage() {
-    this.editor.getPresenter().getPresenterPdf().previousPdfPage();
+    this.presenter.getPresenterPdf().previousPdfPage();
     this.renderDocument();
-    this.questionList.showOnlyPage(this.editor.getPresenter().getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
   }
   
   public double getMaxY() {
@@ -830,6 +824,11 @@ public class ControllerFxEdition {
     this.mainPane.clear();
     this.questionList.clear();
     this.questionEditor.hideAll();
+  }
+  
+  @Pure
+  public PresenterEdition getPresenter() {
+    return this.presenter;
   }
   
   @Pure

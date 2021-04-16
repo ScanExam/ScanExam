@@ -2,6 +2,9 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.editor.HTMLView;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.io.InputStream;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -284,14 +287,14 @@ public class Grader extends VBox {
       float _worth = qItem.getWorth();
       String _plus = (Float.valueOf(_worth) + "");
       this.maxPoints.setText(_plus);
-      List<Integer> ids = this.controller.getAdapterCorrection().getPresenter().getEntryIds(qItem.getQuestionId());
-      List<Integer> sids = this.controller.getAdapterCorrection().getPresenter().getSelectedEntryIds(qItem.getQuestionId());
+      List<Integer> ids = this.controller.getPresenter().getEntryIds(qItem.getQuestionId());
+      List<Integer> sids = this.controller.getPresenter().getSelectedEntryIds(qItem.getQuestionId());
       for (final Integer i : ids) {
         {
           Grader.GradeItem g = new Grader.GradeItem(this);
           g.setItemId((i).intValue());
-          g.setText(this.controller.getAdapterCorrection().getPresenter().getEntryText((i).intValue(), qItem.getQuestionId()));
-          g.setWorth(this.controller.getAdapterCorrection().getPresenter().getEntryWorth((i).intValue(), qItem.getQuestionId()));
+          g.setText(this.controller.getPresenter().getEntryText((i).intValue(), qItem.getQuestionId()));
+          g.setWorth(this.controller.getPresenter().getEntryWorth((i).intValue(), qItem.getQuestionId()));
           this.itemContainer.getChildren().add(g);
           boolean _contains = sids.contains(i);
           if (_contains) {
@@ -338,17 +341,17 @@ public class Grader extends VBox {
   }
   
   public void addEntryToModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    item.setItemId(this.controller.getAdapterCorrection().getPresenter().addEntry(qItem.getQuestionId(), item.getText(), 
+    item.setItemId(this.controller.getPresenter().addEntry(qItem.getQuestionId(), item.getText(), 
       Float.parseFloat(item.getWorth())));
   }
   
   public void updateEntryInModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    this.controller.getAdapterCorrection().getPresenter().modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), 
+    this.controller.getPresenter().modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), 
       Float.parseFloat(item.getWorth()));
   }
   
   public boolean removeEntryFromModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    return this.controller.getAdapterCorrection().getPresenter().removeEntry(qItem.getQuestionId(), item.id);
+    return this.controller.getPresenter().removeEntry(qItem.getQuestionId(), item.id);
   }
   
   public boolean addPoints(final Grader.GradeItem item) {
@@ -363,7 +366,7 @@ public class Grader extends VBox {
       String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
       Grader.logger.info(_plus_4);
       this.addPointsOf(item);
-      _xblockexpression = this.controller.getAdapterCorrection().getPresenter().applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+      _xblockexpression = this.controller.getPresenter().applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
     }
     return _xblockexpression;
   }
@@ -380,7 +383,7 @@ public class Grader extends VBox {
       String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
       Grader.logger.log(Level.INFO, _plus_4);
       this.removePointsOf(item);
-      _xblockexpression = this.controller.getAdapterCorrection().getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+      _xblockexpression = this.controller.getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
     }
     return _xblockexpression;
   }

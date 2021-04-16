@@ -1,11 +1,12 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.launcher.LauncherFX
-import fr.istic.tools.scanexam.view.AdapterEdition
-import fr.istic.tools.scanexam.view.fx.AdapterFxEdition
+import fr.istic.tools.scanexam.presenter.PresenterEdition
 import fr.istic.tools.scanexam.view.fx.FxSettings
 import java.io.File
 import java.util.Arrays
+import javafx.beans.property.BooleanProperty
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.embed.swing.SwingFXUtils
 import javafx.fxml.FXML
 import javafx.scene.Cursor
@@ -22,19 +23,17 @@ import javafx.scene.layout.AnchorPane
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
-import javafx.beans.property.SimpleBooleanProperty
-import javafx.beans.property.BooleanProperty
-import org.eclipse.xtend.lib.annotations.Accessors
 
 class ControllerFxEdition {
 
 	
-	AdapterFxEdition editor;
+	@Accessors PresenterEdition presenter;
 
-	def void setAdapterFxEdition(AdapterFxEdition editor) {
-		this.editor = editor
+	def void setPresenter(PresenterEdition presenter) {
+		this.presenter = presenter
 	}
 	
 	def getEditor(){
@@ -161,7 +160,7 @@ class ControllerFxEdition {
 
 	@FXML
 	def void switchToCorrectorPressed() {
-		LauncherFX.swapToGraduator
+	 	// FIXME
 	}
 
 	@FXML
@@ -203,6 +202,8 @@ class ControllerFxEdition {
 	
 	def void init(){
 		
+		
+	
 		mainPane = new PdfPane(this);
 		mainPaneContainer.children.add(mainPane)
 		
@@ -228,10 +229,7 @@ class ControllerFxEdition {
 		pageChoice.disableProperty.bind(loadedModel.not)
 	}
 	
-	//FIXME Pas terrible de mettre cela en public mais ControllerRoot n'a accès a aucun Presenter
-	def AdapterEdition getAdapter() {
-		return editor
-	}
+
 
 
 	def void chooseMouseAction(MouseEvent e) {
@@ -531,7 +529,7 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			clearVue
-			editor.presenter.getPresenterPdf.create("", file);
+			presenter.getPresenterPdf.create("", file);
 			renderDocument();
 			postLoad
 		} else {
@@ -551,7 +549,7 @@ class ControllerFxEdition {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			editor.presenter.save(file);
+			presenter.save(file);
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -569,7 +567,7 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			
-			editor.presenter.load(file.path);
+			presenter.load(file.path);
 			render();
 			
 		} else {
@@ -590,22 +588,22 @@ class ControllerFxEdition {
 	 */
 	def loadBoxes() {
 		
-		for (var p = 0;p < editor.presenter.getPresenterPdf.getPdfPageCount;p++) {
-			var ids = editor.presenter.presenterQuestionZone.initLoading(p)
+		for (var p = 0;p < presenter.getPresenterPdf.getPdfPageCount;p++) {
+			var ids = presenter.presenterQuestionZone.initLoading(p)
 			for (int i:ids) {
 				
 				var box = new Box(
-					editor.presenter.presenterQuestionZone.questionX(i) * maxX,
-					editor.presenter.presenterQuestionZone.questionY(i) * maxY,
-					editor.presenter.presenterQuestionZone.questionWidth(i) * maxX,
-					editor.presenter.presenterQuestionZone.questionHeight(i) * maxY		
+					presenter.presenterQuestionZone.questionX(i) * maxX,
+					presenter.presenterQuestionZone.questionY(i) * maxY,
+					presenter.presenterQuestionZone.questionWidth(i) * maxX,
+					presenter.presenterQuestionZone.questionHeight(i) * maxY		
 				)
 				mainPane.addZone(box);
-				questionList.loadQuestion(box,editor.presenter.presenterQuestionZone.questionName(i),p,i,editor.presenter.presenterQuestionZone.questionWorth(i))
+				questionList.loadQuestion(box,presenter.presenterQuestionZone.questionName(i),p,i,presenter.presenterQuestionZone.questionWorth(i))
 			}
 		}
 		
-		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 	
 	def postLoad(){
@@ -619,7 +617,7 @@ class ControllerFxEdition {
 	 */
 	def initPageSelection() {
 		pageChoice.items.clear
-		var pdfPresenter = editor.presenter.getPresenterPdf()
+		var pdfPresenter = presenter.getPresenterPdf()
 		for (var i = 1; i<=pdfPresenter.getPdfPageCount(); i++) {
 			//println(i)
 			if (!pageChoice.items.contains(i)) {
@@ -635,37 +633,37 @@ class ControllerFxEdition {
 		//Initialise le selecteur de page (pageChoice)
 		initPageSelection
 		
-		val image = editor.presenter.getPresenterPdf.currentPdfPage
+		val image = presenter.getPresenterPdf.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
 		
-		pageNumberLabel.text = translate("label.page") + (editor.presenter.getPresenterPdf.currentPdfPageNumber + 1) + " / " + editor.presenter.getPresenterPdf.getPdfPageCount
-		pageChoice.value = editor.presenter.getPresenterPdf.currentPdfPageNumber + 1
+		pageNumberLabel.text = translate("label.page") + (presenter.getPresenterPdf.currentPdfPageNumber + 1) + " / " + presenter.getPresenterPdf.getPdfPageCount
+		pageChoice.value = presenter.getPresenterPdf.currentPdfPageNumber + 1
 	}
 
 	/**
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		editor.presenter.getPresenterPdf.goToPdfPage(pageNumber);
+		presenter.getPresenterPdf.goToPdfPage(pageNumber);
 		renderDocument
-		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 
 	/**
 	 * goes to the next page of the current pdf
 	 */
 	def nextPage() {
-		editor.presenter.getPresenterPdf.nextPdfPage();
+		presenter.getPresenterPdf.nextPdfPage();
 		renderDocument
-		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 
 	def previousPage() {
-		editor.presenter.getPresenterPdf.previousPdfPage();
+		presenter.getPresenterPdf.previousPdfPage();
 		renderDocument
-		questionList.showOnlyPage(editor.presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
 	}
 	
 	def double getMaxY(){

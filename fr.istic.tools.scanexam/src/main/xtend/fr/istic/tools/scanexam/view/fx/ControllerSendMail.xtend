@@ -11,7 +11,7 @@ import javafx.stage.Stage
  * Classe pour envoyer les corrigés par mail en JavaFX
  * @author Julien Cochet
  */
-class AdapterFxSendMail {
+class ControllerSendMail {
 	
 	/* Controlleur de la configuration */
 	var PresenterSendMail presSendMail

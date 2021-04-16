@@ -5,10 +5,15 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.mailing.StudentDataManager;
+import fr.istic.tools.scanexam.presenter.Presenter;
+import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
+import fr.istic.tools.scanexam.presenter.PresenterImportExportXMI;
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
+import fr.istic.tools.scanexam.presenter.PresenterQuestion;
+import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.services.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
-import fr.istic.tools.scanexam.view.Adapter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Collection;
@@ -49,8 +54,6 @@ public class PresenterGraduation implements Presenter {
   
   private ServiceGraduation service;
   
-  private Adapter<PresenterGraduation> adapter;
-  
   private static final Logger logger = LogManager.getLogger();
   
   public PresenterGraduation(final ServiceGraduation service) {
@@ -66,12 +69,6 @@ public class PresenterGraduation implements Presenter {
     this.presQuestion = _presenterQuestion;
     PresenterStudentListLoader _presenterStudentListLoader = new PresenterStudentListLoader(service);
     this.studentListPresenter = _presenterStudentListLoader;
-  }
-  
-  public PresenterGraduation(final Adapter<PresenterGraduation> adapter, final ServiceGraduation service) {
-    this(service);
-    Objects.<Adapter<PresenterGraduation>>requireNonNull(adapter);
-    this.adapter = adapter;
   }
   
   /**

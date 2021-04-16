@@ -13,7 +13,7 @@ import javafx.stage.Window;
  * @author Julien Cochet
  */
 @SuppressWarnings("all")
-public class AdapterFxSendMail {
+public class ControllerSendMail {
   /**
    * Controlleur de la configuration
    */
@@ -40,7 +40,7 @@ public class AdapterFxSendMail {
   /**
    * Constructeur
    */
-  public AdapterFxSendMail() {
+  public ControllerSendMail() {
     PresenterSendMail _presenterSendMail = new PresenterSendMail();
     this.presSendMail = _presenterSendMail;
   }

@@ -1,17 +1,22 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
+import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.launcher.LauncherFX;
-import fr.istic.tools.scanexam.view.AdapterGraduation;
-import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation;
+import fr.istic.tools.scanexam.presenter.PresenterGraduation;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.graduation.Grader;
+import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -61,23 +66,8 @@ public class ControllerFxGraduation {
   /**
    * High level Controllers to access the Presenters
    */
-  private AdapterFxGraduation corrector;
-  
-  /**
-   * setter for the ControllerVueCorrection attribute
-   * @param {@link ControllerVueCorrection} controller instance of ControllerVueCorrection (not null)
-   */
-  public void setAdapterCorrection(final AdapterFxGraduation adapterCor) {
-    Objects.<AdapterFxGraduation>requireNonNull(adapterCor);
-    this.corrector = adapterCor;
-  }
-  
-  /**
-   * @return current {@link ControllerVueCorrection}
-   */
-  public AdapterFxGraduation getAdapterCorrection() {
-    return this.corrector;
-  }
+  @Accessors
+  private PresenterGraduation presenter;
   
   @Accessors
   private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a template loaded", false);
@@ -208,7 +198,7 @@ public class ControllerFxGraduation {
   @FXML
   public void exportPressed() {
     InputOutput.<String>println("Export method");
-    this.getAdapterCorrection().getPresenter().exportGrades();
+    this.presenter.exportGrades();
   }
   
   /**
@@ -261,16 +251,11 @@ public class ControllerFxGraduation {
   
   @FXML
   public void swapToEditorPressed() {
-    LauncherFX.swapToEditor();
   }
   
   @FXML
   public void mainMouseEvent(final MouseEvent e) {
     this.chooseMouseAction(e);
-  }
-  
-  public AdapterGraduation getAdapter() {
-    return this.corrector;
   }
   
   private ControllerFxGraduation.SelectedTool currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
@@ -293,7 +278,7 @@ public class ControllerFxGraduation {
   
   public void chooseMouseAction(final MouseEvent e) {
     MouseButton _button = e.getButton();
-    boolean _equals = com.google.common.base.Objects.equal(_button, MouseButton.SECONDARY);
+    boolean _equals = Objects.equal(_button, MouseButton.SECONDARY);
     if (_equals) {
       this.moveImage(e);
       return;
@@ -328,7 +313,7 @@ public class ControllerFxGraduation {
    */
   public void dragBottom(final MouseEvent event) {
     EventType<? extends MouseEvent> _eventType = event.getEventType();
-    boolean _equals = com.google.common.base.Objects.equal(_eventType, MouseEvent.MOUSE_DRAGGED);
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_DRAGGED);
     if (_equals) {
       double _height = this.bottomPane.getScene().getHeight();
       double _minus = (_height - 100);
@@ -351,7 +336,7 @@ public class ControllerFxGraduation {
   
   public void moveImage(final MouseEvent e) {
     EventType<? extends MouseEvent> _eventType = e.getEventType();
-    boolean _equals = com.google.common.base.Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
     if (_equals) {
       this.mouseOriginX = e.getScreenX();
       this.mouseOriginY = e.getScreenY();
@@ -361,7 +346,7 @@ public class ControllerFxGraduation {
       this.objectOriginY = source.getLayoutY();
     }
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
-    boolean _equals_1 = com.google.common.base.Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
+    boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
     if (_equals_1) {
       Object _source_1 = e.getSource();
       Node source_1 = ((Node) _source_1);
@@ -451,24 +436,24 @@ public class ControllerFxGraduation {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
       KeyCode _code = event.getCode();
       boolean _matched = false;
-      if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
+      if (Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
         _matched=true;
         this.nextQuestionPressed();
       }
       if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+        if (Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
           _matched=true;
           this.prevQuestionPressed();
         }
       }
       if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
+        if (Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
           _matched=true;
           this.prevStudentPressed();
         }
       }
       if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
+        if (Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
           _matched=true;
           this.nextStudentPressed();
         }
@@ -486,24 +471,24 @@ public class ControllerFxGraduation {
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
       KeyCode _code = event.getCode();
       boolean _matched = false;
-      if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
+      if (Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
         _matched=true;
         this.nextQuestionPressed();
       }
       if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+        if (Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
           _matched=true;
           this.prevQuestionPressed();
         }
       }
       if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
+        if (Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
           _matched=true;
           this.prevStudentPressed();
         }
       }
       if (!_matched) {
-        if (com.google.common.base.Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
+        if (Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
           _matched=true;
           this.nextStudentPressed();
         }
@@ -541,7 +526,7 @@ public class ControllerFxGraduation {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.getAdapter().getPresenter().saveTemplate(file.getPath());
+      this.presenter.saveTemplate(file.getPath());
       ControllerFxGraduation.logger.info("Saving correction file");
     } else {
       ControllerFxGraduation.logger.warn("File not chosen");
@@ -579,28 +564,28 @@ public class ControllerFxGraduation {
   public void loadQuestions() {
     ControllerFxGraduation.logger.info("Loading Questions");
     int currentQuestionId = 0;
-    for (int p = 0; (p < this.corrector.getPresenter().getPageAmount()); p++) {
+    for (int p = 0; (p < this.presenter.getPageAmount()); p++) {
       {
-        LinkedList<Integer> ids = this.corrector.getPresenter().initLoading(p);
+        LinkedList<Integer> ids = this.presenter.initLoading(p);
         for (final int i : ids) {
           {
             QuestionItemGraduation question = new QuestionItemGraduation();
-            double _questionX = this.corrector.getPresenter().questionX(i);
+            double _questionX = this.presenter.questionX(i);
             double _multiply = (_questionX * this.imageWidth);
             question.setX(_multiply);
-            double _questionY = this.corrector.getPresenter().questionY(i);
+            double _questionY = this.presenter.questionY(i);
             double _multiply_1 = (_questionY * this.imageHeight);
             question.setY(_multiply_1);
-            double _questionHeight = this.corrector.getPresenter().questionHeight(i);
+            double _questionHeight = this.presenter.questionHeight(i);
             double _multiply_2 = (_questionHeight * this.imageHeight);
             question.setH(_multiply_2);
-            double _questionWidth = this.corrector.getPresenter().questionWidth(i);
+            double _questionWidth = this.presenter.questionWidth(i);
             double _multiply_3 = (_questionWidth * this.imageWidth);
             question.setW(_multiply_3);
             question.setPage(p);
             question.setQuestionId(i);
-            question.setName(this.corrector.getPresenter().questionName(i));
-            question.setWorth(Float.valueOf(this.corrector.getPresenter().questionWorth(i)));
+            question.setName(this.presenter.questionName(i));
+            question.setWorth(Float.valueOf(this.presenter.questionWorth(i)));
             this.questionList.addItem(question);
           }
         }
@@ -611,7 +596,7 @@ public class ControllerFxGraduation {
   public void loadStudents() {
     ControllerFxGraduation.logger.info("Loading Students");
     int currentStudentId = 0;
-    LinkedList<Integer> ids = this.corrector.getPresenter().getStudentIds();
+    LinkedList<Integer> ids = this.presenter.getStudentIds();
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
@@ -670,7 +655,7 @@ public class ControllerFxGraduation {
   }
   
   public void renderStudentCopy() {
-    BufferedImage image = this.corrector.getPresenter().getPresenterPdf().getCurrentPdfPage();
+    BufferedImage image = this.presenter.getPresenterPdf().getCurrentPdfPage();
     this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.imageWidth = image.getWidth();
     this.imageHeight = image.getHeight();
@@ -681,13 +666,13 @@ public class ControllerFxGraduation {
   
   public void nextStudent() {
     this.studentList.selectNextItem();
-    this.getAdapterCorrection().getPresenter().getPresenterQuestion().nextStudent();
+    this.presenter.getPresenterQuestion().nextStudent();
     this.setSelectedStudent();
   }
   
   public void previousStudent() {
     this.studentList.selectPreviousItem();
-    this.getAdapterCorrection().getPresenter().getPresenterQuestion().previousStudent();
+    this.presenter.getPresenterQuestion().previousStudent();
     this.setSelectedStudent();
   }
   
@@ -710,19 +695,19 @@ public class ControllerFxGraduation {
   
   public void nextQuestion() {
     this.questionList.selectNextItem();
-    this.getAdapterCorrection().getPresenter().getPresenterQuestion().nextQuestion();
+    this.presenter.getPresenterQuestion().nextQuestion();
     this.setSelectedQuestion();
   }
   
   public void previousQuestion() {
     this.questionList.selectPreviousItem();
-    this.getAdapterCorrection().getPresenter().getPresenterQuestion().previousQuestion();
+    this.presenter.getPresenterQuestion().previousQuestion();
     this.setSelectedQuestion();
   }
   
   public void selectQuestion(final QuestionItemGraduation item) {
     this.questionList.selectItem(item);
-    this.getAdapterCorrection().getPresenter().getPresenterQuestion().selectQuestion(item.getQuestionId());
+    this.presenter.getPresenterQuestion().selectQuestion(item.getQuestionId());
     this.setSelectedQuestion();
   }
   
@@ -756,12 +741,12 @@ public class ControllerFxGraduation {
   
   public void display() {
     if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
-      int i = this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
-      boolean _atCorrectPage = this.corrector.getPresenter().getPresenterPdf().atCorrectPage(i);
+      int i = this.presenter.getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
+      boolean _atCorrectPage = this.presenter.getPresenterPdf().atCorrectPage(i);
       boolean _not = (!_atCorrectPage);
       if (_not) {
         ControllerFxGraduation.logger.info("Changing page");
-        this.selectPage(this.corrector.getPresenter().getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
+        this.selectPage(this.presenter.getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
       }
     } else {
       ControllerFxGraduation.logger.warn("Cannot find correct page, student list or question is is empty");
@@ -791,17 +776,17 @@ public class ControllerFxGraduation {
   }
   
   public void nextPage() {
-    this.corrector.getPresenter().getPresenterPdf().nextPdfPage();
+    this.presenter.getPresenterPdf().nextPdfPage();
     this.renderStudentCopy();
   }
   
   public void previousPage() {
-    this.corrector.getPresenter().getPresenterPdf().previousPdfPage();
+    this.presenter.getPresenterPdf().previousPdfPage();
     this.renderStudentCopy();
   }
   
   public void selectPage(final int pageNumber) {
-    this.corrector.getPresenter().getPresenterPdf().goToPdfPage(pageNumber);
+    this.presenter.getPresenterPdf().goToPdfPage(pageNumber);
     this.renderStudentCopy();
   }
   
@@ -811,12 +796,21 @@ public class ControllerFxGraduation {
   public void updateGlobalGrade() {
     String _translate = LanguageManager.translate("label.grade");
     String _plus = (_translate + " ");
-    float _globalGrade = this.getAdapter().getPresenter().getGlobalGrade();
+    float _globalGrade = this.presenter.getGlobalGrade();
     String _plus_1 = (_plus + Float.valueOf(_globalGrade));
     String _plus_2 = (_plus_1 + "/");
-    float _globalScale = this.getAdapter().getPresenter().getGlobalScale();
+    float _globalScale = this.presenter.getGlobalScale();
     String _plus_3 = (_plus_2 + Float.valueOf(_globalScale));
     this.gradeLabel.setText(_plus_3);
+  }
+  
+  @Pure
+  public PresenterGraduation getPresenter() {
+    return this.presenter;
+  }
+  
+  public void setPresenter(final PresenterGraduation presenter) {
+    this.presenter = presenter;
   }
   
   @Pure

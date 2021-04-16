@@ -2,10 +2,7 @@ package fr.istic.tools.scanexam.launcher
 
 import com.sun.javafx.css.StyleManager
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.presenter.PresenterBindings
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fx.AdapterFxEdition
-import fr.istic.tools.scanexam.view.fx.AdapterFxGraduation
 import fr.istic.tools.scanexam.view.fx.ControllerRoot
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
@@ -14,6 +11,10 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import fr.istic.tools.scanexam.services.ServiceEdition
+import fr.istic.tools.scanexam.services.ServiceGraduation
+import fr.istic.tools.scanexam.presenter.PresenterGraduation
+import fr.istic.tools.scanexam.presenter.PresenterEdition
 
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
@@ -21,11 +22,20 @@ import javafx.stage.Stage
  */
 class LauncherFX extends Application implements Launcher {
 
+
+	static ServiceEdition serviceEdition
+	
+	static ServiceGraduation serviceGraduation
+	
 	/** 
 	 * Lancement de l'application FX
 	 */
-	def static void launchApp(String[] args) {
-		launch(args);
+	def static void launchApp(ServiceEdition serviceEdition,ServiceGraduation serviceGraduation) {
+		
+		LauncherFX.serviceEdition = serviceEdition
+		LauncherFX.serviceGraduation = serviceGraduation
+		
+		launch(null);
 	}
 	
 	
@@ -51,11 +61,7 @@ class LauncherFX extends Application implements Launcher {
 			val controllerGraduator = (graduatorLoader.controller as ControllerFxGraduation);
 			var controllerRoot = (rootLoader.controller as ControllerRoot);
 		
-			controllerEditor.adapterFxEdition = edit;
-			edit.controllerFXCreator =  controllerEditor;
 			
-			controllerGraduator.adapterCorrection = grad;
-			grad.controller =  controllerGraduator;
 			
 			controllerRoot.corrector = graduatorRoot
 			controllerRoot.editor = editorRoot
@@ -67,9 +73,12 @@ class LauncherFX extends Application implements Launcher {
 			//rootScene.stylesheets.add("viewResources/MyStyle.css")
 			
 			
-			
+			controllerGraduator.presenter = new PresenterGraduation(serviceGraduation)
 			controllerGraduator.init
+			
+			controllerEditor.presenter = new PresenterEdition(serviceEdition)
 			controllerEditor.init
+			
 			controllerRoot.correctorController = controllerGraduator
 			controllerRoot.editorController = controllerEditor
 			controllerRoot.init
@@ -81,23 +90,11 @@ class LauncherFX extends Application implements Launcher {
 			primaryStage.show();
 	}
 	
-	static AdapterFxEdition edit; 
-	static AdapterFxGraduation grad;
-	
 	override launch() {
-		edit = new AdapterFxEdition();
-		grad = new AdapterFxGraduation();
-		PresenterBindings.linkEditorPresenter(edit);
-		PresenterBindings.linkGraduationPresenter(grad);
-		launchApp(null);
-	}
-	
-	static def swapToEditor(){
 		
 	}
+
 	
-	static def swapToGraduator(){
 	
-	}
 }
 

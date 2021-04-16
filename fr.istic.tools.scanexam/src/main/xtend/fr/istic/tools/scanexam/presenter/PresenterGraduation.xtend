@@ -7,7 +7,6 @@ import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import fr.istic.tools.scanexam.services.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
-import fr.istic.tools.scanexam.view.Adapter
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.LinkedList
@@ -36,8 +35,7 @@ class PresenterGraduation implements Presenter
 	
 	ServiceGraduation service;
 	
-	Adapter<PresenterGraduation> adapter;
-	
+
 	static val logger = LogManager.logger
 	
 	new(ServiceGraduation service)
@@ -55,24 +53,7 @@ class PresenterGraduation implements Presenter
 		
 	
 	}
-	new(Adapter<PresenterGraduation> adapter,ServiceGraduation service) 
-	{
-		this(service);
-		
-		Objects.requireNonNull(adapter)
-		this.adapter = adapter
-		
-		
-		
-		//Verification Switch Service
-		/*if(this.service.getExamInstance().equals(null)){
-			if(!EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance()).equals(null)){
-				this.service.setExamInstance(EditorGraduationSwitchVerification.loadExamInstance)
-			}
-		}else{
-			EditorGraduationSwitchVerification.saveExamInstance(this.service.getExamInstance())
-		}*/
-	}
+	
 	
 	
 	/**

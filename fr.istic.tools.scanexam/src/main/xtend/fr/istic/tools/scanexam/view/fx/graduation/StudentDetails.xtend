@@ -61,7 +61,7 @@ class StudentDetails extends VBox {
 	
 	def findSuggestions(String start){
 		println("Changing")
-		var l = controller.adapter.presenter.getStudentsSuggestedNames(start);
+		var l = controller.presenter.getStudentsSuggestedNames(start);
 		name.showSuggestion(l);
 	}
 	
