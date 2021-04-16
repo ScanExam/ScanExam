@@ -414,9 +414,6 @@ public class ControllerFxGraduation {
     StudentDetails _studentDetails = new StudentDetails(this);
     this.studentDetails = _studentDetails;
     this.studentDetailsContainer.getChildren().add(this.studentDetails);
-    this.binds(this.root);
-    this.binds(this.scrollMain);
-    this.binds(this.scrollBis);
     this.unLoaded();
     final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
       if ((newVal).booleanValue()) {
@@ -561,6 +558,10 @@ public class ControllerFxGraduation {
     return null;
   }
   
+  /**
+   * Charge les questions present dans le modele.
+   * La liste des etudiants est presente dans studentList, qui affiche tout les etudiants.
+   */
   public void loadQuestions() {
     ControllerFxGraduation.logger.info("Loading Questions");
     int currentQuestionId = 0;
@@ -593,6 +594,10 @@ public class ControllerFxGraduation {
     }
   }
   
+  /**
+   * Charge les etudiant present dans le modele.
+   * La liste des etudiants est presente dans studentList, qui affiche tout les etudiants.
+   */
   public void loadStudents() {
     ControllerFxGraduation.logger.info("Loading Students");
     int currentStudentId = 0;
@@ -686,8 +691,8 @@ public class ControllerFxGraduation {
     boolean _not = (!_noItems);
     if (_not) {
       this.focusStudent(this.studentList.getCurrentItem());
-      this.display();
-      this.displayGrader();
+      this.updateDisplayedPage();
+      this.updateDisplayedGrader();
     } else {
       ControllerFxGraduation.logger.warn("The student list is Empty");
     }
@@ -716,9 +721,9 @@ public class ControllerFxGraduation {
     boolean _not = (!_noItems);
     if (_not) {
       this.focusQuestion(this.questionList.getCurrentItem());
-      this.display();
-      this.displayQuestion();
-      this.displayGrader();
+      this.updateDisplayedPage();
+      this.updateDisplayedQuestion();
+      this.updateDisplayedGrader();
     } else {
       ControllerFxGraduation.logger.warn("The question list is Empty");
     }
@@ -733,13 +738,7 @@ public class ControllerFxGraduation {
     this.studentDetails.display(item);
   }
   
-  public void setZoomArea(final int x, final int y, final int height, final int width) {
-    if (this.autoZoom) {
-      this.mainPane.zoomTo(x, y, height, width);
-    }
-  }
-  
-  public void display() {
+  public void updateDisplayedPage() {
     if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
       int i = this.presenter.getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
       boolean _atCorrectPage = this.presenter.getPresenterPdf().atCorrectPage(i);
@@ -753,22 +752,24 @@ public class ControllerFxGraduation {
     }
   }
   
-  public void setZoomArea(final double x, final double y, final double width, final double height) {
-    this.mainPane.zoomTo(x, y, height, width);
-  }
-  
-  public void displayQuestion() {
+  public void updateDisplayedQuestion() {
     if (this.autoZoom) {
-      this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getW(), this.questionList.getCurrentItem().getH());
+      this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), this.questionList.getCurrentItem().getW());
     }
   }
   
-  public void displayGrader() {
+  public void updateDisplayedGrader() {
     if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
       this.grader.changeGrader(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
       this.updateGlobalGrade();
     } else {
       ControllerFxGraduation.logger.warn("Cannot load grader, student list or question is is empty");
+    }
+  }
+  
+  public void setZoomArea(final double x, final double y, final double height, final double width) {
+    if (this.autoZoom) {
+      this.mainPane.zoomTo(x, y, height, width);
     }
   }
   

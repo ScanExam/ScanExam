@@ -349,9 +349,7 @@ class ControllerFxGraduation {
 		
 		studentDetails = new StudentDetails(this);
 		studentDetailsContainer.children.add(studentDetails)
-		binds(root);
-		binds(scrollMain);
-		binds(scrollBis);
+		
 		
 		unLoaded();
 		
@@ -363,7 +361,7 @@ class ControllerFxGraduation {
 		nextStudentButton.disableProperty.bind(loadedModel.not)
 		
 	}
-	
+	//TODO FIX BINDS
 	def void binds(Node n) {
 		n.setOnKeyPressed([ event |
 			{
@@ -457,7 +455,11 @@ class ControllerFxGraduation {
 	def selectStudentWithId(int id){
 		
 	}
-	
+	/**
+	 * Charge les questions present dans le modele.
+	 * La liste des etudiants est presente dans studentList, qui affiche tout les etudiants.
+	 * 
+	 */
 	def void loadQuestions() {
 		logger.info("Loading Questions")
 		var currentQuestionId = 0;
@@ -478,6 +480,11 @@ class ControllerFxGraduation {
 		}
 	}
 	
+	/**
+	 * Charge les etudiant present dans le modele.
+	 * La liste des etudiants est presente dans studentList, qui affiche tout les etudiants.
+	 * 
+	 */
 	def void loadStudents(){
 		logger.info("Loading Students")
 		var currentStudentId = 0;
@@ -536,16 +543,10 @@ class ControllerFxGraduation {
 	
 	//---NAVIGATION---//
 	
-	def void renderStudentCopy(){		
-		var image = presenter.presenterPdf.currentPdfPage
-		mainPane.image = SwingFXUtils.toFXImage(image, null);
-		imageWidth = image.width
-		imageHeight = image.height
-	}
 	
-	def void renderCorrectedCopy(){
 		
 	}
+	
 	
 	def void nextStudent(){
 		studentList.selectNextItem
@@ -565,8 +566,8 @@ class ControllerFxGraduation {
 	def void setSelectedStudent(){
 		if (!studentList.noItems) {
 			focusStudent(studentList.currentItem)
-			display();
-			displayGrader();	
+			updateDisplayedPage();
+			updateDisplayedGrader();	
 		}else {
 			logger.warn("The student list is Empty")
 		}
@@ -591,9 +592,9 @@ class ControllerFxGraduation {
 	def void setSelectedQuestion(){
 		if (!questionList.noItems) {
 			focusQuestion(questionList.currentItem)
-			display();
-			displayQuestion();
-			displayGrader();
+			updateDisplayedPage();
+			updateDisplayedQuestion();
+			updateDisplayedGrader();
 		}else {
 			logger.warn("The question list is Empty")
 		}
@@ -610,17 +611,25 @@ class ControllerFxGraduation {
 		
 	}
 	
-	def void setZoomArea(int x, int y, int height, int width) {
-		if (autoZoom) 
-			mainPane.zoomTo(x,y,height,width)
-	}
+	
 	
 	//----------------//
 	
 	//---DISPLAYING---//
 	
-	//On veut afficher la bonne page, donc on verifie si on est sur la bonne page, si non, on change de page
-	def void display(){
+	def void renderStudentCopy(){		
+		var image = presenter.presenterPdf.currentPdfPage
+		mainPane.image = SwingFXUtils.toFXImage(image, null);
+		imageWidth = image.width
+		imageHeight = image.height
+	}
+	
+	def void renderCorrectedCopy(){
+	
+	/**
+	 * Checks if we need to change the page and changes it if we need to.
+	 */
+	def void updateDisplayedPage(){
 		if (!studentList.noItems && !questionList.noItems) {
 			var i = presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
 			if (!presenter.presenterPdf.atCorrectPage(i)){
@@ -632,16 +641,18 @@ class ControllerFxGraduation {
 		}
 	}
 
-	def void setZoomArea(double x, double y,double width ,double height) {
-		mainPane.zoomTo(x,y,height,width);
-	}
-
-	def void displayQuestion(){
+	/**
+	 * Changes the zoom to the current questions dimentions
+	 */
+	def void updateDisplayedQuestion(){
 		if (autoZoom) 
-			setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
+			setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.h,questionList.currentItem.w)
 	}
 	
-	def void displayGrader(){
+	/**
+	 * 
+	 */
+	def void updateDisplayedGrader(){
 		if (!studentList.noItems && !questionList.noItems) {
 			grader.changeGrader(questionList.currentItem,studentList.currentItem);
 			updateGlobalGrade
@@ -649,19 +660,18 @@ class ControllerFxGraduation {
 			logger.warn("Cannot load grader, student list or question is is empty")
 		}
 	}
+	/**
+	 * 
+	 */
+	def void setZoomArea(double x, double y, double height, double width) {
+		if (autoZoom) 
+			mainPane.zoomTo(x,y,height,width)
+	}
 
 	//----------------//
 
 	
-	
-	//---ACTIONS ON MODEL---//
-	
-	def void setGrade(int studentId,int questionId,float grade) {
-		
-	}
-	
-	
-	//----------------------//
+
 	
 	
 	//---PAGE OPERATIONS---//
