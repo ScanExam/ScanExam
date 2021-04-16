@@ -862,7 +862,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Pure
-  @Override
   public Collection<StudentSheet> getStudentSheets() {
     return this.studentSheets;
   }
@@ -872,7 +871,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Pure
-  @Override
   public int getQuestionId() {
     return this.questionId;
   }

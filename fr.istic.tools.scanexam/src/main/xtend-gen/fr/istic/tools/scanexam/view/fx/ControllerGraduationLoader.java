@@ -113,7 +113,7 @@ public class ControllerGraduationLoader {
         this.rbLoadModel.selectedProperty().and(this.txtFldFile.textProperty().isEmpty())));
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator(".xmi");
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
-    ValidFilePathValidator _validFilePathValidator_1 = new ValidFilePathValidator(".xmi");
+    ValidFilePathValidator _validFilePathValidator_1 = new ValidFilePathValidator(".pdf");
     this.txtFldFileGraduation.addFormatValidator(_validFilePathValidator_1);
     final EventHandler<MouseEvent> _function = (MouseEvent e) -> {
       boolean _isDisabled = this.btnOk.isDisabled();
@@ -127,7 +127,7 @@ public class ControllerGraduationLoader {
     };
     this.btnBrowse.setOnAction(_function_1);
     final EventHandler<ActionEvent> _function_2 = (ActionEvent e) -> {
-      this.loadFile("*.xmi", "file.format.xmi", this.txtFldFileGraduation);
+      this.loadFile("*.pdf", "file.format.pdf", this.txtFldFileGraduation);
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
     boolean _hasTemplateLoaded = this.presGraduationLoader.hasTemplateLoaded();

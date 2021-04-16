@@ -98,12 +98,12 @@ class ControllerGraduationLoader {
 
 		// Formattage des TextFields		
 		txtFldFile.addFormatValidator(new ValidFilePathValidator(".xmi"))
-		txtFldFileGraduation.addFormatValidator(new ValidFilePathValidator(".xmi"))
+		txtFldFileGraduation.addFormatValidator(new ValidFilePathValidator(".pdf"))
 		hoverPane.onMouseEntered = [e|btnOk.disabled ? shakeEmptyComponents()]
 
 		// Action sur les boutons de chargement de fichiers
 		btnBrowse.onAction = [e|loadFile("*.xmi", "file.format.xmi", txtFldFile)]
-		btnBrowseGraduation.onAction = [e|loadFile("*.xmi", "file.format.xmi", txtFldFileGraduation)]
+		btnBrowseGraduation.onAction = [e|loadFile("*.pdf", "file.format.pdf", txtFldFileGraduation)]
 
 		// Si aucun examen n'est chargé, désactiver le RadioButton "Utiliser le modèle chargé"
 		if (!presGraduationLoader.hasTemplateLoaded) {

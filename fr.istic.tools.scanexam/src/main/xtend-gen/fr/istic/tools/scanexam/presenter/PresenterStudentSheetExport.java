@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.presenter;
 
+import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;

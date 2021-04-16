@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.services.api;
 
 import fr.istic.tools.scanexam.core.QuestionZone;
+import fr.istic.tools.scanexam.services.api.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

@@ -2,6 +2,8 @@ package fr.istic.tools.scanexam.mailing;
 
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.config.Config;
+import fr.istic.tools.scanexam.mailing.GradesExportMail;
+import fr.istic.tools.scanexam.mailing.SendMailXtend;
 import fr.istic.tools.scanexam.services.ServiceImpl;
 import java.io.File;
 import java.util.Collection;
