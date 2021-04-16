@@ -29,6 +29,8 @@ import org.apache.logging.log4j.LogManager
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 	boolean isFinished
+	int nbTreated = 0
+	int numberPagesAllSheets
 	val logger = LogManager.logger
 	
 	/**
@@ -58,6 +60,8 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
             oS.close
             
             val PDDocument doc = PDDocument.load(temp)
+            
+            numberPagesAllSheets = nbCopie * doc.numberOfPages
             
             val int nbPages = doc.numberOfPages
 
@@ -210,6 +214,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 						true)) {
 
 			contentStream.drawImage(pdImage, 0, 0, pdImage.getWidth() * scale, pdImage.getHeight() * scale)
+			incrementTreated
 		}
 	}
 
@@ -219,6 +224,22 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 	def setFinished(boolean bool) {
 		this.isFinished = bool
+	}
+	
+	override getNbTreated(){
+		return nbTreated
+	}
+	
+	def incrementTreated(){
+		nbTreated = nbTreated + 1
+	}
+	
+	override getNumberPagesAllSheets(){
+		return numberPagesAllSheets
+	}
+	
+	def getPercentage(){
+		(getNbTreated * 100)/getNumberPagesAllSheets
 	}
 
 	def static void main(String[] arg) {
@@ -231,7 +252,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 		// FileUtils.readFileToByteArray(File input)
 		val File output = new File("D:/dataScanExam/out/melanie.pdf")
-		gen.createAllExamCopies(input2, output, "42PFO2021", 8)
+		gen.createAllExamCopies(input2, output, "42PFO2021", 100)
 
 	}
 

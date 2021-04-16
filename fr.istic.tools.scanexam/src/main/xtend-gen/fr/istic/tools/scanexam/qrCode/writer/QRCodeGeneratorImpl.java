@@ -38,6 +38,10 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 public class QRCodeGeneratorImpl implements QRCodeGenerator {
   private boolean isFinished;
   
+  private int nbTreated = 0;
+  
+  private int numberPagesAllSheets;
+  
   private final Logger logger = LogManager.getLogger();
   
   /**
@@ -60,6 +64,9 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       oS.write(byteArray);
       oS.close();
       final PDDocument doc = PDDocument.load(temp);
+      int _numberOfPages = doc.getNumberOfPages();
+      int _multiply = (nbCopie * _numberOfPages);
+      this.numberPagesAllSheets = _multiply;
       final int nbPages = doc.getNumberOfPages();
       final MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly();
       PDFMergerUtility ut = new PDFMergerUtility();
@@ -217,30 +224,41 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param numThread le nombre de threads à executer
    * @param nbPagesSuject le nombre de page du sujet maître
    */
-  public void insertQRCodeInPage(final String name, final int numPage, final PDDocument doc, final int numCopie, final int nbPagesSujet, final String pathImage) {
+  public int insertQRCodeInPage(final String name, final int numPage, final PDDocument doc, final int numCopie, final int nbPagesSujet, final String pathImage) {
     try {
-      final String stringAEncoder = ((((name + "_") + Integer.valueOf(numCopie)) + "_") + Integer.valueOf(numPage));
-      this.generateQRCodeImage(stringAEncoder, 350, 350, pathImage);
-      final PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc);
-      final float scale = 0.3f;
-      try (final PDPageContentStream contentStream = new Function0<PDPageContentStream>() {
-        @Override
-        public PDPageContentStream apply() {
-          try {
-            PDPage _page = doc.getPage((numPage + (numCopie * nbPagesSujet)));
-            return new PDPageContentStream(doc, _page, PDPageContentStream.AppendMode.APPEND, true, 
-              true);
-          } catch (Throwable _e) {
-            throw Exceptions.sneakyThrow(_e);
+      int _xblockexpression = (int) 0;
+      {
+        final String stringAEncoder = ((((name + "_") + Integer.valueOf(numCopie)) + "_") + Integer.valueOf(numPage));
+        this.generateQRCodeImage(stringAEncoder, 350, 350, pathImage);
+        final PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc);
+        final float scale = 0.3f;
+        int _xtrycatchfinallyexpression = (int) 0;
+        try (final PDPageContentStream contentStream = new Function0<PDPageContentStream>() {
+          @Override
+          public PDPageContentStream apply() {
+            try {
+              PDPage _page = doc.getPage((numPage + (numCopie * nbPagesSujet)));
+              return new PDPageContentStream(doc, _page, PDPageContentStream.AppendMode.APPEND, true, 
+                true);
+            } catch (Throwable _e) {
+              throw Exceptions.sneakyThrow(_e);
+            }
           }
+        }.apply()) {
+          int _xblockexpression_1 = (int) 0;
+          {
+            int _width = pdImage.getWidth();
+            float _multiply = (_width * scale);
+            int _height = pdImage.getHeight();
+            float _multiply_1 = (_height * scale);
+            contentStream.drawImage(pdImage, 0, 0, _multiply, _multiply_1);
+            _xblockexpression_1 = this.incrementTreated();
+          }
+          _xtrycatchfinallyexpression = _xblockexpression_1;
         }
-      }.apply()) {
-        int _width = pdImage.getWidth();
-        float _multiply = (_width * scale);
-        int _height = pdImage.getHeight();
-        float _multiply_1 = (_height * scale);
-        contentStream.drawImage(pdImage, 0, 0, _multiply, _multiply_1);
+        _xblockexpression = _xtrycatchfinallyexpression;
       }
+      return _xblockexpression;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -255,13 +273,34 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
     return this.isFinished = bool;
   }
   
+  @Override
+  public int getNbTreated() {
+    return this.nbTreated;
+  }
+  
+  public int incrementTreated() {
+    return this.nbTreated = (this.nbTreated + 1);
+  }
+  
+  @Override
+  public int getNumberPagesAllSheets() {
+    return this.numberPagesAllSheets;
+  }
+  
+  public int getPercentage() {
+    int _nbTreated = this.getNbTreated();
+    int _multiply = (_nbTreated * 100);
+    int _numberPagesAllSheets = this.getNumberPagesAllSheets();
+    return (_multiply / _numberPagesAllSheets);
+  }
+  
   public static void main(final String[] arg) {
     try {
       final QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl();
       byte[] _readAllBytes = Files.readAllBytes(Path.of("D:/dataScanExam/in/pfo_example.pdf"));
       final InputStream input2 = new ByteArrayInputStream(_readAllBytes);
       final File output = new File("D:/dataScanExam/out/melanie.pdf");
-      gen.createAllExamCopies(input2, output, "42PFO2021", 8);
+      gen.createAllExamCopies(input2, output, "42PFO2021", 100);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
