@@ -545,7 +545,6 @@ class ControllerFxGraduation {
 	
 	
 		
-	}
 	
 	
 	def void nextStudent(){
@@ -624,7 +623,7 @@ class ControllerFxGraduation {
 		imageHeight = image.height
 	}
 	
-	def void renderCorrectedCopy(){
+	def void renderCorrectedCopy(){}
 	
 	/**
 	 * Checks if we need to change the page and changes it if we need to.

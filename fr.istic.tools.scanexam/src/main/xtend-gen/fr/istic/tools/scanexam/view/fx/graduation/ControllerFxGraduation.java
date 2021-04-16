@@ -659,16 +659,6 @@ public class ControllerFxGraduation {
     return _xblockexpression;
   }
   
-  public void renderStudentCopy() {
-    BufferedImage image = this.presenter.getPresenterPdf().getCurrentPdfPage();
-    this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
-    this.imageWidth = image.getWidth();
-    this.imageHeight = image.getHeight();
-  }
-  
-  public void renderCorrectedCopy() {
-  }
-  
   public void nextStudent() {
     this.studentList.selectNextItem();
     this.presenter.getPresenterQuestion().nextStudent();
@@ -738,6 +728,19 @@ public class ControllerFxGraduation {
     this.studentDetails.display(item);
   }
   
+  public void renderStudentCopy() {
+    BufferedImage image = this.presenter.getPresenterPdf().getCurrentPdfPage();
+    this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
+    this.imageWidth = image.getWidth();
+    this.imageHeight = image.getHeight();
+  }
+  
+  public void renderCorrectedCopy() {
+  }
+  
+  /**
+   * Checks if we need to change the page and changes it if we need to.
+   */
   public void updateDisplayedPage() {
     if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
       int i = this.presenter.getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
@@ -752,6 +755,9 @@ public class ControllerFxGraduation {
     }
   }
   
+  /**
+   * Changes the zoom to the current questions dimentions
+   */
   public void updateDisplayedQuestion() {
     if (this.autoZoom) {
       this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), this.questionList.getCurrentItem().getW());
@@ -771,9 +777,6 @@ public class ControllerFxGraduation {
     if (this.autoZoom) {
       this.mainPane.zoomTo(x, y, height, width);
     }
-  }
-  
-  public void setGrade(final int studentId, final int questionId, final float grade) {
   }
   
   public void nextPage() {
