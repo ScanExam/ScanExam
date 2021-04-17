@@ -86,6 +86,9 @@ public class ControllerFxGraduation {
   
   private boolean autoZoom = true;
   
+  /**
+   * FXML Components
+   */
   @FXML
   public Label gradeLabel;
   
@@ -155,6 +158,9 @@ public class ControllerFxGraduation {
   @FXML
   public Button prevQuestionButton;
   
+  /**
+   * FXML Actions.
+   */
   @FXML
   public Object Pressed() {
     return null;
@@ -174,22 +180,6 @@ public class ControllerFxGraduation {
   @FXML
   public void saveAsPressed() {
     ControllerFxGraduation.logger.info("Save as Called");
-  }
-  
-  /**
-   * Called when a <b>load</b> button is pressed
-   */
-  @FXML
-  public void loadPressed() {
-    this.load();
-  }
-  
-  /**
-   * Called when a <b>import</b> button is pressed
-   */
-  @FXML
-  public void importPressed() {
-    ControllerFxGraduation.logger.info("Import Called");
   }
   
   /**
@@ -247,10 +237,6 @@ public class ControllerFxGraduation {
     if ((_value).booleanValue()) {
       this.previousStudent();
     }
-  }
-  
-  @FXML
-  public void swapToEditorPressed() {
   }
   
   @FXML
@@ -410,7 +396,7 @@ public class ControllerFxGraduation {
     this.studentListContainer.setContent(this.studentList);
     Grader _grader = new Grader(this);
     this.grader = _grader;
-    this.graderContainer.getChildren().add(this.grader);
+    this.parentPane.getChildren().add(this.grader);
     StudentDetails _studentDetails = new StudentDetails(this);
     this.studentDetails = _studentDetails;
     this.studentDetailsContainer.getChildren().add(this.studentDetails);
@@ -530,11 +516,14 @@ public class ControllerFxGraduation {
     }
   }
   
+  /**
+   * Cette methode est a apeler une fois que le modele est pret.
+   * Pour charger les donne du modele dans lest list etudioant et questions
+   */
   public void loaded() {
-    this.renderCorrectedCopy();
-    this.renderStudentCopy();
     this.loadQuestions();
     this.loadStudents();
+    this.renderCorrectedCopy();
     this.grader.setVisible(true);
     this.questionDetails.setVisible(true);
   }
@@ -564,7 +553,6 @@ public class ControllerFxGraduation {
    */
   public void loadQuestions() {
     ControllerFxGraduation.logger.info("Loading Questions");
-    int currentQuestionId = 0;
     for (int p = 0; (p < this.presenter.getPageAmount()); p++) {
       {
         LinkedList<Integer> ids = this.presenter.initLoading(p);
@@ -613,6 +601,9 @@ public class ControllerFxGraduation {
     }
   }
   
+  /**
+   * Utiliser pour ajouter une anotations a la vue avec la sourie.
+   */
   public boolean createNewAnotation(final MouseEvent e) {
     boolean _xblockexpression = false;
     {
@@ -631,14 +622,24 @@ public class ControllerFxGraduation {
     return _xblockexpression;
   }
   
+  /**
+   * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
+   */
   public Object showAnotations() {
     return null;
   }
   
+  /**
+   * Enleve toutes les annotations de la vue
+   */
   public boolean hideAnotations() {
     return this.mainPane.removeAllAnotations();
   }
   
+  /**
+   * On rentre dans le mode d'annotations.
+   * il faut dezoom, afficher les annotations et metter l'outils courrant au mode anotation.
+   */
   public ControllerFxGraduation.SelectedTool enterAnotationMode() {
     ControllerFxGraduation.SelectedTool _xblockexpression = null;
     {

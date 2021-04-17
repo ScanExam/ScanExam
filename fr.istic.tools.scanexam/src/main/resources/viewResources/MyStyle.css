@@ -50,19 +50,20 @@
 	
 }
 
-.scrollPanes {
+/*.scrollPanes {
 	-fx-background-color: transparent;
 	-fx-focus-color : transparent;
 	-fx-faint-focus-color : transparent;
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 1px 1px 1px;
-}
+
 
 
 #correctionScrollPane > .viewport {
 	-fx-background-color: rgba(211,211,211,0.80);
 	
 }
+*/
 
 .botBar {
 
@@ -75,6 +76,7 @@
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 1px 1px 1px;
 }
+
 
 .List > .viewport {
 	-fx-background-color: white;

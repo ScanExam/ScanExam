@@ -55,6 +55,11 @@ class ControllerFxGraduation {
 
 	boolean botShow = false;
 	boolean autoZoom = true;
+	
+	
+	/**
+	 * FXML Components
+	 */
 	@FXML
 	public Label gradeLabel
 	@FXML
@@ -71,8 +76,6 @@ class ControllerFxGraduation {
 	public Button botButtonActive;
 	@FXML
 	public Pane bottomPane;
-	
-	
 	@FXML
 	public Pane parentPane;
 	@FXML
@@ -104,7 +107,9 @@ class ControllerFxGraduation {
 	@FXML
 	public Button prevQuestionButton;
 	
-
+	/**
+	 * FXML Actions.
+	 */
 	@FXML
 	def Pressed() {
 	}
@@ -125,24 +130,6 @@ class ControllerFxGraduation {
 		logger.info("Save as Called")
 	}
 
-	/**
-	 * Called when a <b>load</b> button is pressed
-	 */
-	@FXML
-	def void loadPressed() {
-		load();
-	}
-
-	/**
-	 * Called when a <b>import</b> button is pressed
-	 */
-	@FXML
-	def void importPressed() {
-		logger.info("Import Called")
-
-	}
-
-	//XXX À améliorer
 	/**
 	 * Called when a <b>export</b> button is pressed
 	 */
@@ -193,22 +180,9 @@ class ControllerFxGraduation {
 	}
 
 	@FXML
-	def void swapToEditorPressed() {
-	  //FIXME
-	}
-	
-	@FXML
 	def void mainMouseEvent(MouseEvent e) {
 		chooseMouseAction(e);
 	}
-	
-	
-	
-	//-----------------------//
-	
-	
-
-	
 	
 	//--- LOCAL VARIABLES ---//
 	
@@ -225,6 +199,8 @@ class ControllerFxGraduation {
 	double imageWidth;
 	double imageHeight;
 
+
+	//---Getters/Setters---//
 
 	def getQuestionList(){
 		questionList
@@ -344,7 +320,7 @@ class ControllerFxGraduation {
 		studentListContainer.content = studentList
 		
 		grader = new Grader(this);
-		graderContainer.children.add(grader);
+		parentPane.children.add(grader);
 		
 		
 		studentDetails = new StudentDetails(this);
@@ -396,7 +372,11 @@ class ControllerFxGraduation {
 	}
 
 
-	//---FILE MANAGEMENT---//
+	//---LOADING FROM MODEL--//
+	/**
+	 * Cette section sert a charger le l'information du modele dans la vue, notament la liste des etudiant et questions.
+	 * 
+	 */
 	
 	
 	/**
@@ -427,12 +407,17 @@ class ControllerFxGraduation {
 		}
 	}
 
-	//Called after the service has finished loading
+	/**
+	 * Cette methode est a apeler une fois que le modele est pret.
+	 * Pour charger les donne du modele dans lest list etudioant et questions
+	 * 
+	 *  */
 	def loaded(){
-		renderCorrectedCopy();
-		renderStudentCopy();
+		
 		loadQuestions();
 		loadStudents();
+		renderCorrectedCopy();
+		//renderStudentCopy();
 		grader.visible = true;
 		questionDetails.visible = true;
 	}
@@ -462,7 +447,6 @@ class ControllerFxGraduation {
 	 */
 	def void loadQuestions() {
 		logger.info("Loading Questions")
-		var currentQuestionId = 0;
 		for (var p = 0;p < presenter.getPageAmount;p++) {
 			var ids = presenter.initLoading(p);
 			for (int i:ids) {
@@ -503,10 +487,17 @@ class ControllerFxGraduation {
 	
 	
 	//--Anotations--//
+	/**
+	 * Cette section contient les methodes pour gere les anotations.
+	 * Du a l'implementation du zoom sur des question, il est necesaaire de "deZoom" (viewPort a null) et ensuite de recuper toute les anotations.
+	 * Une fois deZoome, on peut ensuite placer des anotations si l'outils est selectionner.
+	 * Une fois finit avec les annotations, on peut effacer les anotations de la vue, et rezoomer sur la question que l'on veut.
+	 */
 	
 	
-	
-	
+	/**
+	 * Utiliser pour ajouter une anotations a la vue avec la sourie.
+	 */
 	def createNewAnotation(MouseEvent e){
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
 								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
@@ -515,18 +506,26 @@ class ControllerFxGraduation {
 		mainPane.addNewAnotation(mousePositionX,mousePositionY);
 	
 	}
-
+	
+	/**
+	 * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
+	 */
 	def showAnotations(){
-		//On veut prendre les donee de tt les anotations pour la page courante et l'etudiant courrant,
-		//et ajouter ces anotations au mainPane
+	
 	}
 	
+	/**
+	 * Enleve toutes les annotations de la vue
+	 */
 	def hideAnotations(){
-		//On veut enleve tts les anotations de mainPane
-		//
 		mainPane.removeAllAnotations
 	}
 	
+	/**
+	 * On rentre dans le mode d'annotations.
+	 * il faut dezoom, afficher les annotations et metter l'outils courrant au mode anotation.
+	 * 
+	 */
 	def enterAnotationMode(){
 		mainPane.unZoom
 		showAnotations
@@ -541,11 +540,8 @@ class ControllerFxGraduation {
 	
 	//-----------------//
 	
+	
 	//---NAVIGATION---//
-	
-	
-		
-	
 	
 	def void nextStudent(){
 		studentList.selectNextItem
@@ -610,8 +606,6 @@ class ControllerFxGraduation {
 		
 	}
 	
-	
-	
 	//----------------//
 	
 	//---DISPLAYING---//
@@ -659,6 +653,7 @@ class ControllerFxGraduation {
 			logger.warn("Cannot load grader, student list or question is is empty")
 		}
 	}
+	
 	/**
 	 * 
 	 */
@@ -669,11 +664,8 @@ class ControllerFxGraduation {
 
 	//----------------//
 
-	
-
-	
-	
 	//---PAGE OPERATIONS---//
+	
 	def void nextPage() {
 		presenter.getPresenterPdf.nextPdfPage
 		renderStudentCopy
@@ -686,6 +678,7 @@ class ControllerFxGraduation {
 		presenter.getPresenterPdf.goToPdfPage(pageNumber)
 		renderStudentCopy
 	}
+	
 	//---------------------//
 	
 	
