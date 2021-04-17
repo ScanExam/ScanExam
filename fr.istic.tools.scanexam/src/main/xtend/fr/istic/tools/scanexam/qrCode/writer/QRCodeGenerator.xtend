@@ -16,4 +16,8 @@ interface QRCodeGenerator {
 	def void createAllExamCopies(InputStream inputFile, File outputPath, String idExam, int nbCopie)
 	
 	def boolean isFinished()
+	
+	def int getNbTreated()
+	
+	def int getNumberPagesAllSheets()
 }
