@@ -62,6 +62,7 @@ public class StudentListGraduation extends VBox {
   }
   
   public void clearItems() {
+    this.currentIndex = 0;
     this.getChildren().clear();
   }
   

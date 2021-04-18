@@ -13,7 +13,6 @@ class StudentListGraduation extends VBox {
 		setupEvents
 	}
 	
-	
 	ControllerFxGraduation controller;
 	
 	int currentIndex;
@@ -27,16 +26,14 @@ class StudentListGraduation extends VBox {
 	def  getCurrentItem(){
 		if (noItems) return null
 		children.get(currentIndex) as StudentItemGraduation 
-	}
-	
-	def boolean noItems(){
-		return children.isEmpty
-	}
-	
+	}	
 	//---------------------//
 	
 	
 	//---METHODS---//
+	def boolean noItems(){
+		return children.isEmpty
+	}
 
 	def addItem(StudentItemGraduation item) {
 		item.list = this
@@ -48,6 +45,7 @@ class StudentListGraduation extends VBox {
 	}
 	
 	def clearItems(){
+		currentIndex = 0;
 		children.clear
 	}
 	

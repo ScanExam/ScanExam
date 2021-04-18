@@ -2,29 +2,38 @@ package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.api.DataFactory
 import fr.istic.tools.scanexam.core.CoreFactory
+import fr.istic.tools.scanexam.core.Exam
 import fr.istic.tools.scanexam.core.GradeEntry
+import fr.istic.tools.scanexam.core.Page
+import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
+import fr.istic.tools.scanexam.core.templates.TemplatesFactory
 import fr.istic.tools.scanexam.io.TemplateIo
+import fr.istic.tools.scanexam.services.api.ServiceEdition
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.ArrayList
 import java.util.Base64
 import java.util.Collection
+import java.util.Collections
 import java.util.List
 import java.util.Objects
+import java.util.Optional
 import org.eclipse.xtend.lib.annotations.Accessors
-
-import static fr.istic.tools.scanexam.services.ExamSingleton.*
 
 /**
  * Classe servant de façade aux données concernant la correction
  * @author Antoine Degas, Marius Lumbroso, Théo Giraudet, Thomas Guibert
  */
-class ServiceGraduation extends Service
-{
+class ServiceImpl implements ServiceGraduation, ServiceEdition {
+
+	@Accessors Exam exam = null;
 
 	/**
 	 * Index de la page courante du modèle d'exam
@@ -65,7 +74,7 @@ class ServiceGraduation extends Service
 	 * @param path L'emplacement de sauvegarde du fichier.
 	 * @param pdfOutputStream le contenu du fichier sous forme de Stream
 	 */
-	def saveCorrectionTemplate(String path,ByteArrayOutputStream pdfOutputStream) 
+	override saveCorrectionTemplate(String path,ByteArrayOutputStream pdfOutputStream) 
 	{
 		val encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
 		correctionTemplate.encodedDocument = new String(encoded);
@@ -82,7 +91,7 @@ class ServiceGraduation extends Service
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
-	def boolean openCorrectionTemplate(String xmiFile)
+	override boolean openCorrectionTemplate(String xmiFile)
 	{
 		val correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile) 
 		
@@ -90,24 +99,25 @@ class ServiceGraduation extends Service
         {
             this.correctionTemplate = correctionTemplate.get()
             
-            ExamSingleton.instance = correctionTemplate.get().exam
+            exam = correctionTemplate.get().exam
 
             return true
         }
 		return false
 	}
+	
 	/**
 	 * Charge un fichier d'edition d'examen a partir du disque.
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
-	def boolean openCreationTemplate(String xmiFile) {
+	override boolean openCreationTemplate(String xmiFile) {
 		val editionTemplate = TemplateIo.loadCreationTemplate(xmiFile)
 
 		if (editionTemplate.present) {
 			this.creationTemplate = editionTemplate.get()
 
-			ExamSingleton.instance = editionTemplate.get().exam
+			exam = editionTemplate.get().exam
 
 			return true
 		}
@@ -119,12 +129,12 @@ class ServiceGraduation extends Service
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
-	def boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
+	override boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
 		try {
 
 			for (StudentSheet sheet : studentSheets) {
-				for (var i = 0; i < ExamSingleton.templatePageAmount; i++) {
-					val examPage = ExamSingleton.getPage(i);
+				for (var i = 0; i < templatePageAmount; i++) {
+					val examPage = getPage(i);
 
 					println("test size : " + examPage.questions.size)
 					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?
@@ -144,7 +154,7 @@ class ServiceGraduation extends Service
 	}
 	
 	//TODO si les pages sont dans le désordre ?
-	def int getAbsolutePageNumber(int studentId, int offset) {
+	override int getAbsolutePageNumber(int studentId, int offset) {
 		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(0);
 		return pageId + offset;
 	}
@@ -156,7 +166,7 @@ class ServiceGraduation extends Service
 	/**
 	 * Défini la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
 	 */
-	def nextSheet() {
+	override nextSheet() {
 		if (currentSheetIndex + 1 < studentSheets.size)
 			currentSheetIndex++
 	}
@@ -164,7 +174,7 @@ class ServiceGraduation extends Service
 	/**
 	 * Défini la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
 	 */
-	def previousSheet() {
+	override previousSheet() {
 		if (currentSheetIndex > 0)
 			currentSheetIndex--
 	}
@@ -173,7 +183,7 @@ class ServiceGraduation extends Service
 	 * Associe un nouveau identifiant d'étudiant à la copie courante
 	 * @param id le nouvel identifiant d'étudiant
 	 */
-	def assignStudentId(String id) {
+	override assignStudentId(String id) {
 		studentSheets.get(currentSheetIndex).studentName = id
 	}
 	
@@ -187,21 +197,21 @@ class ServiceGraduation extends Service
 	 */
 	private def getCurrentPage()
 	{
-		return ExamSingleton.getPage(pageIndex);
+		return getPage(pageIndex);
 	}
 	
 	/**
 	 * Défini la page suivant la page actuelle comme nouvelle page courante
 	 */
-	def nextPage() {
-		if (pageIndex + 1 < ExamSingleton.instance.pages.length)
+	override nextPage() {
+		if (pageIndex + 1 < exam.pages.length)
 			pageIndex++
 	}
 
 	/**
 	 * Défini la page précédant la page actuelle comme nouvelle page courante
 	 */
-	def previousPage() {
+	override previousPage() {
 		if (pageIndex > 0) 
 			pageIndex--;
 	}
@@ -209,8 +219,8 @@ class ServiceGraduation extends Service
 	/**
 	 * @return le nombre de pages de l'Examen
 	 */
-	def int getPageAmount() {
-		return ExamSingleton.getTemplatePageAmount
+	override int getPageAmount() {
+		return getTemplatePageAmount
 	}
 	
 	//===================================================
@@ -220,7 +230,7 @@ class ServiceGraduation extends Service
 	/**
 	 * Défini la question suivant la question actuelle comme nouvelle question courante
 	 */
-	def nextQuestion()
+	override nextQuestion()
 	{
 		if (currentQuestionIndex + 1 < currentPage.questions.size)
 			currentQuestionIndex++
@@ -229,7 +239,7 @@ class ServiceGraduation extends Service
 	/**
 	 * Défini la question précédant la question actuelle comme nouvelle question courante
 	 */
-	def previousQuestion() {
+	override previousQuestion() {
 		if (currentQuestionIndex > 0)
 			currentQuestionIndex--
 	}
@@ -239,8 +249,8 @@ class ServiceGraduation extends Service
 	 * Ne fait rien si la question n'existe pas 
 	 * @param id un ID de question
 	 */
-	def selectQuestion(int id) {
-		for(page: ExamSingleton.instance.pages) {
+	override selectQuestion(int id) {
+		for(page: exam.pages) {
 			val question = page.questions.findFirst[question | question.id == id]
 			if(question !== null) {
 				pageIndex = page.id
@@ -253,7 +263,7 @@ class ServiceGraduation extends Service
 	/**
 	 * @return le nombre de questions d'une copie d'étudiant
 	 */
-	def numberOfQuestions() {
+	override numberOfQuestions() {
 		var nbQuestion = 0
 		for (var i = 0; i < creationTemplate.exam.pages.size(); i++)
 			nbQuestion += creationTemplate.exam.pages.get(i).questions.size
@@ -271,7 +281,7 @@ class ServiceGraduation extends Service
 	 * @param point le nombre de point de l'entrée
 	 * @return l'ID de l'entrée
 	 */
-	def int addEntry(int questionId, String desc, float point) 
+	override int addEntry(int questionId, String desc, float point) 
 	{
 		val DataFactory factory = new DataFactory
 		val question = getQuestion(questionId)
@@ -289,7 +299,7 @@ class ServiceGraduation extends Service
 	 * @param desc la nouvelle description de l'entrée
 	 * @param point le nouveau nombre de point de l'entrée
 	 */
-	def modifyEntry(int questionId, int gradeEntryId, String desc, float point) {
+	override modifyEntry(int questionId, int gradeEntryId, String desc, float point) {
 		val scale = getQuestion(questionId).gradeScale
 		val scaleEntry = scale.steps.findFirst[step | step.id == gradeEntryId]
 		if(scaleEntry !== null) {
@@ -303,7 +313,7 @@ class ServiceGraduation extends Service
 	 * @param questionId l'ID de la question dans laquelle supprimer l'entrée
 	 * @param gradeEntryId l'ID de l'entrée à supprimer
 	 */
-	def removeEntry(int questionId, int gradeEntryId) {
+	override removeEntry(int questionId, int gradeEntryId) {
 		val scale = getQuestion(questionId).gradeScale
 		val scaleEntry = scale.steps.findFirst[step | step.id == gradeEntryId]
 		if(scaleEntry !== null)
@@ -314,9 +324,10 @@ class ServiceGraduation extends Service
      * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
 	 * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
 	 */
-	def List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(int questionId) {
+	override List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(int questionId) {
 		if (getQuestion(questionId).gradeScale !== null)
-			return getQuestion(questionId).gradeScale.steps.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
+			return getQuestion(questionId).gradeScale.steps
+			.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
 		return List.of
 	}
 	
@@ -332,7 +343,7 @@ class ServiceGraduation extends Service
 	 * @param l'ID de l'entrée dans l'Examen
 	 * @return boolean indique si les points on bien ete attribuer
 	 */
-	def boolean assignGradeEntry(int questionId, int gradeEntryId) {
+	override boolean assignGradeEntry(int questionId, int gradeEntryId) {
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry|entry.id == gradeEntryId]
 
 		if (validGradeEntry(questionId, gradeEntry)) {
@@ -349,7 +360,7 @@ class ServiceGraduation extends Service
 	 * @param questionId l'ID de la question à laquelle retirer l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
 	 */
-	def retractGradeEntry(int questionId, int gradeEntryId) {
+	override retractGradeEntry(int questionId, int gradeEntryId) {
 		val entries = studentSheets.get(currentSheetIndex).grades.get(questionId).entries
 		val gradeEntry = entries.findFirst[entry | entry.id == gradeEntryId]
 		entries.remove(gradeEntry)
@@ -359,7 +370,7 @@ class ServiceGraduation extends Service
      * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
 	 * @return une liste d'ID d'entrées sélectionnées dans le StudentSheet courant pour la question dont l'ID est <i>questionId</i>
 	 */
-	def List<Integer> getQuestionSelectedGradeEntries(int questionId) {
+	override List<Integer> getQuestionSelectedGradeEntries(int questionId) {
 		if (currentSheetIndex > studentSheets.size - 1)
 			return new ArrayList<Integer>();
 
@@ -382,7 +393,7 @@ class ServiceGraduation extends Service
 	 * <li>Ne pas être inferieure à 0</li>
 	 * </ul>
 	 */
-	def boolean validGradeEntry(int questionId,GradeEntry gradeAdd){
+	override boolean validGradeEntry(int questionId,GradeEntry gradeAdd){
 		val gradeMax = getQuestion(questionId).gradeScale.maxPoint
 		val currentGrade = studentSheets.get(currentSheetIndex).grades.get(questionId)
 			.entries
@@ -400,11 +411,11 @@ class ServiceGraduation extends Service
 	/**
 	 * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu 
 	 */
-	def float getCurrentMaxGrade() {
+	override float getCurrentMaxGrade() {
 		studentSheets.get(currentSheetIndex).grades
 			.indexed
 			.filter[pair | !pair.value.entries.isEmpty]
-			.map[pair | ExamSingleton.getQuestionFromIndex(pair.key)]
+			.map[pair | getQuestionFromIndex(pair.key)]
 			.filter[o | !o.isEmpty]
 			.map[ o | o.get.gradeScale.maxPoint]
 			.reduce[acc, n | acc + n]
@@ -414,7 +425,7 @@ class ServiceGraduation extends Service
 	/**
 	 * @return la note actuelle de l'étudiant courant
 	 */
-	def float getCurrentGrade() {
+	override float getCurrentGrade() {
 		studentSheets.get(currentSheetIndex).computeGrade
 	}
 	
@@ -426,7 +437,7 @@ class ServiceGraduation extends Service
 	 * Défini le chemin d'accès vers la liste de tous les étudiants
 	 * @param le chemin d'accès vers cette liste (non null)
 	 */
-	def setStudentListPath(String path) {
+	override setStudentListPath(String path) {
 		Objects.requireNonNull(path)
 		correctionTemplate.studentListPath = path
 	}
@@ -434,7 +445,7 @@ class ServiceGraduation extends Service
 	/**
 	 * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
 	 */
-	def String getStudentListPath() {
+	override String getStudentListPath() {
 		return correctionTemplate.studentListPath
 	}
 	
@@ -442,7 +453,7 @@ class ServiceGraduation extends Service
 	 * Défini la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
 	 * @param la position initialede cette liste (non null)
 	 */
-	def setStudentListShift(String shift) {
+	override setStudentListShift(String shift) {
 		Objects.requireNonNull(shift)
 		correctionTemplate.studentListShift = shift
 	}
@@ -450,7 +461,265 @@ class ServiceGraduation extends Service
 	/**
 	 * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
 	 */
-	def String getStudentListShift() {
+	override String getStudentListShift() {
 		return correctionTemplate.studentListShift
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	CreationTemplate template;
+
+	@Accessors int questionId;
+
+	/**
+	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
+	 * @param q Une Question
+	 * @param r Un Rectangle
+	 * @author degas
+	 */
+	override int createQuestion(int pdfPageIndex, float x, float y, float heigth, float width) {
+
+		val question = CoreFactory.eINSTANCE.createQuestion();
+		question.id = questionId;
+		question.gradeScale = CoreFactory.eINSTANCE.createGradeScale();
+		question.zone = CoreFactory.eINSTANCE.createQuestionZone();
+		question.zone.x = x
+		question.zone.y = y
+		question.zone.width = width
+		question.zone.heigth = heigth
+		getPage(pdfPageIndex).questions.add(question);
+		return questionId++;
+	}
+
+	/**
+	 * Redimensionne la zone d'une Question
+	 * @param id l'ID de la question dont la zone doit être redimensionnée
+	 * @param heigth la nouvelle hauteur de la zone
+	 * @param width la nouvelle largeur de la zone
+	 */
+	override rescaleQuestion(int id, float heigth, float width) {
+		val question = getQuestion(id);
+		question.zone.width = width
+		question.zone.heigth = heigth
+	}
+
+	/**
+	 * Déplace la zone d'une Question
+	 * @param id l'ID de la question dont la zone doit être déplacée
+	 * @param x la nouvelle position x de la zone
+	 * @param y la nouvelle position y de la zone
+	 */
+	override moveQuestion(int id, float x, float y) {
+		val question = getQuestion(id)
+		question.zone.x = x
+		question.zone.y = y
+	}
+	
+	/**
+	 * Renomme la Question
+	 * @param id l'ID de la question à renommer
+	 * @param name le nouveau nom de la question
+	 */
+	override renameQuestion(int id, String name) {
+		val question = getQuestion(id)
+		question.name = name
+	}
+
+	/**
+	 * Supprime une question
+	 * @param id l'ID de la question à supprimer
+	 */
+	override removeQuestion(int id) {
+		for (page : exam.pages)
+			for (question : page.questions)
+				if (question.id == id)
+					page.questions.remove(question)
+	}
+
+	/**
+	 * Modifie la note maximal que l'on peut attribuer a une question.
+	 * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
+	 * @param maxPoint, note maximal de la question question a ajouter
+	 */
+	override modifyMaxPoint(int questionId, float maxPoint) {
+		val scale = getQuestion(questionId).gradeScale
+		if (maxPoint > 0) {
+			scale.maxPoint = maxPoint
+		}
+	}
+
+	/**
+	 * Sauvegarde le fichier modèle d'examen sur le disque
+	 * @param path L'emplacement de sauvegarde du fichier
+	 * @param pdfOutputStream le contenu du fichier sous forme de Stream
+	 */
+	override save(ByteArrayOutputStream outputStream, File path) {
+		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
+		template.encodedDocument = new String(encoded);
+		outputStream.close();
+
+		template.exam = exam
+
+		TemplateIo.save(path, template);
+	}
+
+	/**
+	 * Charge un fichier modèle d'examen a partir du disque
+	 * @params xmiPath L'emplacement du fichier.
+	 * @returns un flux vers le contenu du fichier si celui-ci a bien été ouvert, Optional.empty sinon
+	 */
+	override Optional<ByteArrayInputStream> open(String xmiPath) {
+		val creationTemplate = TemplateIo.loadCreationTemplate(xmiPath)
+
+		if (creationTemplate.present) {
+			this.template = creationTemplate.get()
+			exam = creationTemplate.get().exam
+			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
+
+			questionId = exam.pages.stream.map[page|page.questions.size].reduce[acc, num|acc + num].
+				get + 1
+			return Optional.of(new ByteArrayInputStream(decoded));
+		}
+		return Optional.empty;
+	}
+
+	/**
+	 * Crée un nouveau modèle côté données
+	 * @param pageNumber le nombre de pages du modèle
+	 */
+	override void onDocumentLoad(int pageNumber) {
+		template = TemplatesFactory.eINSTANCE.createCreationTemplate
+
+		exam = CoreFactory.eINSTANCE.createExam()
+
+		for (i : 0 ..< pageNumber) {
+			val page = CoreFactory.eINSTANCE.createPage()
+
+			exam.pages.add(page);
+		}
+		questionId = 0
+	}
+
+	/** Retourne la zone associée à une question
+	 * @param index Index de la question //FIXME (useless?)
+	 * @author degas
+	 */
+	override QuestionZone getQuestionZone(int pageIndex, int questionIndex) {
+		return getQuestion(pageIndex, questionIndex).zone
+	}
+	
+	
+	/** Permet de récupérer une Question
+	 * @param index Index de la question
+	 * @return Question Retourne une instance de Question
+	 * @author degas
+	 */
+	protected def Question getQuestion(int pageId, int questionid)
+	{
+		return exam.pages.get(pageId).questions.get(questionid);
+	}
+	
+	/**  Rend la liste des Questions définies dans un Examen
+	 * @return List<Question>
+	 * @author degas
+	 */
+	protected def Collection<Question> getQuestions(int pageId)
+	{
+		return Collections.unmodifiableCollection(exam.pages.get(pageId).questions);
+	}
+	
+	/**
+	 * @param absoluteQuestionId la position absolue d'une question dans l'Examen
+	 * @return la Question associée à cette position si elle existe, Optional.empty sinon
+	 */
+	protected def Optional<Question> getQuestionFromIndex(int absoluteQuestionId) {
+		return Optional.ofNullable(
+			exam.pages.flatMap[p | p.questions].indexed.findFirst[p | p.key == absoluteQuestionId]
+		).map(q | q.value)
+	}
+	
+	/**
+	 * @return le nombre de pages de l'Examen
+	 */
+	override int getTemplatePageAmount(){
+		exam.pages.size
+	}
+
+	/**
+	 * @param pageId l'ID de la page à récupérer
+	 * @return la Page dont l'ID est <i>pageId</i>
+	 */
+	protected def Page getPage(int pageId)
+	{
+		return exam.pages.get(pageId);
+	}
+	
+	/**
+	 * @return vrai si un modèle d'examen est chargé, false sinon
+	 */
+	override boolean hasExamLoaded() {
+		exam !== null
+	}
+
+	/**
+	 * Met à jour le nom de l'examen
+	 * @param name Nouevau nom de l'examen
+	 */
+	override void setExamName(String name) {
+		exam.name = name
+	}
+	
+	/**
+	 * @param pageIndex l'ID d'une page
+	 * @return la liste des Questions sur la page dont l'ID est <i>pageIndex</i> 
+	 */
+	override getQuestionAtPage(int pageIndex) {
+		getPage(pageIndex).questions
+	}
+	
+	/**
+	 * @param l'ID de la Question
+	 * @return la Question du modèle correspondant à l'ID spécifié
+	 */
+	protected def Question getQuestion(int id) {
+		for (page : exam.pages) {
+			val question = page.questions.findFirst[question|question.id == id]
+			if (question !== null)
+				return question
+		}
+		return null
+	}
+	
+	/**
+	 * @return Identifiant de l'examen
+	 * @author degas
+	 */
+	override int getExamId() {
+		return exam.id;
+	}
+
+	/**@return Nom de l'examen
+	 * @author degas
+	 */
+	override String getExamName() {
+		return exam.name;
 	}
 }

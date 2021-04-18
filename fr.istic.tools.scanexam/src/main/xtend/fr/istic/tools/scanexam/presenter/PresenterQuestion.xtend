@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.presenter
 
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import java.util.Objects
-import fr.istic.tools.scanexam.services.ServiceGraduation
 
 /**
  * CLass representing a presenter of question in 

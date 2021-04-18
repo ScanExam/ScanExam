@@ -4,7 +4,7 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.config.Config;
 import fr.istic.tools.scanexam.mailing.GradesExportMail;
 import fr.istic.tools.scanexam.mailing.SendMailXtend;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
+import fr.istic.tools.scanexam.services.ServiceImpl;
 import java.io.File;
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -13,9 +13,9 @@ import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 @SuppressWarnings("all")
 public class GradesExportMailImpl implements GradesExportMail {
-  private static ServiceGraduation service;
+  private static ServiceImpl service;
   
-  public GradesExportMailImpl(final ServiceGraduation serv) {
+  public GradesExportMailImpl(final ServiceImpl serv) {
     GradesExportMailImpl.service = serv;
   }
   

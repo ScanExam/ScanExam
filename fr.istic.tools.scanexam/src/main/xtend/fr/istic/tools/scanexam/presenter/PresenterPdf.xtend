@@ -1,9 +1,10 @@
 package fr.istic.tools.scanexam.presenter
 
-import fr.istic.tools.scanexam.services.Service
+import fr.istic.tools.scanexam.services.api.Service
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Objects
@@ -11,7 +12,6 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
-import java.io.InputStream
 
 /** 
  * Controlleur du pdf

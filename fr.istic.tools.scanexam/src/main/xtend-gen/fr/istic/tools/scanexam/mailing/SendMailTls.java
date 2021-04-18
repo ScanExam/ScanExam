@@ -2,7 +2,7 @@ package fr.istic.tools.scanexam.mailing;
 
 import com.sun.mail.util.MailConnectException;
 import fr.istic.tools.scanexam.config.ConfigurationManager;
-import fr.istic.tools.scanexam.services.Service;
+import fr.istic.tools.scanexam.services.api.Service;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.io.BufferedReader;
 import java.io.File;

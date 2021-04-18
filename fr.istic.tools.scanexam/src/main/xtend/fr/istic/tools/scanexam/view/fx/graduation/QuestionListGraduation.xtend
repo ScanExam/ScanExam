@@ -40,6 +40,7 @@ class QuestionListGraduation extends VBox {
 	}
 	
 	def clearItems(){
+		currentIndex = 0;
 		children.clear
 	}
 	

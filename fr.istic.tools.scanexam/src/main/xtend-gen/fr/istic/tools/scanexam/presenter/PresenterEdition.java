@@ -5,7 +5,7 @@ import fr.istic.tools.scanexam.presenter.PresenterPdf;
 import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
 import fr.istic.tools.scanexam.presenter.PresenterTemplateCreator;
-import fr.istic.tools.scanexam.services.ServiceEdition;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

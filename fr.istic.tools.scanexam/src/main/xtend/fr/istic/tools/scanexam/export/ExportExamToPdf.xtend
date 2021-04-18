@@ -1,24 +1,24 @@
 package fr.istic.tools.scanexam.export
 
-import java.io.File
-import org.apache.pdfbox.pdmodel.PDDocument
+import fr.istic.tools.scanexam.core.Comment
+import fr.istic.tools.scanexam.core.Grade
+import fr.istic.tools.scanexam.core.HandwritingComment
+import fr.istic.tools.scanexam.core.Line
 import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.core.TextComment
+import fr.istic.tools.scanexam.services.api.Service
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import java.awt.Color
+import java.io.File
 import java.io.InputStream
-import org.apache.pdfbox.pdmodel.common.PDStream
 import java.io.OutputStream
 import java.util.Collection
 import java.util.stream.Collectors
-import fr.istic.tools.scanexam.services.Service
-import fr.istic.tools.scanexam.core.Grade
-import fr.istic.tools.scanexam.core.Comment
-import fr.istic.tools.scanexam.core.TextComment
+import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
-import fr.istic.tools.scanexam.utils.ResourcesUtils
+import org.apache.pdfbox.pdmodel.common.PDStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
-import java.awt.Color
-import fr.istic.tools.scanexam.core.HandwritingComment
-import fr.istic.tools.scanexam.core.Line
 
 class ExportExamToPdf {
 	

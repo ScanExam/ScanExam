@@ -16,4 +16,8 @@ public interface QRCodeGenerator {
   void createAllExamCopies(final InputStream inputFile, final File outputPath, final String idExam, final int nbCopie);
   
   boolean isFinished();
+  
+  int getNbTreated();
+  
+  int getNumberPagesAllSheets();
 }

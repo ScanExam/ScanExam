@@ -3,15 +3,15 @@ package fr.istic.tools.scanexam.presenter;
 import fr.istic.tools.scanexam.presenter.PresenterImportExportXMI;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
-import fr.istic.tools.scanexam.services.ServiceGraduation;
+import fr.istic.tools.scanexam.services.api.Service;
 
 @SuppressWarnings("all")
 public class PresenterGraduationLoader {
-  private final ServiceGraduation service;
+  private final Service service;
   
   private final PresenterImportExportXMI presenterXMI;
   
-  public PresenterGraduationLoader(final PresenterImportExportXMI presenterXMI, final ServiceGraduation graduation) {
+  public PresenterGraduationLoader(final PresenterImportExportXMI presenterXMI, final Service graduation) {
     this.presenterXMI = presenterXMI;
     this.service = graduation;
   }

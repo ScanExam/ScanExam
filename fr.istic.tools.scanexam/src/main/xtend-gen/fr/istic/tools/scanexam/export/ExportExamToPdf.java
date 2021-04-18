@@ -6,7 +6,7 @@ import fr.istic.tools.scanexam.core.HandwritingComment;
 import fr.istic.tools.scanexam.core.Line;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.TextComment;
-import fr.istic.tools.scanexam.services.Service;
+import fr.istic.tools.scanexam.services.api.Service;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.awt.Color;
 import java.io.File;

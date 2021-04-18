@@ -55,6 +55,11 @@ class ControllerFxGraduation {
 
 	boolean botShow = false;
 	boolean autoZoom = true;
+	
+	
+	/**
+	 * FXML Components
+	 */
 	@FXML
 	public Label gradeLabel
 	@FXML
@@ -71,8 +76,6 @@ class ControllerFxGraduation {
 	public Button botButtonActive;
 	@FXML
 	public Pane bottomPane;
-	
-	
 	@FXML
 	public Pane parentPane;
 	@FXML
@@ -104,7 +107,9 @@ class ControllerFxGraduation {
 	@FXML
 	public Button prevQuestionButton;
 	
-
+	/**
+	 * FXML Actions.
+	 */
 	@FXML
 	def Pressed() {
 	}
@@ -125,24 +130,6 @@ class ControllerFxGraduation {
 		logger.info("Save as Called")
 	}
 
-	/**
-	 * Called when a <b>load</b> button is pressed
-	 */
-	@FXML
-	def void loadPressed() {
-		load();
-	}
-
-	/**
-	 * Called when a <b>import</b> button is pressed
-	 */
-	@FXML
-	def void importPressed() {
-		logger.info("Import Called")
-
-	}
-
-	//XXX À améliorer
 	/**
 	 * Called when a <b>export</b> button is pressed
 	 */
@@ -193,22 +180,9 @@ class ControllerFxGraduation {
 	}
 
 	@FXML
-	def void swapToEditorPressed() {
-	  //FIXME
-	}
-	
-	@FXML
 	def void mainMouseEvent(MouseEvent e) {
 		chooseMouseAction(e);
 	}
-	
-	
-	
-	//-----------------------//
-	
-	
-
-	
 	
 	//--- LOCAL VARIABLES ---//
 	
@@ -225,6 +199,8 @@ class ControllerFxGraduation {
 	double imageWidth;
 	double imageHeight;
 
+
+	//---Getters/Setters---//
 
 	def getQuestionList(){
 		questionList
@@ -344,14 +320,12 @@ class ControllerFxGraduation {
 		studentListContainer.content = studentList
 		
 		grader = new Grader(this);
-		graderContainer.children.add(grader);
+		parentPane.children.add(grader);
 		
 		
 		studentDetails = new StudentDetails(this);
 		studentDetailsContainer.children.add(studentDetails)
-		binds(root);
-		binds(scrollMain);
-		binds(scrollBis);
+		
 		
 		unLoaded();
 		
@@ -363,7 +337,7 @@ class ControllerFxGraduation {
 		nextStudentButton.disableProperty.bind(loadedModel.not)
 		
 	}
-	
+	//TODO FIX BINDS
 	def void binds(Node n) {
 		n.setOnKeyPressed([ event |
 			{
@@ -398,7 +372,11 @@ class ControllerFxGraduation {
 	}
 
 
-	//---FILE MANAGEMENT---//
+	//---LOADING FROM MODEL--//
+	/**
+	 * Cette section sert a charger le l'information du modele dans la vue, notament la liste des etudiant et questions.
+	 * 
+	 */
 	
 	
 	/**
@@ -429,12 +407,17 @@ class ControllerFxGraduation {
 		}
 	}
 
-	//Called after the service has finished loading
+	/**
+	 * Cette methode est a apeler une fois que le modele est pret.
+	 * Pour charger les donne du modele dans lest list etudioant et questions
+	 * 
+	 *  */
 	def loaded(){
-		renderCorrectedCopy();
-		renderStudentCopy();
+		
 		loadQuestions();
 		loadStudents();
+		renderCorrectedCopy();
+		//renderStudentCopy();
 		grader.visible = true;
 		questionDetails.visible = true;
 	}
@@ -457,10 +440,13 @@ class ControllerFxGraduation {
 	def selectStudentWithId(int id){
 		
 	}
-	
+	/**
+	 * Charge les questions present dans le modele.
+	 * La liste des etudiants est presente dans studentList, qui affiche tout les etudiants.
+	 * 
+	 */
 	def void loadQuestions() {
 		logger.info("Loading Questions")
-		var currentQuestionId = 0;
 		for (var p = 0;p < presenter.getPageAmount;p++) {
 			var ids = presenter.initLoading(p);
 			for (int i:ids) {
@@ -478,6 +464,11 @@ class ControllerFxGraduation {
 		}
 	}
 	
+	/**
+	 * Charge les etudiant present dans le modele.
+	 * La liste des etudiants est presente dans studentList, qui affiche tout les etudiants.
+	 * 
+	 */
 	def void loadStudents(){
 		logger.info("Loading Students")
 		var currentStudentId = 0;
@@ -496,10 +487,17 @@ class ControllerFxGraduation {
 	
 	
 	//--Anotations--//
+	/**
+	 * Cette section contient les methodes pour gere les anotations.
+	 * Du a l'implementation du zoom sur des question, il est necesaaire de "deZoom" (viewPort a null) et ensuite de recuper toute les anotations.
+	 * Une fois deZoome, on peut ensuite placer des anotations si l'outils est selectionner.
+	 * Une fois finit avec les annotations, on peut effacer les anotations de la vue, et rezoomer sur la question que l'on veut.
+	 */
 	
 	
-	
-	
+	/**
+	 * Utiliser pour ajouter une anotations a la vue avec la sourie.
+	 */
 	def createNewAnotation(MouseEvent e){
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
 								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
@@ -508,18 +506,26 @@ class ControllerFxGraduation {
 		mainPane.addNewAnotation(mousePositionX,mousePositionY);
 	
 	}
-
+	
+	/**
+	 * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
+	 */
 	def showAnotations(){
-		//On veut prendre les donee de tt les anotations pour la page courante et l'etudiant courrant,
-		//et ajouter ces anotations au mainPane
+	
 	}
 	
+	/**
+	 * Enleve toutes les annotations de la vue
+	 */
 	def hideAnotations(){
-		//On veut enleve tts les anotations de mainPane
-		//
 		mainPane.removeAllAnotations
 	}
 	
+	/**
+	 * On rentre dans le mode d'annotations.
+	 * il faut dezoom, afficher les annotations et metter l'outils courrant au mode anotation.
+	 * 
+	 */
 	def enterAnotationMode(){
 		mainPane.unZoom
 		showAnotations
@@ -534,18 +540,8 @@ class ControllerFxGraduation {
 	
 	//-----------------//
 	
+	
 	//---NAVIGATION---//
-	
-	def void renderStudentCopy(){		
-		var image = presenter.presenterPdf.currentPdfPage
-		mainPane.image = SwingFXUtils.toFXImage(image, null);
-		imageWidth = image.width
-		imageHeight = image.height
-	}
-	
-	def void renderCorrectedCopy(){
-		
-	}
 	
 	def void nextStudent(){
 		studentList.selectNextItem
@@ -565,8 +561,8 @@ class ControllerFxGraduation {
 	def void setSelectedStudent(){
 		if (!studentList.noItems) {
 			focusStudent(studentList.currentItem)
-			display();
-			displayGrader();	
+			updateDisplayedPage();
+			updateDisplayedGrader();	
 		}else {
 			logger.warn("The student list is Empty")
 		}
@@ -591,9 +587,9 @@ class ControllerFxGraduation {
 	def void setSelectedQuestion(){
 		if (!questionList.noItems) {
 			focusQuestion(questionList.currentItem)
-			display();
-			displayQuestion();
-			displayGrader();
+			updateDisplayedPage();
+			updateDisplayedQuestion();
+			updateDisplayedGrader();
 		}else {
 			logger.warn("The question list is Empty")
 		}
@@ -610,17 +606,23 @@ class ControllerFxGraduation {
 		
 	}
 	
-	def void setZoomArea(int x, int y, int height, int width) {
-		if (autoZoom) 
-			mainPane.zoomTo(x,y,height,width)
-	}
-	
 	//----------------//
 	
 	//---DISPLAYING---//
 	
-	//On veut afficher la bonne page, donc on verifie si on est sur la bonne page, si non, on change de page
-	def void display(){
+	def void renderStudentCopy(){		
+		var image = presenter.presenterPdf.currentPdfPage
+		mainPane.image = SwingFXUtils.toFXImage(image, null);
+		imageWidth = image.width
+		imageHeight = image.height
+	}
+	
+	def void renderCorrectedCopy(){}
+	
+	/**
+	 * Checks if we need to change the page and changes it if we need to.
+	 */
+	def void updateDisplayedPage(){
 		if (!studentList.noItems && !questionList.noItems) {
 			var i = presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
 			if (!presenter.presenterPdf.atCorrectPage(i)){
@@ -632,16 +634,18 @@ class ControllerFxGraduation {
 		}
 	}
 
-	def void setZoomArea(double x, double y,double width ,double height) {
-		mainPane.zoomTo(x,y,height,width);
-	}
-
-	def void displayQuestion(){
+	/**
+	 * Changes the zoom to the current questions dimentions
+	 */
+	def void updateDisplayedQuestion(){
 		if (autoZoom) 
-			setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
+			setZoomArea(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.h,questionList.currentItem.w)
 	}
 	
-	def void displayGrader(){
+	/**
+	 * 
+	 */
+	def void updateDisplayedGrader(){
 		if (!studentList.noItems && !questionList.noItems) {
 			grader.changeGrader(questionList.currentItem,studentList.currentItem);
 			updateGlobalGrade
@@ -649,22 +653,19 @@ class ControllerFxGraduation {
 			logger.warn("Cannot load grader, student list or question is is empty")
 		}
 	}
+	
+	/**
+	 * 
+	 */
+	def void setZoomArea(double x, double y, double height, double width) {
+		if (autoZoom) 
+			mainPane.zoomTo(x,y,height,width)
+	}
 
 	//----------------//
 
-	
-	
-	//---ACTIONS ON MODEL---//
-	
-	def void setGrade(int studentId,int questionId,float grade) {
-		
-	}
-	
-	
-	//----------------------//
-	
-	
 	//---PAGE OPERATIONS---//
+	
 	def void nextPage() {
 		presenter.getPresenterPdf.nextPdfPage
 		renderStudentCopy
@@ -677,6 +678,7 @@ class ControllerFxGraduation {
 		presenter.getPresenterPdf.goToPdfPage(pageNumber)
 		renderStudentCopy
 	}
+	
 	//---------------------//
 	
 	
