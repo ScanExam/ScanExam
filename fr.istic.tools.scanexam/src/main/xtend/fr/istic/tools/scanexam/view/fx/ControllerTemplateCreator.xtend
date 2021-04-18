@@ -1,10 +1,10 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.presenter.PresenterTemplateCreator
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import java.io.File
 import java.util.Objects
 import javafx.fxml.FXML
@@ -19,7 +19,6 @@ import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import javax.annotation.Nullable
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 
 /**
  * Contrôleur pour l'UI de création d'un modèle d'examen
@@ -51,12 +50,18 @@ class ControllerTemplateCreator {
 	@FXML
 	var Pane hoverPane
 	
-	/* Presenter de la création du modèle */
-	var PresenterTemplateCreator presTemplateCreator;
+
 	
 	/* Controller JaveFX de l'edition d'examen */
 	var ControllerFxEdition ctrlEditor;
-
+	
+	/* Nom du modèle */
+	var String templateName
+	
+	/* Fichier du modèle */
+	var File templateFile
+	
+	
 	/*Logger */
 	static val logger = LogManager.logger
 
@@ -64,8 +69,8 @@ class ControllerTemplateCreator {
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param presenter Presenter de la création du modèle
 	 */
-	def initialize(PresenterTemplateCreator presenter, ControllerFxEdition ctrlFxEditor) {
-		presTemplateCreator = presenter
+	def initialize(ControllerFxEdition ctrlFxEditor) {
+	
 		ctrlEditor = ctrlFxEditor
 		
 		// Condition pour que le bouton de validation soit désactivé :
@@ -83,7 +88,10 @@ class ControllerTemplateCreator {
 		// Action sur les boutons de chargement de fichiers
 		btnBrowser.onAction = [e|loadFile("*.pdf", "file.format.pdf", txtFldTemplateFile)]
 	}
-
+	def void createTemplate() {
+		
+		ctrlEditor.pdfManager.create(templateName, templateFile)
+	}
 	/**
 	 * Anime toutes les composants vides
 	 */
@@ -116,7 +124,7 @@ class ControllerTemplateCreator {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 		if (file !== null) {
 			destination.text = file.path
-			presTemplateCreator.setTemplateFile(file)
+			templateFile = file
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -130,10 +138,10 @@ class ControllerTemplateCreator {
 
 	@FXML
 	def saveAndQuit() {
-		if (presTemplateCreator.checkName(txtFldTemplateName.text)) {
-			if(presTemplateCreator.checkFilepath(txtFldTemplateFile.text)) {
-				presTemplateCreator.setTemplateName(txtFldTemplateName.text)
-				presTemplateCreator.createTemplate
+		if (checkName(txtFldTemplateName.text)) {
+			if(checkFilepath(txtFldTemplateFile.text)) {
+				templateName = txtFldTemplateName.text
+				createTemplate
 				ctrlEditor.render 
 				quit
 			} else {
@@ -142,6 +150,14 @@ class ControllerTemplateCreator {
 		} else {
 			sendDialog(AlertType.ERROR, "templateLoader.dialog.title", "templateLoader.dialog.fileFail", null)
 		}
+	}
+
+	def checkFilepath(String string) {
+		true 	// TODO
+	}
+	
+	def checkName(String string) {
+		true 	// TODO
 	}
 
 	/**

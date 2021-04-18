@@ -1,7 +1,9 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader;
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
@@ -94,19 +96,19 @@ public class ControllerGraduationLoader {
   @FXML
   private Pane hoverPane;
   
-  private PresenterGraduationLoader presGraduationLoader;
-  
   private ControllerFxGraduation ctlrFx;
   
   private static final Logger logger = LogManager.getLogger();
+  
+  private ServiceGraduation service;
   
   /**
    * Initialise le composant avec le presenter composé en paramètre
    * @param loader le presenter
    */
-  public void initialize(final PresenterGraduationLoader loader, final ControllerFxGraduation controller) {
-    this.presGraduationLoader = loader;
+  public void initialize(final ServiceGraduation service, final ControllerFxGraduation controller) {
     this.ctlrFx = controller;
+    this.service = service;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
       this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(
@@ -130,12 +132,33 @@ public class ControllerGraduationLoader {
       this.loadFile("*.pdf", "file.format.pdf", this.txtFldFileGraduation);
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
-    boolean _hasTemplateLoaded = this.presGraduationLoader.hasTemplateLoaded();
+    boolean _hasTemplateLoaded = this.hasTemplateLoaded();
     boolean _not = (!_hasTemplateLoaded);
     if (_not) {
       this.rbUseLoaded.setDisable(true);
       this.rbLoadModel.setSelected(true);
     }
+  }
+  
+  public boolean hasTemplateLoaded() {
+    return this.service.hasExamLoaded();
+  }
+  
+  public boolean loadTemplate(final String path) {
+    return true;
+  }
+  
+  public boolean loadStudentSheets(final String path) {
+    boolean _xblockexpression = false;
+    {
+      final QRCodeGenerator generator = new QRCodeGeneratorImpl();
+      _xblockexpression = true;
+    }
+    return _xblockexpression;
+  }
+  
+  public boolean loadCorrection(final String path) {
+    return true;
   }
   
   /**
@@ -195,9 +218,9 @@ public class ControllerGraduationLoader {
   @FXML
   public Object saveAndQuit() {
     Object _xifexpression = null;
-    if ((this.presGraduationLoader.loadTemplate(this.txtFldFile.getText()) || this.txtFldFile.isDisable())) {
+    if ((this.loadTemplate(this.txtFldFile.getText()) || this.txtFldFile.isDisable())) {
       Object _xifexpression_1 = null;
-      boolean _loadCorrection = this.presGraduationLoader.loadCorrection(this.txtFldFileGraduation.getText());
+      boolean _loadCorrection = this.loadCorrection(this.txtFldFileGraduation.getText());
       if (_loadCorrection) {
         this.ctlrFx.load();
         this.quit();

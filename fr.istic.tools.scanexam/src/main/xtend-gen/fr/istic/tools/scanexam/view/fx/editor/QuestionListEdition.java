@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
 import com.google.common.base.Objects;
-import fr.istic.tools.scanexam.presenter.PresenterQuestionZone;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
 import fr.istic.tools.scanexam.view.fx.editor.BoxType;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
@@ -57,10 +56,10 @@ public class QuestionListEdition extends VBox {
       }
     } else {
     }
-    int _currentPdfPageNumber = this.controller.getPresenter().getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber = this.controller.getPdfManager().currentPdfPageNumber();
     String _plus = ("page : " + Integer.valueOf(_currentPdfPageNumber));
     InputOutput.<String>println(_plus);
-    int _currentPdfPageNumber_1 = this.controller.getPresenter().getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber_1 = this.controller.getPdfManager().currentPdfPageNumber();
     QuestionItemEdition item = new QuestionItemEdition(this, box, type, _currentPdfPageNumber_1);
     this.addToModel(item);
     this.add(item);
@@ -133,7 +132,6 @@ public class QuestionListEdition extends VBox {
   }
   
   public void addToModel(final QuestionItemEdition item) {
-    PresenterQuestionZone _presenterQuestionZone = this.controller.getPresenter().getPresenterQuestionZone();
     double _x = item.getZone().getX();
     double _maxX = this.controller.getMaxX();
     double _divide = (_x / _maxX);
@@ -146,12 +144,11 @@ public class QuestionListEdition extends VBox {
     double _width = item.getZone().getWidth();
     double _maxX_1 = this.controller.getMaxX();
     double _divide_3 = (_width / _maxX_1);
-    item.setQuestionId(_presenterQuestionZone.createQuestion(_divide, _divide_1, _divide_2, _divide_3));
+    item.setQuestionId(this.controller.createQuestion(_divide, _divide_1, _divide_2, _divide_3));
     this.updateInModel(item);
   }
   
   public void updateInModel(final QuestionItemEdition item) {
-    PresenterQuestionZone _presenterQuestionZone = this.controller.getPresenter().getPresenterQuestionZone();
     int _questionId = item.getQuestionId();
     double _x = item.getZone().getX();
     double _maxX = this.controller.getMaxX();
@@ -159,8 +156,7 @@ public class QuestionListEdition extends VBox {
     double _y = item.getZone().getY();
     double _maxY = this.controller.getMaxY();
     double _divide_1 = (_y / _maxY);
-    _presenterQuestionZone.moveQuestion(_questionId, _divide, _divide_1);
-    PresenterQuestionZone _presenterQuestionZone_1 = this.controller.getPresenter().getPresenterQuestionZone();
+    this.controller.moveQuestion(_questionId, _divide, _divide_1);
     int _questionId_1 = item.getQuestionId();
     double _height = item.getZone().getHeight();
     double _maxY_1 = this.controller.getMaxY();
@@ -168,12 +164,12 @@ public class QuestionListEdition extends VBox {
     double _width = item.getZone().getWidth();
     double _maxX_1 = this.controller.getMaxX();
     double _divide_3 = (_width / _maxX_1);
-    _presenterQuestionZone_1.resizeQuestion(_questionId_1, _divide_2, _divide_3);
-    this.controller.getPresenter().getPresenterQuestionZone().renameQuestion(item.getQuestionId(), item.getName());
-    this.controller.getPresenter().getPresenterQuestionZone().changeQuestionWorth(item.getQuestionId(), item.getScale());
+    this.controller.resizeQuestion(_questionId_1, _divide_2, _divide_3);
+    this.controller.renameQuestion(item.getQuestionId(), item.getName());
+    this.controller.changeQuestionWorth(item.getQuestionId(), item.getScale());
   }
   
   public void removeFromModel(final QuestionItemEdition item) {
-    this.controller.getPresenter().getPresenterQuestionZone().removeQuestion(item.getQuestionId());
+    this.controller.removeQuestion(item.getQuestionId());
   }
 }

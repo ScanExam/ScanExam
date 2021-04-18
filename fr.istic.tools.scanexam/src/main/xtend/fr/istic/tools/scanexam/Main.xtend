@@ -10,9 +10,7 @@ import org.apache.logging.log4j.core.config.Configurator
 
 class Main 
 {
-	static val logger = LogManager.logger
 	
-
 	def static void main(String[] args)
 	{
 	

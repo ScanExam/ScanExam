@@ -1,8 +1,8 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader
-import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader.LoadState
+import fr.istic.tools.scanexam.mailing.StudentDataManager
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
@@ -28,6 +28,12 @@ import org.apache.logging.log4j.LogManager
  */
 class ControllerStudentListLoader {
 
+	private enum LoadState {
+		SUCCESS,
+		X_NOT_VALID,
+		Y_NOT_VALID
+	}
+	
 	// ----------------------------------------------------------------------------------------------------
 	/*
 	 * VARIABLES
@@ -40,8 +46,7 @@ class ControllerStudentListLoader {
 					"*.xlsb", "*.xls", "*.xlc", "*.xlm", "*.xlw", "*.xlk", "*.et", "*.xlt", "*.ett", "*.dif", "*.wk1",
 					"*.xls", "*.123", "*.wb2", "*.csv")
 
-	/* Controlleur de la configuration */
-	var PresenterStudentListLoader presStudentList
+
 
 	/* Pane principale de la vue */
 	@FXML
@@ -59,6 +64,7 @@ class ControllerStudentListLoader {
 	@FXML
 	public Button btnOk
 	
+	var ServiceGraduation service
 
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -69,7 +75,7 @@ class ControllerStudentListLoader {
 
 	@FXML
 	def void saveAndQuit() {
-		val state = presStudentList.loadFile(new File(txtFldFile.text), txtFldFirstCell.text)
+		val state = loadFile(new File(txtFldFile.text), txtFldFirstCell.text)
 		if(!btnOk.disable)
 			dispDialog(state)
 		quit
@@ -107,11 +113,11 @@ class ControllerStudentListLoader {
 	/**
 	 * Initialise le contrôleur
 	 */
-	def void initialize(PresenterStudentListLoader presStudentList) {
-		this.presStudentList = presStudentList
+	def void initialize(ServiceGraduation service) {
 		
-		txtFldFile.text = presStudentList.studentListPath
-		txtFldFirstCell.text = presStudentList.studentListShift
+		this.service = service
+		txtFldFile.text = studentListPath
+		txtFldFirstCell.text = studentListShift
 		
 		txtFldFirstCell.textFormatter = new TextFormatter<String> [ change |
 			change.text = change.text.toUpperCase
@@ -137,8 +143,8 @@ class ControllerStudentListLoader {
 		if (state == LoadState.SUCCESS) {
 			alert.alertType = AlertType.CONFIRMATION
 			alert.setTitle(LanguageManager.translate("studentlist.loadConfirmation.title"))
-			alert.setHeaderText(String.format(LanguageManager.translate("studentlist.loadConfirmation.success"), presStudentList.numberPair))
-			alert.contentText = presStudentList.studentList
+			alert.setHeaderText(String.format(LanguageManager.translate("studentlist.loadConfirmation.success"), numberPair))
+			alert.contentText = studentList
 		} else {
 			alert.alertType = AlertType.ERROR
 			alert.setTitle(LanguageManager.translate("studentlist.loadConfirmation.title"))
@@ -148,5 +154,57 @@ class ControllerStudentListLoader {
 				alert.setHeaderText(LanguageManager.translate("studentlist.loadConfirmation.yNotValid"))
 		}
 		alert.showAndWait
+	}
+	
+		/**
+	 * Envoie les informations au service
+	 * @param file Chemin du fichier contenant la liste des étudiants
+	 * @param firstCell Première case à prendre en compte
+	 * @return un LoadState représentant l'état terminal du chargement des données
+	 */
+	def LoadState loadFile(File file, String firstCell) {
+		if(!StudentDataManager.isValidX(firstCell))
+			return LoadState.X_NOT_VALID
+		else if(!StudentDataManager.isValidY(firstCell))
+			return LoadState.Y_NOT_VALID
+			
+		StudentDataManager.loadData(file, firstCell)
+		service.studentListPath = file.absolutePath
+		service.studentListShift = firstCell
+		return LoadState.SUCCESS
+	}
+	
+	/**
+	 * @return le nombre de paires parsée par StudentDataManager, -1 si aucune n'a été parsée
+	 */
+	def int getNumberPair() {
+		StudentDataManager.getNameToMailMap().map(map | map.size).orElse(-1)
+	}
+	
+	/**
+	 * @return la liste des données parsées sous forme de String. Chaîne vide si aucune données n'a été parsée
+	 */
+	def String getStudentList() {
+		StudentDataManager.getNameToMailMap()
+			.map(map | map.entrySet
+					   .map(entry | entry.key + " - " + entry.value)
+					   .join("\n"))
+			.orElse("")
+	}
+	
+	/**
+	 * @return le path vers le fichier contenant la liste des étudiants. Chaîne vide si celui n'est pas défini
+	 */
+	def String getStudentListPath() {
+		return ""
+		//return service.studentListPath === null ? "" : service.studentListPath
+	}
+	
+	/**
+	 * @return la première case à prendre en compte dans le fichier contenant la liste des étudiants
+	 */
+	def String getStudentListShift() {
+		return "A1"
+		//return service.studentListShift
 	}
 }

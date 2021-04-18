@@ -1,12 +1,20 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
-import fr.istic.tools.scanexam.launcher.LauncherFX
-import fr.istic.tools.scanexam.presenter.PresenterGraduation
+import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.export.GradesExportImpl
+import fr.istic.tools.scanexam.mailing.StudentDataManager
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
+import fr.istic.tools.scanexam.utils.Tuple3
 import fr.istic.tools.scanexam.view.fx.FxSettings
+import fr.istic.tools.scanexam.view.fx.PdfManager
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.util.Arrays
-import java.util.Objects
+import java.util.LinkedList
+import java.util.List
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.embed.swing.SwingFXUtils
@@ -25,6 +33,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
+import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
@@ -36,10 +45,7 @@ import static fr.istic.tools.scanexam.config.LanguageManager.translate
 class ControllerFxGraduation {
 
 	static val logger = LogManager.logger
-	/**
-	 * High level Controllers to access the Presenters
-	 */
-	@Accessors PresenterGraduation presenter;
+
 
 	
 	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
@@ -107,6 +113,12 @@ class ControllerFxGraduation {
 	@FXML
 	public Button prevQuestionButton;
 	
+	var ServiceGraduation service
+	
+	@Accessors
+	var PdfManager pdfManager
+	
+	var List<Question> questions
 	/**
 	 * FXML Actions.
 	 */
@@ -136,7 +148,7 @@ class ControllerFxGraduation {
 	@FXML
 	def void exportPressed() {
 		println("Export method");
-		presenter.exportGrades
+		exportGrades
 	}
 
 	/**
@@ -308,8 +320,10 @@ class ControllerFxGraduation {
 
 	// ---------------------------------//
 	
-	def init(){
+	def init(ServiceGraduation serviceGraduation){
 		
+		pdfManager = new PdfManager(serviceGraduation)
+		service = serviceGraduation
 		mainPane = new PdfPaneWithAnotations(this)
 		parentPane.children.add(mainPane)
 		
@@ -399,7 +413,7 @@ class ControllerFxGraduation {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			presenter.saveTemplate(file.path)
+			saveTemplate(file.path)
 			logger.info("Saving correction file")
 		} 
 		else {
@@ -447,18 +461,18 @@ class ControllerFxGraduation {
 	 */
 	def void loadQuestions() {
 		logger.info("Loading Questions")
-		for (var p = 0;p < presenter.getPageAmount;p++) {
-			var ids = presenter.initLoading(p);
+		for (var p = 0;p < service.pageAmount;p++) {
+			var ids =  initLoading(p);
 			for (int i:ids) {
 				var question = new QuestionItemGraduation();
-				question.x = presenter.questionX(i) * imageWidth;
-				question.y = presenter.questionY(i) * imageHeight;
-				question.h = presenter.questionHeight(i) * imageHeight;
-				question.w = presenter.questionWidth(i) * imageWidth;
+				question.x = questionX(i) * imageWidth;
+				question.y = questionY(i) * imageHeight;
+				question.h = questionHeight(i) * imageHeight;
+				question.w = questionWidth(i) * imageWidth;
 				question.page = p
 				question.questionId = i
-				question.name =presenter.questionName(i);
-				question.worth = presenter.questionWorth(i)
+				question.name = questionName(i);
+				question.worth = questionWorth(i)
 				questionList.addItem(question)
 			}
 		}
@@ -472,7 +486,7 @@ class ControllerFxGraduation {
 	def void loadStudents(){
 		logger.info("Loading Students")
 		var currentStudentId = 0;
-		var ids = presenter.studentIds
+		var ids = studentIds
 		
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
@@ -545,12 +559,12 @@ class ControllerFxGraduation {
 	
 	def void nextStudent(){
 		studentList.selectNextItem
-		presenter.presenterQuestion.nextStudent
+		service.nextSheet
 		setSelectedStudent();
 	}
 	def void previousStudent(){
 		studentList.selectPreviousItem
-		presenter.presenterQuestion.previousStudent
+		 service.previousSheet
 		setSelectedStudent();
 	}
 	def void selectStudent(StudentItemGraduation item){
@@ -570,17 +584,17 @@ class ControllerFxGraduation {
 
 	def void nextQuestion(){
 		questionList.selectNextItem
-		presenter.presenterQuestion.nextQuestion
+		service.nextQuestion
 		setSelectedQuestion()
 	}
 	def void previousQuestion(){
 		questionList.selectPreviousItem
-		presenter.presenterQuestion.previousQuestion
+		service.previousQuestion
 		setSelectedQuestion()
 	}
 	def void selectQuestion(QuestionItemGraduation item) {
 		questionList.selectItem(item);
-		presenter.presenterQuestion.selectQuestion(item.questionId)
+		service.selectQuestion(item.questionId)
 		setSelectedQuestion()
 	}
 
@@ -611,7 +625,7 @@ class ControllerFxGraduation {
 	//---DISPLAYING---//
 	
 	def void renderStudentCopy(){		
-		var image = presenter.presenterPdf.currentPdfPage
+		var image = pdfManager.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		imageWidth = image.width
 		imageHeight = image.height
@@ -624,10 +638,10 @@ class ControllerFxGraduation {
 	 */
 	def void updateDisplayedPage(){
 		if (!studentList.noItems && !questionList.noItems) {
-			var i = presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page)
-			if (!presenter.presenterPdf.atCorrectPage(i)){
+			var i = service.getAbsolutePageNumber(studentList.currentItem.studentId,questionList.currentItem.page)
+			if (!pdfManager.atCorrectPage(i)){
 				logger.info("Changing page")
-				selectPage(presenter.getAbsolutePage(studentList.currentItem.studentId,questionList.currentItem.page))
+				selectPage(service.getAbsolutePageNumber(studentList.currentItem.studentId,questionList.currentItem.page))
 			}
 		}else {
 			logger.warn("Cannot find correct page, student list or question is is empty")
@@ -667,15 +681,15 @@ class ControllerFxGraduation {
 	//---PAGE OPERATIONS---//
 	
 	def void nextPage() {
-		presenter.getPresenterPdf.nextPdfPage
+		pdfManager.nextPdfPage
 		renderStudentCopy
 	}
 	def void previousPage(){
-		presenter.getPresenterPdf.previousPdfPage
+		pdfManager.previousPdfPage
 		renderStudentCopy
 	}
 	def void selectPage(int pageNumber) {
-		presenter.getPresenterPdf.goToPdfPage(pageNumber)
+		pdfManager.goToPdfPage(pageNumber)
 		renderStudentCopy
 	}
 	
@@ -686,7 +700,227 @@ class ControllerFxGraduation {
 	 * Met à jour la note globale affichée
 	 */
 	def void updateGlobalGrade() {
-    	gradeLabel.text = translate("label.grade") + " " + presenter.globalGrade + "/" + presenter.globalScale
+    	gradeLabel.text = translate("label.grade") + " " + globalGrade + "/" + globalScale
 	}
 	
+	
+	
+		
+	
+	def boolean openCorrectionPdf(File file)
+	{
+		val document = PDDocument.load(file);
+		val stream = new ByteArrayOutputStream();
+		document.save(stream);
+		pdfManager.create("", file);
+        val pdfReader = new PdfReaderWithoutQrCodeImpl(document, service.pageAmount,3);  
+        pdfReader.readPDf();
+        val studentSheets = pdfReader.completeStudentSheets
+		return service.initializeCorrection(studentSheets) 
+	}
+	
+		
+	//---Grade entry management
+	
+	def List<Integer> getEntryIds(int questionId){
+		var l = service.getQuestionGradeEntries(questionId);
+		
+		var result = new LinkedList<Integer>();
+		for (Tuple3<Integer, String, Float> t : l) {
+			result.add(t._1);
+		}
+		result
+	}
+	
+	def List<Integer> getSelectedEntryIds(int questionId){
+		service.getQuestionSelectedGradeEntries(questionId);
+	}
+	
+	def String getEntryText(int entryId,int questionId){
+		var l = service.getQuestionGradeEntries(questionId);
+		for (Tuple3<Integer, String, Float> t : l) {
+			if (entryId == t._1) {
+				return t._2
+			}
+		}
+		"Entry not found"
+	}
+	
+	def float getEntryWorth(int entryId,int questionId){
+		var l = service.getQuestionGradeEntries(questionId);
+		for (Tuple3<Integer, String, Float> t : l) {
+			if (entryId == t._1) {
+				return t._3
+			}
+		}
+		return -1
+	}
+	
+	/**
+	 * Retourne la note globale de la copie
+	 * @return Note globale de la copie
+	 * //FIXME doit être lié au service
+	 */
+	def float getGlobalGrade() {
+	    return 0.0f
+	}
+	    
+	/**
+	 * Retourne le barème total de l'examen
+	 * @return Barème total de l'examen
+	 * //FIXME doit être lié au service
+	 */
+	def float getGlobalScale() {
+	    return 0.0f
+	}
+	
+	/* SAVING  */
+	def saveTemplate(String path){
+		service.saveCorrectionTemplate(path,pdfManager.pdfOutputStream)
+	}
+	
+	/* STUDENTS */
+	
+	def List<String> getStudentsSuggestedNames(String start){
+		StudentDataManager.allNames
+			.map(l | l.filter[n | n.toLowerCase().contains(start.toLowerCase())].toList)
+			.orElse(List.of())
+	}
+	
+	def LinkedList<Integer> getStudentIds(){ //TODO Change service impl to not return null
+		var list = service.studentSheets
+		var result = new LinkedList<Integer>()
+		if (list !== null) {
+			for (StudentSheet s : list) {
+				result.add(s.id);
+			}
+		}
+		else {
+			logger.warn("Service returned null studentId list")
+		}
+		result
+	}
+	
+
+	
+		
+	def LinkedList<Integer> initLoading(int pageNumber){
+		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
+		var ids = new LinkedList<Integer>();
+		for (Question q : questions) {
+			ids.add(q.id)
+		}
+		ids
+	}
+	
+	
+	 
+	
+	def double questionX(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.x
+			}
+		}
+		result
+	}
+	
+	def double questionY(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.y
+			}
+		}
+		result
+	}
+	
+	def double questionHeight(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.heigth
+			}
+		}
+		result
+	}
+	
+	def double questionWidth(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.width
+			}
+		}
+		result
+	}
+	
+	def String questionName(int id){
+		var result = "";
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.name
+			}
+		}
+		result
+	}
+	
+	def float questionWorth(int id){//TODO FIX (TODO FIX THE TODO)
+		var result = -1f;
+		for (Question q : questions) {
+			if (q.id == id) {
+				if (q.gradeScale !== null)
+					result = q.gradeScale.maxPoint
+			}
+		}
+		result
+	}
+	
+	//XXX À améliorer
+	def void exportGrades() {
+	  (new GradesExportImpl(service)).exportGrades
+	}
+	
+	def applyGrade(int questionId,int gradeId) {
+        service.assignGradeEntry(questionId,gradeId);
+    }
+    
+    def removeGrade(int questionId,int gradeId) {
+        service.retractGradeEntry(questionId,gradeId);
+    }
+    /**
+     * Ajoute une nouvelle entrée à la liste des points attribuable à la question
+     * @param questionId l'ID de la question dans laquelle ajouter l'entrée
+     * @param desc la description de l'entrée
+     * @param point le nombre de point de l'entrée
+     * @return l'ID de l'entrée
+     */
+    def int addEntry(int questionId, String desc, float point) {
+        service.addEntry(questionId, desc, point)
+    }
+    
+    /**
+     * Modifie une entrée de la liste des points attribuable à la question
+     * @param questionId l'ID de la question dans laquelle modifier l'entrée
+     * @param gradeEntryId l'ID de l'entrée à modifier
+     * @param desc la nouvelle description de l'entrée
+     * @param point le nouveau nombre de point de l'entrée
+     */
+    def modifyEntry(int questionId, int gradeEntryId, String desc, float point) {
+        service.modifyEntry(questionId, gradeEntryId, desc, point)            
+    }
+    
+    /**
+     * Supprime une entrée de la liste des points attribuable à la question
+     * @param questionId l'ID de la question dans laquelle supprimer l'entrée
+     * @param gradeEntryId l'ID de l'entrée à supprimer
+     */
+    def removeEntry(int questionId, int gradeEntryId) {
+        service.removeEntry(questionId, gradeEntryId)
+    }
+    
+    def renameStudent(int studentId,String newname){
+        service.assignStudentId(newname)
+    }
 }

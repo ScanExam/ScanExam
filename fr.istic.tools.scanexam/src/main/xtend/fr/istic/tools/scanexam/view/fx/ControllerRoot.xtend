@@ -1,7 +1,8 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.presenter.PresenterConfiguration
+import fr.istic.tools.scanexam.services.api.ServiceEdition
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
@@ -18,6 +19,7 @@ import javafx.scene.control.MenuItem
 import javafx.scene.control.Tab
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class ControllerRoot implements Initializable {
 	
@@ -35,27 +37,28 @@ class ControllerRoot implements Initializable {
 	@FXML
 	MenuItem exportToExamButton;
 	
-	ControllerFxGraduation corrector;
-	ControllerFxEdition editor;
+	@Accessors
+	ControllerFxGraduation graduationController;
 	
-	def setEditorController(ControllerFxEdition editor){
-		this.editor = editor;
-	}
-	def setCorrectorController(ControllerFxGraduation corrector){
-		this.corrector = corrector;
-	}
+	@Accessors
+	ControllerFxEdition editionController;
 	
-	def setEditor(Node n){
+	var ServiceEdition serviceEdition
+	var ServiceGraduation serviceGraduation
+	
+
+	
+	def setEditorNode(Node n){
 		editorTab.content = n
 	}
 	
-	def setCorrector(Node n){
+	def setGraduationNode(Node n){
 		correctorTab.content = n
 	}
 	
 	@FXML
 	def loadTemplatePressedEditor(){
-		editor.loadTemplatePressed
+		editionController.loadTemplatePressed
 	}
 	@FXML
 	def loadTemplatePressedCorrector() {
@@ -65,7 +68,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		loader.<ControllerGraduationLoader>controller.initialize(corrector.presenter.presenterGraduationLoader,corrector)
+		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation,graduationController)
 		dialog.setScene(new Scene(view, 384, 355))
 		dialog.setResizable(false)
 		dialog.show
@@ -79,7 +82,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.new"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerTemplateCreator>controller.initialize(editor.presenter.getPresenterTemplateCreator, editor)
+		loader.<ControllerTemplateCreator>controller.initialize(editionController)
 		dialog.setScene(new Scene(view, 384, 155))
 		dialog.setResizable(false);
 		dialog.show
@@ -87,7 +90,7 @@ class ControllerRoot implements Initializable {
 	
 	@FXML
 	def SaveTemplatePressed(){
-		editor.saveTemplatePressed
+		editionController.saveTemplatePressed
 	}
 	
 	@FXML
@@ -98,7 +101,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerStudentListLoader>controller.initialize(corrector.presenter.presenterStudentList)
+		loader.<ControllerStudentListLoader>controller.initialize(serviceGraduation)
 		dialog.setScene(new Scene(view, 384, 160))
 		dialog.setResizable(false);
 		dialog.show
@@ -112,7 +115,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerConfiguration>controller.initialize(new PresenterConfiguration)
+		loader.<ControllerConfiguration>controller.initialize()
 		dialog.setScene(new Scene(view, 384, 280))
 		dialog.setResizable(false);
 		dialog.show
@@ -139,7 +142,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerGraduationLoader>controller.initialize(corrector.presenter.getPresenterGraduationLoader,corrector)
+		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation,graduationController)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show
@@ -153,7 +156,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerStudentSheetExport>controller.initialize(editor.presenter.presenterStudentSheetExport)
+		loader.<ControllerStudentSheetExport>controller.initialize(editionController,serviceEdition)
 		dialog.setScene(new Scene(view, 384, 107))
 		dialog.setResizable(false);
 		dialog.show
@@ -161,19 +164,21 @@ class ControllerRoot implements Initializable {
 	
 	@FXML
 	def saveCorrection(){
-		corrector.saveExam
+		graduationController.saveExam
 	}
 	
 	@FXML
 	def toggleAutoZoom(){
-		corrector.toAutoZoom = autoZoom.selected
+		graduationController.toAutoZoom = autoZoom.selected
 	}
 	
 	
-	def init(){
-		saveGraduationButton.disableProperty.bind(corrector.loadedModel.not)
-		saveTemplateButton.disableProperty.bind(editor.loadedModel.not)
-		exportToExamButton.disableProperty.bind(editor.loadedModel.not)
+	def init(ServiceEdition serviceEdition,ServiceGraduation serviceGraduation){
+		this.serviceEdition = serviceEdition
+		this.serviceGraduation = serviceGraduation
+		saveGraduationButton.disableProperty.bind(graduationController.loadedModel.not)
+		saveTemplateButton.disableProperty.bind(editionController.loadedModel.not)
+		exportToExamButton.disableProperty.bind(editionController.loadedModel.not)
 	}
 	
 	override initialize(URL location, ResourceBundle resources) {

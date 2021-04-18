@@ -2,7 +2,8 @@ package fr.istic.tools.scanexam.view.fx;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterStudentListLoader;
+import fr.istic.tools.scanexam.mailing.StudentDataManager;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.FormatValidator;
@@ -11,7 +12,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import javafx.collections.ObservableList;
@@ -36,6 +39,14 @@ import org.eclipse.xtext.xbase.lib.ListExtensions;
  */
 @SuppressWarnings("all")
 public class ControllerStudentListLoader {
+  private enum LoadState {
+    SUCCESS,
+    
+    X_NOT_VALID,
+    
+    Y_NOT_VALID;
+  }
+  
   /**
    * Logger du programme
    */
@@ -46,11 +57,6 @@ public class ControllerStudentListLoader {
   private static final List<String> supportedFormat = Arrays.<String>asList("*.ods", "*.ots", "*.sxc", "*.stc", "*.fods", "*.xml", "*.xlsx", "*.xltx", "*.xlsm", 
     "*.xlsb", "*.xls", "*.xlc", "*.xlm", "*.xlw", "*.xlk", "*.et", "*.xlt", "*.ett", "*.dif", "*.wk1", 
     "*.xls", "*.123", "*.wb2", "*.csv");
-  
-  /**
-   * Controlleur de la configuration
-   */
-  private PresenterStudentListLoader presStudentList;
   
   /**
    * Pane principale de la vue
@@ -76,6 +82,8 @@ public class ControllerStudentListLoader {
   @FXML
   public Button btnOk;
   
+  private ServiceGraduation service;
+  
   /**
    * METHODES
    */
@@ -83,7 +91,7 @@ public class ControllerStudentListLoader {
   public void saveAndQuit() {
     String _text = this.txtFldFile.getText();
     File _file = new File(_text);
-    final PresenterStudentListLoader.LoadState state = this.presStudentList.loadFile(_file, this.txtFldFirstCell.getText());
+    final ControllerStudentListLoader.LoadState state = this.loadFile(_file, this.txtFldFirstCell.getText());
     boolean _isDisable = this.btnOk.isDisable();
     boolean _not = (!_isDisable);
     if (_not) {
@@ -135,10 +143,10 @@ public class ControllerStudentListLoader {
   /**
    * Initialise le contrôleur
    */
-  public void initialize(final PresenterStudentListLoader presStudentList) {
-    this.presStudentList = presStudentList;
-    this.txtFldFile.setText(presStudentList.getStudentListPath());
-    this.txtFldFirstCell.setText(presStudentList.getStudentListShift());
+  public void initialize(final ServiceGraduation service) {
+    this.service = service;
+    this.txtFldFile.setText(this.getStudentListPath());
+    this.txtFldFirstCell.setText(this.getStudentListShift());
     final UnaryOperator<TextFormatter.Change> _function = (TextFormatter.Change change) -> {
       TextFormatter.Change _xblockexpression = null;
       {
@@ -188,7 +196,7 @@ public class ControllerStudentListLoader {
    * Affiche un boîte de dialog décrivant la réussite ou non du chargement des données
    * @param state un LoadState décrivant le réussite ou non du chargement des données
    */
-  public void dispDialog(final PresenterStudentListLoader.LoadState state) {
+  public void dispDialog(final ControllerStudentListLoader.LoadState state) {
     final Alert alert = new Alert(Alert.AlertType.NONE);
     Window _window = alert.getDialogPane().getScene().getWindow();
     final Stage stage = ((Stage) _window);
@@ -196,16 +204,16 @@ public class ControllerStudentListLoader {
     InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
     Image _image = new Image(_inputStreamResource);
     _icons.add(_image);
-    boolean _equals = Objects.equal(state, PresenterStudentListLoader.LoadState.SUCCESS);
+    boolean _equals = Objects.equal(state, ControllerStudentListLoader.LoadState.SUCCESS);
     if (_equals) {
       alert.setAlertType(Alert.AlertType.CONFIRMATION);
       alert.setTitle(LanguageManager.translate("studentlist.loadConfirmation.title"));
-      alert.setHeaderText(String.format(LanguageManager.translate("studentlist.loadConfirmation.success"), Integer.valueOf(this.presStudentList.getNumberPair())));
-      alert.setContentText(this.presStudentList.getStudentList());
+      alert.setHeaderText(String.format(LanguageManager.translate("studentlist.loadConfirmation.success"), Integer.valueOf(this.getNumberPair())));
+      alert.setContentText(this.getStudentList());
     } else {
       alert.setAlertType(Alert.AlertType.ERROR);
       alert.setTitle(LanguageManager.translate("studentlist.loadConfirmation.title"));
-      boolean _equals_1 = Objects.equal(state, PresenterStudentListLoader.LoadState.X_NOT_VALID);
+      boolean _equals_1 = Objects.equal(state, ControllerStudentListLoader.LoadState.X_NOT_VALID);
       if (_equals_1) {
         alert.setHeaderText(LanguageManager.translate("studentlist.loadConfirmation.xNotValid"));
       } else {
@@ -213,5 +221,69 @@ public class ControllerStudentListLoader {
       }
     }
     alert.showAndWait();
+  }
+  
+  /**
+   * Envoie les informations au service
+   * @param file Chemin du fichier contenant la liste des étudiants
+   * @param firstCell Première case à prendre en compte
+   * @return un LoadState représentant l'état terminal du chargement des données
+   */
+  public ControllerStudentListLoader.LoadState loadFile(final File file, final String firstCell) {
+    boolean _isValidX = StudentDataManager.isValidX(firstCell);
+    boolean _not = (!_isValidX);
+    if (_not) {
+      return ControllerStudentListLoader.LoadState.X_NOT_VALID;
+    } else {
+      boolean _isValidY = StudentDataManager.isValidY(firstCell);
+      boolean _not_1 = (!_isValidY);
+      if (_not_1) {
+        return ControllerStudentListLoader.LoadState.Y_NOT_VALID;
+      }
+    }
+    StudentDataManager.loadData(file, firstCell);
+    this.service.setStudentListPath(file.getAbsolutePath());
+    this.service.setStudentListShift(firstCell);
+    return ControllerStudentListLoader.LoadState.SUCCESS;
+  }
+  
+  /**
+   * @return le nombre de paires parsée par StudentDataManager, -1 si aucune n'a été parsée
+   */
+  public int getNumberPair() {
+    final Function<Map<String, String>, Integer> _function = (Map<String, String> map) -> {
+      return Integer.valueOf(map.size());
+    };
+    return (StudentDataManager.getNameToMailMap().<Integer>map(_function).orElse(Integer.valueOf((-1)))).intValue();
+  }
+  
+  /**
+   * @return la liste des données parsées sous forme de String. Chaîne vide si aucune données n'a été parsée
+   */
+  public String getStudentList() {
+    final Function<Map<String, String>, String> _function = (Map<String, String> map) -> {
+      final Function1<Map.Entry<String, String>, String> _function_1 = (Map.Entry<String, String> entry) -> {
+        String _key = entry.getKey();
+        String _plus = (_key + " - ");
+        String _value = entry.getValue();
+        return (_plus + _value);
+      };
+      return IterableExtensions.join(IterableExtensions.<Map.Entry<String, String>, String>map(map.entrySet(), _function_1), "\n");
+    };
+    return StudentDataManager.getNameToMailMap().<String>map(_function).orElse("");
+  }
+  
+  /**
+   * @return le path vers le fichier contenant la liste des étudiants. Chaîne vide si celui n'est pas défini
+   */
+  public String getStudentListPath() {
+    return "";
+  }
+  
+  /**
+   * @return la première case à prendre en compte dans le fichier contenant la liste des étudiants
+   */
+  public String getStudentListShift() {
+    return "A1";
   }
 }

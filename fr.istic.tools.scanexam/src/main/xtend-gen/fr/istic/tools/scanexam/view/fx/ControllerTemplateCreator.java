@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterTemplateCreator;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
@@ -69,14 +68,19 @@ public class ControllerTemplateCreator {
   private Pane hoverPane;
   
   /**
-   * Presenter de la création du modèle
-   */
-  private PresenterTemplateCreator presTemplateCreator;
-  
-  /**
    * Controller JaveFX de l'edition d'examen
    */
   private ControllerFxEdition ctrlEditor;
+  
+  /**
+   * Nom du modèle
+   */
+  private String templateName;
+  
+  /**
+   * Fichier du modèle
+   */
+  private File templateFile;
   
   /**
    * Logger
@@ -87,8 +91,7 @@ public class ControllerTemplateCreator {
    * Initialise le composant avec le presenter composé en paramètre
    * @param presenter Presenter de la création du modèle
    */
-  public void initialize(final PresenterTemplateCreator presenter, final ControllerFxEdition ctrlFxEditor) {
-    this.presTemplateCreator = presenter;
+  public void initialize(final ControllerFxEdition ctrlFxEditor) {
     this.ctrlEditor = ctrlFxEditor;
     this.btnOk.disableProperty().bind(
       this.txtFldTemplateFile.wrongFormattedProperty().or(this.txtFldTemplateName.textProperty().isEmpty()));
@@ -107,6 +110,10 @@ public class ControllerTemplateCreator {
     this.btnBrowser.setOnAction(_function_1);
   }
   
+  public void createTemplate() {
+    this.ctrlEditor.getPdfManager().create(this.templateName, this.templateFile);
+  }
+  
   /**
    * Anime toutes les composants vides
    */
@@ -121,38 +128,48 @@ public class ControllerTemplateCreator {
    * @param formatDes la description du format (non null)
    * @param destination le composant dans lequel afficher le path choisi (non null)
    */
-  private void loadFile(final String format, final String formatDes, final FormattedTextField destination) {
-    Objects.<String>requireNonNull(format);
-    Objects.<String>requireNonNull(formatDes);
-    Objects.<FormattedTextField>requireNonNull(destination);
-    FileChooser fileChooser = new FileChooser();
-    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    String _translate = LanguageManager.translate(formatDes);
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter(_translate, format);
-    _extensionFilters.add(_extensionFilter);
-    String _text = destination.getText();
-    final File specifiedFile = new File(_text);
-    if ((specifiedFile.exists() && specifiedFile.isDirectory())) {
-      fileChooser.setInitialDirectory(specifiedFile);
-    } else {
-      if ((specifiedFile.exists() && specifiedFile.isFile())) {
-        fileChooser.setInitialDirectory(specifiedFile.getParentFile());
+  private File loadFile(final String format, final String formatDes, final FormattedTextField destination) {
+    File _xblockexpression = null;
+    {
+      Objects.<String>requireNonNull(format);
+      Objects.<String>requireNonNull(formatDes);
+      Objects.<FormattedTextField>requireNonNull(destination);
+      FileChooser fileChooser = new FileChooser();
+      ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+      String _translate = LanguageManager.translate(formatDes);
+      FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter(_translate, format);
+      _extensionFilters.add(_extensionFilter);
+      String _text = destination.getText();
+      final File specifiedFile = new File(_text);
+      if ((specifiedFile.exists() && specifiedFile.isDirectory())) {
+        fileChooser.setInitialDirectory(specifiedFile);
       } else {
-        String _property = System.getProperty("user.home");
-        String _property_1 = System.getProperty("file.separator");
-        String _plus = (_property + _property_1);
-        String _plus_1 = (_plus + "Documents");
-        File _file = new File(_plus_1);
-        fileChooser.setInitialDirectory(_file);
+        if ((specifiedFile.exists() && specifiedFile.isFile())) {
+          fileChooser.setInitialDirectory(specifiedFile.getParentFile());
+        } else {
+          String _property = System.getProperty("user.home");
+          String _property_1 = System.getProperty("file.separator");
+          String _plus = (_property + _property_1);
+          String _plus_1 = (_plus + "Documents");
+          File _file = new File(_plus_1);
+          fileChooser.setInitialDirectory(_file);
+        }
       }
+      File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
+      File _xifexpression = null;
+      if ((file != null)) {
+        File _xblockexpression_1 = null;
+        {
+          destination.setText(file.getPath());
+          _xblockexpression_1 = this.templateFile = file;
+        }
+        _xifexpression = _xblockexpression_1;
+      } else {
+        ControllerTemplateCreator.logger.warn("File not chosen");
+      }
+      _xblockexpression = _xifexpression;
     }
-    File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-    if ((file != null)) {
-      destination.setText(file.getPath());
-      this.presTemplateCreator.setTemplateFile(file);
-    } else {
-      ControllerTemplateCreator.logger.warn("File not chosen");
-    }
+    return _xblockexpression;
   }
   
   @FXML
@@ -164,12 +181,12 @@ public class ControllerTemplateCreator {
   
   @FXML
   public void saveAndQuit() {
-    boolean _checkName = this.presTemplateCreator.checkName(this.txtFldTemplateName.getText());
+    boolean _checkName = this.checkName(this.txtFldTemplateName.getText());
     if (_checkName) {
-      boolean _checkFilepath = this.presTemplateCreator.checkFilepath(this.txtFldTemplateFile.getText());
+      boolean _checkFilepath = this.checkFilepath(this.txtFldTemplateFile.getText());
       if (_checkFilepath) {
-        this.presTemplateCreator.setTemplateName(this.txtFldTemplateName.getText());
-        this.presTemplateCreator.createTemplate();
+        this.templateName = this.txtFldTemplateName.getText();
+        this.createTemplate();
         this.ctrlEditor.render();
         this.quit();
       } else {
@@ -178,6 +195,14 @@ public class ControllerTemplateCreator {
     } else {
       this.sendDialog(Alert.AlertType.ERROR, "templateLoader.dialog.title", "templateLoader.dialog.fileFail", null);
     }
+  }
+  
+  public boolean checkFilepath(final String string) {
+    return true;
+  }
+  
+  public boolean checkName(final String string) {
+    return true;
   }
   
   /**

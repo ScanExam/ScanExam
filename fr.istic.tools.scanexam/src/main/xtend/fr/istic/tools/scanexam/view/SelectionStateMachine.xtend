@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.presenter
+package fr.istic.tools.scanexam.view
 
 class SelectionStateMachine {
 	public static final int IDLE = 0

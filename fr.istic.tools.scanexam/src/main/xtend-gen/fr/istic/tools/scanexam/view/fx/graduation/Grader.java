@@ -287,14 +287,14 @@ public class Grader extends VBox {
       float _worth = qItem.getWorth();
       String _plus = (Float.valueOf(_worth) + "");
       this.maxPoints.setText(_plus);
-      List<Integer> ids = this.controller.getPresenter().getEntryIds(qItem.getQuestionId());
-      List<Integer> sids = this.controller.getPresenter().getSelectedEntryIds(qItem.getQuestionId());
+      List<Integer> ids = this.controller.getEntryIds(qItem.getQuestionId());
+      List<Integer> sids = this.controller.getSelectedEntryIds(qItem.getQuestionId());
       for (final Integer i : ids) {
         {
           Grader.GradeItem g = new Grader.GradeItem(this);
           g.setItemId((i).intValue());
-          g.setText(this.controller.getPresenter().getEntryText((i).intValue(), qItem.getQuestionId()));
-          g.setWorth(this.controller.getPresenter().getEntryWorth((i).intValue(), qItem.getQuestionId()));
+          g.setText(this.controller.getEntryText((i).intValue(), qItem.getQuestionId()));
+          g.setWorth(this.controller.getEntryWorth((i).intValue(), qItem.getQuestionId()));
           this.itemContainer.getChildren().add(g);
           boolean _contains = sids.contains(i);
           if (_contains) {
@@ -337,17 +337,17 @@ public class Grader extends VBox {
   }
   
   public void addEntryToModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    item.setItemId(this.controller.getPresenter().addEntry(qItem.getQuestionId(), item.getText(), 
+    item.setItemId(this.controller.addEntry(qItem.getQuestionId(), item.getText(), 
       Float.parseFloat(item.getWorth())));
   }
   
   public void updateEntryInModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    this.controller.getPresenter().modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), 
+    this.controller.modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), 
       Float.parseFloat(item.getWorth()));
   }
   
   public void removeEntryFromModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    this.controller.getPresenter().removeEntry(qItem.getQuestionId(), item.id);
+    this.controller.removeEntry(qItem.getQuestionId(), item.id);
   }
   
   public boolean addPoints(final Grader.GradeItem item) {
@@ -362,7 +362,7 @@ public class Grader extends VBox {
       String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
       Grader.logger.info(_plus_4);
       this.addPointsOf(item);
-      _xblockexpression = this.controller.getPresenter().applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+      _xblockexpression = this.controller.applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
     }
     return _xblockexpression;
   }
@@ -377,7 +377,7 @@ public class Grader extends VBox {
     String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
     Grader.logger.log(Level.INFO, _plus_4);
     this.removePointsOf(item);
-    this.controller.getPresenter().removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+    this.controller.removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
   }
   
   public void clearDisplay() {

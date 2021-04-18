@@ -72,7 +72,7 @@ public class StudentDetails extends VBox {
   
   public void findSuggestions(final String start) {
     InputOutput.<String>println("Changing");
-    List<String> l = this.controller.getPresenter().getStudentsSuggestedNames(start);
+    List<String> l = this.controller.getStudentsSuggestedNames(start);
     this.name.showSuggestion(l);
   }
   

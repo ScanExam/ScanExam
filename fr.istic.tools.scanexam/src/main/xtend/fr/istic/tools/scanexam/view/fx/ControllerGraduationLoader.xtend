@@ -1,10 +1,13 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.presenter.PresenterGraduationLoader
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import java.io.File
 import java.util.Objects
 import javafx.fxml.FXML
@@ -21,7 +24,6 @@ import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import javax.annotation.Nullable
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 
 /**
  * Contrôleur pour l'UI de chargement d'une correction
@@ -69,19 +71,23 @@ class ControllerGraduationLoader {
 	@FXML
 	var Pane hoverPane
 
-	var PresenterGraduationLoader presGraduationLoader;
+
 	
 	var ControllerFxGraduation ctlrFx;
 
 	static val logger = LogManager.logger
 
+	var ServiceGraduation service
+	
+
 	/**
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(PresenterGraduationLoader loader,ControllerFxGraduation controller) {
-		presGraduationLoader = loader
+	def initialize(ServiceGraduation service,ControllerFxGraduation controller) {
+
 		ctlrFx = controller
+		this.service = service
 		hBoxLoad.disableProperty.bind(rbLoadModel.selectedProperty.not)
 
 		// Condition pour que le bouton de validation soit désactivé :
@@ -106,12 +112,30 @@ class ControllerGraduationLoader {
 		btnBrowseGraduation.onAction = [e|loadFile("*.pdf", "file.format.pdf", txtFldFileGraduation)]
 
 		// Si aucun examen n'est chargé, désactiver le RadioButton "Utiliser le modèle chargé"
-		if (!presGraduationLoader.hasTemplateLoaded) {
+		if (!hasTemplateLoaded) {
 			rbUseLoaded.disable = true
 			rbLoadModel.selected = true
 		}
 	}
-
+	
+	def boolean hasTemplateLoaded() {
+		return service.hasExamLoaded
+	}
+	
+	def boolean loadTemplate(String path) { true
+	 // TODO
+	}
+	
+	def boolean loadStudentSheets(String path) {
+		val QRCodeGenerator generator = new QRCodeGeneratorImpl()
+		//generator.createAllExamCopies(ExamSingleton., new FileOutputStream(new File(path)), service.examName, quantity)
+		true
+	}
+	
+	def boolean loadCorrection(String path) {
+		true
+	}
+	
 	/**
 	 * Anime toutes les composants vides
 	 */
@@ -157,8 +181,8 @@ class ControllerGraduationLoader {
 
 	@FXML
 	def saveAndQuit() {
-		if (presGraduationLoader.loadTemplate(txtFldFile.text) || txtFldFile.isDisable) {
-			if(presGraduationLoader.loadCorrection(txtFldFileGraduation.text)) {
+		if (loadTemplate(txtFldFile.text) || txtFldFile.isDisable) {
+			if(loadCorrection(txtFldFileGraduation.text)) {
 				ctlrFx.load
 				quit
 			} else {}

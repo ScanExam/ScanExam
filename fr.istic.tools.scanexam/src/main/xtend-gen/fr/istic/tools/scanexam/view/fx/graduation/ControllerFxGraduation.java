@@ -2,8 +2,16 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterGraduation;
+import fr.istic.tools.scanexam.core.GradeScale;
+import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.export.GradesExportImpl;
+import fr.istic.tools.scanexam.mailing.StudentDataManager;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
+import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.PdfManager;
 import fr.istic.tools.scanexam.view.fx.graduation.Grader;
 import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
 import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
@@ -12,11 +20,14 @@ import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -43,8 +54,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtend.lib.annotations.Accessors;
+import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
@@ -62,12 +77,6 @@ public class ControllerFxGraduation {
   }
   
   private static final Logger logger = LogManager.getLogger();
-  
-  /**
-   * High level Controllers to access the Presenters
-   */
-  @Accessors
-  private PresenterGraduation presenter;
   
   @Accessors
   private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a template loaded", false);
@@ -158,6 +167,13 @@ public class ControllerFxGraduation {
   @FXML
   public Button prevQuestionButton;
   
+  private ServiceGraduation service;
+  
+  @Accessors
+  private PdfManager pdfManager;
+  
+  private List<Question> questions;
+  
   /**
    * FXML Actions.
    */
@@ -188,7 +204,7 @@ public class ControllerFxGraduation {
   @FXML
   public void exportPressed() {
     InputOutput.<String>println("Export method");
-    this.presenter.exportGrades();
+    this.exportGrades();
   }
   
   /**
@@ -384,7 +400,10 @@ public class ControllerFxGraduation {
     this.mainPane.unZoom();
   }
   
-  public void init() {
+  public void init(final ServiceGraduation serviceGraduation) {
+    PdfManager _pdfManager = new PdfManager(serviceGraduation);
+    this.pdfManager = _pdfManager;
+    this.service = serviceGraduation;
     PdfPaneWithAnotations _pdfPaneWithAnotations = new PdfPaneWithAnotations(this);
     this.mainPane = _pdfPaneWithAnotations;
     this.parentPane.getChildren().add(this.mainPane);
@@ -509,7 +528,7 @@ public class ControllerFxGraduation {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.presenter.saveTemplate(file.getPath());
+      this.saveTemplate(file.getPath());
       ControllerFxGraduation.logger.info("Saving correction file");
     } else {
       ControllerFxGraduation.logger.warn("File not chosen");
@@ -553,28 +572,28 @@ public class ControllerFxGraduation {
    */
   public void loadQuestions() {
     ControllerFxGraduation.logger.info("Loading Questions");
-    for (int p = 0; (p < this.presenter.getPageAmount()); p++) {
+    for (int p = 0; (p < this.service.getPageAmount()); p++) {
       {
-        LinkedList<Integer> ids = this.presenter.initLoading(p);
+        LinkedList<Integer> ids = this.initLoading(p);
         for (final int i : ids) {
           {
             QuestionItemGraduation question = new QuestionItemGraduation();
-            double _questionX = this.presenter.questionX(i);
+            double _questionX = this.questionX(i);
             double _multiply = (_questionX * this.imageWidth);
             question.setX(_multiply);
-            double _questionY = this.presenter.questionY(i);
+            double _questionY = this.questionY(i);
             double _multiply_1 = (_questionY * this.imageHeight);
             question.setY(_multiply_1);
-            double _questionHeight = this.presenter.questionHeight(i);
+            double _questionHeight = this.questionHeight(i);
             double _multiply_2 = (_questionHeight * this.imageHeight);
             question.setH(_multiply_2);
-            double _questionWidth = this.presenter.questionWidth(i);
+            double _questionWidth = this.questionWidth(i);
             double _multiply_3 = (_questionWidth * this.imageWidth);
             question.setW(_multiply_3);
             question.setPage(p);
             question.setQuestionId(i);
-            question.setName(this.presenter.questionName(i));
-            question.setWorth(Float.valueOf(this.presenter.questionWorth(i)));
+            question.setName(this.questionName(i));
+            question.setWorth(Float.valueOf(this.questionWorth(i)));
             this.questionList.addItem(question);
           }
         }
@@ -589,7 +608,7 @@ public class ControllerFxGraduation {
   public void loadStudents() {
     ControllerFxGraduation.logger.info("Loading Students");
     int currentStudentId = 0;
-    LinkedList<Integer> ids = this.presenter.getStudentIds();
+    LinkedList<Integer> ids = this.getStudentIds();
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
@@ -662,13 +681,13 @@ public class ControllerFxGraduation {
   
   public void nextStudent() {
     this.studentList.selectNextItem();
-    this.presenter.getPresenterQuestion().nextStudent();
+    this.service.nextSheet();
     this.setSelectedStudent();
   }
   
   public void previousStudent() {
     this.studentList.selectPreviousItem();
-    this.presenter.getPresenterQuestion().previousStudent();
+    this.service.previousSheet();
     this.setSelectedStudent();
   }
   
@@ -691,19 +710,19 @@ public class ControllerFxGraduation {
   
   public void nextQuestion() {
     this.questionList.selectNextItem();
-    this.presenter.getPresenterQuestion().nextQuestion();
+    this.service.nextQuestion();
     this.setSelectedQuestion();
   }
   
   public void previousQuestion() {
     this.questionList.selectPreviousItem();
-    this.presenter.getPresenterQuestion().previousQuestion();
+    this.service.previousQuestion();
     this.setSelectedQuestion();
   }
   
   public void selectQuestion(final QuestionItemGraduation item) {
     this.questionList.selectItem(item);
-    this.presenter.getPresenterQuestion().selectQuestion(item.getQuestionId());
+    this.service.selectQuestion(item.getQuestionId());
     this.setSelectedQuestion();
   }
   
@@ -730,7 +749,7 @@ public class ControllerFxGraduation {
   }
   
   public void renderStudentCopy() {
-    BufferedImage image = this.presenter.getPresenterPdf().getCurrentPdfPage();
+    BufferedImage image = this.pdfManager.getCurrentPdfPage();
     this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.imageWidth = image.getWidth();
     this.imageHeight = image.getHeight();
@@ -744,12 +763,12 @@ public class ControllerFxGraduation {
    */
   public void updateDisplayedPage() {
     if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
-      int i = this.presenter.getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
-      boolean _atCorrectPage = this.presenter.getPresenterPdf().atCorrectPage(i);
+      int i = this.service.getAbsolutePageNumber(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage());
+      boolean _atCorrectPage = this.pdfManager.atCorrectPage(i);
       boolean _not = (!_atCorrectPage);
       if (_not) {
         ControllerFxGraduation.logger.info("Changing page");
-        this.selectPage(this.presenter.getAbsolutePage(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
+        this.selectPage(this.service.getAbsolutePageNumber(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
       }
     } else {
       ControllerFxGraduation.logger.warn("Cannot find correct page, student list or question is is empty");
@@ -781,17 +800,17 @@ public class ControllerFxGraduation {
   }
   
   public void nextPage() {
-    this.presenter.getPresenterPdf().nextPdfPage();
+    this.pdfManager.nextPdfPage();
     this.renderStudentCopy();
   }
   
   public void previousPage() {
-    this.presenter.getPresenterPdf().previousPdfPage();
+    this.pdfManager.previousPdfPage();
     this.renderStudentCopy();
   }
   
   public void selectPage(final int pageNumber) {
-    this.presenter.getPresenterPdf().goToPdfPage(pageNumber);
+    this.pdfManager.goToPdfPage(pageNumber);
     this.renderStudentCopy();
   }
   
@@ -801,21 +820,284 @@ public class ControllerFxGraduation {
   public void updateGlobalGrade() {
     String _translate = LanguageManager.translate("label.grade");
     String _plus = (_translate + " ");
-    float _globalGrade = this.presenter.getGlobalGrade();
+    float _globalGrade = this.getGlobalGrade();
     String _plus_1 = (_plus + Float.valueOf(_globalGrade));
     String _plus_2 = (_plus_1 + "/");
-    float _globalScale = this.presenter.getGlobalScale();
+    float _globalScale = this.getGlobalScale();
     String _plus_3 = (_plus_2 + Float.valueOf(_globalScale));
     this.gradeLabel.setText(_plus_3);
   }
   
-  @Pure
-  public PresenterGraduation getPresenter() {
-    return this.presenter;
+  public boolean openCorrectionPdf(final File file) {
+    try {
+      final PDDocument document = PDDocument.load(file);
+      final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+      document.save(stream);
+      this.pdfManager.create("", file);
+      int _pageAmount = this.service.getPageAmount();
+      final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(document, _pageAmount, 3);
+      pdfReader.readPDf();
+      final Collection<StudentSheet> studentSheets = pdfReader.getCompleteStudentSheets();
+      return this.service.initializeCorrection(studentSheets);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
-  public void setPresenter(final PresenterGraduation presenter) {
-    this.presenter = presenter;
+  public List<Integer> getEntryIds(final int questionId) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      List<Tuple3<Integer, String, Float>> l = this.service.getQuestionGradeEntries(questionId);
+      LinkedList<Integer> result = new LinkedList<Integer>();
+      for (final Tuple3<Integer, String, Float> t : l) {
+        result.add(t._1);
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public List<Integer> getSelectedEntryIds(final int questionId) {
+    return this.service.getQuestionSelectedGradeEntries(questionId);
+  }
+  
+  public String getEntryText(final int entryId, final int questionId) {
+    String _xblockexpression = null;
+    {
+      List<Tuple3<Integer, String, Float>> l = this.service.getQuestionGradeEntries(questionId);
+      for (final Tuple3<Integer, String, Float> t : l) {
+        if ((entryId == (t._1).intValue())) {
+          return t._2;
+        }
+      }
+      _xblockexpression = "Entry not found";
+    }
+    return _xblockexpression;
+  }
+  
+  public float getEntryWorth(final int entryId, final int questionId) {
+    List<Tuple3<Integer, String, Float>> l = this.service.getQuestionGradeEntries(questionId);
+    for (final Tuple3<Integer, String, Float> t : l) {
+      if ((entryId == (t._1).intValue())) {
+        return (t._3).floatValue();
+      }
+    }
+    return (-1);
+  }
+  
+  /**
+   * Retourne la note globale de la copie
+   * @return Note globale de la copie
+   * //FIXME doit être lié au service
+   */
+  public float getGlobalGrade() {
+    return 0.0f;
+  }
+  
+  /**
+   * Retourne le barème total de l'examen
+   * @return Barème total de l'examen
+   * //FIXME doit être lié au service
+   */
+  public float getGlobalScale() {
+    return 0.0f;
+  }
+  
+  /**
+   * SAVING
+   */
+  public void saveTemplate(final String path) {
+    this.service.saveCorrectionTemplate(path, this.pdfManager.getPdfOutputStream());
+  }
+  
+  /**
+   * STUDENTS
+   */
+  public List<String> getStudentsSuggestedNames(final String start) {
+    final Function<List<String>, List<String>> _function = (List<String> l) -> {
+      final Function1<String, Boolean> _function_1 = (String n) -> {
+        return Boolean.valueOf(n.toLowerCase().contains(start.toLowerCase()));
+      };
+      return IterableExtensions.<String>toList(IterableExtensions.<String>filter(l, _function_1));
+    };
+    return StudentDataManager.getAllNames().<List<String>>map(_function).orElse(List.<String>of());
+  }
+  
+  public LinkedList<Integer> getStudentIds() {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      Collection<StudentSheet> list = this.service.getStudentSheets();
+      LinkedList<Integer> result = new LinkedList<Integer>();
+      if ((list != null)) {
+        for (final StudentSheet s : list) {
+          result.add(Integer.valueOf(s.getId()));
+        }
+      } else {
+        ControllerFxGraduation.logger.warn("Service returned null studentId list");
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public LinkedList<Integer> initLoading(final int pageNumber) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      this.questions = this.service.getQuestionAtPage(pageNumber);
+      LinkedList<Integer> ids = new LinkedList<Integer>();
+      for (final Question q : this.questions) {
+        ids.add(Integer.valueOf(q.getId()));
+      }
+      _xblockexpression = ids;
+    }
+    return _xblockexpression;
+  }
+  
+  public double questionX(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getX();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public double questionY(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getY();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public double questionHeight(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getHeigth();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public double questionWidth(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getWidth();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public String questionName(final int id) {
+    String _xblockexpression = null;
+    {
+      String result = "";
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getName();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public float questionWorth(final int id) {
+    float _xblockexpression = (float) 0;
+    {
+      float result = (-1f);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          GradeScale _gradeScale = q.getGradeScale();
+          boolean _tripleNotEquals = (_gradeScale != null);
+          if (_tripleNotEquals) {
+            result = q.getGradeScale().getMaxPoint();
+          }
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public void exportGrades() {
+    new GradesExportImpl(this.service).exportGrades();
+  }
+  
+  public boolean applyGrade(final int questionId, final int gradeId) {
+    return this.service.assignGradeEntry(questionId, gradeId);
+  }
+  
+  public void removeGrade(final int questionId, final int gradeId) {
+    this.service.retractGradeEntry(questionId, gradeId);
+  }
+  
+  /**
+   * Ajoute une nouvelle entrée à la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle ajouter l'entrée
+   * @param desc la description de l'entrée
+   * @param point le nombre de point de l'entrée
+   * @return l'ID de l'entrée
+   */
+  public int addEntry(final int questionId, final String desc, final float point) {
+    return this.service.addEntry(questionId, desc, point);
+  }
+  
+  /**
+   * Modifie une entrée de la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle modifier l'entrée
+   * @param gradeEntryId l'ID de l'entrée à modifier
+   * @param desc la nouvelle description de l'entrée
+   * @param point le nouveau nombre de point de l'entrée
+   */
+  public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
+    this.service.modifyEntry(questionId, gradeEntryId, desc, point);
+  }
+  
+  /**
+   * Supprime une entrée de la liste des points attribuable à la question
+   * @param questionId l'ID de la question dans laquelle supprimer l'entrée
+   * @param gradeEntryId l'ID de l'entrée à supprimer
+   */
+  public void removeEntry(final int questionId, final int gradeEntryId) {
+    this.service.removeEntry(questionId, gradeEntryId);
+  }
+  
+  public void renameStudent(final int studentId, final String newname) {
+    this.service.assignStudentId(newname);
   }
   
   @Pure
@@ -825,5 +1107,14 @@ public class ControllerFxGraduation {
   
   public void setLoadedModel(final BooleanProperty loadedModel) {
     this.loadedModel = loadedModel;
+  }
+  
+  @Pure
+  public PdfManager getPdfManager() {
+    return this.pdfManager;
+  }
+  
+  public void setPdfManager(final PdfManager pdfManager) {
+    this.pdfManager = pdfManager;
   }
 }

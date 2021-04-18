@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.presenter
+package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.services.api.Service
 import java.io.ByteArrayInputStream
@@ -12,12 +12,13 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
+import org.eclipse.xtend.lib.annotations.Accessors
 
 /** 
  * Controlleur du pdf
  * @author Julien Cochet
  */
-class PresenterPdf {
+class PdfManager {
 	/**
 	 * Pdf chargé
 	 */
@@ -29,9 +30,8 @@ class PresenterPdf {
 	/**
 	 * Index de la page courante du modèle d'exam
 	 */
-	protected int pdfPageIndex
+	 @Accessors int pdfPageIndex
 
-	Presenter presenter
 
 	/**
 	 * Association with the model via the Service API
@@ -63,32 +63,14 @@ class PresenterPdf {
 	 * @param {@link GraduationPresenter} (not null)
 	 * Constructs a PDFPresenter object.
 	 */
-	new(Service s, Presenter p) {
+	new(Service s) {
 		Objects.requireNonNull(s)
-		Objects.requireNonNull(p)
+
 		this.service = s
-		this.presenter = p
+
 	}
 
-	/**
-	 * set {@link Presenter} for the association 
-	 * @param {@link Presenter} presenter to make the association with
-	 * @author Benjamin Danlos
-	 */
-	def setPresenter(Presenter p) {
-		Objects.requireNonNull(p)
-		this.presenter = p
-	}
-
-	/**
-	 * returns the current presenter associated
-	 * @return {@link Presenter}
-	 * @author Benjamin Danlos
-	 */
-	def getPresenter() {
-		this.presenter
-	}
-
+	
 	/**
 	 * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
 	 * @param page Numéro de page où se rendre

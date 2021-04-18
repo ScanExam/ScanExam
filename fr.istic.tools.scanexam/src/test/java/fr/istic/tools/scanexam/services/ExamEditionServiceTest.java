@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.Assertions;
@@ -18,41 +16,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.beust.jcommander.internal.Lists;
-
 import fr.istic.tools.scanexam.io.TemplateIo;
-import fr.istic.tools.scanexam.presenter.PresenterEdition;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 
 public class ExamEditionServiceTest 
 {
 	ServiceEdition service;
 	
-	PresenterEdition presenter;
+	ControllerFxEdition controller;
 	
 	@BeforeEach
 	void init() 
 	{
 		service = new ServiceImpl();
 		
-		presenter = jailBreak(service);
-		
+		controller = new ControllerFxEdition();
+		controller.init(service);
 	}
 	
-	private PresenterEdition jailBreak(Object... args) {
-		try { 
-			final Class<?>[] argClasses = Lists.newArrayList(args).stream()
-					.map(o -> o.getClass())
-					.toArray(Class<?>[]::new);
-			Constructor<PresenterEdition> method = PresenterEdition.class.getConstructor( argClasses);
-			method.setAccessible(true);
-			return (PresenterEdition)method.newInstance(args);
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-			
-			e.printStackTrace();
-			return null;
-		}
-	}
+	
 	
 	@Test
 	@DisplayName("Test - Ouverture d'un fichier XMI")
@@ -62,7 +45,7 @@ public class ExamEditionServiceTest
 		service.open("src/test/resources/resources_service/sample.xmi");
 
 		//Verification du nombre de page et du nom de l'examen ouvert
-		assertEquals(presenter.getPresenterPdf().currentPdfPageNumber(), 6);
+		assertEquals(controller.getPdfManager().currentPdfPageNumber(), 6);
 		assertEquals(service.getExamName(), "PFO_december_19");
 	}
 
@@ -81,7 +64,7 @@ public class ExamEditionServiceTest
 	@DisplayName("Test - Création d'un nouveaux projet")
 	void createTest() throws IOException 
 	{
-		presenter.load("src/test/resources/resources_service/pfo_example.pdf");
+		controller.load("src/test/resources/resources_service/pfo_example.pdf");
 
 		//ArrayList<BufferedImage> pages = new ArrayList<BufferedImage>();
 
@@ -89,7 +72,7 @@ public class ExamEditionServiceTest
 		PDDocument document = PDDocument.load(new File("src/test/resources/resources_service/pfo_example.pdf"));
 
 		//verification que le nombre de page est identique
-		assertEquals(presenter.getPresenterPdf().getCurrentPdfPage(),document.getNumberOfPages());
+		assertEquals(controller.getPdfManager().getCurrentPdfPage(),document.getNumberOfPages());
 
 		//ajouter une ligne qui verifie que currentPdfPath = file.absolutePath
 	}
@@ -102,7 +85,7 @@ public class ExamEditionServiceTest
 		//ouverture du fichier
 		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 		
-		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
+		int pageNumber = controller.getPdfManager().currentPdfPageNumber();
 		
 		assertNull(service.getQuestionZone(pageNumber,7));
 
@@ -120,7 +103,7 @@ public class ExamEditionServiceTest
 		//ouverture du fichier
 		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 		
-		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
+		int pageNumber = controller.getPdfManager().currentPdfPageNumber();
 		
 		//Creation d'une question
 		final int id = service.createQuestion(pageNumber,2, 2, 2, 2);
@@ -139,11 +122,11 @@ public class ExamEditionServiceTest
 		//ouverture du fichier
 		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		int oldPage = presenter.getPresenterPdf().currentPdfPageNumber();
-		presenter.getPresenterPdf().nextPdfPage();
-		int newPage = presenter.getPresenterPdf().currentPdfPageNumber();
+		int oldPage = controller.getPdfManager().currentPdfPageNumber();
+		controller.getPdfManager().nextPdfPage();
+		int newPage = controller.getPdfManager().currentPdfPageNumber();
 
-		if(oldPage == presenter.getPresenterPdf().currentPdfPageNumber()) {
+		if(oldPage == controller.getPdfManager().currentPdfPageNumber()) {
 			assertEquals(1, newPage);
 		}else {
 			assertEquals(oldPage, newPage-1);
@@ -158,12 +141,12 @@ public class ExamEditionServiceTest
 		//ouverture du fichier
 		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		int oldPage = presenter.getPresenterPdf().currentPdfPageNumber();
-		presenter.getPresenterPdf().previousPdfPage();
-		int newPage = presenter.getPresenterPdf().currentPdfPageNumber();
+		int oldPage = controller.getPdfManager().currentPdfPageNumber();
+		controller.getPdfManager().previousPdfPage();
+		int newPage = controller.getPdfManager().currentPdfPageNumber();
 
 		if(oldPage == 1) {
-			assertEquals(presenter.getPresenterPdf().getPdfPageCount(), newPage);
+			assertEquals(controller.getPdfManager().getPdfPageCount(), newPage);
 		}else {
 			assertEquals(oldPage-1, newPage);
 		}
@@ -176,7 +159,7 @@ public class ExamEditionServiceTest
 		//Ouverture du fichier
 		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 
-		assertEquals(presenter.getPresenterPdf().currentPdfPageNumber(), 6);
+		assertEquals(controller.getPdfManager().currentPdfPageNumber(), 6);
 	}
 
 
@@ -192,13 +175,13 @@ public class ExamEditionServiceTest
 	@DisplayName("Test - Sauvegarde d'un fichier")
 	void saveTest() 
 	{
-		int pageNumber = presenter.getPresenterPdf().currentPdfPageNumber();
+		int pageNumber = controller.getPdfManager().currentPdfPageNumber();
 		
 		final int id = service.createQuestion(pageNumber,2, 2, 2, 2);
 
 		assertNull(service.getQuestionZone(pageNumber,id));
 
-		service.save(presenter.getPresenterPdf().getPdfOutputStream(),new File("src/test/resources/resources_service/sampleExiste.xmi"));
+		service.save(controller.getPdfManager().getPdfOutputStream(),new File("src/test/resources/resources_service/sampleExiste.xmi"));
 
 		TemplateIo.loadCreationTemplate("src/test/resources/resources_service/sampleExiste.xmi");
 

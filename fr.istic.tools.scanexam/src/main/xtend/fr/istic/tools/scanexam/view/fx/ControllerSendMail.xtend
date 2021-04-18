@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.fx
 
-import fr.istic.tools.scanexam.presenter.PresenterSendMail
 import javafx.fxml.FXML
 import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
@@ -12,9 +11,7 @@ import javafx.stage.Stage
  * @author Julien Cochet
  */
 class ControllerSendMail {
-	
-	/* Controlleur de la configuration */
-	var PresenterSendMail presSendMail
+
 	
 	/* Pane principale de la vue */
 	@FXML
@@ -34,16 +31,11 @@ class ControllerSendMail {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
-	/**
-	 * Constructeur
-	 */
-	new() {
-		presSendMail = new PresenterSendMail
-	}
+
 	
 	@FXML
 	def void saveAndQuit() {
-		presSendMail.sendMails(txtFldTitle.text, htmlEditor.htmlText)
+		 // sendMails(txtFldTitle.text, htmlEditor.htmlText) TODO
 		quit
 	}
 	
@@ -53,14 +45,6 @@ class ControllerSendMail {
   		stage.close();
 	}
 	
-	// ----------------------------------------------------------------------------------------------------
-	/*
-	 * SETTERS
-	 */
-	// ----------------------------------------------------------------------------------------------------
 	
-	def void setPresenterSendMail(PresenterSendMail presSendMail) {
-		this.presSendMail = presSendMail
-	}
 	
 }

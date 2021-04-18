@@ -80,14 +80,14 @@ class Grader extends VBox {
 			maxPoints.text = qItem.worth + "";
 	
 			// Loads all the gradeEntries from the model
-			var ids = controller.presenter.getEntryIds(qItem.questionId);
+			var ids = controller.getEntryIds(qItem.questionId);
 			// Finds all the selected entries for this student/question
-			var sids = controller.presenter.getSelectedEntryIds(qItem.questionId)
+			var sids = controller.getSelectedEntryIds(qItem.questionId)
 			for (Integer i : ids) {
 				var g = new GradeItem(this);
 				g.setItemId(i);
-				g.setText(controller.presenter.getEntryText(i, qItem.questionId))
-				g.setWorth(controller.presenter.getEntryWorth(i, qItem.questionId))
+				g.setText(controller.getEntryText(i, qItem.questionId))
+				g.setWorth(controller.getEntryWorth(i, qItem.questionId))
 				itemContainer.children.add(g);
 				if (sids.contains(i)) {
 					g.selected = true;
@@ -140,30 +140,30 @@ class Grader extends VBox {
 
 	// ---Model intecations 
 	def void addEntryToModel(GradeItem item, QuestionItemGraduation qItem) {
-		item.itemId = controller.presenter.addEntry(qItem.questionId, item.getText,
+		item.itemId = controller.addEntry(qItem.questionId, item.getText,
 			Float.parseFloat(item.getWorth));
 	}
 
 	def updateEntryInModel(GradeItem item, QuestionItemGraduation qItem) {
-		controller.presenter.modifyEntry(qItem.questionId, item.itemId, item.getText,
+		controller.modifyEntry(qItem.questionId, item.itemId, item.getText,
 			Float.parseFloat(item.getWorth));
 	}
 
 	def removeEntryFromModel(GradeItem item, QuestionItemGraduation qItem) {
-		controller.presenter.removeEntry(qItem.questionId, item.id);
+		controller.removeEntry(qItem.questionId, item.id);
 	}
 
 	def addPoints(GradeItem item) {
 		logger.info("Adding points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		addPointsOf(item)
-		controller.presenter.applyGrade(controller.questionList.currentItem.questionId, item.id)
+		controller.applyGrade(controller.questionList.currentItem.questionId, item.id)
 		
 	}
 
 	def removePoints(GradeItem item) {
 		logger.log(Level.INFO, "Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		removePointsOf(item)
-		controller.presenter.removeGrade(controller.questionList.currentItem.questionId, item.id)
+		controller.removeGrade(controller.questionList.currentItem.questionId, item.id)
 	}
 
 	def clearDisplay() {

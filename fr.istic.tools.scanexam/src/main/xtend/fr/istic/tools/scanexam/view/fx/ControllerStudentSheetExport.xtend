@@ -1,8 +1,11 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl
+import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import java.io.File
 import java.util.Optional
 import javafx.fxml.FXML
@@ -27,7 +30,9 @@ class ControllerStudentSheetExport {
 	@FXML
 	var Button btnExport
 	
-	var PresenterStudentSheetExport presenter
+	var ControllerFxEdition controllerEdition
+	
+	var ServiceEdition service
 	
 	static val logger = LogManager.logger
 	
@@ -35,9 +40,9 @@ class ControllerStudentSheetExport {
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(PresenterStudentSheetExport presenter) {
-		this.presenter = presenter	
-		
+	def initialize(ControllerFxEdition controllerEdition,ServiceEdition service) {
+		this.service = service
+		this.controllerEdition = controllerEdition
 		txtFlbNbSheet.addFormatValidator[str | Integer.parseInt(str) > 0 ? Optional.empty : Optional.of("exportStudentSheet.errorZeroValue")]
 		btnExport.disableProperty.bind(txtFlbNbSheet.wrongFormattedProperty)	
 	}
@@ -46,11 +51,15 @@ class ControllerStudentSheetExport {
 	def exportAndQuit() {
 		val fileOpt = loadFolder
 		if(fileOpt.isPresent) {
-			if(presenter.export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
+			if(export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
 				quit
 		}
 	}
-	
+	def boolean export(File file, int number) {
+		val QRCodeGenerator generator = new QRCodeGeneratorImpl
+		generator.createAllExamCopies(controllerEdition.pdfManager.getPdfInputStream, file, service.examName, number)
+		true
+	}	
 	@FXML
 	def quit() {
 		val Stage stage = mainPane.scene.window as Stage

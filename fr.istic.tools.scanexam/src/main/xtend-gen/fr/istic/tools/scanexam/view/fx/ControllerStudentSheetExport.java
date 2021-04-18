@@ -1,9 +1,12 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterStudentSheetExport;
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
+import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.FormatValidator;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import java.io.File;
 import java.util.Optional;
 import javafx.collections.ObservableList;
@@ -36,7 +39,9 @@ public class ControllerStudentSheetExport {
   @FXML
   private Button btnExport;
   
-  private PresenterStudentSheetExport presenter;
+  private ControllerFxEdition controllerEdition;
+  
+  private ServiceEdition service;
   
   private static final Logger logger = LogManager.getLogger();
   
@@ -44,8 +49,9 @@ public class ControllerStudentSheetExport {
    * Initialise le composant avec le presenter composé en paramètre
    * @param loader le presenter
    */
-  public void initialize(final PresenterStudentSheetExport presenter) {
-    this.presenter = presenter;
+  public void initialize(final ControllerFxEdition controllerEdition, final ServiceEdition service) {
+    this.service = service;
+    this.controllerEdition = controllerEdition;
     final FormatValidator _function = (String str) -> {
       Optional<String> _xifexpression = null;
       int _parseInt = Integer.parseInt(str);
@@ -66,11 +72,21 @@ public class ControllerStudentSheetExport {
     final Optional<File> fileOpt = this.loadFolder();
     boolean _isPresent = fileOpt.isPresent();
     if (_isPresent) {
-      boolean _export = this.presenter.export(fileOpt.get(), Integer.parseInt(this.txtFlbNbSheet.getText()));
+      boolean _export = this.export(fileOpt.get(), Integer.parseInt(this.txtFlbNbSheet.getText()));
       if (_export) {
         this.quit();
       }
     }
+  }
+  
+  public boolean export(final File file, final int number) {
+    boolean _xblockexpression = false;
+    {
+      final QRCodeGenerator generator = new QRCodeGeneratorImpl();
+      generator.createAllExamCopies(this.controllerEdition.getPdfManager().getPdfInputStream(), file, this.service.getExamName(), number);
+      _xblockexpression = true;
+    }
+    return _xblockexpression;
   }
   
   @FXML

@@ -1,10 +1,13 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
-import fr.istic.tools.scanexam.launcher.LauncherFX
-import fr.istic.tools.scanexam.presenter.PresenterEdition
+import fr.istic.tools.scanexam.core.Question
+import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.view.fx.FxSettings
+import fr.istic.tools.scanexam.view.fx.PdfManager
 import java.io.File
 import java.util.Arrays
+import java.util.LinkedList
+import java.util.List
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.embed.swing.SwingFXUtils
@@ -29,17 +32,10 @@ import static fr.istic.tools.scanexam.config.LanguageManager.translate
 
 class ControllerFxEdition {
 
-	
-	@Accessors PresenterEdition presenter;
+	var ServiceEdition service;
 
-	def void setPresenter(PresenterEdition presenter) {
-		this.presenter = presenter
-	}
 	
-	def getEditor(){
-		editor
-	}
-
+	
 	double maxX;
 	double maxY;
 	var pdfLoaded = false;
@@ -100,7 +96,10 @@ class ControllerFxEdition {
 	
 	@FXML
 	AnchorPane mainPaneContainer
-
+	
+	@Accessors 
+	PdfManager pdfManager
+	
 	@FXML
 	def void pressed() {
 	}
@@ -199,11 +198,24 @@ class ControllerFxEdition {
 		questionEditor.select(item)
 	}
 	
+	def save(File path)
+	{
+		val outputStream = pdfManager.getPdfOutputStream();
+		service.save(outputStream,path);
+	}
 	
-	def void init(){
-		
-		
 	
+	
+	def close() {
+		System.exit(0)
+	}
+	
+	def void init(ServiceEdition serviceEdition){
+		
+		service = serviceEdition
+		
+		pdfManager = new PdfManager(serviceEdition)
+		
 		mainPane = new PdfPane(this);
 		mainPaneContainer.children.add(mainPane)
 		
@@ -529,7 +541,7 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			clearVue
-			presenter.getPresenterPdf.create("", file);
+			pdfManager.create("", file);
 			renderDocument();
 			postLoad
 		} else {
@@ -549,7 +561,7 @@ class ControllerFxEdition {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			presenter.save(file);
+		    save(file);
 		} else {
 			logger.warn("File not chosen")
 		}
@@ -567,7 +579,7 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			
-			presenter.load(file.path);
+			load(file.path);
 			render();
 			
 		} else {
@@ -575,6 +587,17 @@ class ControllerFxEdition {
 		}
 		
 		
+	}
+	def boolean load(String path)
+	{
+		val stream = service.open(path)
+		
+		if (stream.isPresent)
+		{
+			pdfManager.create(stream.get);
+		}
+		
+		return stream.isPresent;
 	}
 	def render()
 	{
@@ -588,22 +611,22 @@ class ControllerFxEdition {
 	 */
 	def loadBoxes() {
 		
-		for (var p = 0;p < presenter.getPresenterPdf.getPdfPageCount;p++) {
-			var ids = presenter.presenterQuestionZone.initLoading(p)
+		for (var p = 0;p < pdfManager.getPdfPageCount;p++) {
+			var ids = initLoading(p)
 			for (int i:ids) {
 				
 				var box = new Box(
-					presenter.presenterQuestionZone.questionX(i) * maxX,
-					presenter.presenterQuestionZone.questionY(i) * maxY,
-					presenter.presenterQuestionZone.questionWidth(i) * maxX,
-					presenter.presenterQuestionZone.questionHeight(i) * maxY		
+					questionX(i) * maxX,
+					questionY(i) * maxY,
+					questionWidth(i) * maxX,
+					questionHeight(i) * maxY		
 				)
 				mainPane.addZone(box);
-				questionList.loadQuestion(box,presenter.presenterQuestionZone.questionName(i),p,i,presenter.presenterQuestionZone.questionWorth(i))
+				questionList.loadQuestion(box,questionName(i),p,i,questionWorth(i))
 			}
 		}
 		
-		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)
 	}
 	
 	def postLoad(){
@@ -617,8 +640,8 @@ class ControllerFxEdition {
 	 */
 	def initPageSelection() {
 		pageChoice.items.clear
-		var pdfPresenter = presenter.getPresenterPdf()
-		for (var i = 1; i<=pdfPresenter.getPdfPageCount(); i++) {
+ 
+		for (var i = 1; i<=pdfManager.getPdfPageCount(); i++) {
 			//println(i)
 			if (!pageChoice.items.contains(i)) {
 				pageChoice.getItems().add(i)
@@ -633,37 +656,37 @@ class ControllerFxEdition {
 		//Initialise le selecteur de page (pageChoice)
 		initPageSelection
 		
-		val image = presenter.getPresenterPdf.currentPdfPage
+		val image = pdfManager.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
 		
-		pageNumberLabel.text = translate("label.page") + (presenter.getPresenterPdf.currentPdfPageNumber + 1) + " / " + presenter.getPresenterPdf.getPdfPageCount
-		pageChoice.value = presenter.getPresenterPdf.currentPdfPageNumber + 1
+		pageNumberLabel.text = translate("label.page") + (pdfManager.currentPdfPageNumber + 1) + " / " + pdfManager.getPdfPageCount
+		pageChoice.value = pdfManager.currentPdfPageNumber + 1
 	}
 
 	/**
 	 * changes the selected page to load and then renders it
 	 */
 	def selectPage(int pageNumber) {
-		presenter.getPresenterPdf.goToPdfPage(pageNumber);
+		pdfManager.goToPdfPage(pageNumber);
 		renderDocument
-		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)
 	}
 
 	/**
 	 * goes to the next page of the current pdf
 	 */
 	def nextPage() {
-		presenter.getPresenterPdf.nextPdfPage();
+		pdfManager.nextPdfPage();
 		renderDocument
-		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)
 	}
 
 	def previousPage() {
-		presenter.getPresenterPdf.previousPdfPage();
+		pdfManager.previousPdfPage();
 		renderDocument
-		questionList.showOnlyPage(presenter.getPresenterPdf.currentPdfPageNumber)
+		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)
 	}
 	
 	def double getMaxY(){
@@ -677,5 +700,126 @@ class ControllerFxEdition {
 		mainPane.clear
 		questionList.clear
 		questionEditor.hideAll
+	}
+	
+	
+	def int createQuestion(double x, double y, double height, double width)
+	{
+		service.createQuestion(pdfManager.pdfPageIndex,x as float,y as float,height as float,width as float)
+	}
+	
+	def void removeQuestion(int ID) {
+		service.removeQuestion(ID);
+	}
+	
+	def void renameQuestion(int ID,String name) {
+		service.renameQuestion(ID,name)
+	}
+	
+	def void resizeQuestion(int ID, double height, double width) {		
+		service.rescaleQuestion(ID,height as float,width as float)
+	}
+	
+	/**
+	 * changes the x and y coordinates of the {@link Question} identified by the id
+	 * @param int id : the unique ID of question
+	 * @param float x : new x position
+	 * @param float y : new y position
+	 * @author : Benjamin Danlos
+	 */
+	def void moveQuestion(int id, double x, double y){
+		service.moveQuestion(id,x as float,y as float)
+	}
+	
+	def void changeQuestionWorth(int id,float worth) {
+		service.modifyMaxPoint(id,worth)
+	}
+	
+	
+	
+	
+	/* --LOADING NEW TEMPLATE--  */
+	
+	def List<Integer> initLoading(int pageNumber){
+		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
+		var ids = new LinkedList<Integer>();
+		for (Question q : questions) {
+			ids.add(q.id)
+		}
+		ids
+	}
+	
+	List<Question> questions
+	/**
+	 * Loads the next question into questionToLoad
+	 * if there is a new question, return true,
+	 * else return false
+	 */
+	 
+	
+	def double questionX(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.x
+			}
+		}
+		result
+	}
+	
+	def double questionY(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.y
+			}
+		}
+		result
+	}
+	
+	def double questionHeight(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.heigth
+				print("h = " + result)
+			}
+		}
+		result
+	}
+	
+	def double questionWidth(int id){
+		var result = -1.0;
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.zone.width
+				print("w = " + result)
+			}
+		}
+		result
+	}
+	
+	def String questionName(int id){
+		var result = "";
+		for (Question q : questions) {
+			if (q.id == id) {
+				result = q.name
+			}
+		}
+		result
+	}
+	
+	
+
+	
+	def float questionWorth(int id){
+		var result = 0f;
+		for (Question q : questions) {
+			if (q.id == id) {
+				if (q.gradeScale !== null)
+					result = q.gradeScale.maxPoint
+			}
+		}
+		result
 	}
 }

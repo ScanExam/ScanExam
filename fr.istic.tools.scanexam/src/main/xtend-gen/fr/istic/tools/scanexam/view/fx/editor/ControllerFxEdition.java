@@ -2,9 +2,11 @@ package fr.istic.tools.scanexam.view.fx.editor;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterEdition;
-import fr.istic.tools.scanexam.presenter.PresenterPdf;
+import fr.istic.tools.scanexam.core.GradeScale;
+import fr.istic.tools.scanexam.core.Question;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.PdfManager;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
 import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
 import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
@@ -12,10 +14,13 @@ import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
@@ -39,6 +44,7 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend.lib.annotations.Accessors;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
@@ -59,16 +65,7 @@ public class ControllerFxEdition {
     RESIZE_TOOL;
   }
   
-  @Accessors
-  private PresenterEdition presenter;
-  
-  public void setPresenter(final PresenterEdition presenter) {
-    this.presenter = presenter;
-  }
-  
-  public Object getEditor() {
-    return this.getEditor();
-  }
+  private ServiceEdition service;
   
   private double maxX;
   
@@ -118,6 +115,9 @@ public class ControllerFxEdition {
   
   @FXML
   private AnchorPane mainPaneContainer;
+  
+  @Accessors
+  private PdfManager pdfManager;
   
   @FXML
   public void pressed() {
@@ -218,7 +218,19 @@ public class ControllerFxEdition {
     this.questionEditor.select(item);
   }
   
-  public void init() {
+  public void save(final File path) {
+    final ByteArrayOutputStream outputStream = this.pdfManager.getPdfOutputStream();
+    this.service.save(outputStream, path);
+  }
+  
+  public void close() {
+    System.exit(0);
+  }
+  
+  public void init(final ServiceEdition serviceEdition) {
+    this.service = serviceEdition;
+    PdfManager _pdfManager = new PdfManager(serviceEdition);
+    this.pdfManager = _pdfManager;
     PdfPane _pdfPane = new PdfPane(this);
     this.mainPane = _pdfPane;
     this.mainPaneContainer.getChildren().add(this.mainPane);
@@ -631,7 +643,7 @@ public class ControllerFxEdition {
         boolean _xblockexpression_1 = false;
         {
           this.clearVue();
-          this.presenter.getPresenterPdf().create("", file);
+          this.pdfManager.create("", file);
           this.renderDocument();
           _xblockexpression_1 = this.postLoad();
         }
@@ -662,7 +674,7 @@ public class ControllerFxEdition {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      this.presenter.save(file);
+      this.save(file);
     } else {
       this.logger.warn("File not chosen");
     }
@@ -691,7 +703,7 @@ public class ControllerFxEdition {
       if ((file != null)) {
         boolean _xblockexpression_1 = false;
         {
-          this.presenter.load(file.getPath());
+          this.load(file.getPath());
           _xblockexpression_1 = this.render();
         }
         _xifexpression = _xblockexpression_1;
@@ -701,6 +713,15 @@ public class ControllerFxEdition {
       _xblockexpression = _xifexpression;
     }
     return Boolean.valueOf(_xblockexpression);
+  }
+  
+  public boolean load(final String path) {
+    final Optional<ByteArrayInputStream> stream = this.service.open(path);
+    boolean _isPresent = stream.isPresent();
+    if (_isPresent) {
+      this.pdfManager.create(stream.get());
+    }
+    return stream.isPresent();
   }
   
   public boolean render() {
@@ -718,27 +739,27 @@ public class ControllerFxEdition {
    * called to load each question from the model into the vue
    */
   public void loadBoxes() {
-    for (int p = 0; (p < this.presenter.getPresenterPdf().getPdfPageCount()); p++) {
+    for (int p = 0; (p < this.pdfManager.getPdfPageCount()); p++) {
       {
-        LinkedList<Integer> ids = this.presenter.getPresenterQuestionZone().initLoading(p);
+        List<Integer> ids = this.initLoading(p);
         for (final int i : ids) {
           {
-            double _questionX = this.presenter.getPresenterQuestionZone().questionX(i);
+            double _questionX = this.questionX(i);
             double _multiply = (_questionX * this.maxX);
-            double _questionY = this.presenter.getPresenterQuestionZone().questionY(i);
+            double _questionY = this.questionY(i);
             double _multiply_1 = (_questionY * this.maxY);
-            double _questionWidth = this.presenter.getPresenterQuestionZone().questionWidth(i);
+            double _questionWidth = this.questionWidth(i);
             double _multiply_2 = (_questionWidth * this.maxX);
-            double _questionHeight = this.presenter.getPresenterQuestionZone().questionHeight(i);
+            double _questionHeight = this.questionHeight(i);
             double _multiply_3 = (_questionHeight * this.maxY);
             Box box = new Box(_multiply, _multiply_1, _multiply_2, _multiply_3);
             this.mainPane.addZone(box);
-            this.questionList.loadQuestion(box, this.presenter.getPresenterQuestionZone().questionName(i), p, i, this.presenter.getPresenterQuestionZone().questionWorth(i));
+            this.questionList.loadQuestion(box, this.questionName(i), p, i, this.questionWorth(i));
           }
         }
       }
     }
-    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
   }
   
   public boolean postLoad() {
@@ -756,8 +777,7 @@ public class ControllerFxEdition {
    */
   public void initPageSelection() {
     this.pageChoice.getItems().clear();
-    PresenterPdf pdfPresenter = this.presenter.getPresenterPdf();
-    for (int i = 1; (i <= pdfPresenter.getPdfPageCount()); i++) {
+    for (int i = 1; (i <= this.pdfManager.getPdfPageCount()); i++) {
       boolean _contains = this.pageChoice.getItems().contains(Integer.valueOf(i));
       boolean _not = (!_contains);
       if (_not) {
@@ -771,19 +791,19 @@ public class ControllerFxEdition {
    */
   public void renderDocument() {
     this.initPageSelection();
-    final BufferedImage image = this.presenter.getPresenterPdf().getCurrentPdfPage();
+    final BufferedImage image = this.pdfManager.getCurrentPdfPage();
     this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.maxX = this.mainPane.getImageViewWidth();
     this.maxY = this.mainPane.getImageViewHeight();
     String _translate = LanguageManager.translate("label.page");
-    int _currentPdfPageNumber = this.presenter.getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber = this.pdfManager.currentPdfPageNumber();
     int _plus = (_currentPdfPageNumber + 1);
     String _plus_1 = (_translate + Integer.valueOf(_plus));
     String _plus_2 = (_plus_1 + " / ");
-    int _pdfPageCount = this.presenter.getPresenterPdf().getPdfPageCount();
+    int _pdfPageCount = this.pdfManager.getPdfPageCount();
     String _plus_3 = (_plus_2 + Integer.valueOf(_pdfPageCount));
     this.pageNumberLabel.setText(_plus_3);
-    int _currentPdfPageNumber_1 = this.presenter.getPresenterPdf().currentPdfPageNumber();
+    int _currentPdfPageNumber_1 = this.pdfManager.currentPdfPageNumber();
     int _plus_4 = (_currentPdfPageNumber_1 + 1);
     this.pageChoice.setValue(Integer.valueOf(_plus_4));
   }
@@ -792,24 +812,24 @@ public class ControllerFxEdition {
    * changes the selected page to load and then renders it
    */
   public void selectPage(final int pageNumber) {
-    this.presenter.getPresenterPdf().goToPdfPage(pageNumber);
+    this.pdfManager.goToPdfPage(pageNumber);
     this.renderDocument();
-    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
   }
   
   /**
    * goes to the next page of the current pdf
    */
   public void nextPage() {
-    this.presenter.getPresenterPdf().nextPdfPage();
+    this.pdfManager.nextPdfPage();
     this.renderDocument();
-    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
   }
   
   public void previousPage() {
-    this.presenter.getPresenterPdf().previousPdfPage();
+    this.pdfManager.previousPdfPage();
     this.renderDocument();
-    this.questionList.showOnlyPage(this.presenter.getPresenterPdf().currentPdfPageNumber());
+    this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
   }
   
   public double getMaxY() {
@@ -826,9 +846,160 @@ public class ControllerFxEdition {
     this.questionEditor.hideAll();
   }
   
-  @Pure
-  public PresenterEdition getPresenter() {
-    return this.presenter;
+  public int createQuestion(final double x, final double y, final double height, final double width) {
+    return this.service.createQuestion(this.pdfManager.getPdfPageIndex(), ((float) x), ((float) y), ((float) height), ((float) width));
+  }
+  
+  public void removeQuestion(final int ID) {
+    this.service.removeQuestion(ID);
+  }
+  
+  public void renameQuestion(final int ID, final String name) {
+    this.service.renameQuestion(ID, name);
+  }
+  
+  public void resizeQuestion(final int ID, final double height, final double width) {
+    this.service.rescaleQuestion(ID, ((float) height), ((float) width));
+  }
+  
+  /**
+   * changes the x and y coordinates of the {@link Question} identified by the id
+   * @param int id : the unique ID of question
+   * @param float x : new x position
+   * @param float y : new y position
+   * @author : Benjamin Danlos
+   */
+  public void moveQuestion(final int id, final double x, final double y) {
+    this.service.moveQuestion(id, ((float) x), ((float) y));
+  }
+  
+  public void changeQuestionWorth(final int id, final float worth) {
+    this.service.modifyMaxPoint(id, worth);
+  }
+  
+  /**
+   * --LOADING NEW TEMPLATE--
+   */
+  public List<Integer> initLoading(final int pageNumber) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      this.questions = this.service.getQuestionAtPage(pageNumber);
+      LinkedList<Integer> ids = new LinkedList<Integer>();
+      for (final Question q : this.questions) {
+        ids.add(Integer.valueOf(q.getId()));
+      }
+      _xblockexpression = ids;
+    }
+    return _xblockexpression;
+  }
+  
+  private List<Question> questions;
+  
+  /**
+   * Loads the next question into questionToLoad
+   * if there is a new question, return true,
+   * else return false
+   */
+  public double questionX(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getX();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public double questionY(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getY();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public double questionHeight(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getHeigth();
+          InputOutput.<String>print(("h = " + Double.valueOf(result)));
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public double questionWidth(final int id) {
+    double _xblockexpression = (double) 0;
+    {
+      double result = (-1.0);
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getZone().getWidth();
+          InputOutput.<String>print(("w = " + Double.valueOf(result)));
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public String questionName(final int id) {
+    String _xblockexpression = null;
+    {
+      String result = "";
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          result = q.getName();
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  public float questionWorth(final int id) {
+    float _xblockexpression = (float) 0;
+    {
+      float result = 0f;
+      for (final Question q : this.questions) {
+        int _id = q.getId();
+        boolean _equals = (_id == id);
+        if (_equals) {
+          GradeScale _gradeScale = q.getGradeScale();
+          boolean _tripleNotEquals = (_gradeScale != null);
+          if (_tripleNotEquals) {
+            result = q.getGradeScale().getMaxPoint();
+          }
+        }
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
   }
   
   @Pure
@@ -838,5 +1009,14 @@ public class ControllerFxEdition {
   
   public void setLoadedModel(final BooleanProperty loadedModel) {
     this.loadedModel = loadedModel;
+  }
+  
+  @Pure
+  public PdfManager getPdfManager() {
+    return this.pdfManager;
+  }
+  
+  public void setPdfManager(final PdfManager pdfManager) {
+    this.pdfManager = pdfManager;
   }
 }

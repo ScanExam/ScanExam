@@ -1,13 +1,17 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import com.google.common.base.Objects;
+import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.core.config.Config;
+import fr.istic.tools.scanexam.extensions.LocaleExtensions;
 import fr.istic.tools.scanexam.mailing.SendMailTls;
-import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Locale;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -28,6 +32,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -36,11 +42,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
  */
 @SuppressWarnings("all")
 public class ControllerConfiguration {
-  /**
-   * Controlleur de la configuration
-   */
-  private PresenterConfiguration presConfig;
-  
   /**
    * Pane principale de la vue
    */
@@ -89,17 +90,18 @@ public class ControllerConfiguration {
   @FXML
   public Button btnCheckMail;
   
+  private final Config config = ConfigurationManager.instance;
+  
   /**
    * Initialise les différents champs avec la valeur actuelle de la configuration
    */
-  public void initialize(final PresenterConfiguration presConfig) {
-    this.presConfig = presConfig;
-    this.cmbBxLanguage.setValue(presConfig.getLanguage());
-    this.txtFldEmail.setText(presConfig.getEmail());
-    this.pwdFldEmailPassword.setText(presConfig.getEmailPassword());
-    this.txtFldEmailHost.setText(presConfig.getMailHost());
-    this.txtFldEmailPort.setText(presConfig.getMailPort());
-    this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(presConfig.getLanguages()));
+  public void initialize() {
+    this.cmbBxLanguage.setValue(LocaleExtensions.capitalizeDisplayName(this.config.getLanguage()));
+    this.txtFldEmail.setText(this.config.getEmail());
+    this.pwdFldEmailPassword.setText(this.config.getEmailPassword());
+    this.txtFldEmailHost.setText(this.config.getMailHost());
+    this.txtFldEmailPort.setText(Integer.valueOf(this.config.getMailPort()).toString());
+    this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(this.getLanguages()));
     EmailValidator _emailValidator = new EmailValidator();
     this.txtFldEmail.addFormatValidator(_emailValidator);
     final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> value, Boolean oldVal, Boolean newVal) -> {
@@ -117,7 +119,7 @@ public class ControllerConfiguration {
   
   @FXML
   public void saveAndQuit() {
-    final boolean needRestart = this.presConfig.updateConfig(this.cmbBxLanguage.getValue(), this.txtFldEmail.getText(), this.pwdFldEmailPassword.getText(), 
+    final boolean needRestart = this.updateConfig(this.cmbBxLanguage.getValue(), this.txtFldEmail.getText(), this.pwdFldEmailPassword.getText(), 
       this.txtFldEmailHost.getText(), this.txtFldEmailPort.getText());
     if (needRestart) {
       final Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -135,18 +137,86 @@ public class ControllerConfiguration {
     this.quit();
   }
   
+  /**
+   * Met à jour la configuration
+   * @param language Nouvelle langue
+   * @param email Nouvel email
+   * @param emailPassword Nouveau mot de passe de l'email
+   * @param emailHost Nouvel hébergeur de l'email
+   * @param emailPort Nouveau port de l'email
+   * @return true si le programme doit être redémarré pour que l'ensemble de la configuration soit prise en compte
+   */
+  public boolean updateConfig(final String language, final String email, final String emailPassword, final String emailHost, final String emailPort) {
+    boolean needToRestart = false;
+    final Function1<Locale, Boolean> _function = (Locale locale) -> {
+      return Boolean.valueOf(language.equals(LocaleExtensions.capitalizeDisplayName(locale)));
+    };
+    final Locale newLocale = IterableExtensions.<Locale>findFirst(LanguageManager.getSupportedLocales(), _function);
+    if ((newLocale == null)) {
+      String _plus = (newLocale + " is not supported.");
+      throw new IllegalArgumentException(_plus);
+    }
+    Locale _currentLanguage = LanguageManager.getCurrentLanguage();
+    boolean _notEquals = (!Objects.equal(newLocale, _currentLanguage));
+    needToRestart = _notEquals;
+    this.config.setLanguage(newLocale);
+    this.config.setEmail(email);
+    this.config.setEmailPassword(emailPassword);
+    this.config.setMailHost(emailHost);
+    this.config.setMailPort(Integer.parseInt(emailPort));
+    ConfigurationManager.save();
+    return needToRestart;
+  }
+  
+  public Collection<String> getLanguages() {
+    final Function1<Locale, String> _function = (Locale local) -> {
+      return LocaleExtensions.capitalizeDisplayName(local);
+    };
+    return IterableExtensions.<String>toList(IterableExtensions.<Locale, String>map(LanguageManager.getSupportedLocales(), _function));
+  }
+  
+  /**
+   * @param name l'adresse mail du login
+   * @param password le mot de passe du login
+   * @param host l'host SMTP
+   * @param port le port SMTP
+   * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
+   */
+  public SendMailTls.LoginResult checkLogin(final String name, final String password, final String host, final String port) {
+    String _xifexpression = null;
+    if ((name == null)) {
+      _xifexpression = "";
+    } else {
+      _xifexpression = name;
+    }
+    String _xifexpression_1 = null;
+    if ((password == null)) {
+      _xifexpression_1 = "";
+    } else {
+      _xifexpression_1 = password;
+    }
+    String _xifexpression_2 = null;
+    if ((host == null)) {
+      _xifexpression_2 = "";
+    } else {
+      _xifexpression_2 = host;
+    }
+    return SendMailTls.checkLogin(_xifexpression, _xifexpression_1, _xifexpression_2, Integer.parseInt(port));
+  }
+  
+  /**
+   * @param email une adresse email (non nulle)
+   * @return une paire composée de l'Host et du Port SMTP pour cette adresse mail, si ceux-ci se trouvent dans le fichier mailing/configMailFile.properties
+   */
+  public Pair<String, String> getSmtpInfos(final String email) {
+    return SendMailTls.getSmtpInformation(email);
+  }
+  
   @FXML
   public void quit() {
     Window _window = this.mainPane.getScene().getWindow();
     final Stage stage = ((Stage) _window);
     stage.close();
-  }
-  
-  /**
-   * SETTERS
-   */
-  public void setPresenterConfiguration(final PresenterConfiguration presConfig) {
-    this.presConfig = presConfig;
   }
   
   /**
@@ -156,7 +226,7 @@ public class ControllerConfiguration {
     String _text = this.txtFldEmail.getText();
     boolean _notEquals = (!Objects.equal(_text, ""));
     if (_notEquals) {
-      final Pair<String, String> infos = this.presConfig.getSmtpInfos(this.txtFldEmail.getText());
+      final Pair<String, String> infos = this.getSmtpInfos(this.txtFldEmail.getText());
       if (((this.txtFldEmailHost.getText() == null) || Objects.equal(this.txtFldEmailHost.getText(), ""))) {
         this.txtFldEmailHost.setText(infos.getKey());
       }
@@ -181,7 +251,7 @@ public class ControllerConfiguration {
         {
           ControllerConfiguration.this.mainPane.getScene().setCursor(Cursor.WAIT);
           ControllerConfiguration.this.mainPane.setDisable(true);
-          final SendMailTls.LoginResult result = ControllerConfiguration.this.presConfig.checkLogin(ControllerConfiguration.this.txtFldEmail.getText(), ControllerConfiguration.this.pwdFldEmailPassword.getText(), ControllerConfiguration.this.txtFldEmailHost.getText(), 
+          final SendMailTls.LoginResult result = ControllerConfiguration.this.checkLogin(ControllerConfiguration.this.txtFldEmail.getText(), ControllerConfiguration.this.pwdFldEmailPassword.getText(), ControllerConfiguration.this.txtFldEmailHost.getText(), 
             ControllerConfiguration.this.txtFldEmailPort.getText());
           ControllerConfiguration.this.mainPane.setDisable(false);
           ControllerConfiguration.this.mainPane.getScene().setCursor(Cursor.DEFAULT);

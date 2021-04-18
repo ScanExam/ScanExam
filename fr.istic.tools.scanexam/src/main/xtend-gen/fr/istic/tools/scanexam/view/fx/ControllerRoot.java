@@ -1,7 +1,8 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.presenter.PresenterConfiguration;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
@@ -25,7 +26,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
 public class ControllerRoot implements Initializable {
@@ -50,29 +53,27 @@ public class ControllerRoot implements Initializable {
   @FXML
   private MenuItem exportToExamButton;
   
-  private ControllerFxGraduation corrector;
+  @Accessors
+  private ControllerFxGraduation graduationController;
   
-  private ControllerFxEdition editor;
+  @Accessors
+  private ControllerFxEdition editionController;
   
-  public ControllerFxEdition setEditorController(final ControllerFxEdition editor) {
-    return this.editor = editor;
-  }
+  private ServiceEdition serviceEdition;
   
-  public ControllerFxGraduation setCorrectorController(final ControllerFxGraduation corrector) {
-    return this.corrector = corrector;
-  }
+  private ServiceGraduation serviceGraduation;
   
-  public void setEditor(final Node n) {
+  public void setEditorNode(final Node n) {
     this.editorTab.setContent(n);
   }
   
-  public void setCorrector(final Node n) {
+  public void setGraduationNode(final Node n) {
     this.correctorTab.setContent(n);
   }
   
   @FXML
   public void loadTemplatePressedEditor() {
-    this.editor.loadTemplatePressed();
+    this.editionController.loadTemplatePressed();
   }
   
   @FXML
@@ -87,7 +88,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getPresenter().getPresenterGraduationLoader(), this.corrector);
+      loader.<ControllerGraduationLoader>getController().initialize(this.serviceGraduation, this.graduationController);
       Scene _scene = new Scene(view, 384, 355);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -109,7 +110,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerTemplateCreator>getController().initialize(this.editor.getPresenter().getPresenterTemplateCreator(), this.editor);
+      loader.<ControllerTemplateCreator>getController().initialize(this.editionController);
       Scene _scene = new Scene(view, 384, 155);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -121,7 +122,7 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void SaveTemplatePressed() {
-    this.editor.saveTemplatePressed();
+    this.editionController.saveTemplatePressed();
   }
   
   @FXML
@@ -136,7 +137,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerStudentListLoader>getController().initialize(this.corrector.getPresenter().getPresenterStudentList());
+      loader.<ControllerStudentListLoader>getController().initialize(this.serviceGraduation);
       Scene _scene = new Scene(view, 384, 160);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -158,9 +159,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      ControllerConfiguration _controller = loader.<ControllerConfiguration>getController();
-      PresenterConfiguration _presenterConfiguration = new PresenterConfiguration();
-      _controller.initialize(_presenterConfiguration);
+      loader.<ControllerConfiguration>getController().initialize();
       Scene _scene = new Scene(view, 384, 280);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -203,7 +202,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationLoader>getController().initialize(this.corrector.getPresenter().getPresenterGraduationLoader(), this.corrector);
+      loader.<ControllerGraduationLoader>getController().initialize(this.serviceGraduation, this.graduationController);
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -225,7 +224,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerStudentSheetExport>getController().initialize(this.editor.getPresenter().getPresenterStudentSheetExport());
+      loader.<ControllerStudentSheetExport>getController().initialize(this.editionController, this.serviceEdition);
       Scene _scene = new Scene(view, 384, 107);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -237,21 +236,41 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void saveCorrection() {
-    this.corrector.saveExam();
+    this.graduationController.saveExam();
   }
   
   @FXML
   public boolean toggleAutoZoom() {
-    return this.corrector.setToAutoZoom(Boolean.valueOf(this.autoZoom.isSelected()));
+    return this.graduationController.setToAutoZoom(Boolean.valueOf(this.autoZoom.isSelected()));
   }
   
-  public void init() {
-    this.saveGraduationButton.disableProperty().bind(this.corrector.getLoadedModel().not());
-    this.saveTemplateButton.disableProperty().bind(this.editor.getLoadedModel().not());
-    this.exportToExamButton.disableProperty().bind(this.editor.getLoadedModel().not());
+  public void init(final ServiceEdition serviceEdition, final ServiceGraduation serviceGraduation) {
+    this.serviceEdition = serviceEdition;
+    this.serviceGraduation = serviceGraduation;
+    this.saveGraduationButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
+    this.saveTemplateButton.disableProperty().bind(this.editionController.getLoadedModel().not());
+    this.exportToExamButton.disableProperty().bind(this.editionController.getLoadedModel().not());
   }
   
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {
+  }
+  
+  @Pure
+  public ControllerFxGraduation getGraduationController() {
+    return this.graduationController;
+  }
+  
+  public void setGraduationController(final ControllerFxGraduation graduationController) {
+    this.graduationController = graduationController;
+  }
+  
+  @Pure
+  public ControllerFxEdition getEditionController() {
+    return this.editionController;
+  }
+  
+  public void setEditionController(final ControllerFxEdition editionController) {
+    this.editionController = editionController;
   }
 }

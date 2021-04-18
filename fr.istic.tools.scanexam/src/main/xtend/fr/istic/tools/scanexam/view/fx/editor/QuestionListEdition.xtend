@@ -48,9 +48,9 @@ class QuestionListEdition extends VBox {
 			default: {
 			}
 		}
-		println("page : " + controller.presenter.presenterPdf.currentPdfPageNumber)
+		println("page : " + controller.pdfManager.currentPdfPageNumber)
 		var item = new QuestionItemEdition(this, box, type,
-			controller.presenter.presenterPdf.currentPdfPageNumber);
+			controller.pdfManager.currentPdfPageNumber);
 
 		addToModel(item)
 		add(item)
@@ -119,20 +119,20 @@ class QuestionListEdition extends VBox {
 
 	//---Model Interactions---//
 	def addToModel(QuestionItemEdition item) {
-		item.questionId = controller.presenter.presenterQuestionZone.createQuestion(item.zone.x/controller.maxX, item.zone.y/controller.maxY,item.zone.height/controller.maxY, item.zone.width/controller.maxX) // TODO convert
+		item.questionId = controller.createQuestion(item.zone.x/controller.maxX, item.zone.y/controller.maxY,item.zone.height/controller.maxY, item.zone.width/controller.maxX) // TODO convert
 		updateInModel(item)
 	}
 
 
 	def updateInModel(QuestionItemEdition item) {
-		controller.presenter.presenterQuestionZone.moveQuestion(item.questionId, item.zone.x/controller.maxX, item.zone.y/controller.maxY) 
-		controller.presenter.presenterQuestionZone.resizeQuestion(item.questionId, item.zone.height/controller.maxY,item.zone.width/controller.maxX)
-		controller.presenter.presenterQuestionZone.renameQuestion(item.questionId,item.name)
-		controller.presenter.presenterQuestionZone.changeQuestionWorth(item.questionId,item.scale)
+		controller.moveQuestion(item.questionId, item.zone.x/controller.maxX, item.zone.y/controller.maxY) 
+		controller.resizeQuestion(item.questionId, item.zone.height/controller.maxY,item.zone.width/controller.maxX)
+		controller.renameQuestion(item.questionId,item.name)
+		controller.changeQuestionWorth(item.questionId,item.scale)
 	}
 
 	def removeFromModel(QuestionItemEdition item) {
-		controller.presenter.presenterQuestionZone.removeQuestion(item.questionId)
+		controller.removeQuestion(item.questionId)
 	}
 	//------------------------//
 	
