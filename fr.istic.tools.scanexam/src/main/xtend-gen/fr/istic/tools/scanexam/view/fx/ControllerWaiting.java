@@ -90,7 +90,6 @@ public class ControllerWaiting implements Initializable {
       }
     };
     this.currentProgress.addListener(_function_1);
-    this.percentLabel.setText("0%");
   }
   
   /**

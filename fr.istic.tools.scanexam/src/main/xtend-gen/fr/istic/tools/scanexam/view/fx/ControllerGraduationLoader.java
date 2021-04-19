@@ -174,6 +174,7 @@ public class ControllerGraduationLoader {
         final Task<Void> task = new Task<Void>() {
           @Override
           protected Void call() {
+            this.updateProgress(0, 1);
             while ((!reader.isFinished())) {
               {
                 this.updateProgress(reader.getNbPagesTreated(), reader.getNbPagesPdf());

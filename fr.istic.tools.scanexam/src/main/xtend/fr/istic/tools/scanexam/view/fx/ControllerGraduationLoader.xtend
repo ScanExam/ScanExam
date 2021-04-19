@@ -139,6 +139,7 @@ class ControllerGraduationLoader {
 		val successStart = reader.readPDf
 		val Task<Void> task = new Task<Void>(){
 			protected override Void call() {
+				updateProgress(0, 1)
 				while(!reader.isFinished) {
 					updateProgress(reader.nbPagesTreated, reader.nbPagesPdf)
 					updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), reader.nbPagesTreated, reader.nbPagesPdf))
