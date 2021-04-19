@@ -19,6 +19,7 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
+import java.io.ByteArrayInputStream
 
 class ExportExamToPdf {
 	
@@ -139,8 +140,10 @@ class ExportExamToPdf {
      /*
       * Export pdf with annotations and Grade
       */
-     def static void exportToPdfWithAnnotations(PDDocument document,StudentSheet sheet, File fileForSaving){
-
+     def static void exportToPdfWithAnnotations(InputStream d,StudentSheet sheet, File fileForSaving){
+     	
+		var PDDocument document = PDDocument.load(d)
+		
      	for(Grade g : sheet.grades){
      		for(Comment c : g.comments){
 				//Write only TextComments
@@ -235,7 +238,14 @@ class ExportExamToPdf {
      	contentStream.beginText();
 		contentStream.newLineAtOffset(0, page.mediaBox.height-10);
 		contentStream.showText(""+sheet.computeGrade);
+		contentStream.endText();
+		contentStream.close();
+		
+		
 		document.save(fileForSaving);
+		
+		document.close();
+		d.close();
      	
      }
      

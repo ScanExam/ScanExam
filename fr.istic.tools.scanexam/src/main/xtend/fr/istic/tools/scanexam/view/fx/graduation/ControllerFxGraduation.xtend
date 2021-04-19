@@ -429,7 +429,7 @@ class ControllerFxGraduation {
 	def void exportGraduationToPdf(File folder) {
 		for (studentSheet : service.studentSheets) {
 			val file = new File(folder.absolutePath + File.separator + studentSheet.studentName + ".pdf") 
-			ExportExamToPdf.exportToPdfWithAnnotations(pdfManager.getPdfDocument(), studentSheet, file)
+			ExportExamToPdf.exportToPdfWithAnnotations(pdfManager.pdfInputStream, studentSheet, file)
 		}
 	}
 
