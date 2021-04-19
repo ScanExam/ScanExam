@@ -180,6 +180,8 @@ public class ControllerGraduationLoader {
                 this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
               }
             }
+            this.updateProgress(reader.getNbPagesTreated(), reader.getNbPagesPdf());
+            this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
             return null;
           }
         };

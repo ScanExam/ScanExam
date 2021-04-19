@@ -73,7 +73,6 @@ public class ControllerWaiting implements Initializable {
   public void initialize(final URL location, final ResourceBundle resources) {
     SimpleDoubleProperty _simpleDoubleProperty = new SimpleDoubleProperty(this, "progressCurrent", 0d);
     this.currentProgress = _simpleDoubleProperty;
-    this.progressBar.setProgress(0d);
     this.progressBar.progressProperty().bind(this.currentProgress);
     final Callable<Long> _function = () -> {
       double _get = this.currentProgress.get();
@@ -91,6 +90,7 @@ public class ControllerWaiting implements Initializable {
       }
     };
     this.currentProgress.addListener(_function_1);
+    this.percentLabel.setText("0%");
   }
   
   /**

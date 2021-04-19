@@ -142,8 +142,9 @@ class ControllerGraduationLoader {
 				while(!reader.isFinished) {
 					updateProgress(reader.nbPagesTreated, reader.nbPagesPdf)
 					updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), reader.nbPagesTreated, reader.nbPagesPdf))
-				
 				}
+				updateProgress(reader.nbPagesTreated, reader.nbPagesPdf)
+				updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), reader.nbPagesTreated, reader.nbPagesPdf))
 				return null
 			}
 		}
