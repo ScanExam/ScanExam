@@ -582,7 +582,7 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			
-			
+			loadTemplate(file)
 			render();
 			
 		} else {

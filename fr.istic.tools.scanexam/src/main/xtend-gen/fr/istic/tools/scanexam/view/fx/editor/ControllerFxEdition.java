@@ -703,7 +703,12 @@ public class ControllerFxEdition {
       File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
       boolean _xifexpression = false;
       if ((file != null)) {
-        _xifexpression = this.render();
+        boolean _xblockexpression_1 = false;
+        {
+          this.loadTemplate(file);
+          _xblockexpression_1 = this.render();
+        }
+        _xifexpression = _xblockexpression_1;
       } else {
         this.logger.warn("File not chosen");
       }
