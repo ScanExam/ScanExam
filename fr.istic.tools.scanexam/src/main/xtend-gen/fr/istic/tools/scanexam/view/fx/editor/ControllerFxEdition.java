@@ -13,6 +13,7 @@ import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,6 +32,7 @@ import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -701,18 +703,33 @@ public class ControllerFxEdition {
       File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
       boolean _xifexpression = false;
       if ((file != null)) {
-        boolean _xblockexpression_1 = false;
-        {
-          this.load(file.getPath());
-          _xblockexpression_1 = this.render();
-        }
-        _xifexpression = _xblockexpression_1;
+        _xifexpression = this.render();
       } else {
         this.logger.warn("File not chosen");
       }
       _xblockexpression = _xifexpression;
     }
     return Boolean.valueOf(_xblockexpression);
+  }
+  
+  /**
+   * Essaye de charger le fichier passé en paramètre comme Template, affiche un DialogMessage en cas d'erreur
+   * @param file un fichier à charger
+   */
+  public boolean loadTemplate(final File file) {
+    boolean _xblockexpression = false;
+    {
+      java.util.Objects.<File>requireNonNull(file);
+      final boolean success = this.load(file.getPath());
+      if ((!success)) {
+        DialogMessageSender.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
+      } else {
+        this.render();
+        this.load(file.getPath());
+      }
+      _xblockexpression = success;
+    }
+    return _xblockexpression;
   }
   
   public boolean load(final String path) {

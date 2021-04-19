@@ -68,7 +68,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation,graduationController)
+		//loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, editionController, graduationController)
 		dialog.setScene(new Scene(view, 384, 355))
 		dialog.setResizable(false)
 		dialog.show
@@ -142,7 +142,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation,graduationController)
+		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, serviceEdition, editionController, graduationController)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show

@@ -1,28 +1,30 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator
-import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl
+import fr.istic.tools.scanexam.qrCode.reader.PdfReader
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl
+import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
-import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
 import java.io.File
+import java.io.FileInputStream
 import java.util.Objects
+import javafx.concurrent.Service
+import javafx.concurrent.Task
 import javafx.fxml.FXML
-import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.Button
 import javafx.scene.control.RadioButton
-import javafx.scene.image.Image
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
-import javax.annotation.Nullable
 import org.apache.logging.log4j.LogManager
 
 /**
@@ -58,6 +60,10 @@ class ControllerGraduationLoader {
 	/* TextField de la saisie du path pour les copies */
 	@FXML
 	var FormattedTextField txtFldFileGraduation
+	
+	/* TextField de la saisie du nom de la correction */
+	@FXML
+	var FormattedTextField txtFldGraduationName
 
 	/* Button de chargement des copies */
 	@FXML
@@ -73,21 +79,25 @@ class ControllerGraduationLoader {
 
 
 	
-	var ControllerFxGraduation ctlrFx;
+	var ControllerFxGraduation controllerGraduation;
 
 	static val logger = LogManager.logger
 
-	var ServiceGraduation service
+	var ServiceGraduation serviceGraduation
+	var ServiceEdition serviceEdition
+	var ControllerFxEdition controllerEdition
 	
 
 	/**
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(ServiceGraduation service,ControllerFxGraduation controller) {
+	def initialize(ServiceGraduation serviceGraduation, ServiceEdition serviceEdition, ControllerFxEdition controllerEdition, ControllerFxGraduation controllerGraduation) {
 
-		ctlrFx = controller
-		this.service = service
+		this.controllerGraduation = controllerGraduation
+		this.serviceGraduation = serviceGraduation
+		this.serviceEdition = serviceEdition
+		this.controllerEdition = controllerEdition
 		hBoxLoad.disableProperty.bind(rbLoadModel.selectedProperty.not)
 
 		// Condition pour que le bouton de validation soit désactivé :
@@ -97,6 +107,7 @@ class ControllerGraduationLoader {
 			txtFldFile.wrongFormattedProperty
 			.or(txtFldFileGraduation.wrongFormattedProperty)
 			.or(txtFldFileGraduation.textProperty.isEmpty)
+			.or(txtFldGraduationName.textProperty.isEmpty)
 			.or(rbLoadModel.selectedProperty
 				.and(txtFldFile.textProperty.isEmpty)
 			)
@@ -112,28 +123,36 @@ class ControllerGraduationLoader {
 		btnBrowseGraduation.onAction = [e|loadFile("*.pdf", "file.format.pdf", txtFldFileGraduation)]
 
 		// Si aucun examen n'est chargé, désactiver le RadioButton "Utiliser le modèle chargé"
-		if (!hasTemplateLoaded) {
+		if (!serviceGraduation.hasExamLoaded) {
 			rbUseLoaded.disable = true
 			rbLoadModel.selected = true
 		}
 	}
 	
-	def boolean hasTemplateLoaded() {
-		return service.hasExamLoaded
-	}
-	
-	def boolean loadTemplate(String path) { true
-	 // TODO
-	}
-	
-	def boolean loadStudentSheets(String path) {
-		val QRCodeGenerator generator = new QRCodeGeneratorImpl()
-		//generator.createAllExamCopies(ExamSingleton., new FileOutputStream(new File(path)), service.examName, quantity)
-		true
-	}
-	
-	def boolean loadCorrection(String path) {
-		true
+	/**
+	 * Lance le chargement des StudentSheets
+	 * @return true si le lancement a bien pu être effectué, false sinon
+	 */
+	def boolean loadStudentSheets() {
+		val File file = new File(txtFldFileGraduation.text)
+		val PdfReader reader = new PdfReaderQrCodeImpl(new FileInputStream(file), serviceGraduation.pageAmount)
+		val successStart = reader.readPDf
+		val Task<Void> task = new Task<Void>(){
+			protected override Void call() {
+				while(!reader.isFinished) {
+					updateProgress(reader.nbPagesTreated, reader.nbPagesPdf)
+					updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), reader.nbPagesTreated, reader.nbPagesPdf))
+				
+				}
+				reader.readPDf
+				return null
+			}
+		}
+		val Service<Void> service = [task]
+		service.onSucceeded = [e | onFinish(reader, file)]
+		service.start
+		ControllerWaiting.openWaitingDialog(service.messageProperty, service.progressProperty, mainPane.getScene().getWindow() as Stage)
+		successStart
 	}
 	
 	/**
@@ -181,35 +200,19 @@ class ControllerGraduationLoader {
 
 	@FXML
 	def saveAndQuit() {
-		if (loadTemplate(txtFldFile.text) || txtFldFile.isDisable) {
-			if(loadCorrection(txtFldFileGraduation.text)) {
-				ctlrFx.load
-				quit
-			} else {}
-				//sendDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)
-		} else
-			sendDialog(AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null)
+		if(txtFldFile.isDisable || controllerEdition.loadTemplate(new File(txtFldFile.text))) {
+			if(!loadStudentSheets)
+				DialogMessageSender.sendDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)
+		}
 	}
-
+	
 	/**
-	 * Affiche un Dialog avec les informations suivantes :
-	 * @param type le type de l'alerte (non null)
-	 * @param title le titre le l'alerte (non null)
-	 * @param headerText le header de l'alerte (non null)
-	 * @param content le contenu de l'alerte
+	 * Fonction exécutée lorsque le chargement des copies est fini
+	 * @param reader le PdfReader s'étant occupé du chargement des copies
+	 * @param file le PDF
 	 */
-	private def void sendDialog(AlertType type, String title, String headerText, @Nullable String content) {
-		Objects.requireNonNull(type)
-		Objects.requireNonNull(title)
-		Objects.requireNonNull(headerText)
-		
-		val alert = new Alert(type)
-		val stage = alert.getDialogPane().getScene().getWindow() as Stage
-		stage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		alert.setTitle = LanguageManager.translate(title)
-		alert.setHeaderText = LanguageManager.translate(headerText)
-		if(content !== null)
-			alert.contentText = LanguageManager.translate(content)
-		alert.showAndWait
+	def onFinish(PdfReader reader, File file) {
+		controllerGraduation.pdfManager.create(txtFldGraduationName.text, file);
+		serviceGraduation.initializeCorrection(reader.completeStudentSheets)
 	}
 }

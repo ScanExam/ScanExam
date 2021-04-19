@@ -66,9 +66,10 @@ public class StudentListGraduation extends VBox {
     this.getChildren().clear();
   }
   
-  public void updateInModel(final StudentItemGraduation item) {
+  public Object updateInModel(final StudentItemGraduation item) {
     StudentListGraduation.logger.info((("Updating " + item) + " to model"));
     this.controller.renameStudent(item.getStudentId(), item.getStudentName());
+    return null;
   }
   
   /**

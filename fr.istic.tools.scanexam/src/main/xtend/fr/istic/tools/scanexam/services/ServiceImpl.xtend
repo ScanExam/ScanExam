@@ -594,8 +594,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 			exam = creationTemplate.get().exam
 			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
 
-			questionId = exam.pages.stream.map[page|page.questions.size].reduce[acc, num|acc + num].
-				get + 1
+			questionId = exam.pages.stream.map[page|page.questions.size].reduce[acc, num|acc + num].get + 1
 			return Optional.of(new ByteArrayInputStream(decoded));
 		}
 		return Optional.empty;

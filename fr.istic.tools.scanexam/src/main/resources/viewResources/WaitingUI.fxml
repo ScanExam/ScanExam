@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:id="root" alignment="CENTER" prefHeight="103.0" prefWidth="289.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerWaiting">
+   <children>
+      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
+         <children>
+            <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" />
+            <Label fx:id="percentLabel" />
+         </children>
+      </HBox>
+      <Label fx:id="progressLabel" />
+   </children>
+</VBox>

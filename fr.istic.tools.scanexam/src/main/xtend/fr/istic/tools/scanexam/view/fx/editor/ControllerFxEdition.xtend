@@ -4,16 +4,19 @@ import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.view.fx.FxSettings
 import fr.istic.tools.scanexam.view.fx.PdfManager
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
 import java.io.File
 import java.util.Arrays
 import java.util.LinkedList
 import java.util.List
+import java.util.Objects
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.embed.swing.SwingFXUtils
 import javafx.fxml.FXML
 import javafx.scene.Cursor
 import javafx.scene.Node
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.Button
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
@@ -579,15 +582,31 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			
-			load(file.path);
+			
 			render();
 			
 		} else {
 			logger.warn("File not chosen")
 		}
-		
-		
 	}
+	
+	/**
+	 * Essaye de charger le fichier passé en paramètre comme Template, affiche un DialogMessage en cas d'erreur
+	 * @param file un fichier à charger
+	 */
+	def boolean loadTemplate(File file) {
+		Objects.requireNonNull(file)
+		val success = load(file.path)
+		if(!success)
+			DialogMessageSender.sendDialog(AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null)
+		else {
+			render()
+			load(file.path);
+		}
+		success
+	}
+	
+	
 	def boolean load(String path)
 	{
 		val stream = service.open(path)

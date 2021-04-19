@@ -1,24 +1,29 @@
 package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
-import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
+import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
-import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
-import java.io.InputStream;
+import java.io.FileInputStream;
 import java.util.Objects;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -26,9 +31,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 
 /**
  * Contrôleur pour l'UI de chargement d'une correction
@@ -79,6 +84,12 @@ public class ControllerGraduationLoader {
   private FormattedTextField txtFldFileGraduation;
   
   /**
+   * TextField de la saisie du nom de la correction
+   */
+  @FXML
+  private FormattedTextField txtFldGraduationName;
+  
+  /**
    * Button de chargement des copies
    */
   @FXML
@@ -96,22 +107,28 @@ public class ControllerGraduationLoader {
   @FXML
   private Pane hoverPane;
   
-  private ControllerFxGraduation ctlrFx;
+  private ControllerFxGraduation controllerGraduation;
   
   private static final Logger logger = LogManager.getLogger();
   
-  private ServiceGraduation service;
+  private ServiceGraduation serviceGraduation;
+  
+  private ServiceEdition serviceEdition;
+  
+  private ControllerFxEdition controllerEdition;
   
   /**
    * Initialise le composant avec le presenter composé en paramètre
    * @param loader le presenter
    */
-  public void initialize(final ServiceGraduation service, final ControllerFxGraduation controller) {
-    this.ctlrFx = controller;
-    this.service = service;
+  public void initialize(final ServiceGraduation serviceGraduation, final ServiceEdition serviceEdition, final ControllerFxEdition controllerEdition, final ControllerFxGraduation controllerGraduation) {
+    this.controllerGraduation = controllerGraduation;
+    this.serviceGraduation = serviceGraduation;
+    this.serviceEdition = serviceEdition;
+    this.controllerEdition = controllerEdition;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
-      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(
+      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(this.txtFldGraduationName.textProperty().isEmpty()).or(
         this.rbLoadModel.selectedProperty().and(this.txtFldFile.textProperty().isEmpty())));
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator(".xmi");
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
@@ -132,33 +149,61 @@ public class ControllerGraduationLoader {
       this.loadFile("*.pdf", "file.format.pdf", this.txtFldFileGraduation);
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
-    boolean _hasTemplateLoaded = this.hasTemplateLoaded();
-    boolean _not = (!_hasTemplateLoaded);
+    boolean _hasExamLoaded = serviceGraduation.hasExamLoaded();
+    boolean _not = (!_hasExamLoaded);
     if (_not) {
       this.rbUseLoaded.setDisable(true);
       this.rbLoadModel.setSelected(true);
     }
   }
   
-  public boolean hasTemplateLoaded() {
-    return this.service.hasExamLoaded();
-  }
-  
-  public boolean loadTemplate(final String path) {
-    return true;
-  }
-  
-  public boolean loadStudentSheets(final String path) {
-    boolean _xblockexpression = false;
-    {
-      final QRCodeGenerator generator = new QRCodeGeneratorImpl();
-      _xblockexpression = true;
+  /**
+   * Lance le chargement des StudentSheets
+   * @return true si le lancement a bien pu être effectué, false sinon
+   */
+  public boolean loadStudentSheets() {
+    try {
+      boolean _xblockexpression = false;
+      {
+        String _text = this.txtFldFileGraduation.getText();
+        final File file = new File(_text);
+        FileInputStream _fileInputStream = new FileInputStream(file);
+        int _pageAmount = this.serviceGraduation.getPageAmount();
+        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _pageAmount);
+        final boolean successStart = reader.readPDf();
+        final Task<Void> task = new Task<Void>() {
+          @Override
+          protected Void call() {
+            while ((!reader.isFinished())) {
+              {
+                this.updateProgress(reader.getNbPagesTreated(), reader.getNbPagesPdf());
+                this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
+              }
+            }
+            reader.readPDf();
+            return null;
+          }
+        };
+        final Service<Void> _function = new Service<Void>() {
+          @Override
+          protected Task<Void> createTask() {
+            return task;
+          }
+        };
+        final Service<Void> service = _function;
+        final EventHandler<WorkerStateEvent> _function_1 = (WorkerStateEvent e) -> {
+          this.onFinish(reader, file);
+        };
+        service.setOnSucceeded(_function_1);
+        service.start();
+        Window _window = this.mainPane.getScene().getWindow();
+        ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), ((Stage) _window));
+        _xblockexpression = successStart;
+      }
+      return _xblockexpression;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
-    return _xblockexpression;
-  }
-  
-  public boolean loadCorrection(final String path) {
-    return true;
   }
   
   /**
@@ -216,47 +261,27 @@ public class ControllerGraduationLoader {
   }
   
   @FXML
-  public Object saveAndQuit() {
-    Object _xifexpression = null;
-    if ((this.loadTemplate(this.txtFldFile.getText()) || this.txtFldFile.isDisable())) {
-      Object _xifexpression_1 = null;
-      boolean _loadCorrection = this.loadCorrection(this.txtFldFileGraduation.getText());
-      if (_loadCorrection) {
-        this.ctlrFx.load();
-        this.quit();
-      } else {
-        _xifexpression_1 = null;
+  public void saveAndQuit() {
+    if ((this.txtFldFile.isDisable() || this.controllerEdition.loadTemplate(new File(this.txtFldFile.getText())))) {
+      boolean _loadStudentSheets = this.loadStudentSheets();
+      boolean _not = (!_loadStudentSheets);
+      if (_not) {
+        DialogMessageSender.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null);
       }
-      _xifexpression = _xifexpression_1;
-    } else {
-      this.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
     }
-    return _xifexpression;
   }
   
   /**
-   * Affiche un Dialog avec les informations suivantes :
-   * @param type le type de l'alerte (non null)
-   * @param title le titre le l'alerte (non null)
-   * @param headerText le header de l'alerte (non null)
-   * @param content le contenu de l'alerte
+   * Fonction exécutée lorsque le chargement des copies est fini
+   * @param reader le PdfReader s'étant occupé du chargement des copies
+   * @param file le PDF
    */
-  private void sendDialog(final Alert.AlertType type, final String title, final String headerText, @Nullable final String content) {
-    Objects.<Alert.AlertType>requireNonNull(type);
-    Objects.<String>requireNonNull(title);
-    Objects.<String>requireNonNull(headerText);
-    final Alert alert = new Alert(type);
-    Window _window = alert.getDialogPane().getScene().getWindow();
-    final Stage stage = ((Stage) _window);
-    ObservableList<Image> _icons = stage.getIcons();
-    InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
-    Image _image = new Image(_inputStreamResource);
-    _icons.add(_image);
-    alert.setTitle(LanguageManager.translate(title));
-    alert.setHeaderText(LanguageManager.translate(headerText));
-    if ((content != null)) {
-      alert.setContentText(LanguageManager.translate(content));
+  public boolean onFinish(final PdfReader reader, final File file) {
+    boolean _xblockexpression = false;
+    {
+      this.controllerGraduation.getPdfManager().create(this.txtFldGraduationName.getText(), file);
+      _xblockexpression = this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
     }
-    alert.showAndWait();
+    return _xblockexpression;
   }
 }
