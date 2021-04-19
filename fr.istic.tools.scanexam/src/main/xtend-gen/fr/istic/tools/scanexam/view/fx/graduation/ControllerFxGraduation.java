@@ -401,6 +401,7 @@ public class ControllerFxGraduation {
   }
   
   public void init(final ServiceGraduation serviceGraduation) {
+    this.parentPane.getStyleClass().add("parentPane");
     PdfManager _pdfManager = new PdfManager(serviceGraduation);
     this.pdfManager = _pdfManager;
     this.service = serviceGraduation;
@@ -540,9 +541,10 @@ public class ControllerFxGraduation {
    * Pour charger les donne du modele dans lest list etudioant et questions
    */
   public void loaded() {
+    this.renderCorrectedCopy();
+    this.renderStudentCopy();
     this.loadQuestions();
     this.loadStudents();
-    this.renderCorrectedCopy();
     this.grader.setVisible(true);
     this.questionDetails.setVisible(true);
   }
@@ -801,6 +803,7 @@ public class ControllerFxGraduation {
     if (this.autoZoom) {
       this.mainPane.zoomTo(x, y, height, width);
     }
+    ControllerFxGraduation.logger.info(((((("Zooming to" + Double.valueOf(x)) + Double.valueOf(y)) + Double.valueOf(height)) + Double.valueOf(width)) + Boolean.valueOf(this.autoZoom)));
   }
   
   public void nextPage() {

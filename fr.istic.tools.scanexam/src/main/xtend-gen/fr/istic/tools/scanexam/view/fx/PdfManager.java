@@ -133,17 +133,19 @@ public class PdfManager {
    * @param name Nom du modèle d'examen
    * @param file Fichier du modèle d'examen
    */
-  public void create(final String name, final File file) {
+  public PDDocument create(final String name, final File file) {
     try {
-      Objects.<File>requireNonNull(file);
-      byte[] _readAllBytes = Files.readAllBytes(Path.of(file.getAbsolutePath()));
-      final InputStream input = new ByteArrayInputStream(_readAllBytes);
-      ByteArrayOutputStream _byteArrayOutputStream = new ByteArrayOutputStream();
-      this.pdfOutput = _byteArrayOutputStream;
-      input.transferTo(this.pdfOutput);
-      this.document = PDDocument.load(file);
-      this.service.onDocumentLoad(IterableExtensions.size(this.document.getPages()));
-      this.service.setExamName(name);
+      PDDocument _xblockexpression = null;
+      {
+        Objects.<File>requireNonNull(file);
+        byte[] _readAllBytes = Files.readAllBytes(Path.of(file.getAbsolutePath()));
+        final InputStream input = new ByteArrayInputStream(_readAllBytes);
+        ByteArrayOutputStream _byteArrayOutputStream = new ByteArrayOutputStream();
+        this.pdfOutput = _byteArrayOutputStream;
+        input.transferTo(this.pdfOutput);
+        _xblockexpression = this.document = PDDocument.load(file);
+      }
+      return _xblockexpression;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

@@ -84,7 +84,6 @@ class ControllerGraduationLoader {
 	static val logger = LogManager.logger
 
 	var ServiceGraduation serviceGraduation
-	var ServiceEdition serviceEdition
 	var ControllerFxEdition controllerEdition
 	
 
@@ -92,11 +91,10 @@ class ControllerGraduationLoader {
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(ServiceGraduation serviceGraduation, ServiceEdition serviceEdition, ControllerFxEdition controllerEdition, ControllerFxGraduation controllerGraduation) {
+	def initialize(ServiceGraduation serviceGraduation, ControllerFxEdition controllerEdition, ControllerFxGraduation controllerGraduation) {
 
 		this.controllerGraduation = controllerGraduation
 		this.serviceGraduation = serviceGraduation
-		this.serviceEdition = serviceEdition
 		this.controllerEdition = controllerEdition
 		hBoxLoad.disableProperty.bind(rbLoadModel.selectedProperty.not)
 
@@ -214,7 +212,8 @@ class ControllerGraduationLoader {
 	 */
 	def onFinish(PdfReader reader, File file) {
 		serviceGraduation.initializeCorrection(reader.completeStudentSheets)
-		controllerGraduation.pdfManager.create(txtFldGraduationName.text,file)
-		controllerGraduation.load
+		controllerGraduation.pdfManager.create(txtFldGraduationName.text, file)
+		controllerGraduation.load()
+		(mainPane.getScene.getWindow as Stage).close
 	}
 }

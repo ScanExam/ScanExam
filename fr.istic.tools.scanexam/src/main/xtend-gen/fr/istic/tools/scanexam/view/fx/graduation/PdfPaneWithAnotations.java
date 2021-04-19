@@ -18,6 +18,11 @@ public class PdfPaneWithAnotations extends Pane {
     this.controller = controller;
     ImageView _imageView = new ImageView();
     this.imageView = _imageView;
+    this.imageView.setFitHeight(600);
+    this.imageView.setFitWidth(600);
+    this.imageView.setPreserveRatio(true);
+    this.getChildren().add(this.imageView);
+    this.getStyleClass().add("mainPane");
     this.setupEvents();
   }
   

@@ -3,7 +3,6 @@ package fr.istic.tools.scanexam.view.fx;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
-import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
@@ -113,18 +112,15 @@ public class ControllerGraduationLoader {
   
   private ServiceGraduation serviceGraduation;
   
-  private ServiceEdition serviceEdition;
-  
   private ControllerFxEdition controllerEdition;
   
   /**
    * Initialise le composant avec le presenter composé en paramètre
    * @param loader le presenter
    */
-  public void initialize(final ServiceGraduation serviceGraduation, final ServiceEdition serviceEdition, final ControllerFxEdition controllerEdition, final ControllerFxGraduation controllerGraduation) {
+  public void initialize(final ServiceGraduation serviceGraduation, final ControllerFxEdition controllerEdition, final ControllerFxGraduation controllerGraduation) {
     this.controllerGraduation = controllerGraduation;
     this.serviceGraduation = serviceGraduation;
-    this.serviceEdition = serviceEdition;
     this.controllerEdition = controllerEdition;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
@@ -280,6 +276,9 @@ public class ControllerGraduationLoader {
    */
   public void onFinish(final PdfReader reader, final File file) {
     this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
+    this.controllerGraduation.getPdfManager().create(this.txtFldGraduationName.getText(), file);
     this.controllerGraduation.load();
+    Window _window = this.mainPane.getScene().getWindow();
+    ((Stage) _window).close();
   }
 }
