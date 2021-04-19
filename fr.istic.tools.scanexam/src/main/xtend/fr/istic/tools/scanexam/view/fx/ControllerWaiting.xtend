@@ -56,6 +56,7 @@ class ControllerWaiting implements Initializable {
 		currentProgress = new SimpleDoubleProperty(this, "progressCurrent", 0d)
 		
 		// Binding
+		progressBar.progress = 0d
 		progressBar.progressProperty.bind(currentProgress)
 		val percentProperty = Bindings.createLongBinding([| Math.round(currentProgress.get * 100)], currentProgress).asString
 		percentLabel.textProperty.bind(percentProperty.concat("%"))
