@@ -5,6 +5,7 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.export.ExportExamToPdf;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.mailing.StudentDataManager;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
@@ -533,6 +534,25 @@ public class ControllerFxGraduation {
       ControllerFxGraduation.logger.info("Saving correction file");
     } else {
       ControllerFxGraduation.logger.warn("File not chosen");
+    }
+  }
+  
+  /**
+   * Exporte la correction des copies au format PDF
+   * @param folder Dossier où exporter
+   */
+  public void exportGraduationToPdf(final File folder) {
+    Collection<StudentSheet> _studentSheets = this.service.getStudentSheets();
+    for (final StudentSheet studentSheet : _studentSheets) {
+      {
+        String _absolutePath = folder.getAbsolutePath();
+        String _plus = (_absolutePath + File.separator);
+        String _studentName = studentSheet.getStudentName();
+        String _plus_1 = (_plus + _studentName);
+        String _plus_2 = (_plus_1 + ".pdf");
+        final File file = new File(_plus_2);
+        ExportExamToPdf.exportToPdfWithAnnotations(this.pdfManager.getPdfDocument(), studentSheet, file);
+      }
     }
   }
   

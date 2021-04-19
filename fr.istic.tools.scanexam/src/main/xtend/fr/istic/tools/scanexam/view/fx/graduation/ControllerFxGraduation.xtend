@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fx.graduation
 
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.export.ExportExamToPdf
 import fr.istic.tools.scanexam.export.GradesExportImpl
 import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
@@ -421,6 +422,17 @@ class ControllerFxGraduation {
 		} 
 		else {
 			logger.warn("File not chosen")
+		}
+	}
+	
+	/**
+	 * Exporte la correction des copies au format PDF
+	 * @param folder Dossier où exporter
+	 */
+	def void exportGraduationToPdf(File folder) {
+		for (studentSheet : service.studentSheets) {
+			val file = new File(folder.absolutePath + File.separator + studentSheet.studentName + ".pdf") 
+			ExportExamToPdf.exportToPdfWithAnnotations(pdfManager.getPdfDocument(), studentSheet, file)
 		}
 	}
 

@@ -156,5 +156,13 @@ class PdfManager {
 	def ByteArrayInputStream getPdfInputStream() {
 		return new ByteArrayInputStream(pdfOutput.toByteArray)
 	}
+	
+	/**
+	 * Renvoie le document
+	 * @return Document
+	 */
+	def PDDocument getPdfDocument() {
+		document
+	}
 
 }

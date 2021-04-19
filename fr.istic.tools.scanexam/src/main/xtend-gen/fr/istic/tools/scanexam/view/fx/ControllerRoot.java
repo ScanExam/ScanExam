@@ -11,6 +11,7 @@ import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,7 +26,10 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -56,6 +60,9 @@ public class ControllerRoot implements Initializable {
   @FXML
   private MenuItem loadStudentNamesButton;
   
+  @FXML
+  private MenuItem pdfExportButton;
+  
   @Accessors
   private ControllerFxGraduation graduationController;
   
@@ -65,6 +72,8 @@ public class ControllerRoot implements Initializable {
   private ServiceEdition serviceEdition;
   
   private ServiceGraduation serviceGraduation;
+  
+  private static final Logger logger = LogManager.getLogger();
   
   public void setEditorNode(final Node n) {
     this.editorTab.setContent(n);
@@ -172,6 +181,24 @@ public class ControllerRoot implements Initializable {
   }
   
   @FXML
+  public void pdfExport() {
+    DirectoryChooser dirChooser = new DirectoryChooser();
+    String _property = System.getProperty("user.home");
+    String _property_1 = System.getProperty("file.separator");
+    String _plus = (_property + _property_1);
+    String _plus_1 = (_plus + "Documents");
+    File _file = new File(_plus_1);
+    dirChooser.setInitialDirectory(_file);
+    Stage _stage = new Stage();
+    File directory = dirChooser.showDialog(_stage);
+    if ((directory == null)) {
+      ControllerRoot.logger.warn("Directory not chosen");
+    } else {
+      this.graduationController.exportGraduationToPdf(directory);
+    }
+  }
+  
+  @FXML
   public void sendMail() {
     try {
       final FXMLLoader loader = new FXMLLoader();
@@ -253,6 +280,7 @@ public class ControllerRoot implements Initializable {
     this.saveTemplateButton.disableProperty().bind(this.editionController.getLoadedModel().not());
     this.exportToExamButton.disableProperty().bind(this.editionController.getLoadedModel().not());
     this.loadStudentNamesButton.disableProperty().bind(this.editionController.getLoadedModel().not());
+    this.pdfExportButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
   }
   
   @Override

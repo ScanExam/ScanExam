@@ -203,6 +203,14 @@ public class PdfManager {
     return new ByteArrayInputStream(_byteArray);
   }
   
+  /**
+   * Renvoie le document
+   * @return Document
+   */
+  public PDDocument getPdfDocument() {
+    return this.document;
+  }
+  
   @Pure
   public int getPdfPageIndex() {
     return this.pdfPageIndex;

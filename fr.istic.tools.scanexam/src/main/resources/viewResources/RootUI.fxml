@@ -32,6 +32,7 @@
 				<Menu mnemonicParsing="false" text="%menu.edit">
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#updateConfig" text="%menu.edit.updateconfig" />
+						<MenuItem fx:id="pdfExportButton" mnemonicParsing="false" onAction="#pdfExport" text="%menu.edit.pdfExport" />
 						<MenuItem mnemonicParsing="false" onAction="#sendMail" text="%menu.edit.sendmail" />
 					</items>
 				</Menu>

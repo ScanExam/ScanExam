@@ -20,6 +20,9 @@ import javafx.scene.control.Tab
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import org.eclipse.xtend.lib.annotations.Accessors
+import javafx.stage.DirectoryChooser
+import java.io.File
+import org.apache.logging.log4j.LogManager
 
 class ControllerRoot implements Initializable {
 	
@@ -38,6 +41,8 @@ class ControllerRoot implements Initializable {
 	MenuItem exportToExamButton;
 	@FXML
 	MenuItem loadStudentNamesButton;
+	@FXML
+	MenuItem pdfExportButton;
 	
 	@Accessors
 	ControllerFxGraduation graduationController;
@@ -48,6 +53,7 @@ class ControllerRoot implements Initializable {
 	var ServiceEdition serviceEdition
 	var ServiceGraduation serviceGraduation
 	
+	static val logger = LogManager.logger
 
 	
 	def setEditorNode(Node n){
@@ -124,6 +130,20 @@ class ControllerRoot implements Initializable {
 	}
 	
 	@FXML
+	def pdfExport() {
+		//Sélection du dossier
+		var dirChooser = new DirectoryChooser
+		dirChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Documents")
+		var directory = dirChooser.showDialog(new Stage)
+		if (directory === null) {
+			logger.warn("Directory not chosen")
+		} else {
+			// Export
+			graduationController.exportGraduationToPdf(directory)
+		}
+	}
+	
+	@FXML
 	def sendMail(){
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
@@ -182,6 +202,7 @@ class ControllerRoot implements Initializable {
 		saveTemplateButton.disableProperty.bind(editionController.loadedModel.not)
 		exportToExamButton.disableProperty.bind(editionController.loadedModel.not)
 		loadStudentNamesButton.disableProperty.bind(editionController.loadedModel.not)
+		pdfExportButton.disableProperty.bind(graduationController.loadedModel.not)
 	}
 	
 	override initialize(URL location, ResourceBundle resources) {
