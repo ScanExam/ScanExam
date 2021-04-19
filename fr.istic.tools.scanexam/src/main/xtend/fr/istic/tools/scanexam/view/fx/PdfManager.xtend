@@ -124,8 +124,8 @@ class PdfManager {
 		input.transferTo(pdfOutput)
 		document = PDDocument.load(file)
 
-		service.onDocumentLoad(document.pages.size);
-		service.setExamName(name)
+		//service.onDocumentLoad(document.pages.size);
+		//service.setExamName(name)
 	}
 
 	def create(ByteArrayInputStream stream) {

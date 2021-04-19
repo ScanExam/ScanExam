@@ -22,7 +22,7 @@ class QuestionListGraduation extends VBox {
 		currentIndex
 	}
 	def  getCurrentItem(){
-		if (noItems) return null
+		if (noItems) return null;
 		children.get(currentIndex) as QuestionItemGraduation
 	}
 	//---------------------//

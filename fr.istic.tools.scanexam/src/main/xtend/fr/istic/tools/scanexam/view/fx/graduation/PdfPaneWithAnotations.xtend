@@ -13,6 +13,11 @@ class PdfPaneWithAnotations extends Pane {
 	new(ControllerFxGraduation controller){
 		this.controller = controller
 		imageView = new ImageView()
+		imageView.fitHeight =  600;
+		imageView.fitWidth =  600;
+		imageView.preserveRatio = true
+		this.children.add(imageView)
+		this.styleClass.add("mainPane")
 		setupEvents
 	}
 	
