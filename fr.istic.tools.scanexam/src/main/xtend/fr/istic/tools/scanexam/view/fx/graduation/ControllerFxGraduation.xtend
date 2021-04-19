@@ -398,8 +398,14 @@ class ControllerFxGraduation {
 	 * Sets the state of loaded model to true, triggering a set of listeners
 	 * To be used once the service loads a model 
 	 */
-	def void load(){
-		loadedModel.set(true)
+	def boolean load(File file){
+		val streamOpt = service.openCorrectionTemplate(file)
+		if(streamOpt.present) {
+			pdfManager.create(streamOpt.get)
+			loadedModel.set(true)
+			return true
+		}
+		return false
 	}
 	
 	

@@ -17,6 +17,7 @@ import fr.istic.tools.scanexam.utils.Tuple3
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.util.ArrayList
 import java.util.Base64
 import java.util.Collection
@@ -24,8 +25,8 @@ import java.util.Collections
 import java.util.List
 import java.util.Objects
 import java.util.Optional
-import org.eclipse.xtend.lib.annotations.Accessors
 import org.apache.logging.log4j.LogManager
+import org.eclipse.xtend.lib.annotations.Accessors
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -68,7 +69,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param path L'emplacement de sauvegarde du fichier.
 	 * @param pdfOutputStream le contenu du fichier sous forme de Stream
 	 */
-	override saveCorrectionTemplate(String path,ByteArrayOutputStream pdfOutputStream) 
+	override saveCorrectionTemplate(String path, ByteArrayOutputStream pdfOutputStream) 
 	{
 		val encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
 		graduationTemplate.encodedDocument = new String(encoded);
@@ -82,19 +83,20 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	/**
 	 * Charge un fichier de correction d'examen a partir du disque.
-	 * @params path L'emplacement du fichier.
-	 * @returns "true" si le fichier a bien été chargé, "false"
+	 * @params path le fichier
+	 * @returns Un inputStream vers le PDF si le template a bien pu être chargé, Optional.empty sinon
 	 */
-	override boolean openCorrectionTemplate(String xmiFile)
+	override Optional<InputStream> openCorrectionTemplate(File xmiFile)
 	{
-		val correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile) 
+		val correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile.absolutePath) 
 		
 		if (correctionTemplate.present) 
         {
             this.graduationTemplate = correctionTemplate.get()
-            return true
+            val decoded = Base64.getDecoder().decode(graduationTemplate.encodedDocument);
+            return Optional.of(new ByteArrayInputStream(decoded));
         }
-		return false
+		return Optional.empty
 	}
 	
 	

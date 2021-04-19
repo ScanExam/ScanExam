@@ -68,15 +68,22 @@ class ControllerRoot implements Initializable {
 	def loadTemplatePressedEditor(){
 		editionController.loadTemplatePressed
 	}
+	
+	@FXML
+	def saveGraduation() {
+		graduationController.saveExam
+	}
+	
+	
 	@FXML
 	def loadTemplatePressedCorrector() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectionLoaderUI.fxml"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GraduationLoaderUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		//loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, editionController, graduationController)
+		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, editionController, graduationController)
 		dialog.setScene(new Scene(view, 384, 355))
 		dialog.setResizable(false)
 		dialog.show

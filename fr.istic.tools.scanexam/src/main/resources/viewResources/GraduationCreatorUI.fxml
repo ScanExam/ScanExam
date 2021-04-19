@@ -91,7 +91,7 @@
       		<Button mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
             <Pane fx:id="hoverPane">
                <children>
-            		<Button fx:id="btnOk" mnemonicParsing="false" onAction="#saveAndQuit" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />
+            		<Button fx:id="btnOk" mnemonicParsing="false" onAction="#valid" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />
                </children>
             </Pane>
          </children>

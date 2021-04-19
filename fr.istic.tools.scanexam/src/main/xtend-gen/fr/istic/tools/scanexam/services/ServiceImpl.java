@@ -20,6 +20,7 @@ import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
@@ -103,18 +104,20 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   
   /**
    * Charge un fichier de correction d'examen a partir du disque.
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
+   * @params path le fichier
+   * @returns Un inputStream vers le PDF si le template a bien pu être chargé, Optional.empty sinon
    */
   @Override
-  public boolean openCorrectionTemplate(final String xmiFile) {
-    final Optional<CorrectionTemplate> correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile);
+  public Optional<InputStream> openCorrectionTemplate(final File xmiFile) {
+    final Optional<CorrectionTemplate> correctionTemplate = TemplateIo.loadCorrectionTemplate(xmiFile.getAbsolutePath());
     boolean _isPresent = correctionTemplate.isPresent();
     if (_isPresent) {
       this.graduationTemplate = correctionTemplate.get();
-      return true;
+      final byte[] decoded = Base64.getDecoder().decode(this.graduationTemplate.getEncodedDocument());
+      ByteArrayInputStream _byteArrayInputStream = new ByteArrayInputStream(decoded);
+      return Optional.<InputStream>of(_byteArrayInputStream);
     }
-    return false;
+    return Optional.<InputStream>empty();
   }
   
   /**

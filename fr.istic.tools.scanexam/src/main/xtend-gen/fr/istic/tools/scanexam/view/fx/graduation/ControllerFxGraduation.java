@@ -22,10 +22,12 @@ import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -507,8 +509,15 @@ public class ControllerFxGraduation {
    * Sets the state of loaded model to true, triggering a set of listeners
    * To be used once the service loads a model
    */
-  public void load() {
-    this.loadedModel.set(true);
+  public boolean load(final File file) {
+    final Optional<InputStream> streamOpt = this.service.openCorrectionTemplate(file);
+    boolean _isPresent = streamOpt.isPresent();
+    if (_isPresent) {
+      this.pdfManager.create(streamOpt.get());
+      this.loadedModel.set(true);
+      return true;
+    }
+    return false;
   }
   
   public void saveExam() {
@@ -547,7 +556,7 @@ public class ControllerFxGraduation {
         String _plus_1 = (_plus + _studentName);
         String _plus_2 = (_plus_1 + ".pdf");
         final File file = new File(_plus_2);
-        ExportExamToPdf.exportToPdfWithAnnotations(this.pdfManager.getPdfDocument(), studentSheet, file);
+        ExportExamToPdf.exportToPdfWithAnnotations(this.pdfManager.getPdfInputStream(), studentSheet, file);
       }
     }
   }

@@ -23,7 +23,7 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="false" mnemonicParsing="false" onAction="#loadStudentCopiesPressed" text="%menu.file.loadStudentSheet" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
-						<MenuItem fx:id="saveGraduationButton" disable="true" mnemonicParsing="false" text="%menu.file.saveGraduation" />
+						<MenuItem fx:id="saveGraduationButton" onAction="#saveGraduation" disable="true" mnemonicParsing="false" text="%menu.file.saveGraduation" />
 						<MenuItem fx:id="loadStudentNamesButton" disable="true" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />

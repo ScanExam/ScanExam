@@ -6,6 +6,7 @@ import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationCreator;
+import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
@@ -89,17 +90,23 @@ public class ControllerRoot implements Initializable {
   }
   
   @FXML
+  public void saveGraduation() {
+    this.graduationController.saveExam();
+  }
+  
+  @FXML
   public void loadTemplatePressedCorrector() {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectionLoaderUI.fxml"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/GraduationLoaderUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"));
       ObservableList<Image> _icons = dialog.getIcons();
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
+      loader.<ControllerGraduationLoader>getController().initialize(this.serviceGraduation, this.editionController, this.graduationController);
       Scene _scene = new Scene(view, 384, 355);
       dialog.setScene(_scene);
       dialog.setResizable(false);

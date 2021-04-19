@@ -147,8 +147,9 @@ public class ExportExamToPdf {
   /**
    * Export pdf with annotations and Grade
    */
-  public static void exportToPdfWithAnnotations(final PDDocument document, final StudentSheet sheet, final File fileForSaving) {
+  public static void exportToPdfWithAnnotations(final InputStream d, final StudentSheet sheet, final File fileForSaving) {
     try {
+      PDDocument document = PDDocument.load(d);
       EList<Grade> _grades = sheet.getGrades();
       for (final Grade g : _grades) {
         EList<Comment> _comments = g.getComments();
@@ -262,7 +263,11 @@ public class ExportExamToPdf {
       float _computeGrade = sheet.computeGrade();
       String _plus_1 = ("" + Float.valueOf(_computeGrade));
       contentStream_1.showText(_plus_1);
+      contentStream_1.endText();
+      contentStream_1.close();
       document.save(fileForSaving);
+      document.close();
+      d.close();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

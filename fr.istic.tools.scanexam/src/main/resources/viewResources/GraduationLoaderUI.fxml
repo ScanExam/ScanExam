@@ -7,17 +7,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainPane" alignment="CENTER" prefHeight="405.0" prefWidth="384.0" spacing="20.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerCorrectionLoader">
+<VBox fx:id="mainPane" alignment="CENTER" prefHeight="349.0" prefWidth="384.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader">
    <children>
       <VBox spacing="5.0">
          <children>
@@ -64,32 +60,23 @@
             <Separator prefWidth="200.0" />
          </children>
       </VBox>
-      <GridPane hgap="20.0" prefHeight="507.0" prefWidth="375.0">
-        <columnConstraints>
-          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="127.0" minWidth="10.0" prefWidth="116.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="112.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="76.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <HBox alignment="CENTER" spacing="20.0">
          <children>
-            <Label layoutX="10.0" layoutY="26.0" text="%studentSheetLoader.loadCorrection" textAlignment="RIGHT" />
-            <FormattedTextField fx:id="txtFldFileGraduation" disable="false" GridPane.columnIndex="1" />
-            <Button fx:id="btnBrowseGraduation" disable="false" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="%button.browser" GridPane.columnIndex="2" />
+            <Label prefHeight="17.0" prefWidth="117.0" text="%studentSheetLoader.loadCorrection" textAlignment="RIGHT" />
+            <FormattedTextField fx:id="txtFldFileGraduation" disable="false" prefHeight="25.0" prefWidth="112.0" />
+            <Button fx:id="btnBrowseGraduation" disable="false" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="%button.browser" />
          </children>
-         <padding>
+         <VBox.margin>
             <Insets left="20.0" right="20.0" />
-         </padding>
-      </GridPane>
+         </VBox.margin>
+      </HBox>
       <Separator prefWidth="200.0" />
       <HBox alignment="CENTER" spacing="80.0">
          <children>
       		<Button mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
             <Pane fx:id="hoverPane">
                <children>
-            		<Button fx:id="btnOk" mnemonicParsing="false" onAction="#saveAndQuit" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />
+            		<Button fx:id="btnOk" mnemonicParsing="false" onAction="#valid" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />
                </children>
             </Pane>
          </children>

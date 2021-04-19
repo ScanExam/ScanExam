@@ -4,8 +4,11 @@ import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.utils.Tuple3
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.InputStream
 import java.util.Collection
 import java.util.List
+import java.util.Optional
 
 interface ServiceGraduation extends Service {
 	
@@ -19,10 +22,10 @@ interface ServiceGraduation extends Service {
 	
 	/**
 	 * Charge un fichier de correction d'examen a partir du disque.
-	 * @params path L'emplacement du fichier.
-	 * @returns "true" si le fichier a bien été chargé, "false"
+	 * @params path le fichier
+	 * @returns Un inputStream vers le PDF si le template a bien pu être chargé, Optional.empty sinon
 	 */
-	def boolean openCorrectionTemplate(String xmiFile)
+	def Optional<InputStream> openCorrectionTemplate(File xmiFile)
 
 	/**
 	 * Charge le document PDF des copies manuscrites,  corrigés

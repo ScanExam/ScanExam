@@ -259,7 +259,7 @@ public class ControllerGraduationCreator {
   }
   
   @FXML
-  public void saveAndQuit() {
+  public void valid() {
     if ((this.rbUseLoaded.isSelected() || this.controllerEdition.loadTemplate(new File(this.txtFldFile.getText())))) {
       boolean _loadStudentSheets = this.loadStudentSheets();
       boolean _not = (!_loadStudentSheets);
@@ -277,8 +277,7 @@ public class ControllerGraduationCreator {
   public void onFinish(final PdfReader reader, final File file) {
     this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
     this.controllerGraduation.getPdfManager().create(file);
-    this.controllerGraduation.load();
-    Window _window = this.mainPane.getScene().getWindow();
-    ((Stage) _window).close();
+    this.controllerGraduation.getLoadedModel().set(true);
+    this.quit();
   }
 }
