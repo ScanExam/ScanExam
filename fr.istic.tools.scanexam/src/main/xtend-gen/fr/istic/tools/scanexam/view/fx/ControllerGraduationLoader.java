@@ -276,7 +276,7 @@ public class ControllerGraduationLoader {
    */
   public void onFinish(final PdfReader reader, final File file) {
     this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
-    this.controllerGraduation.getPdfManager().create(this.txtFldGraduationName.getText(), file);
+    this.controllerGraduation.getPdfManager().create(file);
     this.controllerGraduation.load();
     Window _window = this.mainPane.getScene().getWindow();
     ((Stage) _window).close();

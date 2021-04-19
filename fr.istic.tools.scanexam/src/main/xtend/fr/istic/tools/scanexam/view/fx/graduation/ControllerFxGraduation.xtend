@@ -324,7 +324,7 @@ class ControllerFxGraduation {
 		
 		parentPane.styleClass.add("parentPane")
 		
-		pdfManager = new PdfManager(serviceGraduation)
+		pdfManager = new PdfManager
 		service = serviceGraduation
 		
 		mainPane = new PdfPaneWithAnotations(this)
@@ -444,6 +444,14 @@ class ControllerFxGraduation {
 		questionList.clearItems
 		studentList.clearItems
 		
+	}
+	
+	/**
+	 * Envoie le nom du modèle au service
+	 * @param templateName Nom du modèle
+	 */
+	def sendExamNameToService(String templateName) {
+		service.setExamName(templateName)
 	}
 	
 	def update(){
@@ -716,7 +724,8 @@ class ControllerFxGraduation {
 		val document = PDDocument.load(file);
 		val stream = new ByteArrayOutputStream();
 		document.save(stream);
-		pdfManager.create("", file);
+		pdfManager.create(file);
+		service.onDocumentLoad(pdfManager.getPdfPageCount)
         val pdfReader = new PdfReaderWithoutQrCodeImpl(document, service.pageAmount,3);  
         pdfReader.readPDf();
         val studentSheets = pdfReader.completeStudentSheets

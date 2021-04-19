@@ -3,7 +3,6 @@ package fr.istic.tools.scanexam.view.fx
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl
-import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
@@ -212,7 +211,7 @@ class ControllerGraduationLoader {
 	 */
 	def onFinish(PdfReader reader, File file) {
 		serviceGraduation.initializeCorrection(reader.completeStudentSheets)
-		controllerGraduation.pdfManager.create(txtFldGraduationName.text, file)
+		controllerGraduation.pdfManager.create(file)
 		controllerGraduation.load()
 		(mainPane.getScene.getWindow as Stage).close
 	}

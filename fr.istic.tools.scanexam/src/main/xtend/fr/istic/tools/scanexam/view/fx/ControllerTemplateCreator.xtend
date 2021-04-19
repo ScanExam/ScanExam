@@ -88,10 +88,12 @@ class ControllerTemplateCreator {
 		// Action sur les boutons de chargement de fichiers
 		btnBrowser.onAction = [e|loadFile("*.pdf", "file.format.pdf", txtFldTemplateFile)]
 	}
+	
 	def void createTemplate() {
-		
-		ctrlEditor.pdfManager.create(templateName, templateFile)
+		ctrlEditor.pdfManager.create(templateFile)
+		ctrlEditor.sendExamNameToService(templateName)
 	}
+	
 	/**
 	 * Anime toutes les composants vides
 	 */

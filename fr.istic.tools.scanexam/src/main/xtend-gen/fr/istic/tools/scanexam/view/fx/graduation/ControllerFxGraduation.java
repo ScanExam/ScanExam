@@ -402,7 +402,7 @@ public class ControllerFxGraduation {
   
   public void init(final ServiceGraduation serviceGraduation) {
     this.parentPane.getStyleClass().add("parentPane");
-    PdfManager _pdfManager = new PdfManager(serviceGraduation);
+    PdfManager _pdfManager = new PdfManager();
     this.pdfManager = _pdfManager;
     this.service = serviceGraduation;
     PdfPaneWithAnotations _pdfPaneWithAnotations = new PdfPaneWithAnotations(this);
@@ -554,6 +554,14 @@ public class ControllerFxGraduation {
     this.studentDetails.setVisible(false);
     this.questionList.clearItems();
     this.studentList.clearItems();
+  }
+  
+  /**
+   * Envoie le nom du modèle au service
+   * @param templateName Nom du modèle
+   */
+  public void sendExamNameToService(final String templateName) {
+    this.service.setExamName(templateName);
   }
   
   public Object update() {
@@ -840,7 +848,8 @@ public class ControllerFxGraduation {
       final PDDocument document = PDDocument.load(file);
       final ByteArrayOutputStream stream = new ByteArrayOutputStream();
       document.save(stream);
-      this.pdfManager.create("", file);
+      this.pdfManager.create(file);
+      this.service.onDocumentLoad(this.pdfManager.getPdfPageCount());
       int _pageAmount = this.service.getPageAmount();
       final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(document, _pageAmount, 3);
       pdfReader.readPDf();

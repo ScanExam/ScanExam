@@ -217,7 +217,7 @@ class ControllerFxEdition {
 		
 		service = serviceEdition
 		
-		pdfManager = new PdfManager(serviceEdition)
+		pdfManager = new PdfManager
 		
 		mainPane = new PdfPane(this);
 		mainPaneContainer.children.add(mainPane)
@@ -544,13 +544,22 @@ class ControllerFxEdition {
 
 		if (file !== null) {
 			clearVue
-			pdfManager.create("", file);
+			pdfManager.create(file);
+			service.onDocumentLoad(pdfManager.getPdfPageCount)
 			renderDocument();
 			postLoad
 		} else {
 			logger.warn("File not chosen")
 		}
 
+	}
+	
+	/**
+	 * Envoie le nom du modèle au service
+	 * @param templateName Nom du modèle
+	 */
+	def sendExamNameToService(String templateName) {
+		service.setExamName(templateName)
 	}
 
 	/**
