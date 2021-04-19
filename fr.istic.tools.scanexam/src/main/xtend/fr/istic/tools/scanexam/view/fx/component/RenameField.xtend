@@ -88,5 +88,7 @@ class RenameField extends HBox {
 		field.onAction = [e | toggleRename(false)]
 		field.focusedProperty.addListener([obs,oldVal,newVal | !newVal ? toggleRename(false) : field.text = label.text])
 		label.onMouseClicked = [e | toggleRename(true)]
+		icon.onMouseClicked = [e | toggleRename(true)]
+		
 	}
 }
