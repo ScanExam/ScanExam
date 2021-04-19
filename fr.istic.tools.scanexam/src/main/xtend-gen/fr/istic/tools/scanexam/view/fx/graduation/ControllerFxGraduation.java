@@ -599,6 +599,10 @@ public class ControllerFxGraduation {
         }
       }
     }
+    boolean _noItems = this.questionList.noItems();
+    if (_noItems) {
+      ControllerFxGraduation.logger.warn("The view has received no questions from service");
+    }
   }
   
   /**

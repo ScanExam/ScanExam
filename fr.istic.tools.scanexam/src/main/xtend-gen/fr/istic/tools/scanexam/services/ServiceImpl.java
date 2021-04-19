@@ -769,8 +769,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public boolean hasExamLoaded() {
-    Exam _exam = this.creationTemplate.getExam();
-    return (_exam != null);
+    return ((this.creationTemplate != null) && (this.creationTemplate.getExam() != null));
   }
   
   /**

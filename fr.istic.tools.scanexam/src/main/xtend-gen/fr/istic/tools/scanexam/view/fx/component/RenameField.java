@@ -126,5 +126,9 @@ public class RenameField extends HBox {
       this.toggleRename(true);
     };
     this.label.setOnMouseClicked(_function_2);
+    final EventHandler<MouseEvent> _function_3 = (MouseEvent e) -> {
+      this.toggleRename(true);
+    };
+    this.icon.setOnMouseClicked(_function_3);
   }
 }

@@ -649,7 +649,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return vrai si un modèle d'examen est chargé, false sinon
 	 */
 	override boolean hasExamLoaded() {
-		creationTemplate.exam !== null
+		creationTemplate !== null && creationTemplate.exam !== null
 	}
 
 	/**
