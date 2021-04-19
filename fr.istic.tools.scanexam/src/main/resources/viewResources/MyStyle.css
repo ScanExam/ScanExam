@@ -122,6 +122,9 @@
 	-fx-border-width: 1px;
 	-fx-padding: 0px;
 }
+.renameLabel {
+	fx-padding: 0px;
+}
 
 .Grader {
 	-fx-border-color: lightgrey;
@@ -152,10 +155,21 @@
 .clickableArea {
 	
 }
+
 .unicodeLabel {
 	-fx-font-size: 20;
-	-fx-font-family: Arial;
 }
+
+.mytext-field {
+	-fx-border-color: lightgrey;
+	-fx-border-width: 1px;
+	-fx-padding: 0px;
+}
+.renameLabel {
+	-fx-padding: 0px;
+}
+
+
 
 .text-field:wrong-format {
 	-fx-focus-color: #FF4300;

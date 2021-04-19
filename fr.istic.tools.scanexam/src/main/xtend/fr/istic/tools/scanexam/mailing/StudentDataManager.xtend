@@ -85,7 +85,7 @@ class StudentDataManager {
 	 * @author Antoine
 	 */
 	def static Optional<List<String>> getAllNames() {
-		return mapNomEtudiant.isEmpty ? Optional.empty : Optional.of(mapNomEtudiant.values.toList)
+		return mapNomEtudiant.isEmpty ? Optional.empty : Optional.of(mapNomEtudiant.keySet.toList)
 	}
 
 	/**

@@ -25,13 +25,14 @@ import java.util.List
 import java.util.Objects
 import java.util.Optional
 import org.eclipse.xtend.lib.annotations.Accessors
+import org.apache.logging.log4j.LogManager
 
 /**
  * Classe servant de façade aux données concernant la correction
  * @author Antoine Degas, Marius Lumbroso, Théo Giraudet, Thomas Guibert
  */
 class ServiceImpl implements ServiceGraduation, ServiceEdition {
-
+	static val logger = LogManager.logger
 	/**
 	 * Index de la page courante du modèle d'exam
 	 */
@@ -319,7 +320,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override boolean assignGradeEntry(int questionId, int gradeEntryId) {
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry|entry.id == gradeEntryId]
-
 		if (validGradeEntry(questionId, gradeEntry)) {
 			val sheet = studentSheets.get(currentSheetIndex);
 			sheet.grades.get(questionId).entries.add(gradeEntry)
@@ -369,12 +369,13 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override boolean validGradeEntry(int questionId,GradeEntry gradeAdd){
 		val gradeMax = getQuestion(questionId).gradeScale.maxPoint
-		val currentGrade = studentSheets.get(currentSheetIndex).grades.get(questionId)
+		var currentGrade = studentSheets.get(currentSheetIndex).grades.get(questionId)
 			.entries
 			.map[e | e.step]
 			.reduce[acc, grade | acc + grade]
-		
+		if (currentGrade === null) currentGrade = 0f
 		val newGrade = currentGrade + gradeAdd.step
+		logger.info(newGrade <= gradeMax && newGrade >= 0)
 		return newGrade <= gradeMax && newGrade >= 0
 	}
 	

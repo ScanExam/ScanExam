@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation">
+<VBox fx:id="root" prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation">
 	<children>
 		<ToolBar>
 			<items>
@@ -55,7 +55,7 @@
 						<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
 					</padding>
 				</VBox>
-				<AnchorPane  HBox.hgrow="ALWAYS">
+				<AnchorPane HBox.hgrow="ALWAYS">
 					<children>
 						<ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<content>
@@ -66,7 +66,7 @@
 								</AnchorPane>
 							</content>
 							<cursor>
-								<Cursor fx:constant="OPEN_HAND" />
+								<Cursor fx:constant="DEFAULT" />
 							</cursor>
 						</ScrollPane>
 						<VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

@@ -6,6 +6,7 @@ import javafx.scene.control.TextFormatter
 import javafx.scene.layout.HBox
 import javafx.beans.property.StringProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.geometry.Pos
 
 class RenameField extends HBox {
 	
@@ -17,11 +18,14 @@ class RenameField extends HBox {
 		icon = new Label("\u270E")
 		icon.styleClass.add("unicodeLabel")
 		this.children.addAll(label,icon);
+		field.styleClass.add("mytext-field")
+		label.styleClass.add("renameLabel")
+		setAlignment(Pos.CENTER_LEFT)
 		setupEvents
 	}
 
 	Label label;
-	protected TextField field;
+	package TextField field;
 	Label icon;
 	
 	/**
