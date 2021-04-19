@@ -427,7 +427,6 @@ class ControllerFxGraduation {
 	 * 
 	 *  */
 	def loaded(){
-		
 		loadQuestions();
 		loadStudents();
 		renderCorrectedCopy();
@@ -459,7 +458,7 @@ class ControllerFxGraduation {
 	 * La liste des etudiants est presente dans studentList, qui affiche tout les etudiants.
 	 * 
 	 */
-	def void loadQuestions() {
+	def void loadQuestions() { //TODO FIX
 		logger.info("Loading Questions")
 		for (var p = 0;p < service.pageAmount;p++) {
 			var ids =  initLoading(p);
@@ -476,6 +475,7 @@ class ControllerFxGraduation {
 				questionList.addItem(question)
 			}
 		}
+		if (questionList.noItems) logger.warn("The view has received no questions from service")
 	}
 	
 	/**
