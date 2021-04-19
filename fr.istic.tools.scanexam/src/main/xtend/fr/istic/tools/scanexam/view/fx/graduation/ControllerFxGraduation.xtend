@@ -322,8 +322,11 @@ class ControllerFxGraduation {
 	
 	def init(ServiceGraduation serviceGraduation){
 		
+		parentPane.styleClass.add("parentPane")
+		
 		pdfManager = new PdfManager(serviceGraduation)
 		service = serviceGraduation
+		
 		mainPane = new PdfPaneWithAnotations(this)
 		parentPane.children.add(mainPane)
 		
@@ -427,10 +430,10 @@ class ControllerFxGraduation {
 	 * 
 	 *  */
 	def loaded(){
+		renderCorrectedCopy();
+		renderStudentCopy();
 		loadQuestions();
 		loadStudents();
-		renderCorrectedCopy();
-		//renderStudentCopy();
 		grader.visible = true;
 		questionDetails.visible = true;
 	}
@@ -674,6 +677,7 @@ class ControllerFxGraduation {
 	def void setZoomArea(double x, double y, double height, double width) {
 		if (autoZoom) 
 			mainPane.zoomTo(x,y,height,width)
+		logger.info("Zooming to" + x + y + height + width + autoZoom)
 	}
 
 	//----------------//
@@ -805,7 +809,7 @@ class ControllerFxGraduation {
 	
 		
 	def LinkedList<Integer> initLoading(int pageNumber){
-		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
+		questions = service.getQuestionAtPage(pageNumber)
 		var ids = new LinkedList<Integer>();
 		for (Question q : questions) {
 			ids.add(q.id)
