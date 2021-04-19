@@ -111,7 +111,8 @@ public class ControllerTemplateCreator {
   }
   
   public void createTemplate() {
-    this.ctrlEditor.getPdfManager().create(this.templateName, this.templateFile);
+    this.ctrlEditor.getPdfManager().create(this.templateFile);
+    this.ctrlEditor.sendExamNameToService(this.templateName);
   }
   
   /**

@@ -231,7 +231,7 @@ public class ControllerFxEdition {
   
   public void init(final ServiceEdition serviceEdition) {
     this.service = serviceEdition;
-    PdfManager _pdfManager = new PdfManager(serviceEdition);
+    PdfManager _pdfManager = new PdfManager();
     this.pdfManager = _pdfManager;
     PdfPane _pdfPane = new PdfPane(this);
     this.mainPane = _pdfPane;
@@ -645,7 +645,8 @@ public class ControllerFxEdition {
         boolean _xblockexpression_1 = false;
         {
           this.clearVue();
-          this.pdfManager.create("", file);
+          this.pdfManager.create(file);
+          this.service.onDocumentLoad(this.pdfManager.getPdfPageCount());
           this.renderDocument();
           _xblockexpression_1 = this.postLoad();
         }
@@ -656,6 +657,14 @@ public class ControllerFxEdition {
       _xblockexpression = _xifexpression;
     }
     return Boolean.valueOf(_xblockexpression);
+  }
+  
+  /**
+   * Envoie le nom du modèle au service
+   * @param templateName Nom du modèle
+   */
+  public void sendExamNameToService(final String templateName) {
+    this.service.setExamName(templateName);
   }
   
   /**

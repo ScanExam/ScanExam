@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.fx;
 
-import fr.istic.tools.scanexam.services.api.Service;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,13 +14,12 @@ import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
  * Controlleur du pdf
- * @author Julien Cochet
+ * @author Benjamin Danlos, Julien Cochet
  */
 @SuppressWarnings("all")
 public class PdfManager {
@@ -35,11 +33,6 @@ public class PdfManager {
    */
   @Accessors
   private int pdfPageIndex;
-  
-  /**
-   * Association with the model via the Service API
-   */
-  private Service service;
   
   /**
    * Largeur de la fenêtre
@@ -57,18 +50,6 @@ public class PdfManager {
   protected ByteArrayOutputStream pdfOutput;
   
   /**
-   * Constructor
-   * @author Benjamin Danlos
-   * @param {@link EditorPresenter} (not null)
-   * @param {@link GraduationPresenter} (not null)
-   * Constructs a PDFPresenter object.
-   */
-  public PdfManager(final Service s) {
-    Objects.<Service>requireNonNull(s);
-    this.service = s;
-  }
-  
-  /**
    * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
    * @param page Numéro de page où se rendre
    */
@@ -80,23 +61,25 @@ public class PdfManager {
     return _xifexpression;
   }
   
+  /**
+   * Retourne la page courante
+   * @return Page courante
+   */
   public BufferedImage getCurrentPdfPage() {
     return this.pageToImage(this.document.getPages().get(this.pdfPageIndex));
   }
   
+  /**
+   * Passe à la page suivante s'il y en a une. Ne fait rien sinon
+   */
   public int nextPdfPage() {
-    int _xblockexpression = (int) 0;
-    {
-      InputOutput.<String>println((("-" + Integer.valueOf(this.pdfPageIndex)) + "-"));
-      int _xifexpression = (int) 0;
-      int _size = IterableExtensions.size(this.document.getPages());
-      boolean _lessThan = ((this.pdfPageIndex + 1) < _size);
-      if (_lessThan) {
-        _xifexpression = this.pdfPageIndex++;
-      }
-      _xblockexpression = _xifexpression;
+    int _xifexpression = (int) 0;
+    int _size = IterableExtensions.size(this.document.getPages());
+    boolean _lessThan = ((this.pdfPageIndex + 1) < _size);
+    if (_lessThan) {
+      _xifexpression = this.pdfPageIndex++;
     }
-    return _xblockexpression;
+    return _xifexpression;
   }
   
   /**
@@ -110,10 +93,19 @@ public class PdfManager {
     return _xifexpression;
   }
   
+  /**
+   * Renvoie le numéro du page courant
+   * @return Numéro de page courant
+   */
   public int currentPdfPageNumber() {
     return this.pdfPageIndex;
   }
   
+  /**
+   * Transforme une PDPage en BufferedImage
+   * @param page PDPage à convertir
+   * @return Image convertie
+   */
   public BufferedImage pageToImage(final PDPage page) {
     try {
       BufferedImage _xblockexpression = null;
@@ -129,33 +121,35 @@ public class PdfManager {
   }
   
   /**
-   * Crée le modèle de l'examen
-   * @param name Nom du modèle d'examen
-   * @param file Fichier du modèle d'examen
+   * Charger le PDF à partir d'un fichier
+   * @param file PDF
    */
-  public void create(final String name, final File file) {
+  public PDDocument create(final File file) {
     try {
-      Objects.<File>requireNonNull(file);
-      byte[] _readAllBytes = Files.readAllBytes(Path.of(file.getAbsolutePath()));
-      final InputStream input = new ByteArrayInputStream(_readAllBytes);
-      ByteArrayOutputStream _byteArrayOutputStream = new ByteArrayOutputStream();
-      this.pdfOutput = _byteArrayOutputStream;
-      input.transferTo(this.pdfOutput);
-      this.document = PDDocument.load(file);
-      this.service.onDocumentLoad(IterableExtensions.size(this.document.getPages()));
-      this.service.setExamName(name);
+      PDDocument _xblockexpression = null;
+      {
+        Objects.<File>requireNonNull(file);
+        byte[] _readAllBytes = Files.readAllBytes(Path.of(file.getAbsolutePath()));
+        final InputStream input = new ByteArrayInputStream(_readAllBytes);
+        _xblockexpression = this.create(input);
+      }
+      return _xblockexpression;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
-  public PDDocument create(final ByteArrayInputStream stream) {
+  /**
+   * Charge le PDF à partir d'un input stream
+   * @param stream InputStream du PDF
+   */
+  public PDDocument create(final InputStream input) {
     try {
       PDDocument _xblockexpression = null;
       {
         ByteArrayOutputStream _byteArrayOutputStream = new ByteArrayOutputStream();
         this.pdfOutput = _byteArrayOutputStream;
-        stream.transferTo(this.pdfOutput);
+        input.transferTo(this.pdfOutput);
         _xblockexpression = this.document = PDDocument.load(this.getPdfInputStream());
       }
       return _xblockexpression;
@@ -164,15 +158,28 @@ public class PdfManager {
     }
   }
   
+  /**
+   * Retourne vrai si la page courante est celle passée en paramètre
+   * @param page Numéro de page à vérifier
+   * @return True si la page courante est celle passée en paramètre, false sinon
+   */
   public boolean atCorrectPage(final int page) {
     int _currentPdfPageNumber = this.currentPdfPageNumber();
     return (page == _currentPdfPageNumber);
   }
   
+  /**
+   * Retourne le nombre total de page du pdf
+   * @return Nombre total de page du pdf
+   */
   public int getPdfPageCount() {
     return IterableExtensions.size(this.document.getPages());
   }
   
+  /**
+   * Recupère l'output stream du pdf courant
+   * @return ByteArrayOutputStream du pdf courant
+   */
   public ByteArrayOutputStream getPdfOutputStream() {
     try {
       ByteArrayOutputStream _xblockexpression = null;
@@ -188,7 +195,8 @@ public class PdfManager {
   }
   
   /**
-   * @return un InputStream vers le PDF
+   * Recupère l'input stream du pdf courant
+   * @return ByteArrayInputStream du pdf courant
    */
   public ByteArrayInputStream getPdfInputStream() {
     byte[] _byteArray = this.pdfOutput.toByteArray();

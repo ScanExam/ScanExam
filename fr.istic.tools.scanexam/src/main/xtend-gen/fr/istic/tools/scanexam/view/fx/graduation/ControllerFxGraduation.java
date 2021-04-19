@@ -401,7 +401,8 @@ public class ControllerFxGraduation {
   }
   
   public void init(final ServiceGraduation serviceGraduation) {
-    PdfManager _pdfManager = new PdfManager(serviceGraduation);
+    this.parentPane.getStyleClass().add("parentPane");
+    PdfManager _pdfManager = new PdfManager();
     this.pdfManager = _pdfManager;
     this.service = serviceGraduation;
     PdfPaneWithAnotations _pdfPaneWithAnotations = new PdfPaneWithAnotations(this);
@@ -540,9 +541,10 @@ public class ControllerFxGraduation {
    * Pour charger les donne du modele dans lest list etudioant et questions
    */
   public void loaded() {
+    this.renderCorrectedCopy();
+    this.renderStudentCopy();
     this.loadQuestions();
     this.loadStudents();
-    this.renderCorrectedCopy();
     this.grader.setVisible(true);
     this.questionDetails.setVisible(true);
   }
@@ -552,6 +554,14 @@ public class ControllerFxGraduation {
     this.studentDetails.setVisible(false);
     this.questionList.clearItems();
     this.studentList.clearItems();
+  }
+  
+  /**
+   * Envoie le nom du modèle au service
+   * @param templateName Nom du modèle
+   */
+  public void sendExamNameToService(final String templateName) {
+    this.service.setExamName(templateName);
   }
   
   public Object update() {
@@ -801,6 +811,7 @@ public class ControllerFxGraduation {
     if (this.autoZoom) {
       this.mainPane.zoomTo(x, y, height, width);
     }
+    ControllerFxGraduation.logger.info(((((("Zooming to" + Double.valueOf(x)) + Double.valueOf(y)) + Double.valueOf(height)) + Double.valueOf(width)) + Boolean.valueOf(this.autoZoom)));
   }
   
   public void nextPage() {
@@ -837,7 +848,8 @@ public class ControllerFxGraduation {
       final PDDocument document = PDDocument.load(file);
       final ByteArrayOutputStream stream = new ByteArrayOutputStream();
       document.save(stream);
-      this.pdfManager.create("", file);
+      this.pdfManager.create(file);
+      this.service.onDocumentLoad(this.pdfManager.getPdfPageCount());
       int _pageAmount = this.service.getPageAmount();
       final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(document, _pageAmount, 3);
       pdfReader.readPDf();

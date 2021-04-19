@@ -214,7 +214,8 @@ class ControllerGraduationLoader {
 	 */
 	def onFinish(PdfReader reader, File file) {
 		serviceGraduation.initializeCorrection(reader.completeStudentSheets)
-		controllerGraduation.pdfManager.create(txtFldGraduationName.text,file)
+		controllerGraduation.pdfManager.create(file)
+		controllerGraduation.sendExamNameToService(txtFldGraduationName.text)
 		controllerGraduation.load
 	}
 }

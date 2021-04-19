@@ -280,6 +280,8 @@ public class ControllerGraduationLoader {
    */
   public void onFinish(final PdfReader reader, final File file) {
     this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
+    this.controllerGraduation.getPdfManager().create(file);
+    this.controllerGraduation.sendExamNameToService(this.txtFldGraduationName.getText());
     this.controllerGraduation.load();
   }
 }
