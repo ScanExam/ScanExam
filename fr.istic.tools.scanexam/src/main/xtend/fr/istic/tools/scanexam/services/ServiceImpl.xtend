@@ -49,21 +49,17 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	int currentQuestionIndex;
 	
 	int gradeEntryId;
-	/**
-	 * Liste des copies visible.
-	 */
-	@Accessors Collection<StudentSheet> studentSheets;
 	
 	/**
 	 * Fichier du template de l'édition d'examen (Fichier de méta données sur le sujet d'examen)
 	 */
-	CreationTemplate creationTemplate;
+	CreationTemplate editionTemplate;
 	
 	/**
 	 * Fichier du template de correction d'examen  
 	 * (Fichier de méta données sur les corrections de copies déja effectués)
 	 */
-	CorrectionTemplate correctionTemplate;
+	CorrectionTemplate graduationTemplate;
 	
 
 	/**
@@ -74,13 +70,13 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	override saveCorrectionTemplate(String path,ByteArrayOutputStream pdfOutputStream) 
 	{
 		val encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
-		correctionTemplate.encodedDocument = new String(encoded);
+		graduationTemplate.encodedDocument = new String(encoded);
 		pdfOutputStream.close();
 
-		correctionTemplate.studentsheets.clear()
-		correctionTemplate.studentsheets.addAll(studentSheets);
+		graduationTemplate.studentsheets.clear()
+		graduationTemplate.studentsheets.addAll(studentSheets);
 		
-		TemplateIo.save(new File(path), correctionTemplate);
+		TemplateIo.save(new File(path), graduationTemplate);
 	}
 	
 	/**
@@ -94,7 +90,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		
 		if (correctionTemplate.present) 
         {
-            this.correctionTemplate = correctionTemplate.get()
+            this.graduationTemplate = correctionTemplate.get()
             return true
         }
 		return false
@@ -107,7 +103,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
 	override boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
-		correctionTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
+		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
 		try {
 
 			for (StudentSheet sheet : studentSheets) {
@@ -123,7 +119,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 				}
 
 			}
-			correctionTemplate.studentsheets.addAll(studentSheets)
+			graduationTemplate.studentsheets.addAll(studentSheets)
 			return true
 		} catch (Exception ex) {
 			return false;
@@ -182,7 +178,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * Défini la page suivant la page actuelle comme nouvelle page courante
 	 */
 	override nextPage() {
-		if (pageIndex + 1 < creationTemplate.exam.pages.length)
+		if (pageIndex + 1 < editionTemplate.exam.pages.length)
 			pageIndex++
 	}
 
@@ -228,7 +224,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param id un ID de question
 	 */
 	override selectQuestion(int id) {
-		for(page: creationTemplate.exam.pages) {
+		for(page: editionTemplate.exam.pages) {
 			val question = page.questions.findFirst[question | question.id == id]
 			if(question !== null) {
 				pageIndex = page.id
@@ -243,8 +239,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override numberOfQuestions() {
 		var nbQuestion = 0
-		for (var i = 0; i < creationTemplate.exam.pages.size(); i++)
-			nbQuestion += creationTemplate.exam.pages.get(i).questions.size
+		for (var i = 0; i < editionTemplate.exam.pages.size(); i++)
+			nbQuestion += editionTemplate.exam.pages.get(i).questions.size
 		nbQuestion
 	}
 	
@@ -417,14 +413,14 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override setStudentListPath(String path) {
 		Objects.requireNonNull(path)
-		correctionTemplate.studentListPath = path
+		graduationTemplate.studentListPath = path
 	}
 	
 	/**
 	 * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
 	 */
 	override String getStudentListPath() {
-		return correctionTemplate.studentListPath
+		return graduationTemplate.studentListPath
 	}
 	
 	/**
@@ -433,14 +429,14 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override setStudentListShift(String shift) {
 		Objects.requireNonNull(shift)
-		correctionTemplate.studentListShift = shift
+		graduationTemplate.studentListShift = shift
 	}
 	
 	/**
 	 * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
 	 */
 	override String getStudentListShift() {
-		return correctionTemplate.studentListShift
+		return graduationTemplate.studentListShift
 	}
 	
 	
@@ -524,7 +520,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param id l'ID de la question à supprimer
 	 */
 	override removeQuestion(int id) {
-		for (page : creationTemplate.exam.pages)
+		for (page : editionTemplate.exam.pages)
 			for (question : page.questions)
 				if (question.id == id)
 					page.questions.remove(question)
@@ -549,10 +545,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override save(ByteArrayOutputStream outputStream, File path) {
 		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
-		creationTemplate.encodedDocument = new String(encoded);
+		editionTemplate.encodedDocument = new String(encoded);
 		outputStream.close();
 
-		TemplateIo.save(path, creationTemplate);
+		TemplateIo.save(path, editionTemplate);
 	}
 
 	/**
@@ -564,7 +560,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		val creationTemplate = TemplateIo.loadCreationTemplate(xmiPath)
 
 		if (creationTemplate.present) {
-			this.creationTemplate = creationTemplate.get()
+			this.editionTemplate = creationTemplate.get()
 			val exam = creationTemplate.get().exam
 			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
 
@@ -579,14 +575,14 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param pageNumber le nombre de pages du modèle
 	 */
 	override void onDocumentLoad(int pageNumber) {
-		creationTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate
+		editionTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate
 
-		creationTemplate.exam = CoreFactory.eINSTANCE.createExam()
+		editionTemplate.exam = CoreFactory.eINSTANCE.createExam()
 
 		for (i : 0 ..< pageNumber) {
 			val page = CoreFactory.eINSTANCE.createPage()
 
-			creationTemplate.exam.pages.add(page);
+			editionTemplate.exam.pages.add(page);
 		}
 		questionId = 0
 	}
@@ -607,7 +603,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	protected def Question getQuestion(int pageId, int questionid)
 	{
-		return creationTemplate.exam.pages.get(pageId).questions.get(questionid);
+		return editionTemplate.exam.pages.get(pageId).questions.get(questionid);
 	}
 	
 	/**  Rend la liste des Questions définies dans un Examen
@@ -616,7 +612,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	protected def Collection<Question> getQuestions(int pageId)
 	{
-		return Collections.unmodifiableCollection(creationTemplate.exam.pages.get(pageId).questions);
+		return Collections.unmodifiableCollection(editionTemplate.exam.pages.get(pageId).questions);
 	}
 	
 	/**
@@ -625,7 +621,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	protected def Optional<Question> getQuestionFromIndex(int absoluteQuestionId) {
 		return Optional.ofNullable(
-			creationTemplate.exam.pages.flatMap[p | p.questions].indexed.findFirst[p | p.key == absoluteQuestionId]
+			editionTemplate.exam.pages.flatMap[p | p.questions].indexed.findFirst[p | p.key == absoluteQuestionId]
 		).map(q | q.value)
 	}
 	
@@ -633,7 +629,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return le nombre de pages de l'Examen
 	 */
 	override int getTemplatePageAmount(){
-		creationTemplate.exam.pages.size
+		editionTemplate.exam.pages.size
 	}
 
 	/**
@@ -642,22 +638,22 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	protected def Page getPage(int pageId)
 	{
-		return creationTemplate.exam.pages.get(pageId);
+		return editionTemplate.exam.pages.get(pageId);
 	}
 	
 	/**
 	 * @return vrai si un modèle d'examen est chargé, false sinon
 	 */
 	override boolean hasExamLoaded() {
-		creationTemplate !== null && creationTemplate.exam !== null
+		editionTemplate !== null && editionTemplate.exam !== null
 	}
 
 	/**
 	 * Met à jour le nom de l'examen
-	 * @param name Nouevau nom de l'examen
+	 * @param name Nouveau nom de l'examen
 	 */
 	override void setExamName(String name) {
-		creationTemplate.exam.name = name
+		editionTemplate.exam.name = name
 	}
 	
 	/**
@@ -673,7 +669,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return la Question du modèle correspondant à l'ID spécifié
 	 */
 	protected def Question getQuestion(int id) {
-		for (page : creationTemplate.exam.pages) {
+		for (page : editionTemplate.exam.pages) {
 			val question = page.questions.findFirst[question|question.id == id]
 			if (question !== null)
 				return question
@@ -686,13 +682,21 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @author degas
 	 */
 	override int getExamId() {
-		return creationTemplate.exam.id;
+		return editionTemplate.exam.id;
 	}
 
 	/**@return Nom de l'examen
 	 * @author degas
 	 */
 	override String getExamName() {
-		return creationTemplate.exam.name;
+		return editionTemplate.exam.name;
 	}
+	
+	/**
+	 * @return la liste non modifiable de tous les StudentSheets
+	 */
+	override getStudentSheets() {
+		return Collections.unmodifiableList(graduationTemplate.studentsheets)
+	}
+	
 }
