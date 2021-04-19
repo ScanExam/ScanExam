@@ -42,10 +42,4 @@ public interface Service {
    * @return la liste des Questions sur la page dont l'ID est <i>pageIndex</i>
    */
   List<Question> getQuestionAtPage(final int pageIndex);
-  
-  /**
-   * Crée un nouveau modèle côté données
-   * @param pageNumber le nombre de pages du modèle
-   */
-  void onDocumentLoad(final int pageNumber);
 }

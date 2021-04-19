@@ -39,7 +39,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
  * @author Théo Giraudet
  */
 @SuppressWarnings("all")
-public class ControllerGraduationLoader {
+public class ControllerGraduationCreator {
   /**
    * Composant racine
    */
@@ -247,7 +247,7 @@ public class ControllerGraduationLoader {
     if ((file != null)) {
       destination.setText(file.getPath());
     } else {
-      ControllerGraduationLoader.logger.warn("File not chosen");
+      ControllerGraduationCreator.logger.warn("File not chosen");
     }
   }
   

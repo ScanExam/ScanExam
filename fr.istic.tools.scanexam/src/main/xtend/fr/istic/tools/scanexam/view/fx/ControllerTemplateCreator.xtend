@@ -91,7 +91,7 @@ class ControllerTemplateCreator {
 	
 	def void createTemplate() {
 		ctrlEditor.pdfManager.create(templateFile)
-		ctrlEditor.sendExamNameToService(templateName)
+		ctrlEditor.createExamTemplate(templateName)
 	}
 	
 	/**

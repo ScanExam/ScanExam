@@ -43,11 +43,4 @@ interface Service {
 	 */
 	def List<Question> getQuestionAtPage(int pageIndex)
 	
-	
-	/**
-	 * Crée un nouveau modèle côté données
-	 * @param pageNumber le nombre de pages du modèle
-	 */
-	def void onDocumentLoad(int pageNumber)
-	
 }

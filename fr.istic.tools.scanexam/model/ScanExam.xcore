@@ -90,7 +90,8 @@ class StudentSheet {
 		 for (var i = 0 ; i < grades.size ; i++)
 		 {
 		 	 val res = grades.get(i).entries.stream.map(grade | grade.step).reduce[acc,v | v+acc]
-			 result += res.get
+		 	 if(res.isPresent)
+			 	result += res.get
 		 }
 		 
 		return result

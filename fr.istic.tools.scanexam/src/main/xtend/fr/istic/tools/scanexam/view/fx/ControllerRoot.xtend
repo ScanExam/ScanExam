@@ -72,7 +72,7 @@ class ControllerRoot implements Initializable {
 	def loadTemplatePressedCorrector() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectionLoaderUI.FXML"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectionLoaderUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
@@ -86,7 +86,7 @@ class ControllerRoot implements Initializable {
 	def createNewTemplatePressed() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.FXML"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.new"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
@@ -105,7 +105,7 @@ class ControllerRoot implements Initializable {
 	def loadStudentList() { 
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.FXML"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
@@ -119,7 +119,7 @@ class ControllerRoot implements Initializable {
 	def updateConfig() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.FXML"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
@@ -147,7 +147,7 @@ class ControllerRoot implements Initializable {
 	def sendMail(){
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.FXML"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
@@ -160,11 +160,11 @@ class ControllerRoot implements Initializable {
 	def loadStudentCopiesPressed() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetLoaderUI.FXML"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GraduationCreatorUI.fxml"))
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, editionController, graduationController)
+		loader.<ControllerGraduationCreator>controller.initialize(serviceGraduation, editionController, graduationController)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show

@@ -571,23 +571,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		return Optional.empty;
 	}
 
-	/**
-	 * Crée un nouveau modèle côté données
-	 * @param pageNumber le nombre de pages du modèle
-	 */
-	override void onDocumentLoad(int pageNumber) {
-		editionTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate
-
-		editionTemplate.exam = CoreFactory.eINSTANCE.createExam()
-
-		for (i : 0 ..< pageNumber) {
-			val page = CoreFactory.eINSTANCE.createPage()
-
-			editionTemplate.exam.pages.add(page);
-		}
-		questionId = 0
-	}
-
 	/** Retourne la zone associée à une question
 	 * @param index Index de la question //FIXME (useless?)
 	 * @author degas
@@ -698,6 +681,23 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override getStudentSheets() {
 		return Collections.unmodifiableList(graduationTemplate.studentsheets)
+	}
+	
+	/**
+	 * Crée et initialise un nouveau modèle d'Examen
+	 * @param pageNumber le nombre de pages du modèle
+	 */
+	override initializeEdition(int pageNumber) {
+		editionTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate
+
+		editionTemplate.exam = CoreFactory.eINSTANCE.createExam()
+
+		for (i : 0 ..< pageNumber) {
+			val page = CoreFactory.eINSTANCE.createPage()
+
+			editionTemplate.exam.pages.add(page);
+		}
+		questionId = 0
 	}
 	
 }

@@ -6,6 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -23,12 +24,15 @@ public class RenameField extends HBox {
     this.icon = _label_1;
     this.icon.getStyleClass().add("unicodeLabel");
     this.getChildren().addAll(this.label, this.icon);
+    this.field.getStyleClass().add("mytext-field");
+    this.label.getStyleClass().add("renameLabel");
+    this.setAlignment(Pos.CENTER_LEFT);
     this.setupEvents();
   }
   
   private Label label;
   
-  protected TextField field;
+  TextField field;
   
   private Label icon;
   

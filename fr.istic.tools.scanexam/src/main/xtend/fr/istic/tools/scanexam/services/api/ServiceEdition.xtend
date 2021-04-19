@@ -71,6 +71,12 @@ interface ServiceEdition extends Service {
 	 * @returns un flux vers le contenu du fichier si celui-ci a bien été ouvert, Optional.empty sinon
 	 */
 	def Optional<ByteArrayInputStream> open(String xmiPath) 
+	
+	/**
+	 * Crée et initialise un nouveau modèle d'Examen
+	 * @param pageNumber le nombre de pages du modèle
+	 */
+	def void initializeEdition(int pageNumber)
 
 	/** Retourne la zone associée à une question
 	 * @param index Index de la question //FIXME (useless?)

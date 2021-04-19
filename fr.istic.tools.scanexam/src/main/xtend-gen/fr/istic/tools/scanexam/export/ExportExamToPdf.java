@@ -254,6 +254,7 @@ public class ExportExamToPdf {
       }
       PDPage page_1 = document.getPage((sheet.getPosPage().get(0)).intValue());
       PDPageContentStream contentStream_1 = new PDPageContentStream(document, page_1, PDPageContentStream.AppendMode.APPEND, true, true);
+      contentStream_1.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
       contentStream_1.beginText();
       float _height = page_1.getMediaBox().getHeight();
       float _minus_6 = (_height - 10);

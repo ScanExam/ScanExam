@@ -138,11 +138,6 @@ class ControllerFxEdition {
 	}
 
 	@FXML
-	def void newTemplatePressed() {
-		loadPdf();
-	}
-
-	@FXML
 	def void saveTemplatePressed() {
 		if (pdfLoaded)
 			saveTemplate();
@@ -528,37 +523,12 @@ class ControllerFxEdition {
 	}
 
 
-
-
-	
-	/**
-	 * Called when we press create template
-	 * load a new pdf to start the creation of a new template
-	 */
-	def loadPdf() {
-		var fileChooser = new FileChooser();
-		fileChooser.extensionFilters.add(new ExtensionFilter("PDF files", Arrays.asList("*.pdf")));
-		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
-			"Documents");
-		var file = fileChooser.showOpenDialog(mainPane.scene.window)
-
-		if (file !== null) {
-			clearVue
-			pdfManager.create(file);
-			service.onDocumentLoad(pdfManager.getPdfPageCount)
-			renderDocument();
-			postLoad
-		} else {
-			logger.warn("File not chosen")
-		}
-
-	}
-	
 	/**
 	 * Envoie le nom du modèle au service
 	 * @param templateName Nom du modèle
 	 */
-	def sendExamNameToService(String templateName) {
+	def createExamTemplate(String templateName) {
+		service.initializeEdition(pdfManager.pdfPageCount)
 		service.setExamName(templateName)
 	}
 

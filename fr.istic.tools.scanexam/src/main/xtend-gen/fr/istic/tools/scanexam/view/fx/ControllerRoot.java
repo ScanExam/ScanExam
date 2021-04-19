@@ -5,7 +5,7 @@ import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
-import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerGraduationCreator;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
@@ -93,7 +93,7 @@ public class ControllerRoot implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectionLoaderUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/CorrectionLoaderUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"));
       ObservableList<Image> _icons = dialog.getIcons();
@@ -114,7 +114,7 @@ public class ControllerRoot implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.file.new"));
       ObservableList<Image> _icons = dialog.getIcons();
@@ -141,7 +141,7 @@ public class ControllerRoot implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"));
       ObservableList<Image> _icons = dialog.getIcons();
@@ -163,7 +163,7 @@ public class ControllerRoot implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"));
       ObservableList<Image> _icons = dialog.getIcons();
@@ -203,7 +203,7 @@ public class ControllerRoot implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
       ObservableList<Image> _icons = dialog.getIcons();
@@ -224,14 +224,14 @@ public class ControllerRoot implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetLoaderUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/GraduationCreatorUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"));
       ObservableList<Image> _icons = dialog.getIcons();
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationLoader>getController().initialize(this.serviceGraduation, this.editionController, this.graduationController);
+      loader.<ControllerGraduationCreator>getController().initialize(this.serviceGraduation, this.editionController, this.graduationController);
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);
       dialog.setResizable(false);

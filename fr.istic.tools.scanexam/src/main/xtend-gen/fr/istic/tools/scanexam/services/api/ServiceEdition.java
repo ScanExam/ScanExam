@@ -73,6 +73,12 @@ public interface ServiceEdition extends Service {
   Optional<ByteArrayInputStream> open(final String xmiPath);
   
   /**
+   * Crée et initialise un nouveau modèle d'Examen
+   * @param pageNumber le nombre de pages du modèle
+   */
+  void initializeEdition(final int pageNumber);
+  
+  /**
    * Retourne la zone associée à une question
    * @param index Index de la question //FIXME (useless?)
    * @author degas

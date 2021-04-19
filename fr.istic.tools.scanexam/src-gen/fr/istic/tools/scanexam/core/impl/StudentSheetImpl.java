@@ -216,9 +216,12 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 					}
 				};
 				final Optional<Float> res = this.getGrades().get(i).getEntries().stream().<Float>map(_function).reduce(_function_1);
-				float _result = result;
-				Float _get = res.get();
-				result = (_result + (_get).floatValue());
+				boolean _isPresent = res.isPresent();
+				if (_isPresent) {
+					float _result = result;
+					Float _get = res.get();
+					result = (_result + (_get).floatValue());
+				}
 			}
 		}
 		return result;

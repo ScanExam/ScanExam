@@ -158,11 +158,6 @@ public class ControllerFxEdition {
   }
   
   @FXML
-  public void newTemplatePressed() {
-    this.loadPdf();
-  }
-  
-  @FXML
   public void saveTemplatePressed() {
     if (this.pdfLoaded) {
       this.saveTemplate();
@@ -621,49 +616,11 @@ public class ControllerFxEdition {
   }
   
   /**
-   * Called when we press create template
-   * load a new pdf to start the creation of a new template
-   */
-  public Boolean loadPdf() {
-    boolean _xblockexpression = false;
-    {
-      FileChooser fileChooser = new FileChooser();
-      ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-      List<String> _asList = Arrays.<String>asList("*.pdf");
-      FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("PDF files", _asList);
-      _extensionFilters.add(_extensionFilter);
-      String _property = System.getProperty("user.home");
-      String _property_1 = System.getProperty("file.separator");
-      String _plus = (_property + _property_1);
-      String _plus_1 = (_plus + 
-        "Documents");
-      File _file = new File(_plus_1);
-      fileChooser.setInitialDirectory(_file);
-      File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
-      boolean _xifexpression = false;
-      if ((file != null)) {
-        boolean _xblockexpression_1 = false;
-        {
-          this.clearVue();
-          this.pdfManager.create(file);
-          this.service.onDocumentLoad(this.pdfManager.getPdfPageCount());
-          this.renderDocument();
-          _xblockexpression_1 = this.postLoad();
-        }
-        _xifexpression = _xblockexpression_1;
-      } else {
-        this.logger.warn("File not chosen");
-      }
-      _xblockexpression = _xifexpression;
-    }
-    return Boolean.valueOf(_xblockexpression);
-  }
-  
-  /**
    * Envoie le nom du modèle au service
    * @param templateName Nom du modèle
    */
-  public void sendExamNameToService(final String templateName) {
+  public void createExamTemplate(final String templateName) {
+    this.service.initializeEdition(this.pdfManager.getPdfPageCount());
     this.service.setExamName(templateName);
   }
   

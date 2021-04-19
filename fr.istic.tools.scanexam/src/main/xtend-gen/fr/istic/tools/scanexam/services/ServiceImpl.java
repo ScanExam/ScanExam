@@ -29,6 +29,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
@@ -48,6 +50,8 @@ import org.eclipse.xtext.xbase.lib.Pure;
  */
 @SuppressWarnings("all")
 public class ServiceImpl implements ServiceGraduation, ServiceEdition {
+  private static final Logger logger = LogManager.getLogger();
+  
   /**
    * Index de la page courante du modèle d'exam
    */
@@ -455,9 +459,13 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     final Function2<Float, Float, Float> _function_1 = (Float acc, Float grade) -> {
       return Float.valueOf(((acc).floatValue() + (grade).floatValue()));
     };
-    final Float currentGrade = IterableExtensions.<Float>reduce(ListExtensions.<GradeEntry, Float>map((((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries(), _function), _function_1);
+    Float currentGrade = IterableExtensions.<Float>reduce(ListExtensions.<GradeEntry, Float>map((((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries(), _function), _function_1);
+    if ((currentGrade == null)) {
+      currentGrade = Float.valueOf(0f);
+    }
     float _step = gradeAdd.getStep();
     final float newGrade = ((currentGrade).floatValue() + _step);
+    ServiceImpl.logger.info(Boolean.valueOf(((newGrade <= gradeMax) && (newGrade >= 0))));
     return ((newGrade <= gradeMax) && (newGrade >= 0));
   }
   
@@ -677,24 +685,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Crée un nouveau modèle côté données
-   * @param pageNumber le nombre de pages du modèle
-   */
-  @Override
-  public void onDocumentLoad(final int pageNumber) {
-    this.editionTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate();
-    this.editionTemplate.setExam(CoreFactory.eINSTANCE.createExam());
-    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, pageNumber, true);
-    for (final Integer i : _doubleDotLessThan) {
-      {
-        final Page page = CoreFactory.eINSTANCE.createPage();
-        this.editionTemplate.getExam().getPages().add(page);
-      }
-    }
-    this.questionId = 0;
-  }
-  
-  /**
    * Retourne la zone associée à une question
    * @param index Index de la question //FIXME (useless?)
    * @author degas
@@ -830,6 +820,24 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   @Override
   public Collection<StudentSheet> getStudentSheets() {
     return Collections.<StudentSheet>unmodifiableList(this.graduationTemplate.getStudentsheets());
+  }
+  
+  /**
+   * Crée et initialise un nouveau modèle d'Examen
+   * @param pageNumber le nombre de pages du modèle
+   */
+  @Override
+  public void initializeEdition(final int pageNumber) {
+    this.editionTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate();
+    this.editionTemplate.setExam(CoreFactory.eINSTANCE.createExam());
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, pageNumber, true);
+    for (final Integer i : _doubleDotLessThan) {
+      {
+        final Page page = CoreFactory.eINSTANCE.createPage();
+        this.editionTemplate.getExam().getPages().add(page);
+      }
+    }
+    this.questionId = 0;
   }
   
   @Pure

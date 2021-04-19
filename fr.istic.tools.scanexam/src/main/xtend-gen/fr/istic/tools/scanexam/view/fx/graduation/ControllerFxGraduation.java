@@ -8,7 +8,6 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.ExportExamToPdf;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
 import fr.istic.tools.scanexam.mailing.StudentDataManager;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
@@ -21,7 +20,6 @@ import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -55,9 +53,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtend.lib.annotations.Accessors;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -861,23 +857,6 @@ public class ControllerFxGraduation {
     float _globalScale = this.getGlobalScale();
     String _plus_3 = (_plus_2 + Float.valueOf(_globalScale));
     this.gradeLabel.setText(_plus_3);
-  }
-  
-  public boolean openCorrectionPdf(final File file) {
-    try {
-      final PDDocument document = PDDocument.load(file);
-      final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-      document.save(stream);
-      this.pdfManager.create(file);
-      this.service.onDocumentLoad(this.pdfManager.getPdfPageCount());
-      int _pageAmount = this.service.getPageAmount();
-      final PdfReaderWithoutQrCodeImpl pdfReader = new PdfReaderWithoutQrCodeImpl(document, _pageAmount, 3);
-      pdfReader.readPDf();
-      final Collection<StudentSheet> studentSheets = pdfReader.getCompleteStudentSheets();
-      return this.service.initializeCorrection(studentSheets);
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
   }
   
   public List<Integer> getEntryIds(final int questionId) {

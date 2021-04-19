@@ -5,12 +5,10 @@ import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.ExportExamToPdf
 import fr.istic.tools.scanexam.export.GradesExportImpl
 import fr.istic.tools.scanexam.mailing.StudentDataManager
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeImpl
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
 import fr.istic.tools.scanexam.view.fx.FxSettings
 import fr.istic.tools.scanexam.view.fx.PdfManager
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.util.Arrays
@@ -34,7 +32,6 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
-import org.apache.pdfbox.pdmodel.PDDocument
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
@@ -725,23 +722,6 @@ class ControllerFxGraduation {
 	 */
 	def void updateGlobalGrade() {
     	gradeLabel.text = translate("label.grade") + " " + globalGrade + "/" + globalScale
-	}
-	
-	
-	
-		
-	
-	def boolean openCorrectionPdf(File file)
-	{
-		val document = PDDocument.load(file);
-		val stream = new ByteArrayOutputStream();
-		document.save(stream);
-		pdfManager.create(file);
-		service.onDocumentLoad(pdfManager.getPdfPageCount)
-        val pdfReader = new PdfReaderWithoutQrCodeImpl(document, service.pageAmount,3);  
-        pdfReader.readPDf();
-        val studentSheets = pdfReader.completeStudentSheets
-		return service.initializeCorrection(studentSheets) 
 	}
 	
 		

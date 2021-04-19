@@ -30,7 +30,7 @@ import org.apache.logging.log4j.LogManager
  * Contrôleur pour l'UI de chargement d'une correction
  * @author Théo Giraudet
  */
-class ControllerGraduationLoader {
+class ControllerGraduationCreator {
 
 	/* Composant racine */
 	@FXML

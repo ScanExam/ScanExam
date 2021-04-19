@@ -95,7 +95,7 @@ public class StudentDataManager {
     if (_isEmpty) {
       _xifexpression = Optional.<List<String>>empty();
     } else {
-      _xifexpression = Optional.<List<String>>of(IterableExtensions.<String>toList(StudentDataManager.mapNomEtudiant.values()));
+      _xifexpression = Optional.<List<String>>of(IterableExtensions.<String>toList(StudentDataManager.mapNomEtudiant.keySet()));
     }
     return _xifexpression;
   }
