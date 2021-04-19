@@ -48,9 +48,6 @@ import org.eclipse.xtext.xbase.lib.Pure;
  */
 @SuppressWarnings("all")
 public class ServiceImpl implements ServiceGraduation, ServiceEdition {
-  @Accessors
-  private Exam exam = null;
-  
   /**
    * Index de la page courante du modèle d'exam
    */
@@ -117,24 +114,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     boolean _isPresent = correctionTemplate.isPresent();
     if (_isPresent) {
       this.correctionTemplate = correctionTemplate.get();
-      this.exam = correctionTemplate.get().getExam();
-      return true;
-    }
-    return false;
-  }
-  
-  /**
-   * Charge un fichier d'edition d'examen a partir du disque.
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
-   */
-  @Override
-  public boolean openCreationTemplate(final String xmiFile) {
-    final Optional<CreationTemplate> editionTemplate = TemplateIo.loadCreationTemplate(xmiFile);
-    boolean _isPresent = editionTemplate.isPresent();
-    if (_isPresent) {
-      this.creationTemplate = editionTemplate.get();
-      this.exam = editionTemplate.get().getExam();
       return true;
     }
     return false;
@@ -147,6 +126,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public boolean initializeCorrection(final Collection<StudentSheet> studentSheets) {
+    this.correctionTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate();
     try {
       for (final StudentSheet sheet : studentSheets) {
         for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
@@ -161,7 +141,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
           }
         }
       }
-      this.studentSheets = studentSheets;
+      this.correctionTemplate.getStudentsheets().addAll(studentSheets);
       return true;
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
@@ -226,7 +206,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void nextPage() {
-    int _length = ((Object[])Conversions.unwrapArray(this.exam.getPages(), Object.class)).length;
+    int _length = ((Object[])Conversions.unwrapArray(this.creationTemplate.getExam().getPages(), Object.class)).length;
     boolean _lessThan = ((this.pageIndex + 1) < _length);
     if (_lessThan) {
       this.pageIndex++;
@@ -280,7 +260,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void selectQuestion(final int id) {
-    EList<Page> _pages = this.exam.getPages();
+    EList<Page> _pages = this.creationTemplate.getExam().getPages();
     for (final Page page : _pages) {
       {
         final Function1<Question, Boolean> _function = (Question question) -> {
@@ -630,7 +610,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void removeQuestion(final int id) {
-    EList<Page> _pages = this.exam.getPages();
+    EList<Page> _pages = this.creationTemplate.getExam().getPages();
     for (final Page page : _pages) {
       EList<Question> _questions = page.getQuestions();
       for (final Question question : _questions) {
@@ -668,7 +648,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       String _string = new String(encoded);
       this.creationTemplate.setEncodedDocument(_string);
       outputStream.close();
-      this.creationTemplate.setExam(this.exam);
       TemplateIo.save(path, this.creationTemplate);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -686,7 +665,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     boolean _isPresent = creationTemplate.isPresent();
     if (_isPresent) {
       this.creationTemplate = creationTemplate.get();
-      this.exam = creationTemplate.get().getExam();
+      final Exam exam = creationTemplate.get().getExam();
       final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
       final Function<Page, Integer> _function = (Page page) -> {
         return Integer.valueOf(page.getQuestions().size());
@@ -694,7 +673,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       final BinaryOperator<Integer> _function_1 = (Integer acc, Integer num) -> {
         return Integer.valueOf(((acc).intValue() + (num).intValue()));
       };
-      Integer _get = this.exam.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
+      Integer _get = exam.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
       int _plus = ((_get).intValue() + 1);
       this.questionId = _plus;
       ByteArrayInputStream _byteArrayInputStream = new ByteArrayInputStream(decoded);
@@ -710,12 +689,12 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   @Override
   public void onDocumentLoad(final int pageNumber) {
     this.creationTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate();
-    this.exam = CoreFactory.eINSTANCE.createExam();
+    this.creationTemplate.setExam(CoreFactory.eINSTANCE.createExam());
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, pageNumber, true);
     for (final Integer i : _doubleDotLessThan) {
       {
         final Page page = CoreFactory.eINSTANCE.createPage();
-        this.exam.getPages().add(page);
+        this.creationTemplate.getExam().getPages().add(page);
       }
     }
     this.questionId = 0;
@@ -738,7 +717,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @author degas
    */
   protected Question getQuestion(final int pageId, final int questionid) {
-    return this.exam.getPages().get(pageId).getQuestions().get(questionid);
+    return this.creationTemplate.getExam().getPages().get(pageId).getQuestions().get(questionid);
   }
   
   /**
@@ -747,7 +726,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @author degas
    */
   protected Collection<Question> getQuestions(final int pageId) {
-    return Collections.<Question>unmodifiableCollection(this.exam.getPages().get(pageId).getQuestions());
+    return Collections.<Question>unmodifiableCollection(this.creationTemplate.getExam().getPages().get(pageId).getQuestions());
   }
   
   /**
@@ -766,7 +745,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       return q.getValue();
     };
     return Optional.<Pair<Integer, Question>>ofNullable(
-      IterableExtensions.<Pair<Integer, Question>>findFirst(IterableExtensions.<Question>indexed(IterableExtensions.<Page, Question>flatMap(this.exam.getPages(), _function)), _function_1)).<Question>map(_function_2);
+      IterableExtensions.<Pair<Integer, Question>>findFirst(IterableExtensions.<Question>indexed(IterableExtensions.<Page, Question>flatMap(this.creationTemplate.getExam().getPages(), _function)), _function_1)).<Question>map(_function_2);
   }
   
   /**
@@ -774,7 +753,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public int getTemplatePageAmount() {
-    return this.exam.getPages().size();
+    return this.creationTemplate.getExam().getPages().size();
   }
   
   /**
@@ -782,7 +761,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @return la Page dont l'ID est <i>pageId</i>
    */
   protected Page getPage(final int pageId) {
-    return this.exam.getPages().get(pageId);
+    return this.creationTemplate.getExam().getPages().get(pageId);
   }
   
   /**
@@ -790,7 +769,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public boolean hasExamLoaded() {
-    return (this.exam != null);
+    Exam _exam = this.creationTemplate.getExam();
+    return (_exam != null);
   }
   
   /**
@@ -799,7 +779,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void setExamName(final String name) {
-    this.exam.setName(name);
+    Exam _exam = this.creationTemplate.getExam();
+    _exam.setName(name);
   }
   
   /**
@@ -816,7 +797,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @return la Question du modèle correspondant à l'ID spécifié
    */
   protected Question getQuestion(final int id) {
-    EList<Page> _pages = this.exam.getPages();
+    EList<Page> _pages = this.creationTemplate.getExam().getPages();
     for (final Page page : _pages) {
       {
         final Function1<Question, Boolean> _function = (Question question) -> {
@@ -838,7 +819,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public int getExamId() {
-    return this.exam.getId();
+    return this.creationTemplate.getExam().getId();
   }
   
   /**
@@ -847,16 +828,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public String getExamName() {
-    return this.exam.getName();
-  }
-  
-  @Pure
-  public Exam getExam() {
-    return this.exam;
-  }
-  
-  public void setExam(final Exam exam) {
-    this.exam = exam;
+    return this.creationTemplate.getExam().getName();
   }
   
   @Pure

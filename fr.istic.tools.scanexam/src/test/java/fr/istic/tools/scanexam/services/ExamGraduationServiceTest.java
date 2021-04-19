@@ -5,15 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import fr.istic.tools.scanexam.core.templates.CreationTemplate;
-import fr.istic.tools.scanexam.io.TemplateIo;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 
@@ -36,8 +33,8 @@ public class ExamGraduationServiceTest
 		controller = new ControllerFxGraduation();
 		controller.init(service);
 		
-		Optional<CreationTemplate> editionTemplate = TemplateIo.loadCreationTemplate(XMI_PATH);
-		service.setExam(editionTemplate.get().getExam());
+		//Optional<CreationTemplate> editionTemplate = TemplateIo.loadCreationTemplate(XMI_PATH);
+		//service.setExam(editionTemplate.get().getExam());
 	}
 	
 

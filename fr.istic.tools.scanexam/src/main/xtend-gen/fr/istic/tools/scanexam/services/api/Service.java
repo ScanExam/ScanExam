@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.services.api;
 
-import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Question;
 import java.util.List;
 
@@ -49,9 +48,4 @@ public interface Service {
    * @param pageNumber le nombre de pages du modèle
    */
   void onDocumentLoad(final int pageNumber);
-  
-  /**
-   * @param exam un nouvel examen
-   */
-  void setExam(final Exam exam);
 }

@@ -7,7 +7,6 @@ import fr.istic.tools.scanexam.core.StudentSheet
 class CorrectionTemplate 
 {
 	 String encodedDocument
-	 contains Exam exam
 	 String studentListPath
 	 String studentListShift = "A1"
 	 contains StudentSheet[] studentsheets

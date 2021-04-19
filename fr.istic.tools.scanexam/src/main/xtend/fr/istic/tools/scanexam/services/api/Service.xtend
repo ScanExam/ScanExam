@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.services.api
 
-import fr.istic.tools.scanexam.core.Exam
 import fr.istic.tools.scanexam.core.Question
 import java.util.List
 
@@ -51,8 +50,4 @@ interface Service {
 	 */
 	def void onDocumentLoad(int pageNumber)
 	
-	/**
-	 * @param exam un nouvel examen
-	 */
-	def void setExam(Exam exam)
 }

@@ -2,7 +2,6 @@
  */
 package fr.istic.tools.scanexam.core.templates.impl;
 
-import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.StudentSheet;
 
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
@@ -33,7 +32,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getExam <em>Exam</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentListPath <em>Student List Path</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentListShift <em>Student List Shift</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentsheets <em>Studentsheets</em>}</li>
@@ -61,16 +59,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getExam() <em>Exam</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExam()
-	 * @generated
-	 * @ordered
-	 */
-	protected Exam exam;
 
 	/**
 	 * The default value of the '{@link #getStudentListPath() <em>Student List Path</em>}' attribute.
@@ -167,49 +155,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Exam getExam() {
-		return exam;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetExam(Exam newExam, NotificationChain msgs) {
-		Exam oldExam = exam;
-		exam = newExam;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__EXAM, oldExam, newExam);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setExam(Exam newExam) {
-		if (newExam != exam) {
-			NotificationChain msgs = null;
-			if (exam != null)
-				msgs = ((InternalEObject)exam).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TemplatesPackage.CORRECTION_TEMPLATE__EXAM, null, msgs);
-			if (newExam != null)
-				msgs = ((InternalEObject)newExam).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TemplatesPackage.CORRECTION_TEMPLATE__EXAM, null, msgs);
-			msgs = basicSetExam(newExam, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__EXAM, newExam, newExam));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getStudentListPath() {
 		return studentListPath;
 	}
@@ -267,8 +212,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
-				return basicSetExam(null, msgs);
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return ((InternalEList<?>)getStudentsheets()).basicRemove(otherEnd, msgs);
 		}
@@ -285,8 +228,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		switch (featureID) {
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return getEncodedDocument();
-			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
-				return getExam();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
 				return getStudentListPath();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
@@ -308,9 +249,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		switch (featureID) {
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument((String)newValue);
-				return;
-			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
-				setExam((Exam)newValue);
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
 				setStudentListPath((String)newValue);
@@ -337,9 +275,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
-			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
-				setExam((Exam)null);
-				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
 				setStudentListPath(STUDENT_LIST_PATH_EDEFAULT);
 				return;
@@ -363,8 +298,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		switch (featureID) {
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
-			case TemplatesPackage.CORRECTION_TEMPLATE__EXAM:
-				return exam != null;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
 				return STUDENT_LIST_PATH_EDEFAULT == null ? studentListPath != null : !STUDENT_LIST_PATH_EDEFAULT.equals(studentListPath);
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:

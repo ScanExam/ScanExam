@@ -25,18 +25,13 @@ interface ServiceGraduation extends Service {
 	def boolean openCorrectionTemplate(String xmiFile)
 
 	/**
-	 * Charge un fichier d'edition d'examen a partir du disque.
-	 * @params path L'emplacement du fichier.
-	 * @returns "true" si le fichier a bien été chargé, "false"
-	 */
-	def boolean openCreationTemplate(String xmiFile)
-	
-	/**
 	 * Charge le document PDF des copies manuscrites,  corrigés
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
 	def boolean initializeCorrection(Collection<StudentSheet> studentSheets)
+	
+	
 	
 	def int getAbsolutePageNumber(int studentId, int offset)
 	

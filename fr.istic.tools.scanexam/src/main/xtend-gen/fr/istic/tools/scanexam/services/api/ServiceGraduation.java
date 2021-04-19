@@ -25,13 +25,6 @@ public interface ServiceGraduation extends Service {
   boolean openCorrectionTemplate(final String xmiFile);
   
   /**
-   * Charge un fichier d'edition d'examen a partir du disque.
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
-   */
-  boolean openCreationTemplate(final String xmiFile);
-  
-  /**
    * Charge le document PDF des copies manuscrites,  corrigés
    * @params path L'emplacement du fichier.
    * @returns "true" si le fichier a bien été chargé, "false"
