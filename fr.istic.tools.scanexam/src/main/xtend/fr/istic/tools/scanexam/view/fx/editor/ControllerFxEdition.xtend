@@ -583,7 +583,6 @@ class ControllerFxEdition {
 		if (file !== null) {
 			
 			loadTemplate(file)
-			render();
 			
 		} else {
 			logger.warn("File not chosen")
@@ -601,7 +600,6 @@ class ControllerFxEdition {
 			DialogMessageSender.sendDialog(AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null)
 		else {
 			render()
-			load(file.path);
 		}
 		success
 	}

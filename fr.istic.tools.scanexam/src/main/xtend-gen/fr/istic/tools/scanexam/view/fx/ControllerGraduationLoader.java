@@ -180,7 +180,6 @@ public class ControllerGraduationLoader {
                 this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
               }
             }
-            reader.readPDf();
             return null;
           }
         };
@@ -262,7 +261,7 @@ public class ControllerGraduationLoader {
   
   @FXML
   public void saveAndQuit() {
-    if ((this.txtFldFile.isDisable() || this.controllerEdition.loadTemplate(new File(this.txtFldFile.getText())))) {
+    if ((this.rbUseLoaded.isSelected() || this.controllerEdition.loadTemplate(new File(this.txtFldFile.getText())))) {
       boolean _loadStudentSheets = this.loadStudentSheets();
       boolean _not = (!_loadStudentSheets);
       if (_not) {
@@ -276,12 +275,8 @@ public class ControllerGraduationLoader {
    * @param reader le PdfReader s'étant occupé du chargement des copies
    * @param file le PDF
    */
-  public boolean onFinish(final PdfReader reader, final File file) {
-    boolean _xblockexpression = false;
-    {
-      this.controllerGraduation.getPdfManager().create(this.txtFldGraduationName.getText(), file);
-      _xblockexpression = this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
-    }
-    return _xblockexpression;
+  public void onFinish(final PdfReader reader, final File file) {
+    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
+    this.controllerGraduation.load();
   }
 }

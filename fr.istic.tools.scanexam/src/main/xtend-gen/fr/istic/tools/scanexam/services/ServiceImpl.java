@@ -556,8 +556,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     return this.correctionTemplate.getStudentListShift();
   }
   
-  private CreationTemplate template;
-  
   @Accessors
   private int questionId;
   
@@ -668,10 +666,10 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     try {
       final byte[] encoded = Base64.getEncoder().encode(outputStream.toByteArray());
       String _string = new String(encoded);
-      this.template.setEncodedDocument(_string);
+      this.creationTemplate.setEncodedDocument(_string);
       outputStream.close();
-      this.template.setExam(this.exam);
-      TemplateIo.save(path, this.template);
+      this.creationTemplate.setExam(this.exam);
+      TemplateIo.save(path, this.creationTemplate);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -687,7 +685,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     final Optional<CreationTemplate> creationTemplate = TemplateIo.loadCreationTemplate(xmiPath);
     boolean _isPresent = creationTemplate.isPresent();
     if (_isPresent) {
-      this.template = creationTemplate.get();
+      this.creationTemplate = creationTemplate.get();
       this.exam = creationTemplate.get().getExam();
       final byte[] decoded = Base64.getDecoder().decode(creationTemplate.get().getEncodedDocument());
       final Function<Page, Integer> _function = (Page page) -> {
@@ -711,7 +709,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void onDocumentLoad(final int pageNumber) {
-    this.template = TemplatesFactory.eINSTANCE.createCreationTemplate();
+    this.creationTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate();
     this.exam = CoreFactory.eINSTANCE.createExam();
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, pageNumber, true);
     for (final Integer i : _doubleDotLessThan) {

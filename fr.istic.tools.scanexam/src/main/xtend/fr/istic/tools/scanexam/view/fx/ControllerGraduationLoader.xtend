@@ -144,7 +144,6 @@ class ControllerGraduationLoader {
 					updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), reader.nbPagesTreated, reader.nbPagesPdf))
 				
 				}
-				reader.readPDf
 				return null
 			}
 		}
@@ -200,7 +199,7 @@ class ControllerGraduationLoader {
 
 	@FXML
 	def saveAndQuit() {
-		if(txtFldFile.isDisable || controllerEdition.loadTemplate(new File(txtFldFile.text))) {
+		if(rbUseLoaded.selected || controllerEdition.loadTemplate(new File(txtFldFile.text))) {
 			if(!loadStudentSheets)
 				DialogMessageSender.sendDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)
 		}
@@ -212,7 +211,7 @@ class ControllerGraduationLoader {
 	 * @param file le PDF
 	 */
 	def onFinish(PdfReader reader, File file) {
-		controllerGraduation.pdfManager.create(txtFldGraduationName.text, file);
 		serviceGraduation.initializeCorrection(reader.completeStudentSheets)
+		controllerGraduation.load
 	}
 }

@@ -485,8 +485,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	
-	CreationTemplate template;
-
 	@Accessors int questionId;
 
 	/**
@@ -573,12 +571,12 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override save(ByteArrayOutputStream outputStream, File path) {
 		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
-		template.encodedDocument = new String(encoded);
+		creationTemplate.encodedDocument = new String(encoded);
 		outputStream.close();
 
-		template.exam = exam
+		creationTemplate.exam = exam
 
-		TemplateIo.save(path, template);
+		TemplateIo.save(path, creationTemplate);
 	}
 
 	/**
@@ -590,7 +588,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		val creationTemplate = TemplateIo.loadCreationTemplate(xmiPath)
 
 		if (creationTemplate.present) {
-			this.template = creationTemplate.get()
+			this.creationTemplate = creationTemplate.get()
 			exam = creationTemplate.get().exam
 			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
 
@@ -605,7 +603,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param pageNumber le nombre de pages du modèle
 	 */
 	override void onDocumentLoad(int pageNumber) {
-		template = TemplatesFactory.eINSTANCE.createCreationTemplate
+		creationTemplate = TemplatesFactory.eINSTANCE.createCreationTemplate
 
 		exam = CoreFactory.eINSTANCE.createExam()
 

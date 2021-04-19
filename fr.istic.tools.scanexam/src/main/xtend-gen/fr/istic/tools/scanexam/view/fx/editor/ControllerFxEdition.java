@@ -703,12 +703,7 @@ public class ControllerFxEdition {
       File file = fileChooser.showOpenDialog(this.mainPane.getScene().getWindow());
       boolean _xifexpression = false;
       if ((file != null)) {
-        boolean _xblockexpression_1 = false;
-        {
-          this.loadTemplate(file);
-          _xblockexpression_1 = this.render();
-        }
-        _xifexpression = _xblockexpression_1;
+        _xifexpression = this.loadTemplate(file);
       } else {
         this.logger.warn("File not chosen");
       }
@@ -730,7 +725,6 @@ public class ControllerFxEdition {
         DialogMessageSender.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
       } else {
         this.render();
-        this.load(file.getPath());
       }
       _xblockexpression = success;
     }
