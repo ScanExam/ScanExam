@@ -74,10 +74,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		val encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
 		graduationTemplate.encodedDocument = new String(encoded);
 		pdfOutputStream.close();
-
-		graduationTemplate.studentsheets.clear()
-		graduationTemplate.studentsheets.addAll(studentSheets);
-		
 		TemplateIo.save(new File(path), graduationTemplate);
 	}
 	

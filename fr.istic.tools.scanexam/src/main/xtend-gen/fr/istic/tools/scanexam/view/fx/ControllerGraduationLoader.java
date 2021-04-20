@@ -192,8 +192,8 @@ public class ControllerGraduationLoader {
   
   @FXML
   public void valid() {
-    if (((!this.rbUseLoaded.isSelected()) || this.controllerEdition.loadTemplate(new File(this.txtFldFile.getText())))) {
-      String _text = this.txtFldFile.getText();
+    if ((this.rbUseLoaded.isSelected() || this.controllerEdition.loadTemplate(new File(this.txtFldFile.getText())))) {
+      String _text = this.txtFldFileGraduation.getText();
       File _file = new File(_text);
       boolean _load = this.controllerGraduation.load(_file);
       boolean _not = (!_load);
