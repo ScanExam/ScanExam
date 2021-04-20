@@ -52,7 +52,16 @@ public interface ServiceGraduation extends Service {
    */
   void assignStudentId(final String id);
   
+  /**
+   * @return la liste non modifiable de tous les StudentSheets
+   */
   Collection<StudentSheet> getStudentSheets();
+  
+  /**
+   * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
+   * @param id un ID de copie d'étudiant
+   */
+  void selectSheet(final int id);
   
   /**
    * Défini la page suivant la page actuelle comme nouvelle page courante

@@ -164,6 +164,22 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		studentSheets.get(currentSheetIndex).studentName = id
 	}
 	
+	/**
+	 * @return la liste non modifiable de tous les StudentSheets
+	 */
+	override getStudentSheets() {
+		return Collections.unmodifiableList(graduationTemplate.studentsheets)
+	}
+	
+	/**
+	 * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
+	 * @param id un ID de copie d'étudiant
+	 */
+	override void selectSheet(int id) {
+		if(id > 0 && id < studentSheets.size)
+			currentSheetIndex = id	
+	}
+	
 	//===================================================
 	//          			 Page
 	//===================================================
@@ -676,13 +692,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override String getExamName() {
 		return editionTemplate.exam.name;
-	}
-	
-	/**
-	 * @return la liste non modifiable de tous les StudentSheets
-	 */
-	override getStudentSheets() {
-		return Collections.unmodifiableList(graduationTemplate.studentsheets)
 	}
 	
 	/**
