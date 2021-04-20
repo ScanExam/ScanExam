@@ -196,6 +196,25 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
+   * @return la liste non modifiable de tous les StudentSheets
+   */
+  @Override
+  public Collection<StudentSheet> getStudentSheets() {
+    return Collections.<StudentSheet>unmodifiableList(this.graduationTemplate.getStudentsheets());
+  }
+  
+  /**
+   * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
+   * @param id un ID de copie d'étudiant
+   */
+  @Override
+  public void selectSheet(final int id) {
+    if (((id > 0) && (id < this.getStudentSheets().size()))) {
+      this.currentSheetIndex = id;
+    }
+  }
+  
+  /**
    * @return l'index de la page courante du modèle d'exam
    */
   private Page getCurrentPage() {
@@ -815,14 +834,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   @Override
   public String getExamName() {
     return this.editionTemplate.getExam().getName();
-  }
-  
-  /**
-   * @return la liste non modifiable de tous les StudentSheets
-   */
-  @Override
-  public Collection<StudentSheet> getStudentSheets() {
-    return Collections.<StudentSheet>unmodifiableList(this.graduationTemplate.getStudentsheets());
   }
   
   /**
