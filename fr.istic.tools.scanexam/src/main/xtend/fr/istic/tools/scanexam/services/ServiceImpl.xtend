@@ -161,6 +161,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param id le nouvel identifiant d'étudiant
 	 */
 	override assignStudentId(String id) {
+		logger.info("Renaming student :" + currentSheetIndex + "with name :" + id)
 		studentSheets.get(currentSheetIndex).studentName = id
 	}
 	

@@ -35,6 +35,7 @@ import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
+import javafx.scene.control.ToggleButton
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -110,6 +111,8 @@ class ControllerFxGraduation {
 	public Button nextQuestionButton;
 	@FXML
 	public Button prevQuestionButton;
+	@FXML
+	public ToggleButton annotationModeButton;
 	
 	var ServiceGraduation service
 	
@@ -194,6 +197,8 @@ class ControllerFxGraduation {
 		chooseMouseAction(e);
 	}
 	
+	
+	
 	//--- LOCAL VARIABLES ---//
 	
 	enum SelectedTool {
@@ -232,11 +237,13 @@ class ControllerFxGraduation {
 		}
 		switch currentTool {
 			case NO_TOOL: {
+				return;
 			}
 			case MOVE_CAMERA_TOOL: {
 				moveImage(e)
 			}
 			case CREATE_ANOTATION_TOOL: {
+				createNewAnotation(e)
 			}
 		}
 	}
@@ -345,6 +352,7 @@ class ControllerFxGraduation {
 		unLoaded();
 		
 		loadedModel.addListener([obs,oldVal,newVal | newVal ? loaded() : unLoaded()])
+		annotationModeButton.selectedProperty.addListener([obs,oldVal,newVal | newVal ? enterAnotationMode : leaveAnotationMode])
 		
 		nextQuestionButton.disableProperty.bind(loadedModel.not)
 		prevQuestionButton.disableProperty.bind(loadedModel.not)
@@ -517,9 +525,6 @@ class ControllerFxGraduation {
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
 			studentList.addItem(student)
-			if (currentStudentId == i) {
-					selectStudent(student)
-				}
 		}
 	}
 	
@@ -543,7 +548,8 @@ class ControllerFxGraduation {
 								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
 		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
 							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
-		mainPane.addNewAnotation(mousePositionX,mousePositionY);
+		if (e.eventType == MouseEvent.MOUSE_PRESSED)
+			mainPane.addNewAnotation(mousePositionX,mousePositionY);
 	
 	}
 	
@@ -574,8 +580,8 @@ class ControllerFxGraduation {
 	
 	def leaveAnotationMode(){
 		hideAnotations
-		mainPane.zoomTo(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
-		SelectedTool.NO_TOOL
+		mainPane.zoomTo(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.h,questionList.currentItem.w)
+		currentTool = SelectedTool.NO_TOOL
 	}
 	
 	//-----------------//
@@ -590,11 +596,12 @@ class ControllerFxGraduation {
 	}
 	def void previousStudent(){
 		studentList.selectPreviousItem
-		 service.previousSheet
+		service.previousSheet
 		setSelectedStudent();
 	}
 	def void selectStudent(StudentItemGraduation item){
 		studentList.selectItem(item);
+		service.selectSheet(studentList.currentItem.studentId)
 		setSelectedStudent();
 	}
 

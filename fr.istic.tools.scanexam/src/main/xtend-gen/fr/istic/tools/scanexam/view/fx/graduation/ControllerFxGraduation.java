@@ -44,6 +44,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -165,6 +166,9 @@ public class ControllerFxGraduation {
   
   @FXML
   public Button prevQuestionButton;
+  
+  @FXML
+  public ToggleButton annotationModeButton;
   
   private ServiceGraduation service;
   
@@ -288,11 +292,12 @@ public class ControllerFxGraduation {
     if (currentTool != null) {
       switch (currentTool) {
         case NO_TOOL:
-          break;
+          return;
         case MOVE_CAMERA_TOOL:
           this.moveImage(e);
           break;
         case CREATE_ANOTATION_TOOL:
+          this.createNewAnotation(e);
           break;
         default:
           break;
@@ -428,6 +433,14 @@ public class ControllerFxGraduation {
       }
     };
     this.loadedModel.addListener(_function);
+    final ChangeListener<Boolean> _function_1 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      if ((newVal).booleanValue()) {
+        this.enterAnotationMode();
+      } else {
+        this.leaveAnotationMode();
+      }
+    };
+    this.annotationModeButton.selectedProperty().addListener(_function_1);
     this.nextQuestionButton.disableProperty().bind(this.loadedModel.not());
     this.prevQuestionButton.disableProperty().bind(this.loadedModel.not());
     this.prevStudentButton.disableProperty().bind(this.loadedModel.not());
@@ -652,9 +665,6 @@ public class ControllerFxGraduation {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
         this.studentList.addItem(student);
-        if ((currentStudentId == i)) {
-          this.selectStudent(student);
-        }
       }
     }
   }
@@ -675,7 +685,13 @@ public class ControllerFxGraduation {
       double _minus_1 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
       double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
         Math.min(_y, _minus_1));
-      _xblockexpression = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
+      boolean _xifexpression = false;
+      EventType<? extends MouseEvent> _eventType = e.getEventType();
+      boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
+      if (_equals) {
+        _xifexpression = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
+      }
+      _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
   }
@@ -712,8 +728,8 @@ public class ControllerFxGraduation {
     ControllerFxGraduation.SelectedTool _xblockexpression = null;
     {
       this.hideAnotations();
-      this.mainPane.zoomTo(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getW(), this.questionList.getCurrentItem().getH());
-      _xblockexpression = ControllerFxGraduation.SelectedTool.NO_TOOL;
+      this.mainPane.zoomTo(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), this.questionList.getCurrentItem().getW());
+      _xblockexpression = this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
     }
     return _xblockexpression;
   }
@@ -732,6 +748,7 @@ public class ControllerFxGraduation {
   
   public void selectStudent(final StudentItemGraduation item) {
     this.studentList.selectItem(item);
+    this.service.selectSheet(this.studentList.getCurrentItem().getStudentId());
     this.setSelectedStudent();
   }
   

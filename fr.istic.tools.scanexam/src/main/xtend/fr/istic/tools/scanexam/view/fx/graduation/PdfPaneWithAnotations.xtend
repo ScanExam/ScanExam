@@ -48,15 +48,17 @@ class PdfPaneWithAnotations extends Pane {
 	}
 	
 	def addNewAnotation(double x, double y){
-		this.children.add(new TextAnotation(x,y,50,50,"New Anotation"))
+		var anot = new TextAnotation(x,y,50,50,"New Anotation")
+		this.children.addAll(anot.allParts)
 	}
 	
 	def addAnotation(double x, double y, double height, double width, String text) {
-		this.children.add(new TextAnotation(x,y,height,width,text))
+		var anot = new TextAnotation(x,y,height,width,text)
+		this.children.addAll(anot.allParts)
 	}
 	
 	def removeAnotation(TextAnotation anotation){
-		children.remove(anotation)
+		children.remove(anotation.allParts)
 	}
 	
 	def removeAllAnotations(){

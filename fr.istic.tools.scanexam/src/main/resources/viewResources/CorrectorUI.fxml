@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,7 +20,7 @@
 		<ToolBar>
 			<items>
 				<Button mnemonicParsing="false" onAction="#resetPosition" text="%button.unzoom" />
-				<Button mnemonicParsing="false" text="%button.annotation" />
+            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="ToggleButton" />
 			</items>
 			<VBox.margin>
 				<Insets />

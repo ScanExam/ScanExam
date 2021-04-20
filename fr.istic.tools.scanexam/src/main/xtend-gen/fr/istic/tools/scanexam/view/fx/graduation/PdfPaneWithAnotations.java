@@ -2,10 +2,8 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -73,19 +71,25 @@ public class PdfPaneWithAnotations extends Pane {
   }
   
   public boolean addNewAnotation(final double x, final double y) {
-    ObservableList<Node> _children = this.getChildren();
-    TextAnotation _textAnotation = new TextAnotation(x, y, 50, 50, "New Anotation");
-    return _children.add(_textAnotation);
+    boolean _xblockexpression = false;
+    {
+      TextAnotation anot = new TextAnotation(x, y, 50, 50, "New Anotation");
+      _xblockexpression = this.getChildren().addAll(anot.getAllParts());
+    }
+    return _xblockexpression;
   }
   
   public boolean addAnotation(final double x, final double y, final double height, final double width, final String text) {
-    ObservableList<Node> _children = this.getChildren();
-    TextAnotation _textAnotation = new TextAnotation(x, y, height, width, text);
-    return _children.add(_textAnotation);
+    boolean _xblockexpression = false;
+    {
+      TextAnotation anot = new TextAnotation(x, y, height, width, text);
+      _xblockexpression = this.getChildren().addAll(anot.getAllParts());
+    }
+    return _xblockexpression;
   }
   
   public boolean removeAnotation(final TextAnotation anotation) {
-    return this.getChildren().remove(anotation);
+    return this.getChildren().remove(anotation.getAllParts());
   }
   
   public boolean removeAllAnotations() {

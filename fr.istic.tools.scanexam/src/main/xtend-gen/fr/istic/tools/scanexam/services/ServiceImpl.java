@@ -191,6 +191,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void assignStudentId(final String id) {
+    ServiceImpl.logger.info(((("Renaming student :" + Integer.valueOf(this.currentSheetIndex)) + "with name :") + id));
     StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
     _get.setStudentName(id);
   }
@@ -855,7 +856,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Pure
-  @Override
   public int getQuestionId() {
     return this.questionId;
   }

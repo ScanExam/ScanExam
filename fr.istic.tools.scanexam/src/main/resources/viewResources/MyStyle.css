@@ -189,3 +189,10 @@
 	-fx-background-color: blue;
 	
 }
+
+
+/* ANNOTATIONS */
+
+.textAnnotation {
+	-fx-font-size: 5px;
+}
