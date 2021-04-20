@@ -524,6 +524,8 @@ class ControllerFxGraduation {
 		
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
+			student.studentName = service.getStudentName(i);
+	
 			studentList.addItem(student)
 		}
 	}

@@ -169,11 +169,23 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 	
 	/**
+	 * @return le nom de l'etudiant avec ID
+	 */
+	 override getStudentName(int id){
+	 	for (StudentSheet sheet : studentSheets) {
+			if (sheet.id === id ) {
+				return sheet.studentName;
+			}
+		}
+		return "Not Found Student";
+	 }
+	
+	/**
 	 * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
 	 * @param id un ID de copie d'étudiant
 	 */
 	override void selectSheet(int id) {
-		if(id > 0 && id < studentSheets.size)
+		if(id >= 0 && id < studentSheets.size)
 			currentSheetIndex = id	
 	}
 	

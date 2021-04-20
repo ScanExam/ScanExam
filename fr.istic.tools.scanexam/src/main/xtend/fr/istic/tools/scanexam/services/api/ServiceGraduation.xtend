@@ -59,6 +59,11 @@ interface ServiceGraduation extends Service {
 	def void assignStudentId(String id)
 	
 	/**
+	 * @return le nom de l'etudiant avec ID
+	 */
+	def String getStudentName(int id)
+	
+	/**
 	 * @return la liste non modifiable de tous les StudentSheets
 	 */
 	def Collection<StudentSheet> getStudentSheets()

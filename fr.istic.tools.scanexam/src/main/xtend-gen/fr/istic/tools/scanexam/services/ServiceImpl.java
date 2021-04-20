@@ -203,12 +203,28 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
+   * @return le nom de l'etudiant avec ID
+   */
+  @Override
+  public String getStudentName(final int id) {
+    Collection<StudentSheet> _studentSheets = this.getStudentSheets();
+    for (final StudentSheet sheet : _studentSheets) {
+      int _id = sheet.getId();
+      boolean _tripleEquals = (_id == id);
+      if (_tripleEquals) {
+        return sheet.getStudentName();
+      }
+    }
+    return "Not Found Student";
+  }
+  
+  /**
    * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
    * @param id un ID de copie d'étudiant
    */
   @Override
   public void selectSheet(final int id) {
-    if (((id > 0) && (id < this.getStudentSheets().size()))) {
+    if (((id >= 0) && (id < this.getStudentSheets().size()))) {
       this.currentSheetIndex = id;
     }
   }

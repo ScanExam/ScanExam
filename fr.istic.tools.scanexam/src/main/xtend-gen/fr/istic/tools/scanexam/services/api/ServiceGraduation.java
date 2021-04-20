@@ -53,6 +53,11 @@ public interface ServiceGraduation extends Service {
   void assignStudentId(final String id);
   
   /**
+   * @return le nom de l'etudiant avec ID
+   */
+  String getStudentName(final int id);
+  
+  /**
    * @return la liste non modifiable de tous les StudentSheets
    */
   Collection<StudentSheet> getStudentSheets();

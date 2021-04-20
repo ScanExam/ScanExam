@@ -664,6 +664,7 @@ public class ControllerFxGraduation {
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
+        student.setStudentName(this.service.getStudentName(i));
         this.studentList.addItem(student);
       }
     }
