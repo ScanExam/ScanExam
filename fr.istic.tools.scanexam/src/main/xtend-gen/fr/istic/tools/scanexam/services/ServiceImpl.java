@@ -93,8 +93,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       String _string = new String(encoded);
       this.graduationTemplate.setEncodedDocument(_string);
       pdfOutputStream.close();
-      this.graduationTemplate.getStudentsheets().clear();
-      this.graduationTemplate.getStudentsheets().addAll(this.getStudentSheets());
       File _file = new File(path);
       TemplateIo.save(_file, this.graduationTemplate);
     } catch (Throwable _e) {
