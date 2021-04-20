@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtend.lib.annotations.Accessors;
@@ -35,19 +34,9 @@ public class PdfManager {
   private int pdfPageIndex;
   
   /**
-   * Largeur de la fenêtre
+   * outputStream du pdf
    */
-  protected int width;
-  
-  /**
-   * Hauteur de la fenêtre
-   */
-  protected int height;
-  
-  /**
-   * InputStream du pdf
-   */
-  protected ByteArrayOutputStream pdfOutput;
+  private ByteArrayOutputStream pdfOutput;
   
   /**
    * Change la page courante par la page du numéro envoyé en paramètre (ne change rien si la page n'existe pas)
@@ -66,7 +55,7 @@ public class PdfManager {
    * @return Page courante
    */
   public BufferedImage getCurrentPdfPage() {
-    return this.pageToImage(this.document.getPages().get(this.pdfPageIndex));
+    return this.pageToImage();
   }
   
   /**
@@ -106,7 +95,7 @@ public class PdfManager {
    * @param page PDPage à convertir
    * @return Image convertie
    */
-  public BufferedImage pageToImage(final PDPage page) {
+  private BufferedImage pageToImage() {
     try {
       BufferedImage _xblockexpression = null;
       {
@@ -201,14 +190,6 @@ public class PdfManager {
   public ByteArrayInputStream getPdfInputStream() {
     byte[] _byteArray = this.pdfOutput.toByteArray();
     return new ByteArrayInputStream(_byteArray);
-  }
-  
-  /**
-   * Renvoie le document
-   * @return Document
-   */
-  public PDDocument getPdfDocument() {
-    return this.document;
   }
   
   @Pure

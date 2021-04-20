@@ -157,6 +157,9 @@ class ControllerGraduationLoader {
 		stage.close();
 	}
 
+	/**
+	 * Valide le formulaire en important les XMI. Affiche un message d'erreur si l'un des XMI n'a pa pu être importé correctement  
+	 */
 	@FXML
 	def valid() {
 		if(rbUseLoaded.selected || controllerEdition.loadTemplate(new File(txtFldFile.text))) {

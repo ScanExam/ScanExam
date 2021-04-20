@@ -75,6 +75,11 @@ public class ControllerFxEdition {
   
   private boolean pdfLoaded = false;
   
+  /**
+   * Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings
+   */
+  private boolean renderFlag = true;
+  
   @Accessors
   private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
   
@@ -239,8 +244,10 @@ public class ControllerFxEdition {
     this.gradeListContainer.setContent(this.questionEditor);
     final EventHandler<ActionEvent> _function = (ActionEvent event) -> {
       int selectedIndex = this.pageChoice.getSelectionModel().getSelectedIndex();
-      this.selectPage(selectedIndex);
-      this.renderDocument();
+      if ((!this.renderFlag)) {
+        this.selectPage(selectedIndex);
+      }
+      this.renderFlag = false;
     };
     this.pageChoice.setOnAction(_function);
     this.nextPageButton.disableProperty().bind(this.loadedModel.not());
@@ -710,6 +717,7 @@ public class ControllerFxEdition {
     boolean _xblockexpression = false;
     {
       this.clearVue();
+      this.initPageSelection();
       this.renderDocument();
       this.loadBoxes();
       _xblockexpression = this.postLoad();
@@ -772,7 +780,6 @@ public class ControllerFxEdition {
    * feches the current buffered image in the presenter representing the pdf and converts it and loads into the imageview
    */
   public void renderDocument() {
-    this.initPageSelection();
     final BufferedImage image = this.pdfManager.getCurrentPdfPage();
     this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.maxX = this.mainPane.getImageViewWidth();
@@ -785,6 +792,7 @@ public class ControllerFxEdition {
     int _pdfPageCount = this.pdfManager.getPdfPageCount();
     String _plus_3 = (_plus_2 + Integer.valueOf(_pdfPageCount));
     this.pageNumberLabel.setText(_plus_3);
+    this.renderFlag = true;
     int _currentPdfPageNumber_1 = this.pdfManager.currentPdfPageNumber();
     int _plus_4 = (_currentPdfPageNumber_1 + 1);
     this.pageChoice.setValue(Integer.valueOf(_plus_4));
@@ -803,6 +811,7 @@ public class ControllerFxEdition {
    * goes to the next page of the current pdf
    */
   public void nextPage() {
+    InputOutput.<String>println("Next page");
     this.pdfManager.nextPdfPage();
     this.renderDocument();
     this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
