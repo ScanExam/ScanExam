@@ -675,7 +675,6 @@ class ControllerFxEdition {
 	 * goes to the next page of the current pdf
 	 */
 	def nextPage() {
-		println("Next page")
 		pdfManager.nextPdfPage();
 		renderDocument
 		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)

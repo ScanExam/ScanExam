@@ -811,7 +811,6 @@ public class ControllerFxEdition {
    * goes to the next page of the current pdf
    */
   public void nextPage() {
-    InputOutput.<String>println("Next page");
     this.pdfManager.nextPdfPage();
     this.renderDocument();
     this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
