@@ -195,4 +195,11 @@
 
 .textAnnotation {
 	-fx-font-size: 5px;
+	-fx-background-insets: 0px;
+	-fx-border-radius: 0px;
+}
+.annotationBox {
+	-fx-border-color: black;
+	-fx-border-width: 1px;
+	-fx-background-color: lightgrey;
 }

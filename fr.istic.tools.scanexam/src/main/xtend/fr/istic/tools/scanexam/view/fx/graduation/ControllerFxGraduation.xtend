@@ -659,7 +659,8 @@ class ControllerFxGraduation {
 	
 	//---DISPLAYING---//
 	
-	def void renderStudentCopy(){		
+	def void renderStudentCopy(){
+		logger.info("Call to RenderStudentCopy")
 		var image = pdfManager.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		imageWidth = image.width
