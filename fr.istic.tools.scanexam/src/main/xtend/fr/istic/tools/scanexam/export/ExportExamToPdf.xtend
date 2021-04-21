@@ -233,11 +233,12 @@ class ExportExamToPdf {
      	//Write grade
      	var PDPage page = document.getPage(sheet.posPage.get(0));
      	var PDPageContentStream contentStream = new PDPageContentStream(document, page,PDPageContentStream.AppendMode.APPEND, true, true);
-     	contentStream.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
+     	contentStream.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 12);
+     	contentStream.setNonStrokingColor(Color.decode("#FF0000"))
      	
      	contentStream.beginText();
 		contentStream.newLineAtOffset(0, page.mediaBox.height-10);
-		contentStream.showText(""+sheet.computeGrade);
+		contentStream.showText("Note : "+sheet.computeGrade);
 		contentStream.endText();
 		contentStream.close();
 		
