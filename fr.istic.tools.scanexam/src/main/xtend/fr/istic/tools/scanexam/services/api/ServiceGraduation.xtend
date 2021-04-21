@@ -207,9 +207,16 @@ interface ServiceGraduation extends Service {
 	def float getCurrentMaxGrade()
 	
 	/**
+	 * Retourne la note actuelle de l'étudiant courant
 	 * @return la note actuelle de l'étudiant courant
 	 */
 	def float getCurrentGrade()
+	
+	/**
+	 * Retourne le barème total de l'examen
+	 * @return le barème total de l'examen
+	 */
+	def float getGlobalScale()
 	
 	//===================================================
 	//      Information sur la listes des étudiants

@@ -535,11 +535,29 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
+   * Retourne la note actuelle de l'étudiant courant
    * @return la note actuelle de l'étudiant courant
    */
   @Override
   public float getCurrentGrade() {
     return (((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).computeGrade();
+  }
+  
+  /**
+   * Retourne le barème total de l'examen
+   * @return le barème total de l'examen
+   */
+  @Override
+  public float getGlobalScale() {
+    float globalScale = 0.0f;
+    int _numberOfQuestions = this.numberOfQuestions();
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _numberOfQuestions, true);
+    for (final Integer i : _doubleDotLessThan) {
+      float _globalScale = globalScale;
+      float _maxPoint = this.getQuestion((i).intValue()).getGradeScale().getMaxPoint();
+      globalScale = (_globalScale + _maxPoint);
+    }
+    return globalScale;
   }
   
   /**
@@ -873,6 +891,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Pure
+  @Override
   public int getQuestionId() {
     return this.questionId;
   }
