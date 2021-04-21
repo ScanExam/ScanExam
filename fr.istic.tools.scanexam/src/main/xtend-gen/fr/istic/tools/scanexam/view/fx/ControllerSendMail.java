@@ -61,16 +61,29 @@ public class ControllerSendMail {
    */
   @FXML
   public void saveAndQuit() {
+    int sent = 0;
     int _size = this.studentSheets.size();
     ExclusiveRange _greaterThanDoubleDot = new ExclusiveRange(_size, 0, false);
     for (final Integer i : _greaterThanDoubleDot) {
       {
         final StudentSheet studentSheet = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[(i).intValue()];
         final String studentMail = this.mailMap.get().get(studentSheet.getStudentName());
-        final File pdf = ExportExamToPdf.exportToTempFile(this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet);
-        SendMailTls.sendMail(ConfigurationManager.instance.getEmail(), ConfigurationManager.instance.getEmailPassword(), studentMail, this.txtFldTitle.getText(), this.htmlEditor.getHtmlText(), pdf.getAbsolutePath());
+        String _studentName = studentSheet.getStudentName();
+        boolean _tripleEquals = (_studentName == null);
+        if (_tripleEquals) {
+          final File pdf = ExportExamToPdf.exportToTempFile(this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet);
+          SendMailTls.sendMail(ConfigurationManager.instance.getEmail(), ConfigurationManager.instance.getEmailPassword(), studentMail, this.txtFldTitle.getText(), this.htmlEditor.getHtmlText(), pdf.getAbsolutePath());
+          sent++;
+        }
       }
     }
+    String _translate = LanguageManager.translate("sendMail.resultHeader");
+    String _translate_1 = LanguageManager.translate("sendMail.resultHeader");
+    String _plus = (Integer.valueOf(sent) + " / ");
+    int _size_1 = this.studentSheets.size();
+    String _plus_1 = (_plus + Integer.valueOf(_size_1));
+    String _plus_2 = (_plus_1 + " mail envoyés.");
+    DialogMessageSender.sendDialog(Alert.AlertType.CONFIRMATION, _translate, _translate_1, _plus_2);
     this.quit();
   }
   
@@ -83,20 +96,20 @@ public class ControllerSendMail {
   
   public void init(final ServiceGraduation service, final ControllerFxGraduation controllerGraduation) {
     this.service = service;
+    this.controllerGraduation = controllerGraduation;
     this.mailMap = StudentDataManager.getNameToMailMap();
     this.studentSheets = service.getStudentSheets();
-    boolean _isEmpty = this.mailMap.isEmpty();
-    if (_isEmpty) {
-      DialogMessageSender.sendDialog(Alert.AlertType.WARNING, "Error", LanguageManager.translate("sendMail.dummyDataHeader"), LanguageManager.translate("sendMail.dummyData"));
-      return;
-    }
     final Predicate<StudentSheet> _function = (StudentSheet x) -> {
       String _studentName = x.getStudentName();
       return (_studentName == null);
     };
     final boolean allStudentHasName = this.studentSheets.stream().anyMatch(_function);
-    if ((!allStudentHasName)) {
-      DialogMessageSender.sendDialog(Alert.AlertType.WARNING, "Error", LanguageManager.translate("sendMail.dummyDataHeader"), LanguageManager.translate("sendMail.dummyData"));
+    if ((this.mailMap.isEmpty() || allStudentHasName)) {
+      DialogMessageSender.sendDialog(Alert.AlertType.WARNING, 
+        LanguageManager.translate("sendMail.noStudentDataHeader"), 
+        LanguageManager.translate("sendMail.noStudentDataHeader"), 
+        LanguageManager.translate("sendMail.noStudentData"));
+      return;
     }
   }
 }

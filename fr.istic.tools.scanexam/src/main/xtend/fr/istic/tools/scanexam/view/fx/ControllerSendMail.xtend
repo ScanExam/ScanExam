@@ -40,13 +40,13 @@ class ControllerSendMail  {
 	@FXML
 	public HTMLEditor htmlEditor
 	
-	private ServiceGraduation service
+	ServiceGraduation service
 	
-	private Optional<Map<String,String>> mailMap
+	Optional<Map<String,String>> mailMap
 	
-	private Collection<StudentSheet> studentSheets
+	Collection<StudentSheet> studentSheets
 	
-	private ControllerFxGraduation controllerGraduation
+	ControllerFxGraduation controllerGraduation
 	// ----------------------------------------------------------------------------------------------------
 	/*
 	 * METHODES
@@ -56,19 +56,33 @@ class ControllerSendMail  {
 	@FXML
 	def void saveAndQuit() 
 	{
-		 
+		var sent = 0;
+		
 		for (i : studentSheets.size >.. 0)
 		{
+			
 			val studentSheet = studentSheets.get(i)
 			val studentMail = mailMap.get.get(studentSheet.studentName)
 			
-			val pdf = ExportExamToPdf.exportToTempFile(controllerGraduation.pdfManager.pdfInputStream,studentSheet)
+			if (studentSheet.studentName === null)
+			{
+				val pdf = ExportExamToPdf.exportToTempFile(controllerGraduation.pdfManager.pdfInputStream,studentSheet)
 			
-			SendMailTls.sendMail(ConfigurationManager.instance.email,ConfigurationManager.instance.emailPassword,
+				SendMailTls.sendMail(ConfigurationManager.instance.email,ConfigurationManager.instance.emailPassword,
 				studentMail,txtFldTitle.text,htmlEditor.htmlText,pdf.absolutePath)
+				sent++;
+			
+			}
 				
 			
 		}
+		
+		DialogMessageSender.sendDialog(AlertType.CONFIRMATION,
+				LanguageManager.translate("sendMail.resultHeader"),
+				LanguageManager.translate("sendMail.resultHeader"),
+				sent + " / " + studentSheets.size + " mail envoyés."
+			);
+		
 		
 		quit
 	}
@@ -83,25 +97,24 @@ class ControllerSendMail  {
 	def void init(ServiceGraduation service,ControllerFxGraduation controllerGraduation)
 	{
 		this.service = service
-
+		this.controllerGraduation = controllerGraduation
 		this.mailMap =StudentDataManager.getNameToMailMap()
 		this.studentSheets = service.studentSheets
 		
+		
+		val allStudentHasName =  studentSheets.stream.anyMatch(x | x.studentName === null)
 	 	
-		if (mailMap.empty)
+		if (mailMap.empty || allStudentHasName)
 		{
-			DialogMessageSender.sendDialog(AlertType.WARNING,"Error",LanguageManager.translate("sendMail.dummyDataHeader"),LanguageManager.translate("sendMail.dummyData"));
+			DialogMessageSender.sendDialog(AlertType.WARNING,
+				LanguageManager.translate("sendMail.noStudentDataHeader"),
+				LanguageManager.translate("sendMail.noStudentDataHeader"),
+				LanguageManager.translate("sendMail.noStudentData")
+			);
 			return
 		}
 
-		
-		val allStudentHasName =  studentSheets.stream.anyMatch(x | x.studentName === null)
-		
-		if (!allStudentHasName)
-		{
-			DialogMessageSender.sendDialog(AlertType.WARNING,"Error",LanguageManager.translate("sendMail.dummyDataHeader"),LanguageManager.translate("sendMail.dummyData"));			
-		}
-		
+	
 	}
 	
 	
