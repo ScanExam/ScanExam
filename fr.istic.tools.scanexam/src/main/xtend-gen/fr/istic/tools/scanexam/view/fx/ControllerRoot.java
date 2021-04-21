@@ -7,6 +7,7 @@ import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationCreator;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerSendMail;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
@@ -212,6 +213,7 @@ public class ControllerRoot implements Initializable {
       loader.setResources(LanguageManager.getCurrentBundle());
       final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
       final Stage dialog = new Stage();
+      loader.<ControllerSendMail>getController().init(this.serviceGraduation, this.graduationController);
       dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
       ObservableList<Image> _icons = dialog.getIcons();
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");

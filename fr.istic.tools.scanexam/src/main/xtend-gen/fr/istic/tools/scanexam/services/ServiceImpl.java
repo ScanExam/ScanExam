@@ -199,6 +199,9 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public Collection<StudentSheet> getStudentSheets() {
+    if ((this.graduationTemplate == null)) {
+      return List.<StudentSheet>of();
+    }
     return Collections.<StudentSheet>unmodifiableList(this.graduationTemplate.getStudentsheets());
   }
   

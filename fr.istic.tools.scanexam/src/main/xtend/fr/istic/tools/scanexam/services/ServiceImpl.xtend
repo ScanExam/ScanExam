@@ -165,6 +165,11 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return la liste non modifiable de tous les StudentSheets
 	 */
 	override getStudentSheets() {
+		
+		if (graduationTemplate === null)
+		{
+			return List.of();
+		}
 		return Collections.unmodifiableList(graduationTemplate.studentsheets)
 	}
 	

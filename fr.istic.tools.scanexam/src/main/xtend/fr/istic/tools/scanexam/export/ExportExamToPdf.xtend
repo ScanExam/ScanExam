@@ -106,7 +106,9 @@ class ExportExamToPdf {
 	 * @param sheet is the sheet of the student to export.
 	 * @return temp File of student exam. 
 	 */
-    def static File exportToTempFile(PDDocument pdf,StudentSheet sheet){
+    def static File exportToTempFile(InputStream pdfStream,StudentSheet sheet){
+		
+		val pdf = PDDocument.load(pdfStream)
 		
 		var PDDocument document = new PDDocument();
 		
@@ -130,8 +132,8 @@ class ExportExamToPdf {
 	 * @param sheets is the Collection of sheets of they students to export.
 	 * @return Collection of temp File of student exam. 
 	 */
-    def static Collection<File> exportToCollection(PDDocument pdf,Collection<StudentSheet> sheets){
-    	sheets.stream.map(s |exportToTempFile(pdf,s)).collect(Collectors.toList);
+    def static Collection<File> exportToCollection(InputStream pdfStream,Collection<StudentSheet> sheets){
+    	sheets.stream.map(s |exportToTempFile(pdfStream,s)).collect(Collectors.toList);
     }
     
     /**-----------------------------------------------------------------------

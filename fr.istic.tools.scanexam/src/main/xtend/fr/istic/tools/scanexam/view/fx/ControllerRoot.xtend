@@ -154,8 +154,12 @@ class ControllerRoot implements Initializable {
 	def sendMail(){
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
+	
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
 		val Stage dialog = new Stage
+		
+		loader.<ControllerSendMail>controller.init(serviceGraduation,graduationController)
+			
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 672, 416))

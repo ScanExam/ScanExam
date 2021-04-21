@@ -2,8 +2,6 @@ package fr.istic.tools.scanexam.export;
 
 import fr.istic.tools.scanexam.core.Comment;
 import fr.istic.tools.scanexam.core.Grade;
-import fr.istic.tools.scanexam.core.HandwritingComment;
-import fr.istic.tools.scanexam.core.Line;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.TextComment;
 import fr.istic.tools.scanexam.services.api.Service;
@@ -12,7 +10,11 @@ import java.awt.Color;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -21,6 +23,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 
 @SuppressWarnings("all")
@@ -32,50 +35,36 @@ public class ExportExamToPdf {
   }
   
   /**
-   * Exports a PDF file to the selected directory.
+   * Exports a student's PDF file from the PDF document containing all the exam papers
+   * @param pdf is the complete pdf document of all students
+   * @param sheet is the sheet of the student to export.
+   * @param overwriteFile allow file overwriting
+   * @return null is return if overwrite is needed but @param overwriteFile is false, else return File.
    */
-  public static File exportToPdf(final PDDocument pdf, final StudentSheet sheet, final File outputPdfFile, final Boolean overwriteFile) {
+  public static File exportStudentPdfFromCompletePdf(final PDDocument pdf, final StudentSheet sheet, final File outputPdfFile, final Boolean overwriteFile) {
     try {
       if ((outputPdfFile.exists() && (!(overwriteFile).booleanValue()))) {
         return null;
+      } else {
+        PDDocument document = new PDDocument();
+        EList<Integer> _posPage = sheet.getPosPage();
+        for (final Integer i : _posPage) {
+          document.addPage(pdf.getPage((i).intValue()));
+        }
+        document.save(outputPdfFile);
+        document.close();
+        return outputPdfFile;
       }
-      PDDocument document = new PDDocument();
-      EList<Integer> _posPage = sheet.getPosPage();
-      for (final Integer i : _posPage) {
-        document.addPage(pdf.getPage((i).intValue()));
-      }
-      document.save(outputPdfFile);
-      document.close();
-      return outputPdfFile;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
   /**
-   * Exports a pdf file to the selected directory even if a file already exists.
-   */
-  public static Object exportToPdfAndOverwriteFile(final PDDocument pdf, final StudentSheet sheet, final File outputPdfFile) {
-    try {
-      boolean _exists = outputPdfFile.exists();
-      if (_exists) {
-        return null;
-      }
-      PDDocument document = new PDDocument();
-      EList<Integer> _posPage = sheet.getPosPage();
-      for (final Integer i : _posPage) {
-        document.addPage(pdf.getPage((i).intValue()));
-      }
-      document.save(outputPdfFile);
-      document.close();
-      return null;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  /**
-   * Returns an InputStream of the exported PDF file
+   * Exports a student's InputStream from the PDF document containing all the exam papers
+   * @param pdf is the complete pdf document of all students
+   * @param sheet is the sheet of the student to export.
+   * @return InputStream of student exam
    */
   public static InputStream exportToInputStream(final PDDocument pdf, final StudentSheet sheet) {
     try {
@@ -94,7 +83,10 @@ public class ExportExamToPdf {
   }
   
   /**
-   * Returns an OutputStream of the exported PDF file
+   * Exports a student's OutputStream from the PDF document containing all the exam papers
+   * @param pdf is the complete pdf document of all students
+   * @param sheet is the sheet of the student to export.
+   * @return OutputStream of student exam
    */
   public static OutputStream exportToOutputStream(final PDDocument pdf, final StudentSheet sheet) {
     try {
@@ -113,10 +105,15 @@ public class ExportExamToPdf {
   }
   
   /**
-   * Exports a Temp PDF file placed in Temp directory.
+   * Exports a student's PDF temp file from the PDF document containing all the exam papers
+   * The name of the file is examName + studentName
+   * @param pdf is the complete pdf document of all students
+   * @param sheet is the sheet of the student to export.
+   * @return temp File of student exam.
    */
-  public static File exportToTempFile(final PDDocument pdf, final StudentSheet sheet) {
+  public static File exportToTempFile(final InputStream pdfStream, final StudentSheet sheet) {
     try {
+      final PDDocument pdf = PDDocument.load(pdfStream);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
       for (final Integer i : _posPage) {
@@ -135,21 +132,28 @@ public class ExportExamToPdf {
   }
   
   /**
-   * Export Collection of Temp PDF File
+   * Exports a Collection of student's PDF temp file from the PDF document containing all the exam papers
+   * The name of the file is examName + studentName
+   * @param pdf is the complete pdf document of all students
+   * @param sheets is the Collection of sheets of they students to export.
+   * @return Collection of temp File of student exam.
    */
-  public static Collection<File> exportToCollection(final PDDocument pdf, final Collection<StudentSheet> sheets) {
+  public static Collection<File> exportToCollection(final InputStream pdfStream, final Collection<StudentSheet> sheets) {
     final Function<StudentSheet, File> _function = (StudentSheet s) -> {
-      return ExportExamToPdf.exportToTempFile(pdf, s);
+      return ExportExamToPdf.exportToTempFile(pdfStream, s);
     };
     return sheets.stream().<File>map(_function).collect(Collectors.<File>toList());
   }
   
   /**
    * Export pdf with annotations and Grade
+   * @param documentInputStream is the PDF file of the student
+   * @param sheet is the studentSheet of the student
+   * @param fileForSaving is the File for save PDF document
    */
-  public static void exportToPdfWithAnnotations(final InputStream d, final StudentSheet sheet, final File fileForSaving) {
+  public static void exportToPdfWithAnnotations(final InputStream documentInputStream, final StudentSheet sheet, final File fileForSaving) {
     try {
-      PDDocument document = PDDocument.load(d);
+      PDDocument document = PDDocument.load(documentInputStream);
       EList<Grade> _grades = sheet.getGrades();
       for (final Grade g : _grades) {
         EList<Comment> _comments = g.getComments();
@@ -253,50 +257,101 @@ public class ExportExamToPdf {
           }
         }
       }
-      PDPage page_1 = document.getPage((sheet.getPosPage().get(0)).intValue());
+      PDPage page_1 = document.getPage(0);
       PDPageContentStream contentStream_1 = new PDPageContentStream(document, page_1, PDPageContentStream.AppendMode.APPEND, true, true);
-      contentStream_1.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
+      contentStream_1.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 12);
+      contentStream_1.setNonStrokingColor(Color.decode("#FF0000"));
       contentStream_1.beginText();
       float _height = page_1.getMediaBox().getHeight();
       float _minus_6 = (_height - 10);
       contentStream_1.newLineAtOffset(0, _minus_6);
       float _computeGrade = sheet.computeGrade();
-      String _plus_1 = ("" + Float.valueOf(_computeGrade));
+      String _plus_1 = ("Note : " + Float.valueOf(_computeGrade));
       contentStream_1.showText(_plus_1);
       contentStream_1.endText();
       contentStream_1.close();
       document.save(fileForSaving);
       document.close();
-      d.close();
+      documentInputStream.close();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
   
   /**
-   * Draw lines annotations of fileForSaving
+   * Export pdf with annotations and Grade
+   * @param documentInputStream is the PDF file of the student
+   * @param sheet is the studentSheet of the student
+   * @return temp File of annoted PDF.
    */
-  public static void annotationDrawLinePDF(final PDDocument document, final HandwritingComment[] listLine, final File fileForSaving) {
+  public File exportToTempPdfWithAnnotations(final InputStream documentInputStream, final StudentSheet sheet) {
     try {
-      for (final HandwritingComment handwritingComment : listLine) {
-        {
-          PDPage page = document.getPage(handwritingComment.getPageId());
-          PDPageContentStream contentStream = new PDPageContentStream(document, page, 
-            PDPageContentStream.AppendMode.APPEND, true, true);
-          EList<Line> _lines = handwritingComment.getLines();
-          for (final Line l : _lines) {
-            {
-              contentStream.moveTo(l.getX1(), l.getY1());
-              contentStream.lineTo(l.getX2(), l.getY2());
-              contentStream.setNonStrokingColor(Color.decode(l.getColor()));
-              contentStream.stroke();
-              contentStream.fill();
-            }
+      String _examName = ExportExamToPdf.service.getExamName();
+      String _studentName = sheet.getStudentName();
+      String _plus = (_examName + _studentName);
+      File file = File.createTempFile(_plus, ".pdf");
+      ExportExamToPdf.exportToPdfWithAnnotations(documentInputStream, sheet, file);
+      return file;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * Exports a Collection of student's PDF temp file from Collection of student exam and Collection of studentsheet
+   * The name of the temp file is examName + studentName
+   * documentInputStream and sheets need to have same size and their index must match.
+   * @param documentAndAssociatedStudentSheet is an ordered Collection of documents
+   * @param documentAndAssociatedStudentSheet is an ordered Collection of StudentSheet
+   * @return Collection of temp File of student exam.
+   */
+  public static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromCollections(final Collection<InputStream> documentInputStream, final Collection<StudentSheet> sheets) {
+    try {
+      int _size = documentInputStream.size();
+      int _size_1 = sheets.size();
+      boolean _notEquals = (_size != _size_1);
+      if (_notEquals) {
+        return null;
+      } else {
+        Collection<File> files = new ArrayList<File>();
+        for (int i = 0; (i < documentInputStream.size()); i++) {
+          {
+            String _examName = ExportExamToPdf.service.getExamName();
+            String _studentName = (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[i]).getStudentName();
+            String _plus = (_examName + _studentName);
+            File file = File.createTempFile(_plus, ".pdf");
+            ExportExamToPdf.exportToPdfWithAnnotations(((InputStream[])Conversions.unwrapArray(documentInputStream, InputStream.class))[i], ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[i], file);
+            files.add(file);
           }
-          contentStream.close();
-          document.save(fileForSaving);
+        }
+        return files;
+      }
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * Exports a Collection of student's PDF temp file from HashMap of student exam and studentsheet
+   * The name of the temp file is examName + studentName
+   * @param documentAndAssociatedStudentSheet is an HashMap of Document and StudentSheet
+   * @return Collection of temp File of student exam.
+   */
+  public static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromHashMap(final HashMap<InputStream, StudentSheet> documentAndAssociatedStudentSheet) {
+    try {
+      Collection<File> files = new ArrayList<File>();
+      Set<Map.Entry<InputStream, StudentSheet>> _entrySet = documentAndAssociatedStudentSheet.entrySet();
+      for (final Map.Entry<InputStream, StudentSheet> mapentry : _entrySet) {
+        {
+          String _examName = ExportExamToPdf.service.getExamName();
+          String _studentName = mapentry.getValue().getStudentName();
+          String _plus = (_examName + _studentName);
+          File file = File.createTempFile(_plus, ".pdf");
+          ExportExamToPdf.exportToPdfWithAnnotations(mapentry.getKey(), mapentry.getValue(), file);
+          files.add(file);
         }
       }
+      return files;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
