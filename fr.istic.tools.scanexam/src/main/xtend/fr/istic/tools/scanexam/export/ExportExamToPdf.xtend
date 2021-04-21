@@ -140,10 +140,10 @@ class ExportExamToPdf {
      /*
       * Export pdf with annotations and Grade
       */
-     def static void exportToPdfWithAnnotations(InputStream d,StudentSheet sheet, File fileForSaving){
+     def static void exportToPdfWithAnnotations(InputStream documentInputStream,StudentSheet sheet, File fileForSaving){
      	
-		var PDDocument document = PDDocument.load(d)
-		
+		var PDDocument document = PDDocument.load(documentInputStream)
+
      	for(Grade g : sheet.grades){
      		for(Comment c : g.comments){
 				//Write only TextComments
@@ -230,12 +230,14 @@ class ExportExamToPdf {
      		}
      	}
      	
+
+     	
      	//Write grade
-     	var PDPage page = document.getPage(sheet.posPage.get(0));
+     	var PDPage page = document.getPage(0);
      	var PDPageContentStream contentStream = new PDPageContentStream(document, page,PDPageContentStream.AppendMode.APPEND, true, true);
      	contentStream.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 12);
-     	contentStream.setNonStrokingColor(Color.decode("#FF0000"))
      	
+     	contentStream.setNonStrokingColor(Color.decode("#FF0000"))
      	contentStream.beginText();
 		contentStream.newLineAtOffset(0, page.mediaBox.height-10);
 		contentStream.showText("Note : "+sheet.computeGrade);
@@ -244,9 +246,9 @@ class ExportExamToPdf {
 		
 		
 		document.save(fileForSaving);
-		
 		document.close();
-		d.close();
+		documentInputStream.close();
+		
      	
      }
      
