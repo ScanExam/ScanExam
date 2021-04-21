@@ -70,13 +70,6 @@
 								<Cursor fx:constant="DEFAULT" />
 							</cursor>
 						</ScrollPane>
-						<VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-							<children>
-								<Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-								<HBox fx:id="graderContainer" prefWidth="200.0" />
-								<Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-							</children>
-						</VBox>
 						<AnchorPane id="CorrectionBackground" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="CorrectionBackground" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 							<children>
 								<ScrollPane id="correctionScrollPane" fx:id="scrollBis" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

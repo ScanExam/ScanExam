@@ -73,7 +73,7 @@ public class PdfPaneWithAnotations extends Pane {
   public boolean addNewAnotation(final double x, final double y) {
     boolean _xblockexpression = false;
     {
-      TextAnotation anot = new TextAnotation(x, y, 50, 50, "New Anotation");
+      TextAnotation anot = new TextAnotation(x, y, 100, 50, "New Anotation", this);
       _xblockexpression = this.getChildren().addAll(anot.getAllParts());
     }
     return _xblockexpression;
@@ -82,7 +82,7 @@ public class PdfPaneWithAnotations extends Pane {
   public boolean addAnotation(final double x, final double y, final double height, final double width, final String text) {
     boolean _xblockexpression = false;
     {
-      TextAnotation anot = new TextAnotation(x, y, height, width, text);
+      TextAnotation anot = new TextAnotation(x, y, height, width, text, this);
       _xblockexpression = this.getChildren().addAll(anot.getAllParts());
     }
     return _xblockexpression;
@@ -108,6 +108,16 @@ public class PdfPaneWithAnotations extends Pane {
   
   public void unZoom() {
     this.imageView.setViewport(null);
+  }
+  
+  public void handleMoveAnnotation(final TextAnotation anot, final MouseEvent e) {
+    this.controller.setCurrentTool(ControllerFxGraduation.SelectedTool.MOVE_ANOTATION_TOOL);
+    this.controller.setCurrentAnotation(anot);
+  }
+  
+  public void handleMovePointer(final TextAnotation anot, final MouseEvent e) {
+    this.controller.setCurrentTool(ControllerFxGraduation.SelectedTool.MOVE_POINTER_TOOL);
+    this.controller.setCurrentAnotation(anot);
   }
   
   public void setupEvents() {
