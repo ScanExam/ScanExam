@@ -806,6 +806,7 @@ public class ControllerFxGraduation {
   }
   
   public void renderStudentCopy() {
+    ControllerFxGraduation.logger.info("Call to RenderStudentCopy");
     BufferedImage image = this.pdfManager.getCurrentPdfPage();
     this.mainPane.setImage(SwingFXUtils.toFXImage(image, null));
     this.imageWidth = image.getWidth();
