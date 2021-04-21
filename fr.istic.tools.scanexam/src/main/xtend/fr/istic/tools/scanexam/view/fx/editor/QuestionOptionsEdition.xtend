@@ -11,6 +11,10 @@ import javafx.scene.layout.VBox
 import javafx.util.converter.NumberStringConverter
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
+import java.util.function.UnaryOperator
+import javafx.scene.control.TextFormatter.Change
+import javafx.geometry.Pos
+import javafx.scene.layout.HBox
 
 /**
  * [JavaFX] Détail d'une question
@@ -23,28 +27,33 @@ class QuestionOptionsEdition extends VBox {
 	 * VARIABLES
 	 */
 	// ----------------------------------------------------------------------------------------------------
-	
-	GridPane grid
-	
-	RenameField name
-	
-	/* Modifiable label for the scale of the question */
-	RenameField scale
-	
-	val TextFormatter<Number> formatter
-	/* Formatter to allow only number in scale field */
-	Label questionId
-	Label page
-	Label questionCoords
-	Label questionDescription // TODO replace with htlm display
-	Button remove
+	/* Controlleur de l'édition */
 	ControllerFxEdition controller
 
+	/* Item de la question */
 	QuestionItemEdition currentItem
+
+	/* Grille contenant toutes les éléments */
+	GridPane grid
+
+	/* Champ du nom de la question */
+	RenameField name
+	/* Label contenant l'identifiant de la question */
+	Label questionId
+	/* Label contenant le barème de la question */
+	RenameField scale
+	/* Label contenant la apge de la question */
+	Label page
+
+	/* Fommateur pour n'autorisé que des chiffres dans un champ de texte */
+	val TextFormatter<Number> formatter
+
+	/* Bouton de suppression de la question */
+	Button remove
 
 	// ----------------------------------------------------------------------------------------------------
 	/*
-	 * CONSTRUCTEURS
+	 * CONSTRUCTEUR
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	
@@ -55,43 +64,43 @@ class QuestionOptionsEdition extends VBox {
 
 		var l1 = new Label(translate("question.name"))
 		var l2 = new Label(translate("question.id"))
-		var l3 = new Label(translate("question.page"))
-		var l4 = new Label(translate("question.scale"))
-		var l6 = new Label(translate("question.position"))
-		var l7 = new Label(translate("question.description"))
+		var l3 = new Label(translate("question.scale"))
+		var l4 = new Label(translate("question.page"))
+
 		grid.add(l1, 0, 0)
 		grid.add(l2, 0, 1)
 		grid.add(l3, 0, 2)
 		grid.add(l4, 0, 3)
-		grid.add(l6, 0, 4)
-		grid.add(l7, 0, 5)
-		
 
-		
-		
-		
 		name = new RenameField
-		
+		questionId = new Label
 		scale = new RenameField
-		formatter = new TextFormatter(new NumberStringConverter)
+		var UnaryOperator<Change> integerFilter = [ change |
+			{
+				var String newText = change.getControlNewText()
+				if (newText.matches("([0-9]*([.][0-9]*)?)?")) {
+					return change
+				}
+				return null
+			}
+		]
+		formatter = new TextFormatter<Number>(new NumberStringConverter(), 0, integerFilter)
 		scale.setFieldFormatter(formatter)
+		page = new Label
 
-		questionId = new Label()
-		page = new Label();
-		questionCoords = new Label();
-		questionDescription = new Label();
-		remove = new Button(translate("question.remove"));
-		
+		remove = new Button(translate("question.remove"))
+
 		grid.add(name, 1, 0)
 		grid.add(questionId, 1, 1)
-		grid.add(page, 1, 2)
-		grid.add(scale, 1, 3)
-		grid.add(questionCoords, 1, 4)
-		grid.add(questionDescription, 1, 5)
+		grid.add(scale, 1, 2)
+		grid.add(page, 1, 3)
 
-		children.addAll(grid, remove)
+		val HBox hbox = new HBox(remove)
+		hbox.alignment = Pos.CENTER
+		
+		children.addAll(grid, hbox)
 		hideAll
-		setupEvents();
+		setupEvents
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -108,12 +117,9 @@ class QuestionOptionsEdition extends VBox {
 		showAll()
 		currentItem = item
 		name.text = item.name
-		page.text = item.page + ""
 		questionId.text = "" + item.questionId
 		scale.text = "" + item.scale
-		questionCoords.text = "X:" + item.zone.x + "\nY:" + item.zone.y + "\nH:" + item.zone.height + "\nW:" +
-			item.zone.width
-		questionDescription.text = "No description";
+		page.text = item.page + ""
 	}
 
 	def showAll() {
@@ -142,7 +148,6 @@ class QuestionOptionsEdition extends VBox {
 
 	def setupEvents() {
 		remove.onAction = new EventHandler<ActionEvent>() {
-
 			override handle(ActionEvent event) {
 				controller.questionList.remove(currentItem)
 				controller.mainPane.removeZone(currentItem.zone)
@@ -150,16 +155,7 @@ class QuestionOptionsEdition extends VBox {
 			}
 
 		}
-		
-		name.textProperty.addListener([obs,oldVal,newVal | commitRename ])
-
-		scale.textProperty.addListener([obs,oldVal,newVal | commitRescale])		
-
-		
-
-		//grid.children.findFirst[n | n !== null && GridPane.getRowIndex(n) == 3 && GridPane.getColumnIndex(n) == 2].onMouseClicked = [e | toggleRescale(true)]
-
-		
-
+		name.textProperty.addListener([obs, oldVal, newVal|commitRename])
+		scale.textProperty.addListener([obs, oldVal, newVal|commitRescale])
 	}
 }
