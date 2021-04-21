@@ -23,6 +23,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Spinner
+import javafx.scene.control.ToggleButton
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
@@ -33,9 +34,6 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
-
-import static fr.istic.tools.scanexam.config.LanguageManager.translate
-import javafx.scene.control.ToggleButton
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -65,8 +63,6 @@ class ControllerFxGraduation {
 	/**
 	 * FXML Components
 	 */
-	@FXML
-	public Label gradeLabel
 	@FXML
 	public VBox root;
 	@FXML
@@ -519,7 +515,6 @@ class ControllerFxGraduation {
 	 */
 	def void loadStudents(){
 		logger.info("Loading Students")
-		var currentStudentId = 0;
 		var ids = studentIds
 		
 		for (int i : ids) {
@@ -705,6 +700,13 @@ class ControllerFxGraduation {
 	}
 	
 	/**
+	 * Met à jour la note globale affichée
+	 */
+	def void updateGlobalGrade() {
+    	studentDetails.updateGrade
+	}
+	
+	/**
 	 * 
 	 */
 	def void setZoomArea(double x, double y, double height, double width) {
@@ -733,12 +735,6 @@ class ControllerFxGraduation {
 	//---------------------//
 	
 	
-	/**
-	 * Met à jour la note globale affichée
-	 */
-	def void updateGlobalGrade() {
-    	gradeLabel.text = translate("label.grade") + " " + globalGrade + "/" + globalScale
-	}
 	
 		
 	//---Grade entry management
@@ -780,19 +776,17 @@ class ControllerFxGraduation {
 	/**
 	 * Retourne la note globale de la copie
 	 * @return Note globale de la copie
-	 * //FIXME doit être lié au service
 	 */
 	def float getGlobalGrade() {
-	    return 0.0f
+	    return service.getCurrentGrade
 	}
 	    
 	/**
 	 * Retourne le barème total de l'examen
 	 * @return Barème total de l'examen
-	 * //FIXME doit être lié au service
 	 */
 	def float getGlobalScale() {
-	    return 0.0f
+	    return service.getGlobalScale
 	}
 	
 	/* SAVING  */
