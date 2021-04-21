@@ -43,6 +43,8 @@ class ControllerRoot implements Initializable {
 	MenuItem loadStudentNamesButton;
 	@FXML
 	MenuItem pdfExportButton;
+	@FXML
+	MenuItem sendMailButton;
 	
 	@Accessors
 	ControllerFxGraduation graduationController;
@@ -206,14 +208,15 @@ class ControllerRoot implements Initializable {
 	}
 	
 	
-	def init(ServiceEdition serviceEdition,ServiceGraduation serviceGraduation){
+	def init(ServiceEdition serviceEdition, ServiceGraduation serviceGraduation){
 		this.serviceEdition = serviceEdition
 		this.serviceGraduation = serviceGraduation
 		saveGraduationButton.disableProperty.bind(graduationController.loadedModel.not)
 		saveTemplateButton.disableProperty.bind(editionController.loadedModel.not)
 		exportToExamButton.disableProperty.bind(editionController.loadedModel.not)
-		loadStudentNamesButton.disableProperty.bind(editionController.loadedModel.not)
+		loadStudentNamesButton.disableProperty.bind(graduationController.loadedModel.not)
 		pdfExportButton.disableProperty.bind(graduationController.loadedModel.not)
+		sendMailButton.disableProperty.bind(graduationController.loadedModel.not)
 	}
 	
 	override initialize(URL location, ResourceBundle resources) {
