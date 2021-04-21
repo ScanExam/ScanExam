@@ -816,6 +816,7 @@ public class ControllerFxGraduation {
       this.focusStudent(this.studentList.getCurrentItem());
       this.updateDisplayedPage();
       this.updateDisplayedGrader();
+      this.updateStudentDetails();
     } else {
       ControllerFxGraduation.logger.warn("The student list is Empty");
     }
@@ -847,6 +848,7 @@ public class ControllerFxGraduation {
       this.updateDisplayedPage();
       this.updateDisplayedQuestion();
       this.updateDisplayedGrader();
+      this.updateStudentDetails();
     } else {
       ControllerFxGraduation.logger.warn("The question list is Empty");
     }
@@ -901,17 +903,17 @@ public class ControllerFxGraduation {
   public void updateDisplayedGrader() {
     if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
       this.grader.changeGrader(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
-      this.updateGlobalGrade();
     } else {
       ControllerFxGraduation.logger.warn("Cannot load grader, student list or question is is empty");
     }
   }
   
   /**
-   * Met à jour la note globale affichée
+   * Met à jour les détails de l'étudiant
    */
-  public void updateGlobalGrade() {
+  public void updateStudentDetails() {
     this.studentDetails.updateGrade();
+    this.studentDetails.updateQuality();
   }
   
   public void setZoomArea(final double x, final double y, final double height, final double width) {
@@ -975,6 +977,14 @@ public class ControllerFxGraduation {
       }
     }
     return (-1);
+  }
+  
+  /**
+   * Retourne la note maximale que peut encore obtenir l'étudiant
+   * @return Note maximale que peut encore obtenir l'étudiant
+   */
+  public float getCurrentMaxGrade() {
+    return this.service.getCurrentMaxGrade();
   }
   
   /**

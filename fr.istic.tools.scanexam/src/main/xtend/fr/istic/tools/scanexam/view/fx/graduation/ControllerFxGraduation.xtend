@@ -646,8 +646,9 @@ class ControllerFxGraduation {
 	def void setSelectedStudent(){
 		if (!studentList.noItems) {
 			focusStudent(studentList.currentItem)
-			updateDisplayedPage();
-			updateDisplayedGrader();	
+			updateDisplayedPage
+			updateDisplayedGrader
+			updateStudentDetails
 		}else {
 			logger.warn("The student list is Empty")
 		}
@@ -672,9 +673,10 @@ class ControllerFxGraduation {
 	def void setSelectedQuestion(){
 		if (!questionList.noItems) {
 			focusQuestion(questionList.currentItem)
-			updateDisplayedPage();
-			updateDisplayedQuestion();
-			updateDisplayedGrader();
+			updateDisplayedPage
+			updateDisplayedQuestion
+			updateDisplayedGrader
+			updateStudentDetails
 		}else {
 			logger.warn("The question list is Empty")
 		}
@@ -733,18 +735,18 @@ class ControllerFxGraduation {
 	 */
 	def void updateDisplayedGrader(){
 		if (!studentList.noItems && !questionList.noItems) {
-			grader.changeGrader(questionList.currentItem,studentList.currentItem);
-			updateGlobalGrade
+			grader.changeGrader(questionList.currentItem,studentList.currentItem)
 		}else {
 			logger.warn("Cannot load grader, student list or question is is empty")
 		}
 	}
 	
 	/**
-	 * Met à jour la note globale affichée
+	 * Met à jour les détails de l'étudiant
 	 */
-	def void updateGlobalGrade() {
+	def void updateStudentDetails() {
     	studentDetails.updateGrade
+    	studentDetails.updateQuality
 	}
 	
 	/**
@@ -812,6 +814,14 @@ class ControllerFxGraduation {
 			}
 		}
 		return -1
+	}
+	
+	/**
+	 * Retourne la note maximale que peut encore obtenir l'étudiant
+	 * @return Note maximale que peut encore obtenir l'étudiant
+	 */
+	def float getCurrentMaxGrade() {
+	    return service.currentMaxGrade
 	}
 	
 	/**

@@ -531,7 +531,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     final Function2<Float, Float, Float> _function_4 = (Float acc, Float n) -> {
       return Float.valueOf(((acc).floatValue() + (n).floatValue()));
     };
-    return (float) IterableExtensions.<Float>reduce(IterableExtensions.<Optional<Question>, Float>map(IterableExtensions.<Optional<Question>>filter(IterableExtensions.<Pair<Integer, Grade>, Optional<Question>>map(IterableExtensions.<Pair<Integer, Grade>>filter(IterableExtensions.<Grade>indexed((((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).getGrades()), _function), _function_1), _function_2), _function_3), _function_4);
+    return (Optional.<Float>ofNullable(
+      IterableExtensions.<Float>reduce(IterableExtensions.<Optional<Question>, Float>map(IterableExtensions.<Optional<Question>>filter(IterableExtensions.<Pair<Integer, Grade>, Optional<Question>>map(IterableExtensions.<Pair<Integer, Grade>>filter(IterableExtensions.<Grade>indexed((((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).getGrades()), _function), _function_1), _function_2), _function_3), _function_4)).orElse(Float.valueOf(0f))).floatValue();
   }
   
   /**
@@ -891,6 +892,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Pure
+  @Override
   public int getQuestionId() {
     return this.questionId;
   }

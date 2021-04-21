@@ -419,14 +419,13 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu 
 	 */
 	override float getCurrentMaxGrade() {
-		studentSheets.get(currentSheetIndex).grades
-			.indexed
-			.filter[pair | !pair.value.entries.isEmpty]
-			.map[pair | getQuestionFromIndex(pair.key)]
-			.filter[o | !o.isEmpty]
-			.map[ o | o.get.gradeScale.maxPoint]
-			.reduce[acc, n | acc + n]
-		
+		Optional.ofNullable(studentSheets.get(currentSheetIndex).grades
+            .indexed
+            .filter[pair | !pair.value.entries.isEmpty]
+            .map[pair | getQuestionFromIndex(pair.key)]
+            .filter[o | !o.isEmpty]
+            .map[ o | o.get.gradeScale.maxPoint]
+            .reduce[acc, n | acc + n]).orElse(0f)
 	}
 	
 	/**
