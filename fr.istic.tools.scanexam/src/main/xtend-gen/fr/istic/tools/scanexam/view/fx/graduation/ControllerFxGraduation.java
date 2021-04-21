@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
 import com.google.common.base.Objects;
-import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
@@ -98,9 +97,6 @@ public class ControllerFxGraduation {
   /**
    * FXML Components
    */
-  @FXML
-  public Label gradeLabel;
-  
   @FXML
   public VBox root;
   
@@ -659,7 +655,6 @@ public class ControllerFxGraduation {
    */
   public void loadStudents() {
     ControllerFxGraduation.logger.info("Loading Students");
-    int currentStudentId = 0;
     LinkedList<Integer> ids = this.getStudentIds();
     for (final int i : ids) {
       {
@@ -851,6 +846,13 @@ public class ControllerFxGraduation {
     }
   }
   
+  /**
+   * Met à jour la note globale affichée
+   */
+  public void updateGlobalGrade() {
+    this.studentDetails.updateGrade();
+  }
+  
   public void setZoomArea(final double x, final double y, final double height, final double width) {
     if (this.autoZoom) {
       this.mainPane.zoomTo(x, y, height, width);
@@ -871,20 +873,6 @@ public class ControllerFxGraduation {
   public void selectPage(final int pageNumber) {
     this.pdfManager.goToPdfPage(pageNumber);
     this.renderStudentCopy();
-  }
-  
-  /**
-   * Met à jour la note globale affichée
-   */
-  public void updateGlobalGrade() {
-    String _translate = LanguageManager.translate("label.grade");
-    String _plus = (_translate + " ");
-    float _globalGrade = this.getGlobalGrade();
-    String _plus_1 = (_plus + Float.valueOf(_globalGrade));
-    String _plus_2 = (_plus_1 + "/");
-    float _globalScale = this.getGlobalScale();
-    String _plus_3 = (_plus_2 + Float.valueOf(_globalScale));
-    this.gradeLabel.setText(_plus_3);
   }
   
   public List<Integer> getEntryIds(final int questionId) {
@@ -931,19 +919,17 @@ public class ControllerFxGraduation {
   /**
    * Retourne la note globale de la copie
    * @return Note globale de la copie
-   * //FIXME doit être lié au service
    */
   public float getGlobalGrade() {
-    return 0.0f;
+    return this.service.getCurrentGrade();
   }
   
   /**
    * Retourne le barème total de l'examen
    * @return Barème total de l'examen
-   * //FIXME doit être lié au service
    */
   public float getGlobalScale() {
-    return 0.0f;
+    return this.service.getGlobalScale();
   }
   
   /**

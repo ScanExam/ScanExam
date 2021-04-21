@@ -174,9 +174,16 @@ public interface ServiceGraduation extends Service {
   float getCurrentMaxGrade();
   
   /**
+   * Retourne la note actuelle de l'étudiant courant
    * @return la note actuelle de l'étudiant courant
    */
   float getCurrentGrade();
+  
+  /**
+   * Retourne le barème total de l'examen
+   * @return le barème total de l'examen
+   */
+  float getGlobalScale();
   
   /**
    * Défini le chemin d'accès vers la liste de tous les étudiants

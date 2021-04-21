@@ -430,10 +430,23 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 	
 	/**
+	 * Retourne la note actuelle de l'étudiant courant
 	 * @return la note actuelle de l'étudiant courant
 	 */
 	override float getCurrentGrade() {
 		studentSheets.get(currentSheetIndex).computeGrade
+	}
+	
+	/**
+	 * Retourne le barème total de l'examen
+	 * @return le barème total de l'examen
+	 */
+	override float getGlobalScale() {
+		var float globalScale = 0.0f;
+		for (i : 0 ..< numberOfQuestions) {
+    		globalScale += getQuestion(i).gradeScale.maxPoint
+		}
+		return globalScale
 	}
 	
 	//===================================================
