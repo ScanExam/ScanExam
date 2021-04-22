@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.services.api;
 
-import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.services.api.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,18 +42,14 @@ public interface ServiceEdition extends Service {
   /**
    * Supprime une question
    * @param id l'ID de la question à supprimer
+   * @return true si l'élément a bien été supprimé, false sinon
    */
-  void removeQuestion(final int id);
-  
-  /**
-   * @return l'ID de la question courante
-   */
-  int getQuestionId();
+  boolean removeQuestion(final int id);
   
   /**
    * Modifie la note maximal que l'on peut attribuer a une question.
-   * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
-   * @param maxPoint, note maximal de la question question a ajouter
+   * @param questionId l'ID de la question a laquelle on veut modifier la note maximal possible
+   * @param maxPoint note maximal de la question question a ajouter
    */
   void modifyMaxPoint(final int questionId, final float maxPoint);
   
@@ -67,7 +62,7 @@ public interface ServiceEdition extends Service {
   
   /**
    * Charge un fichier modèle d'examen a partir du disque
-   * @params xmiPath L'emplacement du fichier.
+   * @param xmiPath L'emplacement du fichier XMI
    * @returns un flux vers le contenu du fichier si celui-ci a bien été ouvert, Optional.empty sinon
    */
   Optional<ByteArrayInputStream> open(final String xmiPath);
@@ -77,11 +72,4 @@ public interface ServiceEdition extends Service {
    * @param pageNumber le nombre de pages du modèle
    */
   void initializeEdition(final int pageNumber);
-  
-  /**
-   * Retourne la zone associée à une question
-   * @param index Index de la question //FIXME (useless?)
-   * @author degas
-   */
-  QuestionZone getQuestionZone(final int pageIndex, final int questionIndex);
 }

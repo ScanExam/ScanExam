@@ -42,7 +42,7 @@ public class Grader extends VBox {
       HBox _hBox = new HBox();
       this.topRow = _hBox;
       Label _label = new Label(
-        "This is a test Grate entry name, here you will be able to add a description of this entry, and eventually have some latec/html");
+        "This is a test Grate entry name, here you will be able to add a description of this entry, and eventually have some latex/html");
       this.text = _label;
       this.text.setWrapText(true);
       this.text.setMaxWidth(130);
@@ -57,7 +57,7 @@ public class Grader extends VBox {
       VBox.setMargin(this.textArea, _insets_1);
       CheckBox _checkBox = new CheckBox();
       this.check = _checkBox;
-      Label _label_1 = new Label("5.0");
+      Label _label_1 = new Label("0.5");
       this.worth = _label_1;
       Insets _insets_2 = new Insets(0, 0, 0, 10);
       this.worth.setPadding(_insets_2);

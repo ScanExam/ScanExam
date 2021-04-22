@@ -194,9 +194,14 @@
 /* ANNOTATIONS */
 
 .textAnnotation {
-	-fx-font-size: 5px;
+	-fx-font-size: 7px;
 	-fx-background-insets: 0px;
 	-fx-border-radius: 0px;
+}
+.textAnnotation > .scroll-pane{
+
+-fx-hbar-policy:never;
+-fx-vbar-policy:never;	
 }
 .annotationBox {
 	-fx-border-color: black;

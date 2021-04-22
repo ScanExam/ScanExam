@@ -200,9 +200,12 @@ class ControllerFxGraduation {
 	enum SelectedTool {
 		NO_TOOL,
 		MOVE_CAMERA_TOOL,
-		CREATE_ANOTATION_TOOL
+		CREATE_ANOTATION_TOOL,
+		MOVE_ANOTATION_TOOL,
+		MOVE_POINTER_TOOL
 	}
-	SelectedTool currentTool = SelectedTool.NO_TOOL;
+	
+	@Accessors SelectedTool currentTool = SelectedTool.NO_TOOL;
 	
 
 
@@ -240,6 +243,12 @@ class ControllerFxGraduation {
 			}
 			case CREATE_ANOTATION_TOOL: {
 				createNewAnotation(e)
+			}
+			case MOVE_ANOTATION_TOOL: {
+				moveAnotation(e)
+			}
+			case MOVE_POINTER_TOOL: {
+				movePointer(e)
 			}
 		}
 	}
@@ -286,6 +295,38 @@ class ControllerFxGraduation {
 			source.layoutX = objectOriginX + (e.screenX - mouseOriginX)
 			source.layoutY = objectOriginY + (e.screenY - mouseOriginY)
 		}
+	}
+	
+	@Accessors TextAnotation currentAnotation;
+	
+
+	
+	def void moveAnotation(MouseEvent e){
+		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
+		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
+		if (e.eventType == MouseEvent.MOUSE_DRAGGED) {
+			currentAnotation.move(mousePositionX,mousePositionY)
+		}
+		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
+			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
+		}
+			
+	}
+	
+	def void movePointer(MouseEvent e){
+		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
+		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
+		if (e.eventType == MouseEvent.MOUSE_DRAGGED) {
+			currentAnotation.movePointer(mousePositionX,mousePositionY)
+		}
+		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
+			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
+		}
+			
 	}
 
 	@FXML
@@ -605,8 +646,9 @@ class ControllerFxGraduation {
 	def void setSelectedStudent(){
 		if (!studentList.noItems) {
 			focusStudent(studentList.currentItem)
-			updateDisplayedPage();
-			updateDisplayedGrader();	
+			updateDisplayedPage
+			updateDisplayedGrader
+			updateStudentDetails
 		}else {
 			logger.warn("The student list is Empty")
 		}
@@ -631,9 +673,10 @@ class ControllerFxGraduation {
 	def void setSelectedQuestion(){
 		if (!questionList.noItems) {
 			focusQuestion(questionList.currentItem)
-			updateDisplayedPage();
-			updateDisplayedQuestion();
-			updateDisplayedGrader();
+			updateDisplayedPage
+			updateDisplayedQuestion
+			updateDisplayedGrader
+			updateStudentDetails
 		}else {
 			logger.warn("The question list is Empty")
 		}
@@ -692,18 +735,18 @@ class ControllerFxGraduation {
 	 */
 	def void updateDisplayedGrader(){
 		if (!studentList.noItems && !questionList.noItems) {
-			grader.changeGrader(questionList.currentItem,studentList.currentItem);
-			updateGlobalGrade
+			grader.changeGrader(questionList.currentItem,studentList.currentItem)
 		}else {
 			logger.warn("Cannot load grader, student list or question is is empty")
 		}
 	}
 	
 	/**
-	 * Met à jour la note globale affichée
+	 * Met à jour les détails de l'étudiant
 	 */
-	def void updateGlobalGrade() {
+	def void updateStudentDetails() {
     	studentDetails.updateGrade
+    	studentDetails.updateQuality
 	}
 	
 	/**
@@ -771,6 +814,14 @@ class ControllerFxGraduation {
 			}
 		}
 		return -1
+	}
+	
+	/**
+	 * Retourne la note maximale que peut encore obtenir l'étudiant
+	 * @return Note maximale que peut encore obtenir l'étudiant
+	 */
+	def float getCurrentMaxGrade() {
+	    return service.currentMaxGrade
 	}
 	
 	/**

@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Pane
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
 
 class PdfPaneWithAnotations extends Pane {
 	
@@ -48,12 +49,12 @@ class PdfPaneWithAnotations extends Pane {
 	}
 	
 	def addNewAnotation(double x, double y){
-		var anot = new TextAnotation(x,y,50,50,"New Anotation")
+		var anot = new TextAnotation(x,y,100,50,"New Anotation",this)
 		this.children.addAll(anot.allParts)
 	}
 	
 	def addAnotation(double x, double y, double height, double width, String text) {
-		var anot = new TextAnotation(x,y,height,width,text)
+		var anot = new TextAnotation(x,y,height,width,text,this)
 		this.children.addAll(anot.allParts)
 	}
 	
@@ -74,6 +75,15 @@ class PdfPaneWithAnotations extends Pane {
 		imageView.viewport = null;
 	}
 	
+	def handleMoveAnnotation(TextAnotation anot, MouseEvent e) {
+		controller.currentTool = SelectedTool.MOVE_ANOTATION_TOOL
+		controller.currentAnotation = anot;
+	}
+	
+	def handleMovePointer(TextAnotation anot, MouseEvent e) {
+		controller.currentTool = SelectedTool.MOVE_POINTER_TOOL
+		controller.currentAnotation = anot;
+	}
 	
 	
 	

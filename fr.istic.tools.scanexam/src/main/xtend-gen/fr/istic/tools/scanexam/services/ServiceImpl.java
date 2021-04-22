@@ -33,7 +33,6 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
@@ -43,7 +42,6 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -531,7 +529,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     final Function2<Float, Float, Float> _function_4 = (Float acc, Float n) -> {
       return Float.valueOf(((acc).floatValue() + (n).floatValue()));
     };
-    return (float) IterableExtensions.<Float>reduce(IterableExtensions.<Optional<Question>, Float>map(IterableExtensions.<Optional<Question>>filter(IterableExtensions.<Pair<Integer, Grade>, Optional<Question>>map(IterableExtensions.<Pair<Integer, Grade>>filter(IterableExtensions.<Grade>indexed((((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).getGrades()), _function), _function_1), _function_2), _function_3), _function_4);
+    return (Optional.<Float>ofNullable(
+      IterableExtensions.<Float>reduce(IterableExtensions.<Optional<Question>, Float>map(IterableExtensions.<Optional<Question>>filter(IterableExtensions.<Pair<Integer, Grade>, Optional<Question>>map(IterableExtensions.<Pair<Integer, Grade>>filter(IterableExtensions.<Grade>indexed((((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).getGrades()), _function), _function_1), _function_2), _function_3), _function_4)).orElse(Float.valueOf(0f))).floatValue();
   }
   
   /**
@@ -596,31 +595,44 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     return this.graduationTemplate.getStudentListShift();
   }
   
-  @Accessors
   private int questionId;
   
   /**
-   * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
-   * @param q Une Question
-   * @param r Un Rectangle
+   * Crée une nouvelle question et la zone associée
+   * @param l'index de la page sur laquelle mettre la question
+   * @param x la coordonnée X de la zone de la question
+   * @param y la coordonnée Y de la zone de la question
+   * @param heigth la hauteur de la zone de la question
+   * @param width la longueur de la zone de la question
+   * @return l'ID de la nouvelle question
+   * @throw IllegalArgumentException si l'index de la page pointe vers une page qui n'existe pas
    * @author degas
    */
   @Override
   public int createQuestion(final int pdfPageIndex, final float x, final float y, final float heigth, final float width) {
-    final Question question = CoreFactory.eINSTANCE.createQuestion();
-    question.setId(this.questionId);
-    question.setGradeScale(CoreFactory.eINSTANCE.createGradeScale());
-    question.setZone(CoreFactory.eINSTANCE.createQuestionZone());
-    QuestionZone _zone = question.getZone();
-    _zone.setX(x);
-    QuestionZone _zone_1 = question.getZone();
-    _zone_1.setY(y);
-    QuestionZone _zone_2 = question.getZone();
-    _zone_2.setWidth(width);
-    QuestionZone _zone_3 = question.getZone();
-    _zone_3.setHeigth(heigth);
-    this.getPage(pdfPageIndex).getQuestions().add(question);
-    return this.questionId++;
+    try {
+      final Question question = CoreFactory.eINSTANCE.createQuestion();
+      question.setId(this.questionId);
+      question.setGradeScale(CoreFactory.eINSTANCE.createGradeScale());
+      question.setZone(CoreFactory.eINSTANCE.createQuestionZone());
+      QuestionZone _zone = question.getZone();
+      _zone.setX(x);
+      QuestionZone _zone_1 = question.getZone();
+      _zone_1.setY(y);
+      QuestionZone _zone_2 = question.getZone();
+      _zone_2.setWidth(width);
+      QuestionZone _zone_3 = question.getZone();
+      _zone_3.setHeigth(heigth);
+      this.getPage(pdfPageIndex).getQuestions().add(question);
+      return this.questionId++;
+    } catch (final Throwable _t) {
+      if (_t instanceof IndexOutOfBoundsException) {
+        String _plus = (Integer.valueOf(pdfPageIndex) + " is not a valid Page Index");
+        throw new IllegalArgumentException(_plus);
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
   }
   
   /**
@@ -669,24 +681,31 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @param id l'ID de la question à supprimer
    */
   @Override
-  public void removeQuestion(final int id) {
+  public boolean removeQuestion(final int id) {
+    Question toRemove = null;
     EList<Page> _pages = this.editionTemplate.getExam().getPages();
     for (final Page page : _pages) {
-      EList<Question> _questions = page.getQuestions();
-      for (final Question question : _questions) {
-        int _id = question.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          page.getQuestions().remove(question);
+      {
+        EList<Question> _questions = page.getQuestions();
+        for (final Question question : _questions) {
+          int _id = question.getId();
+          boolean _equals = (_id == id);
+          if (_equals) {
+            toRemove = question;
+          }
+        }
+        if ((toRemove != null)) {
+          page.getQuestions().remove(toRemove);
         }
       }
     }
+    return (toRemove != null);
   }
   
   /**
    * Modifie la note maximal que l'on peut attribuer a une question.
-   * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
-   * @param maxPoint, note maximal de la question question a ajouter
+   * @param questionId l'ID de la question a laquelle on veut modifier la note maximal possible
+   * @param maxPoint note maximal de la question question a ajouter
    */
   @Override
   public void modifyMaxPoint(final int questionId, final float maxPoint) {
@@ -699,7 +718,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   /**
    * Sauvegarde le fichier modèle d'examen sur le disque
    * @param path L'emplacement de sauvegarde du fichier
-   * @param pdfOutputStream le contenu du fichier sous forme de Stream
+   * @param pdfOutputStream le PDF sous forme de Stream
    */
   @Override
   public void save(final ByteArrayOutputStream outputStream, final File path) {
@@ -743,27 +762,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Retourne la zone associée à une question
-   * @param index Index de la question //FIXME (useless?)
-   * @author degas
-   */
-  @Override
-  public QuestionZone getQuestionZone(final int pageIndex, final int questionIndex) {
-    return this.getQuestion(pageIndex, questionIndex).getZone();
-  }
-  
-  /**
-   * Permet de récupérer une Question
-   * @param index Index de la question
-   * @return Question Retourne une instance de Question
-   * @author degas
-   */
-  protected Question getQuestion(final int pageId, final int questionid) {
-    return this.editionTemplate.getExam().getPages().get(pageId).getQuestions().get(questionid);
-  }
-  
-  /**
-   * Rend la liste des Questions définies dans un Examen
+   * Rend la liste non modifiable des Questions définies dans un Examen
    * @return List<Question>
    * @author degas
    */
@@ -888,15 +887,5 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       }
     }
     this.questionId = 0;
-  }
-  
-  @Pure
-  @Override
-  public int getQuestionId() {
-    return this.questionId;
-  }
-  
-  public void setQuestionId(final int questionId) {
-    this.questionId = questionId;
   }
 }

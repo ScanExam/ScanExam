@@ -7,6 +7,8 @@ import javafx.scene.layout.VBox
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
 import org.apache.logging.log4j.LogManager
+import javafx.scene.shape.Circle
+import javafx.scene.paint.Color
 
 /**
  * Affiche les détails d'un élève lors de la correction de sa copie
@@ -31,6 +33,8 @@ class StudentDetails extends VBox {
 	Label idLabel
 	/* Label affichant l'identifiant de l'étudiant */
 	Label gradeLabel
+	/* Cercle affichant la qualité de la copie */
+	Circle qualityCircle
 	
 	/* Elément courant de notation */
 	StudentItemGraduation currentItem
@@ -54,19 +58,23 @@ class StudentDetails extends VBox {
 		var nameRow = new Label(translate("label.student.name"))
 		var idRow = new Label(translate("label.student.id"))
 		var gradeRow = new Label(translate("label.student.grade"))
-
+		var qualityRow = new Label(translate("label.student.quality"))
+		
 		grid = new GridPane
 		grid.add(nameRow, 0, 0)
 		grid.add(idRow, 0, 1)
 		grid.add(gradeRow, 0, 2)
+		grid.add(qualityRow, 0, 3)
 
 		name = new RenameFieldSuggests
 		idLabel = new Label
 		gradeLabel = new Label
+		qualityCircle = new Circle(8, Color.GRAY)
 		
 		grid.add(name, 1, 0)
 		grid.add(idLabel, 1, 1)
 		grid.add(gradeLabel, 1, 2)
+		grid.add(qualityCircle, 1, 3)
 
 		this.children.add(grid)
 		setupEvents
@@ -99,6 +107,26 @@ class StudentDetails extends VBox {
 
 	def updateGrade() {
 		gradeLabel.text = controller.getGlobalGrade + "/" + controller.getGlobalScale
+	}
+	
+	def updateQuality() {
+		val quality = controller.getGlobalGrade / controller.getCurrentMaxGrade
+		if (quality >= 0.75) {
+			// Couleur pour la meilleure qualité
+			qualityCircle.fill = Color.GREEN
+		} else if (quality >= 0.5) {
+			// Couleur pour la deuxième meilleure qualité
+			qualityCircle.fill = Color.YELLOW
+		} else if (quality >= 0.25) {
+			// Couleur pour la troisième meilleure qualité
+			qualityCircle.fill = Color.ORANGE
+		} else if (quality >= 0) {
+			// Couleur pour la pire qualité
+			qualityCircle.fill = Color.RED
+		} else {
+			// Couleur par défaut
+			qualityCircle.fill = Color.GRAY
+		}
 	}
 
 	def clearDisplay() {

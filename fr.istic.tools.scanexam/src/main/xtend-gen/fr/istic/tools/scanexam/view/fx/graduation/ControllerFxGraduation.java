@@ -18,6 +18,7 @@ import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +73,11 @@ public class ControllerFxGraduation {
     
     MOVE_CAMERA_TOOL,
     
-    CREATE_ANOTATION_TOOL;
+    CREATE_ANOTATION_TOOL,
+    
+    MOVE_ANOTATION_TOOL,
+    
+    MOVE_POINTER_TOOL;
   }
   
   private static final Logger logger = LogManager.getLogger();
@@ -259,6 +264,7 @@ public class ControllerFxGraduation {
     this.chooseMouseAction(e);
   }
   
+  @Accessors
   private ControllerFxGraduation.SelectedTool currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
   
   private double imageWidth;
@@ -294,6 +300,12 @@ public class ControllerFxGraduation {
           break;
         case CREATE_ANOTATION_TOOL:
           this.createNewAnotation(e);
+          break;
+        case MOVE_ANOTATION_TOOL:
+          this.moveAnotation(e);
+          break;
+        case MOVE_POINTER_TOOL:
+          this.movePointer(e);
           break;
         default:
           break;
@@ -360,6 +372,55 @@ public class ControllerFxGraduation {
       double _minus_1 = (_screenY - this.mouseOriginY);
       double _plus_1 = (this.objectOriginY + _minus_1);
       source_1.setLayoutY(_plus_1);
+    }
+  }
+  
+  @Accessors
+  private TextAnotation currentAnotation;
+  
+  public void moveAnotation(final MouseEvent e) {
+    double _x = e.getX();
+    double _imageViewWidth = this.mainPane.getImageViewWidth();
+    double _minus = (_imageViewWidth - FxSettings.BOX_BORDER_THICKNESS);
+    double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+      Math.min(_x, _minus));
+    double _y = e.getY();
+    double _imageViewHeight = this.mainPane.getImageViewHeight();
+    double _minus_1 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+    double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+      Math.min(_y, _minus_1));
+    EventType<? extends MouseEvent> _eventType = e.getEventType();
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_DRAGGED);
+    if (_equals) {
+      this.currentAnotation.move(mousePositionX, mousePositionY);
+    }
+    EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
+    boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
+    if (_equals_1) {
+      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+    }
+  }
+  
+  public void movePointer(final MouseEvent e) {
+    double _x = e.getX();
+    double _imageViewWidth = this.mainPane.getImageViewWidth();
+    double _minus = (_imageViewWidth - FxSettings.BOX_BORDER_THICKNESS);
+    double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+      Math.min(_x, _minus));
+    double _y = e.getY();
+    double _imageViewHeight = this.mainPane.getImageViewHeight();
+    double _minus_1 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+    double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+      Math.min(_y, _minus_1));
+    EventType<? extends MouseEvent> _eventType = e.getEventType();
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_DRAGGED);
+    if (_equals) {
+      this.currentAnotation.movePointer(mousePositionX, mousePositionY);
+    }
+    EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
+    boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
+    if (_equals_1) {
+      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
     }
   }
   
@@ -755,6 +816,7 @@ public class ControllerFxGraduation {
       this.focusStudent(this.studentList.getCurrentItem());
       this.updateDisplayedPage();
       this.updateDisplayedGrader();
+      this.updateStudentDetails();
     } else {
       ControllerFxGraduation.logger.warn("The student list is Empty");
     }
@@ -786,6 +848,7 @@ public class ControllerFxGraduation {
       this.updateDisplayedPage();
       this.updateDisplayedQuestion();
       this.updateDisplayedGrader();
+      this.updateStudentDetails();
     } else {
       ControllerFxGraduation.logger.warn("The question list is Empty");
     }
@@ -840,17 +903,17 @@ public class ControllerFxGraduation {
   public void updateDisplayedGrader() {
     if (((!this.studentList.noItems()) && (!this.questionList.noItems()))) {
       this.grader.changeGrader(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
-      this.updateGlobalGrade();
     } else {
       ControllerFxGraduation.logger.warn("Cannot load grader, student list or question is is empty");
     }
   }
   
   /**
-   * Met à jour la note globale affichée
+   * Met à jour les détails de l'étudiant
    */
-  public void updateGlobalGrade() {
+  public void updateStudentDetails() {
     this.studentDetails.updateGrade();
+    this.studentDetails.updateQuality();
   }
   
   public void setZoomArea(final double x, final double y, final double height, final double width) {
@@ -914,6 +977,14 @@ public class ControllerFxGraduation {
       }
     }
     return (-1);
+  }
+  
+  /**
+   * Retourne la note maximale que peut encore obtenir l'étudiant
+   * @return Note maximale que peut encore obtenir l'étudiant
+   */
+  public float getCurrentMaxGrade() {
+    return this.service.getCurrentMaxGrade();
   }
   
   /**
@@ -1145,5 +1216,23 @@ public class ControllerFxGraduation {
   
   public void setPdfManager(final PdfManager pdfManager) {
     this.pdfManager = pdfManager;
+  }
+  
+  @Pure
+  public ControllerFxGraduation.SelectedTool getCurrentTool() {
+    return this.currentTool;
+  }
+  
+  public void setCurrentTool(final ControllerFxGraduation.SelectedTool currentTool) {
+    this.currentTool = currentTool;
+  }
+  
+  @Pure
+  public TextAnotation getCurrentAnotation() {
+    return this.currentAnotation;
+  }
+  
+  public void setCurrentAnotation(final TextAnotation currentAnotation) {
+    this.currentAnotation = currentAnotation;
   }
 }

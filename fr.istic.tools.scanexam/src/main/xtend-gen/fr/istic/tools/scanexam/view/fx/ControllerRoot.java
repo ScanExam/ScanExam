@@ -65,6 +65,9 @@ public class ControllerRoot implements Initializable {
   @FXML
   private MenuItem pdfExportButton;
   
+  @FXML
+  private MenuItem sendMailButton;
+  
   @Accessors
   private ControllerFxGraduation graduationController;
   
@@ -288,8 +291,9 @@ public class ControllerRoot implements Initializable {
     this.saveGraduationButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
     this.saveTemplateButton.disableProperty().bind(this.editionController.getLoadedModel().not());
     this.exportToExamButton.disableProperty().bind(this.editionController.getLoadedModel().not());
-    this.loadStudentNamesButton.disableProperty().bind(this.editionController.getLoadedModel().not());
+    this.loadStudentNamesButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
     this.pdfExportButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
+    this.sendMailButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
   }
   
   @Override

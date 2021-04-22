@@ -191,7 +191,7 @@ class Grader extends VBox {
 			this.grader = grader
 			topRow = new HBox()
 			text = new Label(
-				"This is a test Grate entry name, here you will be able to add a description of this entry, and eventually have some latec/html")
+				"This is a test Grate entry name, here you will be able to add a description of this entry, and eventually have some latex/html")
 			text.wrapText = true
 			text.maxWidth = 130
 			text.margin = new Insets(0, 0, 0, 10)
@@ -203,7 +203,7 @@ class Grader extends VBox {
 
 			check = new CheckBox()
 
-			worth = new Label("5.0");
+			worth = new Label("0.5");
 			worth.padding = new Insets(0, 0, 0, 10)
 
 			worthField = new TextField(worth.text)

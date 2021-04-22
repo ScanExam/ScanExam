@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.Question
-import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
@@ -26,7 +25,6 @@ import java.util.List
 import java.util.Objects
 import java.util.Optional
 import org.apache.logging.log4j.LogManager
-import org.eclipse.xtend.lib.annotations.Accessors
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -419,14 +417,13 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu 
 	 */
 	override float getCurrentMaxGrade() {
-		studentSheets.get(currentSheetIndex).grades
-			.indexed
-			.filter[pair | !pair.value.entries.isEmpty]
-			.map[pair | getQuestionFromIndex(pair.key)]
-			.filter[o | !o.isEmpty]
-			.map[ o | o.get.gradeScale.maxPoint]
-			.reduce[acc, n | acc + n]
-		
+		Optional.ofNullable(studentSheets.get(currentSheetIndex).grades
+            .indexed
+            .filter[pair | !pair.value.entries.isEmpty]
+            .map[pair | getQuestionFromIndex(pair.key)]
+            .filter[o | !o.isEmpty]
+            .map[ o | o.get.gradeScale.maxPoint]
+            .reduce[acc, n | acc + n]).orElse(0f)
 	}
 	
 	/**
@@ -505,16 +502,21 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	
-	@Accessors int questionId;
+	int questionId
 
 	/**
-	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
-	 * @param q Une Question
-	 * @param r Un Rectangle
+	 * Crée une nouvelle question et la zone associée
+	 * @param l'index de la page sur laquelle mettre la question
+	 * @param x la coordonnée X de la zone de la question
+	 * @param y la coordonnée Y de la zone de la question
+	 * @param heigth la hauteur de la zone de la question
+	 * @param width la longueur de la zone de la question
+	 * @return l'ID de la nouvelle question
+	 * @throw IllegalArgumentException si l'index de la page pointe vers une page qui n'existe pas
 	 * @author degas
 	 */
 	override int createQuestion(int pdfPageIndex, float x, float y, float heigth, float width) {
-
+		try {
 		val question = CoreFactory.eINSTANCE.createQuestion();
 		question.id = questionId;
 		question.gradeScale = CoreFactory.eINSTANCE.createGradeScale();
@@ -525,6 +527,9 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		question.zone.heigth = heigth
 		getPage(pdfPageIndex).questions.add(question);
 		return questionId++;
+		} catch(IndexOutOfBoundsException e) {
+			throw new IllegalArgumentException(pdfPageIndex + " is not a valid Page Index")
+		}
 	}
 
 	/**
@@ -566,16 +571,21 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param id l'ID de la question à supprimer
 	 */
 	override removeQuestion(int id) {
-		for (page : editionTemplate.exam.pages)
+		var Question toRemove = null;
+		for (page : editionTemplate.exam.pages) {
 			for (question : page.questions)
 				if (question.id == id)
-					page.questions.remove(question)
+					toRemove = question
+			if(toRemove !== null)
+				page.questions.remove(toRemove)
+			}
+		return toRemove !== null
 	}
 
 	/**
 	 * Modifie la note maximal que l'on peut attribuer a une question.
-	 * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
-	 * @param maxPoint, note maximal de la question question a ajouter
+	 * @param questionId l'ID de la question a laquelle on veut modifier la note maximal possible
+	 * @param maxPoint note maximal de la question question a ajouter
 	 */
 	override modifyMaxPoint(int questionId, float maxPoint) {
 		val scale = getQuestion(questionId).gradeScale
@@ -587,7 +597,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	/**
 	 * Sauvegarde le fichier modèle d'examen sur le disque
 	 * @param path L'emplacement de sauvegarde du fichier
-	 * @param pdfOutputStream le contenu du fichier sous forme de Stream
+	 * @param pdfOutputStream le PDF sous forme de Stream
 	 */
 	override save(ByteArrayOutputStream outputStream, File path) {
 		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
@@ -616,26 +626,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		return Optional.empty;
 	}
 
-	/** Retourne la zone associée à une question
-	 * @param index Index de la question //FIXME (useless?)
-	 * @author degas
-	 */
-	override QuestionZone getQuestionZone(int pageIndex, int questionIndex) {
-		return getQuestion(pageIndex, questionIndex).zone
-	}
-	
-	
-	/** Permet de récupérer une Question
-	 * @param index Index de la question
-	 * @return Question Retourne une instance de Question
-	 * @author degas
-	 */
-	protected def Question getQuestion(int pageId, int questionid)
-	{
-		return editionTemplate.exam.pages.get(pageId).questions.get(questionid);
-	}
-	
-	/**  Rend la liste des Questions définies dans un Examen
+	/**  Rend la liste non modifiable des Questions définies dans un Examen
 	 * @return List<Question>
 	 * @author degas
 	 */
