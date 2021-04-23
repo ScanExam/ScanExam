@@ -2,8 +2,6 @@ package fr.istic.tools.scanexam.export
 
 import fr.istic.tools.scanexam.core.Comment
 import fr.istic.tools.scanexam.core.Grade
-import fr.istic.tools.scanexam.core.HandwritingComment
-import fr.istic.tools.scanexam.core.Line
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.TextComment
 import fr.istic.tools.scanexam.services.api.Service
@@ -19,46 +17,38 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
-import java.io.ByteArrayInputStream
 import java.util.ArrayList
-import java.util.HashMap
-import java.util.Map
+
 
 class ExportExamToPdf {
 	
 	/**
-	 * Exports a student's PDF file from the PDF document containing all the exam papers
+	 * Exports a student's PDF file from the PDF document containing all the exam papers WITHOUT ANNOTATIONS OR GRADE
 	 * @param pdf is the complete pdf document of all students
 	 * @param sheet is the sheet of the student to export.
 	 * @param overwriteFile allow file overwriting
 	 * @return null is return if overwrite is needed but @param overwriteFile is false, else return File.
 	 */
-	def static File exportStudentPdfFromCompletePdf(PDDocument pdf,StudentSheet sheet, File outputPdfFile,Boolean overwriteFile){
-		
-		if(outputPdfFile.exists && !overwriteFile){
-			return null;
+	def static File exportStudentExamFromCompletePdfToPDF(PDDocument pdf,StudentSheet sheet, File outputPdfFile){
+		var PDDocument document = new PDDocument();
+	
+		for(i :sheet.posPage){
+			document.addPage(pdf.getPage(i));	
 		}
-		else{
-			var PDDocument document = new PDDocument();
 		
-			for(i :sheet.posPage){
-				document.addPage(pdf.getPage(i));	
-			}
-			
-			document.save(outputPdfFile);
-			document.close;
-			return outputPdfFile;
-		}
+		document.save(outputPdfFile);
+		document.close;
+		return outputPdfFile;
 	}	
 	
 	
 	/**
-	 * Exports a student's InputStream from the PDF document containing all the exam papers
+	 * Exports a student's InputStream from the PDF document containing all the exam papers WITHOUT ANNOTATIONS OR GRADE
 	 * @param pdf is the complete pdf document of all students
 	 * @param sheet is the sheet of the student to export.
 	 * @return InputStream of student exam
 	 */
-	def static InputStream exportToInputStream(PDDocument pdf, StudentSheet sheet){
+	def static InputStream exportStudentExamFromCompletePdfToInputStream(PDDocument pdf, StudentSheet sheet){
         var PDDocument document = new PDDocument();
 
         for(i :sheet.posPage){
@@ -73,12 +63,12 @@ class ExportExamToPdf {
     }
     
     /**
-	 * Exports a student's InputStream from the PDF document containing all the exam papers
+	 * Exports a student's InputStream from the PDF document containing all the exam papers WITHOUT ANNOTATIONS OR GRADE
 	 * @param pdf is the complete pdf document of all students
 	 * @param sheet is the sheet of the student to export.
 	 * @return InputStream of student exam
 	 */
-	def static InputStream exportToInputStream(InputStream pdf, StudentSheet sheet){
+	def static InputStream exportStudentExamFromCompletePdfToInputStream(InputStream pdf, StudentSheet sheet){
 		var PDDocument document = PDDocument.load(pdf);
 		
         var PDDocument studentDocument = new PDDocument();
@@ -94,12 +84,12 @@ class ExportExamToPdf {
     }
     
     /**
-	 * Exports a student's OutputStream from the PDF document containing all the exam papers
+	 * Exports a student's OutputStream from the PDF document containing all the exam papers WITHOUT ANNOTATIONS OR GRADE
 	 * @param pdf is the complete pdf document of all students
 	 * @param sheet is the sheet of the student to export.
 	 * @return OutputStream of student exam
 	 */
-    def static OutputStream exportToOutputStream(PDDocument pdf, StudentSheet sheet){
+    def static OutputStream exportToOutputStreamToOutputStream(PDDocument pdf, StudentSheet sheet){
         var PDDocument document = new PDDocument();
 
         for(i :sheet.posPage){
@@ -115,7 +105,7 @@ class ExportExamToPdf {
     }
     
     /**
-	 * Exports a student's PDF temp file from the PDF document containing all the exam papers
+	 * Exports a student's temp PDF file from the PDF document containing all the exam papers WITHOUT ANNOTATIONS OR GRADE
 	 * The name of the file is examName + studentName
 	 * @param pdf is the complete pdf document of all students
 	 * @param sheet is the sheet of the student to export.
@@ -138,25 +128,21 @@ class ExportExamToPdf {
 		document.close;
 		
 		return file;
-	}	
-    
-    
-    /**
-	 * Exports a Collection of student's PDF temp file from the PDF document containing all the exam papers
-	 * The name of the file is examName + studentName
-	 * @param pdf is the complete pdf document of all students
-	 * @param sheets is the Collection of sheets of they students to export.
-	 * @return Collection of temp File of student exam. 
-	 */
-    def static Collection<File> exportToCollection(Service service,InputStream pdfStream,Collection<StudentSheet> sheets){
-    	sheets.stream.map(s |exportToTempFile(service,pdfStream,s)).collect(Collectors.toList);
-    }
+	}
     
     /**-----------------------------------------------------------------------
      * ------------------------Export with annotations------------------------
      * -----------------------------------------------------------------------
      */
+
      
+     /**
+      * EXPORT a PDF file for each student containing all annotations TO selected folder
+      * @param documentInputStream is the PDF of all student exams
+      * @param sheets is they studentSheet of they students
+      * @param folderForSaving is the Folder for save PDF documents
+      * @return collection of temp Files
+      */
      def static void exportExamsOfStudentsToPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets, File folderForSaving){
      	var File tempExam = File.createTempFile("examTemp", ".pdf");
      	
@@ -177,7 +163,68 @@ class ExportExamToPdf {
      	pdf.close();
      }
      
+     /**
+      * EXPORT a Collection of PDF TEMP files for each student containing all annotations TO selected folder
+      * @param documentInputStream is the PDF of all student exams
+      * @param sheets is they studentSheet of they students
+      * @return collection of temp Files
+      */
+     def Collection<File> exportExamsOfStudentsToTempPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets){
+     	var Collection<File> tempExams = new ArrayList<File>();
+     	
+     	var File tempExam = File.createTempFile("examTemp", ".pdf");
+     	
+     	exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam);
+     	
+     	var PDDocument pdf = PDDocument.load(tempExam);
+     	
+     	for(sheet : sheets){
+     		
+     		var PDDocument document = new PDDocument();
+     		for(i :sheet.posPage){
+				document.addPage(pdf.getPage(i));	
+			}
+			var File studentExam = File.createTempFile("tempExam" + sheet.studentName, ".pdf");
+			document.save(studentExam);
+			tempExams.add(studentExam);
+			document.close;
+     	}
+     	pdf.close();
+     	return tempExams;
+     }
      
+     
+     /**
+      * EXPORT a PDF TEMP containing all annotations TO temp file
+      * @param studentExamDocument is the PDF file of all students
+      * @param sheet is the studentSheet of the student
+	  * @return temp File of annoted PDF.
+      */
+     def File exportExamsToTempAnnotedPdf(InputStream documentInputStream,Collection<StudentSheet> sheets){
+     	var File tempExam = File.createTempFile("examTemp", ".pdf");
+     	exportExamsToAnnotedPdf(documentInputStream,sheets, tempExam);
+     	return tempExam;
+     }
+     
+     /**
+      * Export PDF file containing all annotations for a student
+      * @param studentExamDocument is the PDF file of the student
+      * @param sheet is the studentSheet of the student
+	  * @return temp File of annoted PDF.
+      */
+     def File exportToTempPdfWithAnnotations(Service service,InputStream studentExamDocument, StudentSheet sheet){
+     	var File file = File.createTempFile(service.examName+sheet.studentName , ".pdf");
+     	exportExamToAnnotedPdf(studentExamDocument, sheet, file);
+     	return file;
+     }
+     
+     
+     /**
+      * Add annotations to master PDF that contains all students
+      * @param documentInputStream is the PDF file of the student
+      * @param sheets is they studentSheet of they students
+      * @param fileForSaving is the File for save PDF document
+      */
      def static void exportExamsToAnnotedPdf(InputStream documentInputStream,Collection<StudentSheet> sheets, File fileForSaving){
      	var PDDocument document = PDDocument.load(documentInputStream)
 		for(sheet : sheets){
@@ -288,12 +335,12 @@ class ExportExamToPdf {
      
      
      /**
-      * Add to the pdf exam of the student annotations
+      * Add annotations to PDF exam of a student
       * @param documentInputStream is the PDF file of the student
       * @param sheet is the studentSheet of the student
       * @param fileForSaving is the File for save PDF document
       */
-     def static void exportExamOfStudentToPdfWithAnnotations(InputStream documentInputStream,StudentSheet sheet, File fileForSaving){
+     def static void exportExamToAnnotedPdf(InputStream documentInputStream,StudentSheet sheet, File fileForSaving){
      	
 		var PDDocument document = PDDocument.load(documentInputStream)
 
@@ -402,85 +449,6 @@ class ExportExamToPdf {
 		documentInputStream.close();
 		
      }
-     
-     /**
-      * Export pdf with annotations and Grade
-      * @param documentInputStream is the PDF file of the student
-      * @param sheet is the studentSheet of the student
-	  * @return temp File of annoted PDF.
-      */
-     def File exportToTempPdfWithAnnotations(Service service,InputStream documentInputStream, StudentSheet sheet){
-     	var File file = File.createTempFile(service.examName+sheet.studentName , ".pdf");
-     	exportExamOfStudentToPdfWithAnnotations(documentInputStream, sheet, file);
-     	return file;
-     }
-     
-     /**
-	 * Exports a Collection of student's PDF temp file from Collection of student exam and Collection of studentsheet
-	 * The name of the temp file is examName + studentName
-	 * documentInputStream and sheets need to have same size and their index must match.
-	 * @param documentAndAssociatedStudentSheet is an ordered Collection of documents
-	 * @param documentAndAssociatedStudentSheet is an ordered Collection of StudentSheet
-	 * @return Collection of temp File of student exam. 
-	 */
-     def static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromCollections(Service service,Collection<InputStream> documentInputStream,Collection<StudentSheet> sheets){
-     	if(documentInputStream.size()!=sheets.size()){
-     		return null;
-     	}
-     	else{
-     		var Collection<File> files = new ArrayList<File>();
-	     	for(var int i=0; i<documentInputStream.size();i++){
-	     		var File file = File.createTempFile(service.examName+sheets.get(i).studentName , ".pdf");
-	     		exportExamOfStudentToPdfWithAnnotations(documentInputStream.get(i),sheets.get(i),file);
-	     		files.add(file)
-	     	}
-	     	return files;
-     	}
-     }
-     
-     /**
-	 * Exports a Collection of student's PDF temp file from HashMap of student exam and studentsheet
-	 * The name of the temp file is examName + studentName
-	 * @param documentAndAssociatedStudentSheet is an HashMap of Document and StudentSheet
-	 * @return Collection of temp File of student exam. 
-	 */
-     def static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromHashMap(Service service,HashMap<InputStream,StudentSheet> documentAndAssociatedStudentSheet){
-     	var Collection<File> files = new ArrayList<File>();
-     	for (Map.Entry<InputStream,StudentSheet> mapentry : documentAndAssociatedStudentSheet.entrySet()) {
-     		var File file = File.createTempFile(service.examName+mapentry.getValue().studentName , ".pdf");
- 			exportExamOfStudentToPdfWithAnnotations(mapentry.getKey(),mapentry.getValue(),file);
-     		files.add(file)
-        }
-        return files;
-     }
-     
-     
-     /*
-	 * PROTOYPE not tested because the functionality is not implemented : Draw lines annotations of fileForSaving
-	 */
-	 /* 
-	def static void annotationDrawLinePDF(PDDocument document, HandwritingComment[] listLine, File fileForSaving) {
-		
-		for(HandwritingComment handwritingComment : listLine){
-			
-			var PDPage page = document.getPage(handwritingComment.pageId);
-			var PDPageContentStream contentStream = new PDPageContentStream(document, page,
-				PDPageContentStream.AppendMode.APPEND, true, true)
-	
-			for (Line l : handwritingComment.lines) {
-				contentStream.moveTo(l.x1, l.y1)
-				contentStream.lineTo(l.x2, l.y2)
-				contentStream.setNonStrokingColor(Color.decode(l.color))
-				contentStream.stroke()
-				contentStream.fill();
-			}
-	
-			contentStream.close();
-			document.save(fileForSaving);
-		}
-	}
-	
-	*/
      
      
 }
