@@ -11,7 +11,6 @@ import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.Collection
-import java.util.stream.Collectors
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
