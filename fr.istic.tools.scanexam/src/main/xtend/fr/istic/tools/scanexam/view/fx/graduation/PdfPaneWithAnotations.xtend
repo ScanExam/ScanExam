@@ -77,7 +77,7 @@ class PdfPaneWithAnotations extends Pane {
 	}
 	
 	def removeAnotation(TextAnotation anotation){
-		children.remove(anotation.allParts)
+		children.removeAll(anotation.allParts)
 	}
 	
 	def removeAllAnotations(){
@@ -108,6 +108,8 @@ class PdfPaneWithAnotations extends Pane {
 	}
 	
 	def handleRemove(TextAnotation anot){
+		controller.removeAnnotation(anot)
+		removeAnotation(anot)
 	}
 	
 	

@@ -33,7 +33,7 @@ public class PdfPaneWithAnotations extends Pane {
   
   private Image currentImage;
   
-  public void displayAnnotationsFor(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
+  public Object displayAnnotationsFor(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
     this.removeAllAnotations();
     List<Integer> ids = this.controller.getService().getAnnotationIds(qItem.getQuestionId(), sItem.getStudentId());
     for (final int id : ids) {
@@ -43,6 +43,7 @@ public class PdfPaneWithAnotations extends Pane {
         this.controller.getService().getAnnotationPointerX(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationPointerY(id, qItem.getQuestionId(), sItem.getStudentId()), 
         this.controller.getService().getAnnotationText(id, qItem.getQuestionId(), sItem.getStudentId()), id);
     }
+    return null;
   }
   
   public Image setImage(final Image image) {
@@ -108,7 +109,7 @@ public class PdfPaneWithAnotations extends Pane {
   }
   
   public boolean removeAnotation(final TextAnotation anotation) {
-    return this.getChildren().remove(anotation.getAllParts());
+    return this.getChildren().removeAll(anotation.getAllParts());
   }
   
   public boolean removeAllAnotations() {
@@ -143,8 +144,13 @@ public class PdfPaneWithAnotations extends Pane {
     this.controller.updateAnnotation(anot);
   }
   
-  public Object handleRemove(final TextAnotation anot) {
-    return null;
+  public boolean handleRemove(final TextAnotation anot) {
+    boolean _xblockexpression = false;
+    {
+      this.controller.removeAnnotation(anot);
+      _xblockexpression = this.removeAnotation(anot);
+    }
+    return _xblockexpression;
   }
   
   public void setupEvents() {

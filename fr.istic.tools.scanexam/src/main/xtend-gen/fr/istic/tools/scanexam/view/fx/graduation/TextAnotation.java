@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
@@ -44,6 +45,7 @@ public class TextAnotation extends VBox {
     this.bar.setAlignment(Pos.TOP_RIGHT);
     Button _button = new Button("X");
     this.close = _button;
+    this.close.setCursor(Cursor.DEFAULT);
     this.bar.setMaxHeight(5);
     Pane p = new Pane();
     this.bar.getChildren().addAll(p, this.close);
@@ -59,27 +61,25 @@ public class TextAnotation extends VBox {
     this.text.getStyleClass().add("textAnnotation");
     this.getStyleClass().add("annotationBox");
     this.text.setMinWidth(TextAnotation.defaultWidth);
-    double _height = this.bar.getHeight();
-    double _minus = (TextAnotation.defaultHeight - _height);
-    this.text.setMinHeight(_minus);
+    this.text.setMinHeight(TextAnotation.defaultHeight);
     this.text.setPrefWidth(TextAnotation.defaultWidth);
     this.text.setPrefHeight(TextAnotation.defaultHeight);
     this.initPos(x, y);
     this.setupEvents();
-    double _height_1 = this.textHolder.getLayoutBounds().getHeight();
-    double _plus = (_height_1 + 20);
+    double _height = this.textHolder.getLayoutBounds().getHeight();
+    double _plus = (_height + 20);
     this.text.setPrefHeight(_plus);
     double _width = this.textHolder.getLayoutBounds().getWidth();
     double _plus_1 = (_width + 20);
     this.text.setPrefWidth(_plus_1);
     double _imageViewHeight = parent.getImageViewHeight();
     double _layoutY = this.getLayoutY();
-    double _minus_1 = (_imageViewHeight - _layoutY);
-    this.setMaxHeight(_minus_1);
+    double _minus = (_imageViewHeight - _layoutY);
+    this.setMaxHeight(_minus);
     double _imageViewWidth = parent.getImageViewWidth();
     double _layoutX = this.getLayoutX();
-    double _minus_2 = (_imageViewWidth - _layoutX);
-    this.setMaxWidth(_minus_2);
+    double _minus_1 = (_imageViewWidth - _layoutX);
+    this.setMaxWidth(_minus_1);
   }
   
   private int annotId;
@@ -228,9 +228,13 @@ public class TextAnotation extends VBox {
       this.parent.handleMovePointer(this, event);
     };
     this.ball.setOnMousePressed(_function_2);
-    final ChangeListener<String> _function_3 = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
+    final EventHandler<ActionEvent> _function_3 = (ActionEvent event) -> {
+      this.parent.handleRemove(this);
+    };
+    this.close.setOnAction(_function_3);
+    final ChangeListener<String> _function_4 = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
       this.parent.handleRename(this);
     };
-    this.text.textProperty().addListener(_function_3);
+    this.text.textProperty().addListener(_function_4);
   }
 }

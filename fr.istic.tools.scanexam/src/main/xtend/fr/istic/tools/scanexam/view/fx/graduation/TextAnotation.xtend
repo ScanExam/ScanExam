@@ -30,6 +30,7 @@ class TextAnotation extends VBox {
 		bar = new HBox();
 		bar.alignment = Pos.TOP_RIGHT
 		close = new Button("X");
+		close.cursor = Cursor.DEFAULT
 		
 		bar.maxHeight = 5;
 		var p = new Pane()
@@ -148,7 +149,7 @@ class TextAnotation extends VBox {
        
 		this.onMousePressed = [event |parent.handleMoveAnnotation(this,event)]
 		ball.onMousePressed = [event | parent.handleMovePointer(this,event)]
-		
+		close.onAction = [event | parent.handleRemove(this)]
 		text.textProperty.addListener([obs,oldVal,newVal | parent.handleRename(this)])
 	}
 	

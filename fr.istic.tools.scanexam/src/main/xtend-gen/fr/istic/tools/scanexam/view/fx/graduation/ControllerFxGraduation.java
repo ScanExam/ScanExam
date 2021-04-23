@@ -725,42 +725,32 @@ public class ControllerFxGraduation {
   /**
    * Utiliser pour ajouter une anotations a la vue avec la sourie.
    */
-  public int createNewAnotation(final MouseEvent e) {
-    int _xblockexpression = (int) 0;
-    {
-      double _x = e.getX();
-      double _imageViewWidth = this.mainPane.getImageViewWidth();
-      double _minus = (_imageViewWidth - FxSettings.BOX_BORDER_THICKNESS);
-      double _minus_1 = (_minus - TextAnotation.defaultWidth);
-      double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
-        Math.min(_x, _minus_1));
-      double _y = e.getY();
-      double _imageViewHeight = this.mainPane.getImageViewHeight();
-      double _minus_2 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
-      double _minus_3 = (_minus_2 - TextAnotation.defaultHeight);
-      double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
-        Math.min(_y, _minus_3));
-      int _xifexpression = (int) 0;
-      EventType<? extends MouseEvent> _eventType = e.getEventType();
-      boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
-      if (_equals) {
-        int _xblockexpression_1 = (int) 0;
-        {
-          TextAnotation annot = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
-          _xblockexpression_1 = annot.setAnnotId(this.addAnnotation(annot));
-        }
-        _xifexpression = _xblockexpression_1;
-      }
-      _xblockexpression = _xifexpression;
+  public void createNewAnotation(final MouseEvent e) {
+    double _x = e.getX();
+    double _imageViewWidth = this.mainPane.getImageViewWidth();
+    double _minus = (_imageViewWidth - FxSettings.BOX_BORDER_THICKNESS);
+    double _minus_1 = (_minus - TextAnotation.defaultWidth);
+    double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+      Math.min(_x, _minus_1));
+    double _y = e.getY();
+    double _imageViewHeight = this.mainPane.getImageViewHeight();
+    double _minus_2 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+    double _minus_3 = (_minus_2 - TextAnotation.defaultHeight);
+    double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
+      Math.min(_y, _minus_3));
+    EventType<? extends MouseEvent> _eventType = e.getEventType();
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
+    if (_equals) {
+      TextAnotation annot = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
+      this.addAnnotation(annot);
     }
-    return _xblockexpression;
   }
   
   /**
    * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
    */
-  public void showAnotations() {
-    this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
+  public Object showAnotations() {
+    return this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
   }
   
   /**
@@ -1220,22 +1210,25 @@ public class ControllerFxGraduation {
     this.service.assignStudentId(newname);
   }
   
-  public int addAnnotation(final TextAnotation annot) {
-    int _xblockexpression = (int) 0;
-    {
-      double _annotPointerX = annot.getAnnotPointerX();
-      String _plus = ("Adding new Annotation to Model : Pointer x :" + Double.valueOf(_annotPointerX));
-      String _plus_1 = (_plus + " Pointer y :");
-      double _annotPointerY = annot.getAnnotPointerY();
-      String _plus_2 = (_plus_1 + Double.valueOf(_annotPointerY));
-      ControllerFxGraduation.logger.info(_plus_2);
-      _xblockexpression = annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId()));
-    }
-    return _xblockexpression;
+  public void addAnnotation(final TextAnotation annot) {
+    annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId()));
+    int _annotId = annot.getAnnotId();
+    String _plus = ("Adding new Annotation to Model : ID = " + Integer.valueOf(_annotId));
+    ControllerFxGraduation.logger.info(_plus);
   }
   
   public void updateAnnotation(final TextAnotation annot) {
+    int _annotId = annot.getAnnotId();
+    String _plus = ("Updating annotation in Model : ID = " + Integer.valueOf(_annotId));
+    ControllerFxGraduation.logger.info(_plus);
     this.service.updateAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), annot.getAnnotId(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId());
+  }
+  
+  public void removeAnnotation(final TextAnotation annot) {
+    int _annotId = annot.getAnnotId();
+    String _plus = ("Removing Annotation from  Model : ID = " + Integer.valueOf(_annotId));
+    ControllerFxGraduation.logger.info(_plus);
+    this.service.removeAnnotation(annot.getAnnotId(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId());
   }
   
   @Pure

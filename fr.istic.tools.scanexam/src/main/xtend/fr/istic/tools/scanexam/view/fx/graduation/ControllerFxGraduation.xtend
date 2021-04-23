@@ -589,7 +589,7 @@ class ControllerFxGraduation {
 							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS - TextAnotation.defaultHeight));
 		if (e.eventType == MouseEvent.MOUSE_PRESSED) {
 				var annot = mainPane.addNewAnotation(mousePositionX,mousePositionY);
-				annot.annotId = addAnnotation(annot)
+				addAnnotation(annot)
 			}
 			
 	
@@ -1011,11 +1011,19 @@ class ControllerFxGraduation {
         service.assignStudentId(newname)
     }
      def addAnnotation(TextAnotation annot){
-    	logger.info("Adding new Annotation to Model : Pointer x :" + annot.annotPointerX + " Pointer y :" + annot.annotPointerY)
+    	
     	annot.annotId = service.addNewAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,questionList.currentItem.questionId,studentList.currentItem.studentId)
+    	logger.info("Adding new Annotation to Model : ID = " + annot.annotId)
     }
     
     def updateAnnotation(TextAnotation annot) {
+    	logger.info("Updating annotation in Model : ID = " + annot.annotId)
     	service.updateAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,annot.annotId,questionList.currentItem.questionId,studentList.currentItem.studentId)
     }
+    
+    def removeAnnotation(TextAnotation annot){
+    	logger.info("Removing Annotation from  Model : ID = " + annot.annotId)
+    	service.removeAnnotation(annot.annotId,questionList.currentItem.questionId,studentList.currentItem.studentId)
+    }
+    
 }
