@@ -34,6 +34,7 @@ public class PdfPaneWithAnotations extends Pane {
   private Image currentImage;
   
   public void displayAnnotationsFor(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
+    this.removeAllAnotations();
     List<Integer> ids = this.controller.getService().getAnnotationIds(qItem.getQuestionId(), sItem.getStudentId());
     for (final int id : ids) {
       this.addAnotation(

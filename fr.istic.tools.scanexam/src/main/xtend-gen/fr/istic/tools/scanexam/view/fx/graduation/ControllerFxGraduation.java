@@ -383,13 +383,17 @@ public class ControllerFxGraduation {
     double _x = e.getX();
     double _imageViewWidth = this.mainPane.getImageViewWidth();
     double _minus = (_imageViewWidth - FxSettings.BOX_BORDER_THICKNESS);
+    double _width = this.currentAnotation.getWidth();
+    double _minus_1 = (_minus - _width);
     double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
-      Math.min(_x, _minus));
+      Math.min(_x, _minus_1));
     double _y = e.getY();
     double _imageViewHeight = this.mainPane.getImageViewHeight();
-    double _minus_1 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+    double _minus_2 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+    double _height = this.currentAnotation.getHeight();
+    double _minus_3 = (_minus_2 - _height);
     double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
-      Math.min(_y, _minus_1));
+      Math.min(_y, _minus_3));
     EventType<? extends MouseEvent> _eventType = e.getEventType();
     boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_DRAGGED);
     if (_equals) {
@@ -721,24 +725,31 @@ public class ControllerFxGraduation {
   /**
    * Utiliser pour ajouter une anotations a la vue avec la sourie.
    */
-  public TextAnotation createNewAnotation(final MouseEvent e) {
-    TextAnotation _xblockexpression = null;
+  public int createNewAnotation(final MouseEvent e) {
+    int _xblockexpression = (int) 0;
     {
       double _x = e.getX();
       double _imageViewWidth = this.mainPane.getImageViewWidth();
       double _minus = (_imageViewWidth - FxSettings.BOX_BORDER_THICKNESS);
+      double _minus_1 = (_minus - TextAnotation.defaultWidth);
       double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
-        Math.min(_x, _minus));
+        Math.min(_x, _minus_1));
       double _y = e.getY();
       double _imageViewHeight = this.mainPane.getImageViewHeight();
-      double _minus_1 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+      double _minus_2 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
+      double _minus_3 = (_minus_2 - TextAnotation.defaultHeight);
       double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
-        Math.min(_y, _minus_1));
-      TextAnotation _xifexpression = null;
+        Math.min(_y, _minus_3));
+      int _xifexpression = (int) 0;
       EventType<? extends MouseEvent> _eventType = e.getEventType();
       boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
       if (_equals) {
-        _xifexpression = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
+        int _xblockexpression_1 = (int) 0;
+        {
+          TextAnotation annot = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
+          _xblockexpression_1 = annot.setAnnotId(this.addAnnotation(annot));
+        }
+        _xifexpression = _xblockexpression_1;
       }
       _xblockexpression = _xifexpression;
     }
@@ -759,26 +770,35 @@ public class ControllerFxGraduation {
     return this.mainPane.removeAllAnotations();
   }
   
+  private boolean annotationMode = false;
+  
+  private boolean previousZoomMode = true;
+  
   /**
    * On rentre dans le mode d'annotations.
    * il faut dezoom, afficher les annotations et metter l'outils courrant au mode anotation.
    */
-  public ControllerFxGraduation.SelectedTool enterAnotationMode() {
-    ControllerFxGraduation.SelectedTool _xblockexpression = null;
+  public boolean enterAnotationMode() {
+    boolean _xblockexpression = false;
     {
       this.mainPane.unZoom();
+      this.previousZoomMode = this.autoZoom;
+      this.autoZoom = false;
       this.showAnotations();
-      _xblockexpression = this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+      _xblockexpression = this.annotationMode = true;
     }
     return _xblockexpression;
   }
   
-  public ControllerFxGraduation.SelectedTool leaveAnotationMode() {
-    ControllerFxGraduation.SelectedTool _xblockexpression = null;
+  public boolean leaveAnotationMode() {
+    boolean _xblockexpression = false;
     {
       this.hideAnotations();
       this.mainPane.zoomTo(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), this.questionList.getCurrentItem().getW());
-      _xblockexpression = this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
+      this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
+      this.annotationMode = false;
+      _xblockexpression = this.autoZoom = this.previousZoomMode;
     }
     return _xblockexpression;
   }
@@ -809,6 +829,7 @@ public class ControllerFxGraduation {
       this.updateDisplayedPage();
       this.updateDisplayedGrader();
       this.updateStudentDetails();
+      this.updateDisplayedAnnotations();
     } else {
       ControllerFxGraduation.logger.warn("The student list is Empty");
     }
@@ -841,6 +862,7 @@ public class ControllerFxGraduation {
       this.updateDisplayedQuestion();
       this.updateDisplayedGrader();
       this.updateStudentDetails();
+      this.updateDisplayedAnnotations();
     } else {
       ControllerFxGraduation.logger.warn("The question list is Empty");
     }
@@ -906,6 +928,12 @@ public class ControllerFxGraduation {
   public void updateStudentDetails() {
     this.studentDetails.updateGrade();
     this.studentDetails.updateQuality();
+  }
+  
+  public void updateDisplayedAnnotations() {
+    if (this.annotationMode) {
+      this.showAnotations();
+    }
   }
   
   public void setZoomArea(final double x, final double y, final double height, final double width) {

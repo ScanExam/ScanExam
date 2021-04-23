@@ -16,6 +16,8 @@ import javafx.geometry.Pos
 
 class TextAnotation extends VBox {
 	static int anotFontSize = 8;
+	static public double defaultWidth= 50;
+	static public double defaultHeight = 50
 	new(double x, double y, String text,PdfPaneWithAnotations parent){
 		this.parent = parent
 		
@@ -43,13 +45,19 @@ class TextAnotation extends VBox {
 		this.text.wrapText = false;
 		this.text.styleClass.add("textAnnotation")
 		this.styleClass.add("annotationBox")
-		initPos(x,y)
 		
-		this.text.minWidth = 50;
-		this.text.minHeight = 50;
-		this.text.prefWidth = 50;
-		this.text.prefHeight = 50;
+		
+		this.text.minWidth = defaultWidth;
+		this.text.minHeight = defaultHeight;
+		this.text.prefWidth = defaultWidth;
+		this.text.prefHeight = defaultHeight;
+		initPos(x,y)
 		setupEvents
+		this.text.setPrefHeight(textHolder.getLayoutBounds().getHeight() + 20);
+        this.text.setPrefWidth(textHolder.getLayoutBounds().getWidth() + 20); 
+        this.maxHeight = parent.imageViewHeight - this.layoutY
+        this.maxWidth = parent.imageViewWidth - this.layoutX
+		
 	}
 
 	int annotId;
@@ -99,8 +107,8 @@ class TextAnotation extends VBox {
 	}
 	
 	def initPos(double x, double y){
-		this.layoutX = Math.min(x, parent.imageViewWidth - this.width)
-		this.layoutY = Math.min(y, parent.imageViewWidth - this.height)
+		this.layoutX = x
+		this.layoutY = y
 		line.startX = this.layoutX + this.width/2;
 		line.startY = this.layoutY + this.height/2;
 		line.endX = this.layoutX -15;
@@ -110,8 +118,8 @@ class TextAnotation extends VBox {
 	}
 	
 	def move(double x, double y){
-		this.layoutX = Math.min(x, parent.imageViewWidth - this.width)
-		this.layoutY = Math.min(y, parent.imageViewHeight - this.height)
+		this.layoutX = x
+		this.layoutY = y
 		line.startX = this.layoutX + this.width/2;
 		line.startY = this.layoutY + this.height/2;
 	}
@@ -122,7 +130,6 @@ class TextAnotation extends VBox {
 		ball.centerX = x;
 		ball.centerY = y;
 	}
-	
 	
 	
 	
@@ -138,10 +145,7 @@ class TextAnotation extends VBox {
             	text.setPrefWidth(textHolder.getLayoutBounds().getWidth() + 20); 
             	this.maxWidth = parent.imageViewWidth - this.layoutX
             }}])
-        text.setPrefHeight(textHolder.getLayoutBounds().getHeight() + 20);
-        text.setPrefWidth(textHolder.getLayoutBounds().getWidth() + 20); 
-        this.maxHeight = parent.imageViewHeight - this.layoutY
-        this.maxWidth = parent.imageViewWidth - this.layoutX
+       
 		this.onMousePressed = [event |parent.handleMoveAnnotation(this,event)]
 		ball.onMousePressed = [event | parent.handleMovePointer(this,event)]
 		

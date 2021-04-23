@@ -305,9 +305,9 @@ class ControllerFxGraduation {
 	
 	def void moveAnotation(MouseEvent e){
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS - currentAnotation.width));
 		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS - currentAnotation.height));
 		if (e.eventType == MouseEvent.MOUSE_DRAGGED) {
 			currentAnotation.move(mousePositionX,mousePositionY)
 		}
@@ -584,11 +584,14 @@ class ControllerFxGraduation {
 	 */
 	def createNewAnotation(MouseEvent e){
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS - TextAnotation.defaultWidth));
 		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
-		if (e.eventType == MouseEvent.MOUSE_PRESSED)
-			mainPane.addNewAnotation(mousePositionX,mousePositionY);
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS - TextAnotation.defaultHeight));
+		if (e.eventType == MouseEvent.MOUSE_PRESSED) {
+				var annot = mainPane.addNewAnotation(mousePositionX,mousePositionY);
+				annot.annotId = addAnnotation(annot)
+			}
+			
 	
 	}
 	
@@ -605,22 +608,31 @@ class ControllerFxGraduation {
 	def hideAnotations(){
 		mainPane.removeAllAnotations
 	}
-	
+
+
+	var annotationMode = false;
+	var previousZoomMode = true;
 	/**
 	 * On rentre dans le mode d'annotations.
 	 * il faut dezoom, afficher les annotations et metter l'outils courrant au mode anotation.
 	 * 
 	 */
+	
 	def enterAnotationMode(){
 		mainPane.unZoom
+		previousZoomMode = autoZoom;
+		autoZoom = false;
 		showAnotations
 		currentTool = SelectedTool.CREATE_ANOTATION_TOOL
+		annotationMode = true;
 	}
 	
 	def leaveAnotationMode(){
 		hideAnotations
 		mainPane.zoomTo(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.h,questionList.currentItem.w)
 		currentTool = SelectedTool.NO_TOOL
+		annotationMode = false;
+		autoZoom = previousZoomMode;
 	}
 	
 	//-----------------//
@@ -650,6 +662,7 @@ class ControllerFxGraduation {
 			updateDisplayedPage
 			updateDisplayedGrader
 			updateStudentDetails
+			updateDisplayedAnnotations
 		}else {
 			logger.warn("The student list is Empty")
 		}
@@ -678,6 +691,7 @@ class ControllerFxGraduation {
 			updateDisplayedQuestion
 			updateDisplayedGrader
 			updateStudentDetails
+			updateDisplayedAnnotations
 		}else {
 			logger.warn("The question list is Empty")
 		}
@@ -748,6 +762,12 @@ class ControllerFxGraduation {
 	def void updateStudentDetails() {
     	studentDetails.updateGrade
     	studentDetails.updateQuality
+	}
+	
+	def void updateDisplayedAnnotations(){
+		if (annotationMode) {
+			showAnotations()
+		}
 	}
 	
 	/**

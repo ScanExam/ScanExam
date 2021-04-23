@@ -28,6 +28,7 @@ class PdfPaneWithAnotations extends Pane {
 	
 	
 	def displayAnnotationsFor(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
+		removeAllAnotations
 		var ids = controller.service.getAnnotationIds(qItem.questionId,sItem.studentId)
 		for (int id : ids){
 			addAnotation( 
