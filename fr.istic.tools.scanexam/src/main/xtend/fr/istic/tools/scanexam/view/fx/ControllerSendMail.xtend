@@ -69,7 +69,7 @@ class ControllerSendMail  {
 			{
 				// TODO exportToTempFileWithAnnotation
 				
-				val pdf = ExportExamToPdf.exportToTempFile(service,controllerGraduation.pdfManager.pdfInputStream,studentSheet)
+				val pdf = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(controllerGraduation.pdfManager.pdfInputStream,studentSheet)
 			
 				SendMailTls.sendMail(ConfigurationManager.instance.email,ConfigurationManager.instance.emailPassword,
 				studentMail,txtFldTitle.text,htmlEditor.htmlText,pdf.absolutePath,service.examName)
