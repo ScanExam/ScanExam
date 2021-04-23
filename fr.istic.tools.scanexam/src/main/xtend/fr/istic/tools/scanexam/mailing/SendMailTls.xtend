@@ -39,13 +39,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem
 class SendMailTls {
 
 	
-	static Service service
-
-	new(Service serv) {
-		service = serv
-	}
-
-	def static save(File files) {
+	def static save(Service service,File files) {
 		save1(files, service.examName)
 	}
 
@@ -67,8 +61,8 @@ class SendMailTls {
 	 * @param pieceJointe : piece jointe du mail
 	 */
 	def static sendMail(String sender, String senderPassword, String recipient, String titleMail, String messageMail,
-		String pieceJointe) {
-		sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, service.examName)
+		String pieceJointe,String examName) {
+		sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, examName)
 	}
 
 	/**

@@ -28,12 +28,6 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 
 @SuppressWarnings("all")
 public class ExportExamToPdf {
-  private static Service service;
-  
-  public ExportExamToPdf(final Service serv) {
-    ExportExamToPdf.service = serv;
-  }
-  
   /**
    * Exports a student's PDF file from the PDF document containing all the exam papers
    * @param pdf is the complete pdf document of all students
@@ -111,7 +105,7 @@ public class ExportExamToPdf {
    * @param sheet is the sheet of the student to export.
    * @return temp File of student exam.
    */
-  public static File exportToTempFile(final InputStream pdfStream, final StudentSheet sheet) {
+  public static File exportToTempFile(final Service service, final InputStream pdfStream, final StudentSheet sheet) {
     try {
       final PDDocument pdf = PDDocument.load(pdfStream);
       PDDocument document = new PDDocument();
@@ -119,7 +113,7 @@ public class ExportExamToPdf {
       for (final Integer i : _posPage) {
         document.addPage(pdf.getPage((i).intValue()));
       }
-      String _examName = ExportExamToPdf.service.getExamName();
+      String _examName = service.getExamName();
       String _studentName = sheet.getStudentName();
       String _plus = (_examName + _studentName);
       File file = File.createTempFile(_plus, ".pdf");
@@ -138,9 +132,9 @@ public class ExportExamToPdf {
    * @param sheets is the Collection of sheets of they students to export.
    * @return Collection of temp File of student exam.
    */
-  public static Collection<File> exportToCollection(final InputStream pdfStream, final Collection<StudentSheet> sheets) {
+  public static Collection<File> exportToCollection(final Service service, final InputStream pdfStream, final Collection<StudentSheet> sheets) {
     final Function<StudentSheet, File> _function = (StudentSheet s) -> {
-      return ExportExamToPdf.exportToTempFile(pdfStream, s);
+      return ExportExamToPdf.exportToTempFile(service, pdfStream, s);
     };
     return sheets.stream().<File>map(_function).collect(Collectors.<File>toList());
   }
@@ -284,9 +278,9 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public File exportToTempPdfWithAnnotations(final InputStream documentInputStream, final StudentSheet sheet) {
+  public File exportToTempPdfWithAnnotations(final Service service, final InputStream documentInputStream, final StudentSheet sheet) {
     try {
-      String _examName = ExportExamToPdf.service.getExamName();
+      String _examName = service.getExamName();
       String _studentName = sheet.getStudentName();
       String _plus = (_examName + _studentName);
       File file = File.createTempFile(_plus, ".pdf");
@@ -305,7 +299,7 @@ public class ExportExamToPdf {
    * @param documentAndAssociatedStudentSheet is an ordered Collection of StudentSheet
    * @return Collection of temp File of student exam.
    */
-  public static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromCollections(final Collection<InputStream> documentInputStream, final Collection<StudentSheet> sheets) {
+  public static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromCollections(final Service service, final Collection<InputStream> documentInputStream, final Collection<StudentSheet> sheets) {
     try {
       int _size = documentInputStream.size();
       int _size_1 = sheets.size();
@@ -316,7 +310,7 @@ public class ExportExamToPdf {
         Collection<File> files = new ArrayList<File>();
         for (int i = 0; (i < documentInputStream.size()); i++) {
           {
-            String _examName = ExportExamToPdf.service.getExamName();
+            String _examName = service.getExamName();
             String _studentName = (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[i]).getStudentName();
             String _plus = (_examName + _studentName);
             File file = File.createTempFile(_plus, ".pdf");
@@ -337,13 +331,13 @@ public class ExportExamToPdf {
    * @param documentAndAssociatedStudentSheet is an HashMap of Document and StudentSheet
    * @return Collection of temp File of student exam.
    */
-  public static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromHashMap(final HashMap<InputStream, StudentSheet> documentAndAssociatedStudentSheet) {
+  public static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromHashMap(final Service service, final HashMap<InputStream, StudentSheet> documentAndAssociatedStudentSheet) {
     try {
       Collection<File> files = new ArrayList<File>();
       Set<Map.Entry<InputStream, StudentSheet>> _entrySet = documentAndAssociatedStudentSheet.entrySet();
       for (final Map.Entry<InputStream, StudentSheet> mapentry : _entrySet) {
         {
-          String _examName = ExportExamToPdf.service.getExamName();
+          String _examName = service.getExamName();
           String _studentName = mapentry.getValue().getStudentName();
           String _plus = (_examName + _studentName);
           File file = File.createTempFile(_plus, ".pdf");

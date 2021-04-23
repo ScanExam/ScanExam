@@ -64,12 +64,15 @@ class ControllerSendMail  {
 			val studentSheet = studentSheets.get(i)
 			val studentMail = mailMap.get.get(studentSheet.studentName)
 			
-			if (studentSheet.studentName === null)
+			
+			if (studentSheet.studentName !== null && studentMail !== null)
 			{
-				val pdf = ExportExamToPdf.exportToTempFile(controllerGraduation.pdfManager.pdfInputStream,studentSheet)
+				// TODO exportToTempFileWithAnnotation
+				
+				val pdf = ExportExamToPdf.exportToTempFile(service,controllerGraduation.pdfManager.pdfInputStream,studentSheet)
 			
 				SendMailTls.sendMail(ConfigurationManager.instance.email,ConfigurationManager.instance.emailPassword,
-				studentMail,txtFldTitle.text,htmlEditor.htmlText,pdf.absolutePath)
+				studentMail,txtFldTitle.text,htmlEditor.htmlText,pdf.absolutePath,service.examName)
 				sent++;
 			
 			}

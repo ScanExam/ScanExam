@@ -50,14 +50,8 @@ public class SendMailTls {
     HOST_NOT_FOUND;
   }
   
-  private static Service service;
-  
-  public SendMailTls(final Service serv) {
-    SendMailTls.service = serv;
-  }
-  
-  public static void save(final File files) {
-    SendMailTls.save1(files, SendMailTls.service.getExamName());
+  public static void save(final Service service, final File files) {
+    SendMailTls.save1(files, service.getExamName());
   }
   
   private static void save1(final File files, final String nom) {
@@ -81,8 +75,8 @@ public class SendMailTls {
    * @param messageMail : Contenu du mail
    * @param pieceJointe : piece jointe du mail
    */
-  public static String sendMail(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe) {
-    return SendMailTls.sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, SendMailTls.service.getExamName());
+  public static String sendMail(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe, final String examName) {
+    return SendMailTls.sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, examName);
   }
   
   /**

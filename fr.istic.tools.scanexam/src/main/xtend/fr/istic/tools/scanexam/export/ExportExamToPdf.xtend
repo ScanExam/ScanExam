@@ -26,12 +26,6 @@ import java.util.Map
 
 class ExportExamToPdf {
 	
-	static Service service
-	 
-	new (Service serv){
-	 	service = serv
-	 }
-
 	/**
 	 * Exports a student's PDF file from the PDF document containing all the exam papers
 	 * @param pdf is the complete pdf document of all students
@@ -106,7 +100,7 @@ class ExportExamToPdf {
 	 * @param sheet is the sheet of the student to export.
 	 * @return temp File of student exam. 
 	 */
-    def static File exportToTempFile(InputStream pdfStream,StudentSheet sheet){
+    def static File exportToTempFile(Service service,InputStream pdfStream,StudentSheet sheet){
 		
 		val pdf = PDDocument.load(pdfStream)
 		
@@ -115,6 +109,7 @@ class ExportExamToPdf {
 		for(i :sheet.posPage){
 			document.addPage(pdf.getPage(i));	
 		}
+		
 		
 		var File file = File.createTempFile(service.examName+sheet.studentName , ".pdf");
 		
@@ -132,8 +127,8 @@ class ExportExamToPdf {
 	 * @param sheets is the Collection of sheets of they students to export.
 	 * @return Collection of temp File of student exam. 
 	 */
-    def static Collection<File> exportToCollection(InputStream pdfStream,Collection<StudentSheet> sheets){
-    	sheets.stream.map(s |exportToTempFile(pdfStream,s)).collect(Collectors.toList);
+    def static Collection<File> exportToCollection(Service service,InputStream pdfStream,Collection<StudentSheet> sheets){
+    	sheets.stream.map(s |exportToTempFile(service,pdfStream,s)).collect(Collectors.toList);
     }
     
     /**-----------------------------------------------------------------------
@@ -263,7 +258,7 @@ class ExportExamToPdf {
       * @param sheet is the studentSheet of the student
 	  * @return temp File of annoted PDF.
       */
-     def File exportToTempPdfWithAnnotations(InputStream documentInputStream, StudentSheet sheet){
+     def File exportToTempPdfWithAnnotations(Service service,InputStream documentInputStream, StudentSheet sheet){
      	var File file = File.createTempFile(service.examName+sheet.studentName , ".pdf");
      	exportToPdfWithAnnotations(documentInputStream, sheet, file);
      	return file;
@@ -277,7 +272,7 @@ class ExportExamToPdf {
 	 * @param documentAndAssociatedStudentSheet is an ordered Collection of StudentSheet
 	 * @return Collection of temp File of student exam. 
 	 */
-     def static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromCollections(Collection<InputStream> documentInputStream,Collection<StudentSheet> sheets){
+     def static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromCollections(Service service,Collection<InputStream> documentInputStream,Collection<StudentSheet> sheets){
      	if(documentInputStream.size()!=sheets.size()){
      		return null;
      	}
@@ -298,7 +293,7 @@ class ExportExamToPdf {
 	 * @param documentAndAssociatedStudentSheet is an HashMap of Document and StudentSheet
 	 * @return Collection of temp File of student exam. 
 	 */
-     def static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromHashMap(HashMap<InputStream,StudentSheet> documentAndAssociatedStudentSheet){
+     def static Collection<File> exportToCollectionOfTempPdfWithAnnotationsFromHashMap(Service service,HashMap<InputStream,StudentSheet> documentAndAssociatedStudentSheet){
      	var Collection<File> files = new ArrayList<File>();
      	for (Map.Entry<InputStream,StudentSheet> mapentry : documentAndAssociatedStudentSheet.entrySet()) {
      		var File file = File.createTempFile(service.examName+mapentry.getValue().studentName , ".pdf");

@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.mailing
 
+import fr.istic.tools.scanexam.services.api.Service
+
 /**
  * @author Thomas Guibert
  */
@@ -39,7 +41,7 @@ class SendMailXtend  {
 	 * 
 	 */
 	def sendMailXtend(){
-		SendMailTls.sendMail(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe)
+		SendMailTls.sendMail(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe,"ExamPfo")
 	}
 	
 	/**

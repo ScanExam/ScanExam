@@ -27,7 +27,7 @@ public class SendMailXtend {
    * Fonction envoie du mail avec les valeur donnée par les getter
    */
   public String sendMailXtend() {
-    return SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe);
+    return SendMailTls.sendMail(SendMailXtend.sender, SendMailXtend.senderPassword, SendMailXtend.recipient, SendMailXtend.titleMail, SendMailXtend.messageMail, SendMailXtend.pieceJointe, "ExamPfo");
   }
   
   /**
