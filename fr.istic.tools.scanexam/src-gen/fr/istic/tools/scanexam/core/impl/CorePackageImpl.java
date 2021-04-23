@@ -420,7 +420,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_PageId() {
+	public EAttribute getComment_Id() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -429,7 +429,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_X() {
+	public EAttribute getComment_PageId() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -438,7 +438,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_Y() {
+	public EAttribute getComment_X() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -447,7 +447,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_PointerX() {
+	public EAttribute getComment_Y() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -456,8 +456,17 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getComment_PointerY() {
+	public EAttribute getComment_PointerX() {
 		return (EAttribute)commentEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getComment_PointerY() {
+		return (EAttribute)commentEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -718,6 +727,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEReference(pageEClass, PAGE__QUESTIONS);
 
 		commentEClass = createEClass(COMMENT);
+		createEAttribute(commentEClass, COMMENT__ID);
 		createEAttribute(commentEClass, COMMENT__PAGE_ID);
 		createEAttribute(commentEClass, COMMENT__X);
 		createEAttribute(commentEClass, COMMENT__Y);
@@ -819,6 +829,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEReference(getPage_Questions(), this.getQuestion(), null, "questions", null, 0, -1, Page.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getComment_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_PageId(), theEcorePackage.getEInt(), "pageId", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_X(), theEcorePackage.getEFloat(), "x", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getComment_Y(), theEcorePackage.getEFloat(), "y", null, 0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

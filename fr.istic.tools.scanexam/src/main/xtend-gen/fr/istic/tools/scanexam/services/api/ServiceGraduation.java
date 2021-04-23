@@ -206,4 +206,60 @@ public interface ServiceGraduation extends Service {
    * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
    */
   String getStudentListShift();
+  
+  /**
+   * Ajoute une annotation sur la page donee et l'etudiant donne au modele, lui genere une id et la retourne
+   * @param The details of the new Annotation
+   * @return l'id de l'annotation cree
+   */
+  int addNewAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int questionId, final int studentId);
+  
+  void updateAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * @param pageNumber : Le numero de la page du template.
+   * 		studentId : l'id de l'etudiant pour lequel on veut obtenir les ids
+   * @returns une liste des id des annotations
+   */
+  List<Integer> getAnnotationIds(final int questionId, final int studentId);
+  
+  /**
+   * Retourne le texte pour l'annotations avec l'id donne
+   */
+  String getAnnotationText(final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * Retourne la postion X pour l'annotations avec l'id donne
+   */
+  double getAnnotationX(final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * Retourne le  postion Y pour l'annotations avec l'id donne
+   */
+  double getAnnotationY(final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * Retourne la hauteur pour l'annotations avec l'id donne
+   */
+  double getAnnotationHeight(final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * Retourne la largeur pour l'annotations avec l'id donne
+   */
+  double getAnnotationWidth(final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * Retourne la postion X pour le pointer de l'annotations avec l'id donne
+   */
+  double getAnnotationPointerX(final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * Retourne la postion Y pour le pointer de l'annotations avec l'id donne
+   */
+  double getAnnotationPointerY(final int annotationId, final int questionId, final int studentId);
+  
+  /**
+   * Retire une annotation du modele
+   */
+  void removeAnnotation(final int annotationId, final int questionId, final int studentId);
 }

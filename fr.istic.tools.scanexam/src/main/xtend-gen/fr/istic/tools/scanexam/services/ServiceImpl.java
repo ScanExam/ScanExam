@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.services;
 
 import fr.istic.tools.scanexam.api.DataFactory;
+import fr.istic.tools.scanexam.core.Comment;
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Grade;
@@ -10,6 +11,7 @@ import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.core.TextComment;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,7 +41,6 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -67,6 +69,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   private int currentQuestionIndex;
   
   private int gradeEntryId;
+  
+  private int annotationId;
   
   /**
    * Fichier du template de l'édition d'examen (Fichier de méta données sur le sujet d'examen)
@@ -129,11 +133,11 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
         for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
           {
             final Page examPage = this.getPage(i);
-            int _size = examPage.getQuestions().size();
-            String _plus = ("test size : " + Integer.valueOf(_size));
-            InputOutput.<String>println(_plus);
             for (int j = 0; (j < examPage.getQuestions().size()); j++) {
-              sheet.getGrades().add(CoreFactory.eINSTANCE.createGrade());
+              {
+                Grade grade = CoreFactory.eINSTANCE.createGrade();
+                sheet.getGrades().add(grade);
+              }
             }
           }
         }
@@ -887,5 +891,149 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       }
     }
     this.questionId = 0;
+  }
+  
+  @Override
+  public int addNewAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int questionId, final int studentId) {
+    int _xblockexpression = (int) 0;
+    {
+      final DataFactory factory = new DataFactory();
+      final Comment annot = factory.createTextComment(this.annotationId, text, ((float) x), ((float) y), ((float) width), ((float) height), ((float) pointerX), ((float) pointerY));
+      final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+      sheet.getGrades().get(questionId).getComments().add(annot);
+      _xblockexpression = this.annotationId++;
+    }
+    return _xblockexpression;
+  }
+  
+  public Comment getAnnotationWithId(final List<Comment> comments, final int annotId) {
+    Object _xblockexpression = null;
+    {
+      for (final Comment c : comments) {
+        int _id = c.getId();
+        boolean _equals = (_id == annotId);
+        if (_equals) {
+          return c;
+        }
+      }
+      _xblockexpression = null;
+    }
+    return ((Comment)_xblockexpression);
+  }
+  
+  @Override
+  public List<Integer> getAnnotationIds(final int questionId, final int studentId) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      LinkedList<Integer> result = new LinkedList<Integer>();
+      final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+      final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+      for (final Comment c : comments) {
+        result.add(Integer.valueOf(c.getId()));
+      }
+      _xblockexpression = result;
+    }
+    return _xblockexpression;
+  }
+  
+  @Override
+  public String getAnnotationText(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      return ((TextComment) annot).getText();
+    }
+    return "Annotation not found";
+  }
+  
+  @Override
+  public double getAnnotationX(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      return annot.getX();
+    }
+    return 0;
+  }
+  
+  @Override
+  public double getAnnotationY(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      return annot.getY();
+    }
+    return 0;
+  }
+  
+  @Override
+  public double getAnnotationHeight(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      return annot.getX();
+    }
+    return 0;
+  }
+  
+  @Override
+  public double getAnnotationWidth(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      return annot.getX();
+    }
+    return 0;
+  }
+  
+  @Override
+  public double getAnnotationPointerX(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      return annot.getPointerX();
+    }
+    return 0;
+  }
+  
+  @Override
+  public double getAnnotationPointerY(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      return annot.getPointerY();
+    }
+    return 0;
+  }
+  
+  @Override
+  public void removeAnnotation(final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      comments.remove(annot);
+    }
+  }
+  
+  @Override
+  public void updateAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int annotationId, final int questionId, final int studentId) {
+    final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    final EList<Comment> comments = sheet.getGrades().get(questionId).getComments();
+    final Comment annot = this.getAnnotationWithId(comments, annotationId);
+    if ((annot != null)) {
+      annot.setX(((float) x));
+      annot.setY(((float) y));
+      annot.setPointerX(((float) pointerX));
+      annot.setPointerY(((float) pointerY));
+      ((TextComment) annot).setText(text);
+    }
   }
 }

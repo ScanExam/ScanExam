@@ -110,6 +110,8 @@ class ControllerFxGraduation {
 	@FXML
 	public ToggleButton annotationModeButton;
 	
+	
+	@Accessors
 	var ServiceGraduation service
 	
 	@Accessors
@@ -311,6 +313,7 @@ class ControllerFxGraduation {
 		}
 		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
 			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
+			updateAnnotation(currentAnotation)
 		}
 			
 	}
@@ -325,6 +328,7 @@ class ControllerFxGraduation {
 		}
 		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
 			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
+			updateAnnotation(currentAnotation)
 		}
 			
 	}
@@ -592,7 +596,7 @@ class ControllerFxGraduation {
 	 * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
 	 */
 	def showAnotations(){
-	
+		mainPane.displayAnnotationsFor(questionList.currentItem,studentList.currentItem)
 	}
 	
 	/**
@@ -985,5 +989,13 @@ class ControllerFxGraduation {
     
     def renameStudent(int studentId,String newname){
         service.assignStudentId(newname)
+    }
+     def addAnnotation(TextAnotation annot){
+    	logger.info("Adding new Annotation to Model : Pointer x :" + annot.annotPointerX + " Pointer y :" + annot.annotPointerY)
+    	annot.annotId = service.addNewAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,questionList.currentItem.questionId,studentList.currentItem.studentId)
+    }
+    
+    def updateAnnotation(TextAnotation annot) {
+    	service.updateAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,annot.annotId,questionList.currentItem.questionId,studentList.currentItem.studentId)
     }
 }

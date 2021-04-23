@@ -1,7 +1,10 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
+import java.util.List;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -29,6 +32,17 @@ public class PdfPaneWithAnotations extends Pane {
   private ImageView imageView;
   
   private Image currentImage;
+  
+  public void displayAnnotationsFor(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
+    List<Integer> ids = this.controller.getService().getAnnotationIds(qItem.getQuestionId(), sItem.getStudentId());
+    for (final int id : ids) {
+      this.addAnotation(
+        this.controller.getService().getAnnotationX(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationY(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationHeight(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationWidth(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationPointerX(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationPointerY(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationText(id, qItem.getQuestionId(), sItem.getStudentId()), id);
+    }
+  }
   
   public Image setImage(final Image image) {
     Image _xblockexpression = null;
@@ -70,19 +84,23 @@ public class PdfPaneWithAnotations extends Pane {
     return _xifexpression;
   }
   
-  public boolean addNewAnotation(final double x, final double y) {
-    boolean _xblockexpression = false;
+  public TextAnotation addNewAnotation(final double x, final double y) {
+    TextAnotation _xblockexpression = null;
     {
-      TextAnotation anot = new TextAnotation(x, y, 100, 50, "New Anotation", this);
-      _xblockexpression = this.getChildren().addAll(anot.getAllParts());
+      TextAnotation anot = new TextAnotation(x, y, "New Anotation", this);
+      this.getChildren().addAll(anot.getAllParts());
+      _xblockexpression = anot;
     }
     return _xblockexpression;
   }
   
-  public boolean addAnotation(final double x, final double y, final double height, final double width, final String text) {
+  public boolean addAnotation(final double x, final double y, final double height, final double width, final double pointerX, final double pointerY, final String text, final int id) {
     boolean _xblockexpression = false;
     {
-      TextAnotation anot = new TextAnotation(x, y, height, width, text, this);
+      TextAnotation anot = new TextAnotation(x, y, text, this);
+      anot.move(x, y);
+      anot.movePointer(pointerX, pointerY);
+      anot.setAnnotId(id);
       _xblockexpression = this.getChildren().addAll(anot.getAllParts());
     }
     return _xblockexpression;
@@ -118,6 +136,14 @@ public class PdfPaneWithAnotations extends Pane {
   public void handleMovePointer(final TextAnotation anot, final MouseEvent e) {
     this.controller.setCurrentTool(ControllerFxGraduation.SelectedTool.MOVE_POINTER_TOOL);
     this.controller.setCurrentAnotation(anot);
+  }
+  
+  public void handleRename(final TextAnotation anot) {
+    this.controller.updateAnnotation(anot);
+  }
+  
+  public Object handleRemove(final TextAnotation anot) {
+    return null;
   }
   
   public void setupEvents() {

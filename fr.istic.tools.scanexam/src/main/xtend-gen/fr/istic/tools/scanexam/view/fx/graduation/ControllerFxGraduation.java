@@ -171,6 +171,7 @@ public class ControllerFxGraduation {
   @FXML
   public ToggleButton annotationModeButton;
   
+  @Accessors
   private ServiceGraduation service;
   
   @Accessors
@@ -398,6 +399,7 @@ public class ControllerFxGraduation {
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
     if (_equals_1) {
       this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+      this.updateAnnotation(this.currentAnotation);
     }
   }
   
@@ -421,6 +423,7 @@ public class ControllerFxGraduation {
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
     if (_equals_1) {
       this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+      this.updateAnnotation(this.currentAnotation);
     }
   }
   
@@ -617,18 +620,7 @@ public class ControllerFxGraduation {
    * @param folder Dossier où exporter
    */
   public void exportGraduationToPdf(final File folder) {
-    Collection<StudentSheet> _studentSheets = this.service.getStudentSheets();
-    for (final StudentSheet studentSheet : _studentSheets) {
-      {
-        String _absolutePath = folder.getAbsolutePath();
-        String _plus = (_absolutePath + File.separator);
-        String _studentName = studentSheet.getStudentName();
-        String _plus_1 = (_plus + _studentName);
-        String _plus_2 = (_plus_1 + ".pdf");
-        final File file = new File(_plus_2);
-        ExportExamToPdf.exportToPdfWithAnnotations(this.pdfManager.getPdfInputStream(), studentSheet, file);
-      }
-    }
+    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.pdfManager.getPdfInputStream(), this.service.getStudentSheets(), folder);
   }
   
   /**
@@ -729,8 +721,8 @@ public class ControllerFxGraduation {
   /**
    * Utiliser pour ajouter une anotations a la vue avec la sourie.
    */
-  public boolean createNewAnotation(final MouseEvent e) {
-    boolean _xblockexpression = false;
+  public TextAnotation createNewAnotation(final MouseEvent e) {
+    TextAnotation _xblockexpression = null;
     {
       double _x = e.getX();
       double _imageViewWidth = this.mainPane.getImageViewWidth();
@@ -742,7 +734,7 @@ public class ControllerFxGraduation {
       double _minus_1 = (_imageViewHeight - FxSettings.BOX_BORDER_THICKNESS);
       double mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
         Math.min(_y, _minus_1));
-      boolean _xifexpression = false;
+      TextAnotation _xifexpression = null;
       EventType<? extends MouseEvent> _eventType = e.getEventType();
       boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
       if (_equals) {
@@ -756,8 +748,8 @@ public class ControllerFxGraduation {
   /**
    * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
    */
-  public Object showAnotations() {
-    return null;
+  public void showAnotations() {
+    this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
   }
   
   /**
@@ -1200,6 +1192,24 @@ public class ControllerFxGraduation {
     this.service.assignStudentId(newname);
   }
   
+  public int addAnnotation(final TextAnotation annot) {
+    int _xblockexpression = (int) 0;
+    {
+      double _annotPointerX = annot.getAnnotPointerX();
+      String _plus = ("Adding new Annotation to Model : Pointer x :" + Double.valueOf(_annotPointerX));
+      String _plus_1 = (_plus + " Pointer y :");
+      double _annotPointerY = annot.getAnnotPointerY();
+      String _plus_2 = (_plus_1 + Double.valueOf(_annotPointerY));
+      ControllerFxGraduation.logger.info(_plus_2);
+      _xblockexpression = annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId()));
+    }
+    return _xblockexpression;
+  }
+  
+  public void updateAnnotation(final TextAnotation annot) {
+    this.service.updateAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), annot.getAnnotId(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId());
+  }
+  
   @Pure
   public BooleanProperty getLoadedModel() {
     return this.loadedModel;
@@ -1207,6 +1217,15 @@ public class ControllerFxGraduation {
   
   public void setLoadedModel(final BooleanProperty loadedModel) {
     this.loadedModel = loadedModel;
+  }
+  
+  @Pure
+  public ServiceGraduation getService() {
+    return this.service;
+  }
+  
+  public void setService(final ServiceGraduation service) {
+    this.service = service;
   }
   
   @Pure

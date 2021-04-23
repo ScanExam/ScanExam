@@ -407,13 +407,22 @@ public interface CorePackage extends EPackage {
 	int COMMENT = 6;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__ID = 0;
+
+	/**
 	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__PAGE_ID = 0;
+	int COMMENT__PAGE_ID = 1;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -422,7 +431,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__X = 1;
+	int COMMENT__X = 2;
 
 	/**
 	 * The feature id for the '<em><b>Y</b></em>' attribute.
@@ -431,7 +440,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__Y = 2;
+	int COMMENT__Y = 3;
 
 	/**
 	 * The feature id for the '<em><b>Pointer X</b></em>' attribute.
@@ -440,7 +449,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__POINTER_X = 3;
+	int COMMENT__POINTER_X = 4;
 
 	/**
 	 * The feature id for the '<em><b>Pointer Y</b></em>' attribute.
@@ -449,7 +458,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT__POINTER_Y = 4;
+	int COMMENT__POINTER_Y = 5;
 
 	/**
 	 * The number of structural features of the '<em>Comment</em>' class.
@@ -458,7 +467,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_FEATURE_COUNT = 5;
+	int COMMENT_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Comment</em>' class.
@@ -478,6 +487,15 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	int TEXT_COMMENT = 7;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXT_COMMENT__ID = COMMENT__ID;
 
 	/**
 	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
@@ -1087,6 +1105,17 @@ public interface CorePackage extends EPackage {
 	EClass getComment();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Comment#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see fr.istic.tools.scanexam.core.Comment#getId()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EAttribute getComment_Id();
+
+	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.Comment#getPageId <em>Page Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1620,6 +1649,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EClass COMMENT = eINSTANCE.getComment();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMMENT__ID = eINSTANCE.getComment_Id();
 
 		/**
 		 * The meta object literal for the '<em><b>Page Id</b></em>' attribute feature.

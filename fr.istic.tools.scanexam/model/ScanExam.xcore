@@ -46,6 +46,7 @@ class Page
 	contains Question[] questions
 }
 class Comment {
+	int ^id
 	int pageId
 	float x
 	float y

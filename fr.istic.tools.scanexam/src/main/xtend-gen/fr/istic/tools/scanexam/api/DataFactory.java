@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.api;
 
+import fr.istic.tools.scanexam.core.Comment;
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
@@ -7,6 +8,7 @@ import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.core.TextComment;
 import java.util.List;
 
 /**
@@ -97,6 +99,21 @@ public class DataFactory {
       final Question question = CoreFactory.eINSTANCE.createQuestion();
       question.setId(id);
       _xblockexpression = question;
+    }
+    return _xblockexpression;
+  }
+  
+  public Comment createTextComment(final int id, final String text, final float x, final float y, final float h, final float w, final float pointerX, final float pointerY) {
+    TextComment _xblockexpression = null;
+    {
+      final TextComment annot = CoreFactory.eINSTANCE.createTextComment();
+      annot.setX(x);
+      annot.setY(y);
+      annot.setPointerX(pointerX);
+      annot.setPointerY(pointerY);
+      annot.setId(id);
+      annot.setText(text);
+      _xblockexpression = annot;
     }
     return _xblockexpression;
   }

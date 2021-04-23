@@ -25,6 +25,9 @@ import java.util.List
 import java.util.Objects
 import java.util.Optional
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.core.Comment
+import java.util.LinkedList
+import fr.istic.tools.scanexam.core.TextComment
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -49,6 +52,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	int currentQuestionIndex;
 	
 	int gradeEntryId;
+	
+	int annotationId;
 	
 	/**
 	 * Fichier du template de l'édition d'examen (Fichier de méta données sur le sujet d'examen)
@@ -107,10 +112,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 				for (var i = 0; i < templatePageAmount; i++) {
 					val examPage = getPage(i);
 
-					println("test size : " + examPage.questions.size)
 					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?
 					{
-						sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
+						var grade = CoreFactory.eINSTANCE.createGrade()
+						sheet.grades.add(grade);
 					}
 
 				}
@@ -727,6 +732,124 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 			editionTemplate.exam.pages.add(page);
 		}
 		questionId = 0
+	}
+	
+	//===================================================
+	//      Annotations
+	//===================================================
+	
+	//SEE API FOR DOC (WILL ADD HERE LATER)
+	override addNewAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text, int questionId, int studentId) {
+		val DataFactory factory = new DataFactory
+		val annot = factory.createTextComment(annotationId,text,x as float,y as float,width as float,height as float,pointerX as float,pointerY as float)
+		
+		val sheet = studentSheets.get(currentSheetIndex)
+		sheet.grades.get(questionId).comments.add(annot)
+		annotationId++;
+	}
+	
+	def Comment getAnnotationWithId(List<Comment> comments,int annotId){
+		for (Comment c : comments) {
+			if (c.id == annotId)
+				return c
+		}
+		null
+	}
+	
+	override getAnnotationIds(int questionId, int studentId) {
+		var result = new LinkedList<Integer>();
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		for (Comment c : comments) {
+			result.add(c.id);
+		}
+		result
+	}
+	
+	override getAnnotationText(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return (annot as TextComment).text
+		return "Annotation not found"
+	}
+	
+	override getAnnotationX(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.x
+		return 0
+	}
+	
+	override getAnnotationY(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.y
+		return 0
+	}
+	
+	override getAnnotationHeight(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.x
+		return 0
+	}
+	
+	override getAnnotationWidth(int annotationId,int questionId,int studentId) { //TODO height and width not in model
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.x
+		return 0
+	}
+	
+	override getAnnotationPointerX(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.pointerX
+		return 0
+	}
+	
+	override getAnnotationPointerY(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.pointerY
+		return 0
+	}
+	
+	override removeAnnotation(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			comments.remove(annot)
+	}
+	
+	override updateAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text,int annotationId, int questionId, int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null){
+			annot.x = x as float
+			annot.y = y as float
+			annot.pointerX = pointerX as float
+			annot.pointerY = pointerY as float
+			(annot as TextComment).text  = text
+		}
+			
+		
 	}
 	
 }

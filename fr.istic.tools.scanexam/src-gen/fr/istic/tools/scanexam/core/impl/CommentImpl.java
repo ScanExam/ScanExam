@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getId <em>Id</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getPageId <em>Page Id</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getX <em>X</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.CommentImpl#getY <em>Y</em>}</li>
@@ -30,6 +31,26 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * @generated
  */
 public class CommentImpl extends MinimalEObjectImpl.Container implements Comment {
+	/**
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int ID_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected int id = ID_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getPageId() <em>Page Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -154,6 +175,27 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setId(int newId) {
+		int oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.COMMENT__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public int getPageId() {
 		return pageId;
 	}
@@ -262,6 +304,8 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case CorePackage.COMMENT__ID:
+				return getId();
 			case CorePackage.COMMENT__PAGE_ID:
 				return getPageId();
 			case CorePackage.COMMENT__X:
@@ -284,6 +328,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case CorePackage.COMMENT__ID:
+				setId((Integer)newValue);
+				return;
 			case CorePackage.COMMENT__PAGE_ID:
 				setPageId((Integer)newValue);
 				return;
@@ -311,6 +358,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case CorePackage.COMMENT__ID:
+				setId(ID_EDEFAULT);
+				return;
 			case CorePackage.COMMENT__PAGE_ID:
 				setPageId(PAGE_ID_EDEFAULT);
 				return;
@@ -338,6 +388,8 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case CorePackage.COMMENT__ID:
+				return id != ID_EDEFAULT;
 			case CorePackage.COMMENT__PAGE_ID:
 				return pageId != PAGE_ID_EDEFAULT;
 			case CorePackage.COMMENT__X:
@@ -362,7 +414,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (pageId: ");
+		result.append(" (id: ");
+		result.append(id);
+		result.append(", pageId: ");
 		result.append(pageId);
 		result.append(", x: ");
 		result.append(x);

@@ -26,6 +26,19 @@ class PdfPaneWithAnotations extends Pane {
 	ImageView imageView
 	Image currentImage
 	
+	
+	def displayAnnotationsFor(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
+		var ids = controller.service.getAnnotationIds(qItem.questionId,sItem.studentId)
+		for (int id : ids){
+			addAnotation( 
+				controller.service.getAnnotationX(id,qItem.questionId,sItem.studentId),controller.service.getAnnotationY(id,qItem.questionId,sItem.studentId),
+				controller.service.getAnnotationHeight(id,qItem.questionId,sItem.studentId),controller.service.getAnnotationWidth(id,qItem.questionId,sItem.studentId),
+				controller.service.getAnnotationPointerX(id,qItem.questionId,sItem.studentId),controller.service.getAnnotationPointerY(id,qItem.questionId,sItem.studentId),
+				controller.service.getAnnotationText(id,qItem.questionId,sItem.studentId),id
+			)
+		}
+	}
+	
 	def setImage(Image image){
 		imageView.image = image
 		currentImage = image
@@ -49,12 +62,16 @@ class PdfPaneWithAnotations extends Pane {
 	}
 	
 	def addNewAnotation(double x, double y){
-		var anot = new TextAnotation(x,y,100,50,"New Anotation",this)
+		var anot = new TextAnotation(x,y,"New Anotation",this)
 		this.children.addAll(anot.allParts)
+		anot
 	}
 	
-	def addAnotation(double x, double y, double height, double width, String text) {
-		var anot = new TextAnotation(x,y,height,width,text,this)
+	def addAnotation(double x, double y, double height, double width,double pointerX,double pointerY ,String text,int id) {
+		var anot = new TextAnotation(x,y,text,this)
+		anot.move(x,y);
+		anot.movePointer(pointerX,pointerY)
+		anot.annotId = id
 		this.children.addAll(anot.allParts)
 	}
 	
@@ -83,6 +100,13 @@ class PdfPaneWithAnotations extends Pane {
 	def handleMovePointer(TextAnotation anot, MouseEvent e) {
 		controller.currentTool = SelectedTool.MOVE_POINTER_TOOL
 		controller.currentAnotation = anot;
+	}
+	
+	def handleRename(TextAnotation anot) {
+		controller.updateAnnotation(anot)
+	}
+	
+	def handleRemove(TextAnotation anot){
 	}
 	
 	
