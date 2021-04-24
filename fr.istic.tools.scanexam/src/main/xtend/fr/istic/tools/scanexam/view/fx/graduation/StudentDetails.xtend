@@ -9,6 +9,7 @@ import static fr.istic.tools.scanexam.config.LanguageManager.translate
 import org.apache.logging.log4j.LogManager
 import javafx.scene.shape.Circle
 import javafx.scene.paint.Color
+import javafx.geometry.Pos
 
 /**
  * Affiche les détails d'un élève lors de la correction de sa copie
@@ -25,8 +26,6 @@ class StudentDetails extends VBox {
 	/* Controleur JavaFX de graduation */
 	ControllerFxGraduation controller
 	
-	/* Grille contenant les informations */
-	GridPane grid
 	/* Champ de text econtenant le nom de l'étudiant */
 	RenameFieldSuggests name
 	/* Label affichant l'identifiant de l'étudiant */
@@ -54,29 +53,36 @@ class StudentDetails extends VBox {
 	 */
 	new(ControllerFxGraduation controller) {
 		this.controller = controller
-		
+		this.alignment = Pos.CENTER
 		var nameRow = new Label(translate("label.student.name"))
 		var idRow = new Label(translate("label.student.id"))
 		var gradeRow = new Label(translate("label.student.grade"))
 		var qualityRow = new Label(translate("label.student.quality"))
+		nameRow.styleClass.add("RowTitle")
+		idRow.styleClass.add("RowTitle")
+		gradeRow.styleClass.add("RowTitle")
+		qualityRow.styleClass.add("RowTitle")
 		
-		grid = new GridPane
-		grid.add(nameRow, 0, 0)
-		grid.add(idRow, 0, 2)
-		grid.add(gradeRow, 0, 3)
-		grid.add(qualityRow, 0, 4)
+		
 
 		name = new RenameFieldSuggests
+		name.alignment = Pos.CENTER
 		idLabel = new Label
 		gradeLabel = new Label
 		qualityCircle = new Circle(8, Color.GRAY)
 		
-		grid.add(name, 0, 1)
-		grid.add(idLabel, 1, 2)
-		grid.add(gradeLabel, 1, 3)
-		grid.add(qualityCircle, 1, 4)
+		this.children.add(nameRow)
+		this.children.add(name)
+		this.children.add(idRow)
+		this.children.add(idLabel)
+		this.children.add(gradeRow)
+		this.children.add(gradeLabel)
+		this.children.add(qualityRow)
+		this.children.add(qualityCircle)
+		
+		
+		
 
-		this.children.add(grid)
 		setupEvents
 	}
 

@@ -105,8 +105,6 @@ class ControllerFxGraduation {
 	@FXML
 	public VBox studentDetailsContainer;
 	@FXML
-	public VBox questionDetails;
-	@FXML
 	public Spinner<Double> gradeSpinner;
 	@FXML
 	public Spinner<Double> totalGradeSpinner;
@@ -522,7 +520,6 @@ class ControllerFxGraduation {
 		setSelectedQuestion
 		setSelectedStudent
 		grader.visible = true;
-		questionDetails.visible = true;
 	}
 	
 	def unLoaded(){

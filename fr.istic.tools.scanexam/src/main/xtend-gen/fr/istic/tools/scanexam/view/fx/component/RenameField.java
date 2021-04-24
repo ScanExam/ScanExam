@@ -26,6 +26,7 @@ public class RenameField extends HBox {
     this.getChildren().addAll(this.label, this.icon);
     this.field.getStyleClass().add("mytext-field");
     this.label.getStyleClass().add("renameLabel");
+    this.getStyleClass().add("RenameField");
     this.setAlignment(Pos.CENTER_LEFT);
     this.setupEvents();
   }

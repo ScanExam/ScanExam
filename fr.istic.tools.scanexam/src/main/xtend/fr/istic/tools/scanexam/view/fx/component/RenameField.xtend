@@ -20,6 +20,7 @@ class RenameField extends HBox {
 		this.children.addAll(label,icon);
 		field.styleClass.add("mytext-field")
 		label.styleClass.add("renameLabel")
+		this.styleClass.add("RenameField")
 		setAlignment(Pos.CENTER_LEFT)
 		setupEvents
 	}

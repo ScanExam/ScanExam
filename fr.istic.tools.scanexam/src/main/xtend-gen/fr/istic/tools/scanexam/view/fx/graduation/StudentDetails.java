@@ -7,8 +7,8 @@ import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -25,11 +25,6 @@ public class StudentDetails extends VBox {
    * Controleur JavaFX de graduation
    */
   private ControllerFxGraduation controller;
-  
-  /**
-   * Grille contenant les informations
-   */
-  private GridPane grid;
   
   /**
    * Champ de text econtenant le nom de l'étudiant
@@ -67,6 +62,7 @@ public class StudentDetails extends VBox {
    */
   public StudentDetails(final ControllerFxGraduation controller) {
     this.controller = controller;
+    this.setAlignment(Pos.CENTER);
     String _translate = LanguageManager.translate("label.student.name");
     Label nameRow = new Label(_translate);
     String _translate_1 = LanguageManager.translate("label.student.id");
@@ -75,25 +71,27 @@ public class StudentDetails extends VBox {
     Label gradeRow = new Label(_translate_2);
     String _translate_3 = LanguageManager.translate("label.student.quality");
     Label qualityRow = new Label(_translate_3);
-    GridPane _gridPane = new GridPane();
-    this.grid = _gridPane;
-    this.grid.add(nameRow, 0, 0);
-    this.grid.add(idRow, 0, 2);
-    this.grid.add(gradeRow, 0, 3);
-    this.grid.add(qualityRow, 0, 4);
+    nameRow.getStyleClass().add("RowTitle");
+    idRow.getStyleClass().add("RowTitle");
+    gradeRow.getStyleClass().add("RowTitle");
+    qualityRow.getStyleClass().add("RowTitle");
     RenameFieldSuggests _renameFieldSuggests = new RenameFieldSuggests();
     this.name = _renameFieldSuggests;
+    this.name.setAlignment(Pos.CENTER);
     Label _label = new Label();
     this.idLabel = _label;
     Label _label_1 = new Label();
     this.gradeLabel = _label_1;
     Circle _circle = new Circle(8, Color.GRAY);
     this.qualityCircle = _circle;
-    this.grid.add(this.name, 0, 1);
-    this.grid.add(this.idLabel, 1, 2);
-    this.grid.add(this.gradeLabel, 1, 3);
-    this.grid.add(this.qualityCircle, 1, 4);
-    this.getChildren().add(this.grid);
+    this.getChildren().add(nameRow);
+    this.getChildren().add(this.name);
+    this.getChildren().add(idRow);
+    this.getChildren().add(this.idLabel);
+    this.getChildren().add(gradeRow);
+    this.getChildren().add(this.gradeLabel);
+    this.getChildren().add(qualityRow);
+    this.getChildren().add(this.qualityCircle);
     this.setupEvents();
   }
   

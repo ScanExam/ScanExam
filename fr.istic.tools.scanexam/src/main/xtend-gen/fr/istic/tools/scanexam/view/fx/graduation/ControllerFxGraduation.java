@@ -155,9 +155,6 @@ public class ControllerFxGraduation {
   public VBox studentDetailsContainer;
   
   @FXML
-  public VBox questionDetails;
-  
-  @FXML
   public Spinner<Double> gradeSpinner;
   
   @FXML
@@ -708,7 +705,6 @@ public class ControllerFxGraduation {
     this.setSelectedQuestion();
     this.setSelectedStudent();
     this.grader.setVisible(true);
-    this.questionDetails.setVisible(true);
   }
   
   public void unLoaded() {
