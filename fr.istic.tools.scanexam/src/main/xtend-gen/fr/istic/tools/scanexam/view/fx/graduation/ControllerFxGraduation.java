@@ -1116,7 +1116,14 @@ public class ControllerFxGraduation {
   public List<String> getStudentsSuggestedNames(final String start) {
     final Function<List<String>, List<String>> _function = (List<String> l) -> {
       final Function1<String, Boolean> _function_1 = (String n) -> {
-        return Boolean.valueOf(n.toLowerCase().contains(start.toLowerCase()));
+        String _lowerCase = n.toLowerCase();
+        String _xifexpression = null;
+        if ((start == null)) {
+          _xifexpression = "";
+        } else {
+          _xifexpression = start.toLowerCase();
+        }
+        return Boolean.valueOf(_lowerCase.contains(_xifexpression));
       };
       return IterableExtensions.<String>toList(IterableExtensions.<String>filter(l, _function_1));
     };

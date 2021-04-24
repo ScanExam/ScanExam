@@ -908,7 +908,7 @@ class ControllerFxGraduation {
 	
 	def List<String> getStudentsSuggestedNames(String start){
 		StudentDataManager.allNames
-			.map(l | l.filter[n | n.toLowerCase().contains(start.toLowerCase())].toList)
+			.map(l | l.filter[n | n.toLowerCase().contains(start === null ? "" : start.toLowerCase())].toList)
 			.orElse(List.of())
 	}
 	
