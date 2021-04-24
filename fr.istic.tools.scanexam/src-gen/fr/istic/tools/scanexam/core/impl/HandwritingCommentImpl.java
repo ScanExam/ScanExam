@@ -91,6 +91,7 @@ public class HandwritingCommentImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getPageId() {
 		return pageId;
 	}
@@ -100,6 +101,7 @@ public class HandwritingCommentImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPageId(int newPageId) {
 		int oldPageId = pageId;
 		pageId = newPageId;
@@ -112,6 +114,7 @@ public class HandwritingCommentImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Line> getLines() {
 		if (lines == null) {
 			lines = new EObjectContainmentEList<Line>(Line.class, this, CorePackage.HANDWRITING_COMMENT__LINES);

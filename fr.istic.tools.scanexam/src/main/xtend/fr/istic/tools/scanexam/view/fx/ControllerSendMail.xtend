@@ -38,7 +38,6 @@ class ControllerSendMail  {
 	@FXML
 	public HTMLEditor htmlEditor
 	
-	ServiceGraduation service
 	int nbSheetWithoutName = 0
 	
 	Optional<Map<String,String>> mailMap
@@ -103,37 +102,33 @@ class ControllerSendMail  {
 	}
 	
 	
-	def void init(ServiceGraduation service,ControllerFxGraduation controllerGraduation)
-	{
-		this.service = service
+	def void init(ServiceGraduation service, ControllerFxGraduation controllerGraduation) {
 		this.controllerGraduation = controllerGraduation
-		this.mailMap =StudentDataManager.getNameToMailMap()
+		this.mailMap = StudentDataManager.getNameToMailMap()
 		this.studentSheets = service.studentSheets
-		
-		nbSheetWithoutName = if(mailMap.present)		
-			studentSheets.filter(x | !mailMap.get.containsKey(x.studentName)).size as int
+
+		nbSheetWithoutName = if (mailMap.present)
+			studentSheets.filter(x|!mailMap.get.containsKey(x.studentName)).size as int
 		else
 			-1
-	 	
-		if (mailMap.empty)
-		{
-			DialogMessageSender.sendTranslateDialog(AlertType.WARNING,
+
+		if (mailMap.empty) {
+			DialogMessageSender.sendTranslateDialog(
+				AlertType.WARNING,
 				"sendMail.noStudentDataHeader",
 				"sendMail.noStudentDataHeader",
 				"sendMail.noStudentData"
 			);
 			return
-		} else if(nbSheetWithoutName != 0) {
-			DialogMessageSender.sendDialog(AlertType.WARNING,
+		} else if (nbSheetWithoutName != 0) {
+			DialogMessageSender.sendDialog(
+				AlertType.WARNING,
 				LanguageManager.translate("sendMail.noStudentDataHeader"),
-				nbSheetWithoutName > 1 
-					? String.format(LanguageManager.translate("sendMail.notAllStudent"), nbSheetWithoutName)
-					: LanguageManager.translate("sendMail.notAllStudent1"),
+				nbSheetWithoutName > 1 ? String.format(LanguageManager.translate("sendMail.notAllStudent"),
+					nbSheetWithoutName) : LanguageManager.translate("sendMail.notAllStudent1"),
 				null
 			)
 		}
-
-	
 	}
 	
 	

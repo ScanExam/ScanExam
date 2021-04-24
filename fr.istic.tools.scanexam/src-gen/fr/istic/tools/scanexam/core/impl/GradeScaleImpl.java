@@ -91,6 +91,7 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public float getMaxPoint() {
 		return maxPoint;
 	}
@@ -100,6 +101,7 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMaxPoint(float newMaxPoint) {
 		float oldMaxPoint = maxPoint;
 		maxPoint = newMaxPoint;
@@ -112,6 +114,7 @@ public class GradeScaleImpl extends MinimalEObjectImpl.Container implements Grad
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<GradeEntry> getSteps() {
 		if (steps == null) {
 			steps = new EObjectContainmentEList<GradeEntry>(GradeEntry.class, this, CorePackage.GRADE_SCALE__STEPS);

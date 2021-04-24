@@ -23,6 +23,9 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import javafx.stage.DirectoryChooser
 import java.io.File
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.config.ConfigurationManager
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
+import javafx.scene.control.Alert.AlertType
 
 class ControllerRoot implements Initializable {
 	
@@ -153,20 +156,32 @@ class ControllerRoot implements Initializable {
 	}
 	
 	@FXML
-	def sendMail(){
-		val FXMLLoader loader = new FXMLLoader
-		loader.setResources(LanguageManager.currentBundle)
-	
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
-		val Stage dialog = new Stage
-		
-		loader.<ControllerSendMail>controller.init(serviceGraduation,graduationController)
-			
-		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
-		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		dialog.setScene(new Scene(view, 672, 416))
-		dialog.setResizable(false);
-		dialog.show
+	def sendMail() {
+		val config = ConfigurationManager.instance
+		val rightConfig = config.email == "" || config.emailPassword == "" || config.mailHost == "" ||
+			config.mailPort == 0
+		if (rightConfig) {
+			DialogMessageSender.sendTranslateDialog(
+				AlertType.ERROR,
+				"error",
+				"sendMail.noCredentialTitle",
+				"sendMail.noCredentialBody"
+			);
+		} else {
+			val FXMLLoader loader = new FXMLLoader
+			loader.setResources(LanguageManager.currentBundle)
+
+			val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
+			val Stage dialog = new Stage
+
+			loader.<ControllerSendMail>controller.init(serviceGraduation, graduationController)
+
+			dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
+			dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+			dialog.setScene(new Scene(view, 672, 416))
+			dialog.setResizable(false);
+			dialog.show
+		}
 	}
 	
 	@FXML

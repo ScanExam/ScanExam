@@ -69,6 +69,7 @@ public class TextCommentImpl extends CommentImpl implements TextComment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getText() {
 		return text;
 	}
@@ -78,6 +79,7 @@ public class TextCommentImpl extends CommentImpl implements TextComment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setText(String newText) {
 		String oldText = text;
 		text = newText;

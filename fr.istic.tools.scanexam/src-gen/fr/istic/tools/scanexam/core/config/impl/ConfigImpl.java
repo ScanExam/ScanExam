@@ -60,7 +60,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String EMAIL_EDEFAULT = null;
+	protected static final String EMAIL_EDEFAULT = "";
 
 	/**
 	 * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute.
@@ -80,7 +80,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String EMAIL_PASSWORD_EDEFAULT = null;
+	protected static final String EMAIL_PASSWORD_EDEFAULT = "";
 
 	/**
 	 * The cached value of the '{@link #getEmailPassword() <em>Email Password</em>}' attribute.
@@ -100,7 +100,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String MAIL_HOST_EDEFAULT = null;
+	protected static final String MAIL_HOST_EDEFAULT = "";
 
 	/**
 	 * The cached value of the '{@link #getMailHost() <em>Mail Host</em>}' attribute.

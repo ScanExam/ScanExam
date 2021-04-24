@@ -1,6 +1,9 @@
 package fr.istic.tools.scanexam.view.fx;
 
+import com.google.common.base.Objects;
+import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.core.config.Config;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
@@ -13,6 +16,7 @@ import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -24,6 +28,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
@@ -212,20 +217,31 @@ public class ControllerRoot implements Initializable {
   @FXML
   public void sendMail() {
     try {
-      final FXMLLoader loader = new FXMLLoader();
-      loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
-      final Stage dialog = new Stage();
-      loader.<ControllerSendMail>getController().init(this.serviceGraduation, this.graduationController);
-      dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
-      ObservableList<Image> _icons = dialog.getIcons();
-      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
-      Image _image = new Image(_inputStreamResource);
-      _icons.add(_image);
-      Scene _scene = new Scene(view, 672, 416);
-      dialog.setScene(_scene);
-      dialog.setResizable(false);
-      dialog.show();
+      final Config config = ConfigurationManager.instance;
+      final boolean rightConfig = (((Objects.equal(config.getEmail(), "") || Objects.equal(config.getEmailPassword(), "")) || Objects.equal(config.getMailHost(), "")) || 
+        (config.getMailPort() == 0));
+      if (rightConfig) {
+        DialogMessageSender.sendTranslateDialog(
+          Alert.AlertType.ERROR, 
+          "error", 
+          "sendMail.noCredentialTitle", 
+          "sendMail.noCredentialBody");
+      } else {
+        final FXMLLoader loader = new FXMLLoader();
+        loader.setResources(LanguageManager.getCurrentBundle());
+        final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"));
+        final Stage dialog = new Stage();
+        loader.<ControllerSendMail>getController().init(this.serviceGraduation, this.graduationController);
+        dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"));
+        ObservableList<Image> _icons = dialog.getIcons();
+        InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
+        Image _image = new Image(_inputStreamResource);
+        _icons.add(_image);
+        Scene _scene = new Scene(view, 672, 416);
+        dialog.setScene(_scene);
+        dialog.setResizable(false);
+        dialog.show();
+      }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

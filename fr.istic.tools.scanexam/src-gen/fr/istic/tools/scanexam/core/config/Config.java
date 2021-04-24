@@ -51,12 +51,13 @@ public interface Config extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Email</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Email</em>' attribute.
 	 * @see #setEmail(String)
 	 * @see fr.istic.tools.scanexam.core.config.ConfigPackage#getConfig_Email()
-	 * @model unique="false"
+	 * @model default="" unique="false"
 	 * @generated
 	 */
 	String getEmail();
@@ -73,12 +74,13 @@ public interface Config extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Email Password</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Email Password</em>' attribute.
 	 * @see #setEmailPassword(String)
 	 * @see fr.istic.tools.scanexam.core.config.ConfigPackage#getConfig_EmailPassword()
-	 * @model unique="false"
+	 * @model default="" unique="false"
 	 * @generated
 	 */
 	String getEmailPassword();
@@ -95,12 +97,13 @@ public interface Config extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Mail Host</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Mail Host</em>' attribute.
 	 * @see #setMailHost(String)
 	 * @see fr.istic.tools.scanexam.core.config.ConfigPackage#getConfig_MailHost()
-	 * @model unique="false"
+	 * @model default="" unique="false"
 	 * @generated
 	 */
 	String getMailHost();
@@ -117,12 +120,13 @@ public interface Config extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Mail Port</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Mail Port</em>' attribute.
 	 * @see #setMailPort(int)
 	 * @see fr.istic.tools.scanexam.core.config.ConfigPackage#getConfig_MailPort()
-	 * @model unique="false"
+	 * @model default="0" unique="false"
 	 * @generated
 	 */
 	int getMailPort();

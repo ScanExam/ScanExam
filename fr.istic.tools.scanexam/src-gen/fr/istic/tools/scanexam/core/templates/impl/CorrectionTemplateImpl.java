@@ -134,6 +134,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEncodedDocument() {
 		return encodedDocument;
 	}
@@ -143,6 +144,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEncodedDocument(String newEncodedDocument) {
 		String oldEncodedDocument = encodedDocument;
 		encodedDocument = newEncodedDocument;
@@ -155,6 +157,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getStudentListPath() {
 		return studentListPath;
 	}
@@ -164,6 +167,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStudentListPath(String newStudentListPath) {
 		String oldStudentListPath = studentListPath;
 		studentListPath = newStudentListPath;
@@ -176,6 +180,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getStudentListShift() {
 		return studentListShift;
 	}
@@ -185,6 +190,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStudentListShift(String newStudentListShift) {
 		String oldStudentListShift = studentListShift;
 		studentListShift = newStudentListShift;
@@ -197,6 +203,7 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<StudentSheet> getStudentsheets() {
 		if (studentsheets == null) {
 			studentsheets = new EObjectContainmentEList<StudentSheet>(StudentSheet.class, this, TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS);

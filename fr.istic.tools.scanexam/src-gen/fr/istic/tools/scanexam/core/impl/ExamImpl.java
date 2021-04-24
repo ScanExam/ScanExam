@@ -122,6 +122,7 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getId() {
 		return id;
 	}
@@ -131,6 +132,7 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId(int newId) {
 		int oldId = id;
 		id = newId;
@@ -143,6 +145,7 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -152,6 +155,7 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -164,6 +168,7 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Page> getPages() {
 		if (pages == null) {
 			pages = new EObjectContainmentEList<Page>(Page.class, this, CorePackage.EXAM__PAGES);
@@ -176,6 +181,7 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public float computeMaxGrade() {
 		float _xblockexpression = (float) 0;
 		{

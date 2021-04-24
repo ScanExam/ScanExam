@@ -5,8 +5,8 @@ type Locale wraps Locale
 class Config 
 {
 	Locale language
-	String email
-	String emailPassword
-	String mailHost
-	int mailPort
+	String email = ""
+	String emailPassword = ""
+	String mailHost = ""
+	int mailPort = "0"
 }

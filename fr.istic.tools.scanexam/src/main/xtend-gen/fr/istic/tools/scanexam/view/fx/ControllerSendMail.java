@@ -52,8 +52,6 @@ public class ControllerSendMail {
   @FXML
   public HTMLEditor htmlEditor;
   
-  private ServiceGraduation service;
-  
   private int nbSheetWithoutName = 0;
   
   private Optional<Map<String, String>> mailMap;
@@ -134,7 +132,6 @@ public class ControllerSendMail {
   }
   
   public void init(final ServiceGraduation service, final ControllerFxGraduation controllerGraduation) {
-    this.service = service;
     this.controllerGraduation = controllerGraduation;
     this.mailMap = StudentDataManager.getNameToMailMap();
     this.studentSheets = service.getStudentSheets();
@@ -153,7 +150,8 @@ public class ControllerSendMail {
     this.nbSheetWithoutName = _xifexpression;
     boolean _isEmpty = this.mailMap.isEmpty();
     if (_isEmpty) {
-      DialogMessageSender.sendTranslateDialog(Alert.AlertType.WARNING, 
+      DialogMessageSender.sendTranslateDialog(
+        Alert.AlertType.WARNING, 
         "sendMail.noStudentDataHeader", 
         "sendMail.noStudentDataHeader", 
         "sendMail.noStudentData");
@@ -163,11 +161,13 @@ public class ControllerSendMail {
         String _translate = LanguageManager.translate("sendMail.noStudentDataHeader");
         String _xifexpression_1 = null;
         if ((this.nbSheetWithoutName > 1)) {
-          _xifexpression_1 = String.format(LanguageManager.translate("sendMail.notAllStudent"), Integer.valueOf(this.nbSheetWithoutName));
+          _xifexpression_1 = String.format(LanguageManager.translate("sendMail.notAllStudent"), 
+            Integer.valueOf(this.nbSheetWithoutName));
         } else {
           _xifexpression_1 = LanguageManager.translate("sendMail.notAllStudent1");
         }
-        DialogMessageSender.sendDialog(Alert.AlertType.WARNING, _translate, _xifexpression_1, 
+        DialogMessageSender.sendDialog(
+          Alert.AlertType.WARNING, _translate, _xifexpression_1, 
           null);
       }
     }
