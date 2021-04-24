@@ -311,7 +311,8 @@ public class ControllerFxGraduation {
     if (currentTool != null) {
       switch (currentTool) {
         case NO_TOOL:
-          return;
+          this.moveImage(e);
+          break;
         case MOVE_CAMERA_TOOL:
           this.moveImage(e);
           break;
@@ -325,7 +326,7 @@ public class ControllerFxGraduation {
           this.movePointer(e);
           break;
         case MOVE_GRADER_TOOL:
-          break;
+          return;
         default:
           break;
       }
@@ -472,8 +473,8 @@ public class ControllerFxGraduation {
     Object _source = e.getSource();
     Node source = ((Node) _source);
     double _deltaY = e.getDeltaY();
-    boolean _greaterThan = (_deltaY > 0);
-    if (_greaterThan) {
+    boolean _lessThan = (_deltaY < 0);
+    if (_lessThan) {
       double _scaleX = source.getScaleX();
       double _multiply = (_scaleX * 0.95);
       source.setScaleX(_multiply);
@@ -865,7 +866,6 @@ public class ControllerFxGraduation {
       this.previousZoomMode = this.autoZoom;
       this.autoZoom = false;
       this.showAnotations();
-      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
       _xblockexpression = this.annotationMode = true;
     }
     return _xblockexpression;

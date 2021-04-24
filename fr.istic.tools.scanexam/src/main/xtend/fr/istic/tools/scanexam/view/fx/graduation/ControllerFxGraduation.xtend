@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
-import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.ExportExamToPdf
@@ -25,7 +24,6 @@ import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Spinner
 import javafx.scene.control.ToggleButton
-import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
@@ -36,6 +34,8 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
+import javafx.scene.input.KeyEvent
+import fr.istic.tools.scanexam.config.LanguageManager
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -252,7 +252,7 @@ class ControllerFxGraduation {
 		}
 		switch currentTool {
 			case NO_TOOL: {
-				return;
+				moveImage(e)
 			}
 			case MOVE_CAMERA_TOOL: {
 				moveImage(e)
@@ -267,7 +267,7 @@ class ControllerFxGraduation {
 				movePointer(e)
 			}
 			case MOVE_GRADER_TOOL: {
-				
+				return
 			}
 		}
 	}
@@ -365,7 +365,7 @@ class ControllerFxGraduation {
 	@FXML
 	def void ZoomImage(ScrollEvent e) {
 		var source = e.source as Node
-		if (e.deltaY > 0) {
+		if (e.deltaY < 0) {
 			source.scaleX = source.scaleX * 0.95
 			source.scaleY = source.scaleY * 0.95
 		} else {
@@ -618,9 +618,9 @@ class ControllerFxGraduation {
 		if (e.eventType == MouseEvent.MOUSE_PRESSED) {
 				var annot = mainPane.addNewAnotation(mousePositionX,mousePositionY);
 				addAnnotation(annot)
-				addAnnotationButton.selected = false;
+				addAnnotationButton.selected = false
 			}
-			
+		
 	
 	}
 	
@@ -661,7 +661,6 @@ class ControllerFxGraduation {
 		previousZoomMode = autoZoom;
 		autoZoom = false;
 		showAnotations
-		currentTool = SelectedTool.CREATE_ANOTATION_TOOL
 		annotationMode = true;
 	}
 	

@@ -185,7 +185,7 @@ interface ServiceGraduation extends Service {
 	 */
 	def List<Integer> getQuestionSelectedGradeEntries(int questionId)
 
-	
+	def double getQuestionSelectedGradeEntriesTotalWorth(int questionId)
 	/**
 	 * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
 	 * @return vrai si le nouvelle note est valide, faux sinon

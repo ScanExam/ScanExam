@@ -390,6 +390,19 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 
 		sheet.grades.get(questionId).entries.map[entry|entry.id]
 	}
+	
+	override double getQuestionSelectedGradeEntriesTotalWorth(int questionId) {
+		if (currentSheetIndex > studentSheets.size - 1) return 0;
+		val sheet = studentSheets.get(currentSheetIndex);
+		if (questionId > sheet.grades.size - 1)
+			return 0;
+		var total = 0f;
+		for (GradeEntry entry : sheet.grades.get(questionId).entries) {
+			total = total + entry.step
+		}
+		total
+	}
+	
 
 	
 	//FIXME : Probleme lorsque la note maximal est modifier pour une note plus basse, risque de depacement

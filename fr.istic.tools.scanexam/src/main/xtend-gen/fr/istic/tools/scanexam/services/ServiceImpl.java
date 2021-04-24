@@ -484,6 +484,35 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     return _xblockexpression;
   }
   
+  @Override
+  public double getQuestionSelectedGradeEntriesTotalWorth(final int questionId) {
+    float _xblockexpression = (float) 0;
+    {
+      int _size = this.getStudentSheets().size();
+      int _minus = (_size - 1);
+      boolean _greaterThan = (this.currentSheetIndex > _minus);
+      if (_greaterThan) {
+        return 0;
+      }
+      final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+      int _size_1 = sheet.getGrades().size();
+      int _minus_1 = (_size_1 - 1);
+      boolean _greaterThan_1 = (questionId > _minus_1);
+      if (_greaterThan_1) {
+        return 0;
+      }
+      float total = 0f;
+      EList<GradeEntry> _entries = sheet.getGrades().get(questionId).getEntries();
+      for (final GradeEntry entry : _entries) {
+        float _step = entry.getStep();
+        float _plus = (total + _step);
+        total = _plus;
+      }
+      _xblockexpression = total;
+    }
+    return _xblockexpression;
+  }
+  
   /**
    * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
    * @return vrai si le nouvelle note est valide, faux sinon

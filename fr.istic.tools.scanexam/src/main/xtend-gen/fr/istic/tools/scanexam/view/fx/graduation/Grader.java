@@ -11,7 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,50 +44,39 @@ public class Grader extends VBox {
       this.grader = grader;
       HBox _hBox = new HBox();
       this.topRow = _hBox;
-      Label _label = new Label(
-        "This is a test Grate entry name, double click to edit the text.");
-      this.text = _label;
-      this.text.setWrapText(true);
-      this.text.setMaxWidth(130);
-      Insets _insets = new Insets(0, 0, 0, 10);
-      VBox.setMargin(this.text, _insets);
       StackPane _stackPane = new StackPane();
       this.stackPane = _stackPane;
+      this.text = "This is a grade entry text, double click here to edit the text.";
       WebView _webView = new WebView();
       this.webView = _webView;
       this.webEngine = this.webView.getEngine();
-      this.webEngine.loadContent(this.text.getText());
-      this.webView.setMaxSize(130, 110);
-      Insets _insets_1 = new Insets(10, 0, 0, 10);
-      VBox.setMargin(this.webView, _insets_1);
+      this.webEngine.loadContent(this.text);
+      this.webView.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+      this.webView.setMinSize(100, 100);
       this.stackPane.getChildren().add(this.webView);
       CheckBox _checkBox = new CheckBox();
       this.check = _checkBox;
-      Label _label_1 = new Label("5.0");
-      this.worth = _label_1;
-      Insets _insets_2 = new Insets(0, 0, 0, 10);
-      this.worth.setPadding(_insets_2);
+      Label _label = new Label("1");
+      this.worth = _label;
       String _text = this.worth.getText();
       TextField _textField = new TextField(_text);
       this.worthField = _textField;
-      Insets _insets_3 = new Insets(0, 0, 0, 10);
-      this.worthField.setPadding(_insets_3);
-      this.worthField.setMaxWidth(25);
       this.worthField.getStyleClass().add("mytext-field");
       Button _button = new Button("Remove entry");
       this.remove = _button;
-      Insets _insets_4 = new Insets(0, 0, 10, 0);
-      VBox.setMargin(this, _insets_4);
-      this.topRow.getChildren().addAll(this.check, this.worthField, this.remove);
-      this.getChildren().addAll(this.topRow, this.stackPane);
+      this.topRow.getChildren().addAll(this.check, this.worthField);
+      this.getChildren().addAll(this.topRow, this.stackPane, this.remove);
+      this.topRow.getStyleClass().add("GradeItemTopRow");
+      this.getStyleClass().add("GradeItem");
+      this.setAlignment(Pos.CENTER);
       this.setupEvents();
     }
     
     private int id;
     
-    private HBox topRow;
+    private String text;
     
-    private Label text;
+    private HBox topRow;
     
     private Label worth;
     
@@ -105,7 +95,7 @@ public class Grader extends VBox {
     private Button remove;
     
     public String getText() {
-      return this.text.getText();
+      return this.text;
     }
     
     public String getWorth() {
@@ -151,8 +141,13 @@ public class Grader extends VBox {
      * Change le text modifié par le HTML Editor
      */
     public void setText(final String text) {
-      this.text.setText(text);
-      this.webEngine.loadContent(this.text.getText());
+      this.text = text;
+      this.webEngine.loadContent(text);
+    }
+    
+    public void changeText(final String text) {
+      this.setText(text);
+      this.grader.updateEntryInModel(this, this.grader.controller.getQuestionList().getCurrentItem());
     }
     
     public void setWorth(final float worth) {
@@ -175,40 +170,27 @@ public class Grader extends VBox {
       {
         this.topRow.getChildren().remove(this.worth);
         this.topRow.getChildren().add(this.worthField);
-        this.topRow.getChildren().add(this.remove);
-        _xblockexpression = this.getChildren().add(this.webView);
+        _xblockexpression = this.getChildren().add(this.remove);
       }
       return _xblockexpression;
     }
     
-    public boolean leaveEditMode() {
-      boolean _xblockexpression = false;
-      {
-        this.topRow.getChildren().remove(this.worthField);
-        this.topRow.getChildren().remove(this.remove);
-        _xblockexpression = this.topRow.getChildren().add(this.worth);
-      }
-      return _xblockexpression;
-    }
-    
-    public boolean commitChanges() {
-      boolean _xblockexpression = false;
-      {
-        this.worth.setText(this.worthField.getText());
-        _xblockexpression = this.leaveEditMode();
-      }
-      return _xblockexpression;
+    public void leaveEditMode() {
+      this.topRow.getChildren().remove(this.worthField);
+      this.getChildren().remove(this.remove);
+      this.topRow.getChildren().add(this.worth);
+      this.worth.setText(this.worthField.getText());
     }
     
     public Boolean checkBoxUsed() {
-      Boolean _xifexpression = null;
+      boolean _xifexpression = false;
       boolean _isSelected = this.check.isSelected();
       if (_isSelected) {
-        _xifexpression = this.grader.addPoints(this);
+        this.grader.addPoints(this);
       } else {
-        _xifexpression = Boolean.valueOf(this.grader.removePoints(this));
+        _xifexpression = this.grader.removePoints(this);
       }
-      return _xifexpression;
+      return Boolean.valueOf(_xifexpression);
     }
     
     public void setupEvents() {
@@ -285,6 +267,7 @@ public class Grader extends VBox {
     ScrollPane scrollp = new ScrollPane();
     scrollp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     scrollp.getStyleClass().add("GradeList");
+    scrollp.setFitToWidth(true);
     VBox _vBox = new VBox();
     this.itemContainer = _vBox;
     Button _button = new Button("Add new Grade Entry");
@@ -294,6 +277,13 @@ public class Grader extends VBox {
     this.editMode = _button_1;
     this.editMode.getStyleClass().add("InfinityButton");
     scrollp.setContent(this.itemContainer);
+    this.setCursor(Cursor.MOVE);
+    this.itemContainer.setCursor(Cursor.DEFAULT);
+    this.add.setCursor(Cursor.DEFAULT);
+    this.editMode.setCursor(Cursor.DEFAULT);
+    this.currentPoints.setCursor(Cursor.DEFAULT);
+    this.maxPoints.setCursor(Cursor.DEFAULT);
+    scrollp.setCursor(Cursor.DEFAULT);
     this.getChildren().addAll(pointsBox, scrollp, this.editMode);
     this.setPrefWidth(170);
     this.setMaxHeight(500);
@@ -340,13 +330,13 @@ public class Grader extends VBox {
           boolean _contains = sids.contains(i);
           if (_contains) {
             g.setSelected(Boolean.valueOf(true));
-            this.addPointsOf(g);
           } else {
             g.setSelected(Boolean.valueOf(false));
           }
           g.leaveEditMode();
         }
       }
+      this.updateCurrentPoints();
     } else {
       Grader.logger.warn("The current Question or current Student is null");
     }
@@ -362,61 +352,49 @@ public class Grader extends VBox {
   public void removeGradeEntry(final Grader.GradeItem item) {
     Grader.logger.log(Level.INFO, "Removing GradeEntry");
     this.itemContainer.getChildren().remove(item);
-    boolean _selected = item.getSelected();
-    if (_selected) {
-      this.removePointsOf(item);
-    }
     this.removeEntryFromModel(item, this.controller.getQuestionList().getCurrentItem());
+    this.updateCurrentPoints();
   }
   
-  public void addPointsOf(final Grader.GradeItem item) {
-    this.currentPoints.setText("FIX");
-  }
-  
-  public void removePointsOf(final Grader.GradeItem item) {
-    this.currentPoints.setText("FIX");
+  public void updateCurrentPoints() {
+    double _questionSelectedGradeEntriesTotalWorth = this.controller.getService().getQuestionSelectedGradeEntriesTotalWorth(this.controller.getQuestionList().getCurrentItem().getQuestionId());
+    String _plus = ("" + Double.valueOf(_questionSelectedGradeEntriesTotalWorth));
+    this.currentPoints.setText(_plus);
   }
   
   public void addEntryToModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    item.setItemId(this.controller.addEntry(qItem.getQuestionId(), item.getText(), 
-      Float.parseFloat(item.getWorth())));
+    item.setItemId(this.controller.addEntry(qItem.getQuestionId(), item.getText(), Float.parseFloat(item.getWorth())));
   }
   
   /**
    * Modifier un item du barême
    */
   public void updateEntryInModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
-    this.controller.modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), 
-      Float.parseFloat(item.getWorth()));
+    Grader.logger.log(Level.INFO, "Updating GradeEntry");
+    this.controller.modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), Float.parseFloat(item.getWorth()));
   }
   
   public void removeEntryFromModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
     this.controller.removeEntry(qItem.getQuestionId(), item.id);
   }
   
-  public Boolean addPoints(final Grader.GradeItem item) {
-    boolean _xblockexpression = false;
-    {
-      int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
-      String _plus = ("Adding points for Student ID :" + Integer.valueOf(_studentId));
-      String _plus_1 = (_plus + ", for Questions ID :");
-      int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
-      String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
-      String _plus_3 = (_plus_2 + ", for Entry ID :");
-      String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
-      Grader.logger.info(_plus_4);
-      this.addPointsOf(item);
-      boolean over = this.controller.applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
-      boolean _xifexpression = false;
-      if (over) {
-        _xifexpression = item.displaySuccess();
-      } else {
-        item.displayError();
-        item.setSelected(Boolean.valueOf(false));
-      }
-      _xblockexpression = _xifexpression;
+  public void addPoints(final Grader.GradeItem item) {
+    int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
+    String _plus = ("Adding points for Student ID :" + Integer.valueOf(_studentId));
+    String _plus_1 = (_plus + ", for Questions ID :");
+    int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
+    String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
+    String _plus_3 = (_plus_2 + ", for Entry ID :");
+    String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
+    Grader.logger.info(_plus_4);
+    boolean over = this.controller.applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+    if (over) {
+      item.displaySuccess();
+      this.updateCurrentPoints();
+    } else {
+      item.displayError();
+      item.setSelected(Boolean.valueOf(false));
     }
-    return Boolean.valueOf(_xblockexpression);
   }
   
   public boolean removePoints(final Grader.GradeItem item) {
@@ -430,8 +408,8 @@ public class Grader extends VBox {
       String _plus_3 = (_plus_2 + ", for Entry ID :");
       String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
       Grader.logger.log(Level.INFO, _plus_4);
-      this.removePointsOf(item);
       this.controller.removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+      this.updateCurrentPoints();
       _xblockexpression = item.displayDefault();
     }
     return _xblockexpression;
@@ -462,7 +440,7 @@ public class Grader extends VBox {
           ObservableList<Node> _children = this.itemContainer.getChildren();
           for (final Node n : _children) {
             {
-              ((Grader.GradeItem) n).commitChanges();
+              ((Grader.GradeItem) n).leaveEditMode();
               this.updateEntryInModel(((Grader.GradeItem) n), this.controller.getQuestionList().getCurrentItem());
             }
           }

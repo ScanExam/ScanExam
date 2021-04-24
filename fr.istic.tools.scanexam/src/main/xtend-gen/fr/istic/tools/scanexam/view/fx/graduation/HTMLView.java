@@ -31,7 +31,7 @@ public class HTMLView {
     if (_contains_1) {
       htmlText = htmlText.replace("body ", "body style=\"height: 130; max-width: 130; padding-right: 10;\" ");
     }
-    HTMLView.item.setText(htmlText);
+    HTMLView.item.changeText(htmlText);
     InputOutput.<String>println(htmlText);
     HTMLView.stage.close();
   }

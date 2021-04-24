@@ -38,5 +38,4 @@ class FxSettings {
 	public static var BUTTON_INTERACT_GRADER_9 = KeyCode.DIGIT9;
 	public static var BUTTON_INTERACT_GRADER_0 = KeyCode.DIGIT0;
 	
-	
 }

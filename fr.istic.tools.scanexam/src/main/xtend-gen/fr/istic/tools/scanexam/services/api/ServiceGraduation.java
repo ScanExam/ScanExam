@@ -157,6 +157,8 @@ public interface ServiceGraduation extends Service {
    */
   List<Integer> getQuestionSelectedGradeEntries(final int questionId);
   
+  double getQuestionSelectedGradeEntriesTotalWorth(final int questionId);
+  
   /**
    * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
    * @return vrai si le nouvelle note est valide, faux sinon

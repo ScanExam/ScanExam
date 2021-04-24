@@ -50,24 +50,18 @@
 	
 }
 
-/*.scrollPanes {
+.scrollPanes {
 	-fx-background-color: transparent;
 	-fx-focus-color : transparent;
 	-fx-faint-focus-color : transparent;
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 1px 1px 1px;
-
-
-
-#correctionScrollPane > .viewport {
-	-fx-background-color: rgba(211,211,211,0.80);
-	
 }
-*/
 
-.botBar {
-
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
 }
+
 
 .List {
 	-fx-background-color: transparent;
@@ -83,8 +77,16 @@
 }
 
 
+/* GRADER */
+
+.Grader {
+	-fx-border-color: lightgrey;
+	-fx-border-width: 1px;
+	-fx-background-color: derive(lightblue,-20%);
+}
+
 .GradeList {
-	-fx-background-color: transparent;
+	-fx-background-color: lightblue;
 	-fx-focus-color : transparent;
 	-fx-faint-focus-color : transparent;
 	-fx-border-color: transparent ;
@@ -94,14 +96,22 @@
 	-fx-background-color: transparent;
 }
 
-
-
+.GradeList:focused {
+	-fx-background-color: lightblue;
+	-fx-background-insets: 0px
+}
 
 .GradeItem {
 	-fx-border-color: lightgrey ;
 	-fx-border-width: 1px 1px 1px 1px;
-	-fx-padding: 1px 1px 1px 1px ;
+	-fx-padding: 3px 3px 3px 3px ;
 }
+
+.GradeItemTopRow {
+}
+
+
+/* */
 
 .ListItem {
 	-fx-border-color: lightgrey ;
@@ -126,11 +136,7 @@
 	fx-padding: 0px;
 }
 
-.Grader {
-	-fx-border-color: lightgrey;
-	-fx-border-width: 1px;
-	-fx-background-color: #f0f2f5;
-}
+
 
 .button {
 	-fx-border-color : lightgrey;
@@ -193,10 +199,10 @@
 }
 
 .mainPane {
-	-fx-background-color: green;
+	
 }
 .parentPane{
-	-fx-background-color: blue;
+	
 	
 }
 

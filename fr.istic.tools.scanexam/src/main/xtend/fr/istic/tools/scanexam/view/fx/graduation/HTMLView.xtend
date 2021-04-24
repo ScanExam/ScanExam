@@ -1,8 +1,8 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
+import fr.istic.tools.scanexam.view.fx.graduation.Grader.GradeItem
 import javafx.fxml.FXML
 import javafx.scene.web.HTMLEditor
-import fr.istic.tools.scanexam.view.fx.graduation.Grader.GradeItem
 import javafx.stage.Stage
 
 class HTMLView {
@@ -42,7 +42,7 @@ class HTMLView {
 		}*/
 		
 		
-		item.setText(htmlText)
+		item.changeText(htmlText)
 		println(htmlText)
 		stage.close()
 	}

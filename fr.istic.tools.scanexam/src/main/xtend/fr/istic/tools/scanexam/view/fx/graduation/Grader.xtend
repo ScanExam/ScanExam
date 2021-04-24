@@ -1,39 +1,34 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
-import javafx.geometry.Insets
+import javafx.fxml.FXMLLoader
+import javafx.geometry.Pos
+import javafx.scene.Cursor
 import javafx.scene.Node
+import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
-//import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
-import javafx.scene.layout.HBox
-import javafx.scene.layout.VBox
-import javafx.scene.input.MouseEvent
-import javafx.stage.Stage
-import fr.istic.tools.scanexam.utils.ResourcesUtils
-import javafx.fxml.FXMLLoader
-import javafx.scene.Scene
 import javafx.scene.input.MouseButton
-import javafx.stage.StageStyle
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Level
-import javafx.scene.web.WebView
-import javafx.scene.web.WebEngine
+import javafx.scene.input.MouseEvent
+import javafx.scene.layout.HBox
+import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
-import javafx.animation.FillTransition
-import javafx.animation.StrokeTransition
-import javafx.scene.layout.Border
-import javafx.scene.layout.BorderStroke
-import javafx.scene.layout.BorderStrokeStyle
-import javafx.scene.layout.CornerRadii
-import javafx.scene.paint.Color
-import javafx.scene.layout.BorderWidths
+import javafx.scene.layout.VBox
+import javafx.scene.web.WebEngine
+import javafx.scene.web.WebView
+import javafx.stage.Stage
+import javafx.stage.StageStyle
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.LogManager
+
+import static fr.istic.tools.scanexam.view.fx.graduation.HTMLView.*
 
 class Grader extends VBox {
 
@@ -54,6 +49,7 @@ class Grader extends VBox {
 
 		scrollp.hbarPolicy = ScrollBarPolicy.NEVER
 		scrollp.styleClass.add("GradeList")
+		scrollp.fitToWidth = true;
 
 		itemContainer = new VBox();
 		add = new Button("Add new Grade Entry");
@@ -64,6 +60,14 @@ class Grader extends VBox {
 		editMode.styleClass.add("InfinityButton")
 
 		scrollp.content = itemContainer
+		
+		this.cursor = Cursor.MOVE
+		itemContainer.cursor = Cursor.DEFAULT
+		add.cursor = Cursor.DEFAULT
+		editMode.cursor = Cursor.DEFAULT
+		currentPoints.cursor = Cursor.DEFAULT
+		maxPoints.cursor = Cursor.DEFAULT
+		scrollp.cursor = Cursor.DEFAULT
 		this.children.addAll(pointsBox, scrollp, editMode);
 		this.prefWidth = 170;
 		this.maxHeight = 500;
@@ -102,12 +106,12 @@ class Grader extends VBox {
 				itemContainer.children.add(g);
 				if (sids.contains(i)) {
 					g.selected = true;
-					addPointsOf(g);
 				} else {
 					g.selected = false;
 				}
 				g.leaveEditMode
 			}
+			updateCurrentPoints
 		}
 		else {
 			logger.warn("The current Question or current Student is null")
@@ -126,41 +130,26 @@ class Grader extends VBox {
 	def removeGradeEntry(GradeItem item) {
 		logger.log(Level.INFO, "Removing GradeEntry")
 		itemContainer.children.remove(item);
-		if (item.selected) {
-			removePointsOf(item)
-		}
 		removeEntryFromModel(item, controller.questionList.currentItem)
+		updateCurrentPoints
 
 	}
-
-	// used to add and rmeove the points of the selected items to the current points label
-	def addPointsOf(GradeItem item) {
-		/*var current = Float.parseFloat(currentPoints.text);
-		 * current = current +  Float.parseFloat(item.getWorth)
-		 * */
-		currentPoints.text = "FIX"
+	
+	def updateCurrentPoints(){
+		currentPoints.text = "" + controller.service.getQuestionSelectedGradeEntriesTotalWorth(controller.questionList.currentItem.questionId)
 	}
-
-	def removePointsOf(GradeItem item) {
-		/*var current = Float.parseFloat(currentPoints.text);
-		 * current = current -  Float.parseFloat(item.getWorth)
-		 * 
-		 */
-		currentPoints.text = "FIX"
-	}
-
 	// ---Model intecations 
 	def void addEntryToModel(GradeItem item, QuestionItemGraduation qItem) {
-		item.itemId = controller.addEntry(qItem.questionId, item.getText,
-			Float.parseFloat(item.getWorth));
+		item.itemId = controller.addEntry(qItem.questionId, item.getText,Float.parseFloat(item.getWorth));
 	}
 
 	/**
 	 * Modifier un item du barême
 	 */
 	def updateEntryInModel(GradeItem item, QuestionItemGraduation qItem) {
-		controller.modifyEntry(qItem.questionId, item.itemId, item.getText,
-			Float.parseFloat(item.getWorth));
+		logger.log(Level.INFO, "Updating GradeEntry")
+		controller.modifyEntry(qItem.questionId, item.itemId, item.getText,Float.parseFloat(item.getWorth));
+	
 	}
 
 	def removeEntryFromModel(GradeItem item, QuestionItemGraduation qItem) {
@@ -169,10 +158,10 @@ class Grader extends VBox {
 
 	def addPoints(GradeItem item) {
 		logger.info("Adding points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
-		addPointsOf(item)
 		var over = controller.applyGrade(controller.questionList.currentItem.questionId, item.id)
 		if (over) {
 			item.displaySuccess
+			updateCurrentPoints
 		}else {
 			item.displayError
 			item.selected = false
@@ -182,8 +171,9 @@ class Grader extends VBox {
 
 	def removePoints(GradeItem item) {
 		logger.log(Level.INFO, "Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
-		removePointsOf(item)
+		
 		controller.removeGrade(controller.questionList.currentItem.questionId, item.id)
+		updateCurrentPoints
 		item.displayDefault
 	}
 
@@ -200,7 +190,7 @@ class Grader extends VBox {
 			this.children.add(add)
 		} else {
 			for (Node n : itemContainer.children) {
-				(n as GradeItem).commitChanges
+				(n as GradeItem).leaveEditMode
 				updateEntryInModel((n as GradeItem), controller.questionList.currentItem);
 			}
 			this.children.remove(add)
@@ -225,11 +215,7 @@ class Grader extends VBox {
 		new(Grader grader) {
 			this.grader = grader
 			topRow = new HBox()
-			text = new Label(
-				"This is a test Grate entry name, double click to edit the text.")
-			text.wrapText = true
-			text.maxWidth = 130
-			text.margin = new Insets(0, 0, 0, 10)
+			
 
 			/* 
 			textArea = new TextArea(text.text)
@@ -240,45 +226,39 @@ class Grader extends VBox {
 			
 			stackPane = new StackPane()
 			
+			text = "This is a grade entry text, double click here to edit the text."
+			
 			webView = new WebView()
 			webEngine = webView.getEngine();
-			webEngine.loadContent(text.text);
-
+			webEngine.loadContent(text);
 			//webView.maxWidth = 130
 			//webView.maxHeight = 130
-			webView.setMaxSize(130, 110);
-		
-			webView.margin = new Insets(10, 0, 0, 10)    		
-    		
+			//webView.setMaxSize(130, 110);	
+			webView.setPrefSize(Region.USE_COMPUTED_SIZE,Region.USE_COMPUTED_SIZE)
+    		webView.setMinSize(100,100)
 			
 			stackPane.getChildren().add(webView)
 
 			check = new CheckBox()
 
-			worth = new Label("5.0");
-			worth.padding = new Insets(0, 0, 0, 10)
-
+			worth = new Label("1");
 			worthField = new TextField(worth.text)
-			worthField.padding = new Insets(0, 0, 0, 10)
-			worthField.maxWidth = 25;
 			worthField.styleClass.add("mytext-field")
-
 			remove = new Button("Remove entry");
-
-			this.margin = new Insets(0, 0, 10, 0)
-			topRow.children.addAll(check, worthField, remove)
-			this.children.addAll(topRow, stackPane)
-
+			topRow.children.addAll(check, worthField)
+			this.children.addAll(topRow, stackPane,remove)
+			topRow.styleClass.add("GradeItemTopRow")
+			this.styleClass.add("GradeItem")
+			this.alignment = Pos.CENTER
 			setupEvents
 		}
 
 		int id;
+		String text;
 		HBox topRow
-		Label text;
 		Label worth;
 		CheckBox check;
 		Grader grader;
-		//TextArea textArea;
 		StackPane stackPane
 		WebView webView
 		WebEngine webEngine
@@ -286,7 +266,7 @@ class Grader extends VBox {
 		Button remove;
 
 		def getText() {
-			text.text
+			text
 		}
 
 		def getWorth() {
@@ -320,9 +300,14 @@ class Grader extends VBox {
 		 * Change le text modifié par le HTML Editor
 		 */
 		def setText(String text) {
-			this.text.text = text
 			//webEngine = webView.getEngine();
-			webEngine.loadContent(this.text.text);
+			this.text = text;
+			webEngine.loadContent(text);
+		}
+		
+		def changeText(String text){
+			setText(text)
+			grader.updateEntryInModel(this,grader.controller.questionList.currentItem)
 		}
 
 		def setWorth(float worth) {
@@ -341,24 +326,20 @@ class Grader extends VBox {
 		def enterEditMode() {
 			topRow.children.remove(worth)
 			topRow.children.add(worthField);
-			topRow.children.add(remove)
 			//this.children.remove(text);
-			this.children.add(webView)
+			this.children.add(remove)
+		
 		}
 
 		def leaveEditMode() {
 			topRow.children.remove(worthField)
-			topRow.children.remove(remove)
+			this.children.remove(remove)
 			topRow.children.add(worth);
+			worth.text = worthField.text
 			//this.children.remove(textArea);
 			//this.children.add(text)
 		}
 
-		def commitChanges() {
-			//text.text = textArea.text
-			worth.text = worthField.text
-			leaveEditMode
-		}
 		
 		def checkBoxUsed(){
 			if (check.selected) {
