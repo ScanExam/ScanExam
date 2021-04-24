@@ -57,7 +57,7 @@ class Grader extends VBox {
 
 		add.styleClass.add("InfinityButton")
 
-		editMode = new Button(LanguageManager.translate("grader.button.togggleEdit"));
+		editMode = new Button(LanguageManager.translate("grader.button.enterEdit"));
 		editMode.styleClass.add("InfinityButton")
 
 		scrollp.content = itemContainer
@@ -185,11 +185,13 @@ class Grader extends VBox {
 	def toggleEditMode(boolean active) {
 		editable = !editable
 		if (active) {
+			editMode.text = LanguageManager.translate("grader.button.leaveEdit")
 			for (Node n : itemContainer.children) {
 				(n as GradeItem).enterEditMode
 			}
 			this.children.add(add)
 		} else {
+			editMode.text = LanguageManager.translate("grader.button.enterEdit")
 			for (Node n : itemContainer.children) {
 				(n as GradeItem).leaveEditMode
 				updateEntryInModel((n as GradeItem), controller.questionList.currentItem);

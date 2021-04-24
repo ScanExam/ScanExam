@@ -277,7 +277,7 @@ public class Grader extends VBox {
     Button _button = new Button(_translate);
     this.add = _button;
     this.add.getStyleClass().add("InfinityButton");
-    String _translate_1 = LanguageManager.translate("grader.button.togggleEdit");
+    String _translate_1 = LanguageManager.translate("grader.button.enterEdit");
     Button _button_1 = new Button(_translate_1);
     this.editMode = _button_1;
     this.editMode.getStyleClass().add("InfinityButton");
@@ -432,6 +432,7 @@ public class Grader extends VBox {
       if (active) {
         boolean _xblockexpression_1 = false;
         {
+          this.editMode.setText(LanguageManager.translate("grader.button.leaveEdit"));
           ObservableList<Node> _children = this.itemContainer.getChildren();
           for (final Node n : _children) {
             ((Grader.GradeItem) n).enterEditMode();
@@ -442,6 +443,7 @@ public class Grader extends VBox {
       } else {
         boolean _xblockexpression_2 = false;
         {
+          this.editMode.setText(LanguageManager.translate("grader.button.enterEdit"));
           ObservableList<Node> _children = this.itemContainer.getChildren();
           for (final Node n : _children) {
             {
