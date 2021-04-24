@@ -45,7 +45,20 @@ class ControllerFxGraduation {
 
 
 	
-	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
+	BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
+	
+	def setToLoaded(){
+		loadedModel.set(false)
+		loadedModel.set(true)
+	}
+	
+	def toNotLoaded(){
+		loadedModel.set(false)
+	}
+	
+	def getLoadedModel(){
+		loadedModel
+	}
 	
 	Grader grader;
 	QuestionListGraduation questionList;
@@ -449,10 +462,11 @@ class ControllerFxGraduation {
 	 * To be used once the service loads a model 
 	 */
 	def boolean load(File file){
+		
 		val streamOpt = service.openCorrectionTemplate(file)
 		if(streamOpt.present) {
 			pdfManager.create(streamOpt.get)
-			loadedModel.set(true)
+			setToLoaded()
 			return true
 		}
 		return false
@@ -492,6 +506,8 @@ class ControllerFxGraduation {
 	 * 
 	 *  */
 	def loaded(){
+		unLoaded()
+		logger.info("Loading Vue")
 		renderCorrectedCopy();
 		renderStudentCopy();
 		loadQuestions();
@@ -503,6 +519,7 @@ class ControllerFxGraduation {
 	}
 	
 	def unLoaded(){
+		logger.info("Clearing current Vue")
 		grader.visible = false;
 		studentDetails.visible = false;
 		questionList.clearItems

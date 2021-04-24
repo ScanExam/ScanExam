@@ -82,8 +82,20 @@ public class ControllerFxGraduation {
   
   private static final Logger logger = LogManager.getLogger();
   
-  @Accessors
   private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a template loaded", false);
+  
+  public void setToLoaded() {
+    this.loadedModel.set(false);
+    this.loadedModel.set(true);
+  }
+  
+  public void toNotLoaded() {
+    this.loadedModel.set(false);
+  }
+  
+  public BooleanProperty getLoadedModel() {
+    return this.loadedModel;
+  }
   
   private Grader grader;
   
@@ -598,7 +610,7 @@ public class ControllerFxGraduation {
     boolean _isPresent = streamOpt.isPresent();
     if (_isPresent) {
       this.pdfManager.create(streamOpt.get());
-      this.loadedModel.set(true);
+      this.setToLoaded();
       return true;
     }
     return false;
@@ -639,6 +651,8 @@ public class ControllerFxGraduation {
    * Pour charger les donne du modele dans lest list etudioant et questions
    */
   public void loaded() {
+    this.unLoaded();
+    ControllerFxGraduation.logger.info("Loading Vue");
     this.renderCorrectedCopy();
     this.renderStudentCopy();
     this.loadQuestions();
@@ -650,6 +664,7 @@ public class ControllerFxGraduation {
   }
   
   public void unLoaded() {
+    ControllerFxGraduation.logger.info("Clearing current Vue");
     this.grader.setVisible(false);
     this.studentDetails.setVisible(false);
     this.questionList.clearItems();
@@ -1256,15 +1271,6 @@ public class ControllerFxGraduation {
     String _plus = ("Removing Annotation from  Model : ID = " + Integer.valueOf(_annotId));
     ControllerFxGraduation.logger.info(_plus);
     this.service.removeAnnotation(annot.getAnnotId(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId());
-  }
-  
-  @Pure
-  public BooleanProperty getLoadedModel() {
-    return this.loadedModel;
-  }
-  
-  public void setLoadedModel(final BooleanProperty loadedModel) {
-    this.loadedModel = loadedModel;
   }
   
   @Pure
