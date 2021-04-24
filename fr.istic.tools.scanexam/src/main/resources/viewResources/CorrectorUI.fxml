@@ -20,7 +20,8 @@
 		<ToolBar>
 			<items>
 				<Button mnemonicParsing="false" onAction="#resetPosition" text="%button.unzoom" />
-            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="ToggleButton" />
+            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="ViewAnnotations" />
+            <ToggleButton fx:id="addAnnotationButton" mnemonicParsing="false" text="AddAnnotation" />
 			</items>
 			<VBox.margin>
 				<Insets />
@@ -60,7 +61,7 @@
 					<children>
 						<ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<content>
-								<AnchorPane fx:id="parentPane">
+								<AnchorPane fx:id="parentPane" onMouseDragged="#parentMouseEvent" onMouseReleased="#parentMouseEvent">
 									<children>
 					
 									</children>

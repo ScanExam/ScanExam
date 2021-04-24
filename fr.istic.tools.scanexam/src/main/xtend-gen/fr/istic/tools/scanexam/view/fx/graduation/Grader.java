@@ -1,8 +1,8 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.editor.HTMLView;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.HTMLView;
 import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.io.InputStream;
@@ -19,13 +19,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -42,27 +44,30 @@ public class Grader extends VBox {
       HBox _hBox = new HBox();
       this.topRow = _hBox;
       Label _label = new Label(
-        "This is a test Grate entry name, here you will be able to add a description of this entry, and eventually have some latex/html");
+        "This is a test Grate entry name, double click to edit the text.");
       this.text = _label;
       this.text.setWrapText(true);
       this.text.setMaxWidth(130);
       Insets _insets = new Insets(0, 0, 0, 10);
       VBox.setMargin(this.text, _insets);
-      String _text = this.text.getText();
-      TextArea _textArea = new TextArea(_text);
-      this.textArea = _textArea;
-      this.textArea.setWrapText(true);
-      this.textArea.setMaxWidth(130);
+      StackPane _stackPane = new StackPane();
+      this.stackPane = _stackPane;
+      WebView _webView = new WebView();
+      this.webView = _webView;
+      this.webEngine = this.webView.getEngine();
+      this.webEngine.loadContent(this.text.getText());
+      this.webView.setMaxSize(130, 110);
       Insets _insets_1 = new Insets(10, 0, 0, 10);
-      VBox.setMargin(this.textArea, _insets_1);
+      VBox.setMargin(this.webView, _insets_1);
+      this.stackPane.getChildren().add(this.webView);
       CheckBox _checkBox = new CheckBox();
       this.check = _checkBox;
-      Label _label_1 = new Label("0.5");
+      Label _label_1 = new Label("5.0");
       this.worth = _label_1;
       Insets _insets_2 = new Insets(0, 0, 0, 10);
       this.worth.setPadding(_insets_2);
-      String _text_1 = this.worth.getText();
-      TextField _textField = new TextField(_text_1);
+      String _text = this.worth.getText();
+      TextField _textField = new TextField(_text);
       this.worthField = _textField;
       Insets _insets_3 = new Insets(0, 0, 0, 10);
       this.worthField.setPadding(_insets_3);
@@ -73,7 +78,7 @@ public class Grader extends VBox {
       Insets _insets_4 = new Insets(0, 0, 10, 0);
       VBox.setMargin(this, _insets_4);
       this.topRow.getChildren().addAll(this.check, this.worthField, this.remove);
-      this.getChildren().addAll(this.topRow, this.textArea);
+      this.getChildren().addAll(this.topRow, this.stackPane);
       this.setupEvents();
     }
     
@@ -89,7 +94,11 @@ public class Grader extends VBox {
     
     private Grader grader;
     
-    private TextArea textArea;
+    private StackPane stackPane;
+    
+    private WebView webView;
+    
+    private WebEngine webEngine;
     
     private TextField worthField;
     
@@ -116,7 +125,7 @@ public class Grader extends VBox {
      */
     public void setText(final String text) {
       this.text.setText(text);
-      this.textArea.setText(text);
+      this.webEngine.loadContent(this.text.getText());
     }
     
     public void setWorth(final float worth) {
@@ -140,8 +149,7 @@ public class Grader extends VBox {
         this.topRow.getChildren().remove(this.worth);
         this.topRow.getChildren().add(this.worthField);
         this.topRow.getChildren().add(this.remove);
-        this.getChildren().remove(this.text);
-        _xblockexpression = this.getChildren().add(this.textArea);
+        _xblockexpression = this.getChildren().add(this.webView);
       }
       return _xblockexpression;
     }
@@ -151,9 +159,7 @@ public class Grader extends VBox {
       {
         this.topRow.getChildren().remove(this.worthField);
         this.topRow.getChildren().remove(this.remove);
-        this.topRow.getChildren().add(this.worth);
-        this.getChildren().remove(this.textArea);
-        _xblockexpression = this.getChildren().add(this.text);
+        _xblockexpression = this.topRow.getChildren().add(this.worth);
       }
       return _xblockexpression;
     }
@@ -161,7 +167,6 @@ public class Grader extends VBox {
     public boolean commitChanges() {
       boolean _xblockexpression = false;
       {
-        this.text.setText(this.textArea.getText());
         this.worth.setText(this.worthField.getText());
         _xblockexpression = this.leaveEditMode();
       }
@@ -187,7 +192,7 @@ public class Grader extends VBox {
           GradeItem.this.grader.removeGradeEntry(me);
         }
       });
-      this.text.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      this.webView.setOnMouseClicked(new EventHandler<MouseEvent>() {
         @Override
         public void handle(final MouseEvent event) {
           if ((!HTMLView.isHTMLEditorOpen)) {
@@ -210,14 +215,17 @@ public class Grader extends VBox {
     public void renderHTMLView() {
       try {
         HTMLView.isHTMLEditorOpen = true;
+        HTMLView.item = this;
         Stage stage = new Stage();
         stage.initStyle(StageStyle.DECORATED);
+        stage.setResizable(false);
         stage.setTitle("Editeur HTML");
         InputStream inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.FXML");
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = fxmlLoader.<Parent>load(inputLayout);
         Scene scene = new Scene(root, 640, 480);
         stage.setScene(scene);
+        HTMLView.stage = stage;
         stage.show();
         final EventHandler<WindowEvent> _function = (WindowEvent event) -> {
           HTMLView.isHTMLEditorOpen = false;
@@ -341,6 +349,9 @@ public class Grader extends VBox {
       Float.parseFloat(item.getWorth())));
   }
   
+  /**
+   * Modifier un item du barême
+   */
   public void updateEntryInModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
     this.controller.modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), 
       Float.parseFloat(item.getWorth()));
@@ -431,5 +442,9 @@ public class Grader extends VBox {
         Grader.this.toggleEditMode((!Grader.this.editable));
       }
     });
+    final EventHandler<MouseEvent> _function = (MouseEvent event) -> {
+      this.controller.setCurrentTool(ControllerFxGraduation.SelectedTool.MOVE_GRADER_TOOL);
+    };
+    this.setOnMousePressed(_function);
   }
 }

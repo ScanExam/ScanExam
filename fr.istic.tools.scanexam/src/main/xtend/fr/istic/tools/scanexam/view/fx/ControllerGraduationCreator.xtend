@@ -212,7 +212,7 @@ class ControllerGraduationCreator {
 	def onFinish(PdfReader reader, File file) {
 		serviceGraduation.initializeCorrection(reader.completeStudentSheets)
 		controllerGraduation.pdfManager.create(file)
-		controllerGraduation.loadedModel.set(true)
+		controllerGraduation.setToLoaded
 		quit
 	}
 }

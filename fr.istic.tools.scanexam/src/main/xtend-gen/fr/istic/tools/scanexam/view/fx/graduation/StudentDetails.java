@@ -108,12 +108,16 @@ public class StudentDetails extends VBox {
     this.name.getFieldTextProperty().addListener(_function_1);
   }
   
-  public void commitRename() {
-    String _text = this.name.getText();
-    String _plus = ("Renaming to" + _text);
-    StudentDetails.logger.info(_plus);
-    this.currentItem.setStudentName(this.name.getText());
-    this.controller.getStudentList().updateInModel(this.currentItem);
+  public Object commitRename() {
+    Object _xblockexpression = null;
+    {
+      String _text = this.name.getText();
+      String _plus = ("Renaming to" + _text);
+      StudentDetails.logger.info(_plus);
+      this.currentItem.setStudentName(this.name.getText());
+      _xblockexpression = this.controller.getStudentList().updateInModel(this.currentItem);
+    }
+    return _xblockexpression;
   }
   
   public void findSuggestions(final String start) {

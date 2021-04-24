@@ -77,13 +77,27 @@ public class ControllerFxGraduation {
     
     MOVE_ANOTATION_TOOL,
     
-    MOVE_POINTER_TOOL;
+    MOVE_POINTER_TOOL,
+    
+    MOVE_GRADER_TOOL;
   }
   
   private static final Logger logger = LogManager.getLogger();
   
-  @Accessors
   private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a template loaded", false);
+  
+  public void setToLoaded() {
+    this.loadedModel.set(false);
+    this.loadedModel.set(true);
+  }
+  
+  public void toNotLoaded() {
+    this.loadedModel.set(false);
+  }
+  
+  public BooleanProperty getLoadedModel() {
+    return this.loadedModel;
+  }
   
   private Grader grader;
   
@@ -170,6 +184,9 @@ public class ControllerFxGraduation {
   
   @FXML
   public ToggleButton annotationModeButton;
+  
+  @FXML
+  public ToggleButton addAnnotationButton;
   
   @Accessors
   private ServiceGraduation service;
@@ -265,6 +282,14 @@ public class ControllerFxGraduation {
     this.chooseMouseAction(e);
   }
   
+  @FXML
+  public void parentMouseEvent(final MouseEvent e) {
+    boolean _equals = Objects.equal(this.currentTool, ControllerFxGraduation.SelectedTool.MOVE_GRADER_TOOL);
+    if (_equals) {
+      this.moveGrader(e);
+    }
+  }
+  
   @Accessors
   private ControllerFxGraduation.SelectedTool currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
   
@@ -307,6 +332,8 @@ public class ControllerFxGraduation {
           break;
         case MOVE_POINTER_TOOL:
           this.movePointer(e);
+          break;
+        case MOVE_GRADER_TOOL:
           break;
         default:
           break;
@@ -376,6 +403,24 @@ public class ControllerFxGraduation {
     }
   }
   
+  public void moveGrader(final MouseEvent e) {
+    EventType<? extends MouseEvent> _eventType = e.getEventType();
+    boolean _equals = Objects.equal(_eventType, MouseEvent.MOUSE_PRESSED);
+    if (_equals) {
+    }
+    EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
+    boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
+    if (_equals_1) {
+      this.grader.setLayoutX(e.getX());
+      this.grader.setLayoutY(e.getY());
+    }
+    EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
+    boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
+    if (_equals_2) {
+      this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
+    }
+  }
+  
   @Accessors
   private TextAnotation currentAnotation;
   
@@ -402,8 +447,8 @@ public class ControllerFxGraduation {
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
     if (_equals_1) {
-      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
       this.updateAnnotation(this.currentAnotation);
+      this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
     }
   }
   
@@ -426,8 +471,8 @@ public class ControllerFxGraduation {
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
     if (_equals_1) {
-      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
       this.updateAnnotation(this.currentAnotation);
+      this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
     }
   }
   
@@ -465,6 +510,8 @@ public class ControllerFxGraduation {
     this.mainPane.setScaleY(1);
     this.mainPane.setLayoutX(0);
     this.mainPane.setLayoutY(0);
+    this.grader.setLayoutX(0);
+    this.grader.setLayoutY(0);
     this.mainPane.unZoom();
   }
   
@@ -505,6 +552,10 @@ public class ControllerFxGraduation {
       }
     };
     this.annotationModeButton.selectedProperty().addListener(_function_1);
+    final ChangeListener<Boolean> _function_2 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      this.setToCreateAnnotation((newVal).booleanValue());
+    };
+    this.addAnnotationButton.selectedProperty().addListener(_function_2);
     this.nextQuestionButton.disableProperty().bind(this.loadedModel.not());
     this.prevQuestionButton.disableProperty().bind(this.loadedModel.not());
     this.prevStudentButton.disableProperty().bind(this.loadedModel.not());
@@ -591,7 +642,7 @@ public class ControllerFxGraduation {
     boolean _isPresent = streamOpt.isPresent();
     if (_isPresent) {
       this.pdfManager.create(streamOpt.get());
-      this.loadedModel.set(true);
+      this.setToLoaded();
       return true;
     }
     return false;
@@ -632,15 +683,20 @@ public class ControllerFxGraduation {
    * Pour charger les donne du modele dans lest list etudioant et questions
    */
   public void loaded() {
+    this.unLoaded();
+    ControllerFxGraduation.logger.info("Loading Vue");
     this.renderCorrectedCopy();
     this.renderStudentCopy();
     this.loadQuestions();
     this.loadStudents();
+    this.setSelectedQuestion();
+    this.setSelectedStudent();
     this.grader.setVisible(true);
     this.questionDetails.setVisible(true);
   }
   
   public void unLoaded() {
+    ControllerFxGraduation.logger.info("Clearing current Vue");
     this.grader.setVisible(false);
     this.studentDetails.setVisible(false);
     this.questionList.clearItems();
@@ -743,7 +799,25 @@ public class ControllerFxGraduation {
     if (_equals) {
       TextAnotation annot = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
       this.addAnnotation(annot);
+      this.addAnnotationButton.setSelected(false);
     }
+  }
+  
+  public ControllerFxGraduation.SelectedTool setToCreateAnnotation(final boolean b) {
+    ControllerFxGraduation.SelectedTool _xifexpression = null;
+    if (b) {
+      ControllerFxGraduation.SelectedTool _xblockexpression = null;
+      {
+        if ((!this.annotationMode)) {
+          this.annotationModeButton.setSelected(true);
+        }
+        _xblockexpression = this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      _xifexpression = this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
+    }
+    return _xifexpression;
   }
   
   /**
@@ -1229,15 +1303,6 @@ public class ControllerFxGraduation {
     String _plus = ("Removing Annotation from  Model : ID = " + Integer.valueOf(_annotId));
     ControllerFxGraduation.logger.info(_plus);
     this.service.removeAnnotation(annot.getAnnotId(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId());
-  }
-  
-  @Pure
-  public BooleanProperty getLoadedModel() {
-    return this.loadedModel;
-  }
-  
-  public void setLoadedModel(final BooleanProperty loadedModel) {
-    this.loadedModel = loadedModel;
   }
   
   @Pure

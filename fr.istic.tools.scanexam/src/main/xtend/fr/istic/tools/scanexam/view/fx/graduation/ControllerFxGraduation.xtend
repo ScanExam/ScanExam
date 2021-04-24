@@ -45,7 +45,20 @@ class ControllerFxGraduation {
 
 
 	
-	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
+	BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a template loaded",false);
+	
+	def setToLoaded(){
+		loadedModel.set(false)
+		loadedModel.set(true)
+	}
+	
+	def toNotLoaded(){
+		loadedModel.set(false)
+	}
+	
+	def getLoadedModel(){
+		loadedModel
+	}
 	
 	Grader grader;
 	QuestionListGraduation questionList;
@@ -109,7 +122,8 @@ class ControllerFxGraduation {
 	public Button prevQuestionButton;
 	@FXML
 	public ToggleButton annotationModeButton;
-	
+	@FXML
+	public ToggleButton addAnnotationButton;
 	
 	@Accessors
 	var ServiceGraduation service
@@ -195,6 +209,12 @@ class ControllerFxGraduation {
 		chooseMouseAction(e);
 	}
 	
+	@FXML
+	def void parentMouseEvent(MouseEvent e){
+		if (currentTool == SelectedTool.MOVE_GRADER_TOOL) moveGrader(e)
+	}
+	
+	
 	
 	
 	//--- LOCAL VARIABLES ---//
@@ -204,7 +224,8 @@ class ControllerFxGraduation {
 		MOVE_CAMERA_TOOL,
 		CREATE_ANOTATION_TOOL,
 		MOVE_ANOTATION_TOOL,
-		MOVE_POINTER_TOOL
+		MOVE_POINTER_TOOL,
+		MOVE_GRADER_TOOL
 	}
 	
 	@Accessors SelectedTool currentTool = SelectedTool.NO_TOOL;
@@ -251,6 +272,9 @@ class ControllerFxGraduation {
 			}
 			case MOVE_POINTER_TOOL: {
 				movePointer(e)
+			}
+			case MOVE_GRADER_TOOL: {
+				
 			}
 		}
 	}
@@ -299,6 +323,18 @@ class ControllerFxGraduation {
 		}
 	}
 	
+	
+	def void moveGrader(MouseEvent e){
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {}
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+			grader.layoutX = e.x
+			grader.layoutY = e.y
+		}
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			currentTool = SelectedTool.NO_TOOL;
+		}
+	}
+	
 	@Accessors TextAnotation currentAnotation;
 	
 
@@ -312,8 +348,8 @@ class ControllerFxGraduation {
 			currentAnotation.move(mousePositionX,mousePositionY)
 		}
 		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
-			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
 			updateAnnotation(currentAnotation)
+			currentTool = SelectedTool.NO_TOOL;
 		}
 			
 	}
@@ -327,8 +363,8 @@ class ControllerFxGraduation {
 			currentAnotation.movePointer(mousePositionX,mousePositionY)
 		}
 		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
-			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
 			updateAnnotation(currentAnotation)
+			currentTool = SelectedTool.NO_TOOL;
 		}
 			
 	}
@@ -361,6 +397,8 @@ class ControllerFxGraduation {
 		mainPane.scaleY = 1;
 		mainPane.layoutX = 0;
 		mainPane.layoutY = 0;
+		grader.layoutX = 0;
+		grader.layoutY = 0;
 		mainPane.unZoom
 	}
 
@@ -394,7 +432,7 @@ class ControllerFxGraduation {
 		
 		loadedModel.addListener([obs,oldVal,newVal | newVal ? loaded() : unLoaded()])
 		annotationModeButton.selectedProperty.addListener([obs,oldVal,newVal | newVal ? enterAnotationMode : leaveAnotationMode])
-		
+		addAnnotationButton.selectedProperty.addListener([obs,oldVal,newVal | toCreateAnnotation = newVal])
 		nextQuestionButton.disableProperty.bind(loadedModel.not)
 		prevQuestionButton.disableProperty.bind(loadedModel.not)
 		prevStudentButton.disableProperty.bind(loadedModel.not)
@@ -448,10 +486,11 @@ class ControllerFxGraduation {
 	 * To be used once the service loads a model 
 	 */
 	def boolean load(File file){
+		
 		val streamOpt = service.openCorrectionTemplate(file)
 		if(streamOpt.present) {
 			pdfManager.create(streamOpt.get)
-			loadedModel.set(true)
+			setToLoaded()
 			return true
 		}
 		return false
@@ -491,15 +530,20 @@ class ControllerFxGraduation {
 	 * 
 	 *  */
 	def loaded(){
+		unLoaded()
+		logger.info("Loading Vue")
 		renderCorrectedCopy();
 		renderStudentCopy();
 		loadQuestions();
 		loadStudents();
+		setSelectedQuestion
+		setSelectedStudent
 		grader.visible = true;
 		questionDetails.visible = true;
 	}
 	
 	def unLoaded(){
+		logger.info("Clearing current Vue")
 		grader.visible = false;
 		studentDetails.visible = false;
 		questionList.clearItems
@@ -590,9 +634,19 @@ class ControllerFxGraduation {
 		if (e.eventType == MouseEvent.MOUSE_PRESSED) {
 				var annot = mainPane.addNewAnotation(mousePositionX,mousePositionY);
 				addAnnotation(annot)
+				addAnnotationButton.selected = false;
 			}
 			
 	
+	}
+	
+	def setToCreateAnnotation(boolean b){
+		if (b){
+			if (!annotationMode) annotationModeButton.selected = true;
+			currentTool = SelectedTool.CREATE_ANOTATION_TOOL
+		} else {
+			currentTool = SelectedTool.NO_TOOL
+		}
 	}
 	
 	/**
