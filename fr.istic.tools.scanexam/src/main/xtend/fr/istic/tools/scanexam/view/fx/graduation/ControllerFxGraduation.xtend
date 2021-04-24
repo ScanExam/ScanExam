@@ -109,7 +109,8 @@ class ControllerFxGraduation {
 	public Button prevQuestionButton;
 	@FXML
 	public ToggleButton annotationModeButton;
-	
+	@FXML
+	public ToggleButton addAnnotationButton;
 	
 	@Accessors
 	var ServiceGraduation service
@@ -312,8 +313,8 @@ class ControllerFxGraduation {
 			currentAnotation.move(mousePositionX,mousePositionY)
 		}
 		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
-			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
 			updateAnnotation(currentAnotation)
+			currentTool = SelectedTool.NO_TOOL;
 		}
 			
 	}
@@ -327,8 +328,8 @@ class ControllerFxGraduation {
 			currentAnotation.movePointer(mousePositionX,mousePositionY)
 		}
 		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
-			currentTool = SelectedTool.CREATE_ANOTATION_TOOL;
 			updateAnnotation(currentAnotation)
+			currentTool = SelectedTool.NO_TOOL;
 		}
 			
 	}
@@ -394,7 +395,7 @@ class ControllerFxGraduation {
 		
 		loadedModel.addListener([obs,oldVal,newVal | newVal ? loaded() : unLoaded()])
 		annotationModeButton.selectedProperty.addListener([obs,oldVal,newVal | newVal ? enterAnotationMode : leaveAnotationMode])
-		
+		addAnnotationButton.selectedProperty.addListener([obs,oldVal,newVal | toCreateAnnotation = newVal])
 		nextQuestionButton.disableProperty.bind(loadedModel.not)
 		prevQuestionButton.disableProperty.bind(loadedModel.not)
 		prevStudentButton.disableProperty.bind(loadedModel.not)
@@ -590,9 +591,19 @@ class ControllerFxGraduation {
 		if (e.eventType == MouseEvent.MOUSE_PRESSED) {
 				var annot = mainPane.addNewAnotation(mousePositionX,mousePositionY);
 				addAnnotation(annot)
+				addAnnotationButton.selected = false;
 			}
 			
 	
+	}
+	
+	def setToCreateAnnotation(boolean b){
+		if (b){
+			if (!annotationMode) annotationModeButton.selected = true;
+			currentTool = SelectedTool.CREATE_ANOTATION_TOOL
+		} else {
+			currentTool = SelectedTool.NO_TOOL
+		}
 	}
 	
 	/**

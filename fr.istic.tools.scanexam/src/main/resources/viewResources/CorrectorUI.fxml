@@ -20,7 +20,8 @@
 		<ToolBar>
 			<items>
 				<Button mnemonicParsing="false" onAction="#resetPosition" text="%button.unzoom" />
-            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="ToggleButton" />
+            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="ViewAnnotations" />
+            <ToggleButton fx:id="addAnnotationButton" mnemonicParsing="false" text="AddAnnotation" />
 			</items>
 			<VBox.margin>
 				<Insets />
