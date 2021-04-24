@@ -12,9 +12,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("all")
 public class PdfPaneWithAnotations extends Pane {
+  private static final Logger logger = LogManager.getLogger();
+  
   public PdfPaneWithAnotations(final ControllerFxGraduation controller) {
     this.controller = controller;
     ImageView _imageView = new ImageView();
@@ -121,6 +125,7 @@ public class PdfPaneWithAnotations extends Pane {
   }
   
   public void zoomTo(final double x, final double y, final double h, final double w) {
+    PdfPaneWithAnotations.logger.warn(((((((("X is :" + Double.valueOf(x)) + "y is :") + Double.valueOf(y)) + "h is :") + Double.valueOf(h)) + "w is :") + Double.valueOf(w)));
     Rectangle2D _rectangle2D = new Rectangle2D(x, y, w, h);
     this.imageView.setViewport(_rectangle2D);
   }

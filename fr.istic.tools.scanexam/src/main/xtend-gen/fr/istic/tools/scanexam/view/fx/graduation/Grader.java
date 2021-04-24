@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.HTMLView;
@@ -46,7 +47,7 @@ public class Grader extends VBox {
       this.topRow = _hBox;
       StackPane _stackPane = new StackPane();
       this.stackPane = _stackPane;
-      this.text = "This is a grade entry text, double click here to edit the text.";
+      this.text = LanguageManager.translate("grader.defaultText");
       WebView _webView = new WebView();
       this.webView = _webView;
       this.webEngine = this.webView.getEngine();
@@ -62,11 +63,13 @@ public class Grader extends VBox {
       TextField _textField = new TextField(_text);
       this.worthField = _textField;
       this.worthField.getStyleClass().add("mytext-field");
-      Button _button = new Button("Remove entry");
+      String _translate = LanguageManager.translate("grader.button.removeEntry");
+      Button _button = new Button(_translate);
       this.remove = _button;
       this.topRow.getChildren().addAll(this.check, this.worthField);
       this.getChildren().addAll(this.topRow, this.stackPane, this.remove);
       this.topRow.getStyleClass().add("GradeItemTopRow");
+      this.webView.getStyleClass().add("WebView");
       this.getStyleClass().add("GradeItem");
       this.setAlignment(Pos.CENTER);
       this.setupEvents();
@@ -270,10 +273,12 @@ public class Grader extends VBox {
     scrollp.setFitToWidth(true);
     VBox _vBox = new VBox();
     this.itemContainer = _vBox;
-    Button _button = new Button("Add new Grade Entry");
+    String _translate = LanguageManager.translate("grader.button.addEntry");
+    Button _button = new Button(_translate);
     this.add = _button;
     this.add.getStyleClass().add("InfinityButton");
-    Button _button_1 = new Button("Toggle Editable");
+    String _translate_1 = LanguageManager.translate("grader.button.togggleEdit");
+    Button _button_1 = new Button(_translate_1);
     this.editMode = _button_1;
     this.editMode.getStyleClass().add("InfinityButton");
     scrollp.setContent(this.itemContainer);

@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import javafx.event.EventHandler;
@@ -16,12 +17,11 @@ import javafx.scene.paint.Color;
 public class StudentItemGraduation extends HBox {
   public StudentItemGraduation(final int studentId) {
     super();
-    String _plus = (Integer.valueOf(studentId) + "");
-    Label _label = new Label(_plus);
-    this.studentId = _label;
-    Label _label_1 = new Label("NOT SET");
-    this.name = _label_1;
-    this.getChildren().addAll(this.studentId, this.name);
+    this.studentId = studentId;
+    String _translate = LanguageManager.translate("name.default");
+    Label _label = new Label(_translate);
+    this.name = _label;
+    this.getChildren().addAll(this.name);
     this.getStyleClass().add("ListItem");
     this.setupEvents();
   }
@@ -30,19 +30,18 @@ public class StudentItemGraduation extends HBox {
   
   private Label name;
   
-  private Label studentId;
+  private int studentId;
   
   public StudentListGraduation setList(final StudentListGraduation list) {
     return this.list = list;
   }
   
-  public void setStudentId(final int id) {
-    String _plus = (Integer.valueOf(id) + "");
-    this.studentId.setText(_plus);
+  public int setStudentId(final int id) {
+    return this.studentId = id;
   }
   
   public int getStudentId() {
-    return Integer.parseInt(this.studentId.getText());
+    return this.studentId;
   }
   
   public String getStudentName() {

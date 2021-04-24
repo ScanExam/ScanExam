@@ -62,19 +62,19 @@ class StudentDetails extends VBox {
 		
 		grid = new GridPane
 		grid.add(nameRow, 0, 0)
-		grid.add(idRow, 0, 1)
-		grid.add(gradeRow, 0, 2)
-		grid.add(qualityRow, 0, 3)
+		grid.add(idRow, 0, 2)
+		grid.add(gradeRow, 0, 3)
+		grid.add(qualityRow, 0, 4)
 
 		name = new RenameFieldSuggests
 		idLabel = new Label
 		gradeLabel = new Label
 		qualityCircle = new Circle(8, Color.GRAY)
 		
-		grid.add(name, 1, 0)
-		grid.add(idLabel, 1, 1)
-		grid.add(gradeLabel, 1, 2)
-		grid.add(qualityCircle, 1, 3)
+		grid.add(name, 0, 1)
+		grid.add(idLabel, 1, 2)
+		grid.add(gradeLabel, 1, 3)
+		grid.add(qualityCircle, 1, 4)
 
 		this.children.add(grid)
 		setupEvents

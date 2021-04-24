@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
 import javafx.event.EventHandler
 import javafx.geometry.Rectangle2D
 import javafx.scene.image.Image
@@ -7,10 +8,10 @@ import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Pane
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
+import org.apache.logging.log4j.LogManager
 
 class PdfPaneWithAnotations extends Pane {
-	
+	static val logger = LogManager.logger
 	new(ControllerFxGraduation controller){
 		this.controller = controller
 		imageView = new ImageView()
@@ -86,6 +87,7 @@ class PdfPaneWithAnotations extends Pane {
 	}
 	
 	def zoomTo(double x, double y, double h, double w){
+		logger.warn("X is :"+ x +"y is :"+ y+"h is :"+ h+"w is :"+ w)
 		imageView.viewport = new Rectangle2D(x,y,w,h)
 	}
 	

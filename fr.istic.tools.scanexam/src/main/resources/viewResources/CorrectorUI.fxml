@@ -20,8 +20,8 @@
 		<ToolBar>
 			<items>
 				<Button mnemonicParsing="false" onAction="#resetPosition" text="%button.unzoom" />
-            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="ViewAnnotations" />
-            <ToggleButton fx:id="addAnnotationButton" mnemonicParsing="false" text="AddAnnotation" />
+            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="%button.viewAnnotations" />
+            <ToggleButton fx:id="addAnnotationButton" mnemonicParsing="false" text="%button.AddAnnotation" />
 			</items>
 			<VBox.margin>
 				<Insets />
@@ -108,7 +108,7 @@
 						</AnchorPane>
 						<HBox alignment="BOTTOM_CENTER" pickOnBounds="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 							<children>
-								<Button fx:id="botButtonHidden" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0">
+								<Button fx:id="botButtonHidden" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toggleBottom" prefHeight="15.0" prefWidth="40.0" visible="false">
 									<styleClass>
 										<String fx:value="ArrowButton" />
 										<String fx:value="BotArrowButton" />

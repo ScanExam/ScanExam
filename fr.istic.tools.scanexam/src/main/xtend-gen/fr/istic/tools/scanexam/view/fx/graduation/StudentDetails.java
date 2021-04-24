@@ -78,9 +78,9 @@ public class StudentDetails extends VBox {
     GridPane _gridPane = new GridPane();
     this.grid = _gridPane;
     this.grid.add(nameRow, 0, 0);
-    this.grid.add(idRow, 0, 1);
-    this.grid.add(gradeRow, 0, 2);
-    this.grid.add(qualityRow, 0, 3);
+    this.grid.add(idRow, 0, 2);
+    this.grid.add(gradeRow, 0, 3);
+    this.grid.add(qualityRow, 0, 4);
     RenameFieldSuggests _renameFieldSuggests = new RenameFieldSuggests();
     this.name = _renameFieldSuggests;
     Label _label = new Label();
@@ -89,10 +89,10 @@ public class StudentDetails extends VBox {
     this.gradeLabel = _label_1;
     Circle _circle = new Circle(8, Color.GRAY);
     this.qualityCircle = _circle;
-    this.grid.add(this.name, 1, 0);
-    this.grid.add(this.idLabel, 1, 1);
-    this.grid.add(this.gradeLabel, 1, 2);
-    this.grid.add(this.qualityCircle, 1, 3);
+    this.grid.add(this.name, 0, 1);
+    this.grid.add(this.idLabel, 1, 2);
+    this.grid.add(this.gradeLabel, 1, 3);
+    this.grid.add(this.qualityCircle, 1, 4);
     this.getChildren().add(this.grid);
     this.setupEvents();
   }

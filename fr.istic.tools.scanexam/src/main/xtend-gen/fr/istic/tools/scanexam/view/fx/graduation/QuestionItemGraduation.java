@@ -23,42 +23,16 @@ public class QuestionItemGraduation extends VBox {
     this.setupEvents();
   }
   
-  private double x;
-  
-  private double y;
-  
-  private double height;
-  
-  private double width;
-  
   private Label name;
   
   private int questionId;
   
   private int page;
   
-  private float pointsWorth;
-  
   private QuestionListGraduation list;
   
   public QuestionListGraduation setList(final QuestionListGraduation list) {
     return this.list = list;
-  }
-  
-  public double setX(final double x) {
-    return this.x = x;
-  }
-  
-  public double setY(final double x) {
-    return this.y = x;
-  }
-  
-  public double setH(final double x) {
-    return this.height = x;
-  }
-  
-  public double setW(final double x) {
-    return this.width = x;
   }
   
   public void setName(final String x) {
@@ -74,19 +48,27 @@ public class QuestionItemGraduation extends VBox {
   }
   
   public double getX() {
-    return this.x;
+    double _questionX = this.list.getController().questionX(this.questionId);
+    double _imageWidth = this.list.getController().getImageWidth();
+    return (_questionX * _imageWidth);
   }
   
   public double getY() {
-    return this.y;
+    double _questionY = this.list.getController().questionY(this.questionId);
+    double _imageHeight = this.list.getController().getImageHeight();
+    return (_questionY * _imageHeight);
   }
   
   public double getH() {
-    return this.height;
+    double _questionHeight = this.list.getController().questionHeight(this.questionId);
+    double _imageHeight = this.list.getController().getImageHeight();
+    return (_questionHeight * _imageHeight);
   }
   
   public double getW() {
-    return this.width;
+    double _questionWidth = this.list.getController().questionWidth(this.questionId);
+    double _imageWidth = this.list.getController().getImageWidth();
+    return (_questionWidth * _imageWidth);
   }
   
   public int getQuestionId() {
@@ -102,11 +84,7 @@ public class QuestionItemGraduation extends VBox {
   }
   
   public float getWorth() {
-    return this.pointsWorth;
-  }
-  
-  public float setWorth(final Float worth) {
-    return this.pointsWorth = (worth).floatValue();
+    return this.list.getController().questionWorth(this.questionId);
   }
   
   public void setFocus(final boolean b) {

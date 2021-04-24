@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.ExportExamToPdf;
@@ -194,8 +193,6 @@ public class ControllerFxGraduation {
   @Accessors
   private PdfManager pdfManager;
   
-  private List<Question> questions;
-  
   /**
    * FXML Actions.
    */
@@ -284,8 +281,10 @@ public class ControllerFxGraduation {
   @Accessors
   private ControllerFxGraduation.SelectedTool currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
   
+  @Accessors
   private double imageWidth;
   
+  @Accessors
   private double imageHeight;
   
   public QuestionListGraduation getQuestionList() {
@@ -752,22 +751,9 @@ public class ControllerFxGraduation {
         for (final int i : ids) {
           {
             QuestionItemGraduation question = new QuestionItemGraduation();
-            double _questionX = this.questionX(i);
-            double _multiply = (_questionX * this.imageWidth);
-            question.setX(_multiply);
-            double _questionY = this.questionY(i);
-            double _multiply_1 = (_questionY * this.imageHeight);
-            question.setY(_multiply_1);
-            double _questionHeight = this.questionHeight(i);
-            double _multiply_2 = (_questionHeight * this.imageHeight);
-            question.setH(_multiply_2);
-            double _questionWidth = this.questionWidth(i);
-            double _multiply_3 = (_questionWidth * this.imageWidth);
-            question.setW(_multiply_3);
             question.setPage(p);
             question.setQuestionId(i);
             question.setName(this.questionName(i));
-            question.setWorth(Float.valueOf(this.questionWorth(i)));
             this.questionList.addItem(question);
           }
         }
@@ -789,7 +775,12 @@ public class ControllerFxGraduation {
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
-        student.setStudentName(this.service.getStudentName(i));
+        String name = this.service.getStudentName(i);
+        if (((name == null) || (name == ""))) {
+          student.setStudentName(LanguageManager.translate("name.default"));
+        } else {
+          student.setStudentName(name);
+        }
         this.studentList.addItem(student);
       }
     }
@@ -876,7 +867,7 @@ public class ControllerFxGraduation {
     {
       this.hideAnotations();
       this.mainPane.zoomTo(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), this.questionList.getCurrentItem().getW());
-      this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
+      this.addAnnotationButton.setSelected(false);
       this.annotationMode = false;
       _xblockexpression = this.autoZoom = this.previousZoomMode;
     }
@@ -1150,9 +1141,9 @@ public class ControllerFxGraduation {
   public LinkedList<Integer> initLoading(final int pageNumber) {
     LinkedList<Integer> _xblockexpression = null;
     {
-      this.questions = this.service.getQuestionAtPage(pageNumber);
       LinkedList<Integer> ids = new LinkedList<Integer>();
-      for (final Question q : this.questions) {
+      List<Question> _questionAtPage = this.service.getQuestionAtPage(pageNumber);
+      for (final Question q : _questionAtPage) {
         ids.add(Integer.valueOf(q.getId()));
       }
       _xblockexpression = ids;
@@ -1164,11 +1155,14 @@ public class ControllerFxGraduation {
     double _xblockexpression = (double) 0;
     {
       double result = (-1.0);
-      for (final Question q : this.questions) {
-        int _id = q.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          result = q.getZone().getX();
+      for (int i = 0; (i < this.service.getPageAmount()); i++) {
+        List<Question> _questionAtPage = this.service.getQuestionAtPage(i);
+        for (final Question q : _questionAtPage) {
+          int _id = q.getId();
+          boolean _equals = (_id == id);
+          if (_equals) {
+            result = q.getZone().getX();
+          }
         }
       }
       _xblockexpression = result;
@@ -1180,11 +1174,14 @@ public class ControllerFxGraduation {
     double _xblockexpression = (double) 0;
     {
       double result = (-1.0);
-      for (final Question q : this.questions) {
-        int _id = q.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          result = q.getZone().getY();
+      for (int i = 0; (i < this.service.getPageAmount()); i++) {
+        List<Question> _questionAtPage = this.service.getQuestionAtPage(i);
+        for (final Question q : _questionAtPage) {
+          int _id = q.getId();
+          boolean _equals = (_id == id);
+          if (_equals) {
+            result = q.getZone().getY();
+          }
         }
       }
       _xblockexpression = result;
@@ -1196,11 +1193,14 @@ public class ControllerFxGraduation {
     double _xblockexpression = (double) 0;
     {
       double result = (-1.0);
-      for (final Question q : this.questions) {
-        int _id = q.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          result = q.getZone().getHeigth();
+      for (int i = 0; (i < this.service.getPageAmount()); i++) {
+        List<Question> _questionAtPage = this.service.getQuestionAtPage(i);
+        for (final Question q : _questionAtPage) {
+          int _id = q.getId();
+          boolean _equals = (_id == id);
+          if (_equals) {
+            result = q.getZone().getHeigth();
+          }
         }
       }
       _xblockexpression = result;
@@ -1212,11 +1212,14 @@ public class ControllerFxGraduation {
     double _xblockexpression = (double) 0;
     {
       double result = (-1.0);
-      for (final Question q : this.questions) {
-        int _id = q.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          result = q.getZone().getWidth();
+      for (int i = 0; (i < this.service.getPageAmount()); i++) {
+        List<Question> _questionAtPage = this.service.getQuestionAtPage(i);
+        for (final Question q : _questionAtPage) {
+          int _id = q.getId();
+          boolean _equals = (_id == id);
+          if (_equals) {
+            result = q.getZone().getWidth();
+          }
         }
       }
       _xblockexpression = result;
@@ -1228,11 +1231,14 @@ public class ControllerFxGraduation {
     String _xblockexpression = null;
     {
       String result = "";
-      for (final Question q : this.questions) {
-        int _id = q.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          result = q.getName();
+      for (int i = 0; (i < this.service.getPageAmount()); i++) {
+        List<Question> _questionAtPage = this.service.getQuestionAtPage(i);
+        for (final Question q : _questionAtPage) {
+          int _id = q.getId();
+          boolean _equals = (_id == id);
+          if (_equals) {
+            result = q.getName();
+          }
         }
       }
       _xblockexpression = result;
@@ -1244,13 +1250,12 @@ public class ControllerFxGraduation {
     float _xblockexpression = (float) 0;
     {
       float result = (-1f);
-      for (final Question q : this.questions) {
-        int _id = q.getId();
-        boolean _equals = (_id == id);
-        if (_equals) {
-          GradeScale _gradeScale = q.getGradeScale();
-          boolean _tripleNotEquals = (_gradeScale != null);
-          if (_tripleNotEquals) {
+      for (int i = 0; (i < this.service.getPageAmount()); i++) {
+        List<Question> _questionAtPage = this.service.getQuestionAtPage(i);
+        for (final Question q : _questionAtPage) {
+          int _id = q.getId();
+          boolean _equals = (_id == id);
+          if (_equals) {
             result = q.getGradeScale().getMaxPoint();
           }
         }
@@ -1373,6 +1378,24 @@ public class ControllerFxGraduation {
   
   public void setCurrentTool(final ControllerFxGraduation.SelectedTool currentTool) {
     this.currentTool = currentTool;
+  }
+  
+  @Pure
+  public double getImageWidth() {
+    return this.imageWidth;
+  }
+  
+  public void setImageWidth(final double imageWidth) {
+    this.imageWidth = imageWidth;
+  }
+  
+  @Pure
+  public double getImageHeight() {
+    return this.imageHeight;
+  }
+  
+  public void setImageHeight(final double imageHeight) {
+    this.imageHeight = imageHeight;
   }
   
   @Pure

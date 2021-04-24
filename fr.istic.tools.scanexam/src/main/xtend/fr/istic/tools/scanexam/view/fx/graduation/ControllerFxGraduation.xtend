@@ -133,7 +133,6 @@ class ControllerFxGraduation {
 	@Accessors
 	var PdfManager pdfManager
 	
-	var List<Question> questions
 	/**
 	 * FXML Actions.
 	 */
@@ -226,8 +225,8 @@ class ControllerFxGraduation {
 
 
 	
-	double imageWidth;
-	double imageHeight;
+	@Accessors double imageWidth;
+	@Accessors double imageHeight;
 
 
 	//---Getters/Setters---//
@@ -563,15 +562,10 @@ class ControllerFxGraduation {
 		for (var p = 0;p < service.pageAmount;p++) {
 			var ids =  initLoading(p);
 			for (int i:ids) {
-				var question = new QuestionItemGraduation();
-				question.x = questionX(i) * imageWidth;
-				question.y = questionY(i) * imageHeight;
-				question.h = questionHeight(i) * imageHeight;
-				question.w = questionWidth(i) * imageWidth;
+				var question = new QuestionItemGraduation();	
 				question.page = p
 				question.questionId = i
 				question.name = questionName(i);
-				question.worth = questionWorth(i)
 				questionList.addItem(question)
 			}
 		}
@@ -589,8 +583,13 @@ class ControllerFxGraduation {
 		
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
-			student.studentName = service.getStudentName(i);
-	
+			var name = service.getStudentName(i);
+			if (name === null || name === "") {
+				student.studentName = LanguageManager.translate("name.default")
+				}
+			else {
+				student.studentName = name
+			}
 			studentList.addItem(student)
 		}
 	}
@@ -667,7 +666,7 @@ class ControllerFxGraduation {
 	def leaveAnotationMode(){
 		hideAnotations
 		mainPane.zoomTo(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.h,questionList.currentItem.w)
-		currentTool = SelectedTool.NO_TOOL
+		addAnnotationButton.selected = false
 		annotationMode = false;
 		autoZoom = previousZoomMode;
 	}
@@ -929,9 +928,8 @@ class ControllerFxGraduation {
 	
 		
 	def LinkedList<Integer> initLoading(int pageNumber){
-		questions = service.getQuestionAtPage(pageNumber)
 		var ids = new LinkedList<Integer>();
-		for (Question q : questions) {
+		for (Question q : service.getQuestionAtPage(pageNumber)) {
 			ids.add(q.id)
 		}
 		ids
@@ -942,9 +940,11 @@ class ControllerFxGraduation {
 	
 	def double questionX(int id){
 		var result = -1.0;
-		for (Question q : questions) {
-			if (q.id == id) {
-				result = q.zone.x
+		for (var i = 0; i < service.pageAmount; i++ ){
+			for (Question q : service.getQuestionAtPage(i)) {
+				if (q.id == id) {
+					result = q.zone.x
+				}
 			}
 		}
 		result
@@ -952,9 +952,11 @@ class ControllerFxGraduation {
 	
 	def double questionY(int id){
 		var result = -1.0;
-		for (Question q : questions) {
-			if (q.id == id) {
-				result = q.zone.y
+		for (var i = 0; i < service.pageAmount; i++ ){
+			for (Question q : service.getQuestionAtPage(i)) {
+				if (q.id == id) {
+					result = q.zone.y
+				}
 			}
 		}
 		result
@@ -962,9 +964,11 @@ class ControllerFxGraduation {
 	
 	def double questionHeight(int id){
 		var result = -1.0;
-		for (Question q : questions) {
-			if (q.id == id) {
-				result = q.zone.heigth
+		for (var i = 0; i < service.pageAmount; i++ ){
+			for (Question q : service.getQuestionAtPage(i)) {
+				if (q.id == id) {
+					result = q.zone.heigth
+				}
 			}
 		}
 		result
@@ -972,9 +976,11 @@ class ControllerFxGraduation {
 	
 	def double questionWidth(int id){
 		var result = -1.0;
-		for (Question q : questions) {
-			if (q.id == id) {
-				result = q.zone.width
+		for (var i = 0; i < service.pageAmount; i++ ){
+			for (Question q : service.getQuestionAtPage(i)) {
+				if (q.id == id) {
+					result = q.zone.width
+				}
 			}
 		}
 		result
@@ -982,20 +988,23 @@ class ControllerFxGraduation {
 	
 	def String questionName(int id){
 		var result = "";
-		for (Question q : questions) {
-			if (q.id == id) {
-				result = q.name
+		for (var i = 0; i < service.pageAmount; i++ ){
+			for (Question q : service.getQuestionAtPage(i)) {
+				if (q.id == id) {
+					result = q.name
+				}
 			}
 		}
 		result
 	}
 	
-	def float questionWorth(int id){//TODO FIX (TODO FIX THE TODO)
+	def float questionWorth(int id){
 		var result = -1f;
-		for (Question q : questions) {
-			if (q.id == id) {
-				if (q.gradeScale !== null)
+		for (var i = 0; i < service.pageAmount; i++ ){
+			for (Question q : service.getQuestionAtPage(i)) {
+				if (q.id == id) {
 					result = q.gradeScale.maxPoint
+				}
 			}
 		}
 		result

@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 
 import static fr.istic.tools.scanexam.view.fx.graduation.HTMLView.*
+import fr.istic.tools.scanexam.config.LanguageManager
 
 class Grader extends VBox {
 
@@ -52,11 +53,11 @@ class Grader extends VBox {
 		scrollp.fitToWidth = true;
 
 		itemContainer = new VBox();
-		add = new Button("Add new Grade Entry");
+		add = new Button(LanguageManager.translate("grader.button.addEntry"));
 
 		add.styleClass.add("InfinityButton")
 
-		editMode = new Button("Toggle Editable");
+		editMode = new Button(LanguageManager.translate("grader.button.togggleEdit"));
 		editMode.styleClass.add("InfinityButton")
 
 		scrollp.content = itemContainer
@@ -226,7 +227,7 @@ class Grader extends VBox {
 			
 			stackPane = new StackPane()
 			
-			text = "This is a grade entry text, double click here to edit the text."
+			text = LanguageManager.translate("grader.defaultText")
 			
 			webView = new WebView()
 			webEngine = webView.getEngine();
@@ -244,10 +245,12 @@ class Grader extends VBox {
 			worth = new Label("1");
 			worthField = new TextField(worth.text)
 			worthField.styleClass.add("mytext-field")
-			remove = new Button("Remove entry");
+			remove = new Button(LanguageManager.translate("grader.button.removeEntry"));
 			topRow.children.addAll(check, worthField)
 			this.children.addAll(topRow, stackPane,remove)
+			
 			topRow.styleClass.add("GradeItemTopRow")
+			webView.styleClass.add("WebView")
 			this.styleClass.add("GradeItem")
 			this.alignment = Pos.CENTER
 			setupEvents

@@ -21,34 +21,17 @@ class QuestionItemGraduation extends VBox {
 		setupEvents
 	}
 	
-	
-	double x;
-	double y;
-	double height;
-	double width;
+
 	Label name;
 	int questionId;
 	int page;
-	float pointsWorth;
 	QuestionListGraduation list;
 	
 	
 	def setList(QuestionListGraduation list) {
 		this.list = list
 	}
-	
-	def setX(double x){
-		this.x = x
-	}
-	def setY(double x){
-		this.y = x
-	}
-	def setH(double x){
-		height = x
-	}
-	def setW(double x){
-		width = x
-	}
+
 	def setName(String x){
 		name.text = x
 	}
@@ -61,16 +44,17 @@ class QuestionItemGraduation extends VBox {
 	}
 	
 	def getX(){
-		x
+		list.controller.questionX(questionId) * list.controller.imageWidth
 	}
 	def getY(){
-		y
+		list.controller.questionY(questionId) * list.controller.imageHeight
 	}
 	def getH(){
-		height
+		list.controller.questionHeight(questionId) * list.controller.imageHeight
+		
 	}
 	def getW(){
-		width
+		list.controller.questionWidth(questionId)* list.controller.imageWidth
 	}
 	def getQuestionId(){
 		questionId
@@ -84,10 +68,7 @@ class QuestionItemGraduation extends VBox {
 	}
 	
 	def getWorth(){
-		pointsWorth
-	}
-	def setWorth(Float worth) {
-		pointsWorth = worth;
+		list.controller.questionWorth(questionId)
 	}
 	
 	def void setFocus(boolean b) {//sets the color of the zone and the item in the list

@@ -10,13 +10,14 @@ import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
+import fr.istic.tools.scanexam.config.LanguageManager
 
 class StudentItemGraduation extends HBox {
 	new(int studentId) {
 		super()
-		this.studentId = new Label(studentId+ "");
-		name = new Label("NOT SET");
-		this.children.addAll(this.studentId,name);
+		this.studentId = studentId;
+		name = new Label(LanguageManager.translate("name.default"));
+		this.children.addAll(name);
 		
 		this.styleClass.add("ListItem")
 		setupEvents()
@@ -24,17 +25,17 @@ class StudentItemGraduation extends HBox {
 	
 	StudentListGraduation list;
 	Label name;
-	Label studentId;
+	int studentId;
 	//---GETTERS/SETTERS---//
 	
 	def setList(StudentListGraduation list) {
 		this.list = list;
 	}
 	def setStudentId(int id){
-		studentId.text = id + ""
+		studentId = id
 	}
 	def getStudentId(){
-		Integer.parseInt(studentId.text)
+		studentId
 	}
 	def getStudentName(){
 		this.name.text

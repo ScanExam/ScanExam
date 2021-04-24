@@ -108,6 +108,12 @@
 }
 
 .GradeItemTopRow {
+	-fx-padding : 3px;
+	-fx-spacing: 3px;
+}
+
+.WebView {/*DOES NOT WORK */
+	-fx-background-color : transparent;
 }
 
 
@@ -133,7 +139,6 @@
 	-fx-padding: 0px;
 }
 .renameLabel {
-	fx-padding: 0px;
 }
 
 
