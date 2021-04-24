@@ -496,6 +496,8 @@ class ControllerFxGraduation {
 		renderStudentCopy();
 		loadQuestions();
 		loadStudents();
+		setSelectedQuestion
+		setSelectedStudent
 		grader.visible = true;
 		questionDetails.visible = true;
 	}

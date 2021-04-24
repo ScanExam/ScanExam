@@ -643,6 +643,8 @@ public class ControllerFxGraduation {
     this.renderStudentCopy();
     this.loadQuestions();
     this.loadStudents();
+    this.setSelectedQuestion();
+    this.setSelectedStudent();
     this.grader.setVisible(true);
     this.questionDetails.setVisible(true);
   }
