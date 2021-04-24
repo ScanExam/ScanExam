@@ -209,6 +209,12 @@ class ControllerFxGraduation {
 		chooseMouseAction(e);
 	}
 	
+	@FXML
+	def void parentMouseEvent(MouseEvent e){
+		if (currentTool == SelectedTool.MOVE_GRADER_TOOL) moveGrader(e)
+	}
+	
+	
 	
 	
 	//--- LOCAL VARIABLES ---//
@@ -218,7 +224,8 @@ class ControllerFxGraduation {
 		MOVE_CAMERA_TOOL,
 		CREATE_ANOTATION_TOOL,
 		MOVE_ANOTATION_TOOL,
-		MOVE_POINTER_TOOL
+		MOVE_POINTER_TOOL,
+		MOVE_GRADER_TOOL
 	}
 	
 	@Accessors SelectedTool currentTool = SelectedTool.NO_TOOL;
@@ -266,6 +273,9 @@ class ControllerFxGraduation {
 			case MOVE_POINTER_TOOL: {
 				movePointer(e)
 			}
+			case MOVE_GRADER_TOOL: {
+				
+			}
 		}
 	}
 	
@@ -310,6 +320,18 @@ class ControllerFxGraduation {
 			var source = e.source as Node
 			source.layoutX = objectOriginX + (e.screenX - mouseOriginX)
 			source.layoutY = objectOriginY + (e.screenY - mouseOriginY)
+		}
+	}
+	
+	
+	def void moveGrader(MouseEvent e){
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {}
+		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+			grader.layoutX = e.x
+			grader.layoutY = e.y
+		}
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			currentTool = SelectedTool.NO_TOOL;
 		}
 	}
 	
@@ -375,6 +397,8 @@ class ControllerFxGraduation {
 		mainPane.scaleY = 1;
 		mainPane.layoutX = 0;
 		mainPane.layoutY = 0;
+		grader.layoutX = 0;
+		grader.layoutY = 0;
 		mainPane.unZoom
 	}
 

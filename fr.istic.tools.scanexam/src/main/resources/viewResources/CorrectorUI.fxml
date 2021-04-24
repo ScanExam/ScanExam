@@ -61,7 +61,7 @@
 					<children>
 						<ScrollPane fx:id="scrollMain" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<content>
-								<AnchorPane fx:id="parentPane">
+								<AnchorPane fx:id="parentPane" onMouseDragged="#parentMouseEvent" onMouseReleased="#parentMouseEvent">
 									<children>
 					
 									</children>

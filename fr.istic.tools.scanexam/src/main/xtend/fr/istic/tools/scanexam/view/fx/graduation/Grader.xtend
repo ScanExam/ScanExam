@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Level
 import javafx.scene.web.WebView
 import javafx.scene.web.WebEngine
 import javafx.scene.layout.StackPane
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
 
 class Grader extends VBox {
 
@@ -388,6 +389,10 @@ class Grader extends VBox {
 			}
 
 		}
+		this.onMousePressed = [event |
+			{ controller.currentTool = SelectedTool.MOVE_GRADER_TOOL;
+			
+		}]
 
 	}
 }
