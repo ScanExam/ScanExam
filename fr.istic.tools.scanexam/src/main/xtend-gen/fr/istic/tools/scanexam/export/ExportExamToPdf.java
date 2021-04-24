@@ -12,7 +12,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -175,11 +177,11 @@ public class ExportExamToPdf {
    * EXPORT a Collection of PDF TEMP files for each student containing all annotations TO selected folder
    * @param documentInputStream is the PDF of all student exams
    * @param sheets is they studentSheet of they students
-   * @return collection of temp Files
+   * @return map of student's name to temp file
    */
-  public static Collection<File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets) {
+  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets) {
     try {
-      Collection<File> tempExams = new ArrayList<File>();
+      Map<String, File> tempExams = new HashMap<String, File>();
       File tempExam = File.createTempFile("examTemp", ".pdf");
       ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam);
       PDDocument pdf = PDDocument.load(tempExam);
@@ -194,7 +196,7 @@ public class ExportExamToPdf {
           String _plus = ("tempExam" + _studentName);
           File studentExam = File.createTempFile(_plus, ".pdf");
           document.save(studentExam);
-          tempExams.add(studentExam);
+          tempExams.put(sheet.getStudentName(), studentExam);
           document.close();
         }
       }

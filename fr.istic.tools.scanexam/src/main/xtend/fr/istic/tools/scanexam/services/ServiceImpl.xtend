@@ -100,7 +100,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	/**
-	 * Charge le document PDF des copies manuscrites,  corrigés
+	 * Charge le document PDF des copies manuscrites, corrigés
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
@@ -728,7 +728,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 
 		for (i : 0 ..< pageNumber) {
 			val page = CoreFactory.eINSTANCE.createPage()
-
+			page.questions.forEach[q | q.gradeScale = CoreFactory.eINSTANCE.createGradeScale]
 			editionTemplate.exam.pages.add(page);
 		}
 		questionId = 0

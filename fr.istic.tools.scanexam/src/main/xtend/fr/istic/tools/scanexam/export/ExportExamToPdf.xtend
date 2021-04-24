@@ -9,14 +9,16 @@ import java.awt.Color
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.ArrayList
+import java.util.Arrays
 import java.util.Collection
+import java.util.HashMap
+import java.util.Map
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
-import java.util.ArrayList
-import java.util.Arrays
 
 class ExportExamToPdf {
 	
@@ -165,10 +167,10 @@ class ExportExamToPdf {
       * EXPORT a Collection of PDF TEMP files for each student containing all annotations TO selected folder
       * @param documentInputStream is the PDF of all student exams
       * @param sheets is they studentSheet of they students
-      * @return collection of temp Files
+      * @return map of student's name to temp file 
       */
-     def static Collection<File> exportExamsOfStudentsToTempPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets){
-     	var Collection<File> tempExams = new ArrayList<File>();
+     def static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets){
+     	var Map<String, File> tempExams = new HashMap<String, File>();
      	
      	var File tempExam = File.createTempFile("examTemp", ".pdf");
      	
@@ -184,7 +186,7 @@ class ExportExamToPdf {
 			}
 			var File studentExam = File.createTempFile("tempExam" + sheet.studentName, ".pdf");
 			document.save(studentExam);
-			tempExams.add(studentExam);
+			tempExams.put(sheet.studentName, studentExam);
 			document.close;
      	}
      	pdf.close();

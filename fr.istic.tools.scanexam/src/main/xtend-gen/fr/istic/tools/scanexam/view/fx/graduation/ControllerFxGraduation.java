@@ -749,8 +749,8 @@ public class ControllerFxGraduation {
   /**
    * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
    */
-  public Object showAnotations() {
-    return this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
+  public void showAnotations() {
+    this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
   }
   
   /**

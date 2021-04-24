@@ -227,12 +227,8 @@ public class ControllerConfiguration {
     boolean _notEquals = (!Objects.equal(_text, ""));
     if (_notEquals) {
       final Pair<String, String> infos = this.getSmtpInfos(this.txtFldEmail.getText());
-      if (((this.txtFldEmailHost.getText() == null) || Objects.equal(this.txtFldEmailHost.getText(), ""))) {
-        this.txtFldEmailHost.setText(infos.getKey());
-      }
-      if (((this.txtFldEmailPort.getText() == null) || Objects.equal(this.txtFldEmailPort.getText(), "0"))) {
-        this.txtFldEmailPort.setText(infos.getValue());
-      }
+      this.txtFldEmailHost.setText(infos.getKey());
+      this.txtFldEmailPort.setText(infos.getValue());
     }
   }
   

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -121,7 +122,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Charge le document PDF des copies manuscrites,  corrigés
+   * Charge le document PDF des copies manuscrites, corrigés
    * @params path L'emplacement du fichier.
    * @returns "true" si le fichier a bien été chargé, "false"
    */
@@ -887,6 +888,10 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     for (final Integer i : _doubleDotLessThan) {
       {
         final Page page = CoreFactory.eINSTANCE.createPage();
+        final Consumer<Question> _function = (Question q) -> {
+          q.setGradeScale(CoreFactory.eINSTANCE.createGradeScale());
+        };
+        page.getQuestions().forEach(_function);
         this.editionTemplate.getExam().getPages().add(page);
       }
     }
