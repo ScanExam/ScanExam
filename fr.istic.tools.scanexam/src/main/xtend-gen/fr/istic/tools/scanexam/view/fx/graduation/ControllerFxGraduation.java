@@ -171,6 +171,9 @@ public class ControllerFxGraduation {
   @FXML
   public ToggleButton annotationModeButton;
   
+  @FXML
+  public ToggleButton addAnnotationButton;
+  
   @Accessors
   private ServiceGraduation service;
   
@@ -402,8 +405,8 @@ public class ControllerFxGraduation {
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
     if (_equals_1) {
-      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
       this.updateAnnotation(this.currentAnotation);
+      this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
     }
   }
   
@@ -426,8 +429,8 @@ public class ControllerFxGraduation {
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_RELEASED);
     if (_equals_1) {
-      this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
       this.updateAnnotation(this.currentAnotation);
+      this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
     }
   }
   
@@ -505,6 +508,10 @@ public class ControllerFxGraduation {
       }
     };
     this.annotationModeButton.selectedProperty().addListener(_function_1);
+    final ChangeListener<Boolean> _function_2 = (ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) -> {
+      this.setToCreateAnnotation((newVal).booleanValue());
+    };
+    this.addAnnotationButton.selectedProperty().addListener(_function_2);
     this.nextQuestionButton.disableProperty().bind(this.loadedModel.not());
     this.prevQuestionButton.disableProperty().bind(this.loadedModel.not());
     this.prevStudentButton.disableProperty().bind(this.loadedModel.not());
@@ -743,7 +750,25 @@ public class ControllerFxGraduation {
     if (_equals) {
       TextAnotation annot = this.mainPane.addNewAnotation(mousePositionX, mousePositionY);
       this.addAnnotation(annot);
+      this.addAnnotationButton.setSelected(false);
     }
+  }
+  
+  public ControllerFxGraduation.SelectedTool setToCreateAnnotation(final boolean b) {
+    ControllerFxGraduation.SelectedTool _xifexpression = null;
+    if (b) {
+      ControllerFxGraduation.SelectedTool _xblockexpression = null;
+      {
+        if ((!this.annotationMode)) {
+          this.annotationModeButton.setSelected(true);
+        }
+        _xblockexpression = this.currentTool = ControllerFxGraduation.SelectedTool.CREATE_ANOTATION_TOOL;
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      _xifexpression = this.currentTool = ControllerFxGraduation.SelectedTool.NO_TOOL;
+    }
+    return _xifexpression;
   }
   
   /**
