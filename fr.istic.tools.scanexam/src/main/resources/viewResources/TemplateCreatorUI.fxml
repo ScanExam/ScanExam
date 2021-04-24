@@ -42,7 +42,7 @@
 		</GridPane>
 		<HBox alignment="CENTER" spacing="80.0">
 			<children>
-				<Button mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
+				<Button fx:id="buttonCancel" mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
 				<Pane fx:id="hoverPane">
 					<children>
 						<Button fx:id="btnOk" mnemonicParsing="false" onAction="#saveAndQuit" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />

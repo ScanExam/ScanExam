@@ -92,6 +92,11 @@ class InterfaceFXTest {
 		stage.show();
 		
 	}
+	/*
+		Pour exécuter certains tests, il faut avoir un modèle et les copies à corriger (avoir exporté le modèle pour l'examen).
+		Il faudra pendant le test, sélectionner le fichier qui correspond. Une indication avant chaque test vous indique quel 
+		fichier sera utile.
+	*/
 	
 	@DisplayName("Premier Test : Clique Simple")
 	@Test
@@ -99,6 +104,119 @@ class InterfaceFXTest {
 		robot.clickOn("#nextPageButton");
         assertTrue(true);
     }
+	
+	@DisplayName("Changement onglet: Editeur Correcteur")
+	@Test
+    public void changeTab(FxRobot robot) throws InterruptedException {
+		robot.clickOn("#correctorTab");
+		Thread.sleep(1000); // fait une pause (1 sec = 1000)
+		robot.clickOn("#editorTab");
+		Thread.sleep(1000);
+		robot.clickOn("#correctorTab");	
+		Thread.sleep(1000);
+		robot.clickOn("#editorTab");	
+        assertTrue(true);
+    }
+	
+	@DisplayName("Ouvrir les menus")
+	@Test
+    public void openMenu(FxRobot robot) throws InterruptedException {
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
+		robot.clickOn("#menuEdit");
+		Thread.sleep(1000);
+		robot.clickOn("#menuView");		
+        assertTrue(true);
+    }
 
+	// Besoin d'un pdf pour modèle
+	@DisplayName("Creation d'une nouvelle template")
+	@Test
+	public void CreationTemplateAndSave(FxRobot robot) throws InterruptedException {
+        //clique sur file editor
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
+		//clique sur create new template
+		robot.clickOn("#newTemplate");	
+		Thread.sleep(1000);
+		//Selectionner et charger le pdf
+		robot.clickOn("#btnBrowser");	
+		Thread.sleep(10000);
+		robot.clickOn("#txtFldTemplateName");	
+		robot.write("TestProjet1");
+		Thread.sleep(1000);
+		robot.clickOn("#btnOk");
+		Thread.sleep(2000);
+    }
+	
+	// Besoin d'un pdf pour modèle
+	@DisplayName("Sauvegarde d'une nouvelle template")
+	@Test
+	public void saveTemplate(FxRobot robot) throws InterruptedException {
+		CreationTemplateAndSave(robot);
+		//clique sur file editor
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
+		//clique sur save template
+		robot.clickOn("#saveTemplateButton");
+		Thread.sleep(1000);
+		assertTrue(true);
+    }
+	
+	// Besoin d'un pdf pour modèle
+	@DisplayName("Changer de page Editeur")
+	@Test
+    public void changePage(FxRobot robot) throws InterruptedException {
+		CreationTemplateAndSave(robot);
+		Thread.sleep(500);
+		robot.clickOn("#nextPageButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextPageButton");
+		Thread.sleep(500);
+		robot.clickOn("#previousPageButton");
+		Thread.sleep(500);
+		robot.clickOn("#previousPageButton");
+		Thread.sleep(500);		
+		robot.clickOn("#pageChoice");
+		Thread.sleep(500);
+		assertTrue(true);
+    }
+	
+	// Besoin d'un modèle et des copies à corriger
+	@DisplayName("Correction : Changement d'élève ou de question")
+	@Test
+    public void changeCorrection(FxRobot robot) throws InterruptedException {
+		robot.clickOn("#menuFile");
+		Thread.sleep(500);
+		robot.clickOn("#loadStudent");
+		Thread.sleep(500);
+		robot.clickOn("#rbLoadModel");
+		robot.clickOn("#btnBrowse");
+		Thread.sleep(6000);
+		robot.clickOn("#btnBrowseGraduation");
+		Thread.sleep(6000);
+		robot.clickOn("#txtFldGraduationName");
+		robot.write("TestCorrection");
+		robot.clickOn("#btnOk");
+		Thread.sleep(10000);
+		robot.clickOn("#correctorTab");
+		Thread.sleep(500);
+		robot.clickOn("#nextQuestionButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextQuestionButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevQuestionButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevQuestionButton");
+		assertTrue(true);
+    }
 
 }
