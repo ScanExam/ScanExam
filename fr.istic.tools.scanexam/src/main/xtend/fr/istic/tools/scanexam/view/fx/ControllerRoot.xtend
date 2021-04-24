@@ -1,11 +1,14 @@
 package fr.istic.tools.scanexam.view.fx
 
+import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
+import java.io.File
 import java.net.URL
 import java.util.ResourceBundle
 import javafx.fxml.FXML
@@ -14,18 +17,15 @@ import javafx.fxml.Initializable
 import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.CheckMenuItem
 import javafx.scene.control.MenuItem
 import javafx.scene.control.Tab
 import javafx.scene.image.Image
-import javafx.stage.Stage
-import org.eclipse.xtend.lib.annotations.Accessors
 import javafx.stage.DirectoryChooser
-import java.io.File
+import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.config.ConfigurationManager
-import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
-import javafx.scene.control.Alert.AlertType
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class ControllerRoot implements Initializable {
 	
@@ -210,6 +210,11 @@ class ControllerRoot implements Initializable {
 		dialog.setScene(new Scene(view, 384, 107))
 		dialog.setResizable(false);
 		dialog.show
+	}
+	
+	@FXML
+	def gradeExport() {
+		graduationController.exportGrades
 	}
 	
 	@FXML

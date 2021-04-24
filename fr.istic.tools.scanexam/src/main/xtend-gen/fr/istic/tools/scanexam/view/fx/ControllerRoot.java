@@ -292,6 +292,11 @@ public class ControllerRoot implements Initializable {
   }
   
   @FXML
+  public void gradeExport() {
+    this.graduationController.exportGrades();
+  }
+  
+  @FXML
   public void saveCorrection() {
     this.graduationController.saveExam();
   }

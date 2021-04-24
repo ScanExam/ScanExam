@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
+import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.ExportExamToPdf
@@ -24,6 +25,7 @@ import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Spinner
 import javafx.scene.control.ToggleButton
+import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
@@ -34,7 +36,6 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
-import javafx.scene.input.KeyEvent
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -154,15 +155,6 @@ class ControllerFxGraduation {
 	@FXML
 	def void saveAsPressed() {
 		logger.info("Save as Called")
-	}
-
-	/**
-	 * Called when a <b>export</b> button is pressed
-	 */
-	@FXML
-	def void exportPressed() {
-		println("Export method");
-		exportGrades
 	}
 
 	/**
@@ -1010,9 +1002,21 @@ class ControllerFxGraduation {
 		result
 	}
 	
-	//XXX À améliorer
 	def void exportGrades() {
-	  (new GradesExportImpl(service)).exportGrades
+		var fileChooser = new FileChooser();
+		fileChooser.extensionFilters.add(new ExtensionFilter(LanguageManager.translate("exportExcel.fileFormat"), Arrays.asList("*.xlsx")));
+		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
+			"Documents");
+		var file = fileChooser.showSaveDialog(mainPane.scene.window)
+
+		if (file !== null) {
+			saveTemplate(file.path)
+			logger.info("Export grade in Excel")
+		} 
+		else {
+			logger.warn("File not chosen")
+		}
+	 (new GradesExportImpl).exportGrades(service.studentSheets, file)
 	}
 	
 	def applyGrade(int questionId,int gradeId) {

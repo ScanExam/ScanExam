@@ -1,22 +1,8 @@
 package fr.istic.tools.scanexam.export;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-
-import fr.istic.tools.scanexam.api.DataFactory;
-import fr.istic.tools.scanexam.core.CoreFactory;
-import fr.istic.tools.scanexam.core.Grade;
-import fr.istic.tools.scanexam.core.StudentSheet;
-
 public class GradesExportTest {
 
-	//GradesExport exporter;
+	/*//GradesExport exporter;
 	String examName = "torchon_pfo";
 	List<StudentSheet> sheetsFromStudents = new ArrayList<>();
 	GradesExportImpl exporter = new GradesExportImpl(null);
@@ -60,9 +46,9 @@ public class GradesExportTest {
 		}
 	}*/
 	
-	@Test
+	/*@Test
 	@DisplayName("Test de la méthode d'export des notes au format Excel xlsx")
 	void exportGradesTest() {
 		exporter.exportGradesPrivate(sheetsFromStudents, examName);
-	}
+	}*/
 }

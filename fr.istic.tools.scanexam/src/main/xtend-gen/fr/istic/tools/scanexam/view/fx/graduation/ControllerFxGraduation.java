@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
 import com.google.common.base.Objects;
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
@@ -58,7 +59,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -218,15 +218,6 @@ public class ControllerFxGraduation {
   @FXML
   public void saveAsPressed() {
     ControllerFxGraduation.logger.info("Save as Called");
-  }
-  
-  /**
-   * Called when a <b>export</b> button is pressed
-   */
-  @FXML
-  public void exportPressed() {
-    InputOutput.<String>println("Export method");
-    this.exportGrades();
   }
   
   /**
@@ -1263,7 +1254,27 @@ public class ControllerFxGraduation {
   }
   
   public void exportGrades() {
-    new GradesExportImpl(this.service).exportGrades();
+    FileChooser fileChooser = new FileChooser();
+    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
+    String _translate = LanguageManager.translate("exportExcel.fileFormat");
+    List<String> _asList = Arrays.<String>asList("*.xlsx");
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter(_translate, _asList);
+    _extensionFilters.add(_extensionFilter);
+    String _property = System.getProperty("user.home");
+    String _property_1 = System.getProperty("file.separator");
+    String _plus = (_property + _property_1);
+    String _plus_1 = (_plus + 
+      "Documents");
+    File _file = new File(_plus_1);
+    fileChooser.setInitialDirectory(_file);
+    File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
+    if ((file != null)) {
+      this.saveTemplate(file.getPath());
+      ControllerFxGraduation.logger.info("Export grade in Excel");
+    } else {
+      ControllerFxGraduation.logger.warn("File not chosen");
+    }
+    new GradesExportImpl().exportGrades(this.service.getStudentSheets(), file);
   }
   
   public boolean applyGrade(final int questionId, final int gradeId) {
