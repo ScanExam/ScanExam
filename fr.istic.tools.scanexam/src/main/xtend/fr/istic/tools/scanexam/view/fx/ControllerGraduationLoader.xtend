@@ -105,7 +105,7 @@ class ControllerGraduationLoader {
 
 		// Action sur les boutons de chargement de fichiers
 		btnBrowse.onAction = [e|loadFile("*.xmi", "file.format.xmi", txtFldFile)]
-		btnBrowseGraduation.onAction = [e|loadFile("*.xmi", "file.format.pdf", txtFldFileGraduation)]
+		btnBrowseGraduation.onAction = [e|loadFile("*.xmi", "file.format.xmi", txtFldFileGraduation)]
 
 		// Si aucun examen n'est chargé, désactiver le RadioButton "Utiliser le modèle chargé"
 		if (!serviceGraduation.hasExamLoaded) {
@@ -164,7 +164,7 @@ class ControllerGraduationLoader {
 	def valid() {
 		if(rbUseLoaded.selected || controllerEdition.loadTemplate(new File(txtFldFile.text))) {
 			if(!controllerGraduation.load(new File(txtFldFileGraduation.text)))
-				DialogMessageSender.sendDialog(AlertType.ERROR, "graduationLoader.graduationConfirmationDialog.title", "graduationLoader.graduationConfirmationDialog.fail", null)
+				DialogMessageSender.sendTranslateDialog(AlertType.ERROR, "graduationLoader.graduationConfirmationDialog.title", "graduationLoader.graduationConfirmationDialog.fail", null)
 			else
 				quit
 		}

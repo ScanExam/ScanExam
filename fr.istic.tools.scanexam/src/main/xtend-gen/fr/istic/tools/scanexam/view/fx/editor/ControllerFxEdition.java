@@ -695,7 +695,7 @@ public class ControllerFxEdition {
       java.util.Objects.<File>requireNonNull(file);
       final boolean success = this.load(file.getPath());
       if ((!success)) {
-        DialogMessageSender.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
+        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
       } else {
         this.render();
       }

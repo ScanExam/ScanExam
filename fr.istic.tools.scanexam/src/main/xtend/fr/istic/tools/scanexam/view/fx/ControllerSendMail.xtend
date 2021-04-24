@@ -1,30 +1,28 @@
 package fr.istic.tools.scanexam.view.fx
 
+import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.export.ExportExamToPdf
+import fr.istic.tools.scanexam.mailing.SendMailTls
+import fr.istic.tools.scanexam.mailing.StudentDataManager
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
+import java.util.Collection
+import java.util.Map
+import java.util.Optional
+import javafx.concurrent.Service
+import javafx.concurrent.Task
 import javafx.fxml.FXML
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
 import javafx.scene.web.HTMLEditor
 import javafx.stage.Stage
-import fr.istic.tools.scanexam.mailing.StudentDataManager
-import fr.istic.tools.scanexam.services.api.ServiceGraduation
-import java.util.Map
-import java.util.Collection
-import fr.istic.tools.scanexam.core.StudentSheet
-import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
-import javafx.scene.control.Alert.AlertType
-import fr.istic.tools.scanexam.export.ExportExamToPdf
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
-import fr.istic.tools.scanexam.mailing.SendMailTls
-import fr.istic.tools.scanexam.config.ConfigurationManager
-import javafx.fxml.Initializable
-import java.net.URL
-import java.util.ResourceBundle
-import java.util.Optional
-import fr.istic.tools.scanexam.config.LanguageManager
 
 /**
  * Classe pour envoyer les corrigés par mail en JavaFX
- * @author Julien Cochet
+ * @author Julien Cochetn Marius Lumbroso, Théo Giraudet
  */
 class ControllerSendMail  {
 
@@ -41,6 +39,7 @@ class ControllerSendMail  {
 	public HTMLEditor htmlEditor
 	
 	ServiceGraduation service
+	int nbSheetWithoutName = 0
 	
 	Optional<Map<String,String>> mailMap
 	
@@ -54,38 +53,45 @@ class ControllerSendMail  {
 	// ----------------------------------------------------------------------------------------------------
 
 	@FXML
-	def void saveAndQuit() 
-	{
-		var sent = 0;
-		
-		for (i : studentSheets.size >.. 0)
-		{
-			
-			val studentSheet = studentSheets.get(i)
-			val studentMail = mailMap.get.get(studentSheet.studentName)
-			
-			
-			if (studentSheet.studentName !== null && studentMail !== null)
-			{
-				// TODO exportToTempFileWithAnnotation
-				
-				val pdf = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(controllerGraduation.pdfManager.pdfInputStream,studentSheet)
-			
-				SendMailTls.sendMail(ConfigurationManager.instance.email,ConfigurationManager.instance.emailPassword,
-				studentMail,txtFldTitle.text,htmlEditor.htmlText,pdf.absolutePath,service.examName)
-				sent++;
-			
+	def void saveAndQuit() {
+
+	val Task<Integer> task = new Task<Integer>() {
+			protected override Integer call() {
+				var sent = 0;
+				updateProgress(sent, studentSheets.size - nbSheetWithoutName)
+				updateMessage(String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size - nbSheetWithoutName))
+				for (studentSheet : studentSheets) {
+
+					val studentMail = mailMap.get.get(studentSheet.studentName)
+
+					if (studentSheet.studentName !== null && studentMail !== null) {
+						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
+							controllerGraduation.pdfManager.pdfInputStream, studentSheet)
+						val sender = new SendMailTls
+						sender.sendMail(controllerGraduation.pdfManager.pdfInputStream, txtFldTitle.text,
+							htmlEditor.htmlText, pair.key, studentMail, pair.value)
+						sent++;
+						updateProgress(sent, studentSheets.size - nbSheetWithoutName)
+						updateMessage(String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size - nbSheetWithoutName))
+					}
+				}
+				return sent
 			}
-				
-			
 		}
 		
-		DialogMessageSender.sendDialog(AlertType.CONFIRMATION,
-				LanguageManager.translate("sendMail.resultHeader"),
-				LanguageManager.translate("sendMail.resultHeader"),
-				sent + " / " + studentSheets.size + " mail envoyés."
-			);
-		
+		val Service<Integer> service = [task]
+		service.onSucceeded = [e | onFinish(service.value)]
+		service.start
+		ControllerWaiting.openWaitingDialog(service.messageProperty, service.progressProperty, mainPane.getScene().getWindow() as Stage)
+	}
+	
+	private def onFinish(int sent) {
+		DialogMessageSender.sendDialog(
+			AlertType.CONFIRMATION,
+			LanguageManager.translate("sendMail.resultHeader"),
+			LanguageManager.translate("sendMail.resultHeader"),
+			String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size)
+		);
 		
 		quit
 	}
@@ -104,17 +110,27 @@ class ControllerSendMail  {
 		this.mailMap =StudentDataManager.getNameToMailMap()
 		this.studentSheets = service.studentSheets
 		
-		
-		val allStudentHasName =  studentSheets.stream.anyMatch(x | x.studentName === null)
+		nbSheetWithoutName = if(mailMap.present)		
+			studentSheets.filter(x | !mailMap.get.containsKey(x.studentName)).size as int
+		else
+			-1
 	 	
-		if (mailMap.empty || allStudentHasName)
+		if (mailMap.empty)
 		{
-			DialogMessageSender.sendDialog(AlertType.WARNING,
-				LanguageManager.translate("sendMail.noStudentDataHeader"),
-				LanguageManager.translate("sendMail.noStudentDataHeader"),
-				LanguageManager.translate("sendMail.noStudentData")
+			DialogMessageSender.sendTranslateDialog(AlertType.WARNING,
+				"sendMail.noStudentDataHeader",
+				"sendMail.noStudentDataHeader",
+				"sendMail.noStudentData"
 			);
 			return
+		} else if(nbSheetWithoutName != 0) {
+			DialogMessageSender.sendDialog(AlertType.WARNING,
+				LanguageManager.translate("sendMail.noStudentDataHeader"),
+				nbSheetWithoutName > 1 
+					? String.format(LanguageManager.translate("sendMail.notAllStudent"), nbSheetWithoutName)
+					: LanguageManager.translate("sendMail.notAllStudent1"),
+				null
+			)
 		}
 
 	

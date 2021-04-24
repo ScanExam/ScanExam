@@ -264,7 +264,7 @@ public class ControllerGraduationCreator {
       boolean _loadStudentSheets = this.loadStudentSheets();
       boolean _not = (!_loadStudentSheets);
       if (_not) {
-        DialogMessageSender.sendDialog(Alert.AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null);
+        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null);
       }
     }
   }

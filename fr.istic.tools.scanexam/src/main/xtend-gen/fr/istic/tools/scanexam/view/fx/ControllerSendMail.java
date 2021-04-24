@@ -1,19 +1,22 @@
 package fr.istic.tools.scanexam.view.fx;
 
-import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.ExportExamToPdf;
 import fr.istic.tools.scanexam.mailing.SendMailTls;
 import fr.istic.tools.scanexam.mailing.StudentDataManager;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
+import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -21,12 +24,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.ExclusiveRange;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * Classe pour envoyer les corrigés par mail en JavaFX
- * @author Julien Cochet
+ * @author Julien Cochetn Marius Lumbroso, Théo Giraudet
  */
 @SuppressWarnings("all")
 public class ControllerSendMail {
@@ -50,6 +54,8 @@ public class ControllerSendMail {
   
   private ServiceGraduation service;
   
+  private int nbSheetWithoutName = 0;
+  
   private Optional<Map<String, String>> mailMap;
   
   private Collection<StudentSheet> studentSheets;
@@ -61,27 +67,62 @@ public class ControllerSendMail {
    */
   @FXML
   public void saveAndQuit() {
-    int sent = 0;
-    int _size = this.studentSheets.size();
-    ExclusiveRange _greaterThanDoubleDot = new ExclusiveRange(_size, 0, false);
-    for (final Integer i : _greaterThanDoubleDot) {
-      {
-        final StudentSheet studentSheet = ((StudentSheet[])Conversions.unwrapArray(this.studentSheets, StudentSheet.class))[(i).intValue()];
-        final String studentMail = this.mailMap.get().get(studentSheet.getStudentName());
-        if (((studentSheet.getStudentName() != null) && (studentMail != null))) {
-          final File pdf = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet);
-          SendMailTls.sendMail(ConfigurationManager.instance.getEmail(), ConfigurationManager.instance.getEmailPassword(), studentMail, this.txtFldTitle.getText(), this.htmlEditor.getHtmlText(), pdf.getAbsolutePath(), this.service.getExamName());
-          sent++;
+    final Task<Integer> task = new Task<Integer>() {
+      @Override
+      protected Integer call() {
+        int sent = 0;
+        int _size = ControllerSendMail.this.studentSheets.size();
+        int _minus = (_size - ControllerSendMail.this.nbSheetWithoutName);
+        this.updateProgress(sent, _minus);
+        String _translate = LanguageManager.translate("sendMail.progress");
+        int _size_1 = ControllerSendMail.this.studentSheets.size();
+        int _minus_1 = (_size_1 - ControllerSendMail.this.nbSheetWithoutName);
+        this.updateMessage(String.format(_translate, Integer.valueOf(sent), Integer.valueOf(_minus_1)));
+        for (final StudentSheet studentSheet : ControllerSendMail.this.studentSheets) {
+          {
+            final String studentMail = ControllerSendMail.this.mailMap.get().get(studentSheet.getStudentName());
+            if (((studentSheet.getStudentName() != null) && (studentMail != null))) {
+              final Pair<String, File> pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
+                ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet);
+              final SendMailTls sender = new SendMailTls();
+              sender.sendMail(ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), ControllerSendMail.this.txtFldTitle.getText(), 
+                ControllerSendMail.this.htmlEditor.getHtmlText(), pair.getKey(), studentMail, pair.getValue());
+              sent++;
+              int _size_2 = ControllerSendMail.this.studentSheets.size();
+              int _minus_2 = (_size_2 - ControllerSendMail.this.nbSheetWithoutName);
+              this.updateProgress(sent, _minus_2);
+              String _translate_1 = LanguageManager.translate("sendMail.progress");
+              int _size_3 = ControllerSendMail.this.studentSheets.size();
+              int _minus_3 = (_size_3 - ControllerSendMail.this.nbSheetWithoutName);
+              this.updateMessage(String.format(_translate_1, Integer.valueOf(sent), Integer.valueOf(_minus_3)));
+            }
+          }
         }
+        return Integer.valueOf(sent);
       }
-    }
-    String _translate = LanguageManager.translate("sendMail.resultHeader");
-    String _translate_1 = LanguageManager.translate("sendMail.resultHeader");
-    String _plus = (Integer.valueOf(sent) + " / ");
-    int _size_1 = this.studentSheets.size();
-    String _plus_1 = (_plus + Integer.valueOf(_size_1));
-    String _plus_2 = (_plus_1 + " mail envoyés.");
-    DialogMessageSender.sendDialog(Alert.AlertType.CONFIRMATION, _translate, _translate_1, _plus_2);
+    };
+    final Service<Integer> _function = new Service<Integer>() {
+      @Override
+      protected Task<Integer> createTask() {
+        return task;
+      }
+    };
+    final Service<Integer> service = _function;
+    final EventHandler<WorkerStateEvent> _function_1 = (WorkerStateEvent e) -> {
+      this.onFinish((service.getValue()).intValue());
+    };
+    service.setOnSucceeded(_function_1);
+    service.start();
+    Window _window = this.mainPane.getScene().getWindow();
+    ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), ((Stage) _window));
+  }
+  
+  private void onFinish(final int sent) {
+    DialogMessageSender.sendDialog(
+      Alert.AlertType.CONFIRMATION, 
+      LanguageManager.translate("sendMail.resultHeader"), 
+      LanguageManager.translate("sendMail.resultHeader"), 
+      String.format(LanguageManager.translate("sendMail.progress"), Integer.valueOf(sent), Integer.valueOf(this.studentSheets.size())));
     this.quit();
   }
   
@@ -97,17 +138,38 @@ public class ControllerSendMail {
     this.controllerGraduation = controllerGraduation;
     this.mailMap = StudentDataManager.getNameToMailMap();
     this.studentSheets = service.getStudentSheets();
-    final Predicate<StudentSheet> _function = (StudentSheet x) -> {
-      String _studentName = x.getStudentName();
-      return (_studentName == null);
-    };
-    final boolean allStudentHasName = this.studentSheets.stream().anyMatch(_function);
-    if ((this.mailMap.isEmpty() || allStudentHasName)) {
-      DialogMessageSender.sendDialog(Alert.AlertType.WARNING, 
-        LanguageManager.translate("sendMail.noStudentDataHeader"), 
-        LanguageManager.translate("sendMail.noStudentDataHeader"), 
-        LanguageManager.translate("sendMail.noStudentData"));
+    int _xifexpression = (int) 0;
+    boolean _isPresent = this.mailMap.isPresent();
+    if (_isPresent) {
+      final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
+        boolean _containsKey = this.mailMap.get().containsKey(x.getStudentName());
+        return Boolean.valueOf((!_containsKey));
+      };
+      int _size = IterableExtensions.size(IterableExtensions.<StudentSheet>filter(this.studentSheets, _function));
+      _xifexpression = ((int) _size);
+    } else {
+      _xifexpression = (-1);
+    }
+    this.nbSheetWithoutName = _xifexpression;
+    boolean _isEmpty = this.mailMap.isEmpty();
+    if (_isEmpty) {
+      DialogMessageSender.sendTranslateDialog(Alert.AlertType.WARNING, 
+        "sendMail.noStudentDataHeader", 
+        "sendMail.noStudentDataHeader", 
+        "sendMail.noStudentData");
       return;
+    } else {
+      if ((this.nbSheetWithoutName != 0)) {
+        String _translate = LanguageManager.translate("sendMail.noStudentDataHeader");
+        String _xifexpression_1 = null;
+        if ((this.nbSheetWithoutName > 1)) {
+          _xifexpression_1 = String.format(LanguageManager.translate("sendMail.notAllStudent"), Integer.valueOf(this.nbSheetWithoutName));
+        } else {
+          _xifexpression_1 = LanguageManager.translate("sendMail.notAllStudent1");
+        }
+        DialogMessageSender.sendDialog(Alert.AlertType.WARNING, _translate, _xifexpression_1, 
+          null);
+      }
     }
   }
 }

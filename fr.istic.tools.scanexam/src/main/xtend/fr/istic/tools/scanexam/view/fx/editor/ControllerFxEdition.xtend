@@ -577,7 +577,7 @@ class ControllerFxEdition {
 		Objects.requireNonNull(file)
 		val success = load(file.path)
 		if(!success)
-			DialogMessageSender.sendDialog(AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null)
+			DialogMessageSender.sendTranslateDialog(AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null)
 		else {
 			render()
 		}

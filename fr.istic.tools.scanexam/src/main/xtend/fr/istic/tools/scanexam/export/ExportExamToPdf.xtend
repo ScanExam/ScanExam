@@ -235,7 +235,7 @@ class ExportExamToPdf {
       * @param sheet is the studentSheet of the student
 	  * @return temp File of annoted PDF.
       */
-     def static File exportStudentExamToTempPdfWithAnnotations(InputStream examDocument, StudentSheet sheet){
+     def static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(InputStream examDocument, StudentSheet sheet){
      	var File studentExam = File.createTempFile(sheet.studentName , ".pdf");
      	
      	var File exam = exportExamsToTempAnnotedPdf(examDocument, new ArrayList<StudentSheet>(Arrays.asList(sheet)))
@@ -251,7 +251,7 @@ class ExportExamToPdf {
 		document.close;
      	pdf.close();
      	
-     	return studentExam;
+     	return Pair.of(sheet.studentName, studentExam);
      }
      
      

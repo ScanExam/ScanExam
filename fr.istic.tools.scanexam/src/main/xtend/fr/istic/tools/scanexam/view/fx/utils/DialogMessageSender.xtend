@@ -13,13 +13,13 @@ class DialogMessageSender {
 
 	
 	/**
-	 * Affiche un Dialog avec les informations suivantes :
+	 * Affiche un Dialog avec les informations suivantes, traduite :
 	 * @param type le type de l'alerte (non null)
 	 * @param title le titre le l'alerte (non null)
 	 * @param headerText le header de l'alerte (non null)
 	 * @param content le contenu de l'alerte
 	 */
-	def static void sendDialog(AlertType type, String title, String headerText, @Nullable String content) {
+	def static void sendTranslateDialog(AlertType type, String title, String headerText, @Nullable String content) {
 		Objects.requireNonNull(type)
 		Objects.requireNonNull(title)
 		Objects.requireNonNull(headerText)
@@ -31,6 +31,28 @@ class DialogMessageSender {
 		alert.setHeaderText = LanguageManager.translate(headerText)
 		if(content !== null)
 			alert.contentText = LanguageManager.translate(content)
+		alert.showAndWait
+	}
+	
+	/**
+	 * Affiche un Dialog avec les informations suivantes :
+	 * @param type le type de l'alerte (non null)
+	 * @param title le titre (code) le l'alerte (non null)
+	 * @param headerText le header (code) de l'alerte (non null)
+	 * @param content le contenu (code) de l'alerte
+	 */
+	def static void sendDialog(AlertType type, String title, String headerText, @Nullable String content) {
+		Objects.requireNonNull(type)
+		Objects.requireNonNull(title)
+		Objects.requireNonNull(headerText)
+		
+		val alert = new Alert(type)
+		val stage = alert.getDialogPane().getScene().getWindow() as Stage
+		stage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
+		alert.setTitle = title
+		alert.setHeaderText = headerText
+		if(content !== null)
+			alert.contentText = content
 		alert.showAndWait
 	}
 }

@@ -125,7 +125,7 @@ public class ControllerGraduationLoader {
     };
     this.btnBrowse.setOnAction(_function_1);
     final EventHandler<ActionEvent> _function_2 = (ActionEvent e) -> {
-      this.loadFile("*.xmi", "file.format.pdf", this.txtFldFileGraduation);
+      this.loadFile("*.xmi", "file.format.xmi", this.txtFldFileGraduation);
     };
     this.btnBrowseGraduation.setOnAction(_function_2);
     boolean _hasExamLoaded = serviceGraduation.hasExamLoaded();
@@ -201,7 +201,7 @@ public class ControllerGraduationLoader {
       boolean _load = this.controllerGraduation.load(_file);
       boolean _not = (!_load);
       if (_not) {
-        DialogMessageSender.sendDialog(Alert.AlertType.ERROR, "graduationLoader.graduationConfirmationDialog.title", "graduationLoader.graduationConfirmationDialog.fail", null);
+        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, "graduationLoader.graduationConfirmationDialog.title", "graduationLoader.graduationConfirmationDialog.fail", null);
       } else {
         this.quit();
       }

@@ -2,15 +2,9 @@ package fr.istic.tools.scanexam.mailing;
 
 import com.sun.mail.util.MailConnectException;
 import fr.istic.tools.scanexam.config.ConfigurationManager;
-import fr.istic.tools.scanexam.services.api.Service;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
@@ -28,13 +22,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -48,35 +36,6 @@ public class SendMailTls {
     IDENTIFICATION_FAILED,
     
     HOST_NOT_FOUND;
-  }
-  
-  public static void save(final Service service, final File files) {
-    SendMailTls.save1(files, service.getExamName());
-  }
-  
-  private static void save1(final File files, final String nom) {
-    try {
-      String chemin = files.getAbsolutePath();
-      String nom1 = (nom + ".txt");
-      PrintWriter writer = new PrintWriter(nom1, "UTF-8");
-      writer.println(chemin);
-      writer.close();
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  /**
-   * La fonction sendMail va chercher dans le fichier configMailFile pour trouver le port et les smtp (host) de l'adresse mail donnée puis qui ce charge d'envoier le mail
-   * @param sender : Adresse mail de l'expediteur qui ne doit pas etre null
-   * @param senderPassword : Mot de passe de l'expediteur qui ne doit pas etre nul
-   * @param recipient : Adresse mail du destinataire qui ne doit pas etre null
-   * @param titleMail : Titre du mail qui ne doit pas etre null
-   * @param messageMail : Contenu du mail
-   * @param pieceJointe : piece jointe du mail
-   */
-  public static String sendMail(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe, final String examName) {
-    return SendMailTls.sendMail1(sender, senderPassword, recipient, titleMail, messageMail, pieceJointe, examName);
   }
   
   /**
@@ -149,125 +108,78 @@ public class SendMailTls {
     }
   }
   
-  public static String sendMail1(final String sender, final String senderPassword, final String recipient, final String titleMail, final String messageMail, final String pieceJointe, final String nameExam) {
-    String _xblockexpression = null;
-    {
-      Objects.<String>requireNonNull(sender, "Erreur : L\'expediteur donner doit etre non Null");
-      Objects.<String>requireNonNull(senderPassword, "Erreur : Le mot de passe de l\'expediteur donner doit etre non Null");
-      Objects.<String>requireNonNull(recipient, "Erreur : Le destinataire donner doit etre non Null");
-      Objects.<String>requireNonNull(titleMail, "Erreur : Le titre du mail ne doit pas etre Null");
-      Objects.<String>requireNonNull(messageMail, "Erreur : Le message du mail ne doit pas etre Null");
-      Objects.<String>requireNonNull(pieceJointe, "Erreur : La piece Jointe du mail ne doit pas etre Null");
-      final Properties props = new Properties();
-      final String host = ConfigurationManager.instance.getMailHost();
-      final String port = ConfigurationManager.instance.getMailHost();
-      Objects.<String>requireNonNull(host, "Erreur : Le type d\'adresse mail n\'est pas présent dans le fichier configuration");
-      Objects.<String>requireNonNull(port, 
-        "Erreur : Le port de l\'adresse mail n\'est pas présent dans le fichier configuration");
-      props.put("mail.smtp.auth", "true");
-      props.put("mail.smtp.localhost", "ScanExam");
-      props.put("mail.smtp.starttls.enable", "true");
-      props.put("mail.smtp.host", host);
-      props.put("mail.smtp.port", port);
-      String nom = null;
-      String mail = "";
-      try {
-        File cheminInfo = new File((nameExam + ".txt"));
-        FileReader fx = new FileReader(cheminInfo);
-        BufferedReader f = new BufferedReader(fx);
-        String _readLine = f.readLine();
-        String _plus = (_readLine + ".xls");
-        File informationMail = new File(_plus);
-        POIFSFileSystem doc = new POIFSFileSystem(informationMail);
-        HSSFWorkbook wb = new HSSFWorkbook(doc);
-        HSSFSheet sheet = wb.getSheetAt(0);
-        int x = 0;
-        HSSFRow row = sheet.getRow(x);
-        HSSFCell cell = row.getCell(0);
-        boolean trouve = false;
-        while (((!com.google.common.base.Objects.equal(cell.getStringCellValue(), "")) && (!trouve))) {
-          if ((com.google.common.base.Objects.equal(cell.getStringCellValue(), recipient) && 
-            recipient.matches("[0-9]+"))) {
-            cell = row.getCell(1);
-            mail = cell.getStringCellValue();
-            cell = row.getCell(2);
-            nom = cell.getStringCellValue();
-            trouve = true;
-          } else {
-            String _stringCellValue = cell.getStringCellValue();
-            boolean _equals = com.google.common.base.Objects.equal(_stringCellValue, recipient);
-            if (_equals) {
-              nom = recipient;
-              cell = row.getCell(1);
-              mail = cell.getStringCellValue();
-              trouve = true;
-            } else {
-              x++;
-              row = sheet.getRow(x);
-              cell = row.getCell(0);
-            }
-          }
-        }
-      } catch (final Throwable _t) {
-        if (_t instanceof FileNotFoundException) {
-          final FileNotFoundException e = (FileNotFoundException)_t;
-          e.printStackTrace();
-        } else if (_t instanceof IOException) {
-          final IOException e_1 = (IOException)_t;
-          e_1.printStackTrace();
-        } else {
-          throw Exceptions.sneakyThrow(_t);
-        }
+  private final Session session;
+  
+  private final Properties props;
+  
+  public SendMailTls() {
+    Properties _properties = new Properties();
+    this.props = _properties;
+    final String sender = ConfigurationManager.instance.getEmail();
+    final String senderPassword = ConfigurationManager.instance.getEmailPassword();
+    final String host = ConfigurationManager.instance.getMailHost();
+    final int port = ConfigurationManager.instance.getMailPort();
+    Objects.<String>requireNonNull(sender, "Sender\'s email is absent in configuration file");
+    Objects.<String>requireNonNull(sender, "Sender\'s email password is absent in configuration file");
+    Objects.<String>requireNonNull(host, "SMTP host of sender\'s email is absent in configuration file");
+    Objects.<Integer>requireNonNull(Integer.valueOf(port), "SMTP port of sender\'s email is absent in configuration file");
+    this.props.put("mail.smtp.auth", "true");
+    this.props.put("mail.smtp.localhost", "ScanExam");
+    this.props.put("mail.smtp.starttls.enable", "true");
+    this.props.put("mail.smtp.host", host);
+    this.props.put("mail.smtp.port", Integer.valueOf(port));
+    this.session = Session.getInstance(this.props, new Authenticator() {
+      @Override
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(sender, senderPassword);
       }
-      boolean equals = com.google.common.base.Objects.equal(mail, "");
-      String _xifexpression = null;
-      if (equals) {
-        _xifexpression = InputOutput.<String>println("Le numero d\'etudiant ou le nom ne correspond a aucune adresse mail");
+    });
+  }
+  
+  /**
+   * La fonction sendMail va chercher dans le fichier configMailFile pour trouver le port et les smtp (host) de l'adresse mail donnée puis qui ce charge d'envoier le mail
+   * @param sender : Adresse mail de l'expediteur qui ne doit pas etre null
+   * @param senderPassword : Mot de passe de l'expediteur qui ne doit pas etre nul
+   * @param recipient : Adresse mail du destinataire qui ne doit pas etre null
+   * @param titleMail : Titre du mail qui ne doit pas etre null
+   * @param messageMail : Contenu du mail
+   * @param pieceJointe : piece jointe du mail
+   */
+  public void sendMail(final InputStream pdfStream, final String titleMail, final String messageMail, final String studentName, final String studentAdress, final File studentSheet) {
+    Objects.<String>requireNonNull(titleMail, "Erreur : Le titre du mail ne doit pas etre Null");
+    Objects.<String>requireNonNull(messageMail, "Erreur : Le message du mail ne doit pas etre Null");
+    final String sender = ConfigurationManager.instance.getEmail();
+    try {
+      final MimeMessage message = new MimeMessage(this.session);
+      InternetAddress _internetAddress = new InternetAddress(sender);
+      message.setFrom(_internetAddress);
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(studentAdress));
+      message.setSubject(titleMail, "UTF-8");
+      MimeBodyPart messageBodyPart = new MimeBodyPart();
+      messageBodyPart.setContent(messageMail, "text/html; charset=UTF-8");
+      MimeMultipart multipart = new MimeMultipart();
+      multipart.addBodyPart(messageBodyPart);
+      MimeBodyPart _mimeBodyPart = new MimeBodyPart();
+      messageBodyPart = _mimeBodyPart;
+      FileDataSource source = new FileDataSource(studentSheet);
+      DataHandler _dataHandler = new DataHandler(source);
+      messageBodyPart.setDataHandler(_dataHandler);
+      messageBodyPart.setFileName(studentName);
+      multipart.addBodyPart(messageBodyPart);
+      message.setContent(multipart);
+      message.setHeader("X-Mailer", "ScanExam");
+      Date _date = new Date();
+      message.setSentDate(_date);
+      this.session.setDebug(false);
+      Transport.send(message);
+      Logger.getGlobal().info("Message envoyé !");
+    } catch (final Throwable _t) {
+      if (_t instanceof MessagingException) {
+        final MessagingException e = (MessagingException)_t;
+        e.printStackTrace();
       } else {
-        final Session session = Session.getInstance(props, new Authenticator() {
-          @Override
-          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(sender, senderPassword);
-          }
-        });
-        try {
-          final MimeMessage message = new MimeMessage(session);
-          InternetAddress _internetAddress = new InternetAddress(sender);
-          message.setFrom(_internetAddress);
-          message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mail));
-          message.setSubject(titleMail);
-          MimeBodyPart messageBodyPart = new MimeBodyPart();
-          messageBodyPart.setText((messageMail + nom));
-          MimeMultipart multipart = new MimeMultipart();
-          multipart.addBodyPart(messageBodyPart);
-          boolean _notEquals = (!com.google.common.base.Objects.equal(pieceJointe, ""));
-          if (_notEquals) {
-            MimeBodyPart _mimeBodyPart = new MimeBodyPart();
-            messageBodyPart = _mimeBodyPart;
-            FileDataSource source = new FileDataSource(pieceJointe);
-            DataHandler _dataHandler = new DataHandler(source);
-            messageBodyPart.setDataHandler(_dataHandler);
-            messageBodyPart.setFileName(pieceJointe);
-            multipart.addBodyPart(messageBodyPart);
-          }
-          message.setContent(multipart);
-          message.setHeader("X-Mailer", "ScanExam");
-          Date _date = new Date();
-          message.setSentDate(_date);
-          session.setDebug(true);
-          Transport.send(message);
-          Logger.getGlobal().info("Message envoyé !");
-        } catch (final Throwable _t) {
-          if (_t instanceof MessagingException) {
-            final MessagingException e = (MessagingException)_t;
-            e.printStackTrace();
-          } else {
-            throw Exceptions.sneakyThrow(_t);
-          }
-        }
+        throw Exceptions.sneakyThrow(_t);
       }
-      _xblockexpression = _xifexpression;
     }
-    return _xblockexpression;
   }
 }

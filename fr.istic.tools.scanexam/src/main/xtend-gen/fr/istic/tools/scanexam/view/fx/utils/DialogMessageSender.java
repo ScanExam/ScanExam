@@ -14,13 +14,13 @@ import javax.annotation.Nullable;
 @SuppressWarnings("all")
 public class DialogMessageSender {
   /**
-   * Affiche un Dialog avec les informations suivantes :
+   * Affiche un Dialog avec les informations suivantes, traduite :
    * @param type le type de l'alerte (non null)
    * @param title le titre le l'alerte (non null)
    * @param headerText le header de l'alerte (non null)
    * @param content le contenu de l'alerte
    */
-  public static void sendDialog(final Alert.AlertType type, final String title, final String headerText, @Nullable final String content) {
+  public static void sendTranslateDialog(final Alert.AlertType type, final String title, final String headerText, @Nullable final String content) {
     Objects.<Alert.AlertType>requireNonNull(type);
     Objects.<String>requireNonNull(title);
     Objects.<String>requireNonNull(headerText);
@@ -35,6 +35,32 @@ public class DialogMessageSender {
     alert.setHeaderText(LanguageManager.translate(headerText));
     if ((content != null)) {
       alert.setContentText(LanguageManager.translate(content));
+    }
+    alert.showAndWait();
+  }
+  
+  /**
+   * Affiche un Dialog avec les informations suivantes :
+   * @param type le type de l'alerte (non null)
+   * @param title le titre (code) le l'alerte (non null)
+   * @param headerText le header (code) de l'alerte (non null)
+   * @param content le contenu (code) de l'alerte
+   */
+  public static void sendDialog(final Alert.AlertType type, final String title, final String headerText, @Nullable final String content) {
+    Objects.<Alert.AlertType>requireNonNull(type);
+    Objects.<String>requireNonNull(title);
+    Objects.<String>requireNonNull(headerText);
+    final Alert alert = new Alert(type);
+    Window _window = alert.getDialogPane().getScene().getWindow();
+    final Stage stage = ((Stage) _window);
+    ObservableList<Image> _icons = stage.getIcons();
+    InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
+    Image _image = new Image(_inputStreamResource);
+    _icons.add(_image);
+    alert.setTitle(title);
+    alert.setHeaderText(headerText);
+    if ((content != null)) {
+      alert.setContentText(content);
     }
     alert.showAndWait();
   }

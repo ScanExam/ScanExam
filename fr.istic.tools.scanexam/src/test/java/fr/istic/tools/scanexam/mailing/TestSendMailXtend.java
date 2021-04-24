@@ -1,41 +1,23 @@
 
 package fr.istic.tools.scanexam.mailing;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import fr.istic.tools.scanexam.services.api.Service;
-
-
 class TestSendMailXtend {
 
-	private SendMailXtend mail;
+	/*private SendMailTls mail;
 	
 
 	
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		mail = new SendMailXtend();
-		mail.setRecipent("...@orange.fr");
-		mail.setSenderPassword("...");
-		mail.setRecipent("...@gmail.com");
-		mail.setTitle("Scanexam");
-		mail.setMessage("test");
-		mail.setPieceJointe("");
+		mail = new SendMailTls();
 	}
 
 	//Pour ce test completer les donnée ci-dessus
 	@Test
 	@DisplayName("Envoye mail reussi (Completer les données ci-dessus)")
 	void test0() {
-		mail.sendMailXtend();
+		mail.SendMailTls();
 	}
 
 	@Test
@@ -43,7 +25,7 @@ class TestSendMailXtend {
 	@DisplayName("Expediteur null")
 	void test1() {
 		mail.setSender(null);
-		Assertions.assertThrows(NullPointerException.class, () ->  mail.sendMailXtend()); 
+		Assertions.assertThrows(NullPointerException.class, () ->  mail.SendMailTls()); 
 	}
 	
 	
@@ -116,5 +98,5 @@ class TestSendMailXtend {
 		mail = null;
 		assertNull(mail);
 	}
-
+*/
 }

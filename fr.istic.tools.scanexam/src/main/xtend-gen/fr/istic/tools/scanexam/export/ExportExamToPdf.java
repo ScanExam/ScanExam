@@ -22,6 +22,7 @@ import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 @SuppressWarnings("all")
 public class ExportExamToPdf {
@@ -254,7 +255,7 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static File exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet) {
+  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet) {
     try {
       File studentExam = File.createTempFile(sheet.getStudentName(), ".pdf");
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
@@ -269,7 +270,7 @@ public class ExportExamToPdf {
       document.save(studentExam);
       document.close();
       pdf.close();
-      return studentExam;
+      return Pair.<String, File>of(sheet.getStudentName(), studentExam);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

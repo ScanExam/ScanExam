@@ -200,7 +200,7 @@ class ControllerGraduationCreator {
 	def valid() {
 		if(rbUseLoaded.selected || controllerEdition.loadTemplate(new File(txtFldFile.text))) {
 			if(!loadStudentSheets)
-				DialogMessageSender.sendDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)
+				DialogMessageSender.sendTranslateDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)
 		}
 	}
 	
