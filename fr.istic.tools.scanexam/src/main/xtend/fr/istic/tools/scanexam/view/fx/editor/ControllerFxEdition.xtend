@@ -42,6 +42,8 @@ class ControllerFxEdition {
 	double maxX;
 	double maxY;
 	var pdfLoaded = false;
+	/* Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings */
+	boolean renderFlag = true
 	
 	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a model loaded",false);
 
@@ -227,10 +229,9 @@ class ControllerFxEdition {
 		//Permet de définir pour chaque item de pageChoice une action : aller à la page sélectionnée
 		pageChoice.setOnAction([ event |
 		    var selectedIndex = pageChoice.getSelectionModel().getSelectedIndex();
-		    //var selectedItem = pageChoice.getSelectionModel().getSelectedItem();
-		    
-		   	selectPage(selectedIndex)
-		    renderDocument
+		    if(!renderFlag)
+		   		selectPage(selectedIndex)
+		   	renderFlag = false
 		]);
 		
 		nextPageButton.disableProperty.bind(loadedModel.not)
@@ -598,6 +599,8 @@ class ControllerFxEdition {
 	def render()
 	{
 		clearVue
+		//Initialise le selecteur de page (pageChoice)
+		initPageSelection
 		renderDocument();
 		loadBoxes();
 		postLoad
@@ -649,15 +652,13 @@ class ControllerFxEdition {
 	 * feches the current buffered image in the presenter representing the pdf and converts it and loads into the imageview
 	 */
 	def renderDocument() {
-		//Initialise le selecteur de page (pageChoice)
-		initPageSelection
-		
 		val image = pdfManager.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
 		
 		pageNumberLabel.text = translate("label.page") + (pdfManager.currentPdfPageNumber + 1) + " / " + pdfManager.getPdfPageCount
+		renderFlag = true
 		pageChoice.value = pdfManager.currentPdfPageNumber + 1
 	}
 

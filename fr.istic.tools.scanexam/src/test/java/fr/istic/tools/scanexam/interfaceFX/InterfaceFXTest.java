@@ -1,34 +1,35 @@
 package fr.istic.tools.scanexam.interfaceFX;
 
-import java.util.concurrent.TimeoutException;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
+import java.io.IOException;
+import java.util.Locale;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxToolkit;
-import org.testfx.framework.junit.ApplicationTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.testfx.api.FxRobot;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
 
-import fr.istic.tools.scanexam.launcher.LauncherFX;
-import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import com.sun.javafx.css.StyleManager;
+
+import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.services.ServiceImpl;
+import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fx.ControllerRoot;
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-class InterfaceFXTest extends ApplicationTest {
+@ExtendWith(ApplicationExtension.class)
+class InterfaceFXTest {
 
 	/**
 	 * EMPLACEMENT DES BOUTONS
@@ -38,257 +39,184 @@ class InterfaceFXTest extends ApplicationTest {
 	 * Fichier fxml : src/main/resources/viewResources
 	 * ConfigUI
 	 */
-
-	@SuppressWarnings("unused")
-	private String localisationFileSave = "";
 	
-	//ROOTUI
-	private MenuItem createNewTemplate;
-	private MenuItem loadTemplate;
-	private MenuItem SaveTemplate;
-	private MenuItem exportToSheets;
-	
-	//ConfigUI
-	private Button configSaveAndQuit;
-	private Button configQuit;
-	
-	//
-	
-	//Barre
-	private Button save;//
-	private Button load;//
-	private Button export;//
-	
-	//CorrectorUI
-	private VBox root;
-	private Pane topPane;
-	private Button topButtonHidden;
-	private Button botButtonHidden;
-	private Button botButtonActive;
-	private Pane bottomPane;
-	private Pane mainPaneGradiation;
-	private Pane parentPane;
-	private ScrollPane studentListContainer;
-	private ScrollPane questionListContainerGradiation;
-	private ImageView imview;
-	private ScrollPane scrollMain;
-	private ScrollPane scrollBis;
-	private VBox studentDetailsContainer;
-	private VBox questionDetails;
-	private Spinner<Double> gradeSpinner;
-	private Spinner<Double> totalGradeSpinner;
-	private HBox graderContainer;
-	private Label instructionLabel;
-	private Button nextStudentButton;//
-	private Button prevStudentButton;//
-	private Button nextQuestionButton;//
-	private Button prevQuestionButton;//
-
-	//EditorUI
-	private ToggleButton createBoxButton;
-	private Button nextPageButton;//
-	private Button previousPageButton;//
-	private PdfPane mainPaneEditor;
-	private ScrollPane questionListContainerEditor;
-	private ScrollPane gradeListContainer;
-	private ChoiceBox<Integer> pageChoice;
-	private Label pageNumberLabel;
-	private QuestionListEdition questionList;
-	private QuestionOptionsEdition questionEditor;
-	private Pane mainPane;//
-
-	
-	@Before
-	public void setUpClass() throws Exception {
-		ApplicationTest.launch(LauncherFX.class);
-	}
 	
 	/**
 	 * Lancement de l'interface FX
+	 * @throws IOException 
 	 */
-	@Override
-	public void start(Stage stage) throws Exception {
-		new LauncherFX().start(stage);
+	@Start
+	public void start(Stage stage) throws IOException {
+		LanguageManager.init(Locale.FRENCH);
+		final FXMLLoader editionLoader = new FXMLLoader();
+		final FXMLLoader graduationLoader = new FXMLLoader();
+		final FXMLLoader rootLoader = new FXMLLoader();
 		
-		//RootUI
-		//createNewTemplate = lookup("#createNewTemplatePressed").query();
-		//loadTemplate = lookup("#loadTemplatePressedEditor").queryButton();
-		//SaveTemplate = lookup("#SaveTemplatePressed").queryButton();
-		//exportToSheets = lookup("#exportToSheets").queryButton();
+		editionLoader.setResources(LanguageManager.getCurrentBundle());
+		graduationLoader.setResources(LanguageManager.getCurrentBundle());
+		rootLoader.setResources(LanguageManager.getCurrentBundle());
 		
-		//ConfigUI
-		configSaveAndQuit = lookup("#saveAndQuit").queryButton();
-		configQuit = lookup("#quit").queryButton();
-		
-		//Barre
-		save = lookup("#savePressed").queryButton();
-		load = lookup("#loadPressed").queryButton();
-		export = lookup("#exportPressed").queryButton();
+		final Parent mainRoot = rootLoader.load(ResourcesUtils.getInputStreamResource("viewResources/RootUI.fxml"));
+		final Node editionRoot = editionLoader.load(ResourcesUtils.getInputStreamResource("viewResources/EditorUI.fxml"));
+		final Node graduationRoot = graduationLoader.load(ResourcesUtils.getInputStreamResource("viewResources/CorrectorUI.fxml"));
 		
 		
-		//CorrectorUI
-		prevQuestionButton = lookup("#prevQuestionPressed").queryButton();
-		nextQuestionButton = lookup("#nextQuestionPressed").queryButton();
-		prevStudentButton = lookup("#prevStudentPressed").queryButton();
-		nextStudentButton = lookup("#nextStudentPressed").queryButton();
+		final ControllerFxEdition controllerEdition = (ControllerFxEdition) editionLoader.getController();
+		final ControllerFxGraduation controllerGraduation = (ControllerFxGraduation) graduationLoader.getController();
+		final ControllerRoot controllerRoot = (ControllerRoot) rootLoader.getController();
+	
+		final ServiceImpl service = new ServiceImpl();
+		
+		controllerRoot.setEditorNode(editionRoot);
+		controllerRoot.setGraduationNode(graduationRoot);
+		
+		final Scene rootScene = new Scene(mainRoot, 1280, 720);
+		
+		Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+		StyleManager.getInstance().addUserAgentStylesheet("viewResources/MyStyle.css");
+		
+		controllerGraduation.init(service);
 		
 		
-		//EditorUI
-		previousPageButton = lookup("#previousPagePressed").queryButton();
-		nextPageButton = lookup("#nextPagePressed").queryButton();
-		mainPane = lookup("#mainMouseEvent").queryTextFlow();
-		//createBoxButton = lookup("#questionAreaPressed").queryButton();
+		controllerEdition.init(service);
+		
+		controllerRoot.setGraduationController(controllerGraduation);
+		controllerRoot.setEditionController(controllerEdition);
+		controllerRoot.init(service, service);
+		stage.setTitle("ScanExam");
+		stage.setScene(rootScene);
+		stage.setMinHeight(720);
+		stage.setMinWidth(720);
+		stage.getIcons().add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+
+		stage.show();
 		
 	}
+	/*
+		Pour exécuter certains tests, il faut avoir un modèle et les copies à corriger (avoir exporté le modèle pour l'examen).
+		Il faudra pendant le test, sélectionner le fichier qui correspond. Une indication avant chaque test vous indique quel 
+		fichier sera utile.
+	*/
 	
 	@DisplayName("Premier Test : Clique Simple")
 	@Test
-    public void cliqueSimple() {
-        clickOn(prevQuestionButton);
+    public void cliqueSimple(FxRobot robot) {
+		robot.clickOn("#nextPageButton");
+        assertTrue(true);
     }
 	
-	/**
-	 * Liste des tests a realiser sur Editor
-	 */
-	
-	@DisplayName("Creation d'une nouvelle template + sauvegarde")
+	@DisplayName("Changement onglet: Editeur Correcteur")
 	@Test
-    public void CreationTemplateAndSave() {
+    public void changeTab(FxRobot robot) throws InterruptedException {
+		robot.clickOn("#correctorTab");
+		Thread.sleep(1000); // fait une pause (1 sec = 1000)
+		robot.clickOn("#editorTab");
+		Thread.sleep(1000);
+		robot.clickOn("#correctorTab");	
+		Thread.sleep(1000);
+		robot.clickOn("#editorTab");	
+        assertTrue(true);
+    }
+	
+	@DisplayName("Ouvrir les menus")
+	@Test
+    public void openMenu(FxRobot robot) throws InterruptedException {
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
+		robot.clickOn("#menuEdit");
+		Thread.sleep(1000);
+		robot.clickOn("#menuView");		
+        assertTrue(true);
+    }
+
+	// Besoin d'un pdf pour modèle
+	@DisplayName("Creation d'une nouvelle template")
+	@Test
+	public void CreationTemplateAndSave(FxRobot robot) throws InterruptedException {
         //clique sur file editor
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
 		//clique sur create new template
-		//Clique sur l'onglet editor
-		
+		robot.clickOn("#newTemplate");	
+		Thread.sleep(1000);
+		//Selectionner et charger le pdf
+		robot.clickOn("#btnBrowser");	
+		Thread.sleep(10000);
+		robot.clickOn("#txtFldTemplateName");	
+		robot.write("TestProjet1");
+		Thread.sleep(1000);
+		robot.clickOn("#btnOk");
+		Thread.sleep(2000);
+    }
+	
+	// Besoin d'un pdf pour modèle
+	@DisplayName("Sauvegarde d'une nouvelle template")
+	@Test
+	public void saveTemplate(FxRobot robot) throws InterruptedException {
+		CreationTemplateAndSave(robot);
 		//clique sur file editor
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
 		//clique sur save template
-		//Choisir l'emplacement
-		//mettre comme nom 'ScanExamInterfaceTest.xmi'
-		//Cliquer sur enregistrer
+		robot.clickOn("#saveTemplateButton");
+		Thread.sleep(1000);
+		assertTrue(true);
     }
 	
-	@DisplayName("Load fichier")
+	// Besoin d'un pdf pour modèle
+	@DisplayName("Changer de page Editeur")
 	@Test
-    public void LoadFichier() {
-		//clique sur file editor
-		//clique sur load template
-        //Selectionner le fichier a l'emplacement choisi
-		//Verifier que le fichier est charger
-		
+    public void changePage(FxRobot robot) throws InterruptedException {
+		CreationTemplateAndSave(robot);
+		Thread.sleep(500);
+		robot.clickOn("#nextPageButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextPageButton");
+		Thread.sleep(500);
+		robot.clickOn("#previousPageButton");
+		Thread.sleep(500);
+		robot.clickOn("#previousPageButton");
+		Thread.sleep(500);		
+		robot.clickOn("#pageChoice");
+		Thread.sleep(500);
+		assertTrue(true);
     }
 	
-	@DisplayName("Ajout de deux question")
+	// Besoin d'un modèle et des copies à corriger
+	@DisplayName("Correction : Changement d'élève ou de question")
 	@Test
-    public void AddQuestion() {
-		//Faire un load
-		
-		//Clique sur crée une question
-		//faire un clique glisser dans la fenetre
-		//Verifier qu'il y a une question de plus
-		
-		//refait la meme chose une seconde fois
-		
-		//Faire un save
+    public void changeCorrection(FxRobot robot) throws InterruptedException {
+		robot.clickOn("#menuFile");
+		Thread.sleep(500);
+		robot.clickOn("#loadStudent");
+		Thread.sleep(500);
+		robot.clickOn("#rbLoadModel");
+		robot.clickOn("#btnBrowse");
+		Thread.sleep(6000);
+		robot.clickOn("#btnBrowseGraduation");
+		Thread.sleep(6000);
+		robot.clickOn("#txtFldGraduationName");
+		robot.write("TestCorrection");
+		robot.clickOn("#btnOk");
+		Thread.sleep(10000);
+		robot.clickOn("#correctorTab");
+		Thread.sleep(500);
+		robot.clickOn("#nextQuestionButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextQuestionButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#nextStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevQuestionButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevQuestionButton");
+		assertTrue(true);
     }
-	
-	@DisplayName("Modification Attribut question")
-	@Test
-    public void ModifQuestion() {
-		//Faire un load
-		
-		//cliquer sur le nom dans question detail
-		//entrer QuestionTestInterface pour le nom de la question
-		
-		//Cliquer sur le barem de la question
-		//entrer 3
-		
-		//Verifier que les changement on bien pris effet
-		
-		//Faire un save
-    }
-	
-	@DisplayName("Navigation dans les questions")
-	@Test
-    public void NavigQuestion() {
-		//Faire un load
-		
-		//clique sur le boutton suiv a gauche
-		//verification que la page n'est plus la meme
-		//clique sur le bouton pres
-		//verification que la page est la meme qu'on depart
-    }
-	
-	@DisplayName("Suppression question")
-	@Test
-    public void SuppQuestion() {
-		//Faire un load
-		
-		//cliquer sur retirer de la seconde question 
-		
-		//Verifier qu'il ne reste que une seul question
-		
-		//Faire un save
-    }
-	
-	/**
-	 * Liste des tests a realiser sur Correction
-	 */
-	
-	@DisplayName("Corrector Load fichier")
-	@Test
-    public void LoadFichierForCorrector() {
-		//clique sur corrector
-		//clique sur load template
-        //Selectionner le fichier a l'emplacement choisi
-		//selectionner le PDF
-		//Verifier que le fichier est charger
-	}
-	
-	@DisplayName("Corrector changement de question")
-	@Test
-    public void changeQuestionForCorrector() {
-		//clique sur corrector
-		//clique sur load template
-        //Selectionner le fichier a l'emplacement choisi
-		//selectionner le PDF
-	
-		
-		//cliquer sur next question
-		//verifier que la question n'est plus la meme
-		//cliquer sur last question
-		//Verifier qu'on est de retour sur la question du depart
-	}
-	
-	@DisplayName("Ajoute, suppression d'Entry")
-	@Test
-    public void ManagerEntry() {
-		//clique sur corrector
-		//clique sur load template
-        //Selectionner le fichier a l'emplacement choisi
-		//selectionner le PDF
-	
-		
-		//cliquer sur Toggle Editable
-		//cliquer sur ass new grade entry
-		//Cliquer sur la note et la modifier a 1
-		//cliquer sur le commentaire et marquer "GradeCommenteTest"
-		
-		//Rajouter une question
-		//Verifier qu'il y a 2 entry
-		//cliquer sur remove entry de la seconde question
-		//Verifier qu'il ne reste que 1 entry
-		//cliquer sur toggle Editable
-		//cliquer sur sur le carrer en face des poin de la question pour ajouter l'entry
-		//verifier que cela a bien ete fait
-	}
-		
-	/**
-	 * Liberation du clavier et de la souris
-	 * @throws TimeoutException
-	 */
-	@After
-	public void afterEachTest() throws TimeoutException {
-		FxToolkit.hideStage();
-		release(new KeyCode[]{});
-		release(new MouseButton[]{});
-	}
 
 }

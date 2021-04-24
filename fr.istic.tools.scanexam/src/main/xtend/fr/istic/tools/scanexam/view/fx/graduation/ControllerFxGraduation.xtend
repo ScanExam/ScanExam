@@ -23,6 +23,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Spinner
+import javafx.scene.control.ToggleButton
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
@@ -33,8 +34,6 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
-
-import static fr.istic.tools.scanexam.config.LanguageManager.translate
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -64,8 +63,6 @@ class ControllerFxGraduation {
 	/**
 	 * FXML Components
 	 */
-	@FXML
-	public Label gradeLabel
 	@FXML
 	public VBox root;
 	@FXML
@@ -110,7 +107,12 @@ class ControllerFxGraduation {
 	public Button nextQuestionButton;
 	@FXML
 	public Button prevQuestionButton;
+	@FXML
+	public ToggleButton annotationModeButton;
+	@FXML
+	public ToggleButton addAnnotationButton;
 	
+	@Accessors
 	var ServiceGraduation service
 	
 	@Accessors
@@ -194,14 +196,19 @@ class ControllerFxGraduation {
 		chooseMouseAction(e);
 	}
 	
+	
+	
 	//--- LOCAL VARIABLES ---//
 	
 	enum SelectedTool {
 		NO_TOOL,
 		MOVE_CAMERA_TOOL,
-		CREATE_ANOTATION_TOOL
+		CREATE_ANOTATION_TOOL,
+		MOVE_ANOTATION_TOOL,
+		MOVE_POINTER_TOOL
 	}
-	SelectedTool currentTool = SelectedTool.NO_TOOL;
+	
+	@Accessors SelectedTool currentTool = SelectedTool.NO_TOOL;
 	
 
 
@@ -232,11 +239,19 @@ class ControllerFxGraduation {
 		}
 		switch currentTool {
 			case NO_TOOL: {
+				return;
 			}
 			case MOVE_CAMERA_TOOL: {
 				moveImage(e)
 			}
 			case CREATE_ANOTATION_TOOL: {
+				createNewAnotation(e)
+			}
+			case MOVE_ANOTATION_TOOL: {
+				moveAnotation(e)
+			}
+			case MOVE_POINTER_TOOL: {
+				movePointer(e)
 			}
 		}
 	}
@@ -283,6 +298,40 @@ class ControllerFxGraduation {
 			source.layoutX = objectOriginX + (e.screenX - mouseOriginX)
 			source.layoutY = objectOriginY + (e.screenY - mouseOriginY)
 		}
+	}
+	
+	@Accessors TextAnotation currentAnotation;
+	
+
+	
+	def void moveAnotation(MouseEvent e){
+		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS - currentAnotation.width));
+		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS - currentAnotation.height));
+		if (e.eventType == MouseEvent.MOUSE_DRAGGED) {
+			currentAnotation.move(mousePositionX,mousePositionY)
+		}
+		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
+			updateAnnotation(currentAnotation)
+			currentTool = SelectedTool.NO_TOOL;
+		}
+			
+	}
+	
+	def void movePointer(MouseEvent e){
+		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
+		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
+		if (e.eventType == MouseEvent.MOUSE_DRAGGED) {
+			currentAnotation.movePointer(mousePositionX,mousePositionY)
+		}
+		if (e.eventType == MouseEvent.MOUSE_RELEASED) {
+			updateAnnotation(currentAnotation)
+			currentTool = SelectedTool.NO_TOOL;
+		}
+			
 	}
 
 	@FXML
@@ -345,7 +394,8 @@ class ControllerFxGraduation {
 		unLoaded();
 		
 		loadedModel.addListener([obs,oldVal,newVal | newVal ? loaded() : unLoaded()])
-		
+		annotationModeButton.selectedProperty.addListener([obs,oldVal,newVal | newVal ? enterAnotationMode : leaveAnotationMode])
+		addAnnotationButton.selectedProperty.addListener([obs,oldVal,newVal | toCreateAnnotation = newVal])
 		nextQuestionButton.disableProperty.bind(loadedModel.not)
 		prevQuestionButton.disableProperty.bind(loadedModel.not)
 		prevStudentButton.disableProperty.bind(loadedModel.not)
@@ -433,10 +483,7 @@ class ControllerFxGraduation {
 	 * @param folder Dossier où exporter
 	 */
 	def void exportGraduationToPdf(File folder) {
-		for (studentSheet : service.studentSheets) {
-			val file = new File(folder.absolutePath + File.separator + studentSheet.studentName + ".pdf") 
-			ExportExamToPdf.exportToPdfWithAnnotations(pdfManager.pdfInputStream, studentSheet, file)
-		}
+		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(pdfManager.pdfInputStream,service.studentSheets,folder)
 	}
 
 	/**
@@ -449,6 +496,8 @@ class ControllerFxGraduation {
 		renderStudentCopy();
 		loadQuestions();
 		loadStudents();
+		setSelectedQuestion
+		setSelectedStudent
 		grader.visible = true;
 		questionDetails.visible = true;
 	}
@@ -511,15 +560,13 @@ class ControllerFxGraduation {
 	 */
 	def void loadStudents(){
 		logger.info("Loading Students")
-		var currentStudentId = 0;
 		var ids = studentIds
 		
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
+			student.studentName = service.getStudentName(i);
+	
 			studentList.addItem(student)
-			if (currentStudentId == i) {
-					selectStudent(student)
-				}
 		}
 	}
 	
@@ -540,18 +587,32 @@ class ControllerFxGraduation {
 	 */
 	def createNewAnotation(MouseEvent e){
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS));
+								Math.min(e.x, mainPane.imageViewWidth- FxSettings.BOX_BORDER_THICKNESS - TextAnotation.defaultWidth));
 		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS));
-		mainPane.addNewAnotation(mousePositionX,mousePositionY);
+							Math.min(e.y, mainPane.imageViewHeight - FxSettings.BOX_BORDER_THICKNESS - TextAnotation.defaultHeight));
+		if (e.eventType == MouseEvent.MOUSE_PRESSED) {
+				var annot = mainPane.addNewAnotation(mousePositionX,mousePositionY);
+				addAnnotation(annot)
+				addAnnotationButton.selected = false;
+			}
+			
 	
+	}
+	
+	def setToCreateAnnotation(boolean b){
+		if (b){
+			if (!annotationMode) annotationModeButton.selected = true;
+			currentTool = SelectedTool.CREATE_ANOTATION_TOOL
+		} else {
+			currentTool = SelectedTool.NO_TOOL
+		}
 	}
 	
 	/**
 	 * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
 	 */
 	def showAnotations(){
-	
+		mainPane.displayAnnotationsFor(questionList.currentItem,studentList.currentItem)
 	}
 	
 	/**
@@ -560,22 +621,31 @@ class ControllerFxGraduation {
 	def hideAnotations(){
 		mainPane.removeAllAnotations
 	}
-	
+
+
+	var annotationMode = false;
+	var previousZoomMode = true;
 	/**
 	 * On rentre dans le mode d'annotations.
 	 * il faut dezoom, afficher les annotations et metter l'outils courrant au mode anotation.
 	 * 
 	 */
+	
 	def enterAnotationMode(){
 		mainPane.unZoom
+		previousZoomMode = autoZoom;
+		autoZoom = false;
 		showAnotations
 		currentTool = SelectedTool.CREATE_ANOTATION_TOOL
+		annotationMode = true;
 	}
 	
 	def leaveAnotationMode(){
 		hideAnotations
-		mainPane.zoomTo(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.w,questionList.currentItem.h)
-		SelectedTool.NO_TOOL
+		mainPane.zoomTo(questionList.currentItem.x,questionList.currentItem.y,questionList.currentItem.h,questionList.currentItem.w)
+		currentTool = SelectedTool.NO_TOOL
+		annotationMode = false;
+		autoZoom = previousZoomMode;
 	}
 	
 	//-----------------//
@@ -590,19 +660,22 @@ class ControllerFxGraduation {
 	}
 	def void previousStudent(){
 		studentList.selectPreviousItem
-		 service.previousSheet
+		service.previousSheet
 		setSelectedStudent();
 	}
 	def void selectStudent(StudentItemGraduation item){
 		studentList.selectItem(item);
+		service.selectSheet(studentList.currentItem.studentId)
 		setSelectedStudent();
 	}
 
 	def void setSelectedStudent(){
 		if (!studentList.noItems) {
 			focusStudent(studentList.currentItem)
-			updateDisplayedPage();
-			updateDisplayedGrader();	
+			updateDisplayedPage
+			updateDisplayedGrader
+			updateStudentDetails
+			updateDisplayedAnnotations
 		}else {
 			logger.warn("The student list is Empty")
 		}
@@ -627,9 +700,11 @@ class ControllerFxGraduation {
 	def void setSelectedQuestion(){
 		if (!questionList.noItems) {
 			focusQuestion(questionList.currentItem)
-			updateDisplayedPage();
-			updateDisplayedQuestion();
-			updateDisplayedGrader();
+			updateDisplayedPage
+			updateDisplayedQuestion
+			updateDisplayedGrader
+			updateStudentDetails
+			updateDisplayedAnnotations
 		}else {
 			logger.warn("The question list is Empty")
 		}
@@ -650,7 +725,8 @@ class ControllerFxGraduation {
 	
 	//---DISPLAYING---//
 	
-	def void renderStudentCopy(){		
+	def void renderStudentCopy(){
+		logger.info("Call to RenderStudentCopy")
 		var image = pdfManager.currentPdfPage
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		imageWidth = image.width
@@ -687,10 +763,23 @@ class ControllerFxGraduation {
 	 */
 	def void updateDisplayedGrader(){
 		if (!studentList.noItems && !questionList.noItems) {
-			grader.changeGrader(questionList.currentItem,studentList.currentItem);
-			updateGlobalGrade
+			grader.changeGrader(questionList.currentItem,studentList.currentItem)
 		}else {
 			logger.warn("Cannot load grader, student list or question is is empty")
+		}
+	}
+	
+	/**
+	 * Met à jour les détails de l'étudiant
+	 */
+	def void updateStudentDetails() {
+    	studentDetails.updateGrade
+    	studentDetails.updateQuality
+	}
+	
+	def void updateDisplayedAnnotations(){
+		if (annotationMode) {
+			showAnotations()
 		}
 	}
 	
@@ -723,12 +812,6 @@ class ControllerFxGraduation {
 	//---------------------//
 	
 	
-	/**
-	 * Met à jour la note globale affichée
-	 */
-	def void updateGlobalGrade() {
-    	gradeLabel.text = translate("label.grade") + " " + globalGrade + "/" + globalScale
-	}
 	
 		
 	//---Grade entry management
@@ -768,21 +851,27 @@ class ControllerFxGraduation {
 	}
 	
 	/**
+	 * Retourne la note maximale que peut encore obtenir l'étudiant
+	 * @return Note maximale que peut encore obtenir l'étudiant
+	 */
+	def float getCurrentMaxGrade() {
+	    return service.currentMaxGrade
+	}
+	
+	/**
 	 * Retourne la note globale de la copie
 	 * @return Note globale de la copie
-	 * //FIXME doit être lié au service
 	 */
 	def float getGlobalGrade() {
-	    return 0.0f
+	    return service.getCurrentGrade
 	}
 	    
 	/**
 	 * Retourne le barème total de l'examen
 	 * @return Barème total de l'examen
-	 * //FIXME doit être lié au service
 	 */
 	def float getGlobalScale() {
-	    return 0.0f
+	    return service.getGlobalScale
 	}
 	
 	/* SAVING  */
@@ -934,4 +1023,20 @@ class ControllerFxGraduation {
     def renameStudent(int studentId,String newname){
         service.assignStudentId(newname)
     }
+     def addAnnotation(TextAnotation annot){
+    	
+    	annot.annotId = service.addNewAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,questionList.currentItem.questionId,studentList.currentItem.studentId)
+    	logger.info("Adding new Annotation to Model : ID = " + annot.annotId)
+    }
+    
+    def updateAnnotation(TextAnotation annot) {
+    	logger.info("Updating annotation in Model : ID = " + annot.annotId)
+    	service.updateAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,annot.annotId,questionList.currentItem.questionId,studentList.currentItem.studentId)
+    }
+    
+    def removeAnnotation(TextAnotation annot){
+    	logger.info("Removing Annotation from  Model : ID = " + annot.annotId)
+    	service.removeAnnotation(annot.annotId,questionList.currentItem.questionId,studentList.currentItem.studentId)
+    }
+    
 }

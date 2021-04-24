@@ -43,6 +43,8 @@ class ControllerRoot implements Initializable {
 	MenuItem loadStudentNamesButton;
 	@FXML
 	MenuItem pdfExportButton;
+	@FXML
+	MenuItem sendMailButton;
 	
 	@Accessors
 	ControllerFxGraduation graduationController;
@@ -154,8 +156,12 @@ class ControllerRoot implements Initializable {
 	def sendMail(){
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
+	
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
 		val Stage dialog = new Stage
+		
+		loader.<ControllerSendMail>controller.init(serviceGraduation,graduationController)
+			
 		dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		dialog.setScene(new Scene(view, 672, 416))
@@ -202,14 +208,15 @@ class ControllerRoot implements Initializable {
 	}
 	
 	
-	def init(ServiceEdition serviceEdition,ServiceGraduation serviceGraduation){
+	def init(ServiceEdition serviceEdition, ServiceGraduation serviceGraduation){
 		this.serviceEdition = serviceEdition
 		this.serviceGraduation = serviceGraduation
 		saveGraduationButton.disableProperty.bind(graduationController.loadedModel.not)
 		saveTemplateButton.disableProperty.bind(editionController.loadedModel.not)
 		exportToExamButton.disableProperty.bind(editionController.loadedModel.not)
-		loadStudentNamesButton.disableProperty.bind(editionController.loadedModel.not)
+		loadStudentNamesButton.disableProperty.bind(graduationController.loadedModel.not)
 		pdfExportButton.disableProperty.bind(graduationController.loadedModel.not)
+		sendMailButton.disableProperty.bind(graduationController.loadedModel.not)
 	}
 	
 	override initialize(URL location, ResourceBundle resources) {

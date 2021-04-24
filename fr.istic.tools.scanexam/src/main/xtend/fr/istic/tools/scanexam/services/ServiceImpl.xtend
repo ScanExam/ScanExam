@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.Question
-import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
@@ -26,7 +25,9 @@ import java.util.List
 import java.util.Objects
 import java.util.Optional
 import org.apache.logging.log4j.LogManager
-import org.eclipse.xtend.lib.annotations.Accessors
+import fr.istic.tools.scanexam.core.Comment
+import java.util.LinkedList
+import fr.istic.tools.scanexam.core.TextComment
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -52,6 +53,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	int gradeEntryId;
 	
+	int annotationId;
+	
 	/**
 	 * Fichier du template de l'édition d'examen (Fichier de méta données sur le sujet d'examen)
 	 */
@@ -74,10 +77,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		val encoded = Base64.getEncoder().encode(pdfOutputStream.toByteArray());
 		graduationTemplate.encodedDocument = new String(encoded);
 		pdfOutputStream.close();
-
-		graduationTemplate.studentsheets.clear()
-		graduationTemplate.studentsheets.addAll(studentSheets);
-		
 		TemplateIo.save(new File(path), graduationTemplate);
 	}
 	
@@ -101,7 +100,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	/**
-	 * Charge le document PDF des copies manuscrites,  corrigés
+	 * Charge le document PDF des copies manuscrites, corrigés
 	 * @params path L'emplacement du fichier.
 	 * @returns "true" si le fichier a bien été chargé, "false"
 	 */
@@ -113,10 +112,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 				for (var i = 0; i < templatePageAmount; i++) {
 					val examPage = getPage(i);
 
-					println("test size : " + examPage.questions.size)
 					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?
 					{
-						sheet.grades.add(CoreFactory.eINSTANCE.createGrade());
+						var grade = CoreFactory.eINSTANCE.createGrade()
+						sheet.grades.add(grade);
 					}
 
 				}
@@ -161,6 +160,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param id le nouvel identifiant d'étudiant
 	 */
 	override assignStudentId(String id) {
+		logger.info("Renaming student :" + currentSheetIndex + "with name :" + id)
 		studentSheets.get(currentSheetIndex).studentName = id
 	}
 	
@@ -168,15 +168,32 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return la liste non modifiable de tous les StudentSheets
 	 */
 	override getStudentSheets() {
+		
+		if (graduationTemplate === null)
+		{
+			return List.of();
+		}
 		return Collections.unmodifiableList(graduationTemplate.studentsheets)
 	}
+	
+	/**
+	 * @return le nom de l'etudiant avec ID
+	 */
+	 override getStudentName(int id){
+	 	for (StudentSheet sheet : studentSheets) {
+			if (sheet.id === id ) {
+				return sheet.studentName;
+			}
+		}
+		return "Not Found Student";
+	 }
 	
 	/**
 	 * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
 	 * @param id un ID de copie d'étudiant
 	 */
 	override void selectSheet(int id) {
-		if(id > 0 && id < studentSheets.size)
+		if(id >= 0 && id < studentSheets.size)
 			currentSheetIndex = id	
 	}
 	
@@ -405,21 +422,33 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu 
 	 */
 	override float getCurrentMaxGrade() {
-		studentSheets.get(currentSheetIndex).grades
-			.indexed
-			.filter[pair | !pair.value.entries.isEmpty]
-			.map[pair | getQuestionFromIndex(pair.key)]
-			.filter[o | !o.isEmpty]
-			.map[ o | o.get.gradeScale.maxPoint]
-			.reduce[acc, n | acc + n]
-		
+		Optional.ofNullable(studentSheets.get(currentSheetIndex).grades
+            .indexed
+            .filter[pair | !pair.value.entries.isEmpty]
+            .map[pair | getQuestionFromIndex(pair.key)]
+            .filter[o | !o.isEmpty]
+            .map[ o | o.get.gradeScale.maxPoint]
+            .reduce[acc, n | acc + n]).orElse(0f)
 	}
 	
 	/**
+	 * Retourne la note actuelle de l'étudiant courant
 	 * @return la note actuelle de l'étudiant courant
 	 */
 	override float getCurrentGrade() {
 		studentSheets.get(currentSheetIndex).computeGrade
+	}
+	
+	/**
+	 * Retourne le barème total de l'examen
+	 * @return le barème total de l'examen
+	 */
+	override float getGlobalScale() {
+		var float globalScale = 0.0f;
+		for (i : 0 ..< numberOfQuestions) {
+    		globalScale += getQuestion(i).gradeScale.maxPoint
+		}
+		return globalScale
 	}
 	
 	//===================================================
@@ -478,16 +507,21 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	
-	@Accessors int questionId;
+	int questionId
 
 	/**
-	 * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
-	 * @param q Une Question
-	 * @param r Un Rectangle
+	 * Crée une nouvelle question et la zone associée
+	 * @param l'index de la page sur laquelle mettre la question
+	 * @param x la coordonnée X de la zone de la question
+	 * @param y la coordonnée Y de la zone de la question
+	 * @param heigth la hauteur de la zone de la question
+	 * @param width la longueur de la zone de la question
+	 * @return l'ID de la nouvelle question
+	 * @throw IllegalArgumentException si l'index de la page pointe vers une page qui n'existe pas
 	 * @author degas
 	 */
 	override int createQuestion(int pdfPageIndex, float x, float y, float heigth, float width) {
-
+		try {
 		val question = CoreFactory.eINSTANCE.createQuestion();
 		question.id = questionId;
 		question.gradeScale = CoreFactory.eINSTANCE.createGradeScale();
@@ -498,6 +532,9 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		question.zone.heigth = heigth
 		getPage(pdfPageIndex).questions.add(question);
 		return questionId++;
+		} catch(IndexOutOfBoundsException e) {
+			throw new IllegalArgumentException(pdfPageIndex + " is not a valid Page Index")
+		}
 	}
 
 	/**
@@ -539,16 +576,21 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param id l'ID de la question à supprimer
 	 */
 	override removeQuestion(int id) {
-		for (page : editionTemplate.exam.pages)
+		var Question toRemove = null;
+		for (page : editionTemplate.exam.pages) {
 			for (question : page.questions)
 				if (question.id == id)
-					page.questions.remove(question)
+					toRemove = question
+			if(toRemove !== null)
+				page.questions.remove(toRemove)
+			}
+		return toRemove !== null
 	}
 
 	/**
 	 * Modifie la note maximal que l'on peut attribuer a une question.
-	 * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
-	 * @param maxPoint, note maximal de la question question a ajouter
+	 * @param questionId l'ID de la question a laquelle on veut modifier la note maximal possible
+	 * @param maxPoint note maximal de la question question a ajouter
 	 */
 	override modifyMaxPoint(int questionId, float maxPoint) {
 		val scale = getQuestion(questionId).gradeScale
@@ -560,7 +602,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	/**
 	 * Sauvegarde le fichier modèle d'examen sur le disque
 	 * @param path L'emplacement de sauvegarde du fichier
-	 * @param pdfOutputStream le contenu du fichier sous forme de Stream
+	 * @param pdfOutputStream le PDF sous forme de Stream
 	 */
 	override save(ByteArrayOutputStream outputStream, File path) {
 		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
@@ -589,26 +631,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		return Optional.empty;
 	}
 
-	/** Retourne la zone associée à une question
-	 * @param index Index de la question //FIXME (useless?)
-	 * @author degas
-	 */
-	override QuestionZone getQuestionZone(int pageIndex, int questionIndex) {
-		return getQuestion(pageIndex, questionIndex).zone
-	}
-	
-	
-	/** Permet de récupérer une Question
-	 * @param index Index de la question
-	 * @return Question Retourne une instance de Question
-	 * @author degas
-	 */
-	protected def Question getQuestion(int pageId, int questionid)
-	{
-		return editionTemplate.exam.pages.get(pageId).questions.get(questionid);
-	}
-	
-	/**  Rend la liste des Questions définies dans un Examen
+	/**  Rend la liste non modifiable des Questions définies dans un Examen
 	 * @return List<Question>
 	 * @author degas
 	 */
@@ -705,10 +728,128 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 
 		for (i : 0 ..< pageNumber) {
 			val page = CoreFactory.eINSTANCE.createPage()
-
+			page.questions.forEach[q | q.gradeScale = CoreFactory.eINSTANCE.createGradeScale]
 			editionTemplate.exam.pages.add(page);
 		}
 		questionId = 0
+	}
+	
+	//===================================================
+	//      Annotations
+	//===================================================
+	
+	//SEE API FOR DOC (WILL ADD HERE LATER)
+	override addNewAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text, int questionId, int studentId) {
+		val DataFactory factory = new DataFactory
+		val annot = factory.createTextComment(annotationId,text,x as float,y as float,width as float,height as float,pointerX as float,pointerY as float)
+		
+		val sheet = studentSheets.get(currentSheetIndex)
+		sheet.grades.get(questionId).comments.add(annot)
+		annotationId++;
+	}
+	
+	def Comment getAnnotationWithId(List<Comment> comments,int annotId){
+		for (Comment c : comments) {
+			if (c.id == annotId)
+				return c
+		}
+		null
+	}
+	
+	override getAnnotationIds(int questionId, int studentId) {
+		var result = new LinkedList<Integer>();
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		for (Comment c : comments) {
+			result.add(c.id);
+		}
+		result
+	}
+	
+	override getAnnotationText(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return (annot as TextComment).text
+		return "Annotation not found"
+	}
+	
+	override getAnnotationX(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.x
+		return 0
+	}
+	
+	override getAnnotationY(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.y
+		return 0
+	}
+	
+	override getAnnotationHeight(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.x
+		return 0
+	}
+	
+	override getAnnotationWidth(int annotationId,int questionId,int studentId) { //TODO height and width not in model
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.x
+		return 0
+	}
+	
+	override getAnnotationPointerX(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.pointerX
+		return 0
+	}
+	
+	override getAnnotationPointerY(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			return annot.pointerY
+		return 0
+	}
+	
+	override removeAnnotation(int annotationId,int questionId,int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null)
+			comments.remove(annot)
+	}
+	
+	override updateAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text,int annotationId, int questionId, int studentId) {
+		val sheet = studentSheets.get(currentSheetIndex)
+		val comments = sheet.grades.get(questionId).comments
+		val annot = getAnnotationWithId(comments, annotationId)
+		if (annot !== null){
+			annot.x = x as float
+			annot.y = y as float
+			annot.pointerX = pointerX as float
+			annot.pointerY = pointerY as float
+			(annot as TextComment).text  = text
+		}
+			
+		
 	}
 	
 }

@@ -185,11 +185,9 @@ class ControllerConfiguration {
 	 */
 	private def void completeHostInfos() {
 		if (txtFldEmail.text != "") {
-			val infos =  getSmtpInfos(txtFldEmail.text)
-			if (txtFldEmailHost.text === null || txtFldEmailHost.text == "")
-				txtFldEmailHost.text = infos.key
-			if (txtFldEmailPort.text === null || txtFldEmailPort.text == "0")
-				txtFldEmailPort.text = infos.value
+			val infos = getSmtpInfos(txtFldEmail.text)
+			txtFldEmailHost.text = infos.key
+			txtFldEmailPort.text = infos.value
 		}
 	}
 

@@ -9,7 +9,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Objects
 import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -32,14 +31,8 @@ class PdfManager {
 	/* Index de la page courante du modèle d'exam */
 	@Accessors int pdfPageIndex
 
-	/* Largeur de la fenêtre */
-	protected int width
-
-	/* Hauteur de la fenêtre */
-	protected int height
-
-	/* InputStream du pdf */
-	protected ByteArrayOutputStream pdfOutput
+	/* outputStream du pdf */
+	ByteArrayOutputStream pdfOutput
 
 	// ----------------------------------------------------------------------------------------------------
 	/* 
@@ -62,7 +55,7 @@ class PdfManager {
 	 * @return Page courante
 	 */
 	def BufferedImage getCurrentPdfPage() {
-		pageToImage(document.pages.get(pdfPageIndex));
+		pageToImage();
 	}
 
 	/**
@@ -96,7 +89,7 @@ class PdfManager {
 	 * @param page PDPage à convertir
 	 * @return Image convertie
 	 */
-	def BufferedImage pageToImage(PDPage page) {
+	private def BufferedImage pageToImage() {
 		val renderer = new PDFRenderer(document);
 		val bufferedImage = renderer.renderImageWithDPI(pdfPageIndex, 300, ImageType.RGB);
 		bufferedImage
@@ -156,13 +149,4 @@ class PdfManager {
 	def ByteArrayInputStream getPdfInputStream() {
 		return new ByteArrayInputStream(pdfOutput.toByteArray)
 	}
-	
-	/**
-	 * Renvoie le document
-	 * @return Document
-	 */
-	def PDDocument getPdfDocument() {
-		document
-	}
-
 }

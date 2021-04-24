@@ -19,19 +19,19 @@
 
 	<dependencies>
 		<dependency>
-    		<groupId>org.testfx</groupId>
-    		<artifactId>testfx-junit</artifactId>
-    		<version>4.0.15-alpha</version>
-    		<scope>test</scope>
+			<groupId>org.testfx</groupId>
+			<artifactId>testfx-junit5</artifactId>
+			<version>4.0.16-alpha</version>
+			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>org.testfx</groupId>
-    		<artifactId>testfx-core</artifactId>
-    		<version>4.0.16-alpha</version>
-    		<scope>test</scope>
+			<groupId>org.testfx</groupId>
+			<artifactId>testfx-core</artifactId>
+			<version>4.0.16-alpha</version>
+			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -94,15 +94,15 @@
 		</dependency>
 
 		<dependency>
-    		<groupId>org.slf4j</groupId>
-    		<artifactId>slf4j-api</artifactId>
-    		<version>2.0.0-alpha1</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.0-alpha1</version>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>org.slf4j</groupId>
-    		<artifactId>slf4j-simple</artifactId>
-    		<version>2.0.0-alpha1</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>2.0.0-alpha1</version>
 		</dependency>
 
 		<dependency>
@@ -136,16 +136,23 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.eclipse.emf</groupId>
+			<artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-web</artifactId>
 			<version>11</version>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>org.mockito</groupId>
-    		<artifactId>mockito-all</artifactId>
-    		<version>1.9.5</version>
-    		<scope>test</scope>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

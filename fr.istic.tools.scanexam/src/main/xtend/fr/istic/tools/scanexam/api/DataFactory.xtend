@@ -8,7 +8,7 @@ import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.List
-
+import fr.istic.tools.scanexam.core.Comment
 
 /**
  * Factory qui crée des objets de type Data: {@link Rectangle},   {@link StudentSheet},  {@link Grade},  {@link GradeScale}, {@link Question}
@@ -85,6 +85,17 @@ class DataFactory {
 		val question = CoreFactory.eINSTANCE.createQuestion
 		question.id = id
 		question
+	}
+	
+	def Comment createTextComment(int id, String text, float x, float y , float h, float w,float pointerX,float pointerY){
+		val annot = CoreFactory.eINSTANCE.createTextComment
+		annot.x = x
+		annot.y = y
+		annot.pointerX = pointerX
+		annot.pointerY = pointerY
+		annot.id = id
+		annot.text = text
+		annot
 	}
 }
 

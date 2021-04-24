@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,7 +20,8 @@
 		<ToolBar>
 			<items>
 				<Button mnemonicParsing="false" onAction="#resetPosition" text="%button.unzoom" />
-				<Button mnemonicParsing="false" text="%button.annotation" />
+            <ToggleButton fx:id="annotationModeButton" mnemonicParsing="false" text="ViewAnnotations" />
+            <ToggleButton fx:id="addAnnotationButton" mnemonicParsing="false" text="AddAnnotation" />
 			</items>
 			<VBox.margin>
 				<Insets />
@@ -69,13 +71,6 @@
 								<Cursor fx:constant="DEFAULT" />
 							</cursor>
 						</ScrollPane>
-						<VBox prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-							<children>
-								<Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-								<HBox fx:id="graderContainer" prefWidth="200.0" />
-								<Pane mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-							</children>
-						</VBox>
 						<AnchorPane id="CorrectionBackground" fx:id="bottomPane" layoutX="140.0" layoutY="-86.0" prefHeight="100.0" styleClass="CorrectionBackground" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 							<children>
 								<ScrollPane id="correctionScrollPane" fx:id="scrollBis" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" styleClass="scrollPanes" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -128,8 +123,7 @@
 				</AnchorPane>
 				<VBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" spacing="10.0" styleClass="SideBoxes">
 					<children>
-                  		<Label fx:id="gradeLabel" alignment="CENTER" layoutX="111.0" layoutY="20.0" styleClass="UILabel" text="%label.grade" />
-						<Label alignment="CENTER" styleClass="UILabel" text="%label.questions" />
+                  		<Label alignment="CENTER" styleClass="UILabel" text="%label.questions" />
 						<ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
 						<VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
 							<VBox.margin>

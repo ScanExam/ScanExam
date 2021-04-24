@@ -59,6 +59,11 @@ interface ServiceGraduation extends Service {
 	def void assignStudentId(String id)
 	
 	/**
+	 * @return le nom de l'etudiant avec ID
+	 */
+	def String getStudentName(int id)
+	
+	/**
 	 * @return la liste non modifiable de tous les StudentSheets
 	 */
 	def Collection<StudentSheet> getStudentSheets()
@@ -202,9 +207,16 @@ interface ServiceGraduation extends Service {
 	def float getCurrentMaxGrade()
 	
 	/**
+	 * Retourne la note actuelle de l'étudiant courant
 	 * @return la note actuelle de l'étudiant courant
 	 */
 	def float getCurrentGrade()
+	
+	/**
+	 * Retourne le barème total de l'examen
+	 * @return le barème total de l'examen
+	 */
+	def float getGlobalScale()
 	
 	//===================================================
 	//      Information sur la listes des étudiants
@@ -231,5 +243,57 @@ interface ServiceGraduation extends Service {
 	 * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
 	 */
 	def String getStudentListShift()
-
+	
+	//===================================================
+	//      Annotations
+	//===================================================
+	/**
+	 * Ajoute une annotation sur la page donee et l'etudiant donne au modele, lui genere une id et la retourne
+	 * @param The details of the new Annotation
+	 * @return l'id de l'annotation cree
+	 */
+	def int addNewAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text, int questionId, int studentId)
+	
+	
+	def void updateAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text,int annotationId, int questionId, int studentId)
+	/**
+	 * @param pageNumber : Le numero de la page du template.
+	 * 		studentId : l'id de l'etudiant pour lequel on veut obtenir les ids
+	 * @returns une liste des id des annotations
+	 */
+	def List<Integer> getAnnotationIds(int questionId,int studentId)
+	
+	/**
+	 * Retourne le texte pour l'annotations avec l'id donne
+	 */
+	def String getAnnotationText(int annotationId,int questionId,int studentId)
+	/**
+	 * Retourne la postion X pour l'annotations avec l'id donne
+	 */
+	def double getAnnotationX(int annotationId,int questionId,int studentId)
+	/**
+	 * Retourne le  postion Y pour l'annotations avec l'id donne
+	 */
+	def double getAnnotationY(int annotationId,int questionId,int studentId)
+	/**
+	 * Retourne la hauteur pour l'annotations avec l'id donne
+	 */
+	def double getAnnotationHeight(int annotationId,int questionId,int studentId)
+	/**
+	 * Retourne la largeur pour l'annotations avec l'id donne
+	 */
+	def double getAnnotationWidth(int annotationId,int questionId,int studentId)
+	/**
+	 * Retourne la postion X pour le pointer de l'annotations avec l'id donne
+	 */
+	def double getAnnotationPointerX(int annotationId,int questionId,int studentId)
+	/**
+	 * Retourne la postion Y pour le pointer de l'annotations avec l'id donne
+	 */
+	def double getAnnotationPointerY(int annotationId,int questionId,int studentId)
+	/**
+	 * Retire une annotation du modele
+	 */
+	def void removeAnnotation(int annotationId,int questionId,int studentId)
+	
 }

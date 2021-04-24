@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.services.api
 
-import fr.istic.tools.scanexam.core.QuestionZone
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -42,19 +41,15 @@ interface ServiceEdition extends Service {
 	/**
 	 * Supprime une question
 	 * @param id l'ID de la question à supprimer
+	 * @return true si l'élément a bien été supprimé, false sinon
 	 */
-	def void removeQuestion(int id)
+	def boolean removeQuestion(int id)
 	
-	
-	/**
-	 * @return l'ID de la question courante
-	 */
-	def int getQuestionId()
 
 	/**
 	 * Modifie la note maximal que l'on peut attribuer a une question.
-	 * @param questionId, l'ID de la question a laquelle on veut modifier la note maximal possible
-	 * @param maxPoint, note maximal de la question question a ajouter
+	 * @param questionId l'ID de la question a laquelle on veut modifier la note maximal possible
+	 * @param maxPoint note maximal de la question question a ajouter
 	 */
 	def void modifyMaxPoint(int questionId, float maxPoint)
 	
@@ -67,7 +62,7 @@ interface ServiceEdition extends Service {
 
 	/**
 	 * Charge un fichier modèle d'examen a partir du disque
-	 * @params xmiPath L'emplacement du fichier.
+	 * @param xmiPath L'emplacement du fichier XMI
 	 * @returns un flux vers le contenu du fichier si celui-ci a bien été ouvert, Optional.empty sinon
 	 */
 	def Optional<ByteArrayInputStream> open(String xmiPath) 
@@ -78,9 +73,4 @@ interface ServiceEdition extends Service {
 	 */
 	def void initializeEdition(int pageNumber)
 
-	/** Retourne la zone associée à une question
-	 * @param index Index de la question //FIXME (useless?)
-	 * @author degas
-	 */
-	def QuestionZone getQuestionZone(int pageIndex, int questionIndex)
 }

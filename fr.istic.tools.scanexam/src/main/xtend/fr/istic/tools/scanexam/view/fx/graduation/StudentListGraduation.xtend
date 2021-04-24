@@ -50,7 +50,7 @@ class StudentListGraduation extends VBox {
 	}
 	
 	def updateInModel(StudentItemGraduation item) {
-		logger.info("Updating " + item + " to model")
+		logger.info("Updating " + item.studentId + " to model")
 		controller.renameStudent(item.studentId,item.studentName)
 	}
 	
