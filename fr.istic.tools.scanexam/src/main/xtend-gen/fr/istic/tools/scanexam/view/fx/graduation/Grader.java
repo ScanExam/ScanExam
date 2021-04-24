@@ -120,6 +120,33 @@ public class Grader extends VBox {
       return this.id = id;
     }
     
+    public boolean displayError() {
+      boolean _xblockexpression = false;
+      {
+        this.check.getStyleClass().remove("goodCheckBox");
+        _xblockexpression = this.check.getStyleClass().add("badCheckBox");
+      }
+      return _xblockexpression;
+    }
+    
+    public boolean displaySuccess() {
+      boolean _xblockexpression = false;
+      {
+        this.check.getStyleClass().remove("badCheckBox");
+        _xblockexpression = this.check.getStyleClass().add("goodCheckBox");
+      }
+      return _xblockexpression;
+    }
+    
+    public boolean displayDefault() {
+      boolean _xblockexpression = false;
+      {
+        this.check.getStyleClass().remove("badCheckBox");
+        _xblockexpression = this.check.getStyleClass().remove("goodCheckBox");
+      }
+      return _xblockexpression;
+    }
+    
     /**
      * Change le text modifié par le HTML Editor
      */
@@ -361,7 +388,7 @@ public class Grader extends VBox {
     this.controller.removeEntry(qItem.getQuestionId(), item.id);
   }
   
-  public boolean addPoints(final Grader.GradeItem item) {
+  public Boolean addPoints(final Grader.GradeItem item) {
     boolean _xblockexpression = false;
     {
       int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
@@ -373,22 +400,35 @@ public class Grader extends VBox {
       String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
       Grader.logger.info(_plus_4);
       this.addPointsOf(item);
-      _xblockexpression = this.controller.applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+      boolean over = this.controller.applyGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+      boolean _xifexpression = false;
+      if (over) {
+        _xifexpression = item.displaySuccess();
+      } else {
+        item.displayError();
+        item.setSelected(Boolean.valueOf(false));
+      }
+      _xblockexpression = _xifexpression;
     }
-    return _xblockexpression;
+    return Boolean.valueOf(_xblockexpression);
   }
   
-  public void removePoints(final Grader.GradeItem item) {
-    int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
-    String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
-    String _plus_1 = (_plus + ", for Questions ID :");
-    int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
-    String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
-    String _plus_3 = (_plus_2 + ", for Entry ID :");
-    String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
-    Grader.logger.log(Level.INFO, _plus_4);
-    this.removePointsOf(item);
-    this.controller.removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+  public boolean removePoints(final Grader.GradeItem item) {
+    boolean _xblockexpression = false;
+    {
+      int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
+      String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
+      String _plus_1 = (_plus + ", for Questions ID :");
+      int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
+      String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
+      String _plus_3 = (_plus_2 + ", for Entry ID :");
+      String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
+      Grader.logger.log(Level.INFO, _plus_4);
+      this.removePointsOf(item);
+      this.controller.removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+      _xblockexpression = item.displayDefault();
+    }
+    return _xblockexpression;
   }
   
   public void clearDisplay() {

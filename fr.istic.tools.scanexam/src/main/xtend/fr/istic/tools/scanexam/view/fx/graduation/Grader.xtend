@@ -26,6 +26,14 @@ import javafx.scene.web.WebView
 import javafx.scene.web.WebEngine
 import javafx.scene.layout.StackPane
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
+import javafx.animation.FillTransition
+import javafx.animation.StrokeTransition
+import javafx.scene.layout.Border
+import javafx.scene.layout.BorderStroke
+import javafx.scene.layout.BorderStrokeStyle
+import javafx.scene.layout.CornerRadii
+import javafx.scene.paint.Color
+import javafx.scene.layout.BorderWidths
 
 class Grader extends VBox {
 
@@ -162,7 +170,13 @@ class Grader extends VBox {
 	def addPoints(GradeItem item) {
 		logger.info("Adding points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		addPointsOf(item)
-		controller.applyGrade(controller.questionList.currentItem.questionId, item.id)
+		var over = controller.applyGrade(controller.questionList.currentItem.questionId, item.id)
+		if (over) {
+			item.displaySuccess
+		}else {
+			item.displayError
+			item.selected = false
+		}
 		
 	}
 
@@ -170,6 +184,7 @@ class Grader extends VBox {
 		logger.log(Level.INFO, "Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		removePointsOf(item)
 		controller.removeGrade(controller.questionList.currentItem.questionId, item.id)
+		item.displayDefault
 	}
 
 	def clearDisplay() {
@@ -270,6 +285,21 @@ class Grader extends VBox {
 
 		def setItemId(int id) {
 			this.id = id;
+		}
+		
+		def displayError(){
+			check.styleClass.remove("goodCheckBox")
+			check.styleClass.add("badCheckBox")
+		}
+		
+		def displaySuccess(){
+			check.styleClass.remove("badCheckBox")
+			check.styleClass.add("goodCheckBox")
+		}
+		
+		def displayDefault(){
+			check.styleClass.remove("badCheckBox")
+			check.styleClass.remove("goodCheckBox")
 		}
 
 		/**

@@ -160,6 +160,16 @@
 	-fx-font-size: 20;
 }
 
+.badCheckBox > .box{
+	-fx-border-color : red;
+	-fx-border-radius: 3px 2px 1px;
+}
+
+.goodCheckBox > .box{
+	-fx-border-color : green;
+	-fx-border-radius: 3px 2px 1px;
+}
+
 .mytext-field {
 	-fx-border-color: lightgrey;
 	-fx-border-width: 1px;
