@@ -38,4 +38,24 @@ public class FxSettings {
   public static KeyCode BUTTON_NEXT_QUESTION = KeyCode.DOWN;
   
   public static KeyCode BUTTON_PREV_QUESTION = KeyCode.UP;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_1 = KeyCode.DIGIT1;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_2 = KeyCode.DIGIT2;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_3 = KeyCode.DIGIT3;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_4 = KeyCode.DIGIT4;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_5 = KeyCode.DIGIT5;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_6 = KeyCode.DIGIT6;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_7 = KeyCode.DIGIT7;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_8 = KeyCode.DIGIT8;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_9 = KeyCode.DIGIT9;
+  
+  public static KeyCode BUTTON_INTERACT_GRADER_0 = KeyCode.DIGIT0;
 }

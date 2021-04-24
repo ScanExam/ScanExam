@@ -26,4 +26,17 @@ class FxSettings {
 	public static var BUTTON_PREV_STUDENT = KeyCode.LEFT;
 	public static var BUTTON_NEXT_QUESTION = KeyCode.DOWN;
 	public static var BUTTON_PREV_QUESTION = KeyCode.UP;
+	
+	public static var BUTTON_INTERACT_GRADER_1 = KeyCode.DIGIT1;
+	public static var BUTTON_INTERACT_GRADER_2 = KeyCode.DIGIT2;
+	public static var BUTTON_INTERACT_GRADER_3 = KeyCode.DIGIT3;
+	public static var BUTTON_INTERACT_GRADER_4 = KeyCode.DIGIT4;
+	public static var BUTTON_INTERACT_GRADER_5 = KeyCode.DIGIT5;
+	public static var BUTTON_INTERACT_GRADER_6 = KeyCode.DIGIT6;
+	public static var BUTTON_INTERACT_GRADER_7 = KeyCode.DIGIT7;
+	public static var BUTTON_INTERACT_GRADER_8 = KeyCode.DIGIT8;
+	public static var BUTTON_INTERACT_GRADER_9 = KeyCode.DIGIT9;
+	public static var BUTTON_INTERACT_GRADER_0 = KeyCode.DIGIT0;
+	
+	
 }

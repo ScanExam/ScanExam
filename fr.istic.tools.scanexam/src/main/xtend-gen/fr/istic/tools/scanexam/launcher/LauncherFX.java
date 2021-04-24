@@ -77,6 +77,7 @@ public class LauncherFX extends Application implements Launcher {
     Image _image = new Image(_inputStreamResource);
     _icons.add(_image);
     primaryStage.show();
+    controllerGraduation.setKeybinds();
   }
   
   @Override

@@ -74,7 +74,6 @@ class LauncherFX extends Application implements Launcher {
 			
 			controllerGraduation.init(serviceGraduation)
 			
-			
 			controllerEdition.init(serviceEdition)
 			
 			controllerRoot.graduationController = controllerGraduation
@@ -86,6 +85,8 @@ class LauncherFX extends Application implements Launcher {
 			primaryStage.setMinWidth(720);
 			primaryStage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 			primaryStage.show();
+			
+			controllerGraduation.setKeybinds
 	}
 	
 	override launch() {

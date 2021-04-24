@@ -200,17 +200,23 @@ public class Grader extends VBox {
       return _xblockexpression;
     }
     
+    public Boolean checkBoxUsed() {
+      Boolean _xifexpression = null;
+      boolean _isSelected = this.check.isSelected();
+      if (_isSelected) {
+        _xifexpression = this.grader.addPoints(this);
+      } else {
+        _xifexpression = Boolean.valueOf(this.grader.removePoints(this));
+      }
+      return _xifexpression;
+    }
+    
     public void setupEvents() {
       final Grader.GradeItem me = this;
       this.check.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent event) {
-          boolean _isSelected = GradeItem.this.check.isSelected();
-          if (_isSelected) {
-            GradeItem.this.grader.addPoints(me);
-          } else {
-            GradeItem.this.grader.removePoints(me);
-          }
+          GradeItem.this.checkBoxUsed();
         }
       });
       this.remove.setOnAction(new EventHandler<ActionEvent>() {
@@ -467,6 +473,28 @@ public class Grader extends VBox {
       _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
+  }
+  
+  public void interactUsingIndex(final int index) {
+    if ((index < 1)) {
+      Grader.logger.info("Cant select an entry below 1");
+      return;
+    }
+    int _size = this.itemContainer.getChildren().size();
+    boolean _greaterThan = (index > _size);
+    if (_greaterThan) {
+      int _size_1 = this.itemContainer.getChildren().size();
+      String _plus = ((("Cant select entry with index :" + Integer.valueOf(index)) + ", there is only ") + Integer.valueOf(_size_1));
+      String _plus_1 = (_plus + " entries in the grader");
+      Grader.logger.info(_plus_1);
+      return;
+    }
+    Node _get = this.itemContainer.getChildren().get((index - 1));
+    Grader.GradeItem item = ((Grader.GradeItem) _get);
+    boolean _selected = item.getSelected();
+    boolean _not = (!_selected);
+    item.setSelected(Boolean.valueOf(_not));
+    item.checkBoxUsed();
   }
   
   public void setupEvents() {

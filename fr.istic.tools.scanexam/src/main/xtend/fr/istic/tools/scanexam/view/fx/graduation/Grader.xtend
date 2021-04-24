@@ -206,6 +206,20 @@ class Grader extends VBox {
 			this.children.remove(add)
 		}
 	}
+	
+	def interactUsingIndex(int index){
+		if (index < 1) {
+			logger.info("Cant select an entry below 1") 
+			return
+		}
+		if (index > itemContainer.children.size) {
+			logger.info("Cant select entry with index :" + index + ", there is only " + itemContainer.children.size + " entries in the grader") 
+			return
+		}
+		var item  = itemContainer.children.get(index-1) as GradeItem
+		item.selected =  !item.selected
+		item.checkBoxUsed
+	}
 
 	static class GradeItem extends VBox {
 		new(Grader grader) {
@@ -345,17 +359,21 @@ class Grader extends VBox {
 			worth.text = worthField.text
 			leaveEditMode
 		}
+		
+		def checkBoxUsed(){
+			if (check.selected) {
+				grader.addPoints(this)
+			} else {
+				grader.removePoints(this)
+			}
+		}
 
 		def setupEvents() {
 			val me = this
 			check.onAction = new EventHandler<ActionEvent>() {
 
 				override handle(ActionEvent event) {
-					if (check.selected) {
-						grader.addPoints(me)
-					} else {
-						grader.removePoints(me)
-					}
+					checkBoxUsed
 				}
 
 			}

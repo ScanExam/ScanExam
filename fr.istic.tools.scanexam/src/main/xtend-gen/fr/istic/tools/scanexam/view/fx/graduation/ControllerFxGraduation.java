@@ -560,40 +560,8 @@ public class ControllerFxGraduation {
     this.prevQuestionButton.disableProperty().bind(this.loadedModel.not());
     this.prevStudentButton.disableProperty().bind(this.loadedModel.not());
     this.nextStudentButton.disableProperty().bind(this.loadedModel.not());
-  }
-  
-  public void binds(final Node n) {
-    final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
-      KeyCode _code = event.getCode();
-      boolean _matched = false;
-      if (Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
-        _matched=true;
-        this.nextQuestionPressed();
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
-          _matched=true;
-          this.prevQuestionPressed();
-        }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
-          _matched=true;
-          this.prevStudentPressed();
-        }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
-          _matched=true;
-          this.nextStudentPressed();
-        }
-      }
-      if (!_matched) {
-        ControllerFxGraduation.logger.warn("Key not supported.");
-      }
-      event.consume();
-    };
-    n.setOnKeyPressed(_function);
+    this.annotationModeButton.disableProperty().bind(this.loadedModel.not());
+    this.addAnnotationButton.disableProperty().bind(this.loadedModel.not());
   }
   
   public void setKeybinds() {
@@ -624,13 +592,70 @@ public class ControllerFxGraduation {
         }
       }
       if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_1)) {
+          _matched=true;
+          this.grader.interactUsingIndex(1);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_2)) {
+          _matched=true;
+          this.grader.interactUsingIndex(2);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_3)) {
+          _matched=true;
+          this.grader.interactUsingIndex(3);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_4)) {
+          _matched=true;
+          this.grader.interactUsingIndex(4);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_5)) {
+          _matched=true;
+          this.grader.interactUsingIndex(5);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_6)) {
+          _matched=true;
+          this.grader.interactUsingIndex(6);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_7)) {
+          _matched=true;
+          this.grader.interactUsingIndex(7);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_8)) {
+          _matched=true;
+          this.grader.interactUsingIndex(8);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_9)) {
+          _matched=true;
+          this.grader.interactUsingIndex(9);
+        }
+      }
+      if (!_matched) {
+        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_0)) {
+          _matched=true;
+          this.grader.interactUsingIndex(10);
+        }
+      }
+      if (!_matched) {
         ControllerFxGraduation.logger.warn("Key not supported.");
       }
-      event.consume();
     };
-    s.setOnKeyPressed(_function);
-    this.binds(this.scrollMain);
-    this.binds(this.scrollBis);
+    s.<KeyEvent>addEventFilter(KeyEvent.KEY_PRESSED, _function);
   }
   
   /**
