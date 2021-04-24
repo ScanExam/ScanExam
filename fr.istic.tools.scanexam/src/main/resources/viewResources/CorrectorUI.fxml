@@ -125,11 +125,6 @@
 					<children>
                   		<Label alignment="CENTER" styleClass="UILabel" text="%label.questions" />
 						<ScrollPane fx:id="questionListContainer" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="List" VBox.vgrow="ALWAYS" />
-						<VBox fx:id="questionDetails" prefHeight="200.0" styleClass="detailsBox" VBox.vgrow="NEVER">
-							<VBox.margin>
-								<Insets />
-							</VBox.margin>
-						</VBox>
 						<HBox alignment="CENTER">
 							<children>
 								<Label alignment="CENTER" text="%label.questions" />
