@@ -87,7 +87,6 @@ class PdfPaneWithAnotations extends Pane {
 	}
 	
 	def zoomTo(double x, double y, double h, double w){
-		logger.warn("X is :"+ x +"y is :"+ y+"h is :"+ h+"w is :"+ w)
 		imageView.viewport = new Rectangle2D(x,y,w,h)
 	}
 	

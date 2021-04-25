@@ -335,9 +335,11 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return une liste d'ID d'entrées pour la question de l'examen dont l'ID est <i>questionId</i>
 	 */
 	override List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(int questionId) {
-		if (getQuestion(questionId).gradeScale !== null)
-			return getQuestion(questionId).gradeScale.steps
-			.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]
+		
+		if (getQuestion(questionId).gradeScale !== null) {
+			logger.info("IN SERVICE : " + getQuestion(questionId).gradeScale.steps)
+			return getQuestion(questionId).gradeScale.steps.map[entry | Tuple3.of(entry.id, entry.header, entry.step)]	
+		}
 		return List.of
 	}
 	
@@ -355,7 +357,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override boolean assignGradeEntry(int questionId, int gradeEntryId) {
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry|entry.id == gradeEntryId]
-		if (validGradeEntry(questionId, gradeEntry)) {
+		if (validGradeEntry(questionId, gradeEntry,false)) {
 			val sheet = studentSheets.get(currentSheetIndex);
 			sheet.grades.get(questionId).entries.add(gradeEntry)
 			return true
@@ -372,7 +374,12 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	override retractGradeEntry(int questionId, int gradeEntryId) {
 		val entries = studentSheets.get(currentSheetIndex).grades.get(questionId).entries
 		val gradeEntry = entries.findFirst[entry | entry.id == gradeEntryId]
-		entries.remove(gradeEntry)
+		if (validGradeEntry(questionId, gradeEntry,true)){
+			entries.remove(gradeEntry)
+			return true;
+		}
+		return false;
+		
 	}
 	
     /**
@@ -415,14 +422,15 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * <li>Ne pas être inferieure à 0</li>
 	 * </ul>
 	 */
-	override boolean validGradeEntry(int questionId,GradeEntry gradeAdd){
+	override boolean validGradeEntry(int questionId,GradeEntry gradeAdd,boolean removal){
 		val gradeMax = getQuestion(questionId).gradeScale.maxPoint
 		var currentGrade = studentSheets.get(currentSheetIndex).grades.get(questionId)
 			.entries
 			.map[e | e.step]
 			.reduce[acc, grade | acc + grade]
 		if (currentGrade === null) currentGrade = 0f
-		val newGrade = currentGrade + gradeAdd.step
+		var newGrade = currentGrade + gradeAdd.step
+		if (removal) newGrade = currentGrade - gradeAdd.step
 		logger.info(newGrade <= gradeMax && newGrade >= 0)
 		return newGrade <= gradeMax && newGrade >= 0
 	}

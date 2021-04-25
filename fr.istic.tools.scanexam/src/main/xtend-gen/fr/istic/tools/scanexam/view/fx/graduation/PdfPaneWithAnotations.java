@@ -125,7 +125,6 @@ public class PdfPaneWithAnotations extends Pane {
   }
   
   public void zoomTo(final double x, final double y, final double h, final double w) {
-    PdfPaneWithAnotations.logger.warn(((((((("X is :" + Double.valueOf(x)) + "y is :") + Double.valueOf(y)) + "h is :") + Double.valueOf(h)) + "w is :") + Double.valueOf(w)));
     Rectangle2D _rectangle2D = new Rectangle2D(x, y, w, h);
     this.imageView.setViewport(_rectangle2D);
   }

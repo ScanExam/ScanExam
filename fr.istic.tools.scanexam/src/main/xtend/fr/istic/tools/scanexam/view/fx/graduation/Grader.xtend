@@ -87,6 +87,7 @@ class Grader extends VBox {
 	
 	QuestionItemGraduation curentQuestion;
 	StudentItemGraduation currentStudent;
+	
 	def changeGrader(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
 		clearDisplay()
 		curentQuestion = qItem;
@@ -97,8 +98,11 @@ class Grader extends VBox {
 	
 			// Loads all the gradeEntries from the model
 			var ids = controller.getEntryIds(qItem.questionId);
+			logger.info("All ids are :"  + ids.size())
 			// Finds all the selected entries for this student/question
 			var sids = controller.getSelectedEntryIds(qItem.questionId)
+			logger.info("selected ids are :"  + sids.size())
+			
 			for (Integer i : ids) {
 				var g = new GradeItem(this);
 				g.setItemId(i);
@@ -173,9 +177,14 @@ class Grader extends VBox {
 	def removePoints(GradeItem item) {
 		logger.log(Level.INFO, "Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		
-		controller.removeGrade(controller.questionList.currentItem.questionId, item.id)
-		updateCurrentPoints
-		item.displayDefault
+		var over = controller.removeGrade(controller.questionList.currentItem.questionId, item.id)
+		if (over) {
+			item.displaySuccess
+			updateCurrentPoints
+		}else {
+			item.displayError
+			item.selected = true
+		}
 	}
 
 	def clearDisplay() {

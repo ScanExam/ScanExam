@@ -185,15 +185,13 @@ public class Grader extends VBox {
       this.worth.setText(this.worthField.getText());
     }
     
-    public Boolean checkBoxUsed() {
-      boolean _xifexpression = false;
+    public void checkBoxUsed() {
       boolean _isSelected = this.check.isSelected();
       if (_isSelected) {
         this.grader.addPoints(this);
       } else {
-        _xifexpression = this.grader.removePoints(this);
+        this.grader.removePoints(this);
       }
-      return Boolean.valueOf(_xifexpression);
     }
     
     public void setupEvents() {
@@ -324,7 +322,13 @@ public class Grader extends VBox {
       String _plus = (Float.valueOf(_worth) + "");
       this.maxPoints.setText(_plus);
       List<Integer> ids = this.controller.getEntryIds(qItem.getQuestionId());
+      int _size = ids.size();
+      String _plus_1 = ("All ids are :" + Integer.valueOf(_size));
+      Grader.logger.info(_plus_1);
       List<Integer> sids = this.controller.getSelectedEntryIds(qItem.getQuestionId());
+      int _size_1 = sids.size();
+      String _plus_2 = ("selected ids are :" + Integer.valueOf(_size_1));
+      Grader.logger.info(_plus_2);
       for (final Integer i : ids) {
         {
           Grader.GradeItem g = new Grader.GradeItem(this);
@@ -402,22 +406,23 @@ public class Grader extends VBox {
     }
   }
   
-  public boolean removePoints(final Grader.GradeItem item) {
-    boolean _xblockexpression = false;
-    {
-      int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
-      String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
-      String _plus_1 = (_plus + ", for Questions ID :");
-      int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
-      String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
-      String _plus_3 = (_plus_2 + ", for Entry ID :");
-      String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
-      Grader.logger.log(Level.INFO, _plus_4);
-      this.controller.removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+  public void removePoints(final Grader.GradeItem item) {
+    int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
+    String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
+    String _plus_1 = (_plus + ", for Questions ID :");
+    int _questionId = this.controller.getQuestionList().getCurrentItem().getQuestionId();
+    String _plus_2 = (_plus_1 + Integer.valueOf(_questionId));
+    String _plus_3 = (_plus_2 + ", for Entry ID :");
+    String _plus_4 = (_plus_3 + Integer.valueOf(item.id));
+    Grader.logger.log(Level.INFO, _plus_4);
+    boolean over = this.controller.removeGrade(this.controller.getQuestionList().getCurrentItem().getQuestionId(), item.id);
+    if (over) {
+      item.displaySuccess();
       this.updateCurrentPoints();
-      _xblockexpression = item.displayDefault();
+    } else {
+      item.displayError();
+      item.setSelected(Boolean.valueOf(true));
     }
-    return _xblockexpression;
   }
   
   public void clearDisplay() {

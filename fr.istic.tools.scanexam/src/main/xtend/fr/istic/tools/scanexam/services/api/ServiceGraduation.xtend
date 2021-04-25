@@ -177,7 +177,7 @@ interface ServiceGraduation extends Service {
 	 * @param questionId l'ID de la question à laquelle retirer l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
 	 */
-	def void retractGradeEntry(int questionId, int gradeEntryId)
+	def boolean retractGradeEntry(int questionId, int gradeEntryId)
 	
     /**
      * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
@@ -195,7 +195,7 @@ interface ServiceGraduation extends Service {
 	 * <li>Ne pas être inferieure à 0</li>
 	 * </ul>
 	 */
-	def boolean validGradeEntry(int questionId,GradeEntry gradeAdd)
+	def boolean validGradeEntry(int questionId,GradeEntry gradeAdd,boolean removal)
 	
 	//===================================================
 	//             Informations sur la copies

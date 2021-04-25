@@ -149,7 +149,7 @@ public interface ServiceGraduation extends Service {
    * @param questionId l'ID de la question à laquelle retirer l'entrée
    * @param l'ID de l'entrée dans l'Examen
    */
-  void retractGradeEntry(final int questionId, final int gradeEntryId);
+  boolean retractGradeEntry(final int questionId, final int gradeEntryId);
   
   /**
    * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
@@ -168,7 +168,7 @@ public interface ServiceGraduation extends Service {
    * <li>Ne pas être inferieure à 0</li>
    * </ul>
    */
-  boolean validGradeEntry(final int questionId, final GradeEntry gradeAdd);
+  boolean validGradeEntry(final int questionId, final GradeEntry gradeAdd, final boolean removal);
   
   /**
    * @return la note maximal que peut avoir l'étudiant avec les questions auxquelles il a répondu

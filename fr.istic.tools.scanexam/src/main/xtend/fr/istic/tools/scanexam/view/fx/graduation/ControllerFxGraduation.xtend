@@ -809,7 +809,6 @@ class ControllerFxGraduation {
 	def void setZoomArea(double x, double y, double height, double width) {
 		if (autoZoom) 
 			mainPane.zoomTo(x,y,height,width)
-		logger.info("Zooming to" + x + y + height + width + autoZoom)
 	}
 
 	//----------------//
@@ -1028,7 +1027,7 @@ class ControllerFxGraduation {
         service.assignGradeEntry(questionId,gradeId);
     }
     
-    def removeGrade(int questionId,int gradeId) {
+    def boolean removeGrade(int questionId,int gradeId) {
         service.retractGradeEntry(questionId,gradeId);
     }
     /**

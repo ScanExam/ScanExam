@@ -408,6 +408,9 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     GradeScale _gradeScale = this.getQuestion(questionId).getGradeScale();
     boolean _tripleNotEquals = (_gradeScale != null);
     if (_tripleNotEquals) {
+      EList<GradeEntry> _steps = this.getQuestion(questionId).getGradeScale().getSteps();
+      String _plus = ("IN SERVICE : " + _steps);
+      ServiceImpl.logger.info(_plus);
       final Function1<GradeEntry, Tuple3<Integer, String, Float>> _function = (GradeEntry entry) -> {
         return Tuple3.<Integer, String, Float>of(Integer.valueOf(entry.getId()), entry.getHeader(), Float.valueOf(entry.getStep()));
       };
@@ -429,7 +432,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       return Boolean.valueOf((_id == gradeEntryId));
     };
     final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
-    boolean _validGradeEntry = this.validGradeEntry(questionId, gradeEntry);
+    boolean _validGradeEntry = this.validGradeEntry(questionId, gradeEntry, false);
     if (_validGradeEntry) {
       final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
       sheet.getGrades().get(questionId).getEntries().add(gradeEntry);
@@ -445,14 +448,19 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @param l'ID de l'entrée dans l'Examen
    */
   @Override
-  public void retractGradeEntry(final int questionId, final int gradeEntryId) {
+  public boolean retractGradeEntry(final int questionId, final int gradeEntryId) {
     final EList<GradeEntry> entries = (((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex]).getGrades().get(questionId).getEntries();
     final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
       int _id = entry.getId();
       return Boolean.valueOf((_id == gradeEntryId));
     };
     final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(entries, _function);
-    entries.remove(gradeEntry);
+    boolean _validGradeEntry = this.validGradeEntry(questionId, gradeEntry, true);
+    if (_validGradeEntry) {
+      entries.remove(gradeEntry);
+      return true;
+    }
+    return false;
   }
   
   /**
@@ -523,7 +531,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * </ul>
    */
   @Override
-  public boolean validGradeEntry(final int questionId, final GradeEntry gradeAdd) {
+  public boolean validGradeEntry(final int questionId, final GradeEntry gradeAdd, final boolean removal) {
     final float gradeMax = this.getQuestion(questionId).getGradeScale().getMaxPoint();
     final Function1<GradeEntry, Float> _function = (GradeEntry e) -> {
       return Float.valueOf(e.getStep());
@@ -536,7 +544,12 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       currentGrade = Float.valueOf(0f);
     }
     float _step = gradeAdd.getStep();
-    final float newGrade = ((currentGrade).floatValue() + _step);
+    float newGrade = ((currentGrade).floatValue() + _step);
+    if (removal) {
+      float _step_1 = gradeAdd.getStep();
+      float _minus = ((currentGrade).floatValue() - _step_1);
+      newGrade = _minus;
+    }
     ServiceImpl.logger.info(Boolean.valueOf(((newGrade <= gradeMax) && (newGrade >= 0))));
     return ((newGrade <= gradeMax) && (newGrade >= 0));
   }

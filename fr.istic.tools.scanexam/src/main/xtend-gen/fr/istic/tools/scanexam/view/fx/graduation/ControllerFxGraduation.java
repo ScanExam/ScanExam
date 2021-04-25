@@ -1007,7 +1007,6 @@ public class ControllerFxGraduation {
     if (this.autoZoom) {
       this.mainPane.zoomTo(x, y, height, width);
     }
-    ControllerFxGraduation.logger.info(((((("Zooming to" + Double.valueOf(x)) + Double.valueOf(y)) + Double.valueOf(height)) + Double.valueOf(width)) + Boolean.valueOf(this.autoZoom)));
   }
   
   public void nextPage() {
@@ -1289,8 +1288,8 @@ public class ControllerFxGraduation {
     return this.service.assignGradeEntry(questionId, gradeId);
   }
   
-  public void removeGrade(final int questionId, final int gradeId) {
-    this.service.retractGradeEntry(questionId, gradeId);
+  public boolean removeGrade(final int questionId, final int gradeId) {
+    return this.service.retractGradeEntry(questionId, gradeId);
   }
   
   /**
