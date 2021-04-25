@@ -30,11 +30,6 @@ mvn compile
 mvn exec:java
 ```
 
-You can specify Graphic Library to use by adding program argument:
-```maven
-mvn exec:java -D exec.args="-javafx"
-```
-
 ## Execute tests
 
 ```maven
@@ -45,12 +40,3 @@ mvn test
 ```maven
 mvn compile assembly:single
 ```
-
-# Program arguments
-
-
-| Argument |  Description |
-|----------|---------------------------------|
-| -javafx | Run program with JavaFX library |
-| -swing  | Run program with Swing library  |
- 
