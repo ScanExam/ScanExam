@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation
 
 import fr.istic.tools.scanexam.view.fx.component.RenameFieldSuggests
 import javafx.scene.control.Label
-import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate

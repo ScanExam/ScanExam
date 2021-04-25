@@ -13,7 +13,7 @@ public class Main {
   public static void main(final String[] args) {
     Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
     ConfigurationManager.init();
-    LanguageManager.init(ConfigurationManager.instance.getLanguage());
+    LanguageManager.init(LanguageManager.toLocale(ConfigurationManager.instance.getLanguage()).orElse(null));
     final ServiceImpl service = new ServiceImpl();
     LauncherFX.launchApp(service, service);
   }

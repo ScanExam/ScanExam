@@ -81,7 +81,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<GradeEntry> getEntries() {
 		if (entries == null) {
 			entries = new EObjectResolvingEList<GradeEntry>(GradeEntry.class, this, CorePackage.GRADE__ENTRIES);
@@ -94,7 +93,6 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public EList<Comment> getComments() {
 		if (comments == null) {
 			comments = new EObjectContainmentEList<Comment>(Comment.class, this, CorePackage.GRADE__COMMENTS);

@@ -96,7 +96,7 @@ public class ControllerConfiguration {
    * Initialise les différents champs avec la valeur actuelle de la configuration
    */
   public void initialize() {
-    this.cmbBxLanguage.setValue(LocaleExtensions.capitalizeDisplayName(this.config.getLanguage()));
+    this.cmbBxLanguage.setValue(LocaleExtensions.capitalizeDisplayName(LanguageManager.getCurrentLanguage()));
     this.txtFldEmail.setText(this.config.getEmail());
     this.pwdFldEmailPassword.setText(this.config.getEmailPassword());
     this.txtFldEmailHost.setText(this.config.getMailHost());
@@ -159,7 +159,7 @@ public class ControllerConfiguration {
     Locale _currentLanguage = LanguageManager.getCurrentLanguage();
     boolean _notEquals = (!Objects.equal(newLocale, _currentLanguage));
     needToRestart = _notEquals;
-    this.config.setLanguage(newLocale);
+    this.config.setLanguage(newLocale.toString());
     this.config.setEmail(email);
     this.config.setEmailPassword(emailPassword);
     this.config.setMailHost(emailHost);

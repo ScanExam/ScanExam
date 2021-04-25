@@ -7,12 +7,13 @@ import java.util.HashSet
 import java.util.Locale
 import java.util.MissingResourceException
 import java.util.Objects
+import java.util.Optional
 import java.util.ResourceBundle
 import java.util.stream.Collectors
+import javax.annotation.Nullable
 import org.apache.logging.log4j.LogManager
 
 import static java.util.Locale.*
-import javax.annotation.Nullable
 
 /**
  * Classe permettant de gérer le langage d'affichage de l'application en se basant sur les {@link Locale Locale}.<br/>
@@ -152,5 +153,25 @@ class LanguageManager {
 			logger.warn(code + " not found for " + currentLocale.displayName + ".")
 			return code
 		}
+	}
+	
+	/**
+	 * Convertit un String en {@link Locale}
+	 * @param un Locale sous forme de String valide (non null), par exemple "fr" ou "fr_FR"
+	 * @return le Locale si <i>language a pu être parsé<i>, Optional.empty sinon
+	 * @throw IllegalArgumentException si le <i>language</i> n'est pas un Locale valide
+	 */
+	def static Optional<Locale> toLocale(String language) {
+		Objects.requireNonNull(language, "Language can not be null")
+		val String[] splitted = language.split("_")
+		val locale = 
+			if(splitted.size == 1)
+				new Locale(splitted.get(0), "")
+			else if(splitted.size == 2)
+				new Locale(splitted.get(0), splitted.get(1))
+			else
+				throw new IllegalArgumentException(String.format("'%s' is not a valid locale syntax", language))
+		return Optional.ofNullable(locale)
+			
 	}
 }

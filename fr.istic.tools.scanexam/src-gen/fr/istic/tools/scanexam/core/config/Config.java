@@ -2,8 +2,6 @@
  */
 package fr.istic.tools.scanexam.core.config;
 
-import java.util.Locale;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -32,12 +30,12 @@ public interface Config extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Language</em>' attribute.
-	 * @see #setLanguage(Locale)
+	 * @see #setLanguage(String)
 	 * @see fr.istic.tools.scanexam.core.config.ConfigPackage#getConfig_Language()
-	 * @model unique="false" dataType="fr.istic.tools.scanexam.core.config.Locale"
+	 * @model unique="false"
 	 * @generated
 	 */
-	Locale getLanguage();
+	String getLanguage();
 
 	/**
 	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.config.Config#getLanguage <em>Language</em>}' attribute.
@@ -47,7 +45,7 @@ public interface Config extends EObject {
 	 * @see #getLanguage()
 	 * @generated
 	 */
-	void setLanguage(Locale value);
+	void setLanguage(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Email</b></em>' attribute.

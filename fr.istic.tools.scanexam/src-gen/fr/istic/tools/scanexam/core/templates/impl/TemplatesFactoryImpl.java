@@ -68,7 +68,6 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public CorrectionTemplate createCorrectionTemplate() {
 		CorrectionTemplateImpl correctionTemplate = new CorrectionTemplateImpl();
 		return correctionTemplate;
@@ -79,7 +78,6 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public CreationTemplate createCreationTemplate() {
 		CreationTemplateImpl creationTemplate = new CreationTemplateImpl();
 		return creationTemplate;
@@ -90,7 +88,6 @@ public class TemplatesFactoryImpl extends EFactoryImpl implements TemplatesFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TemplatesPackage getTemplatesPackage() {
 		return (TemplatesPackage)getEPackage();
 	}

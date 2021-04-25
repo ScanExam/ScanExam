@@ -4,7 +4,6 @@ package fr.istic.tools.scanexam.core.config;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 
 /**
@@ -129,16 +128,6 @@ public interface ConfigPackage extends EPackage {
 	 */
 	int CONFIG_OPERATION_COUNT = 0;
 
-	/**
-	 * The meta object id for the '<em>Locale</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.util.Locale
-	 * @see fr.istic.tools.scanexam.core.config.impl.ConfigPackageImpl#getLocale()
-	 * @generated
-	 */
-	int LOCALE = 1;
-
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.config.Config <em>Config</em>}'.
@@ -204,17 +193,6 @@ public interface ConfigPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getConfig_MailPort();
-
-	/**
-	 * Returns the meta object for data type '{@link java.util.Locale <em>Locale</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Locale</em>'.
-	 * @see java.util.Locale
-	 * @model instanceClass="java.util.Locale"
-	 * @generated
-	 */
-	EDataType getLocale();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -288,16 +266,6 @@ public interface ConfigPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONFIG__MAIL_PORT = eINSTANCE.getConfig_MailPort();
-
-		/**
-		 * The meta object literal for the '<em>Locale</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.util.Locale
-		 * @see fr.istic.tools.scanexam.core.config.impl.ConfigPackageImpl#getLocale()
-		 * @generated
-		 */
-		EDataType LOCALE = eINSTANCE.getLocale();
 
 	}
 

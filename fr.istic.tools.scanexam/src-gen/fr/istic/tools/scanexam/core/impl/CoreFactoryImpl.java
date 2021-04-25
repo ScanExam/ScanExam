@@ -78,7 +78,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public QuestionZone createQuestionZone() {
 		QuestionZoneImpl questionZone = new QuestionZoneImpl();
 		return questionZone;
@@ -89,7 +88,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Question createQuestion() {
 		QuestionImpl question = new QuestionImpl();
 		return question;
@@ -100,7 +98,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public GradeScale createGradeScale() {
 		GradeScaleImpl gradeScale = new GradeScaleImpl();
 		return gradeScale;
@@ -111,7 +108,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public GradeEntry createGradeEntry() {
 		GradeEntryImpl gradeEntry = new GradeEntryImpl();
 		return gradeEntry;
@@ -122,7 +118,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Exam createExam() {
 		ExamImpl exam = new ExamImpl();
 		return exam;
@@ -133,7 +128,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Page createPage() {
 		PageImpl page = new PageImpl();
 		return page;
@@ -144,7 +138,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Comment createComment() {
 		CommentImpl comment = new CommentImpl();
 		return comment;
@@ -155,7 +148,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public TextComment createTextComment() {
 		TextCommentImpl textComment = new TextCommentImpl();
 		return textComment;
@@ -166,7 +158,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public HandwritingComment createHandwritingComment() {
 		HandwritingCommentImpl handwritingComment = new HandwritingCommentImpl();
 		return handwritingComment;
@@ -177,7 +168,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Line createLine() {
 		LineImpl line = new LineImpl();
 		return line;
@@ -188,7 +178,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Grade createGrade() {
 		GradeImpl grade = new GradeImpl();
 		return grade;
@@ -199,7 +188,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public StudentSheet createStudentSheet() {
 		StudentSheetImpl studentSheet = new StudentSheetImpl();
 		return studentSheet;
@@ -210,7 +198,6 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public CorePackage getCorePackage() {
 		return (CorePackage)getEPackage();
 	}

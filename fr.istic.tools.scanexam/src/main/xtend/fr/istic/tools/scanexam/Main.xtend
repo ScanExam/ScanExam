@@ -16,7 +16,7 @@ class Main
 	
 		Configurator.setAllLevels(LogManager.rootLogger.getName, Level.ALL)
 		ConfigurationManager.init
-		LanguageManager.init(ConfigurationManager.instance.language)
+		LanguageManager.init(LanguageManager.toLocale(ConfigurationManager.instance.language).orElse(null))
 
 	
 		val service = new ServiceImpl();

@@ -30,7 +30,9 @@ public class LanguageManagerTest {
 	
 	@BeforeAll
 	static void init() {
-		Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.OFF);
+		System.out.println(new Locale("fr", ""));
+		Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
+		
 	}
 	
 	@BeforeEach
@@ -81,6 +83,19 @@ public class LanguageManagerTest {
 	@DisplayName("init avec une JVM configurée sur un Locale non supporté mais sur un langage supporté")
 	void initTest3() {
 		Locale.setDefault(new Locale("fr", "CA"));
+		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
+		final Collection<Locale> locales = LanguageManager.getSupportedLocales();
+		final Collection<Locale> expected = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, new Locale("es", ""));
+		
+		assertTrue(locales.containsAll(expected) && expected.containsAll(locales));
+		assertEquals(Locale.FRENCH, LanguageManager.getCurrentLanguage());
+		assertEquals(Locale.ENGLISH, Locale.getDefault());
+	}
+	
+	@Test
+	@DisplayName("init avec une JVM configurée sur un Locale non supporté mais sur un langage supporté")
+	void initTest3_5() {
+		Locale.setDefault(new Locale("fr", "fr"));
 		jailBreak(LanguageManager.class, "init", Locale.getDefault(), "languages/");
 		final Collection<Locale> locales = LanguageManager.getSupportedLocales();
 		final Collection<Locale> expected = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, new Locale("es", ""));
@@ -161,5 +176,25 @@ public class LanguageManagerTest {
 		assertEquals("oyster", LanguageManager.translate("oyster"));
 		assertNotNull(LanguageManager.getCurrentBundle());
 		assertThrows(MissingResourceException.class, () -> LanguageManager.getCurrentBundle().getString("oyster"));
+	}
+	
+	@Test
+	@DisplayName("toLocale sur des entrées valides")
+	void toLocaleTest1() {
+		var language = LanguageManager.toLocale("fr_fr");
+		assertTrue(language.isPresent());
+		assertEquals(new Locale("fr", "fr"), language.get());
+		language = LanguageManager.toLocale("fr");
+		assertTrue(language.isPresent());
+		assertEquals(new Locale("fr", ""), language.get());
+		language = LanguageManager.toLocale("fr_ca");
+		assertTrue(language.isPresent());
+		assertEquals(new Locale("fr", "ca"), language.get());
+	}
+	
+	@Test
+	@DisplayName("toLocale sur des entrées non valides")
+	void toLocaleTest2() {
+		assertThrows(IllegalArgumentException.class, () -> LanguageManager.toLocale("fr_en_es"));
 	}
 }

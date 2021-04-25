@@ -175,7 +175,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getX1() {
 		return x1;
 	}
@@ -185,7 +184,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setX1(float newX1) {
 		float oldX1 = x1;
 		x1 = newX1;
@@ -198,7 +196,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getY1() {
 		return y1;
 	}
@@ -208,7 +205,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setY1(float newY1) {
 		float oldY1 = y1;
 		y1 = newY1;
@@ -221,7 +217,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getX2() {
 		return x2;
 	}
@@ -231,7 +226,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setX2(float newX2) {
 		float oldX2 = x2;
 		x2 = newX2;
@@ -244,7 +238,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getY2() {
 		return y2;
 	}
@@ -254,7 +247,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setY2(float newY2) {
 		float oldY2 = y2;
 		y2 = newY2;
@@ -267,7 +259,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getThinkness() {
 		return thinkness;
 	}
@@ -277,7 +268,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setThinkness(float newThinkness) {
 		float oldThinkness = thinkness;
 		thinkness = newThinkness;
@@ -290,7 +280,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getColor() {
 		return color;
 	}
@@ -300,7 +289,6 @@ public class LineImpl extends MinimalEObjectImpl.Container implements Line {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setColor(String newColor) {
 		String oldColor = color;
 		color = newColor;

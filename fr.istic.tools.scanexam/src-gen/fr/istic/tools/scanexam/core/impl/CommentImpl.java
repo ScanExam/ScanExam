@@ -175,7 +175,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getId() {
 		return id;
 	}
@@ -185,7 +184,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setId(int newId) {
 		int oldId = id;
 		id = newId;
@@ -198,7 +196,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public int getPageId() {
 		return pageId;
 	}
@@ -208,7 +205,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPageId(int newPageId) {
 		int oldPageId = pageId;
 		pageId = newPageId;
@@ -221,7 +217,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getX() {
 		return x;
 	}
@@ -231,7 +226,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setX(float newX) {
 		float oldX = x;
 		x = newX;
@@ -244,7 +238,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getY() {
 		return y;
 	}
@@ -254,7 +247,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setY(float newY) {
 		float oldY = y;
 		y = newY;
@@ -267,7 +259,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getPointerX() {
 		return pointerX;
 	}
@@ -277,7 +268,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPointerX(float newPointerX) {
 		float oldPointerX = pointerX;
 		pointerX = newPointerX;
@@ -290,7 +280,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public float getPointerY() {
 		return pointerY;
 	}
@@ -300,7 +289,6 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void setPointerY(float newPointerY) {
 		float oldPointerY = pointerY;
 		pointerY = newPointerY;

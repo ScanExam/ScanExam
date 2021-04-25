@@ -66,7 +66,7 @@ public class ConfigurationManager {
    */
   public static Config create() {
     final Config config = ConfigFactory.eINSTANCE.createConfig();
-    config.setLanguage(Locale.getDefault());
+    config.setLanguage(Locale.getDefault().toString());
     return config;
   }
   

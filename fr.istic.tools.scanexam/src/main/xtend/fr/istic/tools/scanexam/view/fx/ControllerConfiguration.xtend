@@ -85,7 +85,7 @@ class ControllerConfiguration {
 	def initialize() {
 		
 
-		cmbBxLanguage.value = config.language.capitalizeDisplayName
+		cmbBxLanguage.value = LanguageManager.currentLanguage.capitalizeDisplayName
 		txtFldEmail.text = config.email
 		pwdFldEmailPassword.text = config.emailPassword
 		txtFldEmailHost.text = config.mailHost
@@ -131,7 +131,7 @@ class ControllerConfiguration {
 		if (newLocale === null)
 			throw new IllegalArgumentException(newLocale + " is not supported.")
 		needToRestart = newLocale != LanguageManager.currentLanguage
-		config.language = newLocale
+		config.language = newLocale.toString
 		config.email = email
 		config.emailPassword = emailPassword
 		config.mailHost = emailHost

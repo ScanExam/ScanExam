@@ -4,9 +4,11 @@ import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -14,6 +16,7 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -232,5 +235,38 @@ public class LanguageManager {
       }
     }
     return _xtrycatchfinallyexpression;
+  }
+  
+  /**
+   * Convertit un String en {@link Locale}
+   * @param un Locale sous forme de String valide (non null), par exemple "fr" ou "fr_FR"
+   * @return le Locale si <i>language a pu être parsé<i>, Optional.empty sinon
+   * @throw IllegalArgumentException si le <i>language</i> n'est pas un Locale valide
+   */
+  public static Optional<Locale> toLocale(final String language) {
+    Objects.<String>requireNonNull(language, "Language can not be null");
+    final String[] splitted = language.split("_");
+    Locale _xifexpression = null;
+    int _size = ((List<String>)Conversions.doWrapArray(splitted)).size();
+    boolean _equals = (_size == 1);
+    if (_equals) {
+      String _get = splitted[0];
+      _xifexpression = new Locale(_get, "");
+    } else {
+      Locale _xifexpression_1 = null;
+      int _size_1 = ((List<String>)Conversions.doWrapArray(splitted)).size();
+      boolean _equals_1 = (_size_1 == 2);
+      if (_equals_1) {
+        String _get_1 = splitted[0];
+        String _get_2 = splitted[1];
+        _xifexpression_1 = new Locale(_get_1, _get_2);
+      } else {
+        String _format = String.format("\'%s\' is not a valid locale syntax", language);
+        throw new IllegalArgumentException(_format);
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    final Locale locale = _xifexpression;
+    return Optional.<Locale>ofNullable(locale);
   }
 }

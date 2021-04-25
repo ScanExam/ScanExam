@@ -5,8 +5,6 @@ package fr.istic.tools.scanexam.core.config.impl;
 import fr.istic.tools.scanexam.core.config.Config;
 import fr.istic.tools.scanexam.core.config.ConfigPackage;
 
-import java.util.Locale;
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -40,7 +38,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Locale LANGUAGE_EDEFAULT = null;
+	protected static final String LANGUAGE_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getLanguage() <em>Language</em>}' attribute.
@@ -50,7 +48,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * @generated
 	 * @ordered
 	 */
-	protected Locale language = LANGUAGE_EDEFAULT;
+	protected String language = LANGUAGE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute.
@@ -156,7 +154,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Locale getLanguage() {
+	public String getLanguage() {
 		return language;
 	}
 
@@ -165,8 +163,8 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLanguage(Locale newLanguage) {
-		Locale oldLanguage = language;
+	public void setLanguage(String newLanguage) {
+		String oldLanguage = language;
 		language = newLanguage;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ConfigPackage.CONFIG__LANGUAGE, oldLanguage, language));
@@ -287,7 +285,7 @@ public class ConfigImpl extends MinimalEObjectImpl.Container implements Config {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ConfigPackage.CONFIG__LANGUAGE:
-				setLanguage((Locale)newValue);
+				setLanguage((String)newValue);
 				return;
 			case ConfigPackage.CONFIG__EMAIL:
 				setEmail((String)newValue);

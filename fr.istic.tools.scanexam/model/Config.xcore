@@ -1,10 +1,8 @@
 package fr.istic.tools.scanexam.core.config
-import java.util.Locale
-type Locale wraps Locale
 
 class Config 
 {
-	Locale language
+	String language
 	String email = ""
 	String emailPassword = ""
 	String mailHost = ""

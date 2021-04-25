@@ -48,6 +48,8 @@ class ControllerRoot implements Initializable {
 	MenuItem pdfExportButton;
 	@FXML
 	MenuItem sendMailButton;
+	@FXML
+	MenuItem pdfExportGradeButton;
 	
 	@Accessors
 	ControllerFxGraduation graduationController;
@@ -237,6 +239,7 @@ class ControllerRoot implements Initializable {
 		loadStudentNamesButton.disableProperty.bind(graduationController.loadedModel.not)
 		pdfExportButton.disableProperty.bind(graduationController.loadedModel.not)
 		sendMailButton.disableProperty.bind(graduationController.loadedModel.not)
+		pdfExportGradeButton.disableProperty.bind(graduationController.loadedModel.not)
 	}
 	
 	override initialize(URL location, ResourceBundle resources) {
