@@ -27,7 +27,7 @@ mvn compile
 ## Execute program
 
 ```maven
-mvn exec:java
+mvn compile exec:java
 ```
 
 ## Execute tests
