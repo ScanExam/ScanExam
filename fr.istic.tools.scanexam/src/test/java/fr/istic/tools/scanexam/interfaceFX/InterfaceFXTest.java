@@ -100,14 +100,14 @@ class InterfaceFXTest {
 		Il faudra pendant le test, sélectionner le fichier qui correspond. Une indication avant chaque test vous indique quel 
 		fichier sera utile.
 	 */
-	/*
+
 	@DisplayName("Premier Test : Clique Simple")
 	@Test
 	public void cliqueSimple(FxRobot robot) {
 		robot.clickOn("#nextPageButton");
 		assertTrue(true);
-	}*/
-	/*
+	}
+
 	@DisplayName("Changement onglet: Editeur Correcteur")
 	@Test
 	public void changeTab(FxRobot robot) throws InterruptedException {
@@ -119,8 +119,8 @@ class InterfaceFXTest {
 		Thread.sleep(1000);
 		robot.clickOn("#editorTab");	
 		assertTrue(true);
-	}*/
-	/*
+	}
+
 	@DisplayName("Ouvrir les menus")
 	@Test
 	public void openMenu(FxRobot robot) throws InterruptedException {
@@ -130,14 +130,13 @@ class InterfaceFXTest {
 		Thread.sleep(1000);
 		robot.clickOn("#menuView");		
 		assertTrue(true);
-	}*/
+	}
 
 	// Besoin d'un pdf pour modèle
-	@DisplayName("SCENARIO 1 : Editeur")
+	@DisplayName("SCENARIO COMPLET : Editeur + Correcteur")
 	@Test
-	public void CreationTemplateAndSave(FxRobot robot) throws InterruptedException {
+	public void scenarioEditeurPlusCorrecteur(FxRobot robot) throws InterruptedException {
 
-		
 		//clique sur file editor
 		robot.clickOn("#menuFile");
 		Thread.sleep(1000);
@@ -225,10 +224,10 @@ class InterfaceFXTest {
 		robot.clickOn(477, 250, MouseButton.PRIMARY);
 		robot.clickOn(477, 360, MouseButton.PRIMARY);
 		robot.clickOn(477, 302, MouseButton.PRIMARY);
-		
-		
-		
-		
+
+
+
+
 		//CORRECTION
 		robot.clickOn("#menuFile");
 		Thread.sleep(500);
@@ -245,29 +244,113 @@ class InterfaceFXTest {
 		Thread.sleep(10000);
 		robot.clickOn("#correctorTab");
 		Thread.sleep(500);
-		
-		while(true) {
-			System.out.println(MouseInfo.getPointerInfo().getLocation());
-		}
-	}
 
-	/*
-	@DisplayName("Creation d'une nouvelle question")
-	@Test
-	public void CreationAeraQuestion(FxRobot robot) throws InterruptedException {
-		//clique sur file editor
-		robot.clickOn("#questionAreaPressed");
-		robot.drag(25, 25, MouseButton.PRIMARY);
-		robot.dropTo(40, 40);
+		//Ajout Entry Q1
+		robot.clickOn(1492, 235, MouseButton.PRIMARY);
+		robot.clickOn(641, 239, MouseButton.PRIMARY);
+
+		robot.clickOn(641, 270, MouseButton.PRIMARY);
+
+		//Premiere entry
+		robot.doubleClickOn(638, 213, MouseButton.PRIMARY);
+		robot.write("2");
+		robot.doubleClickOn(642, 262, MouseButton.PRIMARY);
+		robot.doubleClickOn(958, 382, MouseButton.PRIMARY);
+		robot.write("Premiere Entrée");
+		robot.doubleClickOn(959, 536, MouseButton.PRIMARY);
+		Thread.sleep(1000);
+		//Second entry
+		robot.clickOn(646, 399, MouseButton.PRIMARY);
+		robot.doubleClickOn(646, 373, MouseButton.PRIMARY);
+		robot.write("1");
+		robot.doubleClickOn(639, 424, MouseButton.PRIMARY);
+		robot.doubleClickOn(958, 382, MouseButton.PRIMARY);
+		robot.write("Seconde Entrée");
+		robot.doubleClickOn(959, 536, MouseButton.PRIMARY);
+
 		Thread.sleep(1000);
 
-	}*/
-	/*
+		robot.clickOn(648, 529, MouseButton.PRIMARY);
+		Thread.sleep(500);
+		//Attribution des note
+		robot.clickOn(580, 215, MouseButton.PRIMARY);
+		robot.clickOn(580, 344, MouseButton.PRIMARY);
+		Thread.sleep(500);
+		robot.clickOn(580, 344, MouseButton.PRIMARY);
+		robot.clickOn(580, 215, MouseButton.PRIMARY);
+		Thread.sleep(1000);
+		//Retirer une question
+		robot.clickOn(644, 473, MouseButton.PRIMARY);
+		robot.clickOn(647, 498, MouseButton.PRIMARY);
+		robot.clickOn(643, 371, MouseButton.PRIMARY);
+
+		//Navigation question
+		robot.clickOn("#nextQuestionButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevQuestionButton");
+		Thread.sleep(500);
+
+
+		//Deplacement de la fenetre
+		robot.drag(643, 185, MouseButton.PRIMARY);
+		robot.dropTo(1173, 559);
+		Thread.sleep(1000);
+
+		//Ajoute annotation
+		robot.clickOn(690, 150, MouseButton.PRIMARY);
+		robot.clickOn(748, 270, MouseButton.PRIMARY);
+		robot.doubleClickOn(781, 323, MouseButton.PRIMARY);
+		robot.doubleClickOn(781, 323, MouseButton.PRIMARY);
+		robot.write("Nouvelle annotation");
+		Thread.sleep(1000);
+		//Deplacement annotation
+		robot.drag(762, 284, MouseButton.PRIMARY);
+		robot.dropTo(892, 188);
+		Thread.sleep(1000);
+
+		//Seond annotation
+		robot.clickOn(690, 150, MouseButton.PRIMARY);
+		Thread.sleep(500);
+		robot.clickOn(754, 428, MouseButton.PRIMARY);
+		Thread.sleep(500);
+		robot.clickOn(814, 443, MouseButton.PRIMARY);
+		Thread.sleep(1000);
+
+		//Visalisation annot
+		robot.clickOn(554, 148, MouseButton.PRIMARY);
+		Thread.sleep(500);
+		robot.clickOn(554, 148, MouseButton.PRIMARY);
+		Thread.sleep(500);
+
+		//Position Fenetre de base
+		robot.clickOn(421, 150, MouseButton.PRIMARY);
+		Thread.sleep(500);
+
+		//Nommage etudiant
+		robot.clickOn(451, 584, MouseButton.PRIMARY);
+		robot.write("Etudiant N°1");
+		Thread.sleep(500);
+
+		//Etudiant suivant
+		robot.clickOn("#nextStudentButton");
+		Thread.sleep(500);
+		robot.clickOn("#prevStudentButton");
+		Thread.sleep(500);
+
+		//Enregister
+		robot.clickOn("#menuFile");
+		Thread.sleep(500);
+		robot.clickOn("#saveGraduationButton");
+		Thread.sleep(10000);
+
+	}
+
+
 	//PDF a plusieurs page 
 	@DisplayName("Navigation dans les pages : PDF a plusieurs page seulement")
 	@Test
 	public void navigQuestion(FxRobot robot) throws InterruptedException {
-		
+
 		//clique sur file editor
 		robot.clickOn("#menuFile");
 		Thread.sleep(1000);
@@ -288,14 +371,27 @@ class InterfaceFXTest {
 		Thread.sleep(500);
 		robot.clickOn("#nextPageButton");
 		assertTrue(true);
-	}*/
+	}
 
-	/*
+
 	// Besoin d'un pdf pour modèle
 	@DisplayName("Sauvegarde d'une nouvelle template")
 	@Test
 	public void saveTemplate(FxRobot robot) throws InterruptedException {
-		CreationTemplateAndSave(robot);
+		//clique sur file editor
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
+		//clique sur create new template
+		robot.clickOn("#newTemplate");	
+		Thread.sleep(1000);
+		//Selectionner et charger le pdf
+		robot.clickOn("#btnBrowser");	
+		Thread.sleep(10000);
+		robot.clickOn("#txtFldTemplateName");	
+		robot.write("TestProjet1");
+		Thread.sleep(1000);
+		robot.clickOn("#btnOk");
+		Thread.sleep(2000);
 		//clique sur file editor
 		robot.clickOn("#menuFile");
 		Thread.sleep(1000);
@@ -304,14 +400,28 @@ class InterfaceFXTest {
 		Thread.sleep(1000);
 		assertTrue(true);
 	}
-	 */
 
-	/*
+
+
 	// Besoin d'un pdf pour modèle
 	@DisplayName("Changer de page Editeur")
 	@Test
 	public void changePage(FxRobot robot) throws InterruptedException {
-		CreationTemplateAndSave(robot);
+		//clique sur file editor
+		robot.clickOn("#menuFile");
+		Thread.sleep(1000);
+		//clique sur create new template
+		robot.clickOn("#newTemplate");	
+		Thread.sleep(1000);
+		//Selectionner et charger le pdf
+		robot.clickOn("#btnBrowser");	
+		Thread.sleep(10000);
+		robot.clickOn("#txtFldTemplateName");	
+		robot.write("TestProjet1");
+		Thread.sleep(1000);
+		robot.clickOn("#btnOk");
+		Thread.sleep(2000);
+
 		Thread.sleep(500);
 		robot.clickOn("#nextPageButton");
 		Thread.sleep(500);
@@ -324,8 +434,8 @@ class InterfaceFXTest {
 		robot.clickOn("#pageChoice");
 		Thread.sleep(500);
 		assertTrue(true);
-	}*/
-	/*
+	}
+
 	// Besoin d'un modèle et des copies à corriger
 	@DisplayName("Correction : Changement d'élève ou de question")
 	@Test
@@ -362,5 +472,5 @@ class InterfaceFXTest {
 		robot.clickOn("#prevQuestionButton");
 		assertTrue(true);
 	}
-	 */
+
 }
