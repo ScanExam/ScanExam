@@ -418,7 +418,7 @@ class Grader extends VBox {
 			stage.setResizable(false)
 			stage.setTitle("Editeur HTML");
 			// layout = ClassLoader.getSystemResource("resources_utils/HTML.FXML");
-			var inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.FXML")
+			var inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.fxml")
 			var fxmlLoader = new FXMLLoader
 			var root = fxmlLoader.load(inputLayout);
 			var scene = new Scene(root, 640, 480);
