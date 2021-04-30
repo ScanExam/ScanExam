@@ -489,6 +489,11 @@ class ControllerFxGraduation {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
+			file = if(!file.getName().contains(".xmi")){
+                new File(file.getAbsolutePath() + ".xmi")
+            }else {
+                file
+            }
 			saveTemplate(file.path)
 			logger.info("Saving correction file")
 		} 
