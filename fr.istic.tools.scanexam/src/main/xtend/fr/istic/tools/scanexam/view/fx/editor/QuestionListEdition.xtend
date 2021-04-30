@@ -3,8 +3,11 @@ package fr.istic.tools.scanexam.view.fx.editor
 import javafx.scene.layout.VBox
 import javafx.scene.layout.Priority
 import javafx.scene.Node
+import org.apache.logging.log4j.LogManager
 
 class QuestionListEdition extends VBox {
+	
+	static val logger = LogManager.logger
 	
 	//---Controller---//
 	new(ControllerFxEdition controller) {
@@ -60,7 +63,7 @@ class QuestionListEdition extends VBox {
 		removeFocus
 		controller.mainPane.removeZone(item.zone)
 		remove(item)
-		//removeFromModel(item) //TODO FIX
+		removeFromModel(item)
 	}
 	
 	def void select(QuestionItemEdition item) {
@@ -108,7 +111,10 @@ class QuestionListEdition extends VBox {
 	}
 
 	def remove(QuestionItemEdition item) {
+		System.out.println(this)
 		this.children.remove(item)
+		logger.info("remove")
+		System.out.println(this.children.toString())
 	}
 	
 	def clear(){
