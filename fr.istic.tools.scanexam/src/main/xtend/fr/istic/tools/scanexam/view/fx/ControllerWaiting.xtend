@@ -70,7 +70,7 @@ class ControllerWaiting implements Initializable {
 	def static void openWaitingDialog(ReadOnlyStringProperty progressTextProperty, ReadOnlyDoubleProperty progressProperty, Stage parentStage) {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
-		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/WaitingUI.FXML"))
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/WaitingUI.fxml"))
 		val Stage dialog = new Stage
 		val controller = loader.<ControllerWaiting>controller
 		val scene = new Scene(view, 289, 103)
