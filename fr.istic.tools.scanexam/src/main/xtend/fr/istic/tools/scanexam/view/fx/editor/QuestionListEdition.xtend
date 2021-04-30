@@ -26,7 +26,7 @@ class QuestionListEdition extends VBox {
 	
 	//---Methods---//
 	def loadQuestion(Box box, String name,int page,int id,float questionWorth) {
-		var item = new QuestionItemEdition(this,box,name,page,id);
+		var item = new QuestionItemEdition(this,box,name,page+1,id);
 		item.scale = questionWorth
 		add(item);
 	}
@@ -49,9 +49,9 @@ class QuestionListEdition extends VBox {
 			default: {
 			}
 		}
-		println("page : " + controller.pdfManager.currentPdfPageNumber)
+		println("page : " + controller.pdfManager.currentPdfPageNumber+1)
 		var item = new QuestionItemEdition(this, box, type,
-			controller.pdfManager.currentPdfPageNumber);
+			controller.pdfManager.currentPdfPageNumber+1);
 
 		addToModel(item)
 		add(item)
@@ -89,7 +89,7 @@ class QuestionListEdition extends VBox {
 	def void showOnlyPage(int page) {
 		for (Node e : children) {
 			if (e instanceof QuestionItemEdition) {
-				checkAndDisplay(page, e as QuestionItemEdition)
+				checkAndDisplay(page+1, e as QuestionItemEdition)
 			}
 
 		}

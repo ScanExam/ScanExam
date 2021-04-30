@@ -499,10 +499,8 @@ class ControllerFxGraduation {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			file = if(!file.getName().contains(".xmi")){
-                new File(file.getAbsolutePath() + ".xmi")
-            }else {
-                file
+			if(!file.getName().contains(".xmi")){
+                file = new File(file.getAbsolutePath() + ".xmi")
             }
 			saveTemplate(file.path)
 			logger.info("Saving correction file")
@@ -1029,10 +1027,8 @@ class ControllerFxGraduation {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			file = if(!file.getName().contains(".xlsx")){
-                new File(file.getAbsolutePath() + ".xlsx")
-            }else {
-                file
+			if(!file.getName().contains(".xlsx")){
+                file = new File(file.getAbsolutePath() + ".xlsx")
             }
 			saveTemplate(file.path)
 			logger.info("Export grade in Excel")

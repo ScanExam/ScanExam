@@ -544,10 +544,8 @@ class ControllerFxEdition {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-            file = if(!file.getName().contains(".xmi")){
-                new File(file.getAbsolutePath() + ".xmi")
-            }else {
-                file
+            if(!file.getName().contains(".xmi")){
+                file = new File(file.getAbsolutePath() + ".xmi")
             }
 		    save(file);
 		} else {
@@ -646,7 +644,7 @@ class ControllerFxEdition {
 		pageChoice.items.clear
  
 		for (var i = 1; i<=pdfManager.getPdfPageCount(); i++) {
-			//println(i)
+			println(i)
 			if (!pageChoice.items.contains(i)) {
 				pageChoice.getItems().add(i)
 			}
