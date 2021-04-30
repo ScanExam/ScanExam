@@ -1029,6 +1029,11 @@ class ControllerFxGraduation {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
+			file = if(!file.getName().contains(".xlsx")){
+                new File(file.getAbsolutePath() + ".xlsx")
+            }else {
+                file
+            }
 			saveTemplate(file.path)
 			logger.info("Export grade in Excel")
 		} 
