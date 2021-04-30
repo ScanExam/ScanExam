@@ -36,6 +36,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -545,94 +546,99 @@ public class ControllerFxGraduation {
   }
   
   public void setKeybinds() {
-    Scene s = this.mainPane.getScene();
+    final Scene s = this.mainPane.getScene();
     final EventHandler<KeyEvent> _function = (KeyEvent event) -> {
-      KeyCode _code = event.getCode();
-      boolean _matched = false;
-      if (Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
-        _matched=true;
-        this.nextQuestionPressed();
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+      Node node = s.getFocusOwner();
+      if ((node instanceof TextInputControl)) {
+      } else {
+        KeyCode _code = event.getCode();
+        boolean _matched = false;
+        if (Objects.equal(_code, FxSettings.BUTTON_NEXT_QUESTION)) {
           _matched=true;
-          this.prevQuestionPressed();
+          this.nextQuestionPressed();
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
-          _matched=true;
-          this.prevStudentPressed();
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_PREV_QUESTION)) {
+            _matched=true;
+            this.prevQuestionPressed();
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
-          _matched=true;
-          this.nextStudentPressed();
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_PREV_STUDENT)) {
+            _matched=true;
+            this.prevStudentPressed();
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_1)) {
-          _matched=true;
-          this.grader.interactUsingIndex(1);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_NEXT_STUDENT)) {
+            _matched=true;
+            this.nextStudentPressed();
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_2)) {
-          _matched=true;
-          this.grader.interactUsingIndex(2);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_1)) {
+            _matched=true;
+            this.grader.interactUsingIndex(1);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_3)) {
-          _matched=true;
-          this.grader.interactUsingIndex(3);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_2)) {
+            _matched=true;
+            this.grader.interactUsingIndex(2);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_4)) {
-          _matched=true;
-          this.grader.interactUsingIndex(4);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_3)) {
+            _matched=true;
+            this.grader.interactUsingIndex(3);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_5)) {
-          _matched=true;
-          this.grader.interactUsingIndex(5);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_4)) {
+            _matched=true;
+            this.grader.interactUsingIndex(4);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_6)) {
-          _matched=true;
-          this.grader.interactUsingIndex(6);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_5)) {
+            _matched=true;
+            this.grader.interactUsingIndex(5);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_7)) {
-          _matched=true;
-          this.grader.interactUsingIndex(7);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_6)) {
+            _matched=true;
+            this.grader.interactUsingIndex(6);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_8)) {
-          _matched=true;
-          this.grader.interactUsingIndex(8);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_7)) {
+            _matched=true;
+            this.grader.interactUsingIndex(7);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_9)) {
-          _matched=true;
-          this.grader.interactUsingIndex(9);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_8)) {
+            _matched=true;
+            this.grader.interactUsingIndex(8);
+          }
         }
-      }
-      if (!_matched) {
-        if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_0)) {
-          _matched=true;
-          this.grader.interactUsingIndex(10);
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_9)) {
+            _matched=true;
+            this.grader.interactUsingIndex(9);
+          }
         }
-      }
-      if (!_matched) {
-        ControllerFxGraduation.logger.warn("Key not supported.");
+        if (!_matched) {
+          if (Objects.equal(_code, FxSettings.BUTTON_INTERACT_GRADER_0)) {
+            _matched=true;
+            this.grader.interactUsingIndex(10);
+          }
+        }
+        if (!_matched) {
+          ControllerFxGraduation.logger.warn("Key not supported.");
+        }
+        event.consume();
       }
     };
     s.<KeyEvent>addEventFilter(KeyEvent.KEY_PRESSED, _function);
@@ -1315,6 +1321,10 @@ public class ControllerFxGraduation {
    */
   public void modifyEntry(final int questionId, final int gradeEntryId, final String desc, final float point) {
     this.service.modifyEntry(questionId, gradeEntryId, desc, point);
+  }
+  
+  public Object modifyEntryWorth(final int questionId, final int gradeEntryId, final float point) {
+    return null;
   }
   
   /**

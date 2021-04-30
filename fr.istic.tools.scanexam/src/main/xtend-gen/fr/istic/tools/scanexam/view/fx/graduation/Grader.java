@@ -164,11 +164,16 @@ public class Grader extends VBox {
       return this.check.isSelected();
     }
     
+    public boolean getCheckDisabled() {
+      return this.check.isDisabled();
+    }
+    
     public boolean enterEditMode() {
       boolean _xblockexpression = false;
       {
         this.topRow.getChildren().remove(this.worth);
         this.topRow.getChildren().add(this.worthField);
+        this.check.setDisable(true);
         _xblockexpression = this.getChildren().add(this.remove);
       }
       return _xblockexpression;
@@ -178,6 +183,7 @@ public class Grader extends VBox {
       this.topRow.getChildren().remove(this.worthField);
       this.getChildren().remove(this.remove);
       this.topRow.getChildren().add(this.worth);
+      this.check.setDisable(false);
       this.worth.setText(this.worthField.getText());
     }
     
@@ -379,6 +385,10 @@ public class Grader extends VBox {
     this.controller.modifyEntry(qItem.getQuestionId(), item.getItemId(), item.getText(), Float.parseFloat(item.getWorth()));
   }
   
+  public Object updateEntryWorthInModel() {
+    return null;
+  }
+  
   public void removeEntryFromModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
     this.controller.removeEntry(qItem.getQuestionId(), item.id);
   }
@@ -477,10 +487,14 @@ public class Grader extends VBox {
     }
     Node _get = this.itemContainer.getChildren().get((index - 1));
     Grader.GradeItem item = ((Grader.GradeItem) _get);
-    boolean _selected = item.getSelected();
-    boolean _not = (!_selected);
-    item.setSelected(Boolean.valueOf(_not));
-    item.checkBoxUsed();
+    boolean _checkDisabled = item.getCheckDisabled();
+    boolean _not = (!_checkDisabled);
+    if (_not) {
+      boolean _selected = item.getSelected();
+      boolean _not_1 = (!_selected);
+      item.setSelected(Boolean.valueOf(_not_1));
+      item.checkBoxUsed();
+    }
   }
   
   public void setupEvents() {

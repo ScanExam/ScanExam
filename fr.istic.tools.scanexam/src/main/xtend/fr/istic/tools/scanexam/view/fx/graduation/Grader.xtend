@@ -154,7 +154,10 @@ class Grader extends VBox {
 	def updateEntryInModel(GradeItem item, QuestionItemGraduation qItem) {
 		logger.log(Level.INFO, "Updating GradeEntry")
 		controller.modifyEntry(qItem.questionId, item.itemId, item.getText,Float.parseFloat(item.getWorth));
+	}
 	
+	def updateEntryWorthInModel(){
+		
 	}
 
 	def removeEntryFromModel(GradeItem item, QuestionItemGraduation qItem) {
@@ -219,8 +222,10 @@ class Grader extends VBox {
 			return
 		}
 		var item  = itemContainer.children.get(index-1) as GradeItem
-		item.selected =  !item.selected
-		item.checkBoxUsed
+		if (!item.checkDisabled) {
+			item.selected =  !item.selected
+			item.checkBoxUsed
+		}
 	}
 
 	static class GradeItem extends VBox {
@@ -336,10 +341,18 @@ class Grader extends VBox {
 		def getSelected() {
 			check.selected
 		}
+		
+		def getCheckDisabled()
+		{
+			check.disabled
+		}
+		
+		
 
 		def enterEditMode() {
 			topRow.children.remove(worth)
 			topRow.children.add(worthField);
+			check.disable = true
 			//this.children.remove(text);
 			this.children.add(remove)
 		
@@ -349,6 +362,7 @@ class Grader extends VBox {
 			topRow.children.remove(worthField)
 			this.children.remove(remove)
 			topRow.children.add(worth);
+			check.disable = false
 			worth.text = worthField.text
 			//this.children.remove(textArea);
 			//this.children.add(text)

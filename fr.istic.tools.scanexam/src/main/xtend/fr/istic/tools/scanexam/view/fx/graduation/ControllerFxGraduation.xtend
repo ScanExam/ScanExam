@@ -36,6 +36,8 @@ import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
 import javafx.scene.input.KeyEvent
 import fr.istic.tools.scanexam.config.LanguageManager
+import javafx.scene.control.Control
+import javafx.scene.control.TextInputControl
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -433,25 +435,33 @@ class ControllerFxGraduation {
 	}
 
 	def void setKeybinds() {
-		var s = mainPane.scene
-		s.addEventFilter(KeyEvent.KEY_PRESSED,[event | switch event.code {
-						case FxSettings.BUTTON_NEXT_QUESTION: nextQuestionPressed
-						case FxSettings.BUTTON_PREV_QUESTION: prevQuestionPressed
-						case FxSettings.BUTTON_PREV_STUDENT: prevStudentPressed  
-						case FxSettings.BUTTON_NEXT_STUDENT: nextStudentPressed
-						case FxSettings.BUTTON_INTERACT_GRADER_1: grader.interactUsingIndex(1)
-						case FxSettings.BUTTON_INTERACT_GRADER_2: grader.interactUsingIndex(2)
-						case FxSettings.BUTTON_INTERACT_GRADER_3: grader.interactUsingIndex(3)
-						case FxSettings.BUTTON_INTERACT_GRADER_4: grader.interactUsingIndex(4)
-						case FxSettings.BUTTON_INTERACT_GRADER_5: grader.interactUsingIndex(5)
-						case FxSettings.BUTTON_INTERACT_GRADER_6: grader.interactUsingIndex(6)
-						case FxSettings.BUTTON_INTERACT_GRADER_7: grader.interactUsingIndex(7)
-						case FxSettings.BUTTON_INTERACT_GRADER_8: grader.interactUsingIndex(8)
-						case FxSettings.BUTTON_INTERACT_GRADER_9: grader.interactUsingIndex(9)
-						case FxSettings.BUTTON_INTERACT_GRADER_0: grader.interactUsingIndex(10)
-						default: logger.warn("Key not supported.")
-					}
-					])
+		val s = mainPane.scene
+		s.addEventFilter(KeyEvent.KEY_PRESSED,[event | 
+			var node = s.focusOwner
+			if (node instanceof TextInputControl) {
+				
+				}
+				else {
+					switch event.code {
+								case FxSettings.BUTTON_NEXT_QUESTION: nextQuestionPressed
+								case FxSettings.BUTTON_PREV_QUESTION: prevQuestionPressed
+								case FxSettings.BUTTON_PREV_STUDENT: prevStudentPressed  
+								case FxSettings.BUTTON_NEXT_STUDENT: nextStudentPressed
+								case FxSettings.BUTTON_INTERACT_GRADER_1: grader.interactUsingIndex(1)
+								case FxSettings.BUTTON_INTERACT_GRADER_2: grader.interactUsingIndex(2)
+								case FxSettings.BUTTON_INTERACT_GRADER_3: grader.interactUsingIndex(3)
+								case FxSettings.BUTTON_INTERACT_GRADER_4: grader.interactUsingIndex(4)
+								case FxSettings.BUTTON_INTERACT_GRADER_5: grader.interactUsingIndex(5)
+								case FxSettings.BUTTON_INTERACT_GRADER_6: grader.interactUsingIndex(6)
+								case FxSettings.BUTTON_INTERACT_GRADER_7: grader.interactUsingIndex(7)
+								case FxSettings.BUTTON_INTERACT_GRADER_8: grader.interactUsingIndex(8)
+								case FxSettings.BUTTON_INTERACT_GRADER_9: grader.interactUsingIndex(9)
+								case FxSettings.BUTTON_INTERACT_GRADER_0: grader.interactUsingIndex(10)
+								default: logger.warn("Key not supported.")
+							}
+							event.consume
+						}
+					])				
 	}
 
 
@@ -1055,6 +1065,10 @@ class ControllerFxGraduation {
      */
     def modifyEntry(int questionId, int gradeEntryId, String desc, float point) {
         service.modifyEntry(questionId, gradeEntryId, desc, point)            
+    }
+    
+    def modifyEntryWorth(int questionId, int gradeEntryId, float point){
+    	
     }
     
     /**
