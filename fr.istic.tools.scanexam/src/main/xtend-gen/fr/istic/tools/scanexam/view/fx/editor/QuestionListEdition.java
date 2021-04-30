@@ -1,10 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
 import com.google.common.base.Objects;
-import fr.istic.tools.scanexam.view.fx.editor.Box;
-import fr.istic.tools.scanexam.view.fx.editor.BoxType;
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Priority;
@@ -65,14 +61,11 @@ public class QuestionListEdition extends VBox {
     this.add(item);
   }
   
-  public boolean removeQuestion(final QuestionItemEdition item) {
-    boolean _xblockexpression = false;
-    {
-      this.removeFocus();
-      this.controller.getMainPane().removeZone(item.getZone());
-      _xblockexpression = this.remove(item);
-    }
-    return _xblockexpression;
+  public void removeQuestion(final QuestionItemEdition item) {
+    this.removeFocus();
+    this.controller.getMainPane().removeZone(item.getZone());
+    this.remove(item);
+    this.removeFromModel(item);
   }
   
   public void select(final QuestionItemEdition item) {

@@ -2,8 +2,6 @@ package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.component.RenameField;
-import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import java.util.function.UnaryOperator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -170,7 +168,7 @@ public class QuestionOptionsEdition extends VBox {
     this.remove.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent event) {
-        QuestionOptionsEdition.this.controller.getQuestionList().remove(QuestionOptionsEdition.this.currentItem);
+        QuestionOptionsEdition.this.controller.getQuestionList().removeQuestion(QuestionOptionsEdition.this.currentItem);
         QuestionOptionsEdition.this.controller.getMainPane().removeZone(QuestionOptionsEdition.this.currentItem.getZone());
         QuestionOptionsEdition.this.controller.selectQuestion(null);
       }

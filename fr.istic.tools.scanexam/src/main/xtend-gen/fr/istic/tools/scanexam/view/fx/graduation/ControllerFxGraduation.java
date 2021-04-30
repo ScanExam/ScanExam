@@ -11,14 +11,6 @@ import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
-import fr.istic.tools.scanexam.view.fx.graduation.Grader;
-import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -676,6 +668,17 @@ public class ControllerFxGraduation {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
+      File _xifexpression = null;
+      boolean _contains = file.getName().contains(".xmi");
+      boolean _not = (!_contains);
+      if (_not) {
+        String _absolutePath = file.getAbsolutePath();
+        String _plus_2 = (_absolutePath + ".xmi");
+        _xifexpression = new File(_plus_2);
+      } else {
+        _xifexpression = file;
+      }
+      file = _xifexpression;
       this.saveTemplate(file.getPath());
       ControllerFxGraduation.logger.info("Saving correction file");
     } else {

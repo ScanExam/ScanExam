@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.fx.component.validator;
 
-import fr.istic.tools.scanexam.view.fx.component.validator.FormatValidator;
 import java.io.File;
 import java.util.Optional;
 

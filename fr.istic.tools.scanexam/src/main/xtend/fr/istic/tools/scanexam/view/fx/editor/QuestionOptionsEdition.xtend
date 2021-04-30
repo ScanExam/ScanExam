@@ -149,7 +149,7 @@ class QuestionOptionsEdition extends VBox {
 	def setupEvents() {
 		remove.onAction = new EventHandler<ActionEvent>() {
 			override handle(ActionEvent event) {
-				controller.questionList.remove(currentItem)
+				controller.questionList.removeQuestion(currentItem)
 				controller.mainPane.removeZone(currentItem.zone)
 				controller.selectQuestion(null)
 			}

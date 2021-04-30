@@ -7,12 +7,6 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
-import fr.istic.tools.scanexam.view.fx.editor.Box;
-import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
-import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -649,6 +643,17 @@ public class ControllerFxEdition {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
+      File _xifexpression = null;
+      boolean _contains = file.getName().contains(".xmi");
+      boolean _not = (!_contains);
+      if (_not) {
+        String _absolutePath = file.getAbsolutePath();
+        String _plus_2 = (_absolutePath + ".xmi");
+        _xifexpression = new File(_plus_2);
+      } else {
+        _xifexpression = file;
+      }
+      file = _xifexpression;
       this.save(file);
     } else {
       this.logger.warn("File not chosen");

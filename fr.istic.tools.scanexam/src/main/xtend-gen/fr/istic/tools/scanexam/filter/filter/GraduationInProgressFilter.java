@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.filter.filter;
 
 import fr.istic.tools.scanexam.core.StudentSheet;
-import fr.istic.tools.scanexam.filter.filter.BasicFilter;
 import fr.istic.tools.scanexam.filter.param.FilterParam;
 import java.util.List;
 

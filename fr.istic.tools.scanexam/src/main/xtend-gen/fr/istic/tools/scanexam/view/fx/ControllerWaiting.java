@@ -101,7 +101,7 @@ public class ControllerWaiting implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/WaitingUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/WaitingUI.fxml"));
       final Stage dialog = new Stage();
       final ControllerWaiting controller = loader.<ControllerWaiting>getController();
       final Scene scene = new Scene(view, 289, 103);
