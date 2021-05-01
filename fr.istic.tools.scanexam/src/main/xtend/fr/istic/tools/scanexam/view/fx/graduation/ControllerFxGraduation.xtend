@@ -515,7 +515,7 @@ class ControllerFxGraduation {
 	 * @param folder Dossier où exporter
 	 */
 	def void exportGraduationToPdf(File folder) {
-		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(pdfManager.pdfInputStream,service.studentSheets,folder)
+		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(pdfManager.pdfInputStream,service.studentSheets,folder, service.getGlobalScale)
 	}
 
 	/**
