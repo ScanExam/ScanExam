@@ -238,7 +238,7 @@ public class Grader extends VBox {
         stage.initStyle(StageStyle.DECORATED);
         stage.setResizable(false);
         stage.setTitle("Editeur HTML");
-        InputStream inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.FXML");
+        InputStream inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent root = fxmlLoader.<Parent>load(inputLayout);
         Scene scene = new Scene(root, 640, 480);
@@ -371,6 +371,7 @@ public class Grader extends VBox {
     double _questionSelectedGradeEntriesTotalWorth = this.controller.getService().getQuestionSelectedGradeEntriesTotalWorth(this.controller.getQuestionList().getCurrentItem().getQuestionId());
     String _plus = ("" + Double.valueOf(_questionSelectedGradeEntriesTotalWorth));
     this.currentPoints.setText(_plus);
+    this.controller.updateGlobalGrade();
   }
   
   public void addEntryToModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {

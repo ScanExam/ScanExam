@@ -405,8 +405,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 			return 0;
 		var total = 0f;
 		for (GradeEntry entry : sheet.grades.get(questionId).entries) {
+			logger.warn("Adding" + entry.step + "to " + total )
 			total = total + entry.step
 		}
+		logger.warn("total is :" + total )
 		total
 	}
 	

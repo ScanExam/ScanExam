@@ -643,17 +643,14 @@ public class ControllerFxEdition {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      File _xifexpression = null;
       boolean _contains = file.getName().contains(".xmi");
       boolean _not = (!_contains);
       if (_not) {
         String _absolutePath = file.getAbsolutePath();
         String _plus_2 = (_absolutePath + ".xmi");
-        _xifexpression = new File(_plus_2);
-      } else {
-        _xifexpression = file;
+        File _file_1 = new File(_plus_2);
+        file = _file_1;
       }
-      file = _xifexpression;
       this.save(file);
     } else {
       this.logger.warn("File not chosen");
@@ -773,10 +770,13 @@ public class ControllerFxEdition {
   public void initPageSelection() {
     this.pageChoice.getItems().clear();
     for (int i = 1; (i <= this.pdfManager.getPdfPageCount()); i++) {
-      boolean _contains = this.pageChoice.getItems().contains(Integer.valueOf(i));
-      boolean _not = (!_contains);
-      if (_not) {
-        this.pageChoice.getItems().add(Integer.valueOf(i));
+      {
+        InputOutput.<Integer>println(Integer.valueOf(i));
+        boolean _contains = this.pageChoice.getItems().contains(Integer.valueOf(i));
+        boolean _not = (!_contains);
+        if (_not) {
+          this.pageChoice.getItems().add(Integer.valueOf(i));
+        }
       }
     }
   }

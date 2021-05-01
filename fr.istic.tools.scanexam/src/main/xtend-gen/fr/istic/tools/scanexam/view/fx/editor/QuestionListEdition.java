@@ -23,7 +23,7 @@ public class QuestionListEdition extends VBox {
   public boolean loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
     boolean _xblockexpression = false;
     {
-      QuestionItemEdition item = new QuestionItemEdition(this, box, name, page, id);
+      QuestionItemEdition item = new QuestionItemEdition(this, box, name, (page + 1), id);
       item.setScale(questionWorth);
       _xblockexpression = this.add(item);
     }
@@ -54,9 +54,11 @@ public class QuestionListEdition extends VBox {
     }
     int _currentPdfPageNumber = this.controller.getPdfManager().currentPdfPageNumber();
     String _plus = ("page : " + Integer.valueOf(_currentPdfPageNumber));
-    InputOutput.<String>println(_plus);
+    String _plus_1 = (_plus + Integer.valueOf(1));
+    InputOutput.<String>println(_plus_1);
     int _currentPdfPageNumber_1 = this.controller.getPdfManager().currentPdfPageNumber();
-    QuestionItemEdition item = new QuestionItemEdition(this, box, type, _currentPdfPageNumber_1);
+    int _plus_2 = (_currentPdfPageNumber_1 + 1);
+    QuestionItemEdition item = new QuestionItemEdition(this, box, type, _plus_2);
     this.addToModel(item);
     this.add(item);
   }
@@ -96,7 +98,7 @@ public class QuestionListEdition extends VBox {
     ObservableList<Node> _children = this.getChildren();
     for (final Node e : _children) {
       if ((e instanceof QuestionItemEdition)) {
-        this.checkAndDisplay(page, ((QuestionItemEdition) e));
+        this.checkAndDisplay((page + 1), ((QuestionItemEdition) e));
       }
     }
   }

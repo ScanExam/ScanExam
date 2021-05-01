@@ -674,17 +674,14 @@ public class ControllerFxGraduation {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
-      File _xifexpression = null;
       boolean _contains = file.getName().contains(".xmi");
       boolean _not = (!_contains);
       if (_not) {
         String _absolutePath = file.getAbsolutePath();
         String _plus_2 = (_absolutePath + ".xmi");
-        _xifexpression = new File(_plus_2);
-      } else {
-        _xifexpression = file;
+        File _file_1 = new File(_plus_2);
+        file = _file_1;
       }
-      file = _xifexpression;
       this.saveTemplate(file.getPath());
       ControllerFxGraduation.logger.info("Saving correction file");
     } else {
@@ -1082,6 +1079,10 @@ public class ControllerFxGraduation {
     return this.service.getCurrentMaxGrade();
   }
   
+  public void updateGlobalGrade() {
+    this.studentDetails.updateGrade();
+  }
+  
   /**
    * Retourne la note globale de la copie
    * @return Note globale de la copie
@@ -1285,6 +1286,14 @@ public class ControllerFxGraduation {
     fileChooser.setInitialDirectory(_file);
     File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
     if ((file != null)) {
+      boolean _contains = file.getName().contains(".xlsx");
+      boolean _not = (!_contains);
+      if (_not) {
+        String _absolutePath = file.getAbsolutePath();
+        String _plus_2 = (_absolutePath + ".xlsx");
+        File _file_1 = new File(_plus_2);
+        file = _file_1;
+      }
       this.saveTemplate(file.getPath());
       ControllerFxGraduation.logger.info("Export grade in Excel");
     } else {

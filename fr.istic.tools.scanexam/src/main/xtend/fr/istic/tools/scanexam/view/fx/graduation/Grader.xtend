@@ -142,6 +142,7 @@ class Grader extends VBox {
 	
 	def updateCurrentPoints(){
 		currentPoints.text = "" + controller.service.getQuestionSelectedGradeEntriesTotalWorth(controller.questionList.currentItem.questionId)
+		controller.updateGlobalGrade
 	}
 	// ---Model intecations 
 	def void addEntryToModel(GradeItem item, QuestionItemGraduation qItem) {

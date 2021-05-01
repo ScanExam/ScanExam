@@ -512,10 +512,18 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       float total = 0f;
       EList<GradeEntry> _entries = sheet.getGrades().get(questionId).getEntries();
       for (final GradeEntry entry : _entries) {
-        float _step = entry.getStep();
-        float _plus = (total + _step);
-        total = _plus;
+        {
+          float _step = entry.getStep();
+          String _plus = ("Adding" + Float.valueOf(_step));
+          String _plus_1 = (_plus + "to ");
+          String _plus_2 = (_plus_1 + Float.valueOf(total));
+          ServiceImpl.logger.warn(_plus_2);
+          float _step_1 = entry.getStep();
+          float _plus_3 = (total + _step_1);
+          total = _plus_3;
+        }
       }
+      ServiceImpl.logger.warn(("total is :" + Float.valueOf(total)));
       _xblockexpression = total;
     }
     return _xblockexpression;

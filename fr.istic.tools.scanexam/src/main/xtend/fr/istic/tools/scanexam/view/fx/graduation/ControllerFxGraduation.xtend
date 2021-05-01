@@ -890,6 +890,10 @@ class ControllerFxGraduation {
 	    return service.currentMaxGrade
 	}
 	
+	def updateGlobalGrade(){
+		studentDetails.updateGrade
+	}
+	
 	/**
 	 * Retourne la note globale de la copie
 	 * @return Note globale de la copie
