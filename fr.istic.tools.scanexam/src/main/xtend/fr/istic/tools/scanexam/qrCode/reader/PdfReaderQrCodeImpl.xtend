@@ -36,14 +36,17 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	int nbPagesInPdf
 	PDDocument doc
 	boolean isFinished
+	List<Integer> pagesMalLues;
 	
 	int missingSheets
+	int treatedSheets
 
 	new(InputStream input, int nbPages) {
 		this.doc = PDDocument.load(input)
 		this.nbPagesInSheet = nbPages
 		this.isFinished = false
 		missingSheets = 0
+		treatedSheets = 0
 		sheets = new HashSet<Copie>()
 	}
 
@@ -59,19 +62,34 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 
 	def void readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
+		pagesMalLues = new ArrayList<Integer>()
 		for (page : startPages ..< endPages) {
-			val BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB)
+			
+			//des fois (randoms) outofmemory
+			var BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 250, ImageType.GRAY)
 			val Pattern pattern = Pattern.compile("_")
 			val String[] items = pattern.split(decodeQRCodeBuffered(bim))
-
-			val Copie cop = new Copie(Integer.parseInt(items.get(items.size - 2)), page,
+			
+			try {
+				val Copie cop = new Copie(Integer.parseInt(items.get(items.size - 2)), page,
 				Integer.parseInt(items.get(items.size - 1)))
 
-			synchronized (sheets) {
-				addCopie(cop)
+				synchronized (sheets) {
+					addCopie(cop)
+				}
+			} catch(ArrayIndexOutOfBoundsException e){
+				pagesMalLues.add(page)
+				logger.error("Cannot read QRCode in page " + page, e)
 			}
+			finally{
+				treatedSheets++
+			}
+			
+			//déréférencement de la variable, pour contrer le pb d'overflow de mémoire
+			bim = null
+			System.gc
+			
 		}
-
 	}
 
 	/**
@@ -79,8 +97,8 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @return le texte decode du QRCOde se trouvant dans qrCodeImage
 	 * @throws IOException
 	 * 
-	 *                     Décode le contenu de qrCodeImage et affiche le contenu
-	 *                     décodé dans le system.out
+	 * Décode le contenu de qrCodeImage et affiche le contenu
+	 * décodé dans le system.out
 	 */
 	def String decodeQRCodeBuffered(BufferedImage bufferedImage) throws IOException {
 		val LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage)
@@ -268,15 +286,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @return le nombre de pages que le reader a lu du PDF source
 	 */
 	override getNbPagesTreated() {
-		var int res = 0
-		//TODO a revoir plus tard 
-		synchronized(sheets) {
-			for (i : 0 ..< sheets.length) {
-				res += sheets.get(i).setPages.length
-			}
-
-		}
-		return res
+		return treatedSheets
 	}
 	
 	override isFinished(){

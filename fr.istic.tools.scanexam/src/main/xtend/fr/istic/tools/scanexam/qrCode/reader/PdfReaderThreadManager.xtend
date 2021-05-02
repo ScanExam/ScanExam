@@ -30,7 +30,11 @@ class PdfReaderThreadManager extends Thread implements Runnable {
 		latchThreads.await()
 		reader.setFinished(true)
 		service.shutdown()
+		
+
 		doc.close
+		
+		
 		
 	}
 	

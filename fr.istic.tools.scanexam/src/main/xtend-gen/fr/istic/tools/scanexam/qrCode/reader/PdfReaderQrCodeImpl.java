@@ -11,6 +11,10 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.qrCode.reader.Copie;
+import fr.istic.tools.scanexam.qrCode.reader.Page;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCode;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderThreadManager;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +53,11 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private boolean isFinished;
   
+  private List<Integer> pagesMalLues;
+  
   private int missingSheets;
+  
+  private int treatedSheets;
   
   public PdfReaderQrCodeImpl(final InputStream input, final int nbPages) {
     try {
@@ -57,6 +65,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
       this.nbPagesInSheet = nbPages;
       this.isFinished = false;
       this.missingSheets = 0;
+      this.treatedSheets = 0;
       HashSet<Copie> _hashSet = new HashSet<Copie>();
       this.sheets = _hashSet;
     } catch (Throwable _e) {
@@ -82,22 +91,38 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   }
   
   public void readQRCodeImage(final PDFRenderer pdfRenderer, final int startPages, final int endPages) throws IOException {
+    ArrayList<Integer> _arrayList = new ArrayList<Integer>();
+    this.pagesMalLues = _arrayList;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(startPages, endPages, true);
     for (final Integer page : _doubleDotLessThan) {
       {
-        final BufferedImage bim = pdfRenderer.renderImageWithDPI((page).intValue(), 300, ImageType.RGB);
+        BufferedImage bim = pdfRenderer.renderImageWithDPI((page).intValue(), 250, ImageType.GRAY);
         final Pattern pattern = Pattern.compile("_");
         final String[] items = pattern.split(this.decodeQRCodeBuffered(bim));
-        int _size = ((List<String>)Conversions.doWrapArray(items)).size();
-        int _minus = (_size - 2);
-        int _parseInt = Integer.parseInt(items[_minus]);
-        int _size_1 = ((List<String>)Conversions.doWrapArray(items)).size();
-        int _minus_1 = (_size_1 - 1);
-        int _parseInt_1 = Integer.parseInt(items[_minus_1]);
-        final Copie cop = new Copie(_parseInt, (page).intValue(), _parseInt_1);
-        synchronized (this.sheets) {
-          this.addCopie(cop);
+        try {
+          int _size = ((List<String>)Conversions.doWrapArray(items)).size();
+          int _minus = (_size - 2);
+          int _parseInt = Integer.parseInt(items[_minus]);
+          int _size_1 = ((List<String>)Conversions.doWrapArray(items)).size();
+          int _minus_1 = (_size_1 - 1);
+          int _parseInt_1 = Integer.parseInt(items[_minus_1]);
+          final Copie cop = new Copie(_parseInt, (page).intValue(), _parseInt_1);
+          synchronized (this.sheets) {
+            this.addCopie(cop);
+          }
+        } catch (final Throwable _t) {
+          if (_t instanceof ArrayIndexOutOfBoundsException) {
+            final ArrayIndexOutOfBoundsException e = (ArrayIndexOutOfBoundsException)_t;
+            this.pagesMalLues.add(page);
+            this.logger.error(("Cannot read QRCode in page " + page), e);
+          } else {
+            throw Exceptions.sneakyThrow(_t);
+          }
+        } finally {
+          this.treatedSheets++;
         }
+        bim = null;
+        System.gc();
       }
     }
   }
@@ -107,8 +132,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @return le texte decode du QRCOde se trouvant dans qrCodeImage
    * @throws IOException
    * 
-   *                     Décode le contenu de qrCodeImage et affiche le contenu
-   *                     décodé dans le system.out
+   * Décode le contenu de qrCodeImage et affiche le contenu
+   * décodé dans le system.out
    */
   public String decodeQRCodeBuffered(final BufferedImage bufferedImage) throws IOException {
     final LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
@@ -346,17 +371,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    */
   @Override
   public int getNbPagesTreated() {
-    int res = 0;
-    synchronized (this.sheets) {
-      int _length = ((Object[])Conversions.unwrapArray(this.sheets, Object.class)).length;
-      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
-      for (final Integer i : _doubleDotLessThan) {
-        int _res = res;
-        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[(i).intValue()]).getSetPages(), Object.class)).length;
-        res = (_res + _length_1);
-      }
-    }
-    return res;
+    return this.treatedSheets;
   }
   
   @Override

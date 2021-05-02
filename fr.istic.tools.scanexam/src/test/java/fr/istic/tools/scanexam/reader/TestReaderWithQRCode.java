@@ -24,7 +24,7 @@ public class TestReaderWithQRCode {
 	static PdfReader readerGood;
 	static PdfReader readerDirty;
 	static int nbPages = 8;
-	static int nbCopies = 4;
+	static int nbCopies = 250;
 
 	//static PDDocument docGood;
 	//static PDDocument docDirty;
@@ -45,12 +45,15 @@ public class TestReaderWithQRCode {
 		readerGood.readPDf();
 		while(!readerGood.isFinished()) {
 			TimeUnit.SECONDS.sleep(3);
+			System.out.println("toujours pas mort " + readerGood.getNbPagesTreated());
 		}
 		
-		readerDirty.readPDf();
+		System.out.println(readerGood.getNbPagesTreated());
+		
+		/*readerDirty.readPDf();
 		while(!readerDirty.isFinished()) {
 			TimeUnit.SECONDS.sleep(3);
-		}
+		}*/
 	}
 
 	@AfterAll
@@ -66,12 +69,12 @@ public class TestReaderWithQRCode {
 		assertEquals(nbCopies * nbPages, readerGood.getNbPagesPdf());
 	}
 
-	@Test
+	/*@Test
 	@DisplayName("Test getNbPagesPdf dans un pdf incomplet")
 	void getNbPagesPdfTestDirty() {
 		
 		assertEquals(nbCopies * nbPages - 1, readerDirty.getNbPagesPdf());
-	}
+	}*/
 	
 	@Test
 	@DisplayName("Test getNbPagesTraitee")
@@ -116,7 +119,7 @@ public class TestReaderWithQRCode {
 		assertEquals(true, bool);
 	}
 
-	@Test
+	/*@Test
 	@DisplayName("Test du renvoi de la structure des copies complètes au format de l'API quand il manque une page")
 	void getCompleteStundentSheetsTestDirty() {
 		
@@ -151,7 +154,7 @@ public class TestReaderWithQRCode {
 		
 		bool &= arr.size() == collection.size();
 		assertEquals(false, bool);
-	}
+	}*/
 	
 	
 	@Test
@@ -161,7 +164,7 @@ public class TestReaderWithQRCode {
 	}
 	
 	
-	@Test
+	/*@Test
 	@DisplayName("Test du renvoi des copies non complètes sur un examen non complet")
 	void getUncompleteStudentSheetsDirty() {
 		DataFactory dF = new DataFactory();
@@ -194,5 +197,5 @@ public class TestReaderWithQRCode {
 		
 		bool &= arr.size() == collection.size();
 		assertEquals(true, bool);
-	}
+	}*/
 }

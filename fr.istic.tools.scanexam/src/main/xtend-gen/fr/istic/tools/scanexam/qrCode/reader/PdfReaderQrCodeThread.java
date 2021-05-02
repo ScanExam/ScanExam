@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.qrCode.reader;
 
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
 import java.util.concurrent.CountDownLatch;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtext.xbase.lib.Exceptions;
