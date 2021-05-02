@@ -77,6 +77,10 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
             
             ut.destinationFileName = outFile.absolutePath
             
+            if(!ut.destinationFileName.contains(".pdf")){
+                ut.destinationFileName = ut.destinationFileName + ".pdf"
+            }
+            
             memUsSett.tempDir = temp
             
             //ut.mergeDocuments(MemoryUsageSetting.setupTempFileOnly())

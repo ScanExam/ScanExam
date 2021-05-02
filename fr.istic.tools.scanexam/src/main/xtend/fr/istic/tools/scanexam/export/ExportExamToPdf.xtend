@@ -143,10 +143,10 @@ class ExportExamToPdf {
       * @param folderForSaving is the Folder for save PDF documents
       * @return collection of temp Files
       */
-     def static void exportExamsOfStudentsToPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets, File folderForSaving){
+     def static void exportExamsOfStudentsToPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets, File folderForSaving, float globalScale){
      	var File tempExam = File.createTempFile("examTemp", ".pdf");
      	
-     	exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam);
+     	exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
      	
      	var PDDocument pdf = PDDocument.load(tempExam);
      	
@@ -169,12 +169,12 @@ class ExportExamToPdf {
       * @param sheets is they studentSheet of they students
       * @return map of student's name to temp file 
       */
-     def static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets){
+     def static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(InputStream documentInputStream,Collection<StudentSheet> sheets, float globalScale){
      	var Map<String, File> tempExams = new HashMap<String, File>();
      	
      	var File tempExam = File.createTempFile("examTemp", ".pdf");
      	
-     	exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam);
+     	exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
      	
      	var PDDocument pdf = PDDocument.load(tempExam);
      	
@@ -200,9 +200,9 @@ class ExportExamToPdf {
       * @param sheet is the studentSheet of the student
 	  * @return temp File of annoted PDF.
       */
-     def static File exportExamsToTempAnnotedPdf(InputStream documentInputStream,Collection<StudentSheet> sheets){
+     def static File exportExamsToTempAnnotedPdf(InputStream documentInputStream,Collection<StudentSheet> sheets, float globalScale){
      	var File tempExam = File.createTempFile("examTemp", ".pdf");
-     	exportExamsToAnnotedPdf(documentInputStream,sheets, tempExam);
+     	exportExamsToAnnotedPdf(documentInputStream,sheets, tempExam, globalScale);
      	return tempExam;
      }
      
@@ -213,9 +213,9 @@ class ExportExamToPdf {
 	  * @return temp File of annoted PDF.
       */
       
-     def static void exportStudentExamToPdfWithAnnotations(InputStream examDocument, StudentSheet sheet, File fileForSaving){
+     def static void exportStudentExamToPdfWithAnnotations(InputStream examDocument, StudentSheet sheet, File fileForSaving, float globalScale){
      	
-     	var File exam = exportExamsToTempAnnotedPdf(examDocument, new ArrayList<StudentSheet>(Arrays.asList(sheet)))
+     	var File exam = exportExamsToTempAnnotedPdf(examDocument, new ArrayList<StudentSheet>(Arrays.asList(sheet)), globalScale)
      	
      	var PDDocument pdf = PDDocument.load(exam);
      	
@@ -235,10 +235,10 @@ class ExportExamToPdf {
       * @param sheet is the studentSheet of the student
 	  * @return temp File of annoted PDF.
       */
-     def static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(InputStream examDocument, StudentSheet sheet){
+     def static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(InputStream examDocument, StudentSheet sheet, float globalScale){
      	var File studentExam = File.createTempFile(sheet.studentName , ".pdf");
      	
-     	var File exam = exportExamsToTempAnnotedPdf(examDocument, new ArrayList<StudentSheet>(Arrays.asList(sheet)))
+     	var File exam = exportExamsToTempAnnotedPdf(examDocument, new ArrayList<StudentSheet>(Arrays.asList(sheet)), globalScale)
      	
      	var PDDocument pdf = PDDocument.load(exam);
      	
@@ -261,7 +261,7 @@ class ExportExamToPdf {
       * @param sheets is they studentSheet of they students
       * @param fileForSaving is the File for save PDF document
       */
-     def static void exportExamsToAnnotedPdf(InputStream documentInputStream,Collection<StudentSheet> sheets, File fileForSaving){
+     def static void exportExamsToAnnotedPdf(InputStream documentInputStream,Collection<StudentSheet> sheets, File fileForSaving, float globalScale){
      	var PDDocument document = PDDocument.load(documentInputStream)
 		for(sheet : sheets){
 			for(Grade g : sheet.grades){
@@ -358,7 +358,7 @@ class ExportExamToPdf {
 	     	contentStream.setNonStrokingColor(Color.decode("#FF0000"))
 	     	contentStream.beginText();
 			contentStream.newLineAtOffset(0, page.mediaBox.height-10);
-			contentStream.showText("Note : "+sheet.computeGrade);
+			contentStream.showText("Note : "+sheet.computeGrade + "/" + globalScale);
 			contentStream.endText();
 			contentStream.close();
 		}

@@ -107,17 +107,14 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	override boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
 		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
 		try {
-
 			for (StudentSheet sheet : studentSheets) {
 				for (var i = 0; i < templatePageAmount; i++) {
 					val examPage = getPage(i);
-
 					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?
 					{
 						var grade = CoreFactory.eINSTANCE.createGrade()
 						sheet.grades.add(grade);
 					}
-
 				}
 
 			}
