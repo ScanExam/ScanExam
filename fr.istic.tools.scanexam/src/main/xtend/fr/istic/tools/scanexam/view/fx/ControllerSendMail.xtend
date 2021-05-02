@@ -45,6 +45,8 @@ class ControllerSendMail  {
 	Collection<StudentSheet> studentSheets
 	
 	ControllerFxGraduation controllerGraduation
+	
+	float globalScale
 	// ----------------------------------------------------------------------------------------------------
 	/*
 	 * METHODES
@@ -65,7 +67,7 @@ class ControllerSendMail  {
 
 					if (studentSheet.studentName !== null && studentMail !== null) {
 						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
-							controllerGraduation.pdfManager.pdfInputStream, studentSheet)
+							controllerGraduation.pdfManager.pdfInputStream, studentSheet, globalScale)
 						val sender = new SendMailTls
 						sender.sendMail(controllerGraduation.pdfManager.pdfInputStream, txtFldTitle.text,
 							htmlEditor.htmlText, pair.key, studentMail, pair.value)
@@ -106,6 +108,7 @@ class ControllerSendMail  {
 		this.controllerGraduation = controllerGraduation
 		this.mailMap = StudentDataManager.getNameToMailMap()
 		this.studentSheets = service.studentSheets
+		this.globalScale = service.getGlobalScale
 
 		nbSheetWithoutName = if (mailMap.present)
 			studentSheets.filter(x|!mailMap.get.containsKey(x.studentName)).size as int
