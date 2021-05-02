@@ -12,7 +12,6 @@ Beware this is an very preliminary version.
 ```
 cd fr.istic.tools.scanexam
 mvn compile assembly:single
-Move file pfo_example.pdf to `target` directory
 java -jar target/ScanExam-jar-with-dependencies.jar
 ```
 
