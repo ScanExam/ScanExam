@@ -164,7 +164,16 @@ public class SendMailTls {
       FileDataSource source = new FileDataSource(studentSheet);
       DataHandler _dataHandler = new DataHandler(source);
       messageBodyPart.setDataHandler(_dataHandler);
-      messageBodyPart.setFileName(studentName);
+      String _xifexpression = null;
+      boolean _contains = studentSheet.getName().contains(".");
+      if (_contains) {
+        String _get = studentSheet.getName().split("\\.")[1];
+        _xifexpression = ("." + _get);
+      } else {
+        _xifexpression = "";
+      }
+      final String fileExtension = _xifexpression;
+      messageBodyPart.setFileName((studentName + fileExtension));
       multipart.addBodyPart(messageBodyPart);
       message.setContent(multipart);
       message.setHeader("X-Mailer", "ScanExam");

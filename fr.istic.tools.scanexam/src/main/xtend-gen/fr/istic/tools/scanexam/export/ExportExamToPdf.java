@@ -146,10 +146,10 @@ public class ExportExamToPdf {
    * @param folderForSaving is the Folder for save PDF documents
    * @return collection of temp Files
    */
-  public static void exportExamsOfStudentsToPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving) {
+  public static void exportExamsOfStudentsToPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving, final float globalScale) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
-      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam);
+      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -180,11 +180,11 @@ public class ExportExamToPdf {
    * @param sheets is they studentSheet of they students
    * @return map of student's name to temp file
    */
-  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets) {
+  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale) {
     try {
       Map<String, File> tempExams = new HashMap<String, File>();
       File tempExam = File.createTempFile("examTemp", ".pdf");
-      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam);
+      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -214,10 +214,10 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static File exportExamsToTempAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets) {
+  public static File exportExamsToTempAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
-      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam);
+      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
       return tempExam;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -230,11 +230,11 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static void exportStudentExamToPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final File fileForSaving) {
+  public static void exportStudentExamToPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final File fileForSaving, final float globalScale) {
     try {
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
@@ -255,17 +255,24 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet) {
+  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final float globalScale) {
     try {
       File studentExam = File.createTempFile(sheet.getStudentName(), ".pdf");
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
       for (final Integer i : _posPage) {
         document.addPage(pdf.getPage((i).intValue()));
+      }
+      boolean _contains = sheet.getStudentName().contains(".pdf");
+      boolean _not = (!_contains);
+      if (_not) {
+        String _studentName = sheet.getStudentName();
+        String _plus = (_studentName + ".pdf");
+        sheet.setStudentName(_plus);
       }
       document.save(studentExam);
       document.close();
@@ -282,7 +289,7 @@ public class ExportExamToPdf {
    * @param sheets is they studentSheet of they students
    * @param fileForSaving is the File for save PDF document
    */
-  public static void exportExamsToAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File fileForSaving) {
+  public static void exportExamsToAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File fileForSaving, final float globalScale) {
     try {
       PDDocument document = PDDocument.load(documentInputStream);
       for (final StudentSheet sheet : sheets) {
@@ -400,7 +407,9 @@ public class ExportExamToPdf {
           contentStream_1.newLineAtOffset(0, _minus_6);
           float _computeGrade = sheet.computeGrade();
           String _plus_1 = ("Note : " + Float.valueOf(_computeGrade));
-          contentStream_1.showText(_plus_1);
+          String _plus_2 = (_plus_1 + "/");
+          String _plus_3 = (_plus_2 + Float.valueOf(globalScale));
+          contentStream_1.showText(_plus_3);
           contentStream_1.endText();
           contentStream_1.close();
         }

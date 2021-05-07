@@ -75,6 +75,13 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
         ut.addSource(temp);
       }
       ut.setDestinationFileName(outFile.getAbsolutePath());
+      boolean _contains = ut.getDestinationFileName().contains(".pdf");
+      boolean _not = (!_contains);
+      if (_not) {
+        String _destinationFileName = ut.getDestinationFileName();
+        String _plus = (_destinationFileName + ".pdf");
+        ut.setDestinationFileName(_plus);
+      }
       memUsSett.setTempDir(temp);
       ut.mergeDocuments(memUsSett);
       final PDDocument docSujetMaitre = PDDocument.load(outFile);

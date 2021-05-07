@@ -60,6 +60,8 @@ public class ControllerSendMail {
   
   private ControllerFxGraduation controllerGraduation;
   
+  private float globalScale;
+  
   /**
    * METHODES
    */
@@ -81,7 +83,7 @@ public class ControllerSendMail {
             final String studentMail = ControllerSendMail.this.mailMap.get().get(studentSheet.getStudentName());
             if (((studentSheet.getStudentName() != null) && (studentMail != null))) {
               final Pair<String, File> pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
-                ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet);
+                ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet, ControllerSendMail.this.globalScale);
               final SendMailTls sender = new SendMailTls();
               sender.sendMail(ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), ControllerSendMail.this.txtFldTitle.getText(), 
                 ControllerSendMail.this.htmlEditor.getHtmlText(), pair.getKey(), studentMail, pair.getValue());
@@ -135,6 +137,7 @@ public class ControllerSendMail {
     this.controllerGraduation = controllerGraduation;
     this.mailMap = StudentDataManager.getNameToMailMap();
     this.studentSheets = service.getStudentSheets();
+    this.globalScale = service.getGlobalScale();
     int _xifexpression = (int) 0;
     boolean _isPresent = this.mailMap.isPresent();
     if (_isPresent) {

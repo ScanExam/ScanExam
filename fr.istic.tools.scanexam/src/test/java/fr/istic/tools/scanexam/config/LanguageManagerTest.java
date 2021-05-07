@@ -30,7 +30,6 @@ public class LanguageManagerTest {
 	
 	@BeforeAll
 	static void init() {
-		System.out.println(new Locale("fr", ""));
 		Configurator.setAllLevels(LogManager.getRootLogger().getName(), Level.ALL);
 		
 	}

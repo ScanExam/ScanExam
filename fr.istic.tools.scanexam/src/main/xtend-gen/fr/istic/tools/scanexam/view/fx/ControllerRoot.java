@@ -277,7 +277,7 @@ public class ControllerRoot implements Initializable {
     try {
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
-      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetExportUI.FXML"));
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetExportUI.fxml"));
       final Stage dialog = new Stage();
       dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"));
       ObservableList<Image> _icons = dialog.getIcons();

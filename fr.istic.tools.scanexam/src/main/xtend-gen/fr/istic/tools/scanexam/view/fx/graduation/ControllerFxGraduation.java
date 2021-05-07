@@ -702,7 +702,7 @@ public class ControllerFxGraduation {
    * @param folder Dossier où exporter
    */
   public void exportGraduationToPdf(final File folder) {
-    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.pdfManager.getPdfInputStream(), this.service.getStudentSheets(), folder);
+    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.pdfManager.getPdfInputStream(), this.service.getStudentSheets(), folder, this.service.getGlobalScale());
   }
   
   /**

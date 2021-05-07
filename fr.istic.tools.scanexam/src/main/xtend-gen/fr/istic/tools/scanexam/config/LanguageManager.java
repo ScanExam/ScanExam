@@ -54,14 +54,15 @@ public class LanguageManager {
    * @param language la langue de l'application (peut être null)
    */
   public static void init(@Nullable final Locale language) {
-    LanguageManager.init(language, "langs/");
+    LanguageManager.init(language, LanguageManager.path);
   }
   
   /**
    * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté) ou
    * par le langage en paramètre si celui-ci est spécifié et supporté.
    * Définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
-   * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code>
+   * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code> et qu'elle
+   * soit déclarée dans le fichier <code>Language_Registry</code>.
    * @param language la langue de l'application (peut être null)
    * @param path le chemin d'accès vers le dossier contenant les fichiers langues
    */
@@ -76,7 +77,7 @@ public class LanguageManager {
     }
     final Locale currentLocal = _xifexpression;
     final String namePattern = (((LanguageManager.prefixFileName + LanguageManager.langCodePattern) + "\\.") + LanguageManager.extFileName);
-    final Collection<String> names = ResourcesUtils.getFolderContentNames(path);
+    final Collection<String> names = ResourcesUtils.getFolderContentNames((path + "Language_Registry"));
     final HashSet<String> badFileNames = new HashSet<String>();
     Locale _locale = new Locale("en");
     LanguageManager.locales.add(_locale);

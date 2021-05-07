@@ -44,14 +44,15 @@ class LanguageManager {
 	 * @param language la langue de l'application (peut être null)
 	 */
 	def static void init(@Nullable Locale language) {
-		init(language, "langs/")
+		init(language, path)
 	}
 	
 	/**
 	 * Charge les différents {@link Locale} supportés pour l'application, définie le langage de l'interface par le langage de l'environnement (si celui-ci est supporté) ou
 	 * par le langage en paramètre si celui-ci est spécifié et supporté.
 	 * Définie le langage par défaut de l'application sur Locale.ENGLISH.<br/>
-	 * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code>
+	 * Pour qu'une langage soit supporté, il faut que celui-ci soit représenté par un fichier <code>/langs/ScanExam_&ltcode langage&gt.properties</code> et qu'elle
+	 * soit déclarée dans le fichier <code>Language_Registry</code>.
 	 * @param language la langue de l'application (peut être null)
 	 * @param path le chemin d'accès vers le dossier contenant les fichiers langues
 	 */
@@ -62,7 +63,7 @@ class LanguageManager {
 		val currentLocal = language === null ? Locale.^default : language
 		
 		val namePattern = prefixFileName + langCodePattern + "\\." + extFileName
-		val names = ResourcesUtils.getFolderContentNames(path)
+		val names = ResourcesUtils.getFolderContentNames(path + "Language_Registry")
 		val badFileNames = new HashSet<String>
 		
 		// Ajout de l'anglais pour langage par défaut en cas d'absence d'une langue choisie

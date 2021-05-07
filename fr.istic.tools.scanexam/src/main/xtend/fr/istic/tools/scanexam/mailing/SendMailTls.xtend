@@ -175,7 +175,8 @@ class SendMailTls {
 			// val fileName = "attachmentName";
 			var source = new FileDataSource(studentSheet)
 			messageBodyPart.setDataHandler(new DataHandler(source))
-			messageBodyPart.setFileName(studentName)
+			val fileExtension = studentSheet.name.contains(".") ? "." + studentSheet.name.split("\\.").get(1) : ""
+			messageBodyPart.setFileName(studentName + fileExtension)
 			multipart.addBodyPart(messageBodyPart)
 
 			message.setContent(multipart)
