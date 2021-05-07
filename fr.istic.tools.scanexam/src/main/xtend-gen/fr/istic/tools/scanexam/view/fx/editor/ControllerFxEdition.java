@@ -222,7 +222,7 @@ public class ControllerFxEdition {
   
   public void save(final File path) {
     final ByteArrayOutputStream outputStream = this.pdfManager.getPdfOutputStream();
-    this.service.save(outputStream, path);
+    this.service.saveEdition(outputStream, path);
   }
   
   public void close() {

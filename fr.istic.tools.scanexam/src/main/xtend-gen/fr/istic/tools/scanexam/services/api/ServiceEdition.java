@@ -58,7 +58,7 @@ public interface ServiceEdition extends Service {
    * @param path L'emplacement de sauvegarde du fichier
    * @param pdfOutputStream le contenu du fichier sous forme de Stream
    */
-  void save(final ByteArrayOutputStream outputStream, final File path);
+  void saveEdition(final ByteArrayOutputStream outputStream, final File path);
   
   /**
    * Charge un fichier modèle d'examen a partir du disque

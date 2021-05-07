@@ -78,6 +78,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		graduationTemplate.encodedDocument = new String(encoded);
 		pdfOutputStream.close();
 		TemplateIo.save(new File(path), graduationTemplate);
+		//FIXME CACHE MISÈRE POUR https://github.com/ScanExam/ScanExam/issues/34
+		saveEdition
 	}
 	
 	/**
@@ -526,7 +528,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	
-	
+	File editionFile
 	int questionId
 
 	/**
@@ -620,17 +622,26 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 
 	/**
-	 * Sauvegarde le fichier modèle d'examen sur le disque
+	 * Sauvegarde sous le fichier modèle d'examen sur le disque
 	 * @param path L'emplacement de sauvegarde du fichier
 	 * @param pdfOutputStream le PDF sous forme de Stream
 	 */
-	override save(ByteArrayOutputStream outputStream, File path) {
+	override saveEdition(ByteArrayOutputStream outputStream, File path) {
 		val encoded = Base64.getEncoder().encode(outputStream.toByteArray());
 		editionTemplate.encodedDocument = new String(encoded);
 		outputStream.close();
 
 		TemplateIo.save(path, editionTemplate);
 	}
+	
+	/**
+	 * Sauvegarde le fichier modèle d'examen sur le disque
+	 */
+	def saveEdition() {
+		TemplateIo.save(editionFile, editionTemplate)
+	}
+	
+	
 
 	/**
 	 * Charge un fichier modèle d'examen a partir du disque
@@ -646,6 +657,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 			val decoded = Base64.getDecoder().decode(creationTemplate.get().encodedDocument);
 
 			questionId = exam.pages.stream.map[page|page.questions.size].reduce[acc, num|acc + num].get + 1
+			editionFile = new File(xmiPath)
 			return Optional.of(new ByteArrayInputStream(decoded));
 		}
 		return Optional.empty;

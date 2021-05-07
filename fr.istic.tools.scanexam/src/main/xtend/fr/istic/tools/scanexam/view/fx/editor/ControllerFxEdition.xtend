@@ -201,7 +201,7 @@ class ControllerFxEdition {
 	def save(File path)
 	{
 		val outputStream = pdfManager.getPdfOutputStream();
-		service.save(outputStream,path);
+		service.saveEdition(outputStream,path);
 	}
 	
 	

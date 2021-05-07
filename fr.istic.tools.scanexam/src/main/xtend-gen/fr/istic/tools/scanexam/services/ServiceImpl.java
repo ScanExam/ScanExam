@@ -98,6 +98,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       pdfOutputStream.close();
       File _file = new File(path);
       TemplateIo.save(_file, this.graduationTemplate);
+      this.saveEdition();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -650,6 +651,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     return this.graduationTemplate.getStudentListShift();
   }
   
+  private File editionFile;
+  
   private int questionId;
   
   /**
@@ -771,12 +774,12 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Sauvegarde le fichier modèle d'examen sur le disque
+   * Sauvegarde sous le fichier modèle d'examen sur le disque
    * @param path L'emplacement de sauvegarde du fichier
    * @param pdfOutputStream le PDF sous forme de Stream
    */
   @Override
-  public void save(final ByteArrayOutputStream outputStream, final File path) {
+  public void saveEdition(final ByteArrayOutputStream outputStream, final File path) {
     try {
       final byte[] encoded = Base64.getEncoder().encode(outputStream.toByteArray());
       String _string = new String(encoded);
@@ -786,6 +789,13 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  /**
+   * Sauvegarde le fichier modèle d'examen sur le disque
+   */
+  public void saveEdition() {
+    TemplateIo.save(this.editionFile, this.editionTemplate);
   }
   
   /**
@@ -810,6 +820,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       Integer _get = exam.getPages().stream().<Integer>map(_function).reduce(_function_1).get();
       int _plus = ((_get).intValue() + 1);
       this.questionId = _plus;
+      File _file = new File(xmiPath);
+      this.editionFile = _file;
       ByteArrayInputStream _byteArrayInputStream = new ByteArrayInputStream(decoded);
       return Optional.<ByteArrayInputStream>of(_byteArrayInputStream);
     }

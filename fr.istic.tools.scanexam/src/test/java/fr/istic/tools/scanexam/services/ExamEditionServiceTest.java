@@ -273,7 +273,7 @@ public class ExamEditionServiceTest {
 		final var outStream = new ByteArrayOutputStream();
 		service.createQuestion(0, 2, 2, 2, 2);
 		outStream.writeBytes(inStream.readAllBytes());
-		service.save(outStream, new File(path));
+		service.saveEdition(outStream, new File(path));
 		service = new ServiceImpl();
 		service.open(path);
 		assertEquals("Test", service.getExamName());

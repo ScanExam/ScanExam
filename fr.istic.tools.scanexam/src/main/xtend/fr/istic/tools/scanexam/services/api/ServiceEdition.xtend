@@ -58,7 +58,7 @@ interface ServiceEdition extends Service {
 	 * @param path L'emplacement de sauvegarde du fichier
 	 * @param pdfOutputStream le contenu du fichier sous forme de Stream
 	 */
-	def void save(ByteArrayOutputStream outputStream, File path)
+	def void saveEdition(ByteArrayOutputStream outputStream, File path)
 
 	/**
 	 * Charge un fichier modèle d'examen a partir du disque
