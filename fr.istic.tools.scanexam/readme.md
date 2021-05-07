@@ -45,12 +45,3 @@ mvn test
 ```maven
 mvn compile assembly:single
 ```
-
-# Program arguments
-
-
-| Argument |  Description |
-|----------|---------------------------------|
-| -javafx | Run program with JavaFX library |
-| -swing  | Run program with Swing library  |
- 
