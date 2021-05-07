@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
+import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.ExportExamToPdf
@@ -23,7 +24,9 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Spinner
+import javafx.scene.control.TextInputControl
 import javafx.scene.control.ToggleButton
+import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
@@ -34,10 +37,6 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
-import javafx.scene.input.KeyEvent
-import fr.istic.tools.scanexam.config.LanguageManager
-import javafx.scene.control.Control
-import javafx.scene.control.TextInputControl
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -515,7 +514,8 @@ class ControllerFxGraduation {
 	 * @param folder Dossier où exporter
 	 */
 	def void exportGraduationToPdf(File folder) {
-		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(pdfManager.pdfInputStream,service.studentSheets,folder, service.getGlobalScale)
+		val sheets = service.studentSheets.filter[sheet | sheet.studentName !== null && !sheet.studentName.matches("\\s*")].toList
+		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(pdfManager.pdfInputStream, sheets,folder, service.getGlobalScale)
 	}
 
 	/**

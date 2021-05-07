@@ -702,7 +702,11 @@ public class ControllerFxGraduation {
    * @param folder Dossier où exporter
    */
   public void exportGraduationToPdf(final File folder) {
-    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.pdfManager.getPdfInputStream(), this.service.getStudentSheets(), folder, this.service.getGlobalScale());
+    final Function1<StudentSheet, Boolean> _function = (StudentSheet sheet) -> {
+      return Boolean.valueOf(((sheet.getStudentName() != null) && (!sheet.getStudentName().matches("\\s*"))));
+    };
+    final List<StudentSheet> sheets = IterableExtensions.<StudentSheet>toList(IterableExtensions.<StudentSheet>filter(this.service.getStudentSheets(), _function));
+    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.pdfManager.getPdfInputStream(), sheets, folder, this.service.getGlobalScale());
   }
   
   /**

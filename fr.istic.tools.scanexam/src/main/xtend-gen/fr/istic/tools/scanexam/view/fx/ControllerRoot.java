@@ -3,7 +3,9 @@ package fr.istic.tools.scanexam.view.fx;
 import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
+import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.config.Config;
+import fr.istic.tools.scanexam.mailing.StudentDataManager;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
@@ -20,6 +22,9 @@ import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -39,6 +44,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 @SuppressWarnings("all")
@@ -201,6 +208,40 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void pdfExport() {
+    final Optional<List<String>> nameList = StudentDataManager.getAllNames();
+    boolean _isEmpty = nameList.isEmpty();
+    if (_isEmpty) {
+      DialogMessageSender.sendTranslateDialog(
+        Alert.AlertType.WARNING, 
+        "sendMail.noStudentDataHeader", 
+        "sendMail.noStudentDataHeader", 
+        "sendMail.noStudentData");
+      return;
+    }
+    final Collection<StudentSheet> studentSheets = this.serviceGraduation.getStudentSheets();
+    int _xifexpression = (int) 0;
+    boolean _isPresent = nameList.isPresent();
+    if (_isPresent) {
+      final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
+        boolean _contains = nameList.get().contains(x.getStudentName());
+        return Boolean.valueOf((!_contains));
+      };
+      int _size = IterableExtensions.size(IterableExtensions.<StudentSheet>filter(studentSheets, _function));
+      _xifexpression = ((int) _size);
+    } else {
+      _xifexpression = (-1);
+    }
+    final int nbSheetWithoutName = _xifexpression;
+    String _translate = LanguageManager.translate("sendMail.noStudentDataHeader");
+    String _xifexpression_1 = null;
+    if ((nbSheetWithoutName > 1)) {
+      _xifexpression_1 = String.format(LanguageManager.translate("sendMail.notAllStudent"), Integer.valueOf(nbSheetWithoutName));
+    } else {
+      _xifexpression_1 = LanguageManager.translate("sendMail.notAllStudent1");
+    }
+    DialogMessageSender.sendDialog(
+      Alert.AlertType.WARNING, _translate, _xifexpression_1, 
+      null);
     DirectoryChooser dirChooser = new DirectoryChooser();
     String _property = System.getProperty("user.home");
     String _property_1 = System.getProperty("file.separator");

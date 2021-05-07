@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
@@ -145,7 +146,36 @@ class ControllerRoot implements Initializable {
 	
 	@FXML
 	def pdfExport() {
-		//Sélection du dossier
+		
+		// Vérification de copies avec aucun nom associé
+		
+		val nameList = StudentDataManager.allNames
+		
+		if (nameList.empty) {
+			DialogMessageSender.sendTranslateDialog(
+				AlertType.WARNING,
+				"sendMail.noStudentDataHeader",
+				"sendMail.noStudentDataHeader",
+				"sendMail.noStudentData"
+			);
+			return
+		}
+		
+		val studentSheets = serviceGraduation.studentSheets
+		val nbSheetWithoutName = if (nameList.present)
+			studentSheets.filter(x|!nameList.get.contains(x.studentName)).size as int
+		else
+			-1
+			
+		DialogMessageSender.sendDialog(
+				AlertType.WARNING,
+				LanguageManager.translate("sendMail.noStudentDataHeader"),
+				nbSheetWithoutName > 1 ? String.format(LanguageManager.translate("sendMail.notAllStudent"),
+					nbSheetWithoutName) : LanguageManager.translate("sendMail.notAllStudent1"),
+				null
+		)
+			
+		//Sélection du dossier	
 		var dirChooser = new DirectoryChooser
 		dirChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Documents")
 		var directory = dirChooser.showDialog(new Stage)
