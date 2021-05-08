@@ -291,13 +291,19 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	/**
-	 * Ajoute une entrée (GradeItem) à la note d'une question d'une copie
+	 * Ajoute une entrée (GradeItem) à la note d'une question d'une copie si la valeur de l'entrée ne fait pas dépasser la note du barême de la question
 	 * @param questionId l'ID de la question à laquelle ajouter l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
-	 * @return boolean indique si les points on bien ete attribuer
+	 * @return boolean indique si les points on bien été attribué
 	 */
 	override boolean assignGradeEntry(int questionId, int gradeEntryId) {
+		if(getQuestion(questionId) === null)
+			return false
+			
 		val gradeEntry = getQuestion(questionId).gradeScale.steps.findFirst[entry|entry.id == gradeEntryId]
+		if(gradeEntry === null)
+			return false
+			
 		if (validGradeEntry(questionId, gradeEntry,false)) {
 			val sheet = studentSheets.get(currentSheetIndex);
 			sheet.grades.get(questionId).entries.add(gradeEntry)
@@ -355,9 +361,12 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 
 	
-	//FIXME : Probleme lorsque la note maximal est modifier pour une note plus basse, risque de depacement
+	//FIXME : Problème lorsque la note maximale est modifiée pour une note plus basse, risque de dépassement
 	/**
 	 * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
+	 * @param questionId l'ID de la question sur laquelle on souhaite modifier l'entrée
+	 * @param gradeAdd l'entrée que l'on souhaite modifier (non null)
+	 * @param removal si la modification consiste en un retrait de l'entrée (false) ou en un ajout (true)
 	 * @return vrai si le nouvelle note est valide, faux sinon
 	 * Pour être valide, la nouvelle note doit respecter les conditions suivantes :
 	 * <ul>
@@ -365,7 +374,11 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * <li>Ne pas être inferieure à 0</li>
 	 * </ul>
 	 */
-	override boolean validGradeEntry(int questionId,GradeEntry gradeAdd,boolean removal){
+	override boolean validGradeEntry(int questionId, GradeEntry gradeAdd, boolean removal) {
+		Objects.requireNonNull(gradeAdd)
+		if(getQuestion(questionId) === null)
+			return false
+			
 		val gradeMax = getQuestion(questionId).gradeScale.maxPoint
 		var currentGrade = studentSheets.get(currentSheetIndex).grades.get(questionId)
 			.entries
@@ -379,7 +392,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 	
 	//===================================================
-	//             Informations sur la copies
+	//             Informations sur la copie
 	//===================================================
 	
 	/**

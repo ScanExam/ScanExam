@@ -139,10 +139,10 @@ interface ServiceGraduation extends Service {
 	
 	
 	/**
-	 * Ajoute une entrée (GradeItem) à la note d'une question d'une copie
+	 * Ajoute une entrée (GradeItem) à la note d'une question d'une copie si la valeur de l'entrée ne fait pas dépasser la note du barême de la question
 	 * @param questionId l'ID de la question à laquelle ajouter l'entrée
 	 * @param l'ID de l'entrée dans l'Examen
-	 * @return boolean indique si les points on bien ete attribuer
+	 * @return boolean indique si les points ont bien été attribués
 	 */
 	def boolean assignGradeEntry(int questionId, int gradeEntryId)
 	
@@ -160,6 +160,7 @@ interface ServiceGraduation extends Service {
 	def List<Integer> getQuestionSelectedGradeEntries(int questionId)
 
 	def double getQuestionSelectedGradeEntriesTotalWorth(int questionId)
+	
 	/**
 	 * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
 	 * @return vrai si le nouvelle note est valide, faux sinon
@@ -172,7 +173,7 @@ interface ServiceGraduation extends Service {
 	def boolean validGradeEntry(int questionId,GradeEntry gradeAdd,boolean removal)
 	
 	//===================================================
-	//             Informations sur la copies
+	//             Informations sur la copie
 	//===================================================
 	
 	/**

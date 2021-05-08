@@ -350,18 +350,26 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Ajoute une entrée (GradeItem) à la note d'une question d'une copie
+   * Ajoute une entrée (GradeItem) à la note d'une question d'une copie si la valeur de l'entrée ne fait pas dépasser la note du barême de la question
    * @param questionId l'ID de la question à laquelle ajouter l'entrée
    * @param l'ID de l'entrée dans l'Examen
-   * @return boolean indique si les points on bien ete attribuer
+   * @return boolean indique si les points on bien été attribué
    */
   @Override
   public boolean assignGradeEntry(final int questionId, final int gradeEntryId) {
+    Question _question = this.getQuestion(questionId);
+    boolean _tripleEquals = (_question == null);
+    if (_tripleEquals) {
+      return false;
+    }
     final Function1<GradeEntry, Boolean> _function = (GradeEntry entry) -> {
       int _id = entry.getId();
       return Boolean.valueOf((_id == gradeEntryId));
     };
     final GradeEntry gradeEntry = IterableExtensions.<GradeEntry>findFirst(this.getQuestion(questionId).getGradeScale().getSteps(), _function);
+    if ((gradeEntry == null)) {
+      return false;
+    }
     boolean _validGradeEntry = this.validGradeEntry(questionId, gradeEntry, false);
     if (_validGradeEntry) {
       final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
@@ -461,6 +469,9 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   
   /**
    * Vérification de la validité d'une note lorsque l'on ajoute un grandEntry
+   * @param questionId l'ID de la question sur laquelle on souhaite modifier l'entrée
+   * @param gradeAdd l'entrée que l'on souhaite modifier (non null)
+   * @param removal si la modification consiste en un retrait de l'entrée (false) ou en un ajout (true)
    * @return vrai si le nouvelle note est valide, faux sinon
    * Pour être valide, la nouvelle note doit respecter les conditions suivantes :
    * <ul>
@@ -470,6 +481,12 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public boolean validGradeEntry(final int questionId, final GradeEntry gradeAdd, final boolean removal) {
+    Objects.<GradeEntry>requireNonNull(gradeAdd);
+    Question _question = this.getQuestion(questionId);
+    boolean _tripleEquals = (_question == null);
+    if (_tripleEquals) {
+      return false;
+    }
     final float gradeMax = this.getQuestion(questionId).getGradeScale().getMaxPoint();
     final Function1<GradeEntry, Float> _function = (GradeEntry e) -> {
       return Float.valueOf(e.getStep());

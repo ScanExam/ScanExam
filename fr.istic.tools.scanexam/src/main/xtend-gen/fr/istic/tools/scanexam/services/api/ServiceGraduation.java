@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.services.api;
 
 import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.services.api.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -112,10 +113,10 @@ public interface ServiceGraduation extends Service {
   List<Tuple3<Integer, String, Float>> getQuestionGradeEntries(final int questionId);
   
   /**
-   * Ajoute une entrée (GradeItem) à la note d'une question d'une copie
+   * Ajoute une entrée (GradeItem) à la note d'une question d'une copie si la valeur de l'entrée ne fait pas dépasser la note du barême de la question
    * @param questionId l'ID de la question à laquelle ajouter l'entrée
    * @param l'ID de l'entrée dans l'Examen
-   * @return boolean indique si les points on bien ete attribuer
+   * @return boolean indique si les points ont bien été attribués
    */
   boolean assignGradeEntry(final int questionId, final int gradeEntryId);
   
