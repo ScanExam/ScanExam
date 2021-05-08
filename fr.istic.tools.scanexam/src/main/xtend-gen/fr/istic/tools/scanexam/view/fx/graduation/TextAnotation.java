@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
-import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

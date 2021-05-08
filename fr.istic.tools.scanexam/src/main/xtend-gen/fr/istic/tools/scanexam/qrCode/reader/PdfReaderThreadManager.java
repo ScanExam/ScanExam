@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.qrCode.reader;
 
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeThread;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
