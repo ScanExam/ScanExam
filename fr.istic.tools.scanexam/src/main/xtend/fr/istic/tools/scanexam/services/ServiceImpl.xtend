@@ -771,9 +771,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	//===================================================
 	
 	//SEE API FOR DOC (WILL ADD HERE LATER)
-	override addNewAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text, int questionId, int studentId) {
+	override addNewAnnotation(double x, double y, double width, double height, double pointerX, double pointerY, String text, int questionId,  int pageId) {
 		val DataFactory factory = new DataFactory
-		val annot = factory.createTextComment(annotationId,text,x as float,y as float,width as float,height as float,pointerX as float,pointerY as float)
+		
+		val annot = factory.createTextComment(annotationId,text,x as float,y as float,width as float,height as float,pointerX as float,pointerY as float, pageId)
 		
 		val sheet = studentSheets.get(currentSheetIndex)
 		sheet.grades.get(questionId).comments.add(annot)

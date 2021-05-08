@@ -87,7 +87,7 @@ class DataFactory {
 		question
 	}
 	
-	def Comment createTextComment(int id, String text, float x, float y , float h, float w,float pointerX,float pointerY){
+	def Comment createTextComment(int id, String text, float x, float y , float h, float w,float pointerX,float pointerY, int pageId){
 		val annot = CoreFactory.eINSTANCE.createTextComment
 		annot.x = x
 		annot.y = y
@@ -95,6 +95,7 @@ class DataFactory {
 		annot.pointerY = pointerY
 		annot.id = id
 		annot.text = text
+		annot.pageId = pageId
 		annot
 	}
 }

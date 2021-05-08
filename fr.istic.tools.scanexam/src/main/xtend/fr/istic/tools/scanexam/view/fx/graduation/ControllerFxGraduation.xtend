@@ -1090,7 +1090,7 @@ class ControllerFxGraduation {
     }
      def addAnnotation(TextAnotation annot){
     	
-    	annot.annotId = service.addNewAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,questionList.currentItem.questionId,studentList.currentItem.studentId)
+    	annot.annotId = service.addNewAnnotation(annot.annotX,annot.annotY,annot.annotW,annot.annotH,annot.annotPointerX,annot.annotPointerY,annot.annotText,questionList.currentItem.questionId,questionList.currentItem.page)
     	logger.info("Adding new Annotation to Model : ID = " + annot.annotId)
     }
     
