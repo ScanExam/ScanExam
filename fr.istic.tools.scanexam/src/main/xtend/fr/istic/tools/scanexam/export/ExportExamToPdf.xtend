@@ -19,10 +19,8 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
-import org.apache.logging.log4j.LogManager
 
 class ExportExamToPdf {
-	static val logger = LogManager.logger
 	
 	/**
 	 * Exports a student's PDF file from the PDF document containing all the exam papers WITHOUT ANNOTATIONS OR GRADE
@@ -278,15 +276,11 @@ class ExportExamToPdf {
 	     				var String text = c.text.replace("\n", "").replace("\r", "");
 	     				// Counter of lines
 						var int nbLines = 1 + (text.length() / 30);
-	     			
-	     			
+						
 		     			var PDPage page = document.getPage(c.pageId);
 		     			
 		     			var float pageWidht = page.getMediaBox().getUpperRightX()
 						var float pageHeight = page.getMediaBox().getUpperRightY()
-						
-						
-						logger.info("Dimensions :" + pageWidht + " " +  pageHeight)
 				
 						// Instantiating the PDPageContentStream class
 						var PDPageContentStream contentStream = new PDPageContentStream(document, page,PDPageContentStream.AppendMode.APPEND, true, true);
@@ -300,6 +294,7 @@ class ExportExamToPdf {
 						// Considered height of a char
 						var float charHeight = 9;
 						
+						// Difference between resolution of application and pdf export
 						var float resolutiondiff = 1.41020067f;
 				
 						var float rectangleBottomLeftCornerX;
@@ -322,9 +317,8 @@ class ExportExamToPdf {
 						}
 				
 						// Drawing pointer line
-						logger.info("Comment :" + (c.pointerX) + " " +  (c.pointerY))
 						contentStream.moveTo(c.pointerX*resolutiondiff, pageHeight-c.pointerY*resolutiondiff)
-						contentStream.lineTo(c.pointerX*resolutiondiff + (rectangleWidth / 2), pageHeight-c.y*resolutiondiff)
+						contentStream.lineTo(c.x*resolutiondiff + (rectangleWidth / 2), pageHeight-c.y*resolutiondiff)
 						contentStream.setNonStrokingColor(Color.decode("#0093ff"))
 						contentStream.stroke()
 						contentStream.fill();
