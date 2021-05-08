@@ -276,8 +276,7 @@ class ExportExamToPdf {
 	     				var String text = c.text.replace("\n", "").replace("\r", "");
 	     				// Counter of lines
 						var int nbLines = 1 + (text.length() / 30);
-	     			
-	     			
+						
 		     			var PDPage page = document.getPage(c.pageId);
 		     			
 		     			var float pageWidht = page.getMediaBox().getUpperRightX()
@@ -294,29 +293,32 @@ class ExportExamToPdf {
 				
 						// Considered height of a char
 						var float charHeight = 9;
+						
+						// Difference between resolution of application and pdf export
+						var float resolutiondiff = 1.41020067f;
 				
 						var float rectangleBottomLeftCornerX;
 						var float rectangleBottomLeftCornerY;
 						var float rectangleWidth;
 						var float rectangleHeight;
 						
-						rectangleBottomLeftCornerX = c.x*pageWidht;
-		
+						rectangleBottomLeftCornerX = c.x*resolutiondiff;
+						
 						// If text size < 30 char
 						if (text.length() <= partitionSize) {
 							rectangleWidth = text.length() * charWidth;
 							rectangleHeight = charHeight;
-							rectangleBottomLeftCornerY = pageHeight-pageHeight*c.y;
+							rectangleBottomLeftCornerY = pageHeight-c.y*resolutiondiff;
 						} // If text size > 30 char
 						else {
-							rectangleBottomLeftCornerY = pageHeight-pageHeight*c.y - (charHeight * (nbLines - 1));
+							rectangleBottomLeftCornerY = pageHeight-c.y*resolutiondiff - (charHeight * (nbLines - 1));
 							rectangleWidth = partitionSize * charWidth;
 							rectangleHeight = charHeight * nbLines;
 						}
 				
 						// Drawing pointer line
-						contentStream.moveTo(pageWidht*c.pointerX, pageHeight-pageHeight*c.pointerY)
-						contentStream.lineTo(pageWidht*c.x + (rectangleWidth / 2), pageHeight-pageHeight*c.y)
+						contentStream.moveTo(c.pointerX*resolutiondiff, pageHeight-c.pointerY*resolutiondiff)
+						contentStream.lineTo(c.x*resolutiondiff + (rectangleWidth / 2), pageHeight-c.y*resolutiondiff)
 						contentStream.setNonStrokingColor(Color.decode("#0093ff"))
 						contentStream.stroke()
 						contentStream.fill();
@@ -336,7 +338,7 @@ class ExportExamToPdf {
 						contentStream.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
 						contentStream.setLeading(7f);
 						contentStream.beginText();
-						contentStream.newLineAtOffset(pageWidht*c.x, pageHeight-pageHeight*c.y);
+						contentStream.newLineAtOffset(c.x*resolutiondiff, pageHeight-c.y*resolutiondiff);
 				
 						// Newline for text every "partitionSize" char
 						for (var int i = 0; i < text.length(); i += partitionSize) {
