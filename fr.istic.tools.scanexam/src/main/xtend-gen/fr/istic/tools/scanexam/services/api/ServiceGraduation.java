@@ -28,21 +28,23 @@ public interface ServiceGraduation extends Service {
   Optional<InputStream> openCorrectionTemplate(final File xmiFile);
   
   /**
-   * Charge le document PDF des copies manuscrites,  corrigés
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
+   * Crée une nouvelle correction à partir d'une liste de StudentSheets
+   * @params studentSheets une liste de StudenSheet
+   * @returns "true" si la correction a pu être créée, "false" sinon
    */
   boolean initializeCorrection(final Collection<StudentSheet> studentSheets);
   
   int getAbsolutePageNumber(final int studentId, final int offset);
   
   /**
-   * Défini la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+   * Définit la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+   * Si la copie courante est la dernière, ne fait rien
    */
   void nextSheet();
   
   /**
-   * Défini la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+   * Définit la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+   * Si la copie courante est la première, ne fait rien
    */
   void previousSheet();
   
@@ -50,12 +52,13 @@ public interface ServiceGraduation extends Service {
    * Associe un nouveau identifiant d'étudiant à la copie courante
    * @param id le nouvel identifiant d'étudiant
    */
-  void assignStudentId(final String id);
+  void assignStudentName(final String id);
   
   /**
-   * @return le nom de l'etudiant avec ID
+   * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * @param id l'ID de la copie
    */
-  String getStudentName(final int id);
+  Optional<String> getStudentName(final int id);
   
   /**
    * @return la liste non modifiable de tous les StudentSheets
@@ -63,42 +66,15 @@ public interface ServiceGraduation extends Service {
   Collection<StudentSheet> getStudentSheets();
   
   /**
-   * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
+   * Définit la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
    * @param id un ID de copie d'étudiant
    */
   void selectSheet(final int id);
   
   /**
-   * Défini la page suivant la page actuelle comme nouvelle page courante
-   */
-  void nextPage();
-  
-  /**
-   * Défini la page précédant la page actuelle comme nouvelle page courante
-   */
-  void previousPage();
-  
-  /**
    * @return le nombre de pages de l'Examen
    */
   int getPageAmount();
-  
-  /**
-   * Défini la question suivant la question actuelle comme nouvelle question courante
-   */
-  void nextQuestion();
-  
-  /**
-   * Défini la question précédant la question actuelle comme nouvelle question courante
-   */
-  void previousQuestion();
-  
-  /**
-   * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
-   * Ne fait rien si la question n'existe pas
-   * @param id un ID de question
-   */
-  void selectQuestion(final int id);
   
   /**
    * @return le nombre de questions d'une copie d'étudiant
@@ -188,18 +164,18 @@ public interface ServiceGraduation extends Service {
   float getGlobalScale();
   
   /**
-   * Défini le chemin d'accès vers la liste de tous les étudiants
+   * Définit le chemin d'accès vers la liste de tous les étudiants
    * @param le chemin d'accès vers cette liste (non null)
    */
   void setStudentListPath(final String path);
   
   /**
-   * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
+   * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas Définit
    */
   String getStudentListPath();
   
   /**
-   * Défini la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
+   * Définit la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
    * @param la position initialede cette liste (non null)
    */
   void setStudentListShift(final String shift);

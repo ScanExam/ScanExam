@@ -46,11 +46,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	int currentSheetIndex;
 	 
-	/**
-	 * Question actuelle.
-	 */
-	int currentQuestionIndex;
-	
 	int gradeEntryId;
 	
 	int annotationId;
@@ -102,9 +97,9 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	
 	/**
-	 * Charge le document PDF des copies manuscrites, corrigés
-	 * @params path L'emplacement du fichier.
-	 * @returns "true" si le fichier a bien été chargé, "false"
+	 * Crée une nouvelle correction à partir d'une liste de StudentSheets
+	 * @params studentSheets une liste de StudenSheet
+	 * @returns "true" si la correction a pu être créée, "false" sinon
 	 */
 	override boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
 		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
@@ -139,7 +134,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	//===================================================
 	
 	/**
-	 * Défini la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+	 * Définit la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+	 * Si la copie courante est la dernière, ne fait rien
 	 */
 	override nextSheet() {
 		if (currentSheetIndex + 1 < studentSheets.size)
@@ -147,7 +143,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 
 	/**
-	 * Défini la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+	 * Définit la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+	 * Si la copie courante est la première, ne fait rien
 	 */
 	override previousSheet() {
 		if (currentSheetIndex > 0)
@@ -158,7 +155,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * Associe un nouveau identifiant d'étudiant à la copie courante
 	 * @param id le nouvel identifiant d'étudiant
 	 */
-	override assignStudentId(String id) {
+	override assignStudentName(String id) {
 		logger.info("Renaming student :" + currentSheetIndex + "with name :" + id)
 		studentSheets.get(currentSheetIndex).studentName = id
 	}
@@ -176,19 +173,20 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 	
 	/**
-	 * @return le nom de l'etudiant avec ID
+	 * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+	 * @param id l'ID de la copie
 	 */
 	 override getStudentName(int id){
 	 	for (StudentSheet sheet : studentSheets) {
 			if (sheet.id === id ) {
-				return sheet.studentName;
+				return Optional.of(sheet.studentName);
 			}
 		}
-		return "Not Found Student";
+		return Optional.empty;
 	 }
 	
 	/**
-	 * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
+	 * Définit la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
 	 * @param id un ID de copie d'étudiant
 	 */
 	override void selectSheet(int id) {
@@ -200,31 +198,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	//          			 Page
 	//===================================================
 	
-	
-	/**
-	 * @return l'index de la page courante du modèle d'exam
-	 */
-	private def getCurrentPage()
-	{
-		return getPage(pageIndex);
-	}
-	
-	/**
-	 * Défini la page suivant la page actuelle comme nouvelle page courante
-	 */
-	override nextPage() {
-		if (pageIndex + 1 < editionTemplate.exam.pages.length)
-			pageIndex++
-	}
-
-	/**
-	 * Défini la page précédant la page actuelle comme nouvelle page courante
-	 */
-	override previousPage() {
-		if (pageIndex > 0) 
-			pageIndex--;
-	}
-	
 	/**
 	 * @return le nombre de pages de l'Examen
 	 */
@@ -235,39 +208,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	//===================================================
 	//          		  Question
 	//===================================================
-	
-	/**
-	 * Défini la question suivant la question actuelle comme nouvelle question courante
-	 */
-	override nextQuestion()
-	{
-		if (currentQuestionIndex + 1 < currentPage.questions.size)
-			currentQuestionIndex++
-	}
-	
-	/**
-	 * Défini la question précédant la question actuelle comme nouvelle question courante
-	 */
-	override previousQuestion() {
-		if (currentQuestionIndex > 0)
-			currentQuestionIndex--
-	}
-	
-	/**
-	 * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
-	 * Ne fait rien si la question n'existe pas 
-	 * @param id un ID de question
-	 */
-	override selectQuestion(int id) {
-		for(page: editionTemplate.exam.pages) {
-			val question = page.questions.findFirst[question | question.id == id]
-			if(question !== null) {
-				pageIndex = page.id
-				currentQuestionIndex = question.id
-			}
-		}
-	}
-	
 	
 	/**
 	 * @return le nombre de questions d'une copie d'étudiant
@@ -478,7 +418,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	//===================================================
 	
 	/**
-	 * Défini le chemin d'accès vers la liste de tous les étudiants
+	 * Définit le chemin d'accès vers la liste de tous les étudiants
 	 * @param le chemin d'accès vers cette liste (non null)
 	 */
 	override setStudentListPath(String path) {
@@ -487,14 +427,14 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 	
 	/**
-	 * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
+	 * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas Définit
 	 */
 	override String getStudentListPath() {
 		return graduationTemplate.studentListPath
 	}
 	
 	/**
-	 * Défini la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
+	 * Définit la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
 	 * @param la position initialede cette liste (non null)
 	 */
 	override setStudentListShift(String shift) {
@@ -663,7 +603,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		return Optional.empty;
 	}
 
-	/**  Rend la liste non modifiable des Questions définies dans un Examen
+	/**  Rend la liste non modifiable des Questions Définies dans un Examen
 	 * @return List<Question>
 	 * @author degas
 	 */

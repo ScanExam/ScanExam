@@ -64,11 +64,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   private int currentSheetIndex;
   
-  /**
-   * Question actuelle.
-   */
-  private int currentQuestionIndex;
-  
   private int gradeEntryId;
   
   private int annotationId;
@@ -123,9 +118,9 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Charge le document PDF des copies manuscrites, corrigés
-   * @params path L'emplacement du fichier.
-   * @returns "true" si le fichier a bien été chargé, "false"
+   * Crée une nouvelle correction à partir d'une liste de StudentSheets
+   * @params studentSheets une liste de StudenSheet
+   * @returns "true" si la correction a pu être créée, "false" sinon
    */
   @Override
   public boolean initializeCorrection(final Collection<StudentSheet> studentSheets) {
@@ -166,7 +161,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Défini la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+   * Définit la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
+   * Si la copie courante est la dernière, ne fait rien
    */
   @Override
   public void nextSheet() {
@@ -178,7 +174,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Défini la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+   * Définit la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
+   * Si la copie courante est la première, ne fait rien
    */
   @Override
   public void previousSheet() {
@@ -192,7 +189,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @param id le nouvel identifiant d'étudiant
    */
   @Override
-  public void assignStudentId(final String id) {
+  public void assignStudentName(final String id) {
     ServiceImpl.logger.info(((("Renaming student :" + Integer.valueOf(this.currentSheetIndex)) + "with name :") + id));
     StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
     _get.setStudentName(id);
@@ -210,23 +207,24 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * @return le nom de l'etudiant avec ID
+   * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * @param id l'ID de la copie
    */
   @Override
-  public String getStudentName(final int id) {
+  public Optional<String> getStudentName(final int id) {
     Collection<StudentSheet> _studentSheets = this.getStudentSheets();
     for (final StudentSheet sheet : _studentSheets) {
       int _id = sheet.getId();
       boolean _tripleEquals = (_id == id);
       if (_tripleEquals) {
-        return sheet.getStudentName();
+        return Optional.<String>of(sheet.getStudentName());
       }
     }
-    return "Not Found Student";
+    return Optional.<String>empty();
   }
   
   /**
-   * Défini la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
+   * Définit la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
    * @param id un ID de copie d'étudiant
    */
   @Override
@@ -237,85 +235,11 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * @return l'index de la page courante du modèle d'exam
-   */
-  private Page getCurrentPage() {
-    return this.getPage(this.pageIndex);
-  }
-  
-  /**
-   * Défini la page suivant la page actuelle comme nouvelle page courante
-   */
-  @Override
-  public void nextPage() {
-    int _length = ((Object[])Conversions.unwrapArray(this.editionTemplate.getExam().getPages(), Object.class)).length;
-    boolean _lessThan = ((this.pageIndex + 1) < _length);
-    if (_lessThan) {
-      this.pageIndex++;
-    }
-  }
-  
-  /**
-   * Défini la page précédant la page actuelle comme nouvelle page courante
-   */
-  @Override
-  public void previousPage() {
-    if ((this.pageIndex > 0)) {
-      this.pageIndex--;
-    }
-  }
-  
-  /**
    * @return le nombre de pages de l'Examen
    */
   @Override
   public int getPageAmount() {
     return this.getTemplatePageAmount();
-  }
-  
-  /**
-   * Défini la question suivant la question actuelle comme nouvelle question courante
-   */
-  @Override
-  public void nextQuestion() {
-    int _size = this.getCurrentPage().getQuestions().size();
-    boolean _lessThan = ((this.currentQuestionIndex + 1) < _size);
-    if (_lessThan) {
-      this.currentQuestionIndex++;
-    }
-  }
-  
-  /**
-   * Défini la question précédant la question actuelle comme nouvelle question courante
-   */
-  @Override
-  public void previousQuestion() {
-    if ((this.currentQuestionIndex > 0)) {
-      this.currentQuestionIndex--;
-    }
-  }
-  
-  /**
-   * Défini pour question courante la question dont l'ID est passé en paramètre si celle-ci existe, et défini pour page courante la page où se trouve cette question.<br/>
-   * Ne fait rien si la question n'existe pas
-   * @param id un ID de question
-   */
-  @Override
-  public void selectQuestion(final int id) {
-    EList<Page> _pages = this.editionTemplate.getExam().getPages();
-    for (final Page page : _pages) {
-      {
-        final Function1<Question, Boolean> _function = (Question question) -> {
-          int _id = question.getId();
-          return Boolean.valueOf((_id == id));
-        };
-        final Question question = IterableExtensions.<Question>findFirst(page.getQuestions(), _function);
-        if ((question != null)) {
-          this.pageIndex = page.getId();
-          this.currentQuestionIndex = question.getId();
-        }
-      }
-    }
   }
   
   /**
@@ -616,7 +540,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Défini le chemin d'accès vers la liste de tous les étudiants
+   * Définit le chemin d'accès vers la liste de tous les étudiants
    * @param le chemin d'accès vers cette liste (non null)
    */
   @Override
@@ -626,7 +550,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas défini
+   * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas Définit
    */
   @Override
   public String getStudentListPath() {
@@ -634,7 +558,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Défini la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
+   * Définit la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
    * @param la position initialede cette liste (non null)
    */
   @Override
@@ -829,7 +753,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Rend la liste non modifiable des Questions définies dans un Examen
+   * Rend la liste non modifiable des Questions Définies dans un Examen
    * @return List<Question>
    * @author degas
    */

@@ -789,7 +789,7 @@ public class ControllerFxGraduation {
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
-        String name = this.service.getStudentName(i);
+        String name = this.service.getStudentName(i).orElse("Not found");
         if (((name == null) || (name == ""))) {
           student.setStudentName(LanguageManager.translate("name.default"));
         } else {
@@ -845,8 +845,8 @@ public class ControllerFxGraduation {
   /**
    * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
    */
-  public void showAnotations() {
-    this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
+  public Object showAnotations() {
+    return this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
   }
   
   /**
@@ -922,19 +922,16 @@ public class ControllerFxGraduation {
   
   public void nextQuestion() {
     this.questionList.selectNextItem();
-    this.service.nextQuestion();
     this.setSelectedQuestion();
   }
   
   public void previousQuestion() {
     this.questionList.selectPreviousItem();
-    this.service.previousQuestion();
     this.setSelectedQuestion();
   }
   
   public void selectQuestion(final QuestionItemGraduation item) {
     this.questionList.selectItem(item);
-    this.service.selectQuestion(item.getQuestionId());
     this.setSelectedQuestion();
   }
   
@@ -1358,7 +1355,7 @@ public class ControllerFxGraduation {
   }
   
   public void renameStudent(final int studentId, final String newname) {
-    this.service.assignStudentId(newname);
+    this.service.assignStudentName(newname);
   }
   
   public void addAnnotation(final TextAnotation annot) {

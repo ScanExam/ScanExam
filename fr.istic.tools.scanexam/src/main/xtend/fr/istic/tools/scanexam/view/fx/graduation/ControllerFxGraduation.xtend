@@ -593,7 +593,7 @@ class ControllerFxGraduation {
 		
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
-			var name = service.getStudentName(i);
+			var name = service.getStudentName(i).orElse("Not found");
 			if (name === null || name === "") {
 				student.studentName = LanguageManager.translate("name.default")
 				}
@@ -716,17 +716,14 @@ class ControllerFxGraduation {
 
 	def void nextQuestion(){
 		questionList.selectNextItem
-		service.nextQuestion
 		setSelectedQuestion()
 	}
 	def void previousQuestion(){
 		questionList.selectPreviousItem
-		service.previousQuestion
 		setSelectedQuestion()
 	}
 	def void selectQuestion(QuestionItemGraduation item) {
 		questionList.selectItem(item);
-		service.selectQuestion(item.questionId)
 		setSelectedQuestion()
 	}
 
@@ -1086,7 +1083,7 @@ class ControllerFxGraduation {
     }
     
     def renameStudent(int studentId,String newname){
-        service.assignStudentId(newname)
+        service.assignStudentName(newname)
     }
      def addAnnotation(TextAnotation annot){
     	
