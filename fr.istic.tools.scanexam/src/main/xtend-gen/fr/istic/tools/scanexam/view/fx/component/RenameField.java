@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.view.fx.component;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -20,6 +22,8 @@ public class RenameField extends HBox {
     this.label = _label;
     TextField _textField = new TextField("Temp");
     this.field = _textField;
+    SimpleBooleanProperty _simpleBooleanProperty = new SimpleBooleanProperty(false);
+    this.editing = _simpleBooleanProperty;
     Label _label_1 = new Label("✎");
     this.icon = _label_1;
     this.icon.getStyleClass().add("unicodeLabel");
@@ -34,6 +38,8 @@ public class RenameField extends HBox {
   private Label label;
   
   TextField field;
+  
+  private BooleanProperty editing;
   
   private Label icon;
   
@@ -50,31 +56,25 @@ public class RenameField extends HBox {
   /**
    * toggles the visibility of the label or the field
    */
-  private Boolean toggleRename(final boolean b) {
-    boolean _xifexpression = false;
+  private void toggleRename(final boolean b) {
     if (b) {
       this.getChildren().remove(this.label);
       this.getChildren().remove(this.icon);
       this.getChildren().add(this.field);
       this.field.requestFocus();
       this.field.selectAll();
+      this.editing.set(true);
     } else {
-      boolean _xifexpression_1 = false;
       boolean _contains = this.getChildren().contains(this.label);
       boolean _not = (!_contains);
       if (_not) {
-        boolean _xblockexpression = false;
-        {
-          this.label.setText(this.field.getText());
-          this.prop.setValue(this.field.getText());
-          this.getChildren().remove(this.field);
-          _xblockexpression = this.getChildren().addAll(this.label, this.icon);
-        }
-        _xifexpression_1 = _xblockexpression;
+        this.label.setText(this.field.getText());
+        this.prop.setValue(this.field.getText());
+        this.getChildren().remove(this.field);
+        this.getChildren().addAll(this.label, this.icon);
+        this.editing.set(false);
       }
-      _xifexpression = _xifexpression_1;
     }
-    return Boolean.valueOf(_xifexpression);
   }
   
   /**
@@ -96,6 +96,10 @@ public class RenameField extends HBox {
    */
   public StringProperty getTextProperty() {
     return this.prop;
+  }
+  
+  public BooleanProperty getEditingProperty() {
+    return this.editing;
   }
   
   public TextFormatter<Number> setFieldFormatter(final TextFormatter<Number> formatter) {

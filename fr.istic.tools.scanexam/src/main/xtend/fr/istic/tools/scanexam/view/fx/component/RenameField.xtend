@@ -7,6 +7,8 @@ import javafx.scene.layout.HBox
 import javafx.beans.property.StringProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
+import javafx.beans.property.BooleanProperty
+import javafx.beans.property.SimpleBooleanProperty
 
 class RenameField extends HBox {
 	
@@ -14,6 +16,8 @@ class RenameField extends HBox {
 		label = new Label("Temp");
 		
 		field = new TextField("Temp");
+		
+		editing = new SimpleBooleanProperty(false)
 		
 		icon = new Label("\u270E")
 		icon.styleClass.add("unicodeLabel")
@@ -27,6 +31,7 @@ class RenameField extends HBox {
 
 	Label label;
 	package TextField field;
+	BooleanProperty editing;
 	Label icon;
 	
 	/**
@@ -49,13 +54,16 @@ class RenameField extends HBox {
 			this.children.add(field);
 			field.requestFocus
 			field.selectAll
+			editing.set(true)
 
 		} else {
 			if (!this.children.contains(label)) {
+				
 				label.text = field.text
 				prop.value = field.text
 				this.children.remove(field);
 				this.children.addAll(label,icon);
+				editing.set(false)
 			}
 		}
 	}
@@ -76,6 +84,10 @@ class RenameField extends HBox {
 	 */
 	def getTextProperty(){
 		return prop
+	}
+	
+	def getEditingProperty(){
+		editing
 	}
 	
 	def setFieldFormatter(TextFormatter<Number> formatter){
