@@ -178,13 +178,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	 override getStudentName(int id){
 	 	for (StudentSheet sheet : studentSheets) {
-			if (sheet.id === id ) {
-<<<<<<< HEAD
+			if (sheet.id === id )
 				return Optional.ofNullable(sheet.studentName);
-=======
-				return (sheet.studentName === null ?Optional.empty:Optional.of(sheet.studentName));
->>>>>>> branch 'dev' of https://github.com/ScanExam/ScanExam.git
-			}
 		}
 		return Optional.empty;
 	 }
