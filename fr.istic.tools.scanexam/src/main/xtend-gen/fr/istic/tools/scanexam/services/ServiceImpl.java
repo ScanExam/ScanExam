@@ -217,7 +217,15 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       int _id = sheet.getId();
       boolean _tripleEquals = (_id == id);
       if (_tripleEquals) {
-        return Optional.<String>of(sheet.getStudentName());
+        Optional<String> _xifexpression = null;
+        String _studentName = sheet.getStudentName();
+        boolean _tripleEquals_1 = (_studentName == null);
+        if (_tripleEquals_1) {
+          _xifexpression = Optional.<String>empty();
+        } else {
+          _xifexpression = Optional.<String>of(sheet.getStudentName());
+        }
+        return _xifexpression;
       }
     }
     return Optional.<String>empty();
@@ -885,11 +893,11 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Override
-  public int addNewAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int questionId, final int studentId) {
+  public int addNewAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int questionId, final int pageId) {
     int _xblockexpression = (int) 0;
     {
       final DataFactory factory = new DataFactory();
-      final Comment annot = factory.createTextComment(this.annotationId, text, ((float) x), ((float) y), ((float) width), ((float) height), ((float) pointerX), ((float) pointerY));
+      final Comment annot = factory.createTextComment(this.annotationId, text, ((float) x), ((float) y), ((float) width), ((float) height), ((float) pointerX), ((float) pointerY), pageId);
       final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
       sheet.getGrades().get(questionId).getComments().add(annot);
       _xblockexpression = this.annotationId++;

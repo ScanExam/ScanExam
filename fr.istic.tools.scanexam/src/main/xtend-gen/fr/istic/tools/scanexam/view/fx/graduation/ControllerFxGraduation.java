@@ -11,14 +11,6 @@ import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
-import fr.istic.tools.scanexam.view.fx.graduation.Grader;
-import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -845,8 +837,8 @@ public class ControllerFxGraduation {
   /**
    * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
    */
-  public Object showAnotations() {
-    return this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
+  public void showAnotations() {
+    this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
   }
   
   /**
@@ -1359,7 +1351,7 @@ public class ControllerFxGraduation {
   }
   
   public void addAnnotation(final TextAnotation annot) {
-    annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId()));
+    annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.questionList.getCurrentItem().getPage()));
     int _annotId = annot.getAnnotId();
     String _plus = ("Adding new Annotation to Model : ID = " + Integer.valueOf(_annotId));
     ControllerFxGraduation.logger.info(_plus);

@@ -2,8 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.component.RenameFieldSuggests;
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

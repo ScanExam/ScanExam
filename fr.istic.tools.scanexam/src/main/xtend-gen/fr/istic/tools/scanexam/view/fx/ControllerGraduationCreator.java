@@ -4,7 +4,6 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
-import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;

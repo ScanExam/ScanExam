@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

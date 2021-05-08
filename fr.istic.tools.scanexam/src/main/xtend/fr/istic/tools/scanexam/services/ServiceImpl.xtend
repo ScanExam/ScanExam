@@ -179,7 +179,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 override getStudentName(int id){
 	 	for (StudentSheet sheet : studentSheets) {
 			if (sheet.id === id ) {
-				return Optional.of(sheet.studentName);
+				return (sheet.studentName === null ?Optional.empty:Optional.of(sheet.studentName));
 			}
 		}
 		return Optional.empty;

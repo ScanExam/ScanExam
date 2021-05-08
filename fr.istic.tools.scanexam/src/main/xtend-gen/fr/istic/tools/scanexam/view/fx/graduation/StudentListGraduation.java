@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;

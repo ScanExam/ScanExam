@@ -310,12 +310,13 @@ public class ExportExamToPdf {
                 int partitionSize = 30;
                 float charWidth = 3.5f;
                 float charHeight = 9;
+                float resolutiondiff = 1.41020067f;
                 float rectangleBottomLeftCornerX = 0;
                 float rectangleBottomLeftCornerY = 0;
                 float rectangleWidth = 0;
                 float rectangleHeight = 0;
                 float _x = ((TextComment)c).getX();
-                float _multiply = (_x * pageWidht);
+                float _multiply = (_x * resolutiondiff);
                 rectangleBottomLeftCornerX = _multiply;
                 int _length_1 = text.length();
                 boolean _lessEqualsThan = (_length_1 <= partitionSize);
@@ -325,12 +326,12 @@ public class ExportExamToPdf {
                   rectangleWidth = _multiply_1;
                   rectangleHeight = charHeight;
                   float _y = ((TextComment)c).getY();
-                  float _multiply_2 = (pageHeight * _y);
+                  float _multiply_2 = (_y * resolutiondiff);
                   float _minus = (pageHeight - _multiply_2);
                   rectangleBottomLeftCornerY = _minus;
                 } else {
                   float _y_1 = ((TextComment)c).getY();
-                  float _multiply_3 = (pageHeight * _y_1);
+                  float _multiply_3 = (_y_1 * resolutiondiff);
                   float _minus_1 = (pageHeight - _multiply_3);
                   float _minus_2 = (_minus_1 - (charHeight * (nbLines - 1)));
                   rectangleBottomLeftCornerY = _minus_2;
@@ -338,16 +339,16 @@ public class ExportExamToPdf {
                   rectangleHeight = (charHeight * nbLines);
                 }
                 float _pointerX = ((TextComment)c).getPointerX();
-                float _multiply_4 = (pageWidht * _pointerX);
+                float _multiply_4 = (_pointerX * resolutiondiff);
                 float _pointerY = ((TextComment)c).getPointerY();
-                float _multiply_5 = (pageHeight * _pointerY);
+                float _multiply_5 = (_pointerY * resolutiondiff);
                 float _minus_3 = (pageHeight - _multiply_5);
                 contentStream.moveTo(_multiply_4, _minus_3);
                 float _x_1 = ((TextComment)c).getX();
-                float _multiply_6 = (pageWidht * _x_1);
+                float _multiply_6 = (_x_1 * resolutiondiff);
                 float _plus = (_multiply_6 + (rectangleWidth / 2));
                 float _y_2 = ((TextComment)c).getY();
-                float _multiply_7 = (pageHeight * _y_2);
+                float _multiply_7 = (_y_2 * resolutiondiff);
                 float _minus_4 = (pageHeight - _multiply_7);
                 contentStream.lineTo(_plus, _minus_4);
                 contentStream.setNonStrokingColor(Color.decode("#0093ff"));
@@ -365,9 +366,9 @@ public class ExportExamToPdf {
                 contentStream.setLeading(7f);
                 contentStream.beginText();
                 float _x_2 = ((TextComment)c).getX();
-                float _multiply_8 = (pageWidht * _x_2);
+                float _multiply_8 = (_x_2 * resolutiondiff);
                 float _y_3 = ((TextComment)c).getY();
-                float _multiply_9 = (pageHeight * _y_3);
+                float _multiply_9 = (_y_3 * resolutiondiff);
                 float _minus_5 = (pageHeight - _multiply_9);
                 contentStream.newLineAtOffset(_multiply_8, _minus_5);
                 {
