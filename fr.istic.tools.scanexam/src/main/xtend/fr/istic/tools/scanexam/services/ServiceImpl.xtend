@@ -179,7 +179,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 override getStudentName(int id){
 	 	for (StudentSheet sheet : studentSheets) {
 			if (sheet.id === id ) {
-				return Optional.of(sheet.studentName);
+				return Optional.ofNullable(sheet.studentName);
 			}
 		}
 		return Optional.empty;
@@ -228,17 +228,20 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param questionId l'ID de la question dans laquelle ajouter l'entrée
 	 * @param desc la description de l'entrée
 	 * @param point le nombre de point de l'entrée
-	 * @return l'ID de l'entrée
+	 * @return l'ID de l'entrée si celle-ci a pu être créée, Optional.empty sinon
 	 */
-	override int addEntry(int questionId, String desc, float point) 
+	override Optional<Integer> addEntry(int questionId, String desc, float point) 
 	{
 		val DataFactory factory = new DataFactory
 		val question = getQuestion(questionId)
+		if(question === null)
+			return Optional.empty
 		if(question.gradeScale === null)
 			question.gradeScale = factory.createGradeScale
 		val scale = question.gradeScale
-		scale.steps.add(factory.createGradeEntry(gradeEntryId, desc, point))
-		gradeEntryId++
+		val entry = factory.createGradeEntry(gradeEntryId, desc, point)
+		scale.steps.add(entry)
+		Optional.of(gradeEntryId++)
 	}
 	
 	/**

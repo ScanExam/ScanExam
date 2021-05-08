@@ -37,7 +37,7 @@ public class PdfPaneWithAnotations extends Pane {
   
   private Image currentImage;
   
-  public Object displayAnnotationsFor(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
+  public void displayAnnotationsFor(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
     this.removeAllAnotations();
     List<Integer> ids = this.controller.getService().getAnnotationIds(qItem.getQuestionId(), sItem.getStudentId());
     for (final int id : ids) {
@@ -47,7 +47,6 @@ public class PdfPaneWithAnotations extends Pane {
         this.controller.getService().getAnnotationPointerX(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationPointerY(id, qItem.getQuestionId(), sItem.getStudentId()), 
         this.controller.getService().getAnnotationText(id, qItem.getQuestionId(), sItem.getStudentId()), id);
     }
-    return null;
   }
   
   public Image setImage(final Image image) {

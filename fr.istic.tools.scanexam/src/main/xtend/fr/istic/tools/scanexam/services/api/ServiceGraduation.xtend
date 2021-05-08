@@ -104,9 +104,9 @@ interface ServiceGraduation extends Service {
 	 * @param questionId l'ID de la question dans laquelle ajouter l'entrée
 	 * @param desc la description de l'entrée
 	 * @param point le nombre de point de l'entrée
-	 * @return l'ID de l'entrée
+	 * @return l'ID de l'entrée si celle-ci a pu être créée, Optional.empty sinon
 	 */
-	def int addEntry(int questionId, String desc, float point) 
+	def Optional<Integer> addEntry(int questionId, String desc, float point) 
 
 	
 	/**

@@ -845,8 +845,8 @@ public class ControllerFxGraduation {
   /**
    * Affiche toutes les annotations pour la page courrant et l'etudiant courrant
    */
-  public Object showAnotations() {
-    return this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
+  public void showAnotations() {
+    this.mainPane.displayAnnotationsFor(this.questionList.getCurrentItem(), this.studentList.getCurrentItem());
   }
   
   /**
@@ -1327,7 +1327,7 @@ public class ControllerFxGraduation {
    * @return l'ID de l'entrée
    */
   public int addEntry(final int questionId, final String desc, final float point) {
-    return this.service.addEntry(questionId, desc, point);
+    return (this.service.addEntry(questionId, desc, point).get()).intValue();
   }
   
   /**
@@ -1359,7 +1359,7 @@ public class ControllerFxGraduation {
   }
   
   public void addAnnotation(final TextAnotation annot) {
-    annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId()));
+    annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.questionList.getCurrentItem().getPage()));
     int _annotId = annot.getAnnotId();
     String _plus = ("Adding new Annotation to Model : ID = " + Integer.valueOf(_annotId));
     ControllerFxGraduation.logger.info(_plus);

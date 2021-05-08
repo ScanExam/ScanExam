@@ -217,7 +217,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       int _id = sheet.getId();
       boolean _tripleEquals = (_id == id);
       if (_tripleEquals) {
-        return Optional.<String>of(sheet.getStudentName());
+        return Optional.<String>ofNullable(sheet.getStudentName());
       }
     }
     return Optional.<String>empty();
@@ -265,22 +265,27 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @param questionId l'ID de la question dans laquelle ajouter l'entrée
    * @param desc la description de l'entrée
    * @param point le nombre de point de l'entrée
-   * @return l'ID de l'entrée
+   * @return l'ID de l'entrée si celle-ci a pu être créée, Optional.empty sinon
    */
   @Override
-  public int addEntry(final int questionId, final String desc, final float point) {
-    int _xblockexpression = (int) 0;
+  public Optional<Integer> addEntry(final int questionId, final String desc, final float point) {
+    Optional<Integer> _xblockexpression = null;
     {
       final DataFactory factory = new DataFactory();
       final Question question = this.getQuestion(questionId);
+      if ((question == null)) {
+        return Optional.<Integer>empty();
+      }
       GradeScale _gradeScale = question.getGradeScale();
       boolean _tripleEquals = (_gradeScale == null);
       if (_tripleEquals) {
         question.setGradeScale(factory.createGradeScale());
       }
       final GradeScale scale = question.getGradeScale();
-      scale.getSteps().add(factory.createGradeEntry(this.gradeEntryId, desc, point));
-      _xblockexpression = this.gradeEntryId++;
+      final GradeEntry entry = factory.createGradeEntry(this.gradeEntryId, desc, point);
+      scale.getSteps().add(entry);
+      int _plusPlus = this.gradeEntryId++;
+      _xblockexpression = Optional.<Integer>of(Integer.valueOf(_plusPlus));
     }
     return _xblockexpression;
   }
@@ -885,11 +890,11 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Override
-  public int addNewAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int questionId, final int studentId) {
+  public int addNewAnnotation(final double x, final double y, final double width, final double height, final double pointerX, final double pointerY, final String text, final int questionId, final int pageId) {
     int _xblockexpression = (int) 0;
     {
       final DataFactory factory = new DataFactory();
-      final Comment annot = factory.createTextComment(this.annotationId, text, ((float) x), ((float) y), ((float) width), ((float) height), ((float) pointerX), ((float) pointerY));
+      final Comment annot = factory.createTextComment(this.annotationId, text, ((float) x), ((float) y), ((float) width), ((float) height), ((float) pointerX), ((float) pointerY), pageId);
       final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
       sheet.getGrades().get(questionId).getComments().add(annot);
       _xblockexpression = this.annotationId++;

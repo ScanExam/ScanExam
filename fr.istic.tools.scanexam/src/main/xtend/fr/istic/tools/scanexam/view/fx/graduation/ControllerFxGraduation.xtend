@@ -1055,7 +1055,7 @@ class ControllerFxGraduation {
      * @return l'ID de l'entrée
      */
     def int addEntry(int questionId, String desc, float point) {
-        service.addEntry(questionId, desc, point)
+        service.addEntry(questionId, desc, point).get()
     }
     
     /**

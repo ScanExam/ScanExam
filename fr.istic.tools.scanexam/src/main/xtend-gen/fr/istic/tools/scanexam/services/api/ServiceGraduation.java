@@ -86,9 +86,9 @@ public interface ServiceGraduation extends Service {
    * @param questionId l'ID de la question dans laquelle ajouter l'entrée
    * @param desc la description de l'entrée
    * @param point le nombre de point de l'entrée
-   * @return l'ID de l'entrée
+   * @return l'ID de l'entrée si celle-ci a pu être créée, Optional.empty sinon
    */
-  int addEntry(final int questionId, final String desc, final float point);
+  Optional<Integer> addEntry(final int questionId, final String desc, final float point);
   
   /**
    * Modifie une entrée de la liste des points attribuable à la question

@@ -103,7 +103,7 @@ public class DataFactory {
     return _xblockexpression;
   }
   
-  public Comment createTextComment(final int id, final String text, final float x, final float y, final float h, final float w, final float pointerX, final float pointerY) {
+  public Comment createTextComment(final int id, final String text, final float x, final float y, final float h, final float w, final float pointerX, final float pointerY, final int pageId) {
     TextComment _xblockexpression = null;
     {
       final TextComment annot = CoreFactory.eINSTANCE.createTextComment();
@@ -113,6 +113,7 @@ public class DataFactory {
       annot.setPointerY(pointerY);
       annot.setId(id);
       annot.setText(text);
+      annot.setPageId(pageId);
       _xblockexpression = annot;
     }
     return _xblockexpression;
