@@ -65,7 +65,7 @@ class ControllerSendMail  {
 
 					if (studentSheet.studentName !== null && studentMail !== null) {
 						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
-							controllerGraduation.pdfManager.pdfInputStream, studentSheet, globalScale)
+							controllerGraduation.pdfManager.pdfInputStream, studentSheet, globalScale, mainPane.width)
 						val sender = new SendMailTls
 						sender.sendMail(controllerGraduation.pdfManager.pdfInputStream, txtFldTitle.text,
 							htmlEditor.htmlText, pair.key, studentMail, pair.value)
