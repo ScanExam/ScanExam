@@ -277,7 +277,7 @@ class ExportExamToPdf {
 	     				// Counter of lines
 						var int nbLines = 1 + (text.length() / 30);
 						
-		     			var PDPage page = document.getPage(c.pageId);
+		     			var PDPage page = document.getPage(c.pageId+sheet.id*sheet.posPage.size);
 		     			
 		     			var float pageWidht = page.getMediaBox().getUpperRightX()
 						var float pageHeight = page.getMediaBox().getUpperRightY()
