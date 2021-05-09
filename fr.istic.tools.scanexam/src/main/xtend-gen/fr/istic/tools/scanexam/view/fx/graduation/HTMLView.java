@@ -1,13 +1,19 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.view.fx.graduation.Grader;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
-public class HTMLView {
+public class HTMLView implements Initializable {
+  @FXML
+  private VBox root;
+  
   @FXML
   private HTMLEditor html;
   
@@ -20,8 +26,12 @@ public class HTMLView {
   
   public static Stage stage;
   
+  @Override
+  public void initialize(final URL location, final ResourceBundle resources) {
+  }
+  
   @FXML
-  private void onMouseClicked() {
+  public void onMouseClicked() {
     String htmlText = this.html.getHtmlText();
     boolean _contains = htmlText.contains("contenteditable=\"true\"");
     if (_contains) {
@@ -32,7 +42,6 @@ public class HTMLView {
       htmlText = htmlText.replace("body ", "body style=\"height: 130; max-width: 130; padding-right: 10;\" ");
     }
     HTMLView.item.changeText(htmlText);
-    InputOutput.<String>println(htmlText);
     HTMLView.stage.close();
   }
 }
