@@ -159,8 +159,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       int _id = x.getId();
       return Boolean.valueOf((_id == studentId));
     };
-    final Integer pageId = IterableExtensions.<StudentSheet>findFirst(this.getStudentSheets(), _function).getPosPage().get(0);
-    return ((pageId).intValue() + offset);
+    final Integer pageId = IterableExtensions.<StudentSheet>findFirst(this.getStudentSheets(), _function).getPosPage().get(offset);
+    return (pageId).intValue();
   }
   
   /**

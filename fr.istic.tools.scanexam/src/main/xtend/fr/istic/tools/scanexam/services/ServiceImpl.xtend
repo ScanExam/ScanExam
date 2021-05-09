@@ -127,8 +127,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	//TODO si les pages sont dans le désordre ?
 	override int getAbsolutePageNumber(int studentId, int offset) {
-		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(0);
-		return pageId + offset;
+		val pageId = studentSheets.findFirst[x | x.id == studentId].posPage.get(offset);
+		return pageId;
 	}
 	
 	//===================================================

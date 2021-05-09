@@ -146,10 +146,10 @@ public class ExportExamToPdf {
    * @param folderForSaving is the Folder for save PDF documents
    * @return collection of temp Files
    */
-  public static void exportExamsOfStudentsToPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving, final float globalScale) {
+  public static void exportExamsOfStudentsToPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving, final float globalScale, final double originWidht) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
-      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
+      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -180,11 +180,11 @@ public class ExportExamToPdf {
    * @param sheets is they studentSheet of they students
    * @return map of student's name to temp file
    */
-  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale) {
+  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale, final double originWidht) {
     try {
       Map<String, File> tempExams = new HashMap<String, File>();
       File tempExam = File.createTempFile("examTemp", ".pdf");
-      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
+      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -214,10 +214,10 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static File exportExamsToTempAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale) {
+  public static File exportExamsToTempAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale, final double originWidht) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
-      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale);
+      ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
       return tempExam;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -230,11 +230,11 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static void exportStudentExamToPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final File fileForSaving, final float globalScale) {
+  public static void exportStudentExamToPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final File fileForSaving, final float globalScale, final double originWidht) {
     try {
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale, originWidht);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
@@ -255,12 +255,12 @@ public class ExportExamToPdf {
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final float globalScale) {
+  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final float globalScale, final double originWidht) {
     try {
       File studentExam = File.createTempFile(sheet.getStudentName(), ".pdf");
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale, originWidht);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
@@ -289,7 +289,7 @@ public class ExportExamToPdf {
    * @param sheets is they studentSheet of they students
    * @param fileForSaving is the File for save PDF document
    */
-  public static void exportExamsToAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File fileForSaving, final float globalScale) {
+  public static void exportExamsToAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File fileForSaving, final float globalScale, final double originWidht) {
     try {
       PDDocument document = PDDocument.load(documentInputStream);
       for (final StudentSheet sheet : sheets) {
@@ -310,7 +310,8 @@ public class ExportExamToPdf {
                 int partitionSize = 30;
                 float charWidth = 3.5f;
                 float charHeight = 9;
-                float resolutiondiff = 1.41020067f;
+                float _floatValue = Double.valueOf(originWidht).floatValue();
+                float resolutiondiff = (pageWidht / _floatValue);
                 float rectangleBottomLeftCornerX = 0;
                 float rectangleBottomLeftCornerY = 0;
                 float rectangleWidth = 0;
