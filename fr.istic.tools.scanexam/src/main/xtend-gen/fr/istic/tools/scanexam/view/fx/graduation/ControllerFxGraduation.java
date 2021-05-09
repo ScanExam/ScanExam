@@ -787,7 +787,7 @@ public class ControllerFxGraduation {
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
-        String name = this.service.getStudentName(i).orElse("Not found");
+        String name = this.service.getStudentName(i).orElse("");
         if (((name == null) || (name == ""))) {
           student.setStudentName(LanguageManager.translate("name.default"));
         } else {

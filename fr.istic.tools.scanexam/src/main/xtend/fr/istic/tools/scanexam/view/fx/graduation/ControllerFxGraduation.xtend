@@ -592,7 +592,7 @@ class ControllerFxGraduation {
 		
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
-			var name = service.getStudentName(i).orElse("Not found");
+			var name = service.getStudentName(i).orElse("");
 			if (name === null || name === "") {
 				student.studentName = LanguageManager.translate("name.default")
 				}
