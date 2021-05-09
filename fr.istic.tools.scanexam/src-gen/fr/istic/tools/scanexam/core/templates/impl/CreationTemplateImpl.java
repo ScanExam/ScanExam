@@ -24,13 +24,23 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getExam <em>Exam</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class CreationTemplateImpl extends MinimalEObjectImpl.Container implements CreationTemplate {
+	/**
+	 * The cached value of the '{@link #getExam() <em>Exam</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExam()
+	 * @generated
+	 * @ordered
+	 */
+	protected Exam exam;
+
 	/**
 	 * The default value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -52,16 +62,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getExam() <em>Exam</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExam()
-	 * @generated
-	 * @ordered
-	 */
-	protected Exam exam;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -78,27 +78,6 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	protected EClass eStaticClass() {
 		return TemplatesPackage.Literals.CREATION_TEMPLATE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getEncodedDocument() {
-		return encodedDocument;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setEncodedDocument(String newEncodedDocument) {
-		String oldEncodedDocument = encodedDocument;
-		encodedDocument = newEncodedDocument;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT, oldEncodedDocument, encodedDocument));
 	}
 
 	/**
@@ -149,6 +128,27 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getEncodedDocument() {
+		return encodedDocument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEncodedDocument(String newEncodedDocument) {
+		String oldEncodedDocument = encodedDocument;
+		encodedDocument = newEncodedDocument;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT, oldEncodedDocument, encodedDocument));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -166,10 +166,10 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
-				return getEncodedDocument();
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return getExam();
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				return getEncodedDocument();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -182,11 +182,11 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
-				setEncodedDocument((String)newValue);
-				return;
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam((Exam)newValue);
+				return;
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -200,11 +200,11 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
-				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
-				return;
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				setExam((Exam)null);
+				return;
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -218,10 +218,10 @@ public class CreationTemplateImpl extends MinimalEObjectImpl.Container implement
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
-				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 			case TemplatesPackage.CREATION_TEMPLATE__EXAM:
 				return exam != null;
+			case TemplatesPackage.CREATION_TEMPLATE__ENCODED_DOCUMENT:
+				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 		}
 		return super.eIsSet(featureID);
 	}

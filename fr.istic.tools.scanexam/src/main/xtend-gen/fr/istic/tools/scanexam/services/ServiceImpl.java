@@ -570,6 +570,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void setStudentInfos(final Map<String, String> informations) {
+    Objects.<Map<String, String>>requireNonNull(informations);
     final DataFactory factory = new DataFactory();
     final Function1<Map.Entry<String, String>, StudentInformation> _function = (Map.Entry<String, String> e) -> {
       return factory.createStudentInformation(e.getKey(), e.getValue());
@@ -610,14 +611,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       _xblockexpression = map;
     }
     return _xblockexpression;
-  }
-  
-  /**
-   * @return true si les informations concernant les étudiants ont été chargées, false sinon
-   */
-  @Override
-  public boolean hasStudentInfosLoaded() {
-    return this.graduationTemplate.getInformations().isEmpty();
   }
   
   private File editionFile;
@@ -737,7 +730,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   @Override
   public void modifyMaxPoint(final int questionId, final float maxPoint) {
     final GradeScale scale = this.getQuestion(questionId).getGradeScale();
-    if ((maxPoint > 0)) {
+    if ((maxPoint >= 0)) {
       scale.setMaxPoint(maxPoint);
     }
   }

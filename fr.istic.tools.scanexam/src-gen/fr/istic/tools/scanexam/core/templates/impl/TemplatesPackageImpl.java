@@ -86,8 +86,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		isInited = true;
 
 		// Initialize simple dependencies
-		EcorePackage.eINSTANCE.eClass();
 		CorePackage.eINSTANCE.eClass();
+		EcorePackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theTemplatesPackage.createPackageContents();
@@ -117,17 +117,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getCorrectionTemplate_EncodedDocument() {
-		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getCorrectionTemplate_Informations() {
-		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(1);
+		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -136,7 +127,16 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * @generated
 	 */
 	public EReference getCorrectionTemplate_Studentsheets() {
-		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(2);
+		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCorrectionTemplate_EncodedDocument() {
+		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -153,8 +153,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getCreationTemplate_EncodedDocument() {
-		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(0);
+	public EReference getCreationTemplate_Exam() {
+		return (EReference)creationTemplateEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -162,8 +162,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCreationTemplate_Exam() {
-		return (EReference)creationTemplateEClass.getEStructuralFeatures().get(1);
+	public EAttribute getCreationTemplate_EncodedDocument() {
+		return (EAttribute)creationTemplateEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -195,13 +195,13 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 
 		// Create classes and their features
 		correctionTemplateEClass = createEClass(CORRECTION_TEMPLATE);
-		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__ENCODED_DOCUMENT);
 		createEReference(correctionTemplateEClass, CORRECTION_TEMPLATE__INFORMATIONS);
 		createEReference(correctionTemplateEClass, CORRECTION_TEMPLATE__STUDENTSHEETS);
+		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__ENCODED_DOCUMENT);
 
 		creationTemplateEClass = createEClass(CREATION_TEMPLATE);
-		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__ENCODED_DOCUMENT);
 		createEReference(creationTemplateEClass, CREATION_TEMPLATE__EXAM);
+		createEAttribute(creationTemplateEClass, CREATION_TEMPLATE__ENCODED_DOCUMENT);
 	}
 
 	/**
@@ -228,8 +228,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
 		// Create type parameters
 
@@ -239,13 +239,13 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(correctionTemplateEClass, CorrectionTemplate.class, "CorrectionTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getCorrectionTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCorrectionTemplate_Informations(), theCorePackage.getStudentInformation(), null, "informations", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCorrectionTemplate_Studentsheets(), theCorePackage.getStudentSheet(), null, "studentsheets", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCorrectionTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(creationTemplateEClass, CreationTemplate.class, "CreationTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getCreationTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCreationTemplate_Exam(), theCorePackage.getExam(), null, "exam", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCreationTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CreationTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

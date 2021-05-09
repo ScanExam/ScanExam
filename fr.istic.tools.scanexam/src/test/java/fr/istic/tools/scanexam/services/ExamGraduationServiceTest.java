@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class ExamGraduationServiceTest {
 	/*
 	 * Base de confiance : getStudentSheets, assignStudentId,
 	 * getQuestionGradeEntries, getQuestionSelectedGradeEntries,
-	 * getStudentListPath, getStudentListShift
+	 * getStudentInfos
 	 */
 
 	ControllerFxGraduation controller;
@@ -655,5 +656,32 @@ public class ExamGraduationServiceTest {
 	}
 	
 	
+	@Test
+	@DisplayName("Test - Définit la liste des informations des étudiants")
+	void setStudentInfos() {
+		openTemplate();
+		openGraduation();
+		
+		assertTrue(service.getStudentInfos().isEmpty());
+		
+		final var map = new HashMap<String, String>();
+		map.put("foo", "foo@bar.net");
+		map.put("bar", "bar@foo.net");
+		
+		service.setStudentInfos(map);
+		
+		assertEquals(map, service.getStudentInfos());
+	}
 	
+	@Test
+	@Tag("Robustesse")
+	@DisplayName("Test - Définit la liste des informations des étudiants avec une entrée nulle")
+	void setStudentInfos2() {
+		openTemplate();
+		openGraduation();
+		
+		assertTrue(service.getStudentInfos().isEmpty());
+		assertThrows(NullPointerException.class, () -> service.setStudentInfos(null));
+		assertTrue(service.getStudentInfos().isEmpty());
+	}
 }

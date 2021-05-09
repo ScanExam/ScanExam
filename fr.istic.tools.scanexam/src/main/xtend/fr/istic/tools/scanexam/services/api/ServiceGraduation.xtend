@@ -8,9 +8,8 @@ import java.io.File
 import java.io.InputStream
 import java.util.Collection
 import java.util.List
-import java.util.Optional
-import fr.istic.tools.scanexam.core.StudentInformation
 import java.util.Map
+import java.util.Optional
 
 interface ServiceGraduation extends Service {
 	
@@ -214,11 +213,6 @@ interface ServiceGraduation extends Service {
 	 * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
 	 */
 	def Map<String, String> getStudentInfos()
-	
-	/**
-	 * @return true si les informations concernant les étudiants ont été chargées, false sinon
-	 */
-	def boolean hasStudentInfosLoaded()
 	
 	//===================================================
 	//      Annotations

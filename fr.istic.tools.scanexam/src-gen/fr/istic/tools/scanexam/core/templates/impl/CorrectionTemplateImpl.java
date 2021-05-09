@@ -32,34 +32,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getInformations <em>Informations</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentsheets <em>Studentsheets</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container implements CorrectionTemplate {
-	/**
-	 * The default value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEncodedDocument()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String ENCODED_DOCUMENT_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEncodedDocument()
-	 * @generated
-	 * @ordered
-	 */
-	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getInformations() <em>Informations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -81,6 +61,26 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	protected EList<StudentSheet> studentsheets;
 
 	/**
+	 * The default value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEncodedDocument()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ENCODED_DOCUMENT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEncodedDocument()
+	 * @generated
+	 * @ordered
+	 */
+	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -97,27 +97,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	protected EClass eStaticClass() {
 		return TemplatesPackage.Literals.CORRECTION_TEMPLATE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getEncodedDocument() {
-		return encodedDocument;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setEncodedDocument(String newEncodedDocument) {
-		String oldEncodedDocument = encodedDocument;
-		encodedDocument = newEncodedDocument;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT, oldEncodedDocument, encodedDocument));
 	}
 
 	/**
@@ -149,6 +128,27 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getEncodedDocument() {
+		return encodedDocument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEncodedDocument(String newEncodedDocument) {
+		String oldEncodedDocument = encodedDocument;
+		encodedDocument = newEncodedDocument;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT, oldEncodedDocument, encodedDocument));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -168,12 +168,12 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
-				return getEncodedDocument();
 			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
 				return getInformations();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return getStudentsheets();
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				return getEncodedDocument();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -187,9 +187,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
-				setEncodedDocument((String)newValue);
-				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
 				getInformations().clear();
 				getInformations().addAll((Collection<? extends StudentInformation>)newValue);
@@ -197,6 +194,9 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
 				getStudentsheets().addAll((Collection<? extends StudentSheet>)newValue);
+				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -210,14 +210,14 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
-				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
-				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
 				getInformations().clear();
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
+				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -231,12 +231,12 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
-				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
 				return informations != null && !informations.isEmpty();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return studentsheets != null && !studentsheets.isEmpty();
+			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
+				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 		}
 		return super.eIsSet(featureID);
 	}

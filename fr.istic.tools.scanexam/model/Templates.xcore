@@ -7,14 +7,14 @@ import fr.istic.tools.scanexam.core.StudentInformation
  
 class CorrectionTemplate 
 {
-	 String encodedDocument
 	 contains StudentInformation[] informations
 	 contains StudentSheet[] studentsheets
+	 String encodedDocument
 }
 
 
 class CreationTemplate 
 {
-	 String encodedDocument
 	 contains Exam exam
+	 String encodedDocument
 }

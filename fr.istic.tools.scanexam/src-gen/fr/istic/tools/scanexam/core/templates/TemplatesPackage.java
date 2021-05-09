@@ -67,22 +67,13 @@ public interface TemplatesPackage extends EPackage {
 	int CORRECTION_TEMPLATE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 0;
-
-	/**
 	 * The feature id for the '<em><b>Informations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE__INFORMATIONS = 1;
+	int CORRECTION_TEMPLATE__INFORMATIONS = 0;
 
 	/**
 	 * The feature id for the '<em><b>Studentsheets</b></em>' containment reference list.
@@ -91,7 +82,16 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE__STUDENTSHEETS = 2;
+	int CORRECTION_TEMPLATE__STUDENTSHEETS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 2;
 
 	/**
 	 * The number of structural features of the '<em>Correction Template</em>' class.
@@ -122,22 +122,22 @@ public interface TemplatesPackage extends EPackage {
 	int CREATION_TEMPLATE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CREATION_TEMPLATE__ENCODED_DOCUMENT = 0;
-
-	/**
 	 * The feature id for the '<em><b>Exam</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CREATION_TEMPLATE__EXAM = 1;
+	int CREATION_TEMPLATE__EXAM = 0;
+
+	/**
+	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CREATION_TEMPLATE__ENCODED_DOCUMENT = 1;
 
 	/**
 	 * The number of structural features of the '<em>Creation Template</em>' class.
@@ -169,17 +169,6 @@ public interface TemplatesPackage extends EPackage {
 	EClass getCorrectionTemplate();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Encoded Document</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument()
-	 * @see #getCorrectionTemplate()
-	 * @generated
-	 */
-	EAttribute getCorrectionTemplate_EncodedDocument();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getInformations <em>Informations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -202,6 +191,17 @@ public interface TemplatesPackage extends EPackage {
 	EReference getCorrectionTemplate_Studentsheets();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Encoded Document</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument()
+	 * @see #getCorrectionTemplate()
+	 * @generated
+	 */
+	EAttribute getCorrectionTemplate_EncodedDocument();
+
+	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate <em>Creation Template</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -210,17 +210,6 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getCreationTemplate();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument <em>Encoded Document</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Encoded Document</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument()
-	 * @see #getCreationTemplate()
-	 * @generated
-	 */
-	EAttribute getCreationTemplate_EncodedDocument();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getExam <em>Exam</em>}'.
@@ -232,6 +221,17 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getCreationTemplate_Exam();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument <em>Encoded Document</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Encoded Document</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CreationTemplate#getEncodedDocument()
+	 * @see #getCreationTemplate()
+	 * @generated
+	 */
+	EAttribute getCreationTemplate_EncodedDocument();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -267,14 +267,6 @@ public interface TemplatesPackage extends EPackage {
 		EClass CORRECTION_TEMPLATE = eINSTANCE.getCorrectionTemplate();
 
 		/**
-		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CORRECTION_TEMPLATE__ENCODED_DOCUMENT = eINSTANCE.getCorrectionTemplate_EncodedDocument();
-
-		/**
 		 * The meta object literal for the '<em><b>Informations</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -291,6 +283,14 @@ public interface TemplatesPackage extends EPackage {
 		EReference CORRECTION_TEMPLATE__STUDENTSHEETS = eINSTANCE.getCorrectionTemplate_Studentsheets();
 
 		/**
+		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CORRECTION_TEMPLATE__ENCODED_DOCUMENT = eINSTANCE.getCorrectionTemplate_EncodedDocument();
+
+		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.templates.impl.CreationTemplateImpl <em>Creation Template</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -301,20 +301,20 @@ public interface TemplatesPackage extends EPackage {
 		EClass CREATION_TEMPLATE = eINSTANCE.getCreationTemplate();
 
 		/**
-		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CREATION_TEMPLATE__ENCODED_DOCUMENT = eINSTANCE.getCreationTemplate_EncodedDocument();
-
-		/**
 		 * The meta object literal for the '<em><b>Exam</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference CREATION_TEMPLATE__EXAM = eINSTANCE.getCreationTemplate_Exam();
+
+		/**
+		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CREATION_TEMPLATE__ENCODED_DOCUMENT = eINSTANCE.getCreationTemplate_EncodedDocument();
 
 	}
 

@@ -439,6 +439,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
 	 */
 	override void setStudentInfos(Map<String, String> informations) {
+		Objects.requireNonNull(informations)
 		val factory = new DataFactory()
 		val listInfos = informations.entrySet
 									.map[e | factory.createStudentInformation(e.key, e.value)]
@@ -463,14 +464,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		graduationTemplate.informations.forEach[infos | map.put(infos.name, infos.emailAddress)]
 		map
 	}
-	
-	/**
-	 * @return true si les informations concernant les étudiants ont été chargées, false sinon
-	 */
-	override boolean hasStudentInfosLoaded() {
-		graduationTemplate.informations.isEmpty
-	}
-	
 	
 	
 	
@@ -578,7 +571,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override modifyMaxPoint(int questionId, float maxPoint) {
 		val scale = getQuestion(questionId).gradeScale
-		if (maxPoint > 0) {
+		if (maxPoint >= 0) {
 			scale.maxPoint = maxPoint
 		}
 	}

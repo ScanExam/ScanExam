@@ -181,11 +181,6 @@ public interface ServiceGraduation extends Service {
   Map<String, String> getStudentInfos();
   
   /**
-   * @return true si les informations concernant les étudiants ont été chargées, false sinon
-   */
-  boolean hasStudentInfosLoaded();
-  
-  /**
    * Ajoute une annotation sur la page donee et l'etudiant donne au modele, lui genere une id et la retourne
    * @param The details of the new Annotation
    * @return l'id de l'annotation cree
