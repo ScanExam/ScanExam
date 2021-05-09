@@ -9,6 +9,8 @@ import java.io.InputStream
 import java.util.Collection
 import java.util.List
 import java.util.Optional
+import fr.istic.tools.scanexam.core.StudentInformation
+import java.util.Map
 
 interface ServiceGraduation extends Service {
 	
@@ -198,26 +200,25 @@ interface ServiceGraduation extends Service {
 	//===================================================
 	
 	/**
-	 * Définit le chemin d'accès vers la liste de tous les étudiants
-	 * @param le chemin d'accès vers cette liste (non null)
+	 * Définit la liste des informations des étudiants (non null)
+	 * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
 	 */
-	def void setStudentListPath(String path)
+	def void setStudentInfos(Map<String, String> informations)
 	
 	/**
-	 * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas Définit
+	 * @return l'ensemble de tous les noms des étudiants chargés
 	 */
-	def String getStudentListPath()
+	def Collection<String> getStudentNames()
 	
 	/**
-	 * Définit la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
-	 * @param la position initialede cette liste (non null)
+	 * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
 	 */
-	def void setStudentListShift(String shift)
+	def Map<String, String> getStudentInfos()
 	
 	/**
-	 * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
+	 * @return true si les informations concernant les étudiants ont été chargées, false sinon
 	 */
-	def String getStudentListShift()
+	def boolean hasStudentInfosLoaded()
 	
 	//===================================================
 	//      Annotations

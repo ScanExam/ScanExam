@@ -7,6 +7,7 @@ import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
+import fr.istic.tools.scanexam.core.StudentInformation;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.TextComment;
 import java.util.List;
@@ -51,6 +52,21 @@ public class DataFactory {
       sheet.setId(idSheet);
       sheet.getPosPage().addAll(pages);
       _xblockexpression = sheet;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * @return une instance d'objet de type {@link StudentInformation}
+   * @author Théo Giraudet
+   */
+  public StudentInformation createStudentInformation(final String name, final String address) {
+    StudentInformation _xblockexpression = null;
+    {
+      final StudentInformation infos = CoreFactory.eINSTANCE.createStudentInformation();
+      infos.setName(name);
+      infos.setEmailAddress(address);
+      _xblockexpression = infos;
     }
     return _xblockexpression;
   }

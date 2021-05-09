@@ -168,9 +168,8 @@ class ControllerStudentListLoader {
 		else if(!StudentDataManager.isValidY(firstCell))
 			return LoadState.Y_NOT_VALID
 			
-		StudentDataManager.loadData(file, firstCell)
-		service.studentListPath = file.absolutePath
-		service.studentListShift = firstCell
+		val mapInfos = StudentDataManager.loadData(file, firstCell)
+		service.studentInfos = mapInfos
 		return LoadState.SUCCESS
 	}
 	
@@ -178,18 +177,17 @@ class ControllerStudentListLoader {
 	 * @return le nombre de paires parsée par StudentDataManager, -1 si aucune n'a été parsée
 	 */
 	def int getNumberPair() {
-		StudentDataManager.getNameToMailMap().map(map | map.size).orElse(-1)
+		val size = service.studentNames.size
+		return size <= 0 ? -1 : size 
 	}
 	
 	/**
 	 * @return la liste des données parsées sous forme de String. Chaîne vide si aucune données n'a été parsée
 	 */
 	def String getStudentList() {
-		StudentDataManager.getNameToMailMap()
-			.map(map | map.entrySet
-					   .map(entry | entry.key + " - " + entry.value)
-					   .join("\n"))
-			.orElse("")
+		service.studentInfos.entrySet
+							.map(entry | entry.key + " - " + entry.value)
+					   		.join("\n")
 	}
 	
 	/**

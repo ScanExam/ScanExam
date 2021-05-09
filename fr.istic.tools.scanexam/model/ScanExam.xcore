@@ -101,5 +101,9 @@ class StudentSheet {
 	op boolean isGraded() {
 		grades.findFirst[g | g.entries.isEmpty] === null
 	}
-		
+}
+
+class StudentInformation {
+	String name
+	String emailAddress
 }

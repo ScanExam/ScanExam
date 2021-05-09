@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
@@ -149,7 +148,7 @@ class ControllerRoot implements Initializable {
 		
 		// Vérification de copies avec aucun nom associé
 		
-		val nameList = StudentDataManager.allNames
+		val nameList = serviceGraduation.studentNames
 		
 		if (nameList.empty) {
 			DialogMessageSender.sendTranslateDialog(
@@ -162,8 +161,8 @@ class ControllerRoot implements Initializable {
 		}
 		
 		val studentSheets = serviceGraduation.studentSheets
-		val nbSheetWithoutName = if (nameList.present)
-			studentSheets.filter(x|!nameList.get.contains(x.studentName)).size as int
+		val nbSheetWithoutName = if (!nameList.empty)
+			studentSheets.filter(x|!nameList.contains(x.studentName)).size as int
 		else
 			-1
 			

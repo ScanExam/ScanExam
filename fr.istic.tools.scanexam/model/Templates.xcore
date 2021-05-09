@@ -3,14 +3,16 @@ package fr.istic.tools.scanexam.core.templates
 
 import fr.istic.tools.scanexam.core.Exam
 import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.core.StudentInformation
  
 class CorrectionTemplate 
 {
 	 String encodedDocument
-	 String studentListPath
-	 String studentListShift = "A1"
+	 contains StudentInformation[] informations
 	 contains StudentSheet[] studentsheets
 }
+
+
 class CreationTemplate 
 {
 	 String encodedDocument

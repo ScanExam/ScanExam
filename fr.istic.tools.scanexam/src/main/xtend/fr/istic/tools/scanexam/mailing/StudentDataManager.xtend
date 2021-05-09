@@ -4,11 +4,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.Collections
 import java.util.HashMap
-import java.util.List
 import java.util.Map
-import java.util.Optional
 import java.util.logging.Logger
 import org.apache.logging.log4j.LogManager
 import org.apache.poi.ss.usermodel.Row
@@ -19,7 +16,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
  */
 class StudentDataManager {
 
-	var static Map<String, String> mapNomEtudiant = new HashMap();
 	static val logger = LogManager.logger
 	
 	val static MAX_ROW = 1_048_576
@@ -47,8 +43,8 @@ class StudentDataManager {
 	 * @param startXY point situant le début des données pour lire le nom et prénom
 	 * @author Arthur & Antoine
 	 */
-	def static void loadData(File file, String startXY) {
-		
+	def static Map<String, String> loadData(File file, String startXY) {
+		val Map<String, String> mapNomEtudiant = new HashMap();
 		try(val wb = WorkbookFactory.create(new FileInputStream(file))) {
 			//CharBuffer.wrap(startXY.)
 			var sheet = wb.getSheetAt(0)
@@ -67,7 +63,7 @@ class StudentDataManager {
 				val cell = row.getCell(x)
 				val nom = cell.getStringCellValue()
 				val mail = row.getCell(x + 1).stringCellValue
-				StudentDataManager.mapNomEtudiant.put(nom, mail)
+				mapNomEtudiant.put(nom, mail)
 				y++
 				row = sheet.getRow(y);
 			}
@@ -78,24 +74,8 @@ class StudentDataManager {
 		}
 		
 		logger.info("Datas loaded: " + mapNomEtudiant.size + " pairs found")
+		return mapNomEtudiant
 	}
-
-	/**
-	 * @return Liste de tout les noms d'élèves contenu dans le fichier fourni par l'utilisateur, null si aucun fichier fourni
-	 * @author Antoine
-	 */
-	def static Optional<List<String>> getAllNames() {
-		return mapNomEtudiant.isEmpty ? Optional.empty : Optional.of(mapNomEtudiant.keySet.toList)
-	}
-
-	/**
-	 * @return Map de tout les noms d'élèves -> adresse mail, contenu dans le fichier fourni par l'utilisateur
-	 * @author Antoine
-	 */
-	def static Optional<Map<String, String>> getNameToMailMap() {
-		return mapNomEtudiant.isEmpty ? Optional.empty : Optional.of(Collections.unmodifiableMap(mapNomEtudiant))
-	}
-
 
 	/**
 	 * @param pos la position de la cellule

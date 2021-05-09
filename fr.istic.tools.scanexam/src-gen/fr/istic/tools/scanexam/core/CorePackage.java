@@ -825,6 +825,52 @@ public interface CorePackage extends EPackage {
 	 */
 	int STUDENT_SHEET_OPERATION_COUNT = 2;
 
+	/**
+	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl <em>Student Information</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.istic.tools.scanexam.core.impl.StudentInformationImpl
+	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getStudentInformation()
+	 * @generated
+	 */
+	int STUDENT_INFORMATION = 12;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_INFORMATION__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Email Address</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_INFORMATION__EMAIL_ADDRESS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Student Information</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_INFORMATION_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Student Information</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_INFORMATION_OPERATION_COUNT = 0;
+
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.QuestionZone <em>Question Zone</em>}'.
@@ -1406,6 +1452,38 @@ public interface CorePackage extends EPackage {
 	EOperation getStudentSheet__IsGraded();
 
 	/**
+	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.StudentInformation <em>Student Information</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Student Information</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentInformation
+	 * @generated
+	 */
+	EClass getStudentInformation();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentInformation#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentInformation#getName()
+	 * @see #getStudentInformation()
+	 * @generated
+	 */
+	EAttribute getStudentInformation_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentInformation#getEmailAddress <em>Email Address</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Email Address</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentInformation#getEmailAddress()
+	 * @see #getStudentInformation()
+	 * @generated
+	 */
+	EAttribute getStudentInformation_EmailAddress();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1883,6 +1961,32 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STUDENT_SHEET___IS_GRADED = eINSTANCE.getStudentSheet__IsGraded();
+
+		/**
+		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl <em>Student Information</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.istic.tools.scanexam.core.impl.StudentInformationImpl
+		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getStudentInformation()
+		 * @generated
+		 */
+		EClass STUDENT_INFORMATION = eINSTANCE.getStudentInformation();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_INFORMATION__NAME = eINSTANCE.getStudentInformation_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Email Address</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_INFORMATION__EMAIL_ADDRESS = eINSTANCE.getStudentInformation_EmailAddress();
 
 	}
 

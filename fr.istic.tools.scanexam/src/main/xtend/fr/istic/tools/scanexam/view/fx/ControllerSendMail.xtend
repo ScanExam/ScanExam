@@ -4,13 +4,11 @@ import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.ExportExamToPdf
 import fr.istic.tools.scanexam.mailing.SendMailTls
-import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
 import java.util.Collection
 import java.util.Map
-import java.util.Optional
 import javafx.concurrent.Service
 import javafx.concurrent.Task
 import javafx.fxml.FXML
@@ -40,7 +38,7 @@ class ControllerSendMail  {
 	
 	int nbSheetWithoutName = 0
 	
-	Optional<Map<String,String>> mailMap
+	Map<String,String> mailMap
 	
 	Collection<StudentSheet> studentSheets
 	
@@ -63,7 +61,7 @@ class ControllerSendMail  {
 				updateMessage(String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size - nbSheetWithoutName))
 				for (studentSheet : studentSheets) {
 
-					val studentMail = mailMap.get.get(studentSheet.studentName)
+					val studentMail = mailMap.get(studentSheet.studentName)
 
 					if (studentSheet.studentName !== null && studentMail !== null) {
 						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
@@ -106,12 +104,12 @@ class ControllerSendMail  {
 	
 	def void init(ServiceGraduation service, ControllerFxGraduation controllerGraduation) {
 		this.controllerGraduation = controllerGraduation
-		this.mailMap = StudentDataManager.getNameToMailMap()
+		this.mailMap = service.studentInfos
 		this.studentSheets = service.studentSheets
 		this.globalScale = service.getGlobalScale
 
-		nbSheetWithoutName = if (mailMap.present)
-			studentSheets.filter(x|!mailMap.get.containsKey(x.studentName)).size as int
+		nbSheetWithoutName = if (!mailMap.empty)
+			studentSheets.filter(x|!mailMap.containsKey(x.studentName)).size as int
 		else
 			-1
 

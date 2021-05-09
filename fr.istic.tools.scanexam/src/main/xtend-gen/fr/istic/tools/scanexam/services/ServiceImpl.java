@@ -10,6 +10,7 @@ import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
+import fr.istic.tools.scanexam.core.StudentInformation;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.TextComment;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
@@ -27,8 +28,10 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
@@ -562,39 +565,59 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * Définit le chemin d'accès vers la liste de tous les étudiants
-   * @param le chemin d'accès vers cette liste (non null)
+   * Définit la liste des informations des étudiants (non null)
+   * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
    */
   @Override
-  public void setStudentListPath(final String path) {
-    Objects.<String>requireNonNull(path);
-    this.graduationTemplate.setStudentListPath(path);
+  public void setStudentInfos(final Map<String, String> informations) {
+    final DataFactory factory = new DataFactory();
+    final Function1<Map.Entry<String, String>, StudentInformation> _function = (Map.Entry<String, String> e) -> {
+      return factory.createStudentInformation(e.getKey(), e.getValue());
+    };
+    final List<StudentInformation> listInfos = IterableExtensions.<StudentInformation>toList(IterableExtensions.<Map.Entry<String, String>, StudentInformation>map(informations.entrySet(), _function));
+    this.graduationTemplate.getInformations().clear();
+    this.graduationTemplate.getInformations().addAll(listInfos);
   }
   
   /**
-   * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas Définit
+   * @return l'ensemble de tous les noms des étudiants chargés
    */
   @Override
-  public String getStudentListPath() {
-    return this.graduationTemplate.getStudentListPath();
+  public Collection<String> getStudentNames() {
+    List<String> _xblockexpression = null;
+    {
+      final Function1<StudentInformation, String> _function = (StudentInformation infos) -> {
+        return infos.getName();
+      };
+      final List<String> list = IterableExtensions.<String>toList(ListExtensions.<StudentInformation, String>map(this.graduationTemplate.getInformations(), _function));
+      _xblockexpression = list;
+    }
+    return _xblockexpression;
   }
   
   /**
-   * Définit la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
-   * @param la position initialede cette liste (non null)
+   * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
    */
   @Override
-  public void setStudentListShift(final String shift) {
-    Objects.<String>requireNonNull(shift);
-    this.graduationTemplate.setStudentListShift(shift);
+  public Map<String, String> getStudentInfos() {
+    HashMap<String, String> _xblockexpression = null;
+    {
+      final HashMap<String, String> map = new HashMap<String, String>();
+      final Consumer<StudentInformation> _function = (StudentInformation infos) -> {
+        map.put(infos.getName(), infos.getEmailAddress());
+      };
+      this.graduationTemplate.getInformations().forEach(_function);
+      _xblockexpression = map;
+    }
+    return _xblockexpression;
   }
   
   /**
-   * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
+   * @return true si les informations concernant les étudiants ont été chargées, false sinon
    */
   @Override
-  public String getStudentListShift() {
-    return this.graduationTemplate.getStudentListShift();
+  public boolean hasStudentInfosLoaded() {
+    return this.graduationTemplate.getInformations().isEmpty();
   }
   
   private File editionFile;

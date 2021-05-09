@@ -76,22 +76,13 @@ public interface TemplatesPackage extends EPackage {
 	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 0;
 
 	/**
-	 * The feature id for the '<em><b>Student List Path</b></em>' attribute.
+	 * The feature id for the '<em><b>Informations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE__STUDENT_LIST_PATH = 1;
-
-	/**
-	 * The feature id for the '<em><b>Student List Shift</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT = 2;
+	int CORRECTION_TEMPLATE__INFORMATIONS = 1;
 
 	/**
 	 * The feature id for the '<em><b>Studentsheets</b></em>' containment reference list.
@@ -100,7 +91,7 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE__STUDENTSHEETS = 3;
+	int CORRECTION_TEMPLATE__STUDENTSHEETS = 2;
 
 	/**
 	 * The number of structural features of the '<em>Correction Template</em>' class.
@@ -109,7 +100,7 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE_FEATURE_COUNT = 4;
+	int CORRECTION_TEMPLATE_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Correction Template</em>' class.
@@ -189,26 +180,15 @@ public interface TemplatesPackage extends EPackage {
 	EAttribute getCorrectionTemplate_EncodedDocument();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListPath <em>Student List Path</em>}'.
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getInformations <em>Informations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Student List Path</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListPath()
+	 * @return the meta object for the containment reference list '<em>Informations</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getInformations()
 	 * @see #getCorrectionTemplate()
 	 * @generated
 	 */
-	EAttribute getCorrectionTemplate_StudentListPath();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListShift <em>Student List Shift</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Student List Shift</em>'.
-	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentListShift()
-	 * @see #getCorrectionTemplate()
-	 * @generated
-	 */
-	EAttribute getCorrectionTemplate_StudentListShift();
+	EReference getCorrectionTemplate_Informations();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentsheets <em>Studentsheets</em>}'.
@@ -295,20 +275,12 @@ public interface TemplatesPackage extends EPackage {
 		EAttribute CORRECTION_TEMPLATE__ENCODED_DOCUMENT = eINSTANCE.getCorrectionTemplate_EncodedDocument();
 
 		/**
-		 * The meta object literal for the '<em><b>Student List Path</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Informations</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CORRECTION_TEMPLATE__STUDENT_LIST_PATH = eINSTANCE.getCorrectionTemplate_StudentListPath();
-
-		/**
-		 * The meta object literal for the '<em><b>Student List Shift</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT = eINSTANCE.getCorrectionTemplate_StudentListShift();
+		EReference CORRECTION_TEMPLATE__INFORMATIONS = eINSTANCE.getCorrectionTemplate_Informations();
 
 		/**
 		 * The meta object literal for the '<em><b>Studentsheets</b></em>' containment reference list feature.

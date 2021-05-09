@@ -284,5 +284,6 @@ public class ExamEditionServiceTest {
 		assertEquals(2, question.getZone().getY());
 		assertEquals(2, question.getZone().getWidth());
 		assertEquals(2, question.getZone().getHeigth());
+		(new File(path)).delete();
 	}
 }

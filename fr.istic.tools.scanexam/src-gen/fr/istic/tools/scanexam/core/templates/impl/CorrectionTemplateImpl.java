@@ -2,6 +2,7 @@
  */
 package fr.istic.tools.scanexam.core.templates.impl;
 
+import fr.istic.tools.scanexam.core.StudentInformation;
 import fr.istic.tools.scanexam.core.StudentSheet;
 
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
@@ -32,8 +33,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentListPath <em>Student List Path</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentListShift <em>Student List Shift</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getInformations <em>Informations</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentsheets <em>Studentsheets</em>}</li>
  * </ul>
  *
@@ -61,44 +61,14 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	protected String encodedDocument = ENCODED_DOCUMENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStudentListPath() <em>Student List Path</em>}' attribute.
+	 * The cached value of the '{@link #getInformations() <em>Informations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getStudentListPath()
+	 * @see #getInformations()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String STUDENT_LIST_PATH_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getStudentListPath() <em>Student List Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getStudentListPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String studentListPath = STUDENT_LIST_PATH_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getStudentListShift() <em>Student List Shift</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getStudentListShift()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String STUDENT_LIST_SHIFT_EDEFAULT = "A1";
-
-	/**
-	 * The cached value of the '{@link #getStudentListShift() <em>Student List Shift</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getStudentListShift()
-	 * @generated
-	 * @ordered
-	 */
-	protected String studentListShift = STUDENT_LIST_SHIFT_EDEFAULT;
+	protected EList<StudentInformation> informations;
 
 	/**
 	 * The cached value of the '{@link #getStudentsheets() <em>Studentsheets</em>}' containment reference list.
@@ -155,41 +125,11 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getStudentListPath() {
-		return studentListPath;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setStudentListPath(String newStudentListPath) {
-		String oldStudentListPath = studentListPath;
-		studentListPath = newStudentListPath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH, oldStudentListPath, studentListPath));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getStudentListShift() {
-		return studentListShift;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setStudentListShift(String newStudentListShift) {
-		String oldStudentListShift = studentListShift;
-		studentListShift = newStudentListShift;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT, oldStudentListShift, studentListShift));
+	public EList<StudentInformation> getInformations() {
+		if (informations == null) {
+			informations = new EObjectContainmentEList<StudentInformation>(StudentInformation.class, this, TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS);
+		}
+		return informations;
 	}
 
 	/**
@@ -212,6 +152,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
+				return ((InternalEList<?>)getInformations()).basicRemove(otherEnd, msgs);
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return ((InternalEList<?>)getStudentsheets()).basicRemove(otherEnd, msgs);
 		}
@@ -228,10 +170,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		switch (featureID) {
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return getEncodedDocument();
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
-				return getStudentListPath();
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
-				return getStudentListShift();
+			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
+				return getInformations();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return getStudentsheets();
 		}
@@ -250,11 +190,9 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument((String)newValue);
 				return;
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
-				setStudentListPath((String)newValue);
-				return;
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
-				setStudentListShift((String)newValue);
+			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
+				getInformations().clear();
+				getInformations().addAll((Collection<? extends StudentInformation>)newValue);
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
@@ -275,11 +213,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
-				setStudentListPath(STUDENT_LIST_PATH_EDEFAULT);
-				return;
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
-				setStudentListShift(STUDENT_LIST_SHIFT_EDEFAULT);
+			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
+				getInformations().clear();
 				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
@@ -298,10 +233,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		switch (featureID) {
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_PATH:
-				return STUDENT_LIST_PATH_EDEFAULT == null ? studentListPath != null : !STUDENT_LIST_PATH_EDEFAULT.equals(studentListPath);
-			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT:
-				return STUDENT_LIST_SHIFT_EDEFAULT == null ? studentListShift != null : !STUDENT_LIST_SHIFT_EDEFAULT.equals(studentListShift);
+			case TemplatesPackage.CORRECTION_TEMPLATE__INFORMATIONS:
+				return informations != null && !informations.isEmpty();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return studentsheets != null && !studentsheets.isEmpty();
 		}
@@ -320,10 +253,6 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (encodedDocument: ");
 		result.append(encodedDocument);
-		result.append(", studentListPath: ");
-		result.append(studentListPath);
-		result.append(", studentListShift: ");
-		result.append(studentListShift);
 		result.append(')');
 		return result.toString();
 	}

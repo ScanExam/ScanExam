@@ -6,11 +6,18 @@ import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.ExportExamToPdf;
 import fr.istic.tools.scanexam.export.GradesExportImpl;
-import fr.istic.tools.scanexam.mailing.StudentDataManager;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
+import fr.istic.tools.scanexam.view.fx.graduation.Grader;
+import fr.istic.tools.scanexam.view.fx.graduation.PdfPaneWithAnotations;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +27,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -1111,20 +1117,17 @@ public class ControllerFxGraduation {
    * STUDENTS
    */
   public List<String> getStudentsSuggestedNames(final String start) {
-    final Function<List<String>, List<String>> _function = (List<String> l) -> {
-      final Function1<String, Boolean> _function_1 = (String n) -> {
-        String _lowerCase = n.toLowerCase();
-        String _xifexpression = null;
-        if ((start == null)) {
-          _xifexpression = "";
-        } else {
-          _xifexpression = start.toLowerCase();
-        }
-        return Boolean.valueOf(_lowerCase.contains(_xifexpression));
-      };
-      return IterableExtensions.<String>toList(IterableExtensions.<String>filter(l, _function_1));
+    final Function1<String, Boolean> _function = (String n) -> {
+      String _lowerCase = n.toLowerCase();
+      String _xifexpression = null;
+      if ((start == null)) {
+        _xifexpression = "";
+      } else {
+        _xifexpression = start.toLowerCase();
+      }
+      return Boolean.valueOf(_lowerCase.contains(_xifexpression));
     };
-    return StudentDataManager.getAllNames().<List<String>>map(_function).orElse(List.<String>of());
+    return IterableExtensions.<String>toList(IterableExtensions.<String>filter(this.service.getStudentNames(), _function));
   }
   
   public LinkedList<Integer> getStudentIds() {

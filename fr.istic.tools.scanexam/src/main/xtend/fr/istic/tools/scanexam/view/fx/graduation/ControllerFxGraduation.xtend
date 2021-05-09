@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.export.ExportExamToPdf
 import fr.istic.tools.scanexam.export.GradesExportImpl
-import fr.istic.tools.scanexam.mailing.StudentDataManager
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
 import fr.istic.tools.scanexam.view.fx.FxSettings
@@ -915,9 +914,9 @@ class ControllerFxGraduation {
 	/* STUDENTS */
 	
 	def List<String> getStudentsSuggestedNames(String start){
-		StudentDataManager.allNames
-			.map(l | l.filter[n | n.toLowerCase().contains(start === null ? "" : start.toLowerCase())].toList)
-			.orElse(List.of())
+		service.studentNames
+			.filter[n | n.toLowerCase().contains(start === null ? "" : start.toLowerCase())]
+			.toList
 	}
 	
 	def LinkedList<Integer> getStudentIds(){ //TODO Change service impl to not return null

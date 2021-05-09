@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @SuppressWarnings("all")
@@ -164,26 +165,25 @@ public interface ServiceGraduation extends Service {
   float getGlobalScale();
   
   /**
-   * Définit le chemin d'accès vers la liste de tous les étudiants
-   * @param le chemin d'accès vers cette liste (non null)
+   * Définit la liste des informations des étudiants (non null)
+   * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
    */
-  void setStudentListPath(final String path);
+  void setStudentInfos(final Map<String, String> informations);
   
   /**
-   * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas Définit
+   * @return l'ensemble de tous les noms des étudiants chargés
    */
-  String getStudentListPath();
+  Collection<String> getStudentNames();
   
   /**
-   * Définit la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
-   * @param la position initialede cette liste (non null)
+   * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
    */
-  void setStudentListShift(final String shift);
+  Map<String, String> getStudentInfos();
   
   /**
-   * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
+   * @return true si les informations concernant les étudiants ont été chargées, false sinon
    */
-  String getStudentListShift();
+  boolean hasStudentInfosLoaded();
   
   /**
    * Ajoute une annotation sur la page donee et l'etudiant donne au modele, lui genere une id et la retourne

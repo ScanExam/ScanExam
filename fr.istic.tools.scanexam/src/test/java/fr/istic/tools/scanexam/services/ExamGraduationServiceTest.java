@@ -29,7 +29,8 @@ public class ExamGraduationServiceTest {
 
 	/*
 	 * Base de confiance : getStudentSheets, assignStudentId,
-	 * getQuestionGradeEntries, getQuestionSelectedGradeEntries
+	 * getQuestionGradeEntries, getQuestionSelectedGradeEntries,
+	 * getStudentListPath, getStudentListShift
 	 */
 
 	ControllerFxGraduation controller;
@@ -255,6 +256,7 @@ public class ExamGraduationServiceTest {
 	@Tag("Robustesse")
 	@DisplayName("Test - Édition de la liste des StudentSheets")
 	void getStudentSheetsTest() {
+		assertTrue(service.getStudentSheets().isEmpty());
 		openTemplate();
 		openGraduation();
 
@@ -644,11 +646,14 @@ public class ExamGraduationServiceTest {
 	
 	
 	@Test
-	@DisplayName("Test - Calcule la note obtenue par l'étudiant")
+	@DisplayName("Test - Calcule la note maximale obtenable pour l'examen")
 	void getGlobalScale() {
 		openTemplate();
 		openGraduation();
 		
 		assertEquals(2, service.getGlobalScale());
 	}
+	
+	
+	
 }

@@ -68,6 +68,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 			case CorePackage.LINE: return createLine();
 			case CorePackage.GRADE: return createGrade();
 			case CorePackage.STUDENT_SHEET: return createStudentSheet();
+			case CorePackage.STUDENT_INFORMATION: return createStudentInformation();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -191,6 +192,16 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	public StudentSheet createStudentSheet() {
 		StudentSheetImpl studentSheet = new StudentSheetImpl();
 		return studentSheet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StudentInformation createStudentInformation() {
+		StudentInformationImpl studentInformation = new StudentInformationImpl();
+		return studentInformation;
 	}
 
 	/**

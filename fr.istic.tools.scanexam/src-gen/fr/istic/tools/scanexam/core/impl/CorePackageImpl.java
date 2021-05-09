@@ -14,6 +14,7 @@ import fr.istic.tools.scanexam.core.Line;
 import fr.istic.tools.scanexam.core.Page;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
+import fr.istic.tools.scanexam.core.StudentInformation;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.TextComment;
 
@@ -116,6 +117,13 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	private EClass studentSheetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass studentInformationEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -672,6 +680,33 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getStudentInformation() {
+		return studentInformationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStudentInformation_Name() {
+		return (EAttribute)studentInformationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStudentInformation_EmailAddress() {
+		return (EAttribute)studentInformationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CoreFactory getCoreFactory() {
 		return (CoreFactory)getEFactoryInstance();
 	}
@@ -760,6 +795,10 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEReference(studentSheetEClass, STUDENT_SHEET__GRADES);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___COMPUTE_GRADE);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___IS_GRADED);
+
+		studentInformationEClass = createEClass(STUDENT_INFORMATION);
+		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__NAME);
+		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__EMAIL_ADDRESS);
 	}
 
 	/**
@@ -864,6 +903,10 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEOperation(getStudentSheet__ComputeGrade(), theEcorePackage.getEFloat(), "computeGrade", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getStudentSheet__IsGraded(), theEcorePackage.getEBoolean(), "isGraded", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(studentInformationEClass, StudentInformation.class, "StudentInformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStudentInformation_Name(), theEcorePackage.getEString(), "name", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentInformation_EmailAddress(), theEcorePackage.getEString(), "emailAddress", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

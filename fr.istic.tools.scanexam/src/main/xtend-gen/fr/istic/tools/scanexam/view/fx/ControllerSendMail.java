@@ -4,14 +4,13 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.export.ExportExamToPdf;
 import fr.istic.tools.scanexam.mailing.SendMailTls;
-import fr.istic.tools.scanexam.mailing.StudentDataManager;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
+import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -53,7 +52,7 @@ public class ControllerSendMail {
   
   private int nbSheetWithoutName = 0;
   
-  private Optional<Map<String, String>> mailMap;
+  private Map<String, String> mailMap;
   
   private Collection<StudentSheet> studentSheets;
   
@@ -79,7 +78,7 @@ public class ControllerSendMail {
         this.updateMessage(String.format(_translate, Integer.valueOf(sent), Integer.valueOf(_minus_1)));
         for (final StudentSheet studentSheet : ControllerSendMail.this.studentSheets) {
           {
-            final String studentMail = ControllerSendMail.this.mailMap.get().get(studentSheet.getStudentName());
+            final String studentMail = ControllerSendMail.this.mailMap.get(studentSheet.getStudentName());
             if (((studentSheet.getStudentName() != null) && (studentMail != null))) {
               final Pair<String, File> pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
                 ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet, ControllerSendMail.this.globalScale);
@@ -134,14 +133,15 @@ public class ControllerSendMail {
   
   public void init(final ServiceGraduation service, final ControllerFxGraduation controllerGraduation) {
     this.controllerGraduation = controllerGraduation;
-    this.mailMap = StudentDataManager.getNameToMailMap();
+    this.mailMap = service.getStudentInfos();
     this.studentSheets = service.getStudentSheets();
     this.globalScale = service.getGlobalScale();
     int _xifexpression = (int) 0;
-    boolean _isPresent = this.mailMap.isPresent();
-    if (_isPresent) {
+    boolean _isEmpty = this.mailMap.isEmpty();
+    boolean _not = (!_isEmpty);
+    if (_not) {
       final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
-        boolean _containsKey = this.mailMap.get().containsKey(x.getStudentName());
+        boolean _containsKey = this.mailMap.containsKey(x.getStudentName());
         return Boolean.valueOf((!_containsKey));
       };
       int _size = IterableExtensions.size(IterableExtensions.<StudentSheet>filter(this.studentSheets, _function));
@@ -150,8 +150,8 @@ public class ControllerSendMail {
       _xifexpression = (-1);
     }
     this.nbSheetWithoutName = _xifexpression;
-    boolean _isEmpty = this.mailMap.isEmpty();
-    if (_isEmpty) {
+    boolean _isEmpty_1 = this.mailMap.isEmpty();
+    if (_isEmpty_1) {
       DialogMessageSender.sendTranslateDialog(
         Alert.AlertType.WARNING, 
         "sendMail.noStudentDataHeader", 

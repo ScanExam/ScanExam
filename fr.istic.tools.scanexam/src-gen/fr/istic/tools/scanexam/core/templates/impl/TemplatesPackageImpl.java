@@ -126,17 +126,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getCorrectionTemplate_StudentListPath() {
-		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getCorrectionTemplate_StudentListShift() {
-		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(2);
+	public EReference getCorrectionTemplate_Informations() {
+		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -145,7 +136,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * @generated
 	 */
 	public EReference getCorrectionTemplate_Studentsheets() {
-		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(3);
+		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -205,8 +196,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		// Create classes and their features
 		correctionTemplateEClass = createEClass(CORRECTION_TEMPLATE);
 		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__ENCODED_DOCUMENT);
-		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__STUDENT_LIST_PATH);
-		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__STUDENT_LIST_SHIFT);
+		createEReference(correctionTemplateEClass, CORRECTION_TEMPLATE__INFORMATIONS);
 		createEReference(correctionTemplateEClass, CORRECTION_TEMPLATE__STUDENTSHEETS);
 
 		creationTemplateEClass = createEClass(CREATION_TEMPLATE);
@@ -250,8 +240,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		// Initialize classes, features, and operations; add parameters
 		initEClass(correctionTemplateEClass, CorrectionTemplate.class, "CorrectionTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCorrectionTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCorrectionTemplate_StudentListPath(), theEcorePackage.getEString(), "studentListPath", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCorrectionTemplate_StudentListShift(), theEcorePackage.getEString(), "studentListShift", "A1", 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCorrectionTemplate_Informations(), theCorePackage.getStudentInformation(), null, "informations", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCorrectionTemplate_Studentsheets(), theCorePackage.getStudentSheet(), null, "studentsheets", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(creationTemplateEClass, CreationTemplate.class, "CreationTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

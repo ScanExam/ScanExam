@@ -116,6 +116,10 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 				return createStudentSheetAdapter();
 			}
 			@Override
+			public Adapter caseStudentInformation(StudentInformation object) {
+				return createStudentInformationAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -300,6 +304,20 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStudentSheetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.StudentInformation <em>Student Information</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see fr.istic.tools.scanexam.core.StudentInformation
+	 * @generated
+	 */
+	public Adapter createStudentInformationAdapter() {
 		return null;
 	}
 

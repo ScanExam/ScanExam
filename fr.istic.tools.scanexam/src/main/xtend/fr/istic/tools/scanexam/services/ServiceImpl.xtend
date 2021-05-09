@@ -1,11 +1,13 @@
 package fr.istic.tools.scanexam.services
 
 import fr.istic.tools.scanexam.api.DataFactory
+import fr.istic.tools.scanexam.core.Comment
 import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.Page
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.core.TextComment
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate
 import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory
@@ -21,13 +23,13 @@ import java.util.ArrayList
 import java.util.Base64
 import java.util.Collection
 import java.util.Collections
+import java.util.HashMap
+import java.util.LinkedList
 import java.util.List
+import java.util.Map
 import java.util.Objects
 import java.util.Optional
 import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.core.Comment
-import java.util.LinkedList
-import fr.istic.tools.scanexam.core.TextComment
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -433,35 +435,40 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	//===================================================
 	
 	/**
-	 * Définit le chemin d'accès vers la liste de tous les étudiants
-	 * @param le chemin d'accès vers cette liste (non null)
+	 * Définit la liste des informations des étudiants (non null)
+	 * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
 	 */
-	override setStudentListPath(String path) {
-		Objects.requireNonNull(path)
-		graduationTemplate.studentListPath = path
+	override void setStudentInfos(Map<String, String> informations) {
+		val factory = new DataFactory()
+		val listInfos = informations.entrySet
+									.map[e | factory.createStudentInformation(e.key, e.value)]
+									.toList
+		graduationTemplate.informations.clear
+		graduationTemplate.informations.addAll(listInfos)
 	}
 	
 	/**
-	 * @return le chemin d'accès vers la liste de tous les étudiants. Null si ce chemin n'est pas Définit
+	 * @return l'ensemble de tous les noms des étudiants chargés
 	 */
-	override String getStudentListPath() {
-		return graduationTemplate.studentListPath
+	override Collection<String> getStudentNames() {
+		val list = graduationTemplate.informations.map[infos | infos.name].toList
+		list
 	}
 	
 	/**
-	 * Définit la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès
-	 * @param la position initialede cette liste (non null)
+	 * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
 	 */
-	override setStudentListShift(String shift) {
-		Objects.requireNonNull(shift)
-		graduationTemplate.studentListShift = shift
+	override Map<String, String> getStudentInfos() {
+		val map = new HashMap<String, String>()
+		graduationTemplate.informations.forEach[infos | map.put(infos.name, infos.emailAddress)]
+		map
 	}
 	
 	/**
-	 * @return la position initiale de la liste de tous les étudiants dans le fichier pointé par le chemin d'accès. 'A1' par défaut
+	 * @return true si les informations concernant les étudiants ont été chargées, false sinon
 	 */
-	override String getStudentListShift() {
-		return graduationTemplate.studentListShift
+	override boolean hasStudentInfosLoaded() {
+		graduationTemplate.informations.isEmpty
 	}
 	
 	

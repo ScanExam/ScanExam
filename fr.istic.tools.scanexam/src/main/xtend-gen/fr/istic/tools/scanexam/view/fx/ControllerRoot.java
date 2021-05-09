@@ -5,10 +5,16 @@ import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.config.Config;
-import fr.istic.tools.scanexam.mailing.StudentDataManager;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
+import fr.istic.tools.scanexam.view.fx.ControllerGraduationCreator;
+import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerSendMail;
+import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
+import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
@@ -16,8 +22,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -201,7 +205,7 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void pdfExport() {
-    final Optional<List<String>> nameList = StudentDataManager.getAllNames();
+    final Collection<String> nameList = this.serviceGraduation.getStudentNames();
     boolean _isEmpty = nameList.isEmpty();
     if (_isEmpty) {
       DialogMessageSender.sendTranslateDialog(
@@ -213,10 +217,11 @@ public class ControllerRoot implements Initializable {
     }
     final Collection<StudentSheet> studentSheets = this.serviceGraduation.getStudentSheets();
     int _xifexpression = (int) 0;
-    boolean _isPresent = nameList.isPresent();
-    if (_isPresent) {
+    boolean _isEmpty_1 = nameList.isEmpty();
+    boolean _not = (!_isEmpty_1);
+    if (_not) {
       final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
-        boolean _contains = nameList.get().contains(x.getStudentName());
+        boolean _contains = nameList.contains(x.getStudentName());
         return Boolean.valueOf((!_contains));
       };
       int _size = IterableExtensions.size(IterableExtensions.<StudentSheet>filter(studentSheets, _function));

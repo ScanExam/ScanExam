@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,7 +15,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -26,8 +22,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
  */
 @SuppressWarnings("all")
 public class StudentDataManager {
-  private static Map<String, String> mapNomEtudiant = new HashMap<String, String>();
-  
   private static final Logger logger = LogManager.getLogger();
   
   private static final int MAX_ROW = 1_048_576;
@@ -40,7 +34,8 @@ public class StudentDataManager {
    * @param startXY point situant le début des données pour lire le nom et prénom
    * @author Arthur & Antoine
    */
-  public static void loadData(final File file, final String startXY) {
+  public static Map<String, String> loadData(final File file, final String startXY) {
+    final Map<String, String> mapNomEtudiant = new HashMap<String, String>();
     try (final Workbook wb = new Function0<Workbook>() {
       @Override
       public Workbook apply() {
@@ -63,7 +58,7 @@ public class StudentDataManager {
           final Cell cell = row.getCell(x);
           final String nom = cell.getStringCellValue();
           final String mail = row.getCell((x + 1)).getStringCellValue();
-          StudentDataManager.mapNomEtudiant.put(nom, mail);
+          mapNomEtudiant.put(nom, mail);
           y++;
           row = sheet.getRow(y);
         }
@@ -79,40 +74,11 @@ public class StudentDataManager {
         throw Exceptions.sneakyThrow(_t);
       }
     }
-    int _size = StudentDataManager.mapNomEtudiant.size();
+    int _size = mapNomEtudiant.size();
     String _plus = ("Datas loaded: " + Integer.valueOf(_size));
     String _plus_1 = (_plus + " pairs found");
     StudentDataManager.logger.info(_plus_1);
-  }
-  
-  /**
-   * @return Liste de tout les noms d'élèves contenu dans le fichier fourni par l'utilisateur, null si aucun fichier fourni
-   * @author Antoine
-   */
-  public static Optional<List<String>> getAllNames() {
-    Optional<List<String>> _xifexpression = null;
-    boolean _isEmpty = StudentDataManager.mapNomEtudiant.isEmpty();
-    if (_isEmpty) {
-      _xifexpression = Optional.<List<String>>empty();
-    } else {
-      _xifexpression = Optional.<List<String>>of(IterableExtensions.<String>toList(StudentDataManager.mapNomEtudiant.keySet()));
-    }
-    return _xifexpression;
-  }
-  
-  /**
-   * @return Map de tout les noms d'élèves -> adresse mail, contenu dans le fichier fourni par l'utilisateur
-   * @author Antoine
-   */
-  public static Optional<Map<String, String>> getNameToMailMap() {
-    Optional<Map<String, String>> _xifexpression = null;
-    boolean _isEmpty = StudentDataManager.mapNomEtudiant.isEmpty();
-    if (_isEmpty) {
-      _xifexpression = Optional.<Map<String, String>>empty();
-    } else {
-      _xifexpression = Optional.<Map<String, String>>of(Collections.<String, String>unmodifiableMap(StudentDataManager.mapNomEtudiant));
-    }
-    return _xifexpression;
+    return mapNomEtudiant;
   }
   
   /**

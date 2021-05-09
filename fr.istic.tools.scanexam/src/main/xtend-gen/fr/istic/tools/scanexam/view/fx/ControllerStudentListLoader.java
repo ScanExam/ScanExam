@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import javafx.collections.ObservableList;
@@ -241,9 +240,8 @@ public class ControllerStudentListLoader {
         return ControllerStudentListLoader.LoadState.Y_NOT_VALID;
       }
     }
-    StudentDataManager.loadData(file, firstCell);
-    this.service.setStudentListPath(file.getAbsolutePath());
-    this.service.setStudentListShift(firstCell);
+    final Map<String, String> mapInfos = StudentDataManager.loadData(file, firstCell);
+    this.service.setStudentInfos(mapInfos);
     return ControllerStudentListLoader.LoadState.SUCCESS;
   }
   
@@ -251,26 +249,27 @@ public class ControllerStudentListLoader {
    * @return le nombre de paires parsée par StudentDataManager, -1 si aucune n'a été parsée
    */
   public int getNumberPair() {
-    final Function<Map<String, String>, Integer> _function = (Map<String, String> map) -> {
-      return Integer.valueOf(map.size());
-    };
-    return (StudentDataManager.getNameToMailMap().<Integer>map(_function).orElse(Integer.valueOf((-1)))).intValue();
+    final int size = this.service.getStudentNames().size();
+    int _xifexpression = (int) 0;
+    if ((size <= 0)) {
+      _xifexpression = (-1);
+    } else {
+      _xifexpression = size;
+    }
+    return _xifexpression;
   }
   
   /**
    * @return la liste des données parsées sous forme de String. Chaîne vide si aucune données n'a été parsée
    */
   public String getStudentList() {
-    final Function<Map<String, String>, String> _function = (Map<String, String> map) -> {
-      final Function1<Map.Entry<String, String>, String> _function_1 = (Map.Entry<String, String> entry) -> {
-        String _key = entry.getKey();
-        String _plus = (_key + " - ");
-        String _value = entry.getValue();
-        return (_plus + _value);
-      };
-      return IterableExtensions.join(IterableExtensions.<Map.Entry<String, String>, String>map(map.entrySet(), _function_1), "\n");
+    final Function1<Map.Entry<String, String>, String> _function = (Map.Entry<String, String> entry) -> {
+      String _key = entry.getKey();
+      String _plus = (_key + " - ");
+      String _value = entry.getValue();
+      return (_plus + _value);
     };
-    return StudentDataManager.getNameToMailMap().<String>map(_function).orElse("");
+    return IterableExtensions.join(IterableExtensions.<Map.Entry<String, String>, String>map(this.service.getStudentInfos().entrySet(), _function), "\n");
   }
   
   /**

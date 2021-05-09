@@ -130,6 +130,15 @@ public interface CoreFactory extends EFactory {
 	StudentSheet createStudentSheet();
 
 	/**
+	 * Returns a new object of class '<em>Student Information</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Student Information</em>'.
+	 * @generated
+	 */
+	StudentInformation createStudentInformation();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

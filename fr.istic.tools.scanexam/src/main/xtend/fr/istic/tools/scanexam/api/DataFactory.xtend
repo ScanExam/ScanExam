@@ -9,6 +9,7 @@ import fr.istic.tools.scanexam.core.QuestionZone
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.List
 import fr.istic.tools.scanexam.core.Comment
+import fr.istic.tools.scanexam.core.StudentInformation
 
 /**
  * Factory qui crée des objets de type Data: {@link Rectangle},   {@link StudentSheet},  {@link Grade},  {@link GradeScale}, {@link Question}
@@ -45,6 +46,17 @@ class DataFactory {
 		
 		sheet.posPage.addAll(pages)
 		sheet
+	}
+	
+	/** 
+	 * @return une instance d'objet de type {@link StudentInformation}
+	 * @author Théo Giraudet
+	 */
+	def StudentInformation createStudentInformation(String name, String address){
+		val infos = CoreFactory.eINSTANCE.createStudentInformation
+		infos.name = name
+		infos.emailAddress = address
+		infos
 	}
 	
 	/** 
