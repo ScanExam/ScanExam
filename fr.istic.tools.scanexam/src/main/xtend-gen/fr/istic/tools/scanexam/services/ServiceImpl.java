@@ -232,8 +232,14 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void selectSheet(final int id) {
-    if (((id >= 0) && (id < this.getStudentSheets().size()))) {
-      this.currentSheetIndex = id;
+    int _size = this.graduationTemplate.getStudentsheets().size();
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
+    for (final Integer i : _doubleDotLessThan) {
+      int _id = this.graduationTemplate.getStudentsheets().get((i).intValue()).getId();
+      boolean _equals = (_id == id);
+      if (_equals) {
+        this.currentSheetIndex = (i).intValue();
+      }
     }
   }
   

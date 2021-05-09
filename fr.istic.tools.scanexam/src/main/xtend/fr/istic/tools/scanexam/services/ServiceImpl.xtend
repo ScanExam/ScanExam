@@ -191,8 +191,9 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param id un ID de copie d'étudiant
 	 */
 	override void selectSheet(int id) {
-		if(id >= 0 && id < studentSheets.size)
-			currentSheetIndex = id	
+		for( i : 0 ..< graduationTemplate.studentsheets.size)
+			if(graduationTemplate.studentsheets.get(i).id == id)
+				currentSheetIndex = i
 	}
 	
 	//===================================================

@@ -217,6 +217,7 @@ interface ServiceGraduation extends Service {
 	//===================================================
 	//      Annotations
 	//===================================================
+	
 	/**
 	 * Ajoute une annotation sur la page donee et l'etudiant donne au modele, lui genere une id et la retourne
 	 * @param The details of the new Annotation
