@@ -5,15 +5,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 
 @SuppressWarnings("all")
 public class HTMLView implements Initializable {
-  @FXML
-  private VBox root;
-  
   @FXML
   private HTMLEditor html;
   

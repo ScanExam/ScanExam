@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Button?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.HTMLView">
-	<VBox fx:id="root" alignment="CENTER" spacing="20">
+	<VBox alignment="CENTER" spacing="20">
 	<children>
 		<HTMLEditor id="html" fx:id="html" maxHeight="300" maxWidth="640" minHeight="300" minWidth="640"/>
 		<Button id="button" onMouseClicked="#onMouseClicked" text="%button.ok"/>

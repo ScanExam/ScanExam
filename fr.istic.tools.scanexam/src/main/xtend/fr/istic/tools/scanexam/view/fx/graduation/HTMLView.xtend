@@ -5,12 +5,10 @@ import java.net.URL
 import java.util.ResourceBundle
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
-import javafx.scene.layout.VBox
 import javafx.scene.web.HTMLEditor
 import javafx.stage.Stage
 
 class HTMLView implements Initializable {
-	@FXML VBox root
 	@FXML HTMLEditor html
 	static public GradeItem item
 
