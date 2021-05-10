@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.filter.param;
 
+import fr.istic.tools.scanexam.filter.param.ParamParseResult;
+
 /**
  * Représente un paramètre de filtre
  * @author Théo Giraudet

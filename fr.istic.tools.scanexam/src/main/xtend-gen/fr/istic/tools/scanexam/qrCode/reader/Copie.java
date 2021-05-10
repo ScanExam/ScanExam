@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.qrCode.reader;
 
+import fr.istic.tools.scanexam.qrCode.reader.Page;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.xtend.lib.annotations.Data;

@@ -1,5 +1,7 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -64,12 +66,13 @@ public class StudentListGraduation extends VBox {
     this.getChildren().clear();
   }
   
-  public void updateInModel(final StudentItemGraduation item) {
+  public Object updateInModel(final StudentItemGraduation item) {
     int _studentId = item.getStudentId();
     String _plus = ("Updating " + Integer.valueOf(_studentId));
     String _plus_1 = (_plus + " to model");
     StudentListGraduation.logger.info(_plus_1);
     this.controller.renameStudent(item.getStudentId(), item.getStudentName());
+    return null;
   }
   
   /**

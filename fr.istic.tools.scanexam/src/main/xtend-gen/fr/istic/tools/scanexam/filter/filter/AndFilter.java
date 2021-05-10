@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.filter.filter;
 
+import fr.istic.tools.scanexam.filter.filter.OperatorFilter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;

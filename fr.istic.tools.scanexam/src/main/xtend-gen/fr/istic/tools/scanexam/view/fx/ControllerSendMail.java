@@ -23,6 +23,7 @@ import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -150,6 +151,7 @@ public class ControllerSendMail {
       _xifexpression = (-1);
     }
     this.nbSheetWithoutName = _xifexpression;
+    InputOutput.<Integer>println(Integer.valueOf(this.nbSheetWithoutName));
     boolean _isEmpty_1 = this.mailMap.isEmpty();
     if (_isEmpty_1) {
       DialogMessageSender.sendTranslateDialog(

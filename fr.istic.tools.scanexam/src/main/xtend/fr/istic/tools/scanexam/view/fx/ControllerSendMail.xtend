@@ -112,6 +112,7 @@ class ControllerSendMail  {
 			studentSheets.filter(x|!mailMap.containsKey(x.studentName)).size as int
 		else
 			-1
+		println(nbSheetWithoutName)
 
 		if (mailMap.empty) {
 			DialogMessageSender.sendTranslateDialog(

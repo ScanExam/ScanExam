@@ -247,15 +247,11 @@ class ExportExamToPdf {
 			document.addPage(pdf.getPage(i));	
 		}
 		
-		if(!sheet.studentName.contains(".pdf")){
-                sheet.studentName = sheet.studentName + ".pdf"
-            }
-		
 		document.save(studentExam);
 		document.close;
      	pdf.close();
      	
-     	return Pair.of(sheet.studentName, studentExam);
+     	return Pair.of(sheet.studentName + ".pdf", studentExam);
      }
      
      

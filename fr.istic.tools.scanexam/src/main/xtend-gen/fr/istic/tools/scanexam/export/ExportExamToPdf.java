@@ -267,17 +267,12 @@ public class ExportExamToPdf {
       for (final Integer i : _posPage) {
         document.addPage(pdf.getPage((i).intValue()));
       }
-      boolean _contains = sheet.getStudentName().contains(".pdf");
-      boolean _not = (!_contains);
-      if (_not) {
-        String _studentName = sheet.getStudentName();
-        String _plus = (_studentName + ".pdf");
-        sheet.setStudentName(_plus);
-      }
       document.save(studentExam);
       document.close();
       pdf.close();
-      return Pair.<String, File>of(sheet.getStudentName(), studentExam);
+      String _studentName = sheet.getStudentName();
+      String _plus = (_studentName + ".pdf");
+      return Pair.<String, File>of(_plus, studentExam);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
