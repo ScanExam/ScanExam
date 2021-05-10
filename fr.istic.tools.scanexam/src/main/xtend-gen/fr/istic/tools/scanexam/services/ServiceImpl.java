@@ -135,11 +135,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   public boolean initializeCorrection(final Collection<StudentSheet> studentSheets) {
     this.graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate();
     try {
-      final Function1<StudentSheet, Integer> _function = (StudentSheet s) -> {
-        return Integer.valueOf(s.getId());
-      };
-      List<StudentSheet> _sortBy = IterableExtensions.<StudentSheet, Integer>sortBy(studentSheets, _function);
-      for (final StudentSheet sheet : _sortBy) {
+      for (final StudentSheet sheet : studentSheets) {
         for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
           {
             final Page examPage = this.getPage(i);
@@ -152,7 +148,10 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
           }
         }
       }
-      this.graduationTemplate.getStudentsheets().addAll(studentSheets);
+      final Function1<StudentSheet, Integer> _function = (StudentSheet s) -> {
+        return Integer.valueOf(s.getId());
+      };
+      this.graduationTemplate.getStudentsheets().addAll(IterableExtensions.<StudentSheet, Integer>sortBy(studentSheets, _function));
       return true;
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {

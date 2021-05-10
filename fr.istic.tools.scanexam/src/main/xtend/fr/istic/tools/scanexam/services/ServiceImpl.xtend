@@ -109,7 +109,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	override boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
 		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
 		try {
-			for (StudentSheet sheet : studentSheets.sortBy[s | s.id]) {
+			for (StudentSheet sheet : studentSheets) {
 				for (var i = 0; i < templatePageAmount; i++) {
 					val examPage = getPage(i);
 					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?
@@ -120,7 +120,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 				}
 
 			}
-			graduationTemplate.studentsheets.addAll(studentSheets)
+			graduationTemplate.studentsheets.addAll(studentSheets.sortBy[s | s.id])
 			return true
 		} catch (Exception ex) {
 			return false;
