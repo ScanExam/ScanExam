@@ -74,6 +74,8 @@
 			<version>0.27</version>
 		</dependency>
 
+		<!-- If you want to upgrade to 5.0.0, please, check this issue: http://apache-poi.1045710.n5.nabble.com/Upgrade-to-5-0-0-resulted-in-IOException-message-td5737013.html
+		     Maybe just a configuration of the maven-assembly-plugin -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
