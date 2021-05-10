@@ -8,6 +8,7 @@ import java.util.HashMap
 import java.util.Map
 import java.util.logging.Logger
 import org.apache.logging.log4j.LogManager
+import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.WorkbookFactory
 
@@ -45,6 +46,7 @@ class StudentDataManager {
 	 */
 	def static Map<String, String> loadData(File file, String startXY) {
 		val Map<String, String> mapNomEtudiant = new HashMap();
+		
 		try(val wb = WorkbookFactory.create(new FileInputStream(file))) {
 			//CharBuffer.wrap(startXY.)
 			var sheet = wb.getSheetAt(0)
@@ -58,11 +60,12 @@ class StudentDataManager {
 			// Lecture d'une cellule
 			var Row row = sheet.getRow(y)
 
+			val formatter = new DataFormatter();
 			// Parcourt notre tableau
 			while (row !== null) {
 				val cell = row.getCell(x)
-				val nom = cell.getStringCellValue()
-				val mail = row.getCell(x + 1).stringCellValue
+				val nom = formatter.formatCellValue(cell)
+				val mail = formatter.formatCellValue(row.getCell(x + 1))
 				mapNomEtudiant.put(nom, mail)
 				y++
 				row = sheet.getRow(y);

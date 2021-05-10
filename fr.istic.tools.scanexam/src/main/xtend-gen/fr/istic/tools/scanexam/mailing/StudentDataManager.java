@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -53,11 +54,12 @@ public class StudentDataManager {
       int y = (pair.getValue()).intValue();
       StudentDataManager.logger.info((((("Starting parsing data from (" + Integer.valueOf(x)) + ", ") + Integer.valueOf(y)) + ")"));
       Row row = sheet.getRow(y);
+      final DataFormatter formatter = new DataFormatter();
       while ((row != null)) {
         {
           final Cell cell = row.getCell(x);
-          final String nom = cell.getStringCellValue();
-          final String mail = row.getCell((x + 1)).getStringCellValue();
+          final String nom = formatter.formatCellValue(cell);
+          final String mail = formatter.formatCellValue(row.getCell((x + 1)));
           mapNomEtudiant.put(nom, mail);
           y++;
           row = sheet.getRow(y);
