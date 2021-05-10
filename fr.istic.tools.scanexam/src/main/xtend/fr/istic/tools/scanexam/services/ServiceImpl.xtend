@@ -91,6 +91,9 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		if (correctionTemplate.present) 
         {
             this.graduationTemplate = correctionTemplate.get()
+            val sorted = this.graduationTemplate.studentsheets.sortBy[s | s.id].toList
+            this.graduationTemplate.studentsheets.clear
+            this.graduationTemplate.studentsheets.addAll(sorted)
             val decoded = Base64.getDecoder().decode(graduationTemplate.encodedDocument);
             return Optional.of(new ByteArrayInputStream(decoded));
         }
@@ -106,7 +109,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	override boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
 		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
 		try {
-			for (StudentSheet sheet : studentSheets) {
+			for (StudentSheet sheet : studentSheets.sortBy[s | s.id]) {
 				for (var i = 0; i < templatePageAmount; i++) {
 					val examPage = getPage(i);
 					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?

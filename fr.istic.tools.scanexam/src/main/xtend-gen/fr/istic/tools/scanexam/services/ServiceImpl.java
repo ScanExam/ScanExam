@@ -113,6 +113,12 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     boolean _isPresent = correctionTemplate.isPresent();
     if (_isPresent) {
       this.graduationTemplate = correctionTemplate.get();
+      final Function1<StudentSheet, Integer> _function = (StudentSheet s) -> {
+        return Integer.valueOf(s.getId());
+      };
+      final List<StudentSheet> sorted = IterableExtensions.<StudentSheet>toList(IterableExtensions.<StudentSheet, Integer>sortBy(this.graduationTemplate.getStudentsheets(), _function));
+      this.graduationTemplate.getStudentsheets().clear();
+      this.graduationTemplate.getStudentsheets().addAll(sorted);
       final byte[] decoded = Base64.getDecoder().decode(this.graduationTemplate.getEncodedDocument());
       ByteArrayInputStream _byteArrayInputStream = new ByteArrayInputStream(decoded);
       return Optional.<InputStream>of(_byteArrayInputStream);
@@ -129,7 +135,11 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   public boolean initializeCorrection(final Collection<StudentSheet> studentSheets) {
     this.graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate();
     try {
-      for (final StudentSheet sheet : studentSheets) {
+      final Function1<StudentSheet, Integer> _function = (StudentSheet s) -> {
+        return Integer.valueOf(s.getId());
+      };
+      List<StudentSheet> _sortBy = IterableExtensions.<StudentSheet, Integer>sortBy(studentSheets, _function);
+      for (final StudentSheet sheet : _sortBy) {
         for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
           {
             final Page examPage = this.getPage(i);
