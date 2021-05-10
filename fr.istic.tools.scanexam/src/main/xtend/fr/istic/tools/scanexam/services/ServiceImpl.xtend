@@ -597,7 +597,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * Sauvegarde le fichier modèle d'examen sur le disque
 	 */
 	def saveEdition() {
-		TemplateIo.save(editionFile, editionTemplate)
+		if(editionFile !== null)
+			TemplateIo.save(editionFile, editionTemplate)
 	}
 	
 	

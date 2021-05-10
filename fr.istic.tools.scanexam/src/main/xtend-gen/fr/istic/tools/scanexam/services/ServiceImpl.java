@@ -773,7 +773,9 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * Sauvegarde le fichier modèle d'examen sur le disque
    */
   public void saveEdition() {
-    TemplateIo.save(this.editionFile, this.editionTemplate);
+    if ((this.editionFile != null)) {
+      TemplateIo.save(this.editionFile, this.editionTemplate);
+    }
   }
   
   /**
