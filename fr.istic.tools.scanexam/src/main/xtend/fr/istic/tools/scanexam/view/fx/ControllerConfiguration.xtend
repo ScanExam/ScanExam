@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.mailing.SendMailTls.LoginResult
+import fr.istic.tools.scanexam.exportation.SendMailTls.LoginResult
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator
@@ -22,9 +22,9 @@ import javafx.stage.Stage
 import java.util.Locale
 import fr.istic.tools.scanexam.core.config.Config
 import fr.istic.tools.scanexam.config.ConfigurationManager
-import static extension fr.istic.tools.scanexam.extensions.LocaleExtensions.*
+import static extension fr.istic.tools.scanexam.utils.extensions.LocaleExtensions.*
 import java.util.Collection
-import fr.istic.tools.scanexam.mailing.SendMailTls
+import fr.istic.tools.scanexam.exportation.SendMailTls
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX

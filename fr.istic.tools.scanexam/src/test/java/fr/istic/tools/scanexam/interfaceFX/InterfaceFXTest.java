@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.interfaceFX;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.awt.MouseInfo;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -14,7 +13,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
 import com.sun.javafx.css.StyleManager;
-import com.sun.javafx.geom.Point2D;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.services.ServiceImpl;

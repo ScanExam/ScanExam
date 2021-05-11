@@ -2,8 +2,8 @@ package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.core.StudentSheet
-import fr.istic.tools.scanexam.export.ExportExamToPdf
-import fr.istic.tools.scanexam.mailing.SendMailTls
+import fr.istic.tools.scanexam.exportation.ExportExamToPdf
+import fr.istic.tools.scanexam.exportation.SendMailTls
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender

@@ -5,7 +5,7 @@
 <?import javafx.scene.web.HTMLEditor?>
 <?import javafx.scene.control.Button?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.HTMLView">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1" fx:controller="fr.istic.tools.scanexam.view.fx.graduation.HTMLView">
 	<VBox alignment="CENTER" spacing="20">
 	<children>
 		<HTMLEditor id="html" fx:id="html" maxHeight="300" maxWidth="640" minHeight="300" minWidth="640"/>

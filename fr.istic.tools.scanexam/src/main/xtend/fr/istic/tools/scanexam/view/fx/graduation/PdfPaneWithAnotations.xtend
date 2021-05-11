@@ -8,10 +8,8 @@ import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Pane
-import org.apache.logging.log4j.LogManager
 
 class PdfPaneWithAnotations extends Pane {
-	static val logger = LogManager.logger
 	new(ControllerFxGraduation controller){
 		this.controller = controller
 		imageView = new ImageView()
@@ -32,7 +30,7 @@ class PdfPaneWithAnotations extends Pane {
 	 * @param qItem A question
 	 * @param sItem A student
 	 */
-	def displayAnnotationsFor(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
+	def void displayAnnotationsFor(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
 		removeAllAnotations
 		var ids = controller.service.getAnnotationIds(qItem.questionId,sItem.studentId)
 		for (int id : ids){

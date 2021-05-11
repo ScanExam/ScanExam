@@ -1,5 +1,9 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
 import java.util.List;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
@@ -8,13 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("all")
 public class PdfPaneWithAnotations extends Pane {
-  private static final Logger logger = LogManager.getLogger();
-  
   public PdfPaneWithAnotations(final ControllerFxGraduation controller) {
     this.controller = controller;
     ImageView _imageView = new ImageView();

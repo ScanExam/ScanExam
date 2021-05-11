@@ -18,7 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import fr.istic.tools.scanexam.api.DataFactory;
+import fr.istic.tools.scanexam.utils.DataFactory;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;

@@ -1,6 +1,5 @@
 package fr.istic.tools.scanexam.services;
 
-import fr.istic.tools.scanexam.api.DataFactory;
 import fr.istic.tools.scanexam.core.Comment;
 import fr.istic.tools.scanexam.core.CoreFactory;
 import fr.istic.tools.scanexam.core.Exam;
@@ -16,9 +15,10 @@ import fr.istic.tools.scanexam.core.TextComment;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
-import fr.istic.tools.scanexam.io.TemplateIo;
+import fr.istic.tools.scanexam.services.TemplateIo;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
+import fr.istic.tools.scanexam.utils.DataFactory;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -3,8 +3,8 @@ package fr.istic.tools.scanexam.view.fx.graduation
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
-import fr.istic.tools.scanexam.export.ExportExamToPdf
-import fr.istic.tools.scanexam.export.GradesExportImpl
+import fr.istic.tools.scanexam.exportation.ExportExamToPdf
+import fr.istic.tools.scanexam.exportation.GradesExportImpl
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.Tuple3
 import fr.istic.tools.scanexam.view.fx.FxSettings

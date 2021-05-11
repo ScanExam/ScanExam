@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import fr.istic.tools.scanexam.api.DataFactory;
+import fr.istic.tools.scanexam.utils.DataFactory;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;

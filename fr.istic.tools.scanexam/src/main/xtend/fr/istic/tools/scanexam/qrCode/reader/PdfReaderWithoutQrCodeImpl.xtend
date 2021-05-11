@@ -1,6 +1,6 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
-import fr.istic.tools.scanexam.api.DataFactory
+import fr.istic.tools.scanexam.utils.DataFactory
 import fr.istic.tools.scanexam.core.StudentSheet
 import java.util.HashSet
 import java.util.Set

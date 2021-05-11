@@ -1,7 +1,7 @@
 package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.mailing.StudentDataManager
+import fr.istic.tools.scanexam.importation.StudentDataManager
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField

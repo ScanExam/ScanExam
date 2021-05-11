@@ -8,11 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.beust.jcommander.internal.Lists;
+
+import fr.istic.tools.scanexam.exportation.SendMailTls;
 
 public class TestanonymousMail {
 	

@@ -1,1 +1,0 @@
-D:\Logiciel\eclipse\Workspace\ScanGrading\fr.istic.tools.scanexam\src\main\resources\mailing\mailAnonyme

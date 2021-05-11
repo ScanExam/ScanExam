@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.services.api;
 
 import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.services.api.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
