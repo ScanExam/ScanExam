@@ -568,15 +568,21 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public float getGlobalScale() {
-    float globalScale = 0.0f;
-    int _numberOfQuestions = this.numberOfQuestions();
-    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _numberOfQuestions, true);
-    for (final Integer i : _doubleDotLessThan) {
-      float _globalScale = globalScale;
-      float _maxPoint = this.getQuestion((i).intValue()).getGradeScale().getMaxPoint();
-      globalScale = (_globalScale + _maxPoint);
+    float _xblockexpression = (float) 0;
+    {
+      float globalScale = 0.0f;
+      EList<Page> _pages = this.editionTemplate.getExam().getPages();
+      for (final Page page : _pages) {
+        EList<Question> _questions = page.getQuestions();
+        for (final Question question : _questions) {
+          float _globalScale = globalScale;
+          float _maxPoint = question.getGradeScale().getMaxPoint();
+          globalScale = (_globalScale + _maxPoint);
+        }
+      }
+      _xblockexpression = globalScale;
     }
-    return globalScale;
+    return _xblockexpression;
   }
   
   /**

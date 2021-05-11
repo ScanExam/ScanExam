@@ -428,10 +428,19 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override float getGlobalScale() {
 		var float globalScale = 0.0f;
-		for (i : 0 ..< numberOfQuestions) {
+		/*for (i : 0 ..< numberOfQuestions) {
+			logger.warn("getQuestion" + i)
     		globalScale += getQuestion(i).gradeScale.maxPoint
 		}
-		return globalScale
+		return globalScale*/
+		
+		for (page : editionTemplate.exam.pages) {
+			for (Question question : page.questions) {
+				globalScale += question.gradeScale.maxPoint
+			}
+				
+		}
+		globalScale
 	}
 	
 	//===================================================
