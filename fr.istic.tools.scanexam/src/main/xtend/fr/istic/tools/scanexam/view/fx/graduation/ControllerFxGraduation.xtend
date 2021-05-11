@@ -431,6 +431,8 @@ class ControllerFxGraduation {
 		addAnnotationButton.disableProperty.bind(loadedModel.not)
 		
 	}
+	
+	
 
 	def void setKeybinds() {
 		val s = mainPane.scene
@@ -758,7 +760,20 @@ class ControllerFxGraduation {
 	 * Called when we change tabs, used to update information of questions such as worth(does not update name TODO)
 	 */
 	def void changedTab(){
-		setSelectedQuestion
+		if (!questionList.noItems) {
+			grader.prepForTabChange
+			updateQuestionList
+			setSelectedQuestion
+		}
+		
+	}
+	
+	
+	def updateQuestionList(){
+		var selectedId= questionList.currentItem.questionId;
+		questionList.clearItems
+		loadQuestions
+		selectQuestion(questionList.questionWithId(selectedId))
 	}
 	
 	def void renderStudentCopy(){

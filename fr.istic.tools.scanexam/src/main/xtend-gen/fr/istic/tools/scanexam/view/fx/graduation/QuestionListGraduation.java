@@ -3,6 +3,8 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 @SuppressWarnings("all")
 public class QuestionListGraduation extends VBox {
@@ -100,6 +102,15 @@ public class QuestionListGraduation extends VBox {
   
   public int selectItem(final QuestionItemGraduation item) {
     return this.currentIndex = this.getChildren().indexOf(item);
+  }
+  
+  public QuestionItemGraduation questionWithId(final int id) {
+    final Function1<Node, Boolean> _function = (Node question) -> {
+      int _questionId = ((QuestionItemGraduation) question).getQuestionId();
+      return Boolean.valueOf((_questionId == id));
+    };
+    Node _findFirst = IterableExtensions.<Node>findFirst(this.getChildren(), _function);
+    return ((QuestionItemGraduation) _findFirst);
   }
   
   public Object setupEvents() {

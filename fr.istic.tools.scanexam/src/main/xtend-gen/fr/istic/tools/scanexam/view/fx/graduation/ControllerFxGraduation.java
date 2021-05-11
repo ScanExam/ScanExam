@@ -953,7 +953,20 @@ public class ControllerFxGraduation {
    * Called when we change tabs, used to update information of questions such as worth(does not update name TODO)
    */
   public void changedTab() {
-    this.setSelectedQuestion();
+    boolean _noItems = this.questionList.noItems();
+    boolean _not = (!_noItems);
+    if (_not) {
+      this.grader.prepForTabChange();
+      this.updateQuestionList();
+      this.setSelectedQuestion();
+    }
+  }
+  
+  public void updateQuestionList() {
+    int selectedId = this.questionList.getCurrentItem().getQuestionId();
+    this.questionList.clearItems();
+    this.loadQuestions();
+    this.selectQuestion(this.questionList.questionWithId(selectedId));
   }
   
   public void renderStudentCopy() {

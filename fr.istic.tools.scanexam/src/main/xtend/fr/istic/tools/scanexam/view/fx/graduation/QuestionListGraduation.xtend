@@ -73,6 +73,11 @@ class QuestionListGraduation extends VBox {
 		currentIndex = children.indexOf(item);
 	}
 	
+	
+	def questionWithId(int id){
+			children.findFirst[question | (question as QuestionItemGraduation).questionId == id] as QuestionItemGraduation
+	}
+	
 	//-------------//
 	
 	def setupEvents(){

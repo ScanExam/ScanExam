@@ -98,6 +98,9 @@ class Grader extends VBox {
 	 * @param l'etudiant pour recupere les entries selectionne
 	 */
 	def changeGrader(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
+		if (editable) {
+			toggleEditMode(false)
+		}
 		clearDisplay()
 		curentQuestion = qItem;
 		currentStudent = sItem;
@@ -157,6 +160,12 @@ class Grader extends VBox {
 		removeEntryFromModel(item, controller.questionList.currentItem)
 		updateCurrentPoints
 
+	}
+	
+	def prepForTabChange(){
+		if (editable) {
+			toggleEditMode(false)
+		}
 	}
 	
 	/**
@@ -238,7 +247,7 @@ class Grader extends VBox {
 	 * Toggles between "editable" states, when edtiable, we can add, remove and modify the worth of a grader entry in the model
 	 */
 	def toggleEditMode(boolean active) {
-		editable = !editable
+		editable = active
 		if (active) {
 			editMode.text = LanguageManager.translate("grader.button.leaveEdit")
 			for (Node n : itemContainer.children) {

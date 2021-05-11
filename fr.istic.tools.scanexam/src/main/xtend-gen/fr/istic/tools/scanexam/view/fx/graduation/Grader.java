@@ -349,6 +349,9 @@ public class Grader extends VBox {
    * @param l'etudiant pour recupere les entries selectionne
    */
   public void changeGrader(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
+    if (this.editable) {
+      this.toggleEditMode(false);
+    }
     this.clearDisplay();
     this.curentQuestion = qItem;
     this.currentStudent = sItem;
@@ -406,6 +409,14 @@ public class Grader extends VBox {
     this.itemContainer.getChildren().remove(item);
     this.removeEntryFromModel(item, this.controller.getQuestionList().getCurrentItem());
     this.updateCurrentPoints();
+  }
+  
+  public boolean prepForTabChange() {
+    boolean _xifexpression = false;
+    if (this.editable) {
+      _xifexpression = this.toggleEditMode(false);
+    }
+    return _xifexpression;
   }
   
   /**
@@ -503,7 +514,7 @@ public class Grader extends VBox {
   public boolean toggleEditMode(final boolean active) {
     boolean _xblockexpression = false;
     {
-      this.editable = (!this.editable);
+      this.editable = active;
       boolean _xifexpression = false;
       if (active) {
         boolean _xblockexpression_1 = false;
