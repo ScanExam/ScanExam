@@ -754,6 +754,13 @@ class ControllerFxGraduation {
 	
 	//---DISPLAYING---//
 	
+	/**
+	 * Called when we change tabs, used to update information of questions such as worth(does not update name TODO)
+	 */
+	def void changedTab(){
+		setSelectedQuestion
+	}
+	
 	def void renderStudentCopy(){
 		logger.info("Call to RenderStudentCopy")
 		var image = pdfManager.currentPdfPage

@@ -78,6 +78,7 @@ class LauncherFX extends Application implements Launcher {
 			
 			controllerRoot.graduationController = controllerGraduation
 			controllerRoot.editionController = controllerEdition
+			controllerRoot.init()
 			controllerRoot.init(serviceEdition,serviceGraduation)
 			primaryStage.setTitle("ScanExam");
 			primaryStage.setScene(rootScene);

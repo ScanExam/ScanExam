@@ -26,6 +26,7 @@ import javafx.stage.DirectoryChooser
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
+import javafx.scene.control.TabPane
 
 class ControllerRoot implements Initializable {
 	
@@ -49,7 +50,10 @@ class ControllerRoot implements Initializable {
 	@FXML
 	MenuItem sendMailButton;
 	@FXML
-	MenuItem pdfExportGradeButton;
+	MenuItem pdfExportGradeButton;	
+	@FXML
+	TabPane tabPane;
+	
 	
 	@Accessors
 	ControllerFxGraduation graduationController;
@@ -62,6 +66,12 @@ class ControllerRoot implements Initializable {
 	
 	static val logger = LogManager.logger
 
+	
+	
+	
+	def init(){
+		tabPane.selectionModel.selectedItemProperty.addListener([obs,oldVal,newVal | graduationController.changedTab])
+	}
 	
 	def setEditorNode(Node n){
 		editorTab.content = n

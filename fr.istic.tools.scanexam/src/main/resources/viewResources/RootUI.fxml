@@ -10,7 +10,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerRoot">
+<VBox prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerRoot">
 	<children>
 		<MenuBar>
 			<menus>
@@ -23,7 +23,7 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="loadStudent" disable="false" mnemonicParsing="false" onAction="#loadStudentCopiesPressed" text="%menu.file.loadStudentSheet" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
-						<MenuItem fx:id="saveGraduationButton" onAction="#saveGraduation" disable="true" mnemonicParsing="false" text="%menu.file.saveGraduation" />
+						<MenuItem fx:id="saveGraduationButton" disable="true" mnemonicParsing="false" onAction="#saveGraduation" text="%menu.file.saveGraduation" />
 						<MenuItem fx:id="loadStudentNamesButton" disable="true" mnemonicParsing="false" onAction="#loadStudentList" text="%menu.file.loadStudentList" />
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.file.close" />
@@ -34,7 +34,7 @@
 						<MenuItem mnemonicParsing="false" onAction="#updateConfig" text="%menu.edit.updateconfig" />
 						<MenuItem fx:id="pdfExportButton" mnemonicParsing="false" onAction="#pdfExport" text="%menu.edit.pdfExport" />
 						<MenuItem fx:id="pdfExportGradeButton" mnemonicParsing="false" onAction="#gradeExport" text="%menu.edit.gradeExport" />
-						<MenuItem fx:id="sendMailButton"  mnemonicParsing="false" onAction="#sendMail" text="%menu.edit.sendmail" />
+						<MenuItem fx:id="sendMailButton" mnemonicParsing="false" onAction="#sendMail" text="%menu.edit.sendmail" />
 					</items>
 				</Menu>
 				<Menu fx:id="menuView" mnemonicParsing="false" text="%menu.view">
@@ -45,7 +45,7 @@
 				</Menu>
 			</menus>
 		</MenuBar>
-		<TabPane side="LEFT" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+		<TabPane fx:id="tabPane" side="LEFT" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
 			<tabs>
 				<Tab fx:id="editorTab" text="%tabs.editor" />
 				<Tab fx:id="correctorTab" text="%tabs.graduation" />

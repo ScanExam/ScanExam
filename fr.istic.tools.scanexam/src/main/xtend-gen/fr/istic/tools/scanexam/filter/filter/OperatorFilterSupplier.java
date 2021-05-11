@@ -1,7 +1,5 @@
 package fr.istic.tools.scanexam.filter.filter;
 
-import fr.istic.tools.scanexam.filter.filter.OperatorFilter;
-
 /**
  * Une interface fonctionnelle pour obtenir une nouvelle instance d'un {@link OperatorFilter}
  * @see OperatorFilter

@@ -1,3 +1,5 @@
+
+
 package fr.istic.tools.scanexam.view.fx.graduation
 
 import fr.istic.tools.scanexam.config.LanguageManager
@@ -89,6 +91,12 @@ class Grader extends VBox {
 	QuestionItemGraduation curentQuestion;
 	StudentItemGraduation currentStudent;
 	
+	
+	/**
+	 * Met a jours les information presenter par le grader,
+	 * @param la question pour recupere les entries
+	 * @param l'etudiant pour recupere les entries selectionne
+	 */
 	def changeGrader(QuestionItemGraduation qItem, StudentItemGraduation sItem) {
 		clearDisplay()
 		curentQuestion = qItem;
@@ -126,13 +134,23 @@ class Grader extends VBox {
 	// create each gradeEntry from the model for the question item for the correct student
 	}
 
+	/**
+	 * Cree une nouvelle grade entry et l'ajoute au modele.
+	 * L'entrie est associer a la question courrante
+	 * 
+	 */
 	def createNewGradeEntry() {
 		logger.info("Creating new GradeEntry")
 		var entry = new GradeItem(this);
 		itemContainer.children.add(entry)
 		addEntryToModel(entry, controller.questionList.currentItem);
 	}
-
+	
+	/**
+	 * Removes une grade entry et l'enleve du modele.
+	 * L'entrie est associer a la question courrante
+	 * 
+	 */
 	def removeGradeEntry(GradeItem item) {
 		logger.log(Level.INFO, "Removing GradeEntry")
 		itemContainer.children.remove(item);
@@ -141,17 +159,23 @@ class Grader extends VBox {
 
 	}
 	
+	/**
+	 * Met a jour l'indicateur des point courrant pour l'etudiant/question courrante
+	 */
 	def updateCurrentPoints(){
 		currentPoints.text = "" + controller.service.getQuestionSelectedGradeEntriesTotalWorth(controller.questionList.currentItem.questionId)
-		controller.updateGlobalGrade
+		controller.updateStudentDetails
 	}
-	// ---Model intecations 
+	
+	/**
+	 * ajoute un entry au modele d'edition
+	 */
 	def void addEntryToModel(GradeItem item, QuestionItemGraduation qItem) {
 		item.itemId = controller.addEntry(qItem.questionId, item.getText,Float.parseFloat(item.getWorth));
 	}
 
 	/**
-	 * Modifier un item du barême
+	 * Modifier un entry dans le modele d'edition
 	 */
 	def updateEntryInModel(GradeItem item, QuestionItemGraduation qItem) {
 		logger.log(Level.INFO, "Updating GradeEntry")
@@ -161,11 +185,18 @@ class Grader extends VBox {
 	def updateEntryWorthInModel(){
 		
 	}
-
+	
+	/**
+	 * Supprime un entry du modele d'edition
+	 */
 	def removeEntryFromModel(GradeItem item, QuestionItemGraduation qItem) {
 		controller.removeEntry(qItem.questionId, item.id);
 	}
-
+	
+	/**
+	 * Ajoute les point d'un entry a un etudiant pour une question
+	 * @param l'entry a ajouter
+	 */
 	def addPoints(GradeItem item) {
 		logger.info("Adding points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		var over = controller.applyGrade(controller.questionList.currentItem.questionId, item.id)
@@ -179,6 +210,10 @@ class Grader extends VBox {
 		
 	}
 
+	/**
+	 * Supprime les point d'un entry a un etudiant pour une question
+	 * @param l'entry a ajouter
+	 */
 	def removePoints(GradeItem item) {
 		logger.log(Level.INFO, "Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
 		
@@ -191,11 +226,17 @@ class Grader extends VBox {
 			item.selected = true
 		}
 	}
-
+	
+	/**
+	 * Met a zero le grader
+	 */
 	def clearDisplay() {
 		itemContainer.children.clear();
 	}
-
+	
+	/**
+	 * Toggles between "editable" states, when edtiable, we can add, remove and modify the worth of a grader entry in the model
+	 */
 	def toggleEditMode(boolean active) {
 		editable = !editable
 		if (active) {
@@ -214,6 +255,10 @@ class Grader extends VBox {
 		}
 	}
 	
+	/**
+	 * interacts with the checkbox for the entry in the index in params
+	 * @param the index of the grade entry
+	 */
 	def interactUsingIndex(int index){
 		if (index < 1) {
 			logger.info("Cant select an entry below 1") 
@@ -302,16 +347,25 @@ class Grader extends VBox {
 			this.id = id;
 		}
 		
+		/**
+		 * Changes the color of the checkbox to represent a unsuccesfull action
+		 */
 		def displayError(){
 			check.styleClass.remove("goodCheckBox")
 			check.styleClass.add("badCheckBox")
 		}
 		
+		/**
+		 * Changes the color of the checkbox to represent a successfull action
+		 */
 		def displaySuccess(){
 			check.styleClass.remove("badCheckBox")
 			check.styleClass.add("goodCheckBox")
 		}
 		
+		/**
+		 * Changes the color of the checkbox to represent a default state
+		 */
 		def displayDefault(){
 			check.styleClass.remove("badCheckBox")
 			check.styleClass.remove("goodCheckBox")
@@ -326,11 +380,15 @@ class Grader extends VBox {
 			webEngine.loadContent(text);
 		}
 		
+		/**
+		 * Changes the text present in as a description of this entry
+		 * and updates it in the model
+		 */
 		def changeText(String text){
 			setText(text)
 			grader.updateEntryInModel(this,grader.controller.questionList.currentItem)
 		}
-
+	
 		def setWorth(float worth) {
 			this.worth.text = worth + ""
 			this.worthField.text = worth + ""
@@ -350,7 +408,9 @@ class Grader extends VBox {
 		}
 		
 		
-
+		/**
+		 * Enters an "Editable" state, where the worth label is replace by a text field, and the checkbox is disabled
+		 */
 		def enterEditMode() {
 			topRow.children.remove(worth)
 			topRow.children.add(worthField);
@@ -359,7 +419,10 @@ class Grader extends VBox {
 			this.children.add(remove)
 		
 		}
-
+		
+		/**
+		 * Leaves an "Editable" state, where the worth label is replace by a text field, and the checkbox is disabled
+		 */
 		def leaveEditMode() {
 			topRow.children.remove(worthField)
 			this.children.remove(remove)
@@ -370,7 +433,9 @@ class Grader extends VBox {
 			//this.children.add(text)
 		}
 
-		
+		/**
+		 * checks the state of the checkbox and updates the point counter
+		 */
 		def checkBoxUsed(){
 			if (check.selected) {
 				grader.addPoints(this)

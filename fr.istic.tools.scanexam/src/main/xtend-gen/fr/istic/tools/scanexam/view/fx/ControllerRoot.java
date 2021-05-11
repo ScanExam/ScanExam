@@ -8,13 +8,6 @@ import fr.istic.tools.scanexam.core.config.Config;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
-import fr.istic.tools.scanexam.view.fx.ControllerGraduationCreator;
-import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
-import fr.istic.tools.scanexam.view.fx.ControllerSendMail;
-import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
-import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
-import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
@@ -23,6 +16,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +29,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -80,6 +76,9 @@ public class ControllerRoot implements Initializable {
   @FXML
   private MenuItem pdfExportGradeButton;
   
+  @FXML
+  private TabPane tabPane;
+  
   @Accessors
   private ControllerFxGraduation graduationController;
   
@@ -91,6 +90,13 @@ public class ControllerRoot implements Initializable {
   private ServiceGraduation serviceGraduation;
   
   private static final Logger logger = LogManager.getLogger();
+  
+  public void init() {
+    final ChangeListener<Tab> _function = (ObservableValue<? extends Tab> obs, Tab oldVal, Tab newVal) -> {
+      this.graduationController.changedTab();
+    };
+    this.tabPane.getSelectionModel().selectedItemProperty().addListener(_function);
+  }
   
   public void setEditorNode(final Node n) {
     this.editorTab.setContent(n);

@@ -2,10 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.HTMLView;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.io.InputStream;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -114,6 +110,9 @@ public class Grader extends VBox {
       return this.id = id;
     }
     
+    /**
+     * Changes the color of the checkbox to represent a unsuccesfull action
+     */
     public boolean displayError() {
       boolean _xblockexpression = false;
       {
@@ -123,6 +122,9 @@ public class Grader extends VBox {
       return _xblockexpression;
     }
     
+    /**
+     * Changes the color of the checkbox to represent a successfull action
+     */
     public boolean displaySuccess() {
       boolean _xblockexpression = false;
       {
@@ -132,6 +134,9 @@ public class Grader extends VBox {
       return _xblockexpression;
     }
     
+    /**
+     * Changes the color of the checkbox to represent a default state
+     */
     public boolean displayDefault() {
       boolean _xblockexpression = false;
       {
@@ -149,6 +154,10 @@ public class Grader extends VBox {
       this.webEngine.loadContent(text);
     }
     
+    /**
+     * Changes the text present in as a description of this entry
+     * and updates it in the model
+     */
     public void changeText(final String text) {
       this.setText(text);
       this.grader.updateEntryInModel(this, this.grader.controller.getQuestionList().getCurrentItem());
@@ -173,6 +182,9 @@ public class Grader extends VBox {
       return this.check.isDisabled();
     }
     
+    /**
+     * Enters an "Editable" state, where the worth label is replace by a text field, and the checkbox is disabled
+     */
     public boolean enterEditMode() {
       boolean _xblockexpression = false;
       {
@@ -184,6 +196,9 @@ public class Grader extends VBox {
       return _xblockexpression;
     }
     
+    /**
+     * Leaves an "Editable" state, where the worth label is replace by a text field, and the checkbox is disabled
+     */
     public void leaveEditMode() {
       this.topRow.getChildren().remove(this.worthField);
       this.getChildren().remove(this.remove);
@@ -192,6 +207,9 @@ public class Grader extends VBox {
       this.worth.setText(this.worthField.getText());
     }
     
+    /**
+     * checks the state of the checkbox and updates the point counter
+     */
     public void checkBoxUsed() {
       boolean _isSelected = this.check.isSelected();
       if (_isSelected) {
@@ -325,6 +343,11 @@ public class Grader extends VBox {
   
   private StudentItemGraduation currentStudent;
   
+  /**
+   * Met a jours les information presenter par le grader,
+   * @param la question pour recupere les entries
+   * @param l'etudiant pour recupere les entries selectionne
+   */
   public void changeGrader(final QuestionItemGraduation qItem, final StudentItemGraduation sItem) {
     this.clearDisplay();
     this.curentQuestion = qItem;
@@ -363,6 +386,10 @@ public class Grader extends VBox {
     }
   }
   
+  /**
+   * Cree une nouvelle grade entry et l'ajoute au modele.
+   * L'entrie est associer a la question courrante
+   */
   public void createNewGradeEntry() {
     Grader.logger.info("Creating new GradeEntry");
     Grader.GradeItem entry = new Grader.GradeItem(this);
@@ -370,6 +397,10 @@ public class Grader extends VBox {
     this.addEntryToModel(entry, this.controller.getQuestionList().getCurrentItem());
   }
   
+  /**
+   * Removes une grade entry et l'enleve du modele.
+   * L'entrie est associer a la question courrante
+   */
   public void removeGradeEntry(final Grader.GradeItem item) {
     Grader.logger.log(Level.INFO, "Removing GradeEntry");
     this.itemContainer.getChildren().remove(item);
@@ -377,19 +408,25 @@ public class Grader extends VBox {
     this.updateCurrentPoints();
   }
   
+  /**
+   * Met a jour l'indicateur des point courrant pour l'etudiant/question courrante
+   */
   public void updateCurrentPoints() {
     double _questionSelectedGradeEntriesTotalWorth = this.controller.getService().getQuestionSelectedGradeEntriesTotalWorth(this.controller.getQuestionList().getCurrentItem().getQuestionId());
     String _plus = ("" + Double.valueOf(_questionSelectedGradeEntriesTotalWorth));
     this.currentPoints.setText(_plus);
-    this.controller.updateGlobalGrade();
+    this.controller.updateStudentDetails();
   }
   
+  /**
+   * ajoute un entry au modele d'edition
+   */
   public void addEntryToModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
     item.setItemId(this.controller.addEntry(qItem.getQuestionId(), item.getText(), Float.parseFloat(item.getWorth())));
   }
   
   /**
-   * Modifier un item du barême
+   * Modifier un entry dans le modele d'edition
    */
   public void updateEntryInModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
     Grader.logger.log(Level.INFO, "Updating GradeEntry");
@@ -400,10 +437,17 @@ public class Grader extends VBox {
     return null;
   }
   
+  /**
+   * Supprime un entry du modele d'edition
+   */
   public void removeEntryFromModel(final Grader.GradeItem item, final QuestionItemGraduation qItem) {
     this.controller.removeEntry(qItem.getQuestionId(), item.id);
   }
   
+  /**
+   * Ajoute les point d'un entry a un etudiant pour une question
+   * @param l'entry a ajouter
+   */
   public void addPoints(final Grader.GradeItem item) {
     int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
     String _plus = ("Adding points for Student ID :" + Integer.valueOf(_studentId));
@@ -423,6 +467,10 @@ public class Grader extends VBox {
     }
   }
   
+  /**
+   * Supprime les point d'un entry a un etudiant pour une question
+   * @param l'entry a ajouter
+   */
   public void removePoints(final Grader.GradeItem item) {
     int _studentId = this.controller.getStudentList().getCurrentItem().getStudentId();
     String _plus = ("Removing points for Student ID :" + Integer.valueOf(_studentId));
@@ -442,10 +490,16 @@ public class Grader extends VBox {
     }
   }
   
+  /**
+   * Met a zero le grader
+   */
   public void clearDisplay() {
     this.itemContainer.getChildren().clear();
   }
   
+  /**
+   * Toggles between "editable" states, when edtiable, we can add, remove and modify the worth of a grader entry in the model
+   */
   public boolean toggleEditMode(final boolean active) {
     boolean _xblockexpression = false;
     {
@@ -482,6 +536,10 @@ public class Grader extends VBox {
     return _xblockexpression;
   }
   
+  /**
+   * interacts with the checkbox for the entry in the index in params
+   * @param the index of the grade entry
+   */
   public void interactUsingIndex(final int index) {
     if ((index < 1)) {
       Grader.logger.info("Cant select an entry below 1");

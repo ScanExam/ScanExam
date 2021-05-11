@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.launcher;
 
 import com.sun.javafx.css.StyleManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
-import fr.istic.tools.scanexam.launcher.Launcher;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
@@ -67,6 +66,7 @@ public class LauncherFX extends Application implements Launcher {
     controllerEdition.init(LauncherFX.serviceEdition);
     controllerRoot.setGraduationController(controllerGraduation);
     controllerRoot.setEditionController(controllerEdition);
+    controllerRoot.init();
     controllerRoot.init(LauncherFX.serviceEdition, LauncherFX.serviceGraduation);
     primaryStage.setTitle("ScanExam");
     primaryStage.setScene(rootScene);
