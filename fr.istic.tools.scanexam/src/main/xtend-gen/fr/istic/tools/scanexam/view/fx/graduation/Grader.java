@@ -22,6 +22,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -247,6 +248,10 @@ public class Grader extends VBox {
         fxmlLoader.setResources(LanguageManager.getCurrentBundle());
         Parent root = fxmlLoader.<Parent>load(inputLayout);
         Scene scene = new Scene(root, 640, 360);
+        ObservableList<Image> _icons = stage.getIcons();
+        InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
+        Image _image = new Image(_inputStreamResource);
+        _icons.add(_image);
         stage.setScene(scene);
         HTMLView.stage = stage;
         stage.show();

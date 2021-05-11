@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation
 
+import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation.SelectedTool
 import javafx.event.ActionEvent
@@ -15,6 +16,7 @@ import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control.TextField
+import javafx.scene.image.Image
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
@@ -29,7 +31,6 @@ import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 
 import static fr.istic.tools.scanexam.view.fx.graduation.HTMLView.*
-import fr.istic.tools.scanexam.config.LanguageManager
 
 class Grader extends VBox {
 
@@ -424,6 +425,7 @@ class Grader extends VBox {
 			fxmlLoader.setResources(LanguageManager.currentBundle)
 			var root = fxmlLoader.load(inputLayout);
 			var scene = new Scene(root, 640, 360);
+			stage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
 			stage.setScene(scene);
 			HTMLView.stage = stage
 			stage.show();
