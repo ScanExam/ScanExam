@@ -92,7 +92,6 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 			addCopie(cop)
 			lock.unlock()
 
-			//println("Success page " + page)
 		}
 	}
 

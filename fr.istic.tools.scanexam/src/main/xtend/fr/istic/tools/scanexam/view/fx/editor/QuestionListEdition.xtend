@@ -49,7 +49,6 @@ class QuestionListEdition extends VBox {
 			default: {
 			}
 		}
-		println("page : " + controller.pdfManager.currentPdfPageNumber+1)
 		var item = new QuestionItemEdition(this, box, type,
 			controller.pdfManager.currentPdfPageNumber+1);
 

@@ -2,6 +2,9 @@ package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.editor.Box;
+import fr.istic.tools.scanexam.view.fx.editor.BoxType;
+import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

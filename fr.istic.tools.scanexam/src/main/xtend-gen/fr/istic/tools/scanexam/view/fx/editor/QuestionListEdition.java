@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class QuestionListEdition extends VBox {
@@ -24,14 +23,14 @@ public class QuestionListEdition extends VBox {
     return this.controller;
   }
   
-  public boolean loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
+  public Object loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
     boolean _xblockexpression = false;
     {
       QuestionItemEdition item = new QuestionItemEdition(this, box, name, (page + 1), id);
       item.setScale(questionWorth);
       _xblockexpression = this.add(item);
     }
-    return _xblockexpression;
+    return Boolean.valueOf(_xblockexpression);
   }
   
   /**
@@ -57,12 +56,8 @@ public class QuestionListEdition extends VBox {
     } else {
     }
     int _currentPdfPageNumber = this.controller.getPdfManager().currentPdfPageNumber();
-    String _plus = ("page : " + Integer.valueOf(_currentPdfPageNumber));
-    String _plus_1 = (_plus + Integer.valueOf(1));
-    InputOutput.<String>println(_plus_1);
-    int _currentPdfPageNumber_1 = this.controller.getPdfManager().currentPdfPageNumber();
-    int _plus_2 = (_currentPdfPageNumber_1 + 1);
-    QuestionItemEdition item = new QuestionItemEdition(this, box, type, _plus_2);
+    int _plus = (_currentPdfPageNumber + 1);
+    QuestionItemEdition item = new QuestionItemEdition(this, box, type, _plus);
     this.addToModel(item);
     this.add(item);
   }
