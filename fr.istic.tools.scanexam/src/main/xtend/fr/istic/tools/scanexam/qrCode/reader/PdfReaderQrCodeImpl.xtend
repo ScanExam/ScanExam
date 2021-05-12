@@ -303,9 +303,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8)
 		
 		qrcodeReader.readPDf
-		
-		
-		println("le threads principal continue")
+
 
 		while (qrcodeReader.getNbPagesTreated != qrcodeReader.getNbPagesPdf) {
 		}

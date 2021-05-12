@@ -9,7 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfThreadManagerWriter extends Thread implements Runnable {
@@ -59,9 +58,6 @@ public class PdfThreadManagerWriter extends Thread implements Runnable {
       QRThreadWriter _qRThreadWriter_3 = new QRThreadWriter(this.writer, ((3 * this.nbCopie) / 4), this.nbCopie, this.docSujetMaitre, this.nbPage, latchThreads, this.examID, _absolutePath_3);
       service.execute(_qRThreadWriter_3);
       latchThreads.await();
-      long _count = latchThreads.getCount();
-      String _plus = ("Fermeture du Thread Manager : " + Long.valueOf(_count));
-      InputOutput.<String>println(_plus);
       this.writer.setFinished(true);
       service.shutdown();
       this.docSujetMaitre.save(this.output);

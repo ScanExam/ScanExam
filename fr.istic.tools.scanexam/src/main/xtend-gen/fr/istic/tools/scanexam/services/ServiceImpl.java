@@ -15,6 +15,7 @@ import fr.istic.tools.scanexam.core.TextComment;
 import fr.istic.tools.scanexam.core.templates.CorrectionTemplate;
 import fr.istic.tools.scanexam.core.templates.CreationTemplate;
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory;
+import fr.istic.tools.scanexam.services.TemplateIo;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.DataFactory;

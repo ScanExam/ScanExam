@@ -32,7 +32,6 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class QRCodeGeneratorImpl implements QRCodeGenerator {
@@ -57,7 +56,6 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
     try {
       final byte[] byteArray = new byte[inputFile.available()];
       inputFile.read(byteArray);
-      InputOutput.<InputStream>println(inputFile);
       final File temp = File.createTempFile("pdfTemp", ".pdf");
       temp.deleteOnExit();
       final OutputStream oS = new FileOutputStream(temp);

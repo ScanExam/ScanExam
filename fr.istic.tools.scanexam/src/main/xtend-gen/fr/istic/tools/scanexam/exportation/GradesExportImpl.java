@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.exportation;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.exportation.GradesExport;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -49,7 +49,6 @@ class PdfThreadManagerWriter extends Thread implements Runnable {
 				qrcode3.absolutePath))
 
 		latchThreads.await()
-		println("Fermeture du Thread Manager : " + latchThreads.count)
 		writer.setFinished(true)
 		service.shutdown()
 		docSujetMaitre.save(output)

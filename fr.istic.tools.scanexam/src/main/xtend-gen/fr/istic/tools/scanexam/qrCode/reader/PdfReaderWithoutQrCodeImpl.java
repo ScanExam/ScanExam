@@ -22,7 +22,6 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
@@ -264,8 +263,6 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
     temp = this.getUncompleteCopies();
     Set<Copie> temp2 = new HashSet<Copie>();
     temp2 = this.getCompleteCopies();
-    InputOutput.<String>println(temp2.toString());
-    InputOutput.<String>println(temp.toString());
     final Set<Copie> _converted_temp = (Set<Copie>)temp;
     int _length = ((Object[])Conversions.unwrapArray(_converted_temp, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
@@ -312,8 +309,5 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
       res = (_res + _length_1);
     }
     return res;
-  }
-  
-  public static void main(final String[] arg) {
   }
 }

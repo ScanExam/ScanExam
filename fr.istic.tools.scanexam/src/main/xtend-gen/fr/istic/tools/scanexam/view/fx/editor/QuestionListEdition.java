@@ -23,14 +23,14 @@ public class QuestionListEdition extends VBox {
     return this.controller;
   }
   
-  public Object loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
+  public boolean loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
     boolean _xblockexpression = false;
     {
       QuestionItemEdition item = new QuestionItemEdition(this, box, name, (page + 1), id);
       item.setScale(questionWorth);
       _xblockexpression = this.add(item);
     }
-    return Boolean.valueOf(_xblockexpression);
+    return _xblockexpression;
   }
   
   /**

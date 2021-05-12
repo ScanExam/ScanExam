@@ -48,9 +48,7 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
             val byte[] byteArray = newByteArrayOfSize(inputFile.available)
             
             inputFile.read(byteArray)
-            
-            println(inputFile)
-            
+
             val File temp = File.createTempFile("pdfTemp",".pdf")
 			temp.deleteOnExit            
             val OutputStream oS = new FileOutputStream(temp)

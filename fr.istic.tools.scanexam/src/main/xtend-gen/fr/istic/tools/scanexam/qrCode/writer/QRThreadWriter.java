@@ -4,7 +4,6 @@ import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import java.util.concurrent.CountDownLatch;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class QRThreadWriter extends Thread implements Runnable {
@@ -42,6 +41,5 @@ public class QRThreadWriter extends Thread implements Runnable {
       this.writer.insertQRCodeInSubject(this.name, this.docSujetMaitre, (i).intValue(), this.nbPages, this.pathImage);
     }
     this.countDown.countDown();
-    InputOutput.<Long>println(Long.valueOf(this.countDown.getCount()));
   }
 }

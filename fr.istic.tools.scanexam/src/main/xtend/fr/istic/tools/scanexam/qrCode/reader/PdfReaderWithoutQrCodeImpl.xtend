@@ -209,9 +209,7 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		
 		var Set<Copie> temp2 = new HashSet<Copie>()
 		temp2 = completeCopies
-		
-		println(temp2.toString)
-		println(temp.toString)
+
 
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
@@ -246,20 +244,15 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		return res
 	}
 
-	def static void main(String[] arg) {
-		/*val File pdf = new File("pfo_example_Inserted.pdf")
+	/*def static void main(String[] arg) {
+		val File pdf = new File("pfo_example_Inserted.pdf")
 		val PdfReaderWithoutQrCodeImpl qrcodeReader = new PdfReaderWithoutQrCodeImpl(pdf, 8, 10)
 
 		qrcodeReader.readPDf
-		for (i : 0 ..< qrcodeReader.sheets.length)
-			println(qrcodeReader.sheets.get(i).toString())
+
 
 		
-		println("Nombre de pages  du doc : " + qrcodeReader.nbPagesPdf)
-		println("Nombre de pages traitées : " + qrcodeReader.nbPagesTreated)
-
-		println("Examen complet? : " + qrcodeReader.isExamenComplete)*/
-	}
+	}*/
 
 	
 }

@@ -31,7 +31,6 @@ class QRThreadWriter extends Thread implements Runnable {
 			writer.insertQRCodeInSubject(name, docSujetMaitre, i, nbPages, pathImage)
 		}
 		countDown.countDown
-		println(countDown.count)
 	}
 
 }
