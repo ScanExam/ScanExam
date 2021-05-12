@@ -237,3 +237,8 @@
 	-fx-border-width: 1px;
 	-fx-background-color: lightgrey;
 }
+
+.focusedText {
+	-fx-text-fill: white;
+}
+

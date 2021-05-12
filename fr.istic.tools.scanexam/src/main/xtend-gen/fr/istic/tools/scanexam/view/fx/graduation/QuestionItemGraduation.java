@@ -1,7 +1,6 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.view.fx.FxSettings;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionListGraduation;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -90,8 +89,10 @@ public class QuestionItemGraduation extends VBox {
   public void setFocus(final boolean b) {
     if (b) {
       this.setColor(FxSettings.ITEM_HIGHLIGHT_COLOR);
+      this.name.getStyleClass().add("focusedText");
     } else {
       this.setColor(FxSettings.ITEM_NORMAL_COLOR);
+      this.name.getStyleClass().remove("focusedText");
     }
   }
   

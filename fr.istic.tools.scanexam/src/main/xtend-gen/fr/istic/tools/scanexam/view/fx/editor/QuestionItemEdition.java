@@ -2,9 +2,6 @@ package fr.istic.tools.scanexam.view.fx.editor;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
-import fr.istic.tools.scanexam.view.fx.editor.Box;
-import fr.istic.tools.scanexam.view.fx.editor.BoxType;
-import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -205,9 +202,11 @@ public class QuestionItemEdition extends VBox {
   public void setFocus(final boolean b) {
     if (b) {
       this.setColor(FxSettings.ITEM_HIGHLIGHT_COLOR);
+      this.name.getStyleClass().add("focusedText");
       this.zone.setFocus(b);
     } else {
       this.setColor(FxSettings.ITEM_NORMAL_COLOR);
+      this.name.getStyleClass().remove("focusedText");
       this.zone.setFocus(b);
     }
   }

@@ -1,9 +1,5 @@
 package fr.istic.tools.scanexam.view.fx.graduation;
 
-import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.QuestionItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
-import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
 import java.util.List;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;

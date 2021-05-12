@@ -47,10 +47,12 @@ class StudentItemGraduation extends HBox {
 	//---METHODS---//
 	def void setFocus(boolean b) {//sets the color of the zone and the item in the list
 		if (b) {
-			color = FxSettings.ITEM_HIGHLIGHT_COLOR		
+			color = FxSettings.ITEM_HIGHLIGHT_COLOR	
+			this.name.styleClass.add("focusedText")		
 		}
 		else {
 			color = FxSettings.ITEM_NORMAL_COLOR
+			this.name.styleClass.remove("focusedText")	
 		}
 	}
 	

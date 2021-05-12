@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.exportation.ExportExamToPdf;
 import fr.istic.tools.scanexam.exportation.SendMailTls;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
-import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;

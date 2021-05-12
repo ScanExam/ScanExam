@@ -2,7 +2,6 @@ package fr.istic.tools.scanexam.view.fx.graduation;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
-import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -55,8 +54,10 @@ public class StudentItemGraduation extends HBox {
   public void setFocus(final boolean b) {
     if (b) {
       this.setColor(FxSettings.ITEM_HIGHLIGHT_COLOR);
+      this.name.getStyleClass().add("focusedText");
     } else {
       this.setColor(FxSettings.ITEM_NORMAL_COLOR);
+      this.name.getStyleClass().remove("focusedText");
     }
   }
   

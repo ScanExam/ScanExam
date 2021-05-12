@@ -1,10 +1,6 @@
 package fr.istic.tools.scanexam.qrCode.reader;
 
 import fr.istic.tools.scanexam.core.StudentSheet;
-import fr.istic.tools.scanexam.qrCode.reader.Copie;
-import fr.istic.tools.scanexam.qrCode.reader.Page;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCode;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderWithoutQrCodeThread;
 import fr.istic.tools.scanexam.utils.DataFactory;
 import java.util.Collection;
 import java.util.HashSet;

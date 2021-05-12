@@ -206,9 +206,11 @@ class QuestionItemEdition extends VBox {
 	def void setFocus(boolean b) {
 		if (b) {
 			color = FxSettings.ITEM_HIGHLIGHT_COLOR
+			this.name.styleClass.add("focusedText")	
 			zone.focus = b
 		} else {
 			color = FxSettings.ITEM_NORMAL_COLOR
+			this.name.styleClass.remove("focusedText")	
 			zone.focus = b
 		}
 	}
