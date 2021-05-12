@@ -206,9 +206,6 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		val DataFactory dF = new DataFactory()
 
 		temp = uncompleteCopies
-		
-		var Set<Copie> temp2 = new HashSet<Copie>()
-		temp2 = completeCopies
 
 
 		for (i : 0 ..< temp.length) {

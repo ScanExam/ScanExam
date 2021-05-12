@@ -261,8 +261,6 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
     Set<Copie> temp = new HashSet<Copie>();
     final DataFactory dF = new DataFactory();
     temp = this.getUncompleteCopies();
-    Set<Copie> temp2 = new HashSet<Copie>();
-    temp2 = this.getCompleteCopies();
     final Set<Copie> _converted_temp = (Set<Copie>)temp;
     int _length = ((Object[])Conversions.unwrapArray(_converted_temp, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
