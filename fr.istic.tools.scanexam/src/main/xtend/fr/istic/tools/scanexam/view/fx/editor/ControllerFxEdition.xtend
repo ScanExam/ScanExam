@@ -644,7 +644,6 @@ class ControllerFxEdition {
 		pageChoice.items.clear
  
 		for (var i = 1; i<=pdfManager.getPdfPageCount(); i++) {
-			println(i)
 			if (!pageChoice.items.contains(i)) {
 				pageChoice.getItems().add(i)
 			}
