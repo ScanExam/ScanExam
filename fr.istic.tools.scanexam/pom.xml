@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.istic</groupId>
 	<artifactId>scanexam</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1-RELEASE</version>
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
