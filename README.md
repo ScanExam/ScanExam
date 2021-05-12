@@ -16,6 +16,7 @@ l'onglet "Issues" de Github.
 ```
 cd fr.istic.tools.scanexam
 mvn compile assembly:single
+Move file pfo_example.pdf to `target` directory
 java -jar target/ScanExam-jar-with-dependencies.jar
 ```
 
@@ -30,17 +31,10 @@ mvn compile
 ### Exécuter directement le programme
 
 ```maven
-<<<<<<< HEAD
-mvn compile exec:java
-```
-
-## Execute tests
-=======
 mvn exec:java
 ```
 
 ### Exécuter les tests
->>>>>>> branch 'master' of https://github.com/ScanExam/ScanExam.git
 
 ```maven
 mvn test
@@ -51,7 +45,4 @@ mvn test
 ```maven
 mvn compile assembly:single
 ```
-<<<<<<< HEAD
-=======
 Le jar se trouvera alors dans le dossier ``target``.
->>>>>>> branch 'master' of https://github.com/ScanExam/ScanExam.git
