@@ -776,13 +776,10 @@ public class ControllerFxEdition {
   public void initPageSelection() {
     this.pageChoice.getItems().clear();
     for (int i = 1; (i <= this.pdfManager.getPdfPageCount()); i++) {
-      {
-        InputOutput.<Integer>println(Integer.valueOf(i));
-        boolean _contains = this.pageChoice.getItems().contains(Integer.valueOf(i));
-        boolean _not = (!_contains);
-        if (_not) {
-          this.pageChoice.getItems().add(Integer.valueOf(i));
-        }
+      boolean _contains = this.pageChoice.getItems().contains(Integer.valueOf(i));
+      boolean _not = (!_contains);
+      if (_not) {
+        this.pageChoice.getItems().add(Integer.valueOf(i));
       }
     }
   }

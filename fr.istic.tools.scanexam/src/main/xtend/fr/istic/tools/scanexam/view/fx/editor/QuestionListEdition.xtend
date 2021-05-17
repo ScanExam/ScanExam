@@ -51,9 +51,10 @@ class QuestionListEdition extends VBox {
 		}
 		var item = new QuestionItemEdition(this, box, type,
 			controller.pdfManager.currentPdfPageNumber+1);
-
 		addToModel(item)
 		add(item)
+		this.select(item)
+		this.controller.selectQuestion(item)
 	}
 
 	def removeQuestion(QuestionItemEdition item) {
