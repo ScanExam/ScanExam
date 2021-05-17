@@ -410,8 +410,8 @@ class ControllerFxGraduation {
 		studentList = new StudentListGraduation(this);
 		studentListContainer.content = studentList
 		
-		grader = new Grader(this);
-		parentPane.children.add(grader);
+		grader = new Grader(this)
+		parentPane.children.add(grader)
 		
 		
 		studentDetails = new StudentDetails(this);
@@ -533,6 +533,8 @@ class ControllerFxGraduation {
 		loadStudents();
 		setSelectedQuestion
 		setSelectedStudent
+		grader.layoutX = parentPane.width - grader.width
+		grader.layoutY = 0
 		grader.visible = true;
 	}
 	

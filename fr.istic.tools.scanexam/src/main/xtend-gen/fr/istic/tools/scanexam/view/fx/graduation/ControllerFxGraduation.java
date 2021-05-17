@@ -720,6 +720,11 @@ public class ControllerFxGraduation {
     this.loadStudents();
     this.setSelectedQuestion();
     this.setSelectedStudent();
+    double _width = this.parentPane.getWidth();
+    double _width_1 = this.grader.getWidth();
+    double _minus = (_width - _width_1);
+    this.grader.setLayoutX(_minus);
+    this.grader.setLayoutY(0);
     this.grader.setVisible(true);
   }
   
