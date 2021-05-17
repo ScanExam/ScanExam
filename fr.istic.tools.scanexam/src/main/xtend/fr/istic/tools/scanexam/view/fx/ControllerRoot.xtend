@@ -83,6 +83,7 @@ class ControllerRoot implements Initializable {
 	
 	@FXML
 	def loadTemplatePressedEditor(){
+		tabPane.getSelectionModel().select(editorTab)
 		editionController.loadTemplatePressed
 	}
 	
@@ -94,6 +95,7 @@ class ControllerRoot implements Initializable {
 	
 	@FXML
 	def loadTemplatePressedCorrector() {
+		tabPane.getSelectionModel().select(correctorTab)
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GraduationLoaderUI.fxml"))
@@ -108,6 +110,7 @@ class ControllerRoot implements Initializable {
 	
 	@FXML
 	def createNewTemplatePressed() {
+		tabPane.getSelectionModel().select(editorTab)
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.fxml"))
@@ -227,6 +230,7 @@ class ControllerRoot implements Initializable {
 	
 	@FXML
 	def loadStudentCopiesPressed() {
+		tabPane.getSelectionModel().select(correctorTab)
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GraduationCreatorUI.fxml"))

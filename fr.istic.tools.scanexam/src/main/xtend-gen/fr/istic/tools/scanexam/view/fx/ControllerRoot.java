@@ -115,6 +115,7 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void loadTemplatePressedEditor() {
+    this.tabPane.getSelectionModel().select(this.editorTab);
     this.editionController.loadTemplatePressed();
   }
   
@@ -126,6 +127,7 @@ public class ControllerRoot implements Initializable {
   @FXML
   public void loadTemplatePressedCorrector() {
     try {
+      this.tabPane.getSelectionModel().select(this.correctorTab);
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
       final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/GraduationLoaderUI.fxml"));
@@ -148,6 +150,7 @@ public class ControllerRoot implements Initializable {
   @FXML
   public void createNewTemplatePressed() {
     try {
+      this.tabPane.getSelectionModel().select(this.editorTab);
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
       final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.fxml"));
@@ -305,6 +308,7 @@ public class ControllerRoot implements Initializable {
   @FXML
   public void loadStudentCopiesPressed() {
     try {
+      this.tabPane.getSelectionModel().select(this.correctorTab);
       final FXMLLoader loader = new FXMLLoader();
       loader.setResources(LanguageManager.getCurrentBundle());
       final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/GraduationCreatorUI.fxml"));
