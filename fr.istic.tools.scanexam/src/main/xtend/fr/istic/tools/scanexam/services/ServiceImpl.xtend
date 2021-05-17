@@ -139,20 +139,26 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	/**
 	 * Définit la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
-	 * Si la copie courante est la dernière, ne fait rien
+	 * Si la copie courante est la dernière, va à la première page
 	 */
 	override nextSheet() {
-		if (currentSheetIndex + 1 < studentSheets.size)
+		if (currentSheetIndex + 1 < studentSheets.size) {
 			currentSheetIndex++
+		} else {
+			currentSheetIndex = 0
+		}
 	}
 
 	/**
 	 * Définit la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
-	 * Si la copie courante est la première, ne fait rien
+	 * Si la copie courante est la première, va à la dernière page
 	 */
 	override previousSheet() {
-		if (currentSheetIndex > 0)
+		if (currentSheetIndex > 0) {
 			currentSheetIndex--
+		} else {
+			currentSheetIndex = studentSheets.size - 1
+		}
 	}
 	
 	/**

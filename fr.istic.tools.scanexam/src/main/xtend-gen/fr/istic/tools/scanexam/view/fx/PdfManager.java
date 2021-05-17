@@ -59,7 +59,7 @@ public class PdfManager {
   }
   
   /**
-   * Passe à la page suivante s'il y en a une. Ne fait rien sinon
+   * Passe à la page suivante, ou va à la première page s'il n'y en a pas
    */
   public int nextPdfPage() {
     int _xifexpression = (int) 0;
@@ -67,17 +67,23 @@ public class PdfManager {
     boolean _lessThan = ((this.pdfPageIndex + 1) < _size);
     if (_lessThan) {
       _xifexpression = this.pdfPageIndex++;
+    } else {
+      _xifexpression = this.pdfPageIndex = 0;
     }
     return _xifexpression;
   }
   
   /**
-   * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+   * Passe à la page précédente, ou va à la dernière page s'il n'y en a pas
    */
   public int previousPdfPage() {
     int _xifexpression = (int) 0;
     if ((this.pdfPageIndex > 0)) {
       _xifexpression = this.pdfPageIndex--;
+    } else {
+      int _size = IterableExtensions.size(this.document.getPages());
+      int _minus = (_size - 1);
+      _xifexpression = this.pdfPageIndex = _minus;
     }
     return _xifexpression;
   }

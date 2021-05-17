@@ -59,20 +59,24 @@ class PdfManager {
 	}
 
 	/**
-	 * Passe à la page suivante s'il y en a une. Ne fait rien sinon
+	 * Passe à la page suivante, ou va à la première page s'il n'y en a pas
 	 */
 	def nextPdfPage() {
 		if (pdfPageIndex + 1 < document.pages.size) {
 			pdfPageIndex++
+		} else {
+			pdfPageIndex = 0
 		}
 	}
 
 	/**
-	 * Change la page courante par la page la précédent si elle existe (ne change rien sinon)
+	 * Passe à la page précédente, ou va à la dernière page s'il n'y en a pas
 	 */
 	def previousPdfPage() {
 		if (pdfPageIndex > 0) {
-			pdfPageIndex--;
+			pdfPageIndex--
+		} else {
+			pdfPageIndex = document.pages.size - 1
 		}
 	}
 

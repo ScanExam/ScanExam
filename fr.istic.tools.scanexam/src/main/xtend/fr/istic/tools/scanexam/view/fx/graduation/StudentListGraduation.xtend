@@ -65,14 +65,20 @@ class StudentListGraduation extends VBox {
 		}
 		item.focus = true
 	 }
-	def selectNextItem(){
-		currentIndex++;
-		currentIndex = Math.min(currentIndex,children.size-1)
+	def selectNextItem() {
+		if (currentIndex + 1 < children.size) {
+			currentIndex++
+		} else {
+			currentIndex = 0
+		}
 	}
 	
-	def selectPreviousItem(){
-		currentIndex--;
-		currentIndex = Math.max(currentIndex,0)
+	def selectPreviousItem() {
+		if (currentIndex > 0) {
+			currentIndex--
+		} else {
+			currentIndex = children.size - 1
+		}
 	}
 	
 	def selectItem(StudentItemGraduation item) {

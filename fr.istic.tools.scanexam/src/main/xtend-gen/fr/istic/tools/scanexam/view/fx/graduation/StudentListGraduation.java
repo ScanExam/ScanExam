@@ -93,23 +93,27 @@ public class StudentListGraduation extends VBox {
   }
   
   public int selectNextItem() {
-    int _xblockexpression = (int) 0;
-    {
-      this.currentIndex++;
-      int _size = this.getChildren().size();
-      int _minus = (_size - 1);
-      _xblockexpression = this.currentIndex = Math.min(this.currentIndex, _minus);
+    int _xifexpression = (int) 0;
+    int _size = this.getChildren().size();
+    boolean _lessThan = ((this.currentIndex + 1) < _size);
+    if (_lessThan) {
+      _xifexpression = this.currentIndex++;
+    } else {
+      _xifexpression = this.currentIndex = 0;
     }
-    return _xblockexpression;
+    return _xifexpression;
   }
   
   public int selectPreviousItem() {
-    int _xblockexpression = (int) 0;
-    {
-      this.currentIndex--;
-      _xblockexpression = this.currentIndex = Math.max(this.currentIndex, 0);
+    int _xifexpression = (int) 0;
+    if ((this.currentIndex > 0)) {
+      _xifexpression = this.currentIndex--;
+    } else {
+      int _size = this.getChildren().size();
+      int _minus = (_size - 1);
+      _xifexpression = this.currentIndex = _minus;
     }
-    return _xblockexpression;
+    return _xifexpression;
   }
   
   public int selectItem(final StudentItemGraduation item) {
