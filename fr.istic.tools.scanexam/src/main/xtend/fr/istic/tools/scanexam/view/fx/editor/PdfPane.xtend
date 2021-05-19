@@ -6,8 +6,12 @@ import javafx.scene.image.Image
 import javafx.scene.input.MouseEvent
 import javafx.event.EventHandler
 import javafx.scene.input.ScrollEvent
-
+/**
+	 * This compontent is used to display the PDF and the boxes.
+	 * 
+	 */
 class PdfPane extends Pane {
+	
 	
 	//---Controller---//
 	new(ControllerFxEdition controller){

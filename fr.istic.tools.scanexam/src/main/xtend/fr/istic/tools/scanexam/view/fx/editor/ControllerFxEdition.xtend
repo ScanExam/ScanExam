@@ -33,39 +33,21 @@ import org.eclipse.xtend.lib.annotations.Accessors
 
 import static fr.istic.tools.scanexam.config.LanguageManager.translate
 
+/**
+ * This controller controlls the main components of the edition
+ * This controlle is associated with a FXML, the static version of the ui.
+ * This FX contains "containers" where we will place our dynamic components.
+ * These components are initiated during the init method, that is called after the loading of the FXML in the launcher.
+ * 
+ * This class has differenc sections : 
+ * 	-Mouse events (mouse inputs for moving the pdf, moving boxes ect).
+ * 	-Box management(creating, resizing ect).
+ * 	-loading/saving (loading a new model, saving).
+ * 	-pdf page management.
+ * 	-interactions with the service.
+ */
 class ControllerFxEdition {
 
-	var ServiceEdition service;
-
-	
-	
-	double maxX;
-	double maxY;
-	var pdfLoaded = false;
-	/* Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings */
-	boolean renderFlag = true
-	
-	@Accessors BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a model loaded",false);
-
-	var logger = LogManager.logger
-
-	enum SelectedTool {
-		NO_TOOL,
-		QUESTION_AREA,
-		ID_AREA,
-		QR_AREA,
-		MOVE_CAMERA_TOOL,
-		MOVE_TOOL,
-		RESIZE_TOOL	
-	}
-	
-	def getSelectedTool(){
-		this.currentTool
-	}
-	
-	def setSelectedTool(SelectedTool tool){
-		currentTool = tool
-	}
 
 	// ** FXML TAGS **//	
 	
@@ -76,39 +58,16 @@ class ControllerFxEdition {
 	Button nextPageButton;
 	@FXML
 	Button previousPageButton;
-	
-	
-	PdfPane mainPane;
-
 	@FXML
 	ScrollPane questionListContainer;
-	
 	@FXML
 	ScrollPane gradeListContainer;
-
 	@FXML
 	ChoiceBox<Integer> pageChoice;
-
-
 	@FXML
 	Label pageNumberLabel;
-	
-	
-	
-	QuestionListEdition questionList;
-	
-	QuestionOptionsEdition questionEditor;
-	
 	@FXML
 	AnchorPane mainPaneContainer
-	
-	@Accessors 
-	PdfManager pdfManager
-	
-	@FXML
-	def void pressed() {
-	}
-
 	@FXML
 	def void questionAreaPressed() {
 		if (createBoxButton.selected) {
@@ -117,7 +76,6 @@ class ControllerFxEdition {
 			setToNoTool
 		}
 	}
-
 	@FXML
 	def void iDAreaPressed() {
 		setToIDAreaTool
@@ -127,41 +85,34 @@ class ControllerFxEdition {
 	def void qRArearessed() {
 		setToQRAreaTool
 	}
-
 	@FXML
 	def void movePressed() {
 		setToMoveCameraTool
 	}
-
 	@FXML
 	def void nextPagePressed() {
 		if (pdfLoaded)
 			nextPage
 	}
-
 	@FXML
 	def void saveTemplatePressed() {
 		if (pdfLoaded)
 			saveTemplate();
 	}
-
 	@FXML
 	def void loadTemplatePressed() {
 		loadTemplate();
 		
 	}
-
 	@FXML
 	def void previousPagePressed() {
 		if (pdfLoaded)
 			previousPage
 	}
-
 	@FXML
 	def void switchToCorrectorPressed() {
 	 	// FIXME
 	}
-
 	@FXML
 	def void mainMouseEvent(MouseEvent e) { // check if rightclick or not, maybe add to choose mouse actuioin
 		if (pdfLoaded) {
@@ -173,15 +124,34 @@ class ControllerFxEdition {
 		}
 	}
 	
-	def getMainPane(){
-		mainPane
-	}
+	var logger = LogManager.logger
 	
+	var ServiceEdition service;
+
+	double maxX;
+	double maxY;
+	var pdfLoaded = false;
 	
+	/* Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code 
+	 * (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings.
+	 */
+	boolean renderFlag = true
 	
-	def getQuestionList(){
-		questionList
-	}
+	@Accessors 
+	BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a model loaded",false);
+
+	
+	@Accessors 
+	QuestionListEdition questionList;
+	
+	@Accessors 
+	QuestionOptionsEdition questionEditor;
+	
+	@Accessors 
+	PdfManager pdfManager
+	
+	@Accessors 
+	PdfPane mainPane;
 	
 	
 	/**
@@ -470,6 +440,24 @@ class ControllerFxEdition {
 	 * Setters for the current tool selected
 	 */
 	var currentTool = SelectedTool.NO_TOOL
+	
+	enum SelectedTool {
+		NO_TOOL,
+		QUESTION_AREA,
+		ID_AREA,
+		QR_AREA,
+		MOVE_CAMERA_TOOL,
+		MOVE_TOOL,
+		RESIZE_TOOL	
+	}
+	
+	def getSelectedTool(){
+		this.currentTool
+	}
+	
+	def setSelectedTool(SelectedTool tool){
+		currentTool = tool
+	}
 
 	def void setToMoveCameraTool() {
 		mainPane.cursor = Cursor.OPEN_HAND
