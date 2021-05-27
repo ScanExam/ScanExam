@@ -1,16 +1,15 @@
 package fr.istic.tools.scanexam.exportation
 
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.apache.pdfbox.multipdf.PDFMergerUtility
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
-import java.nio.file.Files
 
 /** 
  * Ajoute du contenu html à un document pdf
