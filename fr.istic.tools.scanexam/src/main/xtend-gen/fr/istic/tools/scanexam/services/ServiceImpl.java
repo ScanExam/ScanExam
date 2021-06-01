@@ -894,7 +894,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @param l'ID de la Question
    * @return la Question du modèle correspondant à l'ID spécifié
    */
-  protected Question getQuestion(final int id) {
+  @Override
+  public Question getQuestion(final int id) {
     EList<Page> _pages = this.editionTemplate.getExam().getPages();
     for (final Page page : _pages) {
       {

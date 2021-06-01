@@ -705,6 +705,7 @@ public class ControllerFxGraduation {
     };
     final List<StudentSheet> sheets = IterableExtensions.<StudentSheet>toList(IterableExtensions.<StudentSheet>filter(this.service.getStudentSheets(), _function));
     ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.pdfManager.getPdfInputStream(), sheets, folder, this.service.getGlobalScale(), this.mainPane.getImageViewWidth());
+    ExportExamToPdf.generateGradeDetailPdf(this.service, this.service.getStudentSheets(), folder);
   }
   
   /**

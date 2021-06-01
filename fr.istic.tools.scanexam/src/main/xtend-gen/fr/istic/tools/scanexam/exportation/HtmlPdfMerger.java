@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Ajoute du contenu html à un document pdf
@@ -87,9 +88,10 @@ public class HtmlPdfMerger {
    */
   public static void createPdfFromHtmlContent(final String htmlContent, final Path resourcesPath, final Path destPath) {
     PdfRendererBuilder builder = new PdfRendererBuilder();
-    if ((resourcesPath != null)) {
-      File resourcesFolder = resourcesPath.toFile();
-      builder.withHtmlContent(htmlContent, resourcesFolder.toURI().toString());
+    boolean _isNullOrEmpty = IterableExtensions.isNullOrEmpty(resourcesPath);
+    boolean _not = (!_isNullOrEmpty);
+    if (_not) {
+      builder.withHtmlContent(htmlContent, resourcesPath.toUri().toString());
     } else {
       builder.withHtmlContent(htmlContent, null);
     }

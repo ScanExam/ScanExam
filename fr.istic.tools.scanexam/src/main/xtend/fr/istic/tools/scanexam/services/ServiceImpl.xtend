@@ -699,7 +699,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param l'ID de la Question
 	 * @return la Question du modèle correspondant à l'ID spécifié
 	 */
-	protected def Question getQuestion(int id) {
+	override Question getQuestion(int id) {
 		for (page : editionTemplate.exam.pages) {
 			val question = page.questions.findFirst[question|question.id == id]
 			if (question !== null)

@@ -80,10 +80,9 @@ class HtmlPdfMerger {
 	 * @param destPath      Chemin du document pdf à générer
 	 */
 	def static void createPdfFromHtmlContent(String htmlContent, Path resourcesPath, Path destPath) {
-		var PdfRendererBuilder builder = new PdfRendererBuilder()
-		if (resourcesPath !== null) {
-			var File resourcesFolder = resourcesPath.toFile()
-			builder.withHtmlContent(htmlContent, resourcesFolder.toURI().toString())
+		var PdfRendererBuilder builder = new PdfRendererBuilder
+		if (!resourcesPath.nullOrEmpty) {
+			builder.withHtmlContent(htmlContent, resourcesPath.toUri.toString)
 		} else {
 			builder.withHtmlContent(htmlContent, null)
 		}

@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.services.api;
 
 import fr.istic.tools.scanexam.core.GradeEntry;
+import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.services.api.Service;
 import fr.istic.tools.scanexam.utils.Tuple3;
@@ -127,6 +128,12 @@ public interface ServiceGraduation extends Service {
    * @param l'ID de l'entrée dans l'Examen
    */
   boolean retractGradeEntry(final int questionId, final int gradeEntryId);
+  
+  /**
+   * @param l'ID de la Question
+   * @return la Question du modèle correspondant à l'ID spécifié
+   */
+  Question getQuestion(final int id);
   
   /**
    * @param l'ID de la question à laquelle récupérer la liste d'entrées de note
