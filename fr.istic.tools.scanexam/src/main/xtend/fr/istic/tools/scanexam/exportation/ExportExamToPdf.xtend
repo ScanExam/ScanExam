@@ -140,16 +140,18 @@ class ExportExamToPdf {
 	 */
 	/**
 	 * EXPORT a PDF file for each student containing all annotations TO selected folder
+	 * @param service Service managing the graduation
 	 * @param documentInputStream is the PDF of all student exams
 	 * @param sheets is they studentSheet of they students
 	 * @param folderForSaving is the Folder for save PDF documents
 	 * @return collection of temp Files
 	 */
-	def static void exportExamsOfStudentsToPdfsWithAnnotations(InputStream documentInputStream,
-		Collection<StudentSheet> sheets, File folderForSaving, float globalScale, double originWidht) {
+	def static void exportExamsOfStudentsToPdfsWithAnnotations(ServiceGraduation service,
+		InputStream documentInputStream, Collection<StudentSheet> sheets, File folderForSaving, double originWidht) {
 		var File tempExam = File.createTempFile("examTemp", ".pdf");
-
+		val float globalScale = service.getGlobalScale
 		exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+		addGradeDetailToPdf(service, sheets, tempExam)
 
 		var PDDocument pdf = PDDocument.load(tempExam);
 
@@ -168,17 +170,20 @@ class ExportExamToPdf {
 
 	/**
 	 * EXPORT a Collection of PDF TEMP files for each student containing all annotations TO selected folder
+	 * @param service Service managing the graduation
 	 * @param documentInputStream is the PDF of all student exams
 	 * @param sheets is they studentSheet of they students
 	 * @return map of student's name to temp file 
 	 */
-	def static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(InputStream documentInputStream,
-		Collection<StudentSheet> sheets, float globalScale, double originWidht) {
+	def static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(ServiceGraduation service,
+		InputStream documentInputStream, Collection<StudentSheet> sheets, double originWidht) {
 		var Map<String, File> tempExams = new HashMap<String, File>();
 
 		var File tempExam = File.createTempFile("examTemp", ".pdf");
 
+		val float globalScale = service.getGlobalScale
 		exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+		addGradeDetailToPdf(service, sheets, tempExam)
 
 		var PDDocument pdf = PDDocument.load(tempExam);
 
@@ -199,28 +204,33 @@ class ExportExamToPdf {
 
 	/**
 	 * EXPORT a PDF TEMP containing all annotations TO temp file
+	 * @param service Service managing the graduation
 	 * @param studentExamDocument is the PDF file of all students
 	 * @param sheet is the studentSheet of the student
 	 * @return temp File of annoted PDF.
 	 */
-	def static File exportExamsToTempAnnotedPdf(InputStream documentInputStream, Collection<StudentSheet> sheets,
-		float globalScale, double originWidht) {
+	def static File exportExamsToTempAnnotedPdf(ServiceGraduation service, InputStream documentInputStream,
+		Collection<StudentSheet> sheets, double originWidht) {
 		var File tempExam = File.createTempFile("examTemp", ".pdf");
+
+		val float globalScale = service.getGlobalScale
 		exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+		addGradeDetailToPdf(service, sheets, tempExam)
 		return tempExam;
 	}
 
 	/**
 	 * Export a TEMP PDF file containing all annotations for a student
+	 * @param service Service managing the graduation
 	 * @param studentExamDocument is the PDF file of the student
 	 * @param sheet is the studentSheet of the student
 	 * @return temp File of annoted PDF.
 	 */
-	def static void exportStudentExamToPdfWithAnnotations(InputStream examDocument, StudentSheet sheet,
-		File fileForSaving, float globalScale, double originWidht) {
+	def static void exportStudentExamToPdfWithAnnotations(ServiceGraduation service, InputStream examDocument,
+		StudentSheet sheet, File fileForSaving, double originWidht) {
 
-		var File exam = exportExamsToTempAnnotedPdf(examDocument, new ArrayList<StudentSheet>(Arrays.asList(sheet)),
-			globalScale, originWidht)
+		var File exam = exportExamsToTempAnnotedPdf(service, examDocument,
+			new ArrayList<StudentSheet>(Arrays.asList(sheet)), originWidht)
 
 		var PDDocument pdf = PDDocument.load(exam);
 
@@ -236,16 +246,17 @@ class ExportExamToPdf {
 
 	/**
 	 * Export PDF file containing all annotations for a student
+	 * @param service Service managing the graduation
 	 * @param studentExamDocument is the PDF file of the student
 	 * @param sheet is the studentSheet of the student
 	 * @return temp File of annoted PDF.
 	 */
-	def static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(InputStream examDocument,
-		StudentSheet sheet, float globalScale, double originWidht) {
+	def static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(ServiceGraduation service,
+		InputStream examDocument, StudentSheet sheet, double originWidht) {
 		var File studentExam = File.createTempFile(sheet.studentName, ".pdf");
 
-		var File exam = exportExamsToTempAnnotedPdf(examDocument, new ArrayList<StudentSheet>(Arrays.asList(sheet)),
-			globalScale, originWidht)
+		var File exam = exportExamsToTempAnnotedPdf(service, examDocument,
+			new ArrayList<StudentSheet>(Arrays.asList(sheet)), originWidht)
 
 		var PDDocument pdf = PDDocument.load(exam);
 
@@ -382,29 +393,33 @@ class ExportExamToPdf {
 		document.close();
 		documentInputStream.close();
 	}
-	
+
 	/**
-	 * Crée un pdf avec le détail des notes de chaque étudiant 
+	 * Ajoute le détail des notes de chaque étudiant à un pdf existant
 	 * @author Julien Cochet
 	 * @param service Service gérant la correction
-	 * @param sheets Copies des étudiants dont on veut le détail de la note
-	 * @param folder Dossier où créer le pdf
+	 * @param sheets  Copies des étudiants dont on veut le détail de la note
+	 * @param pdfFile Pdf où ajouter le détail des notes
 	 */
-	def static void generateGradeDetailPdf(ServiceGraduation service, Collection<StudentSheet> sheets, File folder) {
+	private def static void addGradeDetailToPdf(ServiceGraduation service, Collection<StudentSheet> sheets,
+		File pdfFile) {
 		val InputStream resourcesStream = ResourcesUtils.getInputStreamResource("viewResources/gradeDetail.css")
 		val Path cssPath = Files.createTempFile("gradeDetail", ".css")
 		new File(cssPath.toUri).delete
 		Files.copy(resourcesStream, cssPath)
 		resourcesStream.close
 		val Path resourcesPath = Paths.get(System.getProperty("java.io.tmpdir"))
-		
-		val Path gradeDetailPdfPath = Paths.get(folder.path + "/Detail.pdf")
-		var String htmlContent = generateGradeDetailContent(service, sheets.get(0), cssPath.fileName.toString)
-		HtmlPdfMerger.createPdfFromHtmlContent(htmlContent, resourcesPath, gradeDetailPdfPath)
-		val File pdfFile = new File(gradeDetailPdfPath.toUri)
-		for (i : 1 ..< sheets.size) {
-			htmlContent = generateGradeDetailContent(service, sheets.get(i), cssPath.fileName.toString)
+
+		val Path gradeDetailPdfPath = Paths.get(pdfFile.toURI)
+
+		for (i : 0 ..< sheets.size) {
+			val initialNbPage = PDDocument.load(pdfFile).numberOfPages
+			val htmlContent = generateGradeDetailContent(service, sheets.get(i), cssPath.fileName.toString)
 			HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, pdfFile, gradeDetailPdfPath, false)
+			val newNbPage = PDDocument.load(pdfFile).numberOfPages
+			for (page : initialNbPage ..< newNbPage) {
+				sheets.get(i).posPage.add(page)
+			}
 		}
 		new File(cssPath.toUri).delete
 	}
@@ -417,9 +432,10 @@ class ExportExamToPdf {
 	 * @param cssName Nom du fichier css, laisser un string vide pour ne pas en utiliser
 	 * @return Le détail de la note de l'étudiant sous la forme d'une page html donnée en String
 	 */
-	private def static String generateGradeDetailContent(ServiceGraduation service, StudentSheet sheet, String cssName) {
+	private def static String generateGradeDetailContent(ServiceGraduation service, StudentSheet sheet,
+		String cssName) {
 		service.selectSheet(sheet.id)
-		
+
 		val String examName = service.examName
 		val String studentName = sheet.studentName
 		val float globalGrade = sheet.computeGrade

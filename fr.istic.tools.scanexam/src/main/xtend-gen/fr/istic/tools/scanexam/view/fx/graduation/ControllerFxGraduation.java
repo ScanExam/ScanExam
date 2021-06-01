@@ -704,8 +704,7 @@ public class ControllerFxGraduation {
       return Boolean.valueOf(((sheet.getStudentName() != null) && (!sheet.getStudentName().matches("\\s*"))));
     };
     final List<StudentSheet> sheets = IterableExtensions.<StudentSheet>toList(IterableExtensions.<StudentSheet>filter(this.service.getStudentSheets(), _function));
-    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.pdfManager.getPdfInputStream(), sheets, folder, this.service.getGlobalScale(), this.mainPane.getImageViewWidth());
-    ExportExamToPdf.generateGradeDetailPdf(this.service, this.service.getStudentSheets(), folder);
+    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.service, this.pdfManager.getPdfInputStream(), sheets, folder, this.mainPane.getImageViewWidth());
   }
   
   /**

@@ -151,15 +151,18 @@ public class ExportExamToPdf {
   
   /**
    * EXPORT a PDF file for each student containing all annotations TO selected folder
+   * @param service Service managing the graduation
    * @param documentInputStream is the PDF of all student exams
    * @param sheets is they studentSheet of they students
    * @param folderForSaving is the Folder for save PDF documents
    * @return collection of temp Files
    */
-  public static void exportExamsOfStudentsToPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving, final float globalScale, final double originWidht) {
+  public static void exportExamsOfStudentsToPdfsWithAnnotations(final ServiceGraduation service, final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving, final double originWidht) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
+      final float globalScale = service.getGlobalScale();
       ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+      ExportExamToPdf.addGradeDetailToPdf(service, sheets, tempExam);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -186,15 +189,18 @@ public class ExportExamToPdf {
   
   /**
    * EXPORT a Collection of PDF TEMP files for each student containing all annotations TO selected folder
+   * @param service Service managing the graduation
    * @param documentInputStream is the PDF of all student exams
    * @param sheets is they studentSheet of they students
    * @return map of student's name to temp file
    */
-  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale, final double originWidht) {
+  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final ServiceGraduation service, final InputStream documentInputStream, final Collection<StudentSheet> sheets, final double originWidht) {
     try {
       Map<String, File> tempExams = new HashMap<String, File>();
       File tempExam = File.createTempFile("examTemp", ".pdf");
+      final float globalScale = service.getGlobalScale();
       ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+      ExportExamToPdf.addGradeDetailToPdf(service, sheets, tempExam);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -220,14 +226,17 @@ public class ExportExamToPdf {
   
   /**
    * EXPORT a PDF TEMP containing all annotations TO temp file
+   * @param service Service managing the graduation
    * @param studentExamDocument is the PDF file of all students
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static File exportExamsToTempAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale, final double originWidht) {
+  public static File exportExamsToTempAnnotedPdf(final ServiceGraduation service, final InputStream documentInputStream, final Collection<StudentSheet> sheets, final double originWidht) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
+      final float globalScale = service.getGlobalScale();
       ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+      ExportExamToPdf.addGradeDetailToPdf(service, sheets, tempExam);
       return tempExam;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -236,15 +245,16 @@ public class ExportExamToPdf {
   
   /**
    * Export a TEMP PDF file containing all annotations for a student
+   * @param service Service managing the graduation
    * @param studentExamDocument is the PDF file of the student
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static void exportStudentExamToPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final File fileForSaving, final float globalScale, final double originWidht) {
+  public static void exportStudentExamToPdfWithAnnotations(final ServiceGraduation service, final InputStream examDocument, final StudentSheet sheet, final File fileForSaving, final double originWidht) {
     try {
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale, originWidht);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(service, examDocument, _arrayList, originWidht);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
@@ -261,16 +271,17 @@ public class ExportExamToPdf {
   
   /**
    * Export PDF file containing all annotations for a student
+   * @param service Service managing the graduation
    * @param studentExamDocument is the PDF file of the student
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final float globalScale, final double originWidht) {
+  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final ServiceGraduation service, final InputStream examDocument, final StudentSheet sheet, final double originWidht) {
     try {
       File studentExam = File.createTempFile(sheet.getStudentName(), ".pdf");
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale, originWidht);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(service, examDocument, _arrayList, originWidht);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
@@ -436,13 +447,13 @@ public class ExportExamToPdf {
   }
   
   /**
-   * Crée un pdf avec le détail des notes de chaque étudiant
+   * Ajoute le détail des notes de chaque étudiant à un pdf existant
    * @author Julien Cochet
    * @param service Service gérant la correction
-   * @param sheets Copies des étudiants dont on veut le détail de la note
-   * @param folder Dossier où créer le pdf
+   * @param sheets  Copies des étudiants dont on veut le détail de la note
+   * @param pdfFile Pdf où ajouter le détail des notes
    */
-  public static void generateGradeDetailPdf(final ServiceGraduation service, final Collection<StudentSheet> sheets, final File folder) {
+  private static void addGradeDetailToPdf(final ServiceGraduation service, final Collection<StudentSheet> sheets, final File pdfFile) {
     try {
       final InputStream resourcesStream = ResourcesUtils.getInputStreamResource("viewResources/gradeDetail.css");
       final Path cssPath = Files.createTempFile("gradeDetail", ".css");
@@ -451,23 +462,23 @@ public class ExportExamToPdf {
       Files.copy(resourcesStream, cssPath);
       resourcesStream.close();
       final Path resourcesPath = Paths.get(System.getProperty("java.io.tmpdir"));
-      String _path = folder.getPath();
-      String _plus = (_path + "/Detail.pdf");
-      final Path gradeDetailPdfPath = Paths.get(_plus);
-      String htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[0], cssPath.getFileName().toString());
-      HtmlPdfMerger.createPdfFromHtmlContent(htmlContent, resourcesPath, gradeDetailPdfPath);
-      URI _uri_1 = gradeDetailPdfPath.toUri();
-      final File pdfFile = new File(_uri_1);
+      final Path gradeDetailPdfPath = Paths.get(pdfFile.toURI());
       int _size = sheets.size();
-      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(1, _size, true);
+      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
       for (final Integer i : _doubleDotLessThan) {
         {
-          htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()], cssPath.getFileName().toString());
+          final int initialNbPage = PDDocument.load(pdfFile).getNumberOfPages();
+          final String htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()], cssPath.getFileName().toString());
           HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, pdfFile, gradeDetailPdfPath, false);
+          final int newNbPage = PDDocument.load(pdfFile).getNumberOfPages();
+          ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(initialNbPage, newNbPage, true);
+          for (final Integer page : _doubleDotLessThan_1) {
+            (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()]).getPosPage().add(page);
+          }
         }
       }
-      URI _uri_2 = cssPath.toUri();
-      new File(_uri_2).delete();
+      URI _uri_1 = cssPath.toUri();
+      new File(_uri_1).delete();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
