@@ -473,7 +473,10 @@ public class ExportExamToPdf {
           final int newNbPage = PDDocument.load(pdfFile).getNumberOfPages();
           ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(initialNbPage, newNbPage, true);
           for (final Integer page : _doubleDotLessThan_1) {
-            (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()]).getPosPage().add(page);
+            {
+              final int index = ((page).intValue() - initialNbPage);
+              (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()]).getPosPage().add(index, page);
+            }
           }
         }
       }

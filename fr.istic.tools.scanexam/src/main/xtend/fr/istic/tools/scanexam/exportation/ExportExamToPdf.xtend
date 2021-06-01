@@ -418,7 +418,8 @@ class ExportExamToPdf {
 			HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, pdfFile, gradeDetailPdfPath, false)
 			val newNbPage = PDDocument.load(pdfFile).numberOfPages
 			for (page : initialNbPage ..< newNbPage) {
-				sheets.get(i).posPage.add(page)
+				val index = page - initialNbPage
+				sheets.get(i).posPage.add(index, page)
 			}
 		}
 		new File(cssPath.toUri).delete
