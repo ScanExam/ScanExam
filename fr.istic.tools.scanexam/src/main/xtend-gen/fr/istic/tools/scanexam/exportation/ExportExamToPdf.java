@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -462,26 +463,53 @@ public class ExportExamToPdf {
       Files.copy(resourcesStream, cssPath);
       resourcesStream.close();
       final Path resourcesPath = Paths.get(System.getProperty("java.io.tmpdir"));
-      final Path gradeDetailPdfPath = Paths.get(pdfFile.toURI());
-      int _size = sheets.size();
-      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
-      for (final Integer i : _doubleDotLessThan) {
+      final Path gradesDetailPath = Files.createTempFile("gradesDetail", ".pdf");
+      URI _uri_1 = gradesDetailPath.toUri();
+      final File gradesDetailFile = new File(_uri_1);
+      final PDDocument pdfPDDoc = PDDocument.load(pdfFile);
+      final int pdfNbPage = pdfPDDoc.getNumberOfPages();
+      pdfPDDoc.close();
+      String htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[0], cssPath.getFileName().toString());
+      HtmlPdfMerger.createPdfFromHtmlContent(htmlContent, resourcesPath, gradesDetailPath);
+      int initialNbPage = 0;
+      PDDocument gradeDetailPDDoc = PDDocument.load(gradesDetailFile);
+      int newNbPage = gradeDetailPDDoc.getNumberOfPages();
+      gradeDetailPDDoc.close();
+      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(initialNbPage, newNbPage, true);
+      for (final Integer page : _doubleDotLessThan) {
         {
-          final int initialNbPage = PDDocument.load(pdfFile).getNumberOfPages();
-          final String htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()], cssPath.getFileName().toString());
-          HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, pdfFile, gradeDetailPdfPath, false);
-          final int newNbPage = PDDocument.load(pdfFile).getNumberOfPages();
-          ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(initialNbPage, newNbPage, true);
-          for (final Integer page : _doubleDotLessThan_1) {
+          final int index = ((page).intValue() - initialNbPage);
+          (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[0]).getPosPage().add(index, Integer.valueOf(((page).intValue() + pdfNbPage)));
+        }
+      }
+      int _size = sheets.size();
+      ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(1, _size, true);
+      for (final Integer i : _doubleDotLessThan_1) {
+        {
+          htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()], cssPath.getFileName().toString());
+          HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, gradesDetailFile, gradesDetailPath, false);
+          initialNbPage = newNbPage;
+          gradeDetailPDDoc = PDDocument.load(gradesDetailFile);
+          newNbPage = gradeDetailPDDoc.getNumberOfPages();
+          gradeDetailPDDoc.close();
+          ExclusiveRange _doubleDotLessThan_2 = new ExclusiveRange(initialNbPage, newNbPage, true);
+          for (final Integer page_1 : _doubleDotLessThan_2) {
             {
-              final int index = ((page).intValue() - initialNbPage);
-              (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()]).getPosPage().add(index, page);
+              final int index = ((page_1).intValue() - initialNbPage);
+              (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()]).getPosPage().add(index, Integer.valueOf(((page_1).intValue() + pdfNbPage)));
             }
           }
         }
       }
-      URI _uri_1 = cssPath.toUri();
-      new File(_uri_1).delete();
+      URI _uri_2 = cssPath.toUri();
+      new File(_uri_2).delete();
+      final Path pdfPath = Paths.get(pdfFile.toURI());
+      final PDFMergerUtility merger = new PDFMergerUtility();
+      merger.addSource(pdfFile);
+      merger.addSource(gradesDetailFile);
+      merger.setDestinationFileName(pdfPath.toString());
+      merger.mergeDocuments(null);
+      gradesDetailFile.delete();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

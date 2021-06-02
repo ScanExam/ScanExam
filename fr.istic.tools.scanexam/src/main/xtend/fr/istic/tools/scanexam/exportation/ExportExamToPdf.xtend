@@ -25,6 +25,7 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
+import org.apache.pdfbox.multipdf.PDFMergerUtility
 
 class ExportExamToPdf {
 
@@ -403,6 +404,7 @@ class ExportExamToPdf {
 	 */
 	private def static void addGradeDetailToPdf(ServiceGraduation service, Collection<StudentSheet> sheets,
 		File pdfFile) {
+		// Copie du fichier CSS du détail des notes dans le fichier temporaire
 		val InputStream resourcesStream = ResourcesUtils.getInputStreamResource("viewResources/gradeDetail.css")
 		val Path cssPath = Files.createTempFile("gradeDetail", ".css")
 		new File(cssPath.toUri).delete
@@ -410,19 +412,54 @@ class ExportExamToPdf {
 		resourcesStream.close
 		val Path resourcesPath = Paths.get(System.getProperty("java.io.tmpdir"))
 
-		val Path gradeDetailPdfPath = Paths.get(pdfFile.toURI)
+		// Fichier contenant le détail de toutes les notes
+		val Path gradesDetailPath = Files.createTempFile("gradesDetail", ".pdf")
+		val File gradesDetailFile = new File(gradesDetailPath.toUri)
 
-		for (i : 0 ..< sheets.size) {
-			val initialNbPage = PDDocument.load(pdfFile).numberOfPages
-			val htmlContent = generateGradeDetailContent(service, sheets.get(i), cssPath.fileName.toString)
-			HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, pdfFile, gradeDetailPdfPath, false)
-			val newNbPage = PDDocument.load(pdfFile).numberOfPages
+		// Nombre de pages dans le pdf contenant toutes les copies étudiantes
+		val PDDocument pdfPDDoc = PDDocument.load(pdfFile)
+		val pdfNbPage = pdfPDDoc.numberOfPages
+		pdfPDDoc.close
+
+		// Création d'un pdf avec le détail de la note de la première copie
+		var htmlContent = generateGradeDetailContent(service, sheets.get(0), cssPath.fileName.toString)
+		HtmlPdfMerger.createPdfFromHtmlContent(htmlContent, resourcesPath, gradesDetailPath)
+		// Ajout de ces pages aux pages lié à l'étudiant
+		var initialNbPage = 0
+		var PDDocument gradeDetailPDDoc = PDDocument.load(gradesDetailFile)
+		var newNbPage = gradeDetailPDDoc.numberOfPages
+		gradeDetailPDDoc.close
+		for (page : initialNbPage ..< newNbPage) {
+			val index = page - initialNbPage
+			sheets.get(0).posPage.add(index, page + pdfNbPage)
+		}
+
+		// Ajout du détail des autres notes au pdf de détail de note
+		for (i : 1 ..< sheets.size) {
+			htmlContent = generateGradeDetailContent(service, sheets.get(i), cssPath.fileName.toString)
+			HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, gradesDetailFile, gradesDetailPath, false)
+			// Ajout de ces nouvelles pages aux pages lié à l'étudiant
+			initialNbPage = newNbPage
+			gradeDetailPDDoc = PDDocument.load(gradesDetailFile)
+			newNbPage = gradeDetailPDDoc.numberOfPages
+			gradeDetailPDDoc.close
 			for (page : initialNbPage ..< newNbPage) {
 				val index = page - initialNbPage
-				sheets.get(i).posPage.add(index, page)
+				sheets.get(i).posPage.add(index, page + pdfNbPage)
 			}
 		}
+
+		// Suppression du CSS temporaire
 		new File(cssPath.toUri).delete
+
+		// Ajout des détails des notes au pdf contenant toutes les copies d'élèves
+		val Path pdfPath = Paths.get(pdfFile.toURI)
+		val PDFMergerUtility merger = new PDFMergerUtility
+		merger.addSource(pdfFile)
+		merger.addSource(gradesDetailFile)
+		merger.setDestinationFileName(pdfPath.toString())
+		merger.mergeDocuments(null)
+		gradesDetailFile.delete
 	}
 
 	/**
@@ -435,23 +472,25 @@ class ExportExamToPdf {
 	 */
 	private def static String generateGradeDetailContent(ServiceGraduation service, StudentSheet sheet,
 		String cssName) {
+		// Information globale sur la copie
 		service.selectSheet(sheet.id)
-
 		val String examName = service.examName
 		val String studentName = sheet.studentName
 		val float globalGrade = sheet.computeGrade
 		val float globalScale = service.globalScale
+
 		val GradeDetailToHtml gradeDetailToHtml = new GradeDetailToHtml(examName, studentName, globalGrade, globalScale)
 		gradeDetailToHtml.cssName = cssName
 
+		// Parcours de chaque question
 		for (i : 0 ..< sheet.grades.size) {
+			// Détail de la question
 			val String qstName = service.getQuestion(i).name
 			val double qstGrade = service.getQuestionSelectedGradeEntriesTotalWorth(i)
 			val double qstScale = service.getQuestion(i).gradeScale.maxPoint
 			val List<Integer> achievedPoints = service.getQuestionSelectedGradeEntries(i)
 			val Map<String, Float> achieved = new HashMap
 			val Map<String, Float> missed = new HashMap
-
 			val List<Tuple3<Integer, String, Float>> gradeEntries = service.getQuestionGradeEntries(i)
 			for (entry : gradeEntries) {
 				if (achievedPoints.contains(entry._1)) {
@@ -462,7 +501,6 @@ class ExportExamToPdf {
 			}
 			gradeDetailToHtml.addQuestion(qstName, qstGrade, qstScale, achieved, missed)
 		}
-
 		return gradeDetailToHtml.toHtmlPage
 	}
 
