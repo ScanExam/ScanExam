@@ -8,6 +8,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import fr.istic.tools.scanexam.qrCode.writer.PdfThreadManagerWriter;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRThreadWriter;
+import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,6 +29,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
@@ -84,7 +86,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       ut.mergeDocuments(memUsSett);
       final PDDocument docSujetMaitre = PDDocument.load(outFile);
       FileOutputStream _fileOutputStream = new FileOutputStream(outFile);
-      this.createThread(idExam, nbCopie, docSujetMaitre, doc, nbPages, _fileOutputStream);
+      this.createThread(nbCopie, docSujetMaitre, doc, nbPages, _fileOutputStream);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -178,26 +180,25 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   }
   
   /**
-   * @param name l'intitulé du document
    * @param nbCopies nombre de copies désirées
    * @param docSujetMaitre document dans lequel insérer les Codes
    * @param nbPages nombre de pages du sujet Maitre
    */
-  public void createThread(final String examID, final int nbCopie, final PDDocument docSujetMaitre, final PDDocument doc, final int nbPage, final OutputStream output) {
+  public void createThread(final int nbCopie, final PDDocument docSujetMaitre, final PDDocument doc, final int nbPage, final OutputStream output) {
     try {
       if ((nbCopie < 4)) {
         final ExecutorService service = Executors.newFixedThreadPool(1);
         File qrcode = File.createTempFile("qrcode", ".png");
         final CountDownLatch LatchThreads = new CountDownLatch(1);
         String _absolutePath = qrcode.getAbsolutePath();
-        QRThreadWriter _qRThreadWriter = new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, nbPage, LatchThreads, examID, _absolutePath);
+        QRThreadWriter _qRThreadWriter = new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, nbPage, LatchThreads, _absolutePath);
         service.execute(_qRThreadWriter);
         LatchThreads.await();
         service.shutdown();
         docSujetMaitre.save(output);
         qrcode.deleteOnExit();
       } else {
-        final PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, doc, this, nbCopie, examID, output);
+        final PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, doc, this, nbCopie, output);
         manager.start();
       }
     } catch (Throwable _e) {
@@ -208,32 +209,31 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   /**
    * Insère le QRCode sur chaque pages d'un sujet (en changeant le numéro de page sur chacunes des pages)
    * 
-   * @param name l'intitulé du document
    * @param docSujetMaitre le sujet maitre
    * @param numCopie le nombre de copies souhaitées
    * @param numThread le nombre de threads à executer
    * @param nbPagesSuject le nombre de page du sujet maître
    */
-  public void insertQRCodeInSubject(final String name, final PDDocument docSujetMaitre, final int numCopie, final int nbPagesSujet, final String pathImage) {
+  public void insertQRCodeInSubject(final PDDocument docSujetMaitre, final int numCopie, final int nbPagesSujet, final String pathImage) {
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbPagesSujet, true);
     for (final Integer i : _doubleDotLessThan) {
-      this.insertQRCodeInPage(name, (i).intValue(), docSujetMaitre, numCopie, nbPagesSujet, pathImage);
+      this.insertQRCodeInPage((i).intValue(), docSujetMaitre, numCopie, nbPagesSujet, pathImage);
     }
   }
   
   /**
    * Inèsre un QRCode sur une page
-   * @param name l'intitulé du document
    * @param docSujetMaitre le sujet maitre
    * @param numCopie le nombre de copies souhaitées
    * @param numThread le nombre de threads à executer
    * @param nbPagesSuject le nombre de page du sujet maître
    */
-  public int insertQRCodeInPage(final String name, final int numPage, final PDDocument doc, final int numCopie, final int nbPagesSujet, final String pathImage) {
+  public int insertQRCodeInPage(final int numPage, final PDDocument doc, final int numCopie, final int nbPagesSujet, final String pathImage) {
     try {
       int _xblockexpression = (int) 0;
       {
-        final String stringAEncoder = ((((name + "_") + Integer.valueOf(numCopie)) + "_") + Integer.valueOf(numPage));
+        String _plus = (Integer.valueOf(numCopie) + "_");
+        final String stringAEncoder = (_plus + Integer.valueOf(numPage));
         this.generateQRCodeImage(stringAEncoder, 350, 350, pathImage);
         final PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc);
         final float scale = 0.3f;
@@ -257,6 +257,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
             int _height = pdImage.getHeight();
             float _multiply_1 = (_height * scale);
             contentStream.drawImage(pdImage, 0, 0, _multiply, _multiply_1);
+            this.insertTextDataInPage(doc, numPage, contentStream, stringAEncoder);
             _xblockexpression_1 = this.incrementTreated();
           }
           _xtrycatchfinallyexpression = _xblockexpression_1;
@@ -264,6 +265,40 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
         _xblockexpression = _xtrycatchfinallyexpression;
       }
       return _xblockexpression;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * Insert des données sous forme textuelle aux 4 coins d'une page
+   * @param doc PDDocument où inscrire les données
+   * @param numPage Numéro de la page où inscrire les données
+   * @param contentStream PDPageContentStream servant à écrire les données
+   * @param data Données à inscrire
+   */
+  private void insertTextDataInPage(final PDDocument doc, final int numPage, final PDPageContentStream contentStream, final String data) {
+    try {
+      final float width = doc.getPage(numPage).getMediaBox().getWidth();
+      final float height = doc.getPage(numPage).getMediaBox().getHeight();
+      contentStream.setFont(
+        PDType0Font.load(doc, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 6);
+      contentStream.beginText();
+      contentStream.newLineAtOffset(60, 4);
+      contentStream.showText(data);
+      contentStream.endText();
+      contentStream.beginText();
+      contentStream.newLineAtOffset(60, (height - 12));
+      contentStream.showText(data);
+      contentStream.endText();
+      contentStream.beginText();
+      contentStream.newLineAtOffset((width - 92), 4);
+      contentStream.showText(data);
+      contentStream.endText();
+      contentStream.beginText();
+      contentStream.newLineAtOffset((width - 92), (height - 12));
+      contentStream.showText(data);
+      contentStream.endText();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
