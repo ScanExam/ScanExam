@@ -19,6 +19,15 @@ import static fr.istic.tools.scanexam.config.LanguageManager.translate
 
 /**
  * [JavaFX] Item question dans la liste de gauche des questions
+ * 
+ * This component is used as an item for the QuestionListEdition class.
+ * We store the name, id , worth, and page position of the question, as well as a  referece to the box on the pdf
+ * The main interaction with this class is changing its details such as worth and name ect,
+ * setFocus is used when this item is clicked in the list .
+ * 
+ * Fixes to do : completely link to model, only store names for displaying the list and id, and use those to find the items in the model when we need box dimentions or worth.
+ * 
+ * 
  * @author Stefan Locke, Julien Cochet
  */
 class QuestionItemEdition extends VBox {
@@ -126,9 +135,14 @@ class QuestionItemEdition extends VBox {
 	 */
 	// -------------//
 	// ---SETUP METHODS---//	
+	/**
+	 * Used to stetup the context menu (right click), called on the setupevent Method
+	 */
 	def setupContextMenu() {
 	}
-
+	/**
+	 * Used to setup events for this item, called at the end of the constructor.
+	 */
 	def setupEvents(QuestionItemEdition item) {
 
 		remove.onAction = new EventHandler<ActionEvent>() {
@@ -200,8 +214,8 @@ class QuestionItemEdition extends VBox {
 	}
 
 	/**
-	 * Sets the color of the zone and the item in the list
-	 * @param b True for highlight color
+	 * Sets the focused state of the zone and the item in the list
+	 * @param b true if we want to highlight this item, false if not.
 	 */
 	def void setFocus(boolean b) {
 		if (b) {
@@ -214,7 +228,11 @@ class QuestionItemEdition extends VBox {
 			zone.focus = b
 		}
 	}
-
+	
+	/**
+	 * Changes the color of the item in the list.
+	 * @param color the color we want the background to be
+	 */
 	def setColor(Color color) {
 		var bf = new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY);
 		this.background = new Background(bf)

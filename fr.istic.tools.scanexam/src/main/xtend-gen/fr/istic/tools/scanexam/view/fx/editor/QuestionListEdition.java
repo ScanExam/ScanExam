@@ -23,14 +23,14 @@ public class QuestionListEdition extends VBox {
     return this.controller;
   }
   
-  public boolean loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
+  public Object loadQuestion(final Box box, final String name, final int page, final int id, final float questionWorth) {
     boolean _xblockexpression = false;
     {
       QuestionItemEdition item = new QuestionItemEdition(this, box, name, (page + 1), id);
       item.setScale(questionWorth);
       _xblockexpression = this.add(item);
     }
-    return _xblockexpression;
+    return Boolean.valueOf(_xblockexpression);
   }
   
   /**
@@ -60,6 +60,8 @@ public class QuestionListEdition extends VBox {
     QuestionItemEdition item = new QuestionItemEdition(this, box, type, _plus);
     this.addToModel(item);
     this.add(item);
+    this.select(item);
+    this.controller.selectQuestion(item);
   }
   
   public void removeQuestion(final QuestionItemEdition item) {

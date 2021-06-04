@@ -10,6 +10,7 @@ import java.util.Collection
 import java.util.List
 import java.util.Map
 import java.util.Optional
+import fr.istic.tools.scanexam.core.Question
 
 interface ServiceGraduation extends Service {
 	
@@ -153,6 +154,12 @@ interface ServiceGraduation extends Service {
 	 * @param l'ID de l'entrée dans l'Examen
 	 */
 	def boolean retractGradeEntry(int questionId, int gradeEntryId)
+	
+	/**
+	 * @param l'ID de la Question
+	 * @return la Question du modèle correspondant à l'ID spécifié
+	 */
+	def Question getQuestion(int id)
 	
     /**
      * @param l'ID de la question à laquelle récupérer la liste d'entrées de note

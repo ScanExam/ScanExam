@@ -4,6 +4,23 @@ import javafx.scene.layout.VBox
 import javafx.scene.layout.Priority
 import javafx.scene.Node
 
+
+
+/**
+ * This Component is used to store all the questions created in the edition.
+ * To add questions to this list, we have 2 methods : 
+ * 	-loadQuestion, adds a question to the list without adding it to the model, used when we load a question from the model.
+ * 	-newQuestion, adds a question to the list and the model, used when we create a new question.
+ * 
+ * To manage focus, we use select and removeFocus
+ * select will look for a specific item in the list and highlight it, while removing focus on other items.
+ * removeFocus will remove the focus from all the elements in the list.
+ * 
+ * We can also manage witch box is present by using the showOnlyPane method, that checks for each item in the list if we are on its page, and if so will show it.
+ * 
+ * 
+ * FIXES TO DO : Change add remove to private.
+ */
 class QuestionListEdition extends VBox {
 	
 	
@@ -51,9 +68,10 @@ class QuestionListEdition extends VBox {
 		}
 		var item = new QuestionItemEdition(this, box, type,
 			controller.pdfManager.currentPdfPageNumber+1);
-
 		addToModel(item)
 		add(item)
+		this.select(item)
+		this.controller.selectQuestion(item)
 	}
 
 	def removeQuestion(QuestionItemEdition item) {

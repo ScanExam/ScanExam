@@ -58,7 +58,7 @@ public class ControllerSendMail {
   
   private ControllerFxGraduation controllerGraduation;
   
-  private float globalScale;
+  private ServiceGraduation service;
   
   /**
    * METHODES
@@ -80,8 +80,8 @@ public class ControllerSendMail {
           {
             final String studentMail = ControllerSendMail.this.mailMap.get(studentSheet.getStudentName());
             if (((studentSheet.getStudentName() != null) && (studentMail != null))) {
-              final Pair<String, File> pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(
-                ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet, ControllerSendMail.this.globalScale, ControllerSendMail.this.mainPane.getWidth());
+              final Pair<String, File> pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(ControllerSendMail.this.service, 
+                ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet, ControllerSendMail.this.mainPane.getWidth());
               final SendMailTls sender = new SendMailTls();
               sender.sendMail(ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), ControllerSendMail.this.txtFldTitle.getText(), 
                 ControllerSendMail.this.htmlEditor.getHtmlText(), pair.getKey(), studentMail, pair.getValue());
@@ -135,7 +135,7 @@ public class ControllerSendMail {
     this.controllerGraduation = controllerGraduation;
     this.mailMap = service.getStudentInfos();
     this.studentSheets = service.getStudentSheets();
-    this.globalScale = service.getGlobalScale();
+    this.service = service;
     int _xifexpression = (int) 0;
     boolean _isEmpty = this.mailMap.isEmpty();
     boolean _not = (!_isEmpty);

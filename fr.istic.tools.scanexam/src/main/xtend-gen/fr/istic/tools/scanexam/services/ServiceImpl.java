@@ -174,7 +174,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   
   /**
    * Définit la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
-   * Si la copie courante est la dernière, ne fait rien
+   * Si la copie courante est la dernière, va à la première page
    */
   @Override
   public void nextSheet() {
@@ -182,17 +182,23 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     boolean _lessThan = ((this.currentSheetIndex + 1) < _size);
     if (_lessThan) {
       this.currentSheetIndex++;
+    } else {
+      this.currentSheetIndex = 0;
     }
   }
   
   /**
    * Définit la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
-   * Si la copie courante est la première, ne fait rien
+   * Si la copie courante est la première, va à la dernière page
    */
   @Override
   public void previousSheet() {
     if ((this.currentSheetIndex > 0)) {
       this.currentSheetIndex--;
+    } else {
+      int _size = this.getStudentSheets().size();
+      int _minus = (_size - 1);
+      this.currentSheetIndex = _minus;
     }
   }
   
@@ -888,7 +894,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @param l'ID de la Question
    * @return la Question du modèle correspondant à l'ID spécifié
    */
-  protected Question getQuestion(final int id) {
+  @Override
+  public Question getQuestion(final int id) {
     EList<Page> _pages = this.editionTemplate.getExam().getPages();
     for (final Page page : _pages) {
       {

@@ -4,24 +4,35 @@ import fr.istic.tools.scanexam.core.Comment;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.core.TextComment;
+import fr.istic.tools.scanexam.exportation.GradeDetailToHtml;
+import fr.istic.tools.scanexam.exportation.HtmlPdfMerger;
+import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import fr.istic.tools.scanexam.utils.Tuple3;
 import java.awt.Color;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 @SuppressWarnings("all")
@@ -141,15 +152,18 @@ public class ExportExamToPdf {
   
   /**
    * EXPORT a PDF file for each student containing all annotations TO selected folder
+   * @param service Service managing the graduation
    * @param documentInputStream is the PDF of all student exams
    * @param sheets is they studentSheet of they students
    * @param folderForSaving is the Folder for save PDF documents
    * @return collection of temp Files
    */
-  public static void exportExamsOfStudentsToPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving, final float globalScale, final double originWidht) {
+  public static void exportExamsOfStudentsToPdfsWithAnnotations(final ServiceGraduation service, final InputStream documentInputStream, final Collection<StudentSheet> sheets, final File folderForSaving, final double originWidht) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
+      final float globalScale = service.getGlobalScale();
       ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+      ExportExamToPdf.addGradeDetailToPdf(service, sheets, tempExam);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -176,15 +190,18 @@ public class ExportExamToPdf {
   
   /**
    * EXPORT a Collection of PDF TEMP files for each student containing all annotations TO selected folder
+   * @param service Service managing the graduation
    * @param documentInputStream is the PDF of all student exams
    * @param sheets is they studentSheet of they students
    * @return map of student's name to temp file
    */
-  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale, final double originWidht) {
+  public static Map<String, File> exportExamsOfStudentsToTempPdfsWithAnnotations(final ServiceGraduation service, final InputStream documentInputStream, final Collection<StudentSheet> sheets, final double originWidht) {
     try {
       Map<String, File> tempExams = new HashMap<String, File>();
       File tempExam = File.createTempFile("examTemp", ".pdf");
+      final float globalScale = service.getGlobalScale();
       ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+      ExportExamToPdf.addGradeDetailToPdf(service, sheets, tempExam);
       PDDocument pdf = PDDocument.load(tempExam);
       for (final StudentSheet sheet : sheets) {
         {
@@ -210,14 +227,17 @@ public class ExportExamToPdf {
   
   /**
    * EXPORT a PDF TEMP containing all annotations TO temp file
+   * @param service Service managing the graduation
    * @param studentExamDocument is the PDF file of all students
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static File exportExamsToTempAnnotedPdf(final InputStream documentInputStream, final Collection<StudentSheet> sheets, final float globalScale, final double originWidht) {
+  public static File exportExamsToTempAnnotedPdf(final ServiceGraduation service, final InputStream documentInputStream, final Collection<StudentSheet> sheets, final double originWidht) {
     try {
       File tempExam = File.createTempFile("examTemp", ".pdf");
+      final float globalScale = service.getGlobalScale();
       ExportExamToPdf.exportExamsToAnnotedPdf(documentInputStream, sheets, tempExam, globalScale, originWidht);
+      ExportExamToPdf.addGradeDetailToPdf(service, sheets, tempExam);
       return tempExam;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -226,15 +246,16 @@ public class ExportExamToPdf {
   
   /**
    * Export a TEMP PDF file containing all annotations for a student
+   * @param service Service managing the graduation
    * @param studentExamDocument is the PDF file of the student
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static void exportStudentExamToPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final File fileForSaving, final float globalScale, final double originWidht) {
+  public static void exportStudentExamToPdfWithAnnotations(final ServiceGraduation service, final InputStream examDocument, final StudentSheet sheet, final File fileForSaving, final double originWidht) {
     try {
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale, originWidht);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(service, examDocument, _arrayList, originWidht);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
@@ -251,16 +272,17 @@ public class ExportExamToPdf {
   
   /**
    * Export PDF file containing all annotations for a student
+   * @param service Service managing the graduation
    * @param studentExamDocument is the PDF file of the student
    * @param sheet is the studentSheet of the student
    * @return temp File of annoted PDF.
    */
-  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final InputStream examDocument, final StudentSheet sheet, final float globalScale, final double originWidht) {
+  public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final ServiceGraduation service, final InputStream examDocument, final StudentSheet sheet, final double originWidht) {
     try {
       File studentExam = File.createTempFile(sheet.getStudentName(), ".pdf");
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
-      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(examDocument, _arrayList, globalScale, originWidht);
+      File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(service, examDocument, _arrayList, originWidht);
       PDDocument pdf = PDDocument.load(exam);
       PDDocument document = new PDDocument();
       EList<Integer> _posPage = sheet.getPosPage();
@@ -301,7 +323,8 @@ public class ExportExamToPdf {
                 PDPage page = document.getPage((sheet.getPosPage().get(((TextComment)c).getPageId())).intValue());
                 float pageWidht = page.getMediaBox().getUpperRightX();
                 float pageHeight = page.getMediaBox().getUpperRightY();
-                PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
+                PDPageContentStream contentStream = new PDPageContentStream(document, page, 
+                  PDPageContentStream.AppendMode.APPEND, true, true);
                 int partitionSize = 30;
                 float charWidth = 3.5f;
                 float charHeight = 9;
@@ -350,15 +373,17 @@ public class ExportExamToPdf {
                 contentStream.setNonStrokingColor(Color.decode("#0093ff"));
                 contentStream.stroke();
                 contentStream.fill();
-                contentStream.addRect((rectangleBottomLeftCornerX - 2), (rectangleBottomLeftCornerY - 2), (rectangleWidth + 4), 
-                  (rectangleHeight + 4));
+                contentStream.addRect((rectangleBottomLeftCornerX - 2), (rectangleBottomLeftCornerY - 2), 
+                  (rectangleWidth + 4), (rectangleHeight + 4));
                 contentStream.setNonStrokingColor(Color.decode("#000000"));
                 contentStream.fill();
                 contentStream.addRect(rectangleBottomLeftCornerX, rectangleBottomLeftCornerY, rectangleWidth, rectangleHeight);
                 contentStream.setNonStrokingColor(Color.decode("#ffffff"));
                 contentStream.fill();
                 contentStream.setNonStrokingColor(Color.decode("#000000"));
-                contentStream.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
+                contentStream.setFont(
+                  PDType0Font.load(document, 
+                    ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 8);
                 contentStream.setLeading(7f);
                 contentStream.beginText();
                 float _x_2 = ((TextComment)c).getX();
@@ -395,8 +420,11 @@ public class ExportExamToPdf {
             }
           }
           PDPage page_1 = document.getPage((sheet.getPosPage().get(0)).intValue());
-          PDPageContentStream contentStream_1 = new PDPageContentStream(document, page_1, PDPageContentStream.AppendMode.APPEND, true, true);
-          contentStream_1.setFont(PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 12);
+          PDPageContentStream contentStream_1 = new PDPageContentStream(document, page_1, 
+            PDPageContentStream.AppendMode.APPEND, true, true);
+          contentStream_1.setFont(
+            PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 
+            12);
           contentStream_1.setNonStrokingColor(Color.decode("#FF0000"));
           contentStream_1.beginText();
           float _height = page_1.getMediaBox().getHeight();
@@ -417,5 +445,114 @@ public class ExportExamToPdf {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  /**
+   * Ajoute le détail des notes de chaque étudiant à un pdf existant
+   * @author Julien Cochet
+   * @param service Service gérant la correction
+   * @param sheets  Copies des étudiants dont on veut le détail de la note
+   * @param pdfFile Pdf où ajouter le détail des notes
+   */
+  private static void addGradeDetailToPdf(final ServiceGraduation service, final Collection<StudentSheet> sheets, final File pdfFile) {
+    try {
+      final InputStream resourcesStream = ResourcesUtils.getInputStreamResource("viewResources/gradeDetail.css");
+      final Path cssPath = Files.createTempFile("gradeDetail", ".css");
+      URI _uri = cssPath.toUri();
+      new File(_uri).delete();
+      Files.copy(resourcesStream, cssPath);
+      resourcesStream.close();
+      final Path resourcesPath = Paths.get(System.getProperty("java.io.tmpdir"));
+      final Path gradesDetailPath = Files.createTempFile("gradesDetail", ".pdf");
+      URI _uri_1 = gradesDetailPath.toUri();
+      final File gradesDetailFile = new File(_uri_1);
+      final PDDocument pdfPDDoc = PDDocument.load(pdfFile);
+      final int pdfNbPage = pdfPDDoc.getNumberOfPages();
+      pdfPDDoc.close();
+      String htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[0], cssPath.getFileName().toString());
+      HtmlPdfMerger.createPdfFromHtmlContent(htmlContent, resourcesPath, gradesDetailPath);
+      int initialNbPage = 0;
+      PDDocument gradeDetailPDDoc = PDDocument.load(gradesDetailFile);
+      int newNbPage = gradeDetailPDDoc.getNumberOfPages();
+      gradeDetailPDDoc.close();
+      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(initialNbPage, newNbPage, true);
+      for (final Integer page : _doubleDotLessThan) {
+        {
+          final int index = ((page).intValue() - initialNbPage);
+          (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[0]).getPosPage().add(index, Integer.valueOf(((page).intValue() + pdfNbPage)));
+        }
+      }
+      int _size = sheets.size();
+      ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(1, _size, true);
+      for (final Integer i : _doubleDotLessThan_1) {
+        {
+          htmlContent = ExportExamToPdf.generateGradeDetailContent(service, ((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()], cssPath.getFileName().toString());
+          HtmlPdfMerger.mergeHtmlContentWithPdf(htmlContent, resourcesPath, gradesDetailFile, gradesDetailPath, false);
+          initialNbPage = newNbPage;
+          gradeDetailPDDoc = PDDocument.load(gradesDetailFile);
+          newNbPage = gradeDetailPDDoc.getNumberOfPages();
+          gradeDetailPDDoc.close();
+          ExclusiveRange _doubleDotLessThan_2 = new ExclusiveRange(initialNbPage, newNbPage, true);
+          for (final Integer page_1 : _doubleDotLessThan_2) {
+            {
+              final int index = ((page_1).intValue() - initialNbPage);
+              (((StudentSheet[])Conversions.unwrapArray(sheets, StudentSheet.class))[(i).intValue()]).getPosPage().add(index, Integer.valueOf(((page_1).intValue() + pdfNbPage)));
+            }
+          }
+        }
+      }
+      URI _uri_2 = cssPath.toUri();
+      new File(_uri_2).delete();
+      final Path pdfPath = Paths.get(pdfFile.toURI());
+      final PDFMergerUtility merger = new PDFMergerUtility();
+      merger.addSource(pdfFile);
+      merger.addSource(gradesDetailFile);
+      merger.setDestinationFileName(pdfPath.toString());
+      merger.mergeDocuments(null);
+      gradesDetailFile.delete();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * Renvoie le détail de la note d'un étudiant sous la forme d'une page html donnée en String
+   * @author Julien Cochet
+   * @param service Service gérant la correction
+   * @param sheet Copie de l'étudiant dont on veut le détail de la note
+   * @param cssName Nom du fichier css, laisser un string vide pour ne pas en utiliser
+   * @return Le détail de la note de l'étudiant sous la forme d'une page html donnée en String
+   */
+  private static String generateGradeDetailContent(final ServiceGraduation service, final StudentSheet sheet, final String cssName) {
+    service.selectSheet(sheet.getId());
+    final String examName = service.getExamName();
+    final String studentName = sheet.getStudentName();
+    final float globalGrade = sheet.computeGrade();
+    final float globalScale = service.getGlobalScale();
+    final GradeDetailToHtml gradeDetailToHtml = new GradeDetailToHtml(examName, studentName, globalGrade, globalScale);
+    gradeDetailToHtml.setCssName(cssName);
+    int _size = sheet.getGrades().size();
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
+    for (final Integer i : _doubleDotLessThan) {
+      {
+        final String qstName = service.getQuestion((i).intValue()).getName();
+        final double qstGrade = service.getQuestionSelectedGradeEntriesTotalWorth((i).intValue());
+        final double qstScale = service.getQuestion((i).intValue()).getGradeScale().getMaxPoint();
+        final List<Integer> achievedPoints = service.getQuestionSelectedGradeEntries((i).intValue());
+        final Map<String, Float> achieved = new HashMap<String, Float>();
+        final Map<String, Float> missed = new HashMap<String, Float>();
+        final List<Tuple3<Integer, String, Float>> gradeEntries = service.getQuestionGradeEntries((i).intValue());
+        for (final Tuple3<Integer, String, Float> entry : gradeEntries) {
+          boolean _contains = achievedPoints.contains(entry._1);
+          if (_contains) {
+            achieved.put(entry._2, entry._3);
+          } else {
+            missed.put(entry._2, entry._3);
+          }
+        }
+        gradeDetailToHtml.addQuestion(qstName, qstGrade, qstScale, achieved, missed);
+      }
+    }
+    return gradeDetailToHtml.toHtmlPage();
   }
 }

@@ -15,6 +15,8 @@
 		<fully.qualified.main.class>fr.istic.tools.scanexam.Main</fully.qualified.main.class>
 		<xtend-gen-path>${basedir}/src/main/xtend-gen</xtend-gen-path>
 		<xcore-gen-path>${basedir}/src-gen</xcore-gen-path>
+		
+		<openhtml.version>1.0.8</openhtml.version>
 	</properties>
 
 	<dependencies>
@@ -74,8 +76,6 @@
 			<version>0.27</version>
 		</dependency>
 
-		<!-- If you want to upgrade to 5.0.0, please, check this issue: http://apache-poi.1045710.n5.nabble.com/Upgrade-to-5-0-0-resulted-in-IOException-message-td5737013.html
-		     Maybe just a configuration of the maven-assembly-plugin -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -155,6 +155,54 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-core</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-pdfbox</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-java2d</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-rtl-support</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-slf4j</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-svg-support</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-mathml-support</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

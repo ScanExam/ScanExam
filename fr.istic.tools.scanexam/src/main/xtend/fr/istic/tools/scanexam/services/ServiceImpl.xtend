@@ -139,20 +139,26 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	
 	/**
 	 * Définit la copie d'étudiant suivant la copie actuelle comme nouvelle copie courante
-	 * Si la copie courante est la dernière, ne fait rien
+	 * Si la copie courante est la dernière, va à la première page
 	 */
 	override nextSheet() {
-		if (currentSheetIndex + 1 < studentSheets.size)
+		if (currentSheetIndex + 1 < studentSheets.size) {
 			currentSheetIndex++
+		} else {
+			currentSheetIndex = 0
+		}
 	}
 
 	/**
 	 * Définit la copie d'étudiant précédant la copie actuelle comme nouvelle copie courante
-	 * Si la copie courante est la première, ne fait rien
+	 * Si la copie courante est la première, va à la dernière page
 	 */
 	override previousSheet() {
-		if (currentSheetIndex > 0)
+		if (currentSheetIndex > 0) {
 			currentSheetIndex--
+		} else {
+			currentSheetIndex = studentSheets.size - 1
+		}
 	}
 	
 	/**
@@ -693,7 +699,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param l'ID de la Question
 	 * @return la Question du modèle correspondant à l'ID spécifié
 	 */
-	protected def Question getQuestion(int id) {
+	override Question getQuestion(int id) {
 		for (page : editionTemplate.exam.pages) {
 			val question = page.questions.findFirst[question|question.id == id]
 			if (question !== null)

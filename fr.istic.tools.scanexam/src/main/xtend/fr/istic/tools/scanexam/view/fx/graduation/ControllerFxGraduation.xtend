@@ -410,8 +410,8 @@ class ControllerFxGraduation {
 		studentList = new StudentListGraduation(this);
 		studentListContainer.content = studentList
 		
-		grader = new Grader(this);
-		parentPane.children.add(grader);
+		grader = new Grader(this)
+		parentPane.children.add(grader)
 		
 		
 		studentDetails = new StudentDetails(this);
@@ -516,7 +516,7 @@ class ControllerFxGraduation {
 	 */
 	def void exportGraduationToPdf(File folder) {
 		val sheets = service.studentSheets.filter[sheet | sheet.studentName !== null && !sheet.studentName.matches("\\s*")].toList
-		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(pdfManager.pdfInputStream, sheets,folder, service.getGlobalScale, mainPane.imageViewWidth)
+		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(service, pdfManager.pdfInputStream, sheets,folder, mainPane.imageViewWidth)
 	}
 
 	/**
@@ -533,6 +533,8 @@ class ControllerFxGraduation {
 		loadStudents();
 		setSelectedQuestion
 		setSelectedStudent
+		grader.layoutX = parentPane.width - grader.width
+		grader.layoutY = 0
 		grader.visible = true;
 	}
 	
