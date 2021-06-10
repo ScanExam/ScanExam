@@ -18,7 +18,7 @@
 			<items>
 				<ToggleButton fx:id="createBoxButton" mnemonicParsing="false" onAction="#questionAreaPressed" text="%button.createQuestion" />
 				<Button fx:id="createZone" disable="true" mnemonicParsing="false" onAction="#iDAreaPressed" text="%button.IDarea" />
-				<Button fx:id="createQRcode" disable="true" mnemonicParsing="false" onAction="#qRArearessed" text="%button.QRarea" />
+				<ToggleButton fx:id="createQrButton" mnemonicParsing="false" onAction="#qrAreaPressed" text="%button.QRarea" />
 			</items>
 			<VBox.margin>
 				<Insets />

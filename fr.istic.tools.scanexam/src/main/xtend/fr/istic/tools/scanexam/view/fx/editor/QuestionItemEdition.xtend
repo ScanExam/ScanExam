@@ -32,13 +32,12 @@ import static fr.istic.tools.scanexam.config.LanguageManager.translate
  */
 class QuestionItemEdition extends VBox {
 
-	//----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
 	/*
-	 *	VARIABLES
+	 * VARIABLES
 	 */
-	//----------------------------------------------------------------------------------------------------
-	
-	//--- FX vars ---//
+	// ----------------------------------------------------------------------------------------------------
+	// --- FX vars ---//
 	/* the top container of the questionItem */
 	HBox top
 	/* the middle container of the questionItem */
@@ -47,8 +46,8 @@ class QuestionItemEdition extends VBox {
 	HBox bottom
 	/* button remote */
 	Button remove
-	
-	//--- Question vars ---//
+
+	// --- Question vars ---//
 	/* Zone of the question, a rectangle */
 	Box zone
 	/* textfield used to rename the question */
@@ -61,17 +60,16 @@ class QuestionItemEdition extends VBox {
 	float scale
 	/* the type of this zone */
 	BoxType type
-	
-	//--- Other Vars---//
+
+	// --- Other Vars---//
 	/*the container of all the question items */
 	QuestionListEdition list
 
-	//----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
 	/*
-	 *	CONSTRUCTEURS
+	 * CONSTRUCTEURS
 	 */
-	//----------------------------------------------------------------------------------------------------
-	
+	// ----------------------------------------------------------------------------------------------------
 	new(QuestionListEdition list, Box zone) {
 		super()
 		top = new HBox
@@ -79,11 +77,11 @@ class QuestionItemEdition extends VBox {
 		bottom = new HBox
 		remove = new Button(translate("question.remove"))
 		bottom.children.add(remove)
-		
+
 		this.list = list
 		this.zone = zone
 		this.zone.questionItem = this
-
+		this.type = BoxType.QUESTION
 		name = new Label("New Question");
 
 		this.children.addAll(top, middle, bottom)
@@ -91,12 +89,12 @@ class QuestionItemEdition extends VBox {
 		top.children.addAll(name)
 
 		vgrow = Priority.ALWAYS
-		zone.setupEvents
+		zone.setupEvents(type)
 
-		this.scale  = 1f
-		
+		this.scale = 1f
+
 		this.styleClass.add("ListItem");
-		
+
 		this.margin = new Insets(2);
 		setupContextMenu
 		setupEvents(this)
@@ -114,13 +112,12 @@ class QuestionItemEdition extends VBox {
 		this.page = page
 		this.questionId = id
 	}
-	
-	//----------------------------------------------------------------------------------------------------
-	/*
-	 *	METHODES
-	 */
-	//----------------------------------------------------------------------------------------------------
 
+	// ----------------------------------------------------------------------------------------------------
+	/*
+	 * METHODES
+	 */
+	// ----------------------------------------------------------------------------------------------------
 	// ---------------------//
 	// ---METHODS---//
 	/*def setNameEditable(){
@@ -140,18 +137,19 @@ class QuestionItemEdition extends VBox {
 	 */
 	def setupContextMenu() {
 	}
+
 	/**
 	 * Used to setup events for this item, called at the end of the constructor.
 	 */
 	def setupEvents(QuestionItemEdition item) {
 
 		remove.onAction = new EventHandler<ActionEvent>() {
-			
+
 			override handle(ActionEvent event) {
 				list.removeQuestion(item)
 				list.controller.selectQuestion(null)
 			}
-			
+
 		}
 
 		this.onMouseClicked = new EventHandler<MouseEvent> {
@@ -165,16 +163,15 @@ class QuestionItemEdition extends VBox {
 
 	}
 
-	//----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
 	/*
-	 *	GETTERS
+	 * GETTERS
 	 */
-	//----------------------------------------------------------------------------------------------------
-	
+	// ----------------------------------------------------------------------------------------------------
 	def getWeight() {
 		1
 	}
-	
+
 	def getScale() {
 		scale
 	}
@@ -186,7 +183,7 @@ class QuestionItemEdition extends VBox {
 	def getQuestionId() {
 		questionId
 	}
-	
+
 	def getPage() {
 		page
 	}
@@ -194,17 +191,16 @@ class QuestionItemEdition extends VBox {
 	def String getName() {
 		name.text
 	}
-	
+
 	def BoxType getType() {
 		type
 	}
-	
-	//----------------------------------------------------------------------------------------------------
+
+	// ----------------------------------------------------------------------------------------------------
 	/*
-	 *	SETTERS
+	 * SETTERS
 	 */
-	//----------------------------------------------------------------------------------------------------
-	
+	// ----------------------------------------------------------------------------------------------------
 	def setQuestionId(int id) {
 		questionId = id
 	}
@@ -220,15 +216,15 @@ class QuestionItemEdition extends VBox {
 	def void setFocus(boolean b) {
 		if (b) {
 			color = FxSettings.ITEM_HIGHLIGHT_COLOR
-			this.name.styleClass.add("focusedText")	
+			this.name.styleClass.add("focusedText")
 			zone.focus = b
 		} else {
 			color = FxSettings.ITEM_NORMAL_COLOR
-			this.name.styleClass.remove("focusedText")	
+			this.name.styleClass.remove("focusedText")
 			zone.focus = b
 		}
 	}
-	
+
 	/**
 	 * Changes the color of the item in the list.
 	 * @param color the color we want the background to be
@@ -241,7 +237,7 @@ class QuestionItemEdition extends VBox {
 	def void setName(String text) {
 		name.text = text
 	}
-	
+
 	def setScale(float scale) {
 		this.scale = scale
 	}

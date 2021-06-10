@@ -48,12 +48,56 @@ import static fr.istic.tools.scanexam.config.LanguageManager.translate
  */
 class ControllerFxEdition {
 
+	var logger = LogManager.logger
+
+	var ServiceEdition service;
+
+	double maxX;
+	double maxY;
+	var pdfLoaded = false;
+
+	/* Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code 
+	 * (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings.
+	 */
+	boolean renderFlag = true
+
+	var mouseOriginX = 0d;
+	var mouseOriginY = 0d;
+	var objectOriginX = 0d;
+	var objectOriginY = 0d;
+
+	Box currentRectangle = null;
+	EdgeLocation edge = null;
+
+	double offsetX;
+	double offsetY;
+
+	List<Question> questions
+
+	QrCodeZone qrCodeZone
+
+	// ------ TOOL SELECTORS ------//
+	/**
+	 * Setters for the current tool selected
+	 */
+	var currentTool = SelectedTool.NO_TOOL
+
+	enum SelectedTool {
+		NO_TOOL,
+		QUESTION_AREA,
+		ID_AREA,
+		QR_AREA,
+		MOVE_CAMERA_TOOL,
+		MOVE_TOOL,
+		RESIZE_TOOL
+	}
 
 	// ** FXML TAGS **//	
-	
-	//**FXML CONTROLS**//
+	// **FXML CONTROLS**//
 	@FXML
 	ToggleButton createBoxButton;
+	@FXML
+	ToggleButton createQrButton;
 	@FXML
 	Button nextPageButton;
 	@FXML
@@ -68,150 +112,70 @@ class ControllerFxEdition {
 	Label pageNumberLabel;
 	@FXML
 	AnchorPane mainPaneContainer
-	@FXML
-	def void questionAreaPressed() {
-		if (createBoxButton.selected) {
-			setToQuestionAreaTool
-		}else {
-			setToNoTool
-		}
-	}
-	@FXML
-	def void iDAreaPressed() {
-		setToIDAreaTool
-	}
 
-	@FXML
-	def void qRArearessed() {
-		setToQRAreaTool
-	}
-	@FXML
-	def void movePressed() {
-		setToMoveCameraTool
-	}
-	@FXML
-	def void nextPagePressed() {
-		if (pdfLoaded)
-			nextPage
-	}
-	@FXML
-	def void saveTemplatePressed() {
-		if (pdfLoaded)
-			saveTemplate();
-	}
-	@FXML
-	def void loadTemplatePressed() {
-		loadTemplate();
-		
-	}
-	@FXML
-	def void previousPagePressed() {
-		if (pdfLoaded)
-			previousPage
-	}
-	@FXML
-	def void switchToCorrectorPressed() {
-	 	// FIXME
-	}
-	@FXML
-	def void mainMouseEvent(MouseEvent e) { // check if rightclick or not, maybe add to choose mouse actuioin
-		if (pdfLoaded) {
-			if (e.button == MouseButton.SECONDARY) {
-				moveImage(e)
-			} else {
-				chooseMouseAction(e);
-			}
-		}
-	}
-	
-	var logger = LogManager.logger
-	
-	var ServiceEdition service;
+	@Accessors
+	BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
 
-	double maxX;
-	double maxY;
-	var pdfLoaded = false;
-	
-	/* Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code 
-	 * (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings.
-	 */
-	boolean renderFlag = true
-	
-	@Accessors 
-	BooleanProperty loadedModel = new SimpleBooleanProperty(this,"Is a model loaded",false);
-
-	
-	@Accessors 
+	@Accessors
 	QuestionListEdition questionList;
-	
-	@Accessors 
+
+	@Accessors
 	QuestionOptionsEdition questionEditor;
-	
-	@Accessors 
+
+	@Accessors
 	PdfManager pdfManager
-	
-	@Accessors 
+
+	@Accessors
 	PdfPane mainPane;
-	
-	
-	/**
-	 * Called When we decide to focus on a specific question
-	 */
-	def void selectQuestion(QuestionItemEdition item){
-		if (item === null) {
-			questionList.removeFocus
-			questionEditor.hideAll
-			return
-		}
-		currentRectangle = item.zone
-		questionList.select(item)
-		questionEditor.select(item)
-	}
-	
-	def save(File path)
-	{
-		val outputStream = pdfManager.getPdfOutputStream();
-		service.saveEdition(outputStream,path);
-	}
-	
-	
-	
-	def close() {
-		System.exit(0)
-	}
-	
-	def void init(ServiceEdition serviceEdition){
-		
+
+	def void init(ServiceEdition serviceEdition) {
+
 		service = serviceEdition
-		
+
 		pdfManager = new PdfManager
-		
+
 		mainPane = new PdfPane(this);
 		mainPaneContainer.children.add(mainPane)
-		
+
 		questionList = new QuestionListEdition(this);
 		questionListContainer.content = questionList
-		
+
 		questionEditor = new QuestionOptionsEdition(this);
 		gradeListContainer.content = questionEditor
-		
-		
-		//Permet de définir pour chaque item de pageChoice une action : aller à la page sélectionnée
+
+		// Permet de définir pour chaque item de pageChoice une action : aller à la page sélectionnée
 		pageChoice.setOnAction([ event |
-		    var selectedIndex = pageChoice.getSelectionModel().getSelectedIndex();
-		    if(!renderFlag)
-		   		selectPage(selectedIndex)
-		   	renderFlag = false
+			var selectedIndex = pageChoice.getSelectionModel().getSelectedIndex();
+			if (!renderFlag)
+				selectPage(selectedIndex)
+			renderFlag = false
 		]);
-		
+
 		nextPageButton.disableProperty.bind(loadedModel.not)
 		previousPageButton.disableProperty.bind(loadedModel.not)
 		createBoxButton.disableProperty.bind(loadedModel.not)
+		createQrButton.disableProperty.bind(loadedModel.not)
 		pageChoice.disableProperty.bind(loadedModel.not)
 	}
-	
 
+	/* --LOADING NEW TEMPLATE--  */
+	def List<Integer> initLoading(int pageNumber) {
+		questions = service.getQuestionAtPage(pageNumber) // replace with method that gives a list of pages corresponding to questions at same index
+		var ids = new LinkedList<Integer>();
+		for (Question q : questions) {
+			ids.add(q.id)
+		}
+		ids
+	}
 
+	def save(File path) {
+		val outputStream = pdfManager.getPdfOutputStream();
+		service.saveEdition(outputStream, path);
+	}
+
+	def close() {
+		System.exit(0)
+	}
 
 	def void chooseMouseAction(MouseEvent e) {
 		switch currentTool {
@@ -238,36 +202,51 @@ class ControllerFxEdition {
 		}
 	}
 
-	var mouseOriginX = 0d;
-	var mouseOriginY = 0d;
-	var objectOriginX = 0d;
-	var objectOriginY = 0d;
-
-	Box currentRectangle = null;
-	EdgeLocation edge = null;
-	def setEdgeLoc(EdgeLocation edge){
-		this.edge = edge
+	/**
+	 * Called When we decide to focus on a specific question
+	 */
+	def void selectQuestion(QuestionItemEdition item) {
+		if (item === null) {
+			questionList.removeFocus
+			questionEditor.hideAll
+			return
+		}
+		currentRectangle = item.zone
+		if (qrCodeZone !== null) {
+			qrCodeZone.zone.setFocus(false)
+		}
+		questionList.select(item)
+		questionEditor.select(item)
 	}
+
+	/**
+	 * Sélectionne la zone de qr code
+	 */
+	def void selectQr() {
+		questionList.removeFocus
+		questionEditor.hideAll
+		currentRectangle = qrCodeZone.zone
+		currentRectangle.setFocus(true)
+	}
+
 	/**
 	 * Called when we click and drag on the pdf with the create question too selected
 	 * will not create the question if the zone is too small
 	 */
 	def void createBox(MouseEvent e) {
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-								Math.min(e.x, maxX - FxSettings.BOX_BORDER_THICKNESS));
+			Math.min(e.x, maxX - FxSettings.BOX_BORDER_THICKNESS));
 		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
-							Math.min(e.y, maxY - FxSettings.BOX_BORDER_THICKNESS));
+			Math.min(e.y, maxY - FxSettings.BOX_BORDER_THICKNESS));
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { // TODO add type checks
 			mouseOriginX = mousePositionX
 			mouseOriginY = mousePositionY
-		
-			
+
 			currentRectangle = createZone(mousePositionX, mousePositionY);
 			mainPane.addZone(currentRectangle);
 
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-
 			var xDelta = mousePositionX - mouseOriginX;
 			var yDelta = mousePositionY - mouseOriginY;
 			if (xDelta > 0) {
@@ -286,28 +265,38 @@ class ControllerFxEdition {
 			}
 
 		}
-		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) 
-		{
-			if (currentRectangle.width > FxSettings.MINIMUM_ZONE_SIZE && currentRectangle.height > FxSettings.MINIMUM_ZONE_SIZE)
-			{
-				questionList.newQuestion(currentRectangle)
-			}
-			else
-			{
+		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			if (currentRectangle.width > FxSettings.MINIMUM_ZONE_SIZE &&
+				currentRectangle.height > FxSettings.MINIMUM_ZONE_SIZE) {
+
+				if (currentTool == SelectedTool.QUESTION_AREA) {
+					questionList.newQuestion(currentRectangle)
+				} else {
+					if (currentTool == SelectedTool.QR_AREA) {
+						qrCodeZone = new QrCodeZone(currentRectangle)
+					}
+				}
+
+			} else {
 				mainPane.removeZone(currentRectangle);
 			}
+			if (currentTool == SelectedTool.QUESTION_AREA) {
+				createBoxButton.selected = false
+			} else {
+				if (currentTool == SelectedTool.QR_AREA) {
+					createQrButton.selected = false
+				}
+			}
 			setToNoTool
-			createBoxButton.selected = false
+		// createBoxButton.selected = false
 		}
 	}
 
-/**
- * OLD CODE
- * Called when we click on a pdf with the move tool selected
- * the box is limited to inside the pdf
- */
- 	double offsetX;
- 	double offsetY;
+	/**
+	 * OLD CODE
+	 * Called when we click on a pdf with the move tool selected
+	 * the box is limited to inside the pdf
+	 */
 	def void moveBox(MouseEvent e) {
 		var mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS,
 			Math.min(e.x, maxX - FxSettings.BOX_BORDER_THICKNESS));
@@ -315,7 +304,6 @@ class ControllerFxEdition {
 			Math.min(e.y, maxY - FxSettings.BOX_BORDER_THICKNESS));
 
 		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
-			
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 			currentRectangle.x(Math.min(mousePositionX + offsetX,
@@ -342,53 +330,65 @@ class ControllerFxEdition {
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 			switch edge {
-				case SOUTH : {
+				case SOUTH: {
 					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
 				}
-	
-				case EAST : {
+				case EAST: {
 					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
 				}
 				case NORTH: {
-					currentRectangle.y(Math.min(mousePositionY,maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+					currentRectangle.y(
+						Math.min(mousePositionY, maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
 					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
 				}
-				case WEST: {				
-					currentRectangle.x(Math.min(mousePositionX,maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+				case WEST: {
+					currentRectangle.x(
+						Math.min(mousePositionX, maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
 					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
 				}
 				case NORTHEAST: {
-					currentRectangle.y(Math.min(mousePositionY,maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+					currentRectangle.y(
+						Math.min(mousePositionY, maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
 					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
 					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
 				}
 				case NORTHWEST: {
-					currentRectangle.y(Math.min(mousePositionY,maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
+					currentRectangle.y(
+						Math.min(mousePositionY, maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
 					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
-					currentRectangle.x(Math.min(mousePositionX,maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+					currentRectangle.x(
+						Math.min(mousePositionX, maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
 					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
 				}
 				case SOUTHEAST: {
 					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
 					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
-					
+
 				}
 				case SOUTHWEST: {
 					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
-					currentRectangle.x(Math.min(mousePositionX,maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
+					currentRectangle.x(
+						Math.min(mousePositionX, maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
 					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
 				}
 				case NONE: {
-					currentRectangle.x(Math.max(Math.min(mousePositionX - offsetX,maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width),FxSettings.BOX_BORDER_THICKNESS))
-					currentRectangle.y(Math.max(Math.min(mousePositionY - offsetY,maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height),FxSettings.BOX_BORDER_THICKNESS))
+					currentRectangle.x(
+						Math.max(
+							Math.min(mousePositionX - offsetX, maxX - FxSettings.BOX_BORDER_THICKNESS -
+								currentRectangle.width), FxSettings.BOX_BORDER_THICKNESS))
+					currentRectangle.y(
+						Math.max(
+							Math.min(mousePositionY - offsetY, maxY - FxSettings.BOX_BORDER_THICKNESS -
+								currentRectangle.height), FxSettings.BOX_BORDER_THICKNESS))
 				}
 			}
-			
-			
+
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			setToNoTool
-			questionList.updateInModel(currentRectangle.questionItem)
+			if (currentRectangle.type == BoxType.QUESTION) {
+				questionList.updateInModel(currentRectangle.questionItem)
+			}
 		}
 	}
 
@@ -419,98 +419,17 @@ class ControllerFxEdition {
 	}
 
 	/**
-	 * Used to zoom in and out the pdf image
-	 * 
-	 * Using the scale allows the children of the pane to also scale accordingly
-	 */
-	@FXML
-	def void ZoomImage(ScrollEvent e) {
-		var source = e.source as Node
-		if (e.deltaY < 0) {
-			source.scaleX = source.scaleX * 0.95
-			source.scaleY = source.scaleY * 0.95
-		} else {
-			source.scaleX = source.scaleX * 1.05
-			source.scaleY = source.scaleY * 1.05
-		}
-	}
-
-	// ------ TOOL SELECTORS ------//
-	/**
-	 * Setters for the current tool selected
-	 */
-	var currentTool = SelectedTool.NO_TOOL
-	
-	enum SelectedTool {
-		NO_TOOL,
-		QUESTION_AREA,
-		ID_AREA,
-		QR_AREA,
-		MOVE_CAMERA_TOOL,
-		MOVE_TOOL,
-		RESIZE_TOOL	
-	}
-	
-	def getSelectedTool(){
-		this.currentTool
-	}
-	
-	def setSelectedTool(SelectedTool tool){
-		currentTool = tool
-	}
-
-	def void setToMoveCameraTool() {
-		mainPane.cursor = Cursor.OPEN_HAND
-		currentTool = SelectedTool.MOVE_CAMERA_TOOL
-	}
-
-	def void setToQuestionAreaTool() {
-		mainPane.cursor = Cursor.DEFAULT
-		
-		currentTool = SelectedTool.QUESTION_AREA
-	}
-
-	def void setToIDAreaTool() {
-		mainPane.cursor = Cursor.DEFAULT
-		
-
-		currentTool = SelectedTool.ID_AREA
-	}
-
-	def void setToQRAreaTool() {
-		mainPane.cursor = Cursor.DEFAULT
-	
-		currentTool = SelectedTool.QR_AREA
-	}
-
-	def void setToMoveTool() {
-		mainPane.cursor = Cursor.DEFAULT
-		
-		currentTool = SelectedTool.MOVE_TOOL
-	}
-
-	def void setToResizeTool() {
-		mainPane.cursor = Cursor.DEFAULT
-		
-		currentTool = SelectedTool.RESIZE_TOOL
-	}
-
-	def void setToNoTool() {
-		mainPane.cursor = Cursor.DEFAULT
-		
-		currentTool = SelectedTool.NO_TOOL
-	}
-
-	/**
 	 * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
 	 */
-
 	def Box createZone(double x, double y) {
-		
-		new Box(x, y,0,0);
-		
+		if (currentTool == SelectedTool.QUESTION_AREA) {
+			new Box(BoxType.QUESTION, x, y, 0, 0)
+		} else {
+			if (currentTool == SelectedTool.QR_AREA) {
+				new Box(BoxType.QR, x, y, 0, 0)
+			}
+		}
 	}
-
 
 	/**
 	 * Envoie le nom du modèle au service
@@ -532,19 +451,20 @@ class ControllerFxEdition {
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 
 		if (file !== null) {
-            if(!file.getName().contains(".xmi")){
-                file = new File(file.getAbsolutePath() + ".xmi")
-            }
-		    save(file);
+			if (!file.getName().contains(".xmi")) {
+				file = new File(file.getAbsolutePath() + ".xmi")
+			}
+			save(file);
 		} else {
 			logger.warn("File not chosen")
 		}
 	}
+
 	/**
 	 * Loads new model from an xmi file
 	 */
 	def loadTemplate() {
-		
+
 		var fileChooser = new FileChooser();
 		fileChooser.extensionFilters.add(new ExtensionFilter("XMI Files", Arrays.asList("*.xmi")));
 		fileChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
@@ -552,14 +472,14 @@ class ControllerFxEdition {
 		var file = fileChooser.showOpenDialog(mainPane.scene.window)
 
 		if (file !== null) {
-			
+
 			loadTemplate(file)
-			
+
 		} else {
 			logger.warn("File not chosen")
 		}
 	}
-	
+
 	/**
 	 * Essaye de charger le fichier passé en paramètre comme Template, affiche un DialogMessage en cas d'erreur
 	 * @param file un fichier à charger
@@ -567,59 +487,60 @@ class ControllerFxEdition {
 	def boolean loadTemplate(File file) {
 		Objects.requireNonNull(file)
 		val success = load(file.path)
-		if(!success)
-			DialogMessageSender.sendTranslateDialog(AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null)
+		if (!success)
+			DialogMessageSender.sendTranslateDialog(AlertType.ERROR,
+				"studentSheetLoader.templateConfirmationDialog.title",
+				"studentSheetLoader.templateConfirmationDialog.fail", null)
 		else {
 			render()
 		}
 		success
 	}
-	
-	
-	def boolean load(String path)
-	{
+
+	def boolean load(String path) {
 		val stream = service.open(path)
-		
-		if (stream.isPresent)
-		{
+
+		if (stream.isPresent) {
 			pdfManager.create(stream.get);
 		}
-		
+
 		return stream.isPresent;
 	}
-	def render()
-	{
+
+	def render() {
 		clearVue
-		//Initialise le selecteur de page (pageChoice)
+		// Initialise le selecteur de page (pageChoice)
 		initPageSelection
 		renderDocument();
 		loadBoxes();
 		postLoad
 	}
+
 	/**
 	 * called to load each question from the model into the vue
 	 */
 	def loadBoxes() {
-		
-		for (var p = 0;p < pdfManager.getPdfPageCount;p++) {
+
+		for (var p = 0; p < pdfManager.getPdfPageCount; p++) {
 			var ids = initLoading(p)
-			for (int i:ids) {
-				
+			for (int i : ids) {
+
 				var box = new Box(
+					BoxType.QUESTION,
 					questionX(i) * maxX,
 					questionY(i) * maxY,
 					questionWidth(i) * maxX,
-					questionHeight(i) * maxY		
+					questionHeight(i) * maxY
 				)
 				mainPane.addZone(box);
-				questionList.loadQuestion(box,questionName(i),p,i,questionWorth(i))
+				questionList.loadQuestion(box, questionName(i), p, i, questionWorth(i))
 			}
 		}
-		
+
 		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)
 	}
-	
-	def postLoad(){
+
+	def postLoad() {
 		loadedModel.set(true)
 		pdfLoaded = true;
 	}
@@ -630,8 +551,8 @@ class ControllerFxEdition {
 	 */
 	def initPageSelection() {
 		pageChoice.items.clear
- 
-		for (var i = 1; i<=pdfManager.getPdfPageCount(); i++) {
+
+		for (var i = 1; i <= pdfManager.getPdfPageCount(); i++) {
 			if (!pageChoice.items.contains(i)) {
 				pageChoice.getItems().add(i)
 			}
@@ -646,8 +567,9 @@ class ControllerFxEdition {
 		mainPane.image = SwingFXUtils.toFXImage(image, null);
 		maxX = mainPane.imageViewWidth
 		maxY = mainPane.imageViewHeight
-		
-		pageNumberLabel.text = translate("label.page") + (pdfManager.currentPdfPageNumber + 1) + " / " + pdfManager.getPdfPageCount
+
+		pageNumberLabel.text = translate("label.page") + (pdfManager.currentPdfPageNumber + 1) + " / " +
+			pdfManager.getPdfPageCount
 		renderFlag = true
 		pageChoice.value = pdfManager.currentPdfPageNumber + 1
 	}
@@ -675,38 +597,37 @@ class ControllerFxEdition {
 		renderDocument
 		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)
 	}
-	
-	def double getMaxY(){
+
+	def double getMaxY() {
 		maxY
 	}
-	def double getMaxX(){
+
+	def double getMaxX() {
 		maxX
 	}
-	
-	def void clearVue(){
+
+	def void clearVue() {
 		mainPane.clear
 		questionList.clear
 		questionEditor.hideAll
 	}
-	
-	
-	def int createQuestion(double x, double y, double height, double width)
-	{
-		service.createQuestion(pdfManager.pdfPageIndex,x as float,y as float,height as float,width as float)
+
+	def int createQuestion(double x, double y, double height, double width) {
+		service.createQuestion(pdfManager.pdfPageIndex, x as float, y as float, height as float, width as float)
 	}
-	
+
 	def void removeQuestion(int ID) {
 		service.removeQuestion(ID);
 	}
-	
-	def void renameQuestion(int ID,String name) {
-		service.renameQuestion(ID,name)
+
+	def void renameQuestion(int ID, String name) {
+		service.renameQuestion(ID, name)
 	}
-	
-	def void resizeQuestion(int ID, double height, double width) {		
-		service.rescaleQuestion(ID,height as float,width as float)
+
+	def void resizeQuestion(int ID, double height, double width) {
+		service.rescaleQuestion(ID, height as float, width as float)
 	}
-	
+
 	/**
 	 * changes the x and y coordinates of the {@link Question} identified by the id
 	 * @param int id : the unique ID of question
@@ -714,37 +635,29 @@ class ControllerFxEdition {
 	 * @param float y : new y position
 	 * @author : Benjamin Danlos
 	 */
-	def void moveQuestion(int id, double x, double y){
-		service.moveQuestion(id,x as float,y as float)
+	def void moveQuestion(int id, double x, double y) {
+		service.moveQuestion(id, x as float, y as float)
 	}
-	
-	def void changeQuestionWorth(int id,float worth) {
-		service.modifyMaxPoint(id,worth)
+
+	def void changeQuestionWorth(int id, float worth) {
+		service.modifyMaxPoint(id, worth)
 	}
-	
-	
-	
-	
-	/* --LOADING NEW TEMPLATE--  */
-	
-	def List<Integer> initLoading(int pageNumber){
-		questions = service.getQuestionAtPage(pageNumber)//replace with method that gives a list of pages corresponding to questions at same index
-		var ids = new LinkedList<Integer>();
-		for (Question q : questions) {
-			ids.add(q.id)
+
+	/**
+	 * Supprime la zone de qr code de l'écran
+	 */
+	def void removeQrCodeZone() {
+		if (qrCodeZone !== null) {
+			mainPane.removeZone(qrCodeZone.zone)
 		}
-		ids
 	}
-	
-	List<Question> questions
+
 	/**
 	 * Loads the next question into questionToLoad
 	 * if there is a new question, return true,
 	 * else return false
 	 */
-	 
-	
-	def double questionX(int id){
+	def double questionX(int id) {
 		var result = -1.0;
 		for (Question q : questions) {
 			if (q.id == id) {
@@ -753,8 +666,8 @@ class ControllerFxEdition {
 		}
 		result
 	}
-	
-	def double questionY(int id){
+
+	def double questionY(int id) {
 		var result = -1.0;
 		for (Question q : questions) {
 			if (q.id == id) {
@@ -763,8 +676,8 @@ class ControllerFxEdition {
 		}
 		result
 	}
-	
-	def double questionHeight(int id){
+
+	def double questionHeight(int id) {
 		var result = -1.0;
 		for (Question q : questions) {
 			if (q.id == id) {
@@ -774,8 +687,8 @@ class ControllerFxEdition {
 		}
 		result
 	}
-	
-	def double questionWidth(int id){
+
+	def double questionWidth(int id) {
 		var result = -1.0;
 		for (Question q : questions) {
 			if (q.id == id) {
@@ -785,8 +698,8 @@ class ControllerFxEdition {
 		}
 		result
 	}
-	
-	def String questionName(int id){
+
+	def String questionName(int id) {
 		var result = "";
 		for (Question q : questions) {
 			if (q.id == id) {
@@ -795,11 +708,8 @@ class ControllerFxEdition {
 		}
 		result
 	}
-	
-	
 
-	
-	def float questionWorth(int id){
+	def float questionWorth(int id) {
 		var result = 0f;
 		for (Question q : questions) {
 			if (q.id == id) {
@@ -808,5 +718,144 @@ class ControllerFxEdition {
 			}
 		}
 		result
+	}
+
+	def getSelectedTool() {
+		this.currentTool
+	}
+
+	def setEdgeLoc(EdgeLocation edge) {
+		this.edge = edge
+	}
+
+	def setSelectedTool(SelectedTool tool) {
+		currentTool = tool
+	}
+
+	def void setToMoveCameraTool() {
+		mainPane.cursor = Cursor.OPEN_HAND
+		currentTool = SelectedTool.MOVE_CAMERA_TOOL
+	}
+
+	def void setToQuestionAreaTool() {
+		mainPane.cursor = Cursor.DEFAULT
+
+		currentTool = SelectedTool.QUESTION_AREA
+	}
+
+	def void setToIDAreaTool() {
+		mainPane.cursor = Cursor.DEFAULT
+
+		currentTool = SelectedTool.ID_AREA
+	}
+
+	def void setToQRAreaTool() {
+		mainPane.cursor = Cursor.DEFAULT
+
+		currentTool = SelectedTool.QR_AREA
+	}
+
+	def void setToMoveTool() {
+		mainPane.cursor = Cursor.DEFAULT
+
+		currentTool = SelectedTool.MOVE_TOOL
+	}
+
+	def void setToResizeTool() {
+		mainPane.cursor = Cursor.DEFAULT
+
+		currentTool = SelectedTool.RESIZE_TOOL
+	}
+
+	def void setToNoTool() {
+		mainPane.cursor = Cursor.DEFAULT
+
+		currentTool = SelectedTool.NO_TOOL
+	}
+
+	@FXML
+	def void questionAreaPressed() {
+		if (createBoxButton.selected) {
+			setToQuestionAreaTool
+		} else {
+			setToNoTool
+		}
+	}
+
+	@FXML
+	def void iDAreaPressed() {
+		setToIDAreaTool
+	}
+
+	@FXML
+	def void qrAreaPressed() {
+		if (createQrButton.selected) {
+			removeQrCodeZone
+			setToQRAreaTool
+		} else {
+			setToNoTool
+		}
+	}
+
+	@FXML
+	def void movePressed() {
+		setToMoveCameraTool
+	}
+
+	@FXML
+	def void nextPagePressed() {
+		if (pdfLoaded)
+			nextPage
+	}
+
+	@FXML
+	def void saveTemplatePressed() {
+		if (pdfLoaded)
+			saveTemplate();
+	}
+
+	@FXML
+	def void loadTemplatePressed() {
+		loadTemplate();
+
+	}
+
+	@FXML
+	def void previousPagePressed() {
+		if (pdfLoaded)
+			previousPage
+	}
+
+	@FXML
+	def void switchToCorrectorPressed() {
+		// FIXME
+	}
+
+	@FXML
+	def void mainMouseEvent(MouseEvent e) { // check if rightclick or not, maybe add to choose mouse actuioin
+		if (pdfLoaded) {
+			if (e.button == MouseButton.SECONDARY) {
+				moveImage(e)
+			} else {
+				chooseMouseAction(e);
+			}
+		}
+	}
+
+	/**
+	 * Used to zoom in and out the pdf image
+	 * 
+	 * Using the scale allows the children of the pane to also scale accordingly
+	 */
+	@FXML
+	def void ZoomImage(ScrollEvent e) {
+		var source = e.source as Node
+		if (e.deltaY < 0) {
+			source.scaleX = source.scaleX * 0.95
+			source.scaleY = source.scaleY * 0.95
+		} else {
+			source.scaleX = source.scaleX * 1.05
+			source.scaleY = source.scaleY * 1.05
+		}
 	}
 }

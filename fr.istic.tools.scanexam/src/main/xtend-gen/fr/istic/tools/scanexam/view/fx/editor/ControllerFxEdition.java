@@ -8,8 +8,10 @@ import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
+import fr.istic.tools.scanexam.view.fx.editor.BoxType;
 import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
 import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
+import fr.istic.tools.scanexam.view.fx.editor.QrCodeZone;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
@@ -80,8 +82,52 @@ public class ControllerFxEdition {
     RESIZE_TOOL;
   }
   
+  private Logger logger = LogManager.getLogger();
+  
+  private ServiceEdition service;
+  
+  private double maxX;
+  
+  private double maxY;
+  
+  private boolean pdfLoaded = false;
+  
+  /**
+   * Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code
+   * (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings.
+   */
+  private boolean renderFlag = true;
+  
+  private double mouseOriginX = 0d;
+  
+  private double mouseOriginY = 0d;
+  
+  private double objectOriginX = 0d;
+  
+  private double objectOriginY = 0d;
+  
+  private Box currentRectangle = null;
+  
+  private EdgeLocation edge = null;
+  
+  private double offsetX;
+  
+  private double offsetY;
+  
+  private List<Question> questions;
+  
+  private QrCodeZone qrCodeZone;
+  
+  /**
+   * Setters for the current tool selected
+   */
+  private ControllerFxEdition.SelectedTool currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
+  
   @FXML
   private ToggleButton createBoxButton;
+  
+  @FXML
+  private ToggleButton createQrButton;
   
   @FXML
   private Button nextPageButton;
@@ -104,90 +150,6 @@ public class ControllerFxEdition {
   @FXML
   private AnchorPane mainPaneContainer;
   
-  @FXML
-  public void questionAreaPressed() {
-    boolean _isSelected = this.createBoxButton.isSelected();
-    if (_isSelected) {
-      this.setToQuestionAreaTool();
-    } else {
-      this.setToNoTool();
-    }
-  }
-  
-  @FXML
-  public void iDAreaPressed() {
-    this.setToIDAreaTool();
-  }
-  
-  @FXML
-  public void qRArearessed() {
-    this.setToQRAreaTool();
-  }
-  
-  @FXML
-  public void movePressed() {
-    this.setToMoveCameraTool();
-  }
-  
-  @FXML
-  public void nextPagePressed() {
-    if (this.pdfLoaded) {
-      this.nextPage();
-    }
-  }
-  
-  @FXML
-  public void saveTemplatePressed() {
-    if (this.pdfLoaded) {
-      this.saveTemplate();
-    }
-  }
-  
-  @FXML
-  public void loadTemplatePressed() {
-    this.loadTemplate();
-  }
-  
-  @FXML
-  public void previousPagePressed() {
-    if (this.pdfLoaded) {
-      this.previousPage();
-    }
-  }
-  
-  @FXML
-  public void switchToCorrectorPressed() {
-  }
-  
-  @FXML
-  public void mainMouseEvent(final MouseEvent e) {
-    if (this.pdfLoaded) {
-      MouseButton _button = e.getButton();
-      boolean _equals = Objects.equal(_button, MouseButton.SECONDARY);
-      if (_equals) {
-        this.moveImage(e);
-      } else {
-        this.chooseMouseAction(e);
-      }
-    }
-  }
-  
-  private Logger logger = LogManager.getLogger();
-  
-  private ServiceEdition service;
-  
-  private double maxX;
-  
-  private double maxY;
-  
-  private boolean pdfLoaded = false;
-  
-  /**
-   * Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code
-   * (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings.
-   */
-  private boolean renderFlag = true;
-  
   @Accessors
   private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
   
@@ -202,29 +164,6 @@ public class ControllerFxEdition {
   
   @Accessors
   private PdfPane mainPane;
-  
-  /**
-   * Called When we decide to focus on a specific question
-   */
-  public void selectQuestion(final QuestionItemEdition item) {
-    if ((item == null)) {
-      this.questionList.removeFocus();
-      this.questionEditor.hideAll();
-      return;
-    }
-    this.currentRectangle = item.getZone();
-    this.questionList.select(item);
-    this.questionEditor.select(item);
-  }
-  
-  public void save(final File path) {
-    final ByteArrayOutputStream outputStream = this.pdfManager.getPdfOutputStream();
-    this.service.saveEdition(outputStream, path);
-  }
-  
-  public void close() {
-    System.exit(0);
-  }
   
   public void init(final ServiceEdition serviceEdition) {
     this.service = serviceEdition;
@@ -250,7 +189,33 @@ public class ControllerFxEdition {
     this.nextPageButton.disableProperty().bind(this.loadedModel.not());
     this.previousPageButton.disableProperty().bind(this.loadedModel.not());
     this.createBoxButton.disableProperty().bind(this.loadedModel.not());
+    this.createQrButton.disableProperty().bind(this.loadedModel.not());
     this.pageChoice.disableProperty().bind(this.loadedModel.not());
+  }
+  
+  /**
+   * --LOADING NEW TEMPLATE--
+   */
+  public List<Integer> initLoading(final int pageNumber) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      this.questions = this.service.getQuestionAtPage(pageNumber);
+      LinkedList<Integer> ids = new LinkedList<Integer>();
+      for (final Question q : this.questions) {
+        ids.add(Integer.valueOf(q.getId()));
+      }
+      _xblockexpression = ids;
+    }
+    return _xblockexpression;
+  }
+  
+  public void save(final File path) {
+    final ByteArrayOutputStream outputStream = this.pdfManager.getPdfOutputStream();
+    this.service.saveEdition(outputStream, path);
+  }
+  
+  public void close() {
+    System.exit(0);
   }
   
   public void chooseMouseAction(final MouseEvent e) {
@@ -283,20 +248,31 @@ public class ControllerFxEdition {
     }
   }
   
-  private double mouseOriginX = 0d;
+  /**
+   * Called When we decide to focus on a specific question
+   */
+  public void selectQuestion(final QuestionItemEdition item) {
+    if ((item == null)) {
+      this.questionList.removeFocus();
+      this.questionEditor.hideAll();
+      return;
+    }
+    this.currentRectangle = item.getZone();
+    if ((this.qrCodeZone != null)) {
+      this.qrCodeZone.getZone().setFocus(false);
+    }
+    this.questionList.select(item);
+    this.questionEditor.select(item);
+  }
   
-  private double mouseOriginY = 0d;
-  
-  private double objectOriginX = 0d;
-  
-  private double objectOriginY = 0d;
-  
-  private Box currentRectangle = null;
-  
-  private EdgeLocation edge = null;
-  
-  public EdgeLocation setEdgeLoc(final EdgeLocation edge) {
-    return this.edge = edge;
+  /**
+   * Sélectionne la zone de qr code
+   */
+  public void selectQr() {
+    this.questionList.removeFocus();
+    this.questionEditor.hideAll();
+    this.currentRectangle = this.qrCodeZone.getZone();
+    this.currentRectangle.setFocus(true);
   }
   
   /**
@@ -341,13 +317,31 @@ public class ControllerFxEdition {
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
     if (_equals_2) {
-      if (((this.currentRectangle.getWidth() > FxSettings.MINIMUM_ZONE_SIZE) && (this.currentRectangle.getHeight() > FxSettings.MINIMUM_ZONE_SIZE))) {
-        this.questionList.newQuestion(this.currentRectangle);
+      if (((this.currentRectangle.getWidth() > FxSettings.MINIMUM_ZONE_SIZE) && 
+        (this.currentRectangle.getHeight() > FxSettings.MINIMUM_ZONE_SIZE))) {
+        boolean _equals_3 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
+        if (_equals_3) {
+          this.questionList.newQuestion(this.currentRectangle);
+        } else {
+          boolean _equals_4 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
+          if (_equals_4) {
+            QrCodeZone _qrCodeZone = new QrCodeZone(this.currentRectangle);
+            this.qrCodeZone = _qrCodeZone;
+          }
+        }
       } else {
         this.mainPane.removeZone(this.currentRectangle);
       }
+      boolean _equals_5 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
+      if (_equals_5) {
+        this.createBoxButton.setSelected(false);
+      } else {
+        boolean _equals_6 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
+        if (_equals_6) {
+          this.createQrButton.setSelected(false);
+        }
+      }
       this.setToNoTool();
-      this.createBoxButton.setSelected(false);
     }
   }
   
@@ -356,10 +350,6 @@ public class ControllerFxEdition {
    * Called when we click on a pdf with the move tool selected
    * the box is limited to inside the pdf
    */
-  private double offsetX;
-  
-  private double offsetY;
-  
   public void moveBox(final MouseEvent e) {
     double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
       Math.min(e.getX(), (this.maxX - FxSettings.BOX_BORDER_THICKNESS)));
@@ -423,7 +413,8 @@ public class ControllerFxEdition {
           case NORTH:
             double _height = this.currentRectangle.getHeight();
             double _minus_4 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_4));
+            this.currentRectangle.y(
+              Math.min(mousePositionY, _minus_4));
             double _y_2 = this.currentRectangle.getY();
             double _minus_5 = (_y_2 - this.mouseOriginY);
             double _minus_6 = (this.objectOriginY - _minus_5);
@@ -432,7 +423,8 @@ public class ControllerFxEdition {
           case WEST:
             double _width = this.currentRectangle.getWidth();
             double _minus_7 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_7));
+            this.currentRectangle.x(
+              Math.min(mousePositionX, _minus_7));
             double _x_2 = this.currentRectangle.getX();
             double _minus_8 = (_x_2 - this.mouseOriginX);
             double _minus_9 = (this.objectOriginX - _minus_8);
@@ -441,7 +433,8 @@ public class ControllerFxEdition {
           case NORTHEAST:
             double _height_1 = this.currentRectangle.getHeight();
             double _minus_10 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_1);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_10));
+            this.currentRectangle.y(
+              Math.min(mousePositionY, _minus_10));
             double _y_3 = this.currentRectangle.getY();
             double _minus_11 = (_y_3 - this.mouseOriginY);
             double _minus_12 = (this.objectOriginY - _minus_11);
@@ -453,14 +446,16 @@ public class ControllerFxEdition {
           case NORTHWEST:
             double _height_2 = this.currentRectangle.getHeight();
             double _minus_14 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_2);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_14));
+            this.currentRectangle.y(
+              Math.min(mousePositionY, _minus_14));
             double _y_4 = this.currentRectangle.getY();
             double _minus_15 = (_y_4 - this.mouseOriginY);
             double _minus_16 = (this.objectOriginY - _minus_15);
             this.currentRectangle.height(Math.abs(_minus_16));
             double _width_1 = this.currentRectangle.getWidth();
             double _minus_17 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_1);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_17));
+            this.currentRectangle.x(
+              Math.min(mousePositionX, _minus_17));
             double _x_4 = this.currentRectangle.getX();
             double _minus_18 = (_x_4 - this.mouseOriginX);
             double _minus_19 = (this.objectOriginX - _minus_18);
@@ -480,7 +475,8 @@ public class ControllerFxEdition {
             this.currentRectangle.height(Math.abs(_minus_22));
             double _width_2 = this.currentRectangle.getWidth();
             double _minus_23 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_2);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_23));
+            this.currentRectangle.x(
+              Math.min(mousePositionX, _minus_23));
             double _x_6 = this.currentRectangle.getX();
             double _minus_24 = (_x_6 - this.mouseOriginX);
             double _minus_25 = (this.objectOriginX - _minus_24);
@@ -489,10 +485,14 @@ public class ControllerFxEdition {
           case NONE:
             double _width_3 = this.currentRectangle.getWidth();
             double _minus_26 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_3);
-            this.currentRectangle.x(Math.max(Math.min((mousePositionX - this.offsetX), _minus_26), FxSettings.BOX_BORDER_THICKNESS));
+            this.currentRectangle.x(
+              Math.max(
+                Math.min((mousePositionX - this.offsetX), _minus_26), FxSettings.BOX_BORDER_THICKNESS));
             double _height_3 = this.currentRectangle.getHeight();
             double _minus_27 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_3);
-            this.currentRectangle.y(Math.max(Math.min((mousePositionY - this.offsetY), _minus_27), FxSettings.BOX_BORDER_THICKNESS));
+            this.currentRectangle.y(
+              Math.max(
+                Math.min((mousePositionY - this.offsetY), _minus_27), FxSettings.BOX_BORDER_THICKNESS));
             break;
           default:
             break;
@@ -503,7 +503,11 @@ public class ControllerFxEdition {
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
     if (_equals_2) {
       this.setToNoTool();
-      this.questionList.updateInModel(this.currentRectangle.getQuestionItem());
+      BoxType _type = this.currentRectangle.getType();
+      boolean _equals_3 = Objects.equal(_type, BoxType.QUESTION);
+      if (_equals_3) {
+        this.questionList.updateInModel(this.currentRectangle.getQuestionItem());
+      }
     }
   }
   
@@ -545,86 +549,22 @@ public class ControllerFxEdition {
   }
   
   /**
-   * Used to zoom in and out the pdf image
-   * 
-   * Using the scale allows the children of the pane to also scale accordingly
-   */
-  @FXML
-  public void ZoomImage(final ScrollEvent e) {
-    Object _source = e.getSource();
-    Node source = ((Node) _source);
-    double _deltaY = e.getDeltaY();
-    boolean _lessThan = (_deltaY < 0);
-    if (_lessThan) {
-      double _scaleX = source.getScaleX();
-      double _multiply = (_scaleX * 0.95);
-      source.setScaleX(_multiply);
-      double _scaleY = source.getScaleY();
-      double _multiply_1 = (_scaleY * 0.95);
-      source.setScaleY(_multiply_1);
-    } else {
-      double _scaleX_1 = source.getScaleX();
-      double _multiply_2 = (_scaleX_1 * 1.05);
-      source.setScaleX(_multiply_2);
-      double _scaleY_1 = source.getScaleY();
-      double _multiply_3 = (_scaleY_1 * 1.05);
-      source.setScaleY(_multiply_3);
-    }
-  }
-  
-  /**
-   * Setters for the current tool selected
-   */
-  private ControllerFxEdition.SelectedTool currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
-  
-  public ControllerFxEdition.SelectedTool getSelectedTool() {
-    return this.currentTool;
-  }
-  
-  public ControllerFxEdition.SelectedTool setSelectedTool(final ControllerFxEdition.SelectedTool tool) {
-    return this.currentTool = tool;
-  }
-  
-  public void setToMoveCameraTool() {
-    this.mainPane.setCursor(Cursor.OPEN_HAND);
-    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_CAMERA_TOOL;
-  }
-  
-  public void setToQuestionAreaTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.QUESTION_AREA;
-  }
-  
-  public void setToIDAreaTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.ID_AREA;
-  }
-  
-  public void setToQRAreaTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.QR_AREA;
-  }
-  
-  public void setToMoveTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_TOOL;
-  }
-  
-  public void setToResizeTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.RESIZE_TOOL;
-  }
-  
-  public void setToNoTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
-  }
-  
-  /**
    * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
    */
   public Box createZone(final double x, final double y) {
-    return new Box(x, y, 0, 0);
+    Box _xifexpression = null;
+    boolean _equals = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
+    if (_equals) {
+      _xifexpression = new Box(BoxType.QUESTION, x, y, 0, 0);
+    } else {
+      Box _xifexpression_1 = null;
+      boolean _equals_1 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
+      if (_equals_1) {
+        _xifexpression_1 = new Box(BoxType.QR, x, y, 0, 0);
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    return _xifexpression;
   }
   
   /**
@@ -708,7 +648,9 @@ public class ControllerFxEdition {
       java.util.Objects.<File>requireNonNull(file);
       final boolean success = this.load(file.getPath());
       if ((!success)) {
-        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
+        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, 
+          "studentSheetLoader.templateConfirmationDialog.title", 
+          "studentSheetLoader.templateConfirmationDialog.fail", null);
       } else {
         this.render();
       }
@@ -755,7 +697,8 @@ public class ControllerFxEdition {
             double _multiply_2 = (_questionWidth * this.maxX);
             double _questionHeight = this.questionHeight(i);
             double _multiply_3 = (_questionHeight * this.maxY);
-            Box box = new Box(_multiply, _multiply_1, _multiply_2, _multiply_3);
+            Box box = new Box(
+              BoxType.QUESTION, _multiply, _multiply_1, _multiply_2, _multiply_3);
             this.mainPane.addZone(box);
             this.questionList.loadQuestion(box, this.questionName(i), p, i, this.questionWorth(i));
           }
@@ -881,22 +824,13 @@ public class ControllerFxEdition {
   }
   
   /**
-   * --LOADING NEW TEMPLATE--
+   * Supprime la zone de qr code de l'écran
    */
-  public List<Integer> initLoading(final int pageNumber) {
-    LinkedList<Integer> _xblockexpression = null;
-    {
-      this.questions = this.service.getQuestionAtPage(pageNumber);
-      LinkedList<Integer> ids = new LinkedList<Integer>();
-      for (final Question q : this.questions) {
-        ids.add(Integer.valueOf(q.getId()));
-      }
-      _xblockexpression = ids;
+  public void removeQrCodeZone() {
+    if ((this.qrCodeZone != null)) {
+      this.mainPane.removeZone(this.qrCodeZone.getZone());
     }
-    return _xblockexpression;
   }
-  
-  private List<Question> questions;
   
   /**
    * Loads the next question into questionToLoad
@@ -1003,6 +937,155 @@ public class ControllerFxEdition {
       _xblockexpression = result;
     }
     return _xblockexpression;
+  }
+  
+  public ControllerFxEdition.SelectedTool getSelectedTool() {
+    return this.currentTool;
+  }
+  
+  public EdgeLocation setEdgeLoc(final EdgeLocation edge) {
+    return this.edge = edge;
+  }
+  
+  public ControllerFxEdition.SelectedTool setSelectedTool(final ControllerFxEdition.SelectedTool tool) {
+    return this.currentTool = tool;
+  }
+  
+  public void setToMoveCameraTool() {
+    this.mainPane.setCursor(Cursor.OPEN_HAND);
+    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_CAMERA_TOOL;
+  }
+  
+  public void setToQuestionAreaTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.QUESTION_AREA;
+  }
+  
+  public void setToIDAreaTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.ID_AREA;
+  }
+  
+  public void setToQRAreaTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.QR_AREA;
+  }
+  
+  public void setToMoveTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_TOOL;
+  }
+  
+  public void setToResizeTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.RESIZE_TOOL;
+  }
+  
+  public void setToNoTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
+  }
+  
+  @FXML
+  public void questionAreaPressed() {
+    boolean _isSelected = this.createBoxButton.isSelected();
+    if (_isSelected) {
+      this.setToQuestionAreaTool();
+    } else {
+      this.setToNoTool();
+    }
+  }
+  
+  @FXML
+  public void iDAreaPressed() {
+    this.setToIDAreaTool();
+  }
+  
+  @FXML
+  public void qrAreaPressed() {
+    boolean _isSelected = this.createQrButton.isSelected();
+    if (_isSelected) {
+      this.removeQrCodeZone();
+      this.setToQRAreaTool();
+    } else {
+      this.setToNoTool();
+    }
+  }
+  
+  @FXML
+  public void movePressed() {
+    this.setToMoveCameraTool();
+  }
+  
+  @FXML
+  public void nextPagePressed() {
+    if (this.pdfLoaded) {
+      this.nextPage();
+    }
+  }
+  
+  @FXML
+  public void saveTemplatePressed() {
+    if (this.pdfLoaded) {
+      this.saveTemplate();
+    }
+  }
+  
+  @FXML
+  public void loadTemplatePressed() {
+    this.loadTemplate();
+  }
+  
+  @FXML
+  public void previousPagePressed() {
+    if (this.pdfLoaded) {
+      this.previousPage();
+    }
+  }
+  
+  @FXML
+  public void switchToCorrectorPressed() {
+  }
+  
+  @FXML
+  public void mainMouseEvent(final MouseEvent e) {
+    if (this.pdfLoaded) {
+      MouseButton _button = e.getButton();
+      boolean _equals = Objects.equal(_button, MouseButton.SECONDARY);
+      if (_equals) {
+        this.moveImage(e);
+      } else {
+        this.chooseMouseAction(e);
+      }
+    }
+  }
+  
+  /**
+   * Used to zoom in and out the pdf image
+   * 
+   * Using the scale allows the children of the pane to also scale accordingly
+   */
+  @FXML
+  public void ZoomImage(final ScrollEvent e) {
+    Object _source = e.getSource();
+    Node source = ((Node) _source);
+    double _deltaY = e.getDeltaY();
+    boolean _lessThan = (_deltaY < 0);
+    if (_lessThan) {
+      double _scaleX = source.getScaleX();
+      double _multiply = (_scaleX * 0.95);
+      source.setScaleX(_multiply);
+      double _scaleY = source.getScaleY();
+      double _multiply_1 = (_scaleY * 0.95);
+      source.setScaleY(_multiply_1);
+    } else {
+      double _scaleX_1 = source.getScaleX();
+      double _multiply_2 = (_scaleX_1 * 1.05);
+      source.setScaleX(_multiply_2);
+      double _scaleY_1 = source.getScaleY();
+      double _multiply_3 = (_scaleY_1 * 1.05);
+      source.setScaleY(_multiply_3);
+    }
   }
   
   @Pure

@@ -107,12 +107,13 @@ public class QuestionItemEdition extends VBox {
     this.list = list;
     this.zone = zone;
     this.zone.setQuestionItem(this);
+    this.type = BoxType.QUESTION;
     Label _label = new Label("New Question");
     this.name = _label;
     this.getChildren().addAll(this.top, this.middle, this.bottom);
     this.top.getChildren().addAll(this.name);
     VBox.setVgrow(this, Priority.ALWAYS);
-    zone.setupEvents();
+    zone.setupEvents(this.type);
     this.scale = 1f;
     this.getStyleClass().add("ListItem");
     Insets _insets = new Insets(2);
