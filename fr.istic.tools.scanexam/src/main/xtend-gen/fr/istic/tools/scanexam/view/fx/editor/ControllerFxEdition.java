@@ -49,6 +49,19 @@ import org.eclipse.xtend.lib.annotations.Accessors;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 
+/**
+ * This controller controlls the main components of the edition
+ * This controlle is associated with a FXML, the static version of the ui.
+ * This FX contains "containers" where we will place our dynamic components.
+ * These components are initiated during the init method, that is called after the loading of the FXML in the launcher.
+ * 
+ * This class has differenc sections :
+ * 	-Mouse events (mouse inputs for moving the pdf, moving boxes ect).
+ * 	-Box management(creating, resizing ect).
+ * 	-loading/saving (loading a new model, saving).
+ * 	-pdf page management.
+ * 	-interactions with the service.
+ */
 @SuppressWarnings("all")
 public class ControllerFxEdition {
   public enum SelectedTool {
@@ -67,32 +80,6 @@ public class ControllerFxEdition {
     RESIZE_TOOL;
   }
   
-  private ServiceEdition service;
-  
-  private double maxX;
-  
-  private double maxY;
-  
-  private boolean pdfLoaded = false;
-  
-  /**
-   * Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings
-   */
-  private boolean renderFlag = true;
-  
-  @Accessors
-  private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
-  
-  private Logger logger = LogManager.getLogger();
-  
-  public ControllerFxEdition.SelectedTool getSelectedTool() {
-    return this.currentTool;
-  }
-  
-  public ControllerFxEdition.SelectedTool setSelectedTool(final ControllerFxEdition.SelectedTool tool) {
-    return this.currentTool = tool;
-  }
-  
   @FXML
   private ToggleButton createBoxButton;
   
@@ -101,8 +88,6 @@ public class ControllerFxEdition {
   
   @FXML
   private Button previousPageButton;
-  
-  private PdfPane mainPane;
   
   @FXML
   private ScrollPane questionListContainer;
@@ -116,19 +101,8 @@ public class ControllerFxEdition {
   @FXML
   private Label pageNumberLabel;
   
-  private QuestionListEdition questionList;
-  
-  private QuestionOptionsEdition questionEditor;
-  
   @FXML
   private AnchorPane mainPaneContainer;
-  
-  @Accessors
-  private PdfManager pdfManager;
-  
-  @FXML
-  public void pressed() {
-  }
   
   @FXML
   public void questionAreaPressed() {
@@ -198,13 +172,36 @@ public class ControllerFxEdition {
     }
   }
   
-  public PdfPane getMainPane() {
-    return this.mainPane;
-  }
+  private Logger logger = LogManager.getLogger();
   
-  public QuestionListEdition getQuestionList() {
-    return this.questionList;
-  }
+  private ServiceEdition service;
+  
+  private double maxX;
+  
+  private double maxY;
+  
+  private boolean pdfLoaded = false;
+  
+  /**
+   * Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code
+   * (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings.
+   */
+  private boolean renderFlag = true;
+  
+  @Accessors
+  private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
+  
+  @Accessors
+  private QuestionListEdition questionList;
+  
+  @Accessors
+  private QuestionOptionsEdition questionEditor;
+  
+  @Accessors
+  private PdfManager pdfManager;
+  
+  @Accessors
+  private PdfPane mainPane;
   
   /**
    * Called When we decide to focus on a specific question
@@ -579,6 +576,14 @@ public class ControllerFxEdition {
    * Setters for the current tool selected
    */
   private ControllerFxEdition.SelectedTool currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
+  
+  public ControllerFxEdition.SelectedTool getSelectedTool() {
+    return this.currentTool;
+  }
+  
+  public ControllerFxEdition.SelectedTool setSelectedTool(final ControllerFxEdition.SelectedTool tool) {
+    return this.currentTool = tool;
+  }
   
   public void setToMoveCameraTool() {
     this.mainPane.setCursor(Cursor.OPEN_HAND);
@@ -1010,11 +1015,38 @@ public class ControllerFxEdition {
   }
   
   @Pure
+  public QuestionListEdition getQuestionList() {
+    return this.questionList;
+  }
+  
+  public void setQuestionList(final QuestionListEdition questionList) {
+    this.questionList = questionList;
+  }
+  
+  @Pure
+  public QuestionOptionsEdition getQuestionEditor() {
+    return this.questionEditor;
+  }
+  
+  public void setQuestionEditor(final QuestionOptionsEdition questionEditor) {
+    this.questionEditor = questionEditor;
+  }
+  
+  @Pure
   public PdfManager getPdfManager() {
     return this.pdfManager;
   }
   
   public void setPdfManager(final PdfManager pdfManager) {
     this.pdfManager = pdfManager;
+  }
+  
+  @Pure
+  public PdfPane getMainPane() {
+    return this.mainPane;
+  }
+  
+  public void setMainPane(final PdfPane mainPane) {
+    this.mainPane = mainPane;
   }
 }

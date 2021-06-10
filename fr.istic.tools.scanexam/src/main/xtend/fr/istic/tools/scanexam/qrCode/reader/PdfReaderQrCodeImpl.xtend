@@ -296,6 +296,10 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	def setFinished(boolean bool){
 		this.isFinished = bool
 	}
+	
+	override getFailedSheets() {
+		return pagesMalLues
+	}
 
 	/*def static void main(String[] arg) {
 		val File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf")

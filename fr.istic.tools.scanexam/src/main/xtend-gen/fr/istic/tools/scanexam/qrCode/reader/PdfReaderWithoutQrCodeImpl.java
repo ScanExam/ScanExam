@@ -35,6 +35,8 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   
   private PDDocument doc;
   
+  private List<Integer> pagesMalLues;
+  
   public PdfReaderWithoutQrCodeImpl(final PDDocument document, final int nbPages, final int nbCopies) {
     this.doc = document;
     this.nbPagesInSheet = nbPages;
@@ -307,5 +309,10 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
       res = (_res + _length_1);
     }
     return res;
+  }
+  
+  @Override
+  public Collection<Integer> getFailedSheets() {
+    return this.pagesMalLues;
   }
 }

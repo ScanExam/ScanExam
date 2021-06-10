@@ -382,4 +382,9 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   public boolean setFinished(final boolean bool) {
     return this.isFinished = bool;
   }
+  
+  @Override
+  public Collection<Integer> getFailedSheets() {
+    return this.pagesMalLues;
+  }
 }
