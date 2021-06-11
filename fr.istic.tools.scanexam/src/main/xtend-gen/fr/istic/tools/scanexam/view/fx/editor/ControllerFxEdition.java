@@ -402,97 +402,163 @@ public class ControllerFxEdition {
         switch (edge) {
           case SOUTH:
             double _y_1 = this.currentRectangle.getY();
-            double _minus_2 = (_y_1 - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus_2));
+            boolean _greaterThan = (mousePositionY > _y_1);
+            if (_greaterThan) {
+              double _y_2 = this.currentRectangle.getY();
+              double _minus_2 = (mousePositionY - _y_2);
+              this.currentRectangle.height(_minus_2);
+            } else {
+              this.edge = EdgeLocation.NORTH;
+            }
             break;
           case EAST:
             double _x_1 = this.currentRectangle.getX();
-            double _minus_3 = (_x_1 - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_3));
+            boolean _greaterThan_1 = (mousePositionX > _x_1);
+            if (_greaterThan_1) {
+              double _x_2 = this.currentRectangle.getX();
+              double _minus_3 = (mousePositionX - _x_2);
+              this.currentRectangle.width(_minus_3);
+            } else {
+              this.edge = EdgeLocation.WEST;
+            }
             break;
           case NORTH:
+            double _y_3 = this.currentRectangle.getY();
             double _height = this.currentRectangle.getHeight();
-            double _minus_4 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height);
-            this.currentRectangle.y(
-              Math.min(mousePositionY, _minus_4));
-            double _y_2 = this.currentRectangle.getY();
-            double _minus_5 = (_y_2 - this.mouseOriginY);
-            double _minus_6 = (this.objectOriginY - _minus_5);
-            this.currentRectangle.height(Math.abs(_minus_6));
+            double _plus = (_y_3 + _height);
+            boolean _lessThan = (mousePositionY < _plus);
+            if (_lessThan) {
+              final double initialY = this.currentRectangle.getY();
+              this.currentRectangle.y(mousePositionY);
+              double _height_1 = this.currentRectangle.getHeight();
+              double _minus_4 = (_height_1 - (mousePositionY - initialY));
+              this.currentRectangle.height(_minus_4);
+            } else {
+              this.edge = EdgeLocation.SOUTH;
+            }
             break;
           case WEST:
+            double _x_3 = this.currentRectangle.getX();
             double _width = this.currentRectangle.getWidth();
-            double _minus_7 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width);
-            this.currentRectangle.x(
-              Math.min(mousePositionX, _minus_7));
-            double _x_2 = this.currentRectangle.getX();
-            double _minus_8 = (_x_2 - this.mouseOriginX);
-            double _minus_9 = (this.objectOriginX - _minus_8);
-            this.currentRectangle.width(Math.abs(_minus_9));
+            double _plus_1 = (_x_3 + _width);
+            boolean _lessThan_1 = (mousePositionX < _plus_1);
+            if (_lessThan_1) {
+              final double initialX = this.currentRectangle.getX();
+              this.currentRectangle.x(mousePositionX);
+              double _width_1 = this.currentRectangle.getWidth();
+              double _minus_5 = (_width_1 - (mousePositionX - initialX));
+              this.currentRectangle.width(_minus_5);
+            } else {
+              this.edge = EdgeLocation.EAST;
+            }
             break;
           case NORTHEAST:
-            double _height_1 = this.currentRectangle.getHeight();
-            double _minus_10 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_1);
-            this.currentRectangle.y(
-              Math.min(mousePositionY, _minus_10));
-            double _y_3 = this.currentRectangle.getY();
-            double _minus_11 = (_y_3 - this.mouseOriginY);
-            double _minus_12 = (this.objectOriginY - _minus_11);
-            this.currentRectangle.height(Math.abs(_minus_12));
-            double _x_3 = this.currentRectangle.getX();
-            double _minus_13 = (_x_3 - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_13));
+            double _y_4 = this.currentRectangle.getY();
+            double _height_2 = this.currentRectangle.getHeight();
+            double _plus_2 = (_y_4 + _height_2);
+            boolean _lessThan_2 = (mousePositionY < _plus_2);
+            if (_lessThan_2) {
+              final double initialY_1 = this.currentRectangle.getY();
+              this.currentRectangle.y(mousePositionY);
+              double _height_3 = this.currentRectangle.getHeight();
+              double _minus_6 = (_height_3 - (mousePositionY - initialY_1));
+              this.currentRectangle.height(_minus_6);
+            } else {
+              this.edge = EdgeLocation.SOUTHEAST;
+            }
+            double _x_4 = this.currentRectangle.getX();
+            boolean _greaterThan_2 = (mousePositionX > _x_4);
+            if (_greaterThan_2) {
+              double _x_5 = this.currentRectangle.getX();
+              double _minus_7 = (mousePositionX - _x_5);
+              this.currentRectangle.width(_minus_7);
+            } else {
+              this.edge = EdgeLocation.NORTHWEST;
+            }
             break;
           case NORTHWEST:
-            double _height_2 = this.currentRectangle.getHeight();
-            double _minus_14 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_2);
-            this.currentRectangle.y(
-              Math.min(mousePositionY, _minus_14));
-            double _y_4 = this.currentRectangle.getY();
-            double _minus_15 = (_y_4 - this.mouseOriginY);
-            double _minus_16 = (this.objectOriginY - _minus_15);
-            this.currentRectangle.height(Math.abs(_minus_16));
-            double _width_1 = this.currentRectangle.getWidth();
-            double _minus_17 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_1);
-            this.currentRectangle.x(
-              Math.min(mousePositionX, _minus_17));
-            double _x_4 = this.currentRectangle.getX();
-            double _minus_18 = (_x_4 - this.mouseOriginX);
-            double _minus_19 = (this.objectOriginX - _minus_18);
-            this.currentRectangle.width(Math.abs(_minus_19));
+            double _y_5 = this.currentRectangle.getY();
+            double _height_4 = this.currentRectangle.getHeight();
+            double _plus_3 = (_y_5 + _height_4);
+            boolean _lessThan_3 = (mousePositionY < _plus_3);
+            if (_lessThan_3) {
+              final double initialY_2 = this.currentRectangle.getY();
+              this.currentRectangle.y(mousePositionY);
+              double _height_5 = this.currentRectangle.getHeight();
+              double _minus_8 = (_height_5 - (mousePositionY - initialY_2));
+              this.currentRectangle.height(_minus_8);
+            } else {
+              this.edge = EdgeLocation.SOUTHWEST;
+            }
+            double _x_6 = this.currentRectangle.getX();
+            double _width_2 = this.currentRectangle.getWidth();
+            double _plus_4 = (_x_6 + _width_2);
+            boolean _lessThan_4 = (mousePositionX < _plus_4);
+            if (_lessThan_4) {
+              final double initialX_1 = this.currentRectangle.getX();
+              this.currentRectangle.x(mousePositionX);
+              double _width_3 = this.currentRectangle.getWidth();
+              double _minus_9 = (_width_3 - (mousePositionX - initialX_1));
+              this.currentRectangle.width(_minus_9);
+            } else {
+              this.edge = EdgeLocation.NORTHEAST;
+            }
             break;
           case SOUTHEAST:
-            double _y_5 = this.currentRectangle.getY();
-            double _minus_20 = (_y_5 - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus_20));
-            double _x_5 = this.currentRectangle.getX();
-            double _minus_21 = (_x_5 - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_21));
+            double _y_6 = this.currentRectangle.getY();
+            boolean _greaterThan_3 = (mousePositionY > _y_6);
+            if (_greaterThan_3) {
+              double _y_7 = this.currentRectangle.getY();
+              double _minus_10 = (mousePositionY - _y_7);
+              this.currentRectangle.height(_minus_10);
+            } else {
+              this.edge = EdgeLocation.NORTHEAST;
+            }
+            double _x_7 = this.currentRectangle.getX();
+            boolean _greaterThan_4 = (mousePositionX > _x_7);
+            if (_greaterThan_4) {
+              double _x_8 = this.currentRectangle.getX();
+              double _minus_11 = (mousePositionX - _x_8);
+              this.currentRectangle.width(_minus_11);
+            } else {
+              this.edge = EdgeLocation.SOUTHWEST;
+            }
             break;
           case SOUTHWEST:
-            double _y_6 = this.currentRectangle.getY();
-            double _minus_22 = (_y_6 - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus_22));
-            double _width_2 = this.currentRectangle.getWidth();
-            double _minus_23 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_2);
-            this.currentRectangle.x(
-              Math.min(mousePositionX, _minus_23));
-            double _x_6 = this.currentRectangle.getX();
-            double _minus_24 = (_x_6 - this.mouseOriginX);
-            double _minus_25 = (this.objectOriginX - _minus_24);
-            this.currentRectangle.width(Math.abs(_minus_25));
+            double _y_8 = this.currentRectangle.getY();
+            boolean _greaterThan_5 = (mousePositionY > _y_8);
+            if (_greaterThan_5) {
+              double _y_9 = this.currentRectangle.getY();
+              double _minus_12 = (mousePositionY - _y_9);
+              this.currentRectangle.height(_minus_12);
+            } else {
+              this.edge = EdgeLocation.NORTHWEST;
+            }
+            double _x_9 = this.currentRectangle.getX();
+            double _width_4 = this.currentRectangle.getWidth();
+            double _plus_5 = (_x_9 + _width_4);
+            boolean _lessThan_5 = (mousePositionX < _plus_5);
+            if (_lessThan_5) {
+              final double initialX_2 = this.currentRectangle.getX();
+              this.currentRectangle.x(mousePositionX);
+              double _width_5 = this.currentRectangle.getWidth();
+              double _minus_13 = (_width_5 - (mousePositionX - initialX_2));
+              this.currentRectangle.width(_minus_13);
+            } else {
+              this.edge = EdgeLocation.SOUTHEAST;
+            }
             break;
           case NONE:
-            double _width_3 = this.currentRectangle.getWidth();
-            double _minus_26 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_3);
+            double _width_6 = this.currentRectangle.getWidth();
+            double _minus_14 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_6);
             this.currentRectangle.x(
               Math.max(
-                Math.min((mousePositionX - this.offsetX), _minus_26), FxSettings.BOX_BORDER_THICKNESS));
-            double _height_3 = this.currentRectangle.getHeight();
-            double _minus_27 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_3);
+                Math.min((mousePositionX - this.offsetX), _minus_14), FxSettings.BOX_BORDER_THICKNESS));
+            double _height_6 = this.currentRectangle.getHeight();
+            double _minus_15 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_6);
             this.currentRectangle.y(
               Math.max(
-                Math.min((mousePositionY - this.offsetY), _minus_27), FxSettings.BOX_BORDER_THICKNESS));
+                Math.min((mousePositionY - this.offsetY), _minus_15), FxSettings.BOX_BORDER_THICKNESS));
             break;
           default:
             break;

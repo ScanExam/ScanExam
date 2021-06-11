@@ -7,6 +7,7 @@ class FxSettings {
 	
 	public static var BOX_BORDER_THICKNESS = 3
 	public static var BOX_BORDER_NORMAL_COLOR = Color.BLACK
+	public static var QRZONE_BORDER_NORMAL_COLOR = Color.GRAY
 	public static var BOX_BORDER_HIGHLIGHT_COLOR = Color.web("#0093ff")
 	public static var BUTTON_ICON_SIZE = 16;
 	public static var BOX_TEXT_OFFSET_X = 25.0;

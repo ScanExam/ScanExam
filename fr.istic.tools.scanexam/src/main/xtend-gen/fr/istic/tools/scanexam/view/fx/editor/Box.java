@@ -25,7 +25,12 @@ public class Box extends Rectangle {
     this.type = type;
     this.questionItem = item;
     this.setStrokeWidth(FxSettings.BOX_BORDER_THICKNESS);
-    this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+    boolean _equals = Objects.equal(this.type, BoxType.QR);
+    if (_equals) {
+      this.setStroke(FxSettings.QRZONE_BORDER_NORMAL_COLOR);
+    } else {
+      this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+    }
     this.setFill(FxSettings.BOX_NORMAL_COLOR);
   }
   
@@ -62,7 +67,12 @@ public class Box extends Rectangle {
       this.setStroke(FxSettings.BOX_BORDER_HIGHLIGHT_COLOR);
       this.setFill(FxSettings.BOX_HIGHLIGHT_COLOR);
     } else {
-      this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+      boolean _equals = Objects.equal(this.type, BoxType.QR);
+      if (_equals) {
+        this.setStroke(FxSettings.QRZONE_BORDER_NORMAL_COLOR);
+      } else {
+        this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+      }
       this.setFill(FxSettings.BOX_NORMAL_COLOR);
     }
   }

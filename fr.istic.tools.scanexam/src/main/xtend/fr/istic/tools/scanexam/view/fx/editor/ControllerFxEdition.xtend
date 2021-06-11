@@ -331,45 +331,92 @@ class ControllerFxEdition {
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 			switch edge {
 				case SOUTH: {
-					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
+					if (mousePositionY > currentRectangle.y) {
+						currentRectangle.height(mousePositionY - currentRectangle.y)
+					} else {
+						edge = EdgeLocation.NORTH
+					}
 				}
 				case EAST: {
-					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
+					if (mousePositionX > currentRectangle.x) {
+						currentRectangle.width(mousePositionX - currentRectangle.x)
+					} else {
+						edge = EdgeLocation.WEST
+					}
 				}
 				case NORTH: {
-					currentRectangle.y(
-						Math.min(mousePositionY, maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
-					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
+					if (mousePositionY < currentRectangle.y + currentRectangle.height) {
+						val double initialY = currentRectangle.y
+						currentRectangle.y(mousePositionY)
+						currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+					} else {
+						edge = EdgeLocation.SOUTH
+					}
 				}
 				case WEST: {
-					currentRectangle.x(
-						Math.min(mousePositionX, maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
-					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
+					if (mousePositionX < currentRectangle.x + currentRectangle.width) {
+						val double initialX = currentRectangle.x
+						currentRectangle.x(mousePositionX)
+						currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+					} else {
+						edge = EdgeLocation.EAST
+					}
 				}
 				case NORTHEAST: {
-					currentRectangle.y(
-						Math.min(mousePositionY, maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
-					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
-					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
+					if (mousePositionY < currentRectangle.y + currentRectangle.height) {
+						val double initialY = currentRectangle.y
+						currentRectangle.y(mousePositionY)
+						currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+					} else {
+						edge = EdgeLocation.SOUTHEAST
+					}
+					if (mousePositionX > currentRectangle.x) {
+						currentRectangle.width(mousePositionX - currentRectangle.x)
+					} else {
+						edge = EdgeLocation.NORTHWEST
+					}
 				}
 				case NORTHWEST: {
-					currentRectangle.y(
-						Math.min(mousePositionY, maxY - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.height))
-					currentRectangle.height(Math.abs(objectOriginY - (currentRectangle.y - mouseOriginY)))
-					currentRectangle.x(
-						Math.min(mousePositionX, maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
-					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
+					if (mousePositionY < currentRectangle.y + currentRectangle.height) {
+						val double initialY = currentRectangle.y
+						currentRectangle.y(mousePositionY)
+						currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+					} else {
+						edge = EdgeLocation.SOUTHWEST
+					}
+					if (mousePositionX < currentRectangle.x + currentRectangle.width) {
+						val double initialX = currentRectangle.x
+						currentRectangle.x(mousePositionX)
+						currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+					} else {
+						edge = EdgeLocation.NORTHEAST
+					}
 				}
 				case SOUTHEAST: {
-					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
-					currentRectangle.width(Math.abs(currentRectangle.x - mousePositionX))
-
+					if (mousePositionY > currentRectangle.y) {
+						currentRectangle.height(mousePositionY - currentRectangle.y)
+					} else {
+						edge = EdgeLocation.NORTHEAST
+					}
+					if (mousePositionX > currentRectangle.x) {
+						currentRectangle.width(mousePositionX - currentRectangle.x)
+					} else {
+						edge = EdgeLocation.SOUTHWEST
+					}
 				}
 				case SOUTHWEST: {
-					currentRectangle.height(Math.abs(currentRectangle.y - mousePositionY))
-					currentRectangle.x(
-						Math.min(mousePositionX, maxX - FxSettings.BOX_BORDER_THICKNESS - currentRectangle.width))
-					currentRectangle.width(Math.abs(objectOriginX - (currentRectangle.x - mouseOriginX)))
+					if (mousePositionY > currentRectangle.y) {
+						currentRectangle.height(mousePositionY - currentRectangle.y)
+					} else {
+						edge = EdgeLocation.NORTHWEST
+					}
+					if (mousePositionX < currentRectangle.x + currentRectangle.width) {
+						val double initialX = currentRectangle.x
+						currentRectangle.x(mousePositionX)
+						currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+					} else {
+						edge = EdgeLocation.SOUTHEAST
+					}
 				}
 				case NONE: {
 					currentRectangle.x(
