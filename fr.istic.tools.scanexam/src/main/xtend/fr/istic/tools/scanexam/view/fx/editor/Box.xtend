@@ -18,7 +18,11 @@ class Box extends Rectangle {
 		this.type = type
 		this.questionItem = item
 		this.strokeWidth = FxSettings.BOX_BORDER_THICKNESS
-		this.stroke = FxSettings.BOX_BORDER_NORMAL_COLOR
+		if (this.type == BoxType.QR) {
+			this.stroke = FxSettings.QRZONE_BORDER_NORMAL_COLOR
+		} else {
+			this.stroke = FxSettings.BOX_BORDER_NORMAL_COLOR
+		}
 		this.fill = FxSettings.BOX_NORMAL_COLOR
 
 	}
@@ -61,7 +65,11 @@ class Box extends Rectangle {
 			this.stroke = FxSettings.BOX_BORDER_HIGHLIGHT_COLOR
 			this.fill = FxSettings.BOX_HIGHLIGHT_COLOR
 		} else {
-			this.stroke = FxSettings.BOX_BORDER_NORMAL_COLOR
+			if (this.type == BoxType.QR) {
+				this.stroke = FxSettings.QRZONE_BORDER_NORMAL_COLOR
+			} else {
+				this.stroke = FxSettings.BOX_BORDER_NORMAL_COLOR
+			}
 			this.fill = FxSettings.BOX_NORMAL_COLOR
 		}
 	}

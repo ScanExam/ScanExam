@@ -9,6 +9,8 @@ public class FxSettings {
   
   public static Color BOX_BORDER_NORMAL_COLOR = Color.BLACK;
   
+  public static Color QRZONE_BORDER_NORMAL_COLOR = Color.GRAY;
+  
   public static Color BOX_BORDER_HIGHLIGHT_COLOR = Color.web("#0093ff");
   
   public static int BUTTON_ICON_SIZE = 16;
