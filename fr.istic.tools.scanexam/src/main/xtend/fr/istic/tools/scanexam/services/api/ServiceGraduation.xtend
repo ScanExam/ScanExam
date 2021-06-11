@@ -34,7 +34,7 @@ interface ServiceGraduation extends Service {
 	 * @params studentSheets une liste de StudenSheet
 	 * @returns "true" si la correction a pu être créée, "false" sinon
 	 */
-	def boolean initializeCorrection(Collection<StudentSheet> studentSheets)
+	def boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages)
 	
 	
 	
@@ -87,6 +87,11 @@ interface ServiceGraduation extends Service {
 	 * @return le nombre de pages de l'Examen
 	 */
 	def int getPageAmount()
+	
+	/**
+	 * @return les pages qui n'ont pas été détectées avec un QRCode
+	 */
+	 def Collection<Integer> getFailedPages()
 	
 	//===================================================
 	//          		  Question

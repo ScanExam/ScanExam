@@ -243,7 +243,7 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 		return res
 	}
 	
-	override getFailedSheets() {
+	override getFailedPages() {
 		return pagesMalLues
 	}
 

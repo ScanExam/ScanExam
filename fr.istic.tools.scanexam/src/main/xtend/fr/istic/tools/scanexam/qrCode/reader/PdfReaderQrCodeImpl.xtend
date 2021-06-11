@@ -297,7 +297,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		this.isFinished = bool
 	}
 	
-	override getFailedSheets() {
+	override getFailedPages() {
 		return pagesMalLues
 	}
 

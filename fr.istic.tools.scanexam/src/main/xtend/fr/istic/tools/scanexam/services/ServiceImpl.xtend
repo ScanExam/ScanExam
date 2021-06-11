@@ -105,7 +105,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @params studentSheets une liste de StudenSheet
 	 * @returns "true" si la correction a pu être créée, "false" sinon
 	 */
-	override boolean initializeCorrection(Collection<StudentSheet> studentSheets) {
+	override boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages) {
 		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
 		try {
 			for (StudentSheet sheet : studentSheets) {
@@ -119,7 +119,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 				}
 
 			}
+			
+			
 			graduationTemplate.studentsheets.addAll(studentSheets.sortBy[s | s.id])
+			graduationTemplate.failedPages.addAll(failedPages.sortBy[a | a])
 			return true
 		} catch (Exception ex) {
 			return false;
@@ -213,6 +216,13 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override int getPageAmount() {
 		return getTemplatePageAmount
+	}
+	
+	/**
+	 * @return les pages qui n'ont pas été détectées avec un QRCode
+	 */
+	override Collection<Integer> getFailedPages(){
+		return graduationTemplate.failedPages
 	}
 	
 	//===================================================

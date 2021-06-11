@@ -49,7 +49,7 @@ interface PdfReader {
 	 * comme étant marquées avec un QRCode
 	 * @return la collection du numéro des pages qui n'ont pas été détectées avec un QRCode
 	 */
-	 def Collection<Integer> getFailedSheets()
+	 def Collection<Integer> getFailedPages()
 	 
 	 
 	 }
