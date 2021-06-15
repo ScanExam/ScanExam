@@ -48,7 +48,6 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend.lib.annotations.Accessors;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
@@ -325,19 +324,25 @@ public class ControllerFxEdition {
         } else {
           boolean _equals_4 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
           if (_equals_4) {
-            QrCodeZone _qrCodeZone = new QrCodeZone(this.currentRectangle);
+            QrCodeZone _qrCodeZone = new QrCodeZone(this.currentRectangle, this);
             this.qrCodeZone = _qrCodeZone;
+          } else {
+            BoxType _type = this.currentRectangle.getType();
+            boolean _equals_5 = Objects.equal(_type, BoxType.QR);
+            if (_equals_5) {
+              this.qrCodeZone.updateInModel();
+            }
           }
         }
       } else {
         this.mainPane.removeZone(this.currentRectangle);
       }
-      boolean _equals_5 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
-      if (_equals_5) {
+      boolean _equals_6 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
+      if (_equals_6) {
         this.createBoxButton.setSelected(false);
       } else {
-        boolean _equals_6 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
-        if (_equals_6) {
+        boolean _equals_7 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
+        if (_equals_7) {
           this.createQrButton.setSelected(false);
         }
       }
@@ -573,6 +578,12 @@ public class ControllerFxEdition {
       boolean _equals_3 = Objects.equal(_type, BoxType.QUESTION);
       if (_equals_3) {
         this.questionList.updateInModel(this.currentRectangle.getQuestionItem());
+      } else {
+        BoxType _type_1 = this.currentRectangle.getType();
+        boolean _equals_4 = Objects.equal(_type_1, BoxType.QR);
+        if (_equals_4) {
+          this.qrCodeZone.updateInModel();
+        }
       }
     }
   }
@@ -740,6 +751,7 @@ public class ControllerFxEdition {
       this.clearVue();
       this.initPageSelection();
       this.renderDocument();
+      this.loadQrCodeZone();
       this.loadBoxes();
       _xblockexpression = this.postLoad();
     }
@@ -772,6 +784,38 @@ public class ControllerFxEdition {
       }
     }
     this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
+  }
+  
+  /**
+   * Chage la zone de qr code
+   */
+  public boolean loadQrCodeZone() {
+    boolean _xblockexpression = false;
+    {
+      final fr.istic.tools.scanexam.core.QrCodeZone qrCodeInService = this.service.getQrCodeZone();
+      boolean _xifexpression = false;
+      if ((qrCodeInService != null)) {
+        boolean _xblockexpression_1 = false;
+        {
+          float _x = qrCodeInService.getX();
+          double _multiply = (_x * this.maxX);
+          float _y = qrCodeInService.getY();
+          double _multiply_1 = (_y * this.maxY);
+          float _width = qrCodeInService.getWidth();
+          double _multiply_2 = (_width * this.maxX);
+          float _height = qrCodeInService.getHeight();
+          double _multiply_3 = (_height * this.maxY);
+          final Box qrCodeBox = new Box(
+            BoxType.QR, _multiply, _multiply_1, _multiply_2, _multiply_3);
+          QrCodeZone _qrCodeZone = new QrCodeZone(qrCodeBox, this);
+          this.qrCodeZone = _qrCodeZone;
+          _xblockexpression_1 = this.mainPane.addZone(this.qrCodeZone.getZone());
+        }
+        _xifexpression = _xblockexpression_1;
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
   }
   
   public boolean postLoad() {
@@ -856,6 +900,18 @@ public class ControllerFxEdition {
     this.mainPane.clear();
     this.questionList.clear();
     this.questionEditor.hideAll();
+  }
+  
+  public void createQrCode(final double x, final double y, final double height, final double width) {
+    this.service.createQrCode(((float) x), ((float) y), ((float) height), ((float) width));
+  }
+  
+  public void resizeQrCode(final double height, final double width) {
+    this.service.rescaleQrCode(((float) height), ((float) width));
+  }
+  
+  public void moveQrCode(final double x, final double y) {
+    this.service.moveQrCode(((float) x), ((float) y));
   }
   
   public int createQuestion(final double x, final double y, final double height, final double width) {
@@ -944,7 +1000,6 @@ public class ControllerFxEdition {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getHeigth();
-          InputOutput.<String>print(("h = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;
@@ -961,7 +1016,6 @@ public class ControllerFxEdition {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getWidth();
-          InputOutput.<String>print(("w = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;

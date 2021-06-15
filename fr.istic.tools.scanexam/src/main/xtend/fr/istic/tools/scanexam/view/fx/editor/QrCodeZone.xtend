@@ -17,6 +17,9 @@ class QrCodeZone {
 	/* Échelle de la zone du qr code */
 	float scale
 
+	/* Controlleur de l'édition du sujet maître */
+	ControllerFxEdition controller
+
 	// ----------------------------------------------------------------------------------------------------
 	/*
 	 * CONSTRUCTEUR
@@ -25,12 +28,36 @@ class QrCodeZone {
 	/**
 	 * Constructeur
 	 * @param zone Zone du qr code
+	 * @param controller Controlleur de l'édition du sujet maître
 	 */
-	new(Box zone) {
+	new(Box zone, ControllerFxEdition controller) {
 		this.zone = zone
 		this.scale = 1.0f
 		this.zone.setupEvents(this.getType())
+		this.controller = controller
+		addToModel
 		setFocus(true)
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	/*
+	 * MÉTHODE
+	 */
+	// ----------------------------------------------------------------------------------------------------
+	/**
+	 * Ajoute les coordonnées de la zone qr code dans le modèle
+	 */
+	def addToModel() {
+		controller.createQrCode(zone.x / controller.maxX, zone.y / controller.maxY, zone.height / controller.maxY,
+			zone.width / controller.maxX)
+	}
+
+	/**
+	 * Met à jour les coordonnées de la zone qr code dans le modèle
+	 */
+	def void updateInModel() {
+		controller.moveQrCode(zone.x / controller.maxX, zone.y / controller.maxY)
+		controller.resizeQrCode(zone.height / controller.maxY, zone.width / controller.maxX)
 	}
 
 	// ----------------------------------------------------------------------------------------------------

@@ -273,7 +273,11 @@ class ControllerFxEdition {
 					questionList.newQuestion(currentRectangle)
 				} else {
 					if (currentTool == SelectedTool.QR_AREA) {
-						qrCodeZone = new QrCodeZone(currentRectangle)
+						qrCodeZone = new QrCodeZone(currentRectangle, this)
+					} else {
+						if (currentRectangle.type == BoxType.QR) {
+							qrCodeZone.updateInModel
+						}
 					}
 				}
 
@@ -435,6 +439,10 @@ class ControllerFxEdition {
 			setToNoTool
 			if (currentRectangle.type == BoxType.QUESTION) {
 				questionList.updateInModel(currentRectangle.questionItem)
+			} else {
+				if (currentRectangle.type == BoxType.QR) {
+					qrCodeZone.updateInModel
+				}
 			}
 		}
 	}
@@ -559,6 +567,7 @@ class ControllerFxEdition {
 		// Initialise le selecteur de page (pageChoice)
 		initPageSelection
 		renderDocument();
+		loadQrCodeZone
 		loadBoxes();
 		postLoad
 	}
@@ -585,6 +594,24 @@ class ControllerFxEdition {
 		}
 
 		questionList.showOnlyPage(pdfManager.currentPdfPageNumber)
+	}
+
+	/**
+	 * Chage la zone de qr code
+	 */
+	def loadQrCodeZone() {
+		val qrCodeInService = service.getQrCodeZone()
+		if (qrCodeInService !== null) {
+			val qrCodeBox = new Box(
+				BoxType.QR,
+				qrCodeInService.x * maxX,
+				qrCodeInService.y * maxY,
+				qrCodeInService.width * maxX,
+				qrCodeInService.height * maxY
+			)
+			qrCodeZone = new QrCodeZone(qrCodeBox, this)
+			mainPane.addZone(qrCodeZone.zone)
+		}
 	}
 
 	def postLoad() {
@@ -659,6 +686,18 @@ class ControllerFxEdition {
 		questionEditor.hideAll
 	}
 
+	def void createQrCode(double x, double y, double height, double width) {
+		service.createQrCode(x as float, y as float, height as float, width as float)
+	}
+
+	def void resizeQrCode(double height, double width) {
+		service.rescaleQrCode(height as float, width as float)
+	}
+
+	def void moveQrCode(double x, double y) {
+		service.moveQrCode(x as float, y as float)
+	}
+
 	def int createQuestion(double x, double y, double height, double width) {
 		service.createQuestion(pdfManager.pdfPageIndex, x as float, y as float, height as float, width as float)
 	}
@@ -729,7 +768,6 @@ class ControllerFxEdition {
 		for (Question q : questions) {
 			if (q.id == id) {
 				result = q.zone.heigth
-				print("h = " + result)
 			}
 		}
 		result
@@ -740,7 +778,6 @@ class ControllerFxEdition {
 		for (Question q : questions) {
 			if (q.id == id) {
 				result = q.zone.width
-				print("w = " + result)
 			}
 		}
 		result
