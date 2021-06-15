@@ -18,55 +18,59 @@ import org.apache.logging.log4j.LogManager
 
 class ControllerStudentSheetExport {
 
-	/* Composant racine */	
+	/* Composant racine */
 	@FXML
 	var VBox mainPane
-	
+
 	/* TextField pour saisir le nombre de copies voulues */
 	@FXML
 	var FormattedTextField txtFlbNbSheet
-	
+
 	/* Button pour exporter */
 	@FXML
 	var Button btnExport
-	
+
 	var ControllerFxEdition controllerEdition
-	
+
 	var ServiceEdition service
-	
+
 	static val logger = LogManager.logger
-	
+
 	/**
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(ControllerFxEdition controllerEdition,ServiceEdition service) {
+	def initialize(ControllerFxEdition controllerEdition, ServiceEdition service) {
 		this.service = service
 		this.controllerEdition = controllerEdition
-		txtFlbNbSheet.addFormatValidator[str | Integer.parseInt(str) > 0 ? Optional.empty : Optional.of("exportStudentSheet.errorZeroValue")]
-		btnExport.disableProperty.bind(txtFlbNbSheet.wrongFormattedProperty)	
+		txtFlbNbSheet.addFormatValidator [ str |
+			Integer.parseInt(str) > 0 ? Optional.empty : Optional.of("exportStudentSheet.errorZeroValue")
+		]
+		btnExport.disableProperty.bind(txtFlbNbSheet.wrongFormattedProperty)
 	}
-	
+
 	@FXML
 	def exportAndQuit() {
 		val fileOpt = loadFolder
-		if(fileOpt.isPresent) {
-			if(export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
+		if (fileOpt.isPresent) {
+			if (export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
 				quit
 		}
 	}
+
 	def boolean export(File file, int number) {
 		val QRCodeGenerator generator = new QRCodeGeneratorImpl
-		generator.createAllExamCopies(controllerEdition.pdfManager.getPdfInputStream, file, service.examName, number)
+		generator.createAllExamCopies(controllerEdition.pdfManager.getPdfInputStream, file, service.qrCodeZone,
+			service.examName, number)
 		true
-	}	
+	}
+
 	@FXML
 	def quit() {
 		val Stage stage = mainPane.scene.window as Stage
 		stage.close();
 	}
-	
-	
+
 	/**
 	 * Affiche un sélectionneur de dossier
 	 * @return le chemin du dossier sélectionné par l'utilisateur, Optional.empty si aucun dossier sélectionné
@@ -75,7 +79,7 @@ class ControllerStudentSheetExport {
 		var fileChooser = new FileChooser
 		fileChooser.extensionFilters.add(new ExtensionFilter(LanguageManager.translate("file.format.pdf"), "*.pdf"))
 		fileChooser.initialDirectory = new File(
-				System.getProperty("user.home") + System.getProperty("file.separator") + "Documents")
+			System.getProperty("user.home") + System.getProperty("file.separator") + "Documents")
 		var file = fileChooser.showSaveDialog(mainPane.scene.window)
 		if (file !== null) {
 			return Optional.of(file)

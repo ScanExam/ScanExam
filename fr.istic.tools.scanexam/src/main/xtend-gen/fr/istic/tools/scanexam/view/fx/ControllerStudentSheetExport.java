@@ -83,7 +83,8 @@ public class ControllerStudentSheetExport {
     boolean _xblockexpression = false;
     {
       final QRCodeGenerator generator = new QRCodeGeneratorImpl();
-      generator.createAllExamCopies(this.controllerEdition.getPdfManager().getPdfInputStream(), file, this.service.getExamName(), number);
+      generator.createAllExamCopies(this.controllerEdition.getPdfManager().getPdfInputStream(), file, this.service.getQrCodeZone(), 
+        this.service.getExamName(), number);
       _xblockexpression = true;
     }
     return _xblockexpression;
