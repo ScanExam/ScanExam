@@ -238,7 +238,7 @@ class ControllerFxEdition {
 			Math.min(e.x, maxX - FxSettings.BOX_BORDER_THICKNESS));
 		var mousePositionY = Math.max(FxSettings.BOX_BORDER_THICKNESS,
 			Math.min(e.y, maxY - FxSettings.BOX_BORDER_THICKNESS));
-		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { // TODO add type checks
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
 			mouseOriginX = mousePositionX
 			mouseOriginY = mousePositionY
 
@@ -247,23 +247,17 @@ class ControllerFxEdition {
 
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			var xDelta = mousePositionX - mouseOriginX;
-			var yDelta = mousePositionY - mouseOriginY;
-			if (xDelta > 0) {
-				currentRectangle.width(xDelta)
-			} else {
-				currentRectangle.width(Math.abs(xDelta))
-				currentRectangle.x(mouseOriginX - Math.abs(xDelta))
+			edge = EdgeLocation.SOUTHEAST
+			switch (currentRectangle.type) {
+				case BoxType.QUESTION: {
+					draggedQuestion(mousePositionX, mousePositionY)
+				}
+				case BoxType.QR: {
+					draggedQrCode(mousePositionX, mousePositionY)
+				}
+				default: {
+				}
 			}
-
-			if (yDelta > 0) {
-				currentRectangle.height(yDelta)
-			} else {
-				currentRectangle.height(Math.abs(yDelta))
-				currentRectangle.y(mouseOriginY - Math.abs(yDelta))
-
-			}
-
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			if (currentRectangle.width > FxSettings.MINIMUM_ZONE_SIZE &&
@@ -333,116 +327,244 @@ class ControllerFxEdition {
 			offsetY = mousePositionY - currentRectangle.y
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			switch edge {
-				case SOUTH: {
-					if (mousePositionY > currentRectangle.y) {
-						currentRectangle.height(mousePositionY - currentRectangle.y)
-					} else {
-						edge = EdgeLocation.NORTH
-					}
+			switch (currentRectangle.type) {
+				case BoxType.QUESTION: {
+					draggedQuestion(mousePositionX, mousePositionY)
 				}
-				case EAST: {
-					if (mousePositionX > currentRectangle.x) {
-						currentRectangle.width(mousePositionX - currentRectangle.x)
-					} else {
-						edge = EdgeLocation.WEST
-					}
+				case BoxType.QR: {
+					draggedQrCode(mousePositionX, mousePositionY)
 				}
-				case NORTH: {
-					if (mousePositionY < currentRectangle.y + currentRectangle.height) {
-						val double initialY = currentRectangle.y
-						currentRectangle.y(mousePositionY)
-						currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
-					} else {
-						edge = EdgeLocation.SOUTH
-					}
-				}
-				case WEST: {
-					if (mousePositionX < currentRectangle.x + currentRectangle.width) {
-						val double initialX = currentRectangle.x
-						currentRectangle.x(mousePositionX)
-						currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
-					} else {
-						edge = EdgeLocation.EAST
-					}
-				}
-				case NORTHEAST: {
-					if (mousePositionY < currentRectangle.y + currentRectangle.height) {
-						val double initialY = currentRectangle.y
-						currentRectangle.y(mousePositionY)
-						currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
-					} else {
-						edge = EdgeLocation.SOUTHEAST
-					}
-					if (mousePositionX > currentRectangle.x) {
-						currentRectangle.width(mousePositionX - currentRectangle.x)
-					} else {
-						edge = EdgeLocation.NORTHWEST
-					}
-				}
-				case NORTHWEST: {
-					if (mousePositionY < currentRectangle.y + currentRectangle.height) {
-						val double initialY = currentRectangle.y
-						currentRectangle.y(mousePositionY)
-						currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
-					} else {
-						edge = EdgeLocation.SOUTHWEST
-					}
-					if (mousePositionX < currentRectangle.x + currentRectangle.width) {
-						val double initialX = currentRectangle.x
-						currentRectangle.x(mousePositionX)
-						currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
-					} else {
-						edge = EdgeLocation.NORTHEAST
-					}
-				}
-				case SOUTHEAST: {
-					if (mousePositionY > currentRectangle.y) {
-						currentRectangle.height(mousePositionY - currentRectangle.y)
-					} else {
-						edge = EdgeLocation.NORTHEAST
-					}
-					if (mousePositionX > currentRectangle.x) {
-						currentRectangle.width(mousePositionX - currentRectangle.x)
-					} else {
-						edge = EdgeLocation.SOUTHWEST
-					}
-				}
-				case SOUTHWEST: {
-					if (mousePositionY > currentRectangle.y) {
-						currentRectangle.height(mousePositionY - currentRectangle.y)
-					} else {
-						edge = EdgeLocation.NORTHWEST
-					}
-					if (mousePositionX < currentRectangle.x + currentRectangle.width) {
-						val double initialX = currentRectangle.x
-						currentRectangle.x(mousePositionX)
-						currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
-					} else {
-						edge = EdgeLocation.SOUTHEAST
-					}
-				}
-				case NONE: {
-					currentRectangle.x(
-						Math.max(
-							Math.min(mousePositionX - offsetX, maxX - FxSettings.BOX_BORDER_THICKNESS -
-								currentRectangle.width), FxSettings.BOX_BORDER_THICKNESS))
-					currentRectangle.y(
-						Math.max(
-							Math.min(mousePositionY - offsetY, maxY - FxSettings.BOX_BORDER_THICKNESS -
-								currentRectangle.height), FxSettings.BOX_BORDER_THICKNESS))
+				default: {
 				}
 			}
-
 		}
 		if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			setToNoTool
-			if (currentRectangle.type == BoxType.QUESTION) {
-				questionList.updateInModel(currentRectangle.questionItem)
-			} else {
-				if (currentRectangle.type == BoxType.QR) {
+			switch (currentRectangle.type) {
+				case BoxType.QUESTION: {
+					questionList.updateInModel(currentRectangle.questionItem)
+				}
+				case BoxType.QR: {
 					qrCodeZone.updateInModel
 				}
+				default: {
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gère le redimensionnage des questions
+	 * @param mouse PositionX Position sur l'axe X de la souris
+	 * @param mouse PositionX Position sur l'axe Y de la souris
+	 */
+	private def void draggedQuestion(double mousePositionX, double mousePositionY) {
+		switch edge {
+			case SOUTH: {
+				if (mousePositionY > currentRectangle.y) {
+					currentRectangle.height(mousePositionY - currentRectangle.y)
+				} else {
+					edge = EdgeLocation.NORTH
+				}
+			}
+			case EAST: {
+				if (mousePositionX > currentRectangle.x) {
+					currentRectangle.width(mousePositionX - currentRectangle.x)
+				} else {
+					edge = EdgeLocation.WEST
+				}
+			}
+			case NORTH: {
+				if (mousePositionY < currentRectangle.y + currentRectangle.height) {
+					val double initialY = currentRectangle.y
+					currentRectangle.y(mousePositionY)
+					currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+				} else {
+					edge = EdgeLocation.SOUTH
+				}
+			}
+			case WEST: {
+				if (mousePositionX < currentRectangle.x + currentRectangle.width) {
+					val double initialX = currentRectangle.x
+					currentRectangle.x(mousePositionX)
+					currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+				} else {
+					edge = EdgeLocation.EAST
+				}
+			}
+			case NORTHEAST: {
+				if (mousePositionY < currentRectangle.y + currentRectangle.height) {
+					val double initialY = currentRectangle.y
+					currentRectangle.y(mousePositionY)
+					currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+				} else {
+					edge = EdgeLocation.SOUTHEAST
+				}
+				if (mousePositionX > currentRectangle.x) {
+					currentRectangle.width(mousePositionX - currentRectangle.x)
+				} else {
+					edge = EdgeLocation.NORTHWEST
+				}
+			}
+			case NORTHWEST: {
+				if (mousePositionY < currentRectangle.y + currentRectangle.height) {
+					val double initialY = currentRectangle.y
+					currentRectangle.y(mousePositionY)
+					currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+				} else {
+					edge = EdgeLocation.SOUTHWEST
+				}
+				if (mousePositionX < currentRectangle.x + currentRectangle.width) {
+					val double initialX = currentRectangle.x
+					currentRectangle.x(mousePositionX)
+					currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+				} else {
+					edge = EdgeLocation.NORTHEAST
+				}
+			}
+			case SOUTHEAST: {
+				if (mousePositionY > currentRectangle.y) {
+					currentRectangle.height(mousePositionY - currentRectangle.y)
+				} else {
+					edge = EdgeLocation.NORTHEAST
+				}
+				if (mousePositionX > currentRectangle.x) {
+					currentRectangle.width(mousePositionX - currentRectangle.x)
+				} else {
+					edge = EdgeLocation.SOUTHWEST
+				}
+			}
+			case SOUTHWEST: {
+				if (mousePositionY > currentRectangle.y) {
+					currentRectangle.height(mousePositionY - currentRectangle.y)
+				} else {
+					edge = EdgeLocation.NORTHWEST
+				}
+				if (mousePositionX < currentRectangle.x + currentRectangle.width) {
+					val double initialX = currentRectangle.x
+					currentRectangle.x(mousePositionX)
+					currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+				} else {
+					edge = EdgeLocation.SOUTHEAST
+				}
+			}
+			case NONE: {
+				currentRectangle.x(
+					Math.max(
+						Math.min(mousePositionX - offsetX, maxX - FxSettings.BOX_BORDER_THICKNESS -
+							currentRectangle.width), FxSettings.BOX_BORDER_THICKNESS))
+				currentRectangle.y(
+					Math.max(
+						Math.min(mousePositionY - offsetY, maxY - FxSettings.BOX_BORDER_THICKNESS -
+							currentRectangle.height), FxSettings.BOX_BORDER_THICKNESS))
+			}
+		}
+	}
+
+	/**
+	 * Gère le redimensionnage du qr code
+	 * @param mouse PositionX Position sur l'axe X de la souris
+	 * @param mouse PositionX Position sur l'axe Y de la souris
+	 */
+	private def void draggedQrCode(double mousePositionX, double mousePositionY) {
+		switch edge {
+			case SOUTH: {
+				if (mousePositionY > currentRectangle.y) {
+					val double initialX = currentRectangle.x
+					val double initialHeight = currentRectangle.height
+					currentRectangle.height(mousePositionY - currentRectangle.y)
+					currentRectangle.x(initialX - (currentRectangle.height - initialHeight))
+					currentRectangle.width(currentRectangle.height)
+				} else {
+					edge = EdgeLocation.NORTH
+				}
+			}
+			case EAST: {
+				if (mousePositionX > currentRectangle.x) {
+					currentRectangle.width(mousePositionX - currentRectangle.x)
+					currentRectangle.height(currentRectangle.width)
+				} else {
+					edge = EdgeLocation.WEST
+				}
+			}
+			case NORTH: {
+				if (mousePositionY < currentRectangle.y + currentRectangle.height) {
+					val double initialY = currentRectangle.y
+					currentRectangle.y(mousePositionY)
+					currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+					currentRectangle.width(currentRectangle.height)
+				} else {
+					edge = EdgeLocation.SOUTH
+				}
+			}
+			case WEST: {
+				if (mousePositionX < currentRectangle.x + currentRectangle.width) {
+					val double initialX = currentRectangle.x
+					val double initialY = currentRectangle.y
+					val double initialWidth = currentRectangle.width
+					currentRectangle.x(mousePositionX)
+					currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+					currentRectangle.y(initialY - (currentRectangle.width - initialWidth))
+					currentRectangle.height(currentRectangle.width)
+				} else {
+					edge = EdgeLocation.EAST
+				}
+			}
+			case NORTHEAST: {
+				if ((mousePositionY < currentRectangle.y + currentRectangle.height) &&
+					(mousePositionX > currentRectangle.x)) {
+					val double initialY = currentRectangle.y
+					currentRectangle.y(mousePositionY)
+					currentRectangle.height(currentRectangle.height - (mousePositionY - initialY))
+					currentRectangle.width(currentRectangle.height)
+				} else {
+					edge = EdgeLocation.SOUTHWEST
+				}
+			}
+			case NORTHWEST: {
+				if ((mousePositionY < currentRectangle.y + currentRectangle.height) &&
+					(mousePositionX < currentRectangle.x + currentRectangle.width)) {
+					val double initialX = currentRectangle.x
+					val double initialY = currentRectangle.y
+					val double initialWidth = currentRectangle.width
+					currentRectangle.x(mousePositionX)
+					currentRectangle.width(currentRectangle.width - (mousePositionX - initialX))
+					currentRectangle.y(initialY - (currentRectangle.width - initialWidth))
+					currentRectangle.height(currentRectangle.width)
+				} else {
+					edge = EdgeLocation.SOUTHEAST
+				}
+
+			}
+			case SOUTHEAST: {
+				if ((mousePositionY > currentRectangle.y) && (mousePositionX > currentRectangle.x)) {
+					currentRectangle.width(mousePositionX - currentRectangle.x)
+					currentRectangle.height(currentRectangle.width)
+				} else {
+					edge = EdgeLocation.NORTHWEST
+				}
+			}
+			case SOUTHWEST: {
+				if ((mousePositionY > currentRectangle.y) &&
+					(mousePositionX < currentRectangle.x + currentRectangle.width)) {
+					val double initialX = currentRectangle.x
+					val double initialHeight = currentRectangle.height
+					currentRectangle.height(mousePositionY - currentRectangle.y)
+					currentRectangle.x(initialX - (currentRectangle.height - initialHeight))
+					currentRectangle.width(currentRectangle.height)
+				} else {
+					edge = EdgeLocation.NORTHEAST
+				}
+			}
+			case NONE: {
+				currentRectangle.x(
+					Math.max(
+						Math.min(mousePositionX - offsetX, maxX - FxSettings.BOX_BORDER_THICKNESS -
+							currentRectangle.width), FxSettings.BOX_BORDER_THICKNESS))
+				currentRectangle.y(
+					Math.max(
+						Math.min(mousePositionY - offsetY, maxY - FxSettings.BOX_BORDER_THICKNESS -
+							currentRectangle.height), FxSettings.BOX_BORDER_THICKNESS))
 			}
 		}
 	}
@@ -453,7 +575,7 @@ class ControllerFxEdition {
 	 */
 	def void moveImage(MouseEvent e) {
 
-		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) { // TODO add type checks
+		if (e.getEventType() == MouseEvent.MOUSE_PRESSED) {
 			mouseOriginX = e.screenX
 			mouseOriginY = e.screenY
 			var source = e.source as Node
