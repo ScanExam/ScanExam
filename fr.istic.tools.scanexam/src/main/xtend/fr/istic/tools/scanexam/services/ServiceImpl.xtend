@@ -30,6 +30,7 @@ import java.util.Objects
 import java.util.Optional
 import org.apache.logging.log4j.LogManager
 import fr.istic.tools.scanexam.core.QrCodeZone
+import javafx.util.Pair
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -501,6 +502,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param y la nouvelle position y de la zone
 	 */
 	override void moveQrCode(float x, float y) {
+		println("position x:" + x + " y:" + y)
 		val qrCodeZone = editionTemplate.exam.qrCodeZone
 		qrCodeZone.x = x
 		qrCodeZone.y = y
@@ -690,6 +692,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 
 	override QrCodeZone getQrCodeZone() {
 		return editionTemplate.exam.qrCodeZone
+	}
+	
+	override Pair<Float, Float> getQrCodePosition() {
+		new Pair<Float, Float>(qrCodeZone.x, qrCodeZone.y)
 	}
 
 	/**

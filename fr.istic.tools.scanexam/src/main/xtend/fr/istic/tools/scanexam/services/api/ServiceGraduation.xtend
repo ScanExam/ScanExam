@@ -11,6 +11,7 @@ import java.util.List
 import java.util.Map
 import java.util.Optional
 import fr.istic.tools.scanexam.core.Question
+import javafx.util.Pair
 
 interface ServiceGraduation extends Service {
 	
@@ -159,6 +160,8 @@ interface ServiceGraduation extends Service {
 	 * @param l'ID de l'entrée dans l'Examen
 	 */
 	def boolean retractGradeEntry(int questionId, int gradeEntryId)
+	
+	def Pair<Float, Float> getQrCodePosition()
 	
 	/**
 	 * @param l'ID de la Question

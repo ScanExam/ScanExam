@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -43,6 +44,7 @@ import org.apache.pdfbox.util.Matrix;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
@@ -58,6 +60,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private String docPath;
   
+  private Pair<Float, Float> qrPos;
+  
   private boolean isFinished;
   
   private List<Integer> pagesMalLues;
@@ -66,11 +70,12 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private int treatedSheets;
   
-  public PdfReaderQrCodeImpl(final InputStream input, final String docPath, final int nbPages) {
+  public PdfReaderQrCodeImpl(final InputStream input, final String docPath, final int nbPages, final Pair<Float, Float> qrPos) {
     try {
       this.doc = PDDocument.load(input);
       this.docPath = docPath;
       this.nbPagesInSheet = nbPages;
+      this.qrPos = qrPos;
       this.isFinished = false;
       this.missingSheets = 0;
       this.treatedSheets = 0;
@@ -85,7 +90,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   public boolean readPDf() {
     try {
       this.nbPagesInPdf = this.doc.getNumberOfPages();
-      this.createThread(this.doc.getNumberOfPages(), this.doc, this.docPath);
+      this.createThread(this.doc.getNumberOfPages(), this.doc, this.docPath, this.qrPos);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -98,7 +103,16 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return true;
   }
   
-  public void readQRCodeImage(final PDDocument pdDoc, final String docPath, final PDFRenderer pdfRenderer, final int startPages, final int endPages) throws IOException {
+  /**
+   * Analyse les qr codes, corrige les problèmes de numérisation (ex: à l'envers) et lie les pages aux élèves
+   * @param pdDoc Document à analyser
+   * @param docPath Chemin du document à analyser
+   * @param pdfRenderer Rendu du document à analyser
+   * @param startPages Première page à analyser
+   * @param endPages Dernière page à analyser
+   * @param qrPos Position où devrait ce trouver le qr code
+   */
+  public void readQRCodeImage(final PDDocument pdDoc, final String docPath, final PDFRenderer pdfRenderer, final int startPages, final int endPages, final Pair<Float, Float> qrPos) throws IOException {
     try {
       ArrayList<Integer> _arrayList = new ArrayList<Integer>();
       this.pagesMalLues = _arrayList;
@@ -117,6 +131,16 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
             final float orientation = this.qrCodeOrientation(result);
             if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
               this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
+            }
+            final Pair<Float, Float> position = this.qrCodePosition(result, bim.getWidth(), bim.getHeight());
+            Float _key = position.getKey();
+            Float _key_1 = qrPos.getKey();
+            final float diffX = ((_key).floatValue() - (_key_1).floatValue());
+            Float _value = position.getValue();
+            Float _value_1 = qrPos.getValue();
+            final float diffY = ((_value).floatValue() - (_value_1).floatValue());
+            if (((((diffX <= (-0.01f)) || (diffX >= 0.01f)) || (diffY <= (-0.01f))) || (diffY >= 0.01f))) {
+              this.repositionPdf(pdDoc, docPath, (page).intValue(), diffX, diffY);
             }
           }
           try {
@@ -184,7 +208,60 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   }
   
   /**
-   * Réoriente le contenu d'un page de pdf selon un angle donné
+   * Retourne la position d'un QR code en pixel. On considère que le point
+   * d'origine du QR code est en haut à gauche et que les coordonnées (0, 0) sont
+   * sont bas à gauche de la page. Ne marche que si le code à un angle de 0 ou
+   * 180°.
+   * 
+   * @param result    Résultat du dédodage du QR code
+   * @param docWidth  Laugueur du document où se trouve le QR code
+   * @param docHeight Hauteur du document où se trouve le QR code
+   * @return Paire contenant les positions x et y du QR code
+   */
+  private Pair<Float, Float> qrCodePosition(final Result result, final float docWidth, final float docHeight) {
+    final ResultPoint[] resultPoints = result.getResultPoints();
+    final ResultPoint a = resultPoints[1];
+    final ResultPoint b = resultPoints[2];
+    final ResultPoint c = resultPoints[0];
+    float _x = b.getX();
+    float _x_1 = a.getX();
+    float _plus = (_x + _x_1);
+    float x = (_plus / 2);
+    float _y = c.getY();
+    float _y_1 = a.getY();
+    float _plus_1 = (_y + _y_1);
+    float y = (_plus_1 / 2);
+    float _x_2 = b.getX();
+    float _x_3 = a.getX();
+    float _minus = (_x_2 - _x_3);
+    final double widthX2 = Math.pow(_minus, 2);
+    float _y_2 = b.getY();
+    float _y_3 = a.getY();
+    float _minus_1 = (_y_2 - _y_3);
+    final double widthY2 = Math.pow(_minus_1, 2);
+    double width = Math.sqrt((widthX2 + widthY2));
+    float _x_4 = c.getX();
+    float _x_5 = a.getX();
+    float _minus_2 = (_x_4 - _x_5);
+    final double heightX2 = Math.pow(_minus_2, 2);
+    float _y_4 = c.getY();
+    float _y_5 = a.getY();
+    float _minus_3 = (_y_4 - _y_5);
+    final double heightY2 = Math.pow(_minus_3, 2);
+    double height = Math.sqrt((heightX2 + heightY2));
+    double _width = width;
+    width = (_width / (4.0f / 3.0f));
+    double _height = height;
+    height = (_height / (4.0f / 3.0f));
+    float _x_6 = x;
+    x = (_x_6 - ((float) width));
+    float _y_6 = y;
+    y = (_y_6 - ((float) height));
+    return new Pair<Float, Float>(Float.valueOf((x / docWidth)), Float.valueOf((y / docHeight)));
+  }
+  
+  /**
+   * Réoriente le contenu d'une page de pdf selon un angle donné
    * @param pdDoc Document sur lequel travailler
    * @param docPath Chemin du document sur lequel travailler
    * @param page Page où effectuer la rotation
@@ -212,6 +289,18 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  /**
+   * Repositionne le contenu d'une page de pdf selon un les longueurs x et y données
+   * @param pdDoc Document sur lequel travailler
+   * @param docPath Chemin du document sur lequel travailler
+   * @param page Page où effectuer la rotation
+   * @param offsetX Longueur vers laquelle décaler le contenu sur l'axe x
+   * @param offsetY Longueur vers laquelle décaler le contenu sur l'axe y
+   */
+  private void repositionPdf(final PDDocument pdDoc, final String docPath, final int page, final float offsetX, final float offsetY) {
+    InputOutput.<String>println("repositionnement du pdf nécessaire");
   }
   
   /**
@@ -245,11 +334,13 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   }
   
   /**
-   * @param nbCopies nombre de copies désirées
-   * @param docSujetMaitre document dans lequel insérer les Codes
+   * @param nbPage nombre de copies désirées
+   * @param doc document dans lequel insérer les Codes
+   * @param docPath chemin du document dans lequel insérer les Codes
+   * @param qrPos Position à laquelle devrait se trouver les qr codes
    */
-  public void createThread(final int nbPage, final PDDocument doc, final String docPath) {
-    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, this);
+  public void createThread(final int nbPage, final PDDocument doc, final String docPath, final Pair<Float, Float> qrPos) {
+    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, qrPos, this);
     manager.start();
   }
   

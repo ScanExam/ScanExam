@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javafx.util.Pair;
 
 @SuppressWarnings("all")
 public interface ServiceGraduation extends Service {
@@ -34,7 +35,7 @@ public interface ServiceGraduation extends Service {
    * @params studentSheets une liste de StudenSheet
    * @returns "true" si la correction a pu être créée, "false" sinon
    */
-  boolean initializeCorrection(final Collection<StudentSheet> studentSheets);
+  boolean initializeCorrection(final Collection<StudentSheet> studentSheets, final Collection<Integer> failedPages);
   
   int getAbsolutePageNumber(final int studentId, final int offset);
   
@@ -77,6 +78,11 @@ public interface ServiceGraduation extends Service {
    * @return le nombre de pages de l'Examen
    */
   int getPageAmount();
+  
+  /**
+   * @return les pages qui n'ont pas été détectées avec un QRCode
+   */
+  Collection<Integer> getFailedPages();
   
   /**
    * @return le nombre de questions d'une copie d'étudiant
@@ -128,6 +134,8 @@ public interface ServiceGraduation extends Service {
    * @param l'ID de l'entrée dans l'Examen
    */
   boolean retractGradeEntry(final int questionId, final int gradeEntryId);
+  
+  Pair<Float, Float> getQrCodePosition();
   
   /**
    * @param l'ID de la Question

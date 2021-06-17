@@ -30,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -167,7 +168,8 @@ public class ControllerGraduationCreator {
         FileInputStream _fileInputStream = new FileInputStream(file);
         String _text_1 = this.txtFldFileGraduation.getText();
         int _pageAmount = this.serviceGraduation.getPageAmount();
-        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _text_1, _pageAmount);
+        Pair<Float, Float> _qrCodePosition = this.serviceGraduation.getQrCodePosition();
+        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _text_1, _pageAmount, _qrCodePosition);
         final boolean successStart = reader.readPDf();
         final Task<Void> task = new Task<Void>() {
           @Override

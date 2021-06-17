@@ -128,7 +128,7 @@ class ControllerGraduationCreator {
 	def boolean loadStudentSheets() {
 		val File file = new File(txtFldFileGraduation.text)
 		val PdfReader reader = new PdfReaderQrCodeImpl(new FileInputStream(file), txtFldFileGraduation.text,
-			serviceGraduation.pageAmount)
+			serviceGraduation.pageAmount, serviceGraduation.qrCodePosition)
 		val successStart = reader.readPDf
 		val Task<Void> task = new Task<Void>() {
 			protected override Void call() {
