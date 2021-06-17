@@ -7,6 +7,7 @@ import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import fr.istic.tools.scanexam.core.StudentSheet;
@@ -33,8 +34,12 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.util.Matrix;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
@@ -51,6 +56,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private PDDocument doc;
   
+  private String docPath;
+  
   private boolean isFinished;
   
   private List<Integer> pagesMalLues;
@@ -59,9 +66,10 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   
   private int treatedSheets;
   
-  public PdfReaderQrCodeImpl(final InputStream input, final int nbPages) {
+  public PdfReaderQrCodeImpl(final InputStream input, final String docPath, final int nbPages) {
     try {
       this.doc = PDDocument.load(input);
+      this.docPath = docPath;
       this.nbPagesInSheet = nbPages;
       this.isFinished = false;
       this.missingSheets = 0;
@@ -77,7 +85,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   public boolean readPDf() {
     try {
       this.nbPagesInPdf = this.doc.getNumberOfPages();
-      this.createThread(this.doc.getNumberOfPages(), this.doc);
+      this.createThread(this.doc.getNumberOfPages(), this.doc, this.docPath);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -90,40 +98,119 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
     return true;
   }
   
-  public void readQRCodeImage(final PDFRenderer pdfRenderer, final int startPages, final int endPages) throws IOException {
-    ArrayList<Integer> _arrayList = new ArrayList<Integer>();
-    this.pagesMalLues = _arrayList;
-    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(startPages, endPages, true);
-    for (final Integer page : _doubleDotLessThan) {
-      {
-        BufferedImage bim = pdfRenderer.renderImageWithDPI((page).intValue(), 250, ImageType.GRAY);
-        final Pattern pattern = Pattern.compile("_");
-        final String[] items = pattern.split(this.decodeQRCodeBuffered(bim));
-        try {
-          int _size = ((List<String>)Conversions.doWrapArray(items)).size();
-          int _minus = (_size - 2);
-          int _parseInt = Integer.parseInt(items[_minus]);
-          int _size_1 = ((List<String>)Conversions.doWrapArray(items)).size();
-          int _minus_1 = (_size_1 - 1);
-          int _parseInt_1 = Integer.parseInt(items[_minus_1]);
-          final Copie cop = new Copie(_parseInt, (page).intValue(), _parseInt_1);
-          synchronized (this.sheets) {
-            this.addCopie(cop);
+  public void readQRCodeImage(final PDDocument pdDoc, final String docPath, final PDFRenderer pdfRenderer, final int startPages, final int endPages) throws IOException {
+    try {
+      ArrayList<Integer> _arrayList = new ArrayList<Integer>();
+      this.pagesMalLues = _arrayList;
+      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(startPages, endPages, true);
+      for (final Integer page : _doubleDotLessThan) {
+        {
+          BufferedImage bim = pdfRenderer.renderImageWithDPI((page).intValue(), 250, ImageType.GRAY);
+          final LuminanceSource source = new BufferedImageLuminanceSource(bim);
+          HybridBinarizer _hybridBinarizer = new HybridBinarizer(source);
+          final BinaryBitmap bitmap = new BinaryBitmap(_hybridBinarizer);
+          final MultiFormatReader mfr = new MultiFormatReader();
+          final Result result = mfr.decodeWithState(bitmap);
+          final Pattern pattern = Pattern.compile("_");
+          final String[] items = pattern.split(result.getText());
+          if ((result != null)) {
+            final float orientation = this.qrCodeOrientation(result);
+            if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
+              this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
+            }
           }
-        } catch (final Throwable _t) {
-          if (_t instanceof ArrayIndexOutOfBoundsException) {
-            final ArrayIndexOutOfBoundsException e = (ArrayIndexOutOfBoundsException)_t;
-            this.pagesMalLues.add(page);
-            this.logger.error(("Cannot read QRCode in page " + page), e);
-          } else {
-            throw Exceptions.sneakyThrow(_t);
+          try {
+            int _size = ((List<String>)Conversions.doWrapArray(items)).size();
+            int _minus = (_size - 2);
+            int _parseInt = Integer.parseInt(items[_minus]);
+            int _size_1 = ((List<String>)Conversions.doWrapArray(items)).size();
+            int _minus_1 = (_size_1 - 1);
+            int _parseInt_1 = Integer.parseInt(items[_minus_1]);
+            final Copie cop = new Copie(_parseInt, (page).intValue(), _parseInt_1);
+            synchronized (this.sheets) {
+              this.addCopie(cop);
+            }
+          } catch (final Throwable _t) {
+            if (_t instanceof ArrayIndexOutOfBoundsException) {
+              final ArrayIndexOutOfBoundsException e = (ArrayIndexOutOfBoundsException)_t;
+              this.pagesMalLues.add(page);
+              this.logger.error(("Cannot read QRCode in page " + page), e);
+            } else {
+              throw Exceptions.sneakyThrow(_t);
+            }
+          } finally {
+            this.treatedSheets++;
           }
-        } finally {
-          this.treatedSheets++;
+          bim = null;
+          System.gc();
         }
-        bim = null;
-        System.gc();
       }
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * Retourne l'orientation d'un QR code sous la forme d'un angle compris entre
+   * ]-180;180]°. Plus le QR code est orienté vers la droite plus il gagne de
+   * dégrés.
+   * 
+   * @param result Résultat du dédodage du QR code
+   * @return Orientation du QR code
+   */
+  private float qrCodeOrientation(final Result result) {
+    final ResultPoint[] resultPoints = result.getResultPoints();
+    final ResultPoint a = resultPoints[1];
+    final ResultPoint b = resultPoints[2];
+    float _x = b.getX();
+    float _x_1 = a.getX();
+    final float distanceX = (_x - _x_1);
+    float _y = b.getY();
+    float _y_1 = a.getY();
+    final float distanceY = (_y - _y_1);
+    double _atan = Math.atan((distanceY / distanceX));
+    double _multiply = (_atan * (180 / Math.PI));
+    float angle = ((float) _multiply);
+    if ((((angle > 0) && (a.getX() > b.getX())) && (a.getY() >= b.getY()))) {
+      float _angle = angle;
+      angle = (_angle - 180);
+    } else {
+      if ((((angle <= 0) && (b.getX() < a.getX())) && (b.getY() >= a.getY()))) {
+        float _angle_1 = angle;
+        angle = (_angle_1 + 180);
+      }
+    }
+    return angle;
+  }
+  
+  /**
+   * Réoriente le contenu d'un page de pdf selon un angle donné
+   * @param pdDoc Document sur lequel travailler
+   * @param docPath Chemin du document sur lequel travailler
+   * @param page Page où effectuer la rotation
+   * @param rotation Nouvelle inclinaison du contenu
+   */
+  private void rotatePdf(final PDDocument pdDoc, final String docPath, final int page, final float rotation) {
+    try {
+      final PDPage pdPage = pdDoc.getDocumentCatalog().getPages().get(page);
+      final PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND, 
+        false, false);
+      final PDRectangle cropBox = pdPage.getCropBox();
+      float _lowerLeftX = cropBox.getLowerLeftX();
+      float _upperRightX = cropBox.getUpperRightX();
+      float _plus = (_lowerLeftX + _upperRightX);
+      final float tx = (_plus / 2);
+      float _lowerLeftY = cropBox.getLowerLeftY();
+      float _upperRightY = cropBox.getUpperRightY();
+      float _plus_1 = (_lowerLeftY + _upperRightY);
+      final float ty = (_plus_1 / 2);
+      cs.transform(Matrix.getTranslateInstance(tx, ty));
+      cs.transform(Matrix.getRotateInstance(Math.toRadians(rotation), 0, 0));
+      cs.transform(Matrix.getTranslateInstance((-tx), (-ty)));
+      cs.close();
+      pdDoc.save(docPath);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
   }
   
@@ -161,8 +248,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param nbCopies nombre de copies désirées
    * @param docSujetMaitre document dans lequel insérer les Codes
    */
-  public void createThread(final int nbPage, final PDDocument doc) {
-    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, this);
+  public void createThread(final int nbPage, final PDDocument doc, final String docPath) {
+    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, this);
     manager.start();
   }
   
@@ -384,7 +471,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   }
   
   @Override
-  public Collection<Integer> getFailedSheets() {
+  public Collection<Integer> getFailedPages() {
     return this.pagesMalLues;
   }
 }

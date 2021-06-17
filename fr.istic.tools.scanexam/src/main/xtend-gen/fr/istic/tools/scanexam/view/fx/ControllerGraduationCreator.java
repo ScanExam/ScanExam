@@ -124,7 +124,8 @@ public class ControllerGraduationCreator {
     this.controllerEdition = controllerEdition;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
-      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(this.txtFldGraduationName.textProperty().isEmpty()).or(
+      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(
+        this.txtFldFileGraduation.textProperty().isEmpty()).or(this.txtFldGraduationName.textProperty().isEmpty()).or(
         this.rbLoadModel.selectedProperty().and(this.txtFldFile.textProperty().isEmpty())));
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator(".xmi");
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
@@ -164,8 +165,9 @@ public class ControllerGraduationCreator {
         String _text = this.txtFldFileGraduation.getText();
         final File file = new File(_text);
         FileInputStream _fileInputStream = new FileInputStream(file);
+        String _text_1 = this.txtFldFileGraduation.getText();
         int _pageAmount = this.serviceGraduation.getPageAmount();
-        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _pageAmount);
+        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _text_1, _pageAmount);
         final boolean successStart = reader.readPDf();
         final Task<Void> task = new Task<Void>() {
           @Override
@@ -174,11 +176,15 @@ public class ControllerGraduationCreator {
             while ((!reader.isFinished())) {
               {
                 this.updateProgress(reader.getNbPagesTreated(), reader.getNbPagesPdf());
-                this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
+                this.updateMessage(
+                  String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), 
+                    Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
               }
             }
             this.updateProgress(reader.getNbPagesTreated(), reader.getNbPagesPdf());
-            this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
+            this.updateMessage(
+              String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), 
+                Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
             return null;
           }
         };
@@ -195,7 +201,8 @@ public class ControllerGraduationCreator {
         service.setOnSucceeded(_function_1);
         service.start();
         Window _window = this.mainPane.getScene().getWindow();
-        ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), ((Stage) _window));
+        ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), 
+          ((Stage) _window));
         _xblockexpression = successStart;
       }
       return _xblockexpression;
@@ -264,7 +271,9 @@ public class ControllerGraduationCreator {
       boolean _loadStudentSheets = this.loadStudentSheets();
       boolean _not = (!_loadStudentSheets);
       if (_not) {
-        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null);
+        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, 
+          "studentSheetLoader.graduationConfirmationDialog.title", 
+          "studentSheetLoader.graduationConfirmationDialog.fail", null);
       }
     }
   }
@@ -275,7 +284,7 @@ public class ControllerGraduationCreator {
    * @param file le PDF
    */
   public void onFinish(final PdfReader reader, final File file) {
-    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
+    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages());
     this.serviceGraduation.setExamName(this.txtFldGraduationName.getText());
     this.controllerGraduation.getPdfManager().create(file);
     this.controllerGraduation.setToLoaded();

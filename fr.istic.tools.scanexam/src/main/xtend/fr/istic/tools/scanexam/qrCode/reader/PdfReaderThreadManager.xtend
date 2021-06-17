@@ -10,11 +10,13 @@ class PdfReaderThreadManager extends Thread implements Runnable {
 
 	int nbPage;
 	PDDocument doc
+	String docPath
 	PdfReaderQrCodeImpl reader
 
-	new(int nbPage, PDDocument doc, PdfReaderQrCodeImpl reader) {
+	new(int nbPage, PDDocument doc, String docPath, PdfReaderQrCodeImpl reader) {
 		this.nbPage = nbPage
 		this.doc = doc
+		this.docPath = docPath
 		this.reader = reader
 	}
 
@@ -22,22 +24,18 @@ class PdfReaderThreadManager extends Thread implements Runnable {
 		val ExecutorService service = Executors.newFixedThreadPool(4)
 		val CountDownLatch latchThreads = new CountDownLatch(4)
 		val PDFRenderer pdf = new PDFRenderer(doc)
-		service.execute(new PdfReaderQrCodeThread(reader, 0, (nbPage / 4), pdf, latchThreads))
-		service.execute(new PdfReaderQrCodeThread(reader, (nbPage / 4), (nbPage / 2), pdf, latchThreads))
-		service.execute(new PdfReaderQrCodeThread(reader, (nbPage / 2), (3 * nbPage / 4), pdf, latchThreads))
-		service.execute(new PdfReaderQrCodeThread(reader, (3 * nbPage / 4), nbPage, pdf, latchThreads))
+		service.execute(new PdfReaderQrCodeThread(reader, doc, docPath, 0, (nbPage / 4), pdf, latchThreads))
+		service.execute(new PdfReaderQrCodeThread(reader, doc, docPath, (nbPage / 4), (nbPage / 2), pdf, latchThreads))
+		service.execute(
+			new PdfReaderQrCodeThread(reader, doc, docPath, (nbPage / 2), (3 * nbPage / 4), pdf, latchThreads))
+		service.execute(new PdfReaderQrCodeThread(reader, doc, docPath, (3 * nbPage / 4), nbPage, pdf, latchThreads))
 
 		latchThreads.await()
 		reader.setFinished(true)
 		service.shutdown()
-		
 
 		doc.close
-		
-		
-		
+
 	}
-	
-	
 
 }

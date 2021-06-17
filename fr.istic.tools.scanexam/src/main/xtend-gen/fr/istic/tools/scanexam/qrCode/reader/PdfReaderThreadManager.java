@@ -15,11 +15,14 @@ public class PdfReaderThreadManager extends Thread implements Runnable {
   
   private PDDocument doc;
   
+  private String docPath;
+  
   private PdfReaderQrCodeImpl reader;
   
-  public PdfReaderThreadManager(final int nbPage, final PDDocument doc, final PdfReaderQrCodeImpl reader) {
+  public PdfReaderThreadManager(final int nbPage, final PDDocument doc, final String docPath, final PdfReaderQrCodeImpl reader) {
     this.nbPage = nbPage;
     this.doc = doc;
+    this.docPath = docPath;
     this.reader = reader;
   }
   
@@ -29,13 +32,13 @@ public class PdfReaderThreadManager extends Thread implements Runnable {
       final ExecutorService service = Executors.newFixedThreadPool(4);
       final CountDownLatch latchThreads = new CountDownLatch(4);
       final PDFRenderer pdf = new PDFRenderer(this.doc);
-      PdfReaderQrCodeThread _pdfReaderQrCodeThread = new PdfReaderQrCodeThread(this.reader, 0, (this.nbPage / 4), pdf, latchThreads);
+      PdfReaderQrCodeThread _pdfReaderQrCodeThread = new PdfReaderQrCodeThread(this.reader, this.doc, this.docPath, 0, (this.nbPage / 4), pdf, latchThreads);
       service.execute(_pdfReaderQrCodeThread);
-      PdfReaderQrCodeThread _pdfReaderQrCodeThread_1 = new PdfReaderQrCodeThread(this.reader, (this.nbPage / 4), (this.nbPage / 2), pdf, latchThreads);
+      PdfReaderQrCodeThread _pdfReaderQrCodeThread_1 = new PdfReaderQrCodeThread(this.reader, this.doc, this.docPath, (this.nbPage / 4), (this.nbPage / 2), pdf, latchThreads);
       service.execute(_pdfReaderQrCodeThread_1);
-      PdfReaderQrCodeThread _pdfReaderQrCodeThread_2 = new PdfReaderQrCodeThread(this.reader, (this.nbPage / 2), ((3 * this.nbPage) / 4), pdf, latchThreads);
+      PdfReaderQrCodeThread _pdfReaderQrCodeThread_2 = new PdfReaderQrCodeThread(this.reader, this.doc, this.docPath, (this.nbPage / 2), ((3 * this.nbPage) / 4), pdf, latchThreads);
       service.execute(_pdfReaderQrCodeThread_2);
-      PdfReaderQrCodeThread _pdfReaderQrCodeThread_3 = new PdfReaderQrCodeThread(this.reader, ((3 * this.nbPage) / 4), this.nbPage, pdf, latchThreads);
+      PdfReaderQrCodeThread _pdfReaderQrCodeThread_3 = new PdfReaderQrCodeThread(this.reader, this.doc, this.docPath, ((3 * this.nbPage) / 4), this.nbPage, pdf, latchThreads);
       service.execute(_pdfReaderQrCodeThread_3);
       latchThreads.await();
       this.reader.setFinished(true);
