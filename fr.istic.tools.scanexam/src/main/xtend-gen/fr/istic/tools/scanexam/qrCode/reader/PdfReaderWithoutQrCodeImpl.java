@@ -312,7 +312,7 @@ public class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
   }
   
   @Override
-  public Collection<Integer> getFailedSheets() {
+  public Collection<Integer> getFailedPages() {
     return this.pagesMalLues;
   }
 }

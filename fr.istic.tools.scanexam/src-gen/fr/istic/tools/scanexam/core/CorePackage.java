@@ -122,6 +122,70 @@ public interface CorePackage extends EPackage {
 	int QUESTION_ZONE_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.QrCodeZoneImpl <em>Qr Code Zone</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.istic.tools.scanexam.core.impl.QrCodeZoneImpl
+	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getQrCodeZone()
+	 * @generated
+	 */
+	int QR_CODE_ZONE = 1;
+
+	/**
+	 * The feature id for the '<em><b>X</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int QR_CODE_ZONE__X = 0;
+
+	/**
+	 * The feature id for the '<em><b>Y</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int QR_CODE_ZONE__Y = 1;
+
+	/**
+	 * The feature id for the '<em><b>Width</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int QR_CODE_ZONE__WIDTH = 2;
+
+	/**
+	 * The feature id for the '<em><b>Height</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int QR_CODE_ZONE__HEIGHT = 3;
+
+	/**
+	 * The number of structural features of the '<em>Qr Code Zone</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int QR_CODE_ZONE_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Qr Code Zone</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int QR_CODE_ZONE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.QuestionImpl <em>Question</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -129,7 +193,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getQuestion()
 	 * @generated
 	 */
-	int QUESTION = 1;
+	int QUESTION = 2;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -193,7 +257,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getGradeScale()
 	 * @generated
 	 */
-	int GRADE_SCALE = 2;
+	int GRADE_SCALE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Max Point</b></em>' attribute.
@@ -239,7 +303,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getGradeEntry()
 	 * @generated
 	 */
-	int GRADE_ENTRY = 3;
+	int GRADE_ENTRY = 4;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -294,7 +358,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getExam()
 	 * @generated
 	 */
-	int EXAM = 4;
+	int EXAM = 5;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -315,13 +379,22 @@ public interface CorePackage extends EPackage {
 	int EXAM__NAME = 1;
 
 	/**
+	 * The feature id for the '<em><b>Qr Code Zone</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXAM__QR_CODE_ZONE = 2;
+
+	/**
 	 * The feature id for the '<em><b>Pages</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM__PAGES = 2;
+	int EXAM__PAGES = 3;
 
 	/**
 	 * The number of structural features of the '<em>Exam</em>' class.
@@ -330,7 +403,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXAM_FEATURE_COUNT = 3;
+	int EXAM_FEATURE_COUNT = 4;
 
 	/**
 	 * The operation id for the '<em>Compute Max Grade</em>' operation.
@@ -358,7 +431,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getPage()
 	 * @generated
 	 */
-	int PAGE = 5;
+	int PAGE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -404,7 +477,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getComment()
 	 * @generated
 	 */
-	int COMMENT = 6;
+	int COMMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -486,7 +559,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getTextComment()
 	 * @generated
 	 */
-	int TEXT_COMMENT = 7;
+	int TEXT_COMMENT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -577,7 +650,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getHandwritingComment()
 	 * @generated
 	 */
-	int HANDWRITING_COMMENT = 8;
+	int HANDWRITING_COMMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
@@ -623,7 +696,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getLine()
 	 * @generated
 	 */
-	int LINE = 9;
+	int LINE = 10;
 
 	/**
 	 * The feature id for the '<em><b>X1</b></em>' attribute.
@@ -705,7 +778,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getGrade()
 	 * @generated
 	 */
-	int GRADE = 10;
+	int GRADE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Entries</b></em>' reference list.
@@ -751,7 +824,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getStudentSheet()
 	 * @generated
 	 */
-	int STUDENT_SHEET = 11;
+	int STUDENT_SHEET = 12;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -833,7 +906,7 @@ public interface CorePackage extends EPackage {
 	 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getStudentInformation()
 	 * @generated
 	 */
-	int STUDENT_INFORMATION = 12;
+	int STUDENT_INFORMATION = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -925,6 +998,60 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getQuestionZone_Heigth();
+
+	/**
+	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.QrCodeZone <em>Qr Code Zone</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Qr Code Zone</em>'.
+	 * @see fr.istic.tools.scanexam.core.QrCodeZone
+	 * @generated
+	 */
+	EClass getQrCodeZone();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.QrCodeZone#getX <em>X</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>X</em>'.
+	 * @see fr.istic.tools.scanexam.core.QrCodeZone#getX()
+	 * @see #getQrCodeZone()
+	 * @generated
+	 */
+	EAttribute getQrCodeZone_X();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.QrCodeZone#getY <em>Y</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Y</em>'.
+	 * @see fr.istic.tools.scanexam.core.QrCodeZone#getY()
+	 * @see #getQrCodeZone()
+	 * @generated
+	 */
+	EAttribute getQrCodeZone_Y();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.QrCodeZone#getWidth <em>Width</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Width</em>'.
+	 * @see fr.istic.tools.scanexam.core.QrCodeZone#getWidth()
+	 * @see #getQrCodeZone()
+	 * @generated
+	 */
+	EAttribute getQrCodeZone_Width();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.QrCodeZone#getHeight <em>Height</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Height</em>'.
+	 * @see fr.istic.tools.scanexam.core.QrCodeZone#getHeight()
+	 * @see #getQrCodeZone()
+	 * @generated
+	 */
+	EAttribute getQrCodeZone_Height();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.Question <em>Question</em>}'.
@@ -1086,6 +1213,17 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getExam_Name();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link fr.istic.tools.scanexam.core.Exam#getQrCodeZone <em>Qr Code Zone</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Qr Code Zone</em>'.
+	 * @see fr.istic.tools.scanexam.core.Exam#getQrCodeZone()
+	 * @see #getExam()
+	 * @generated
+	 */
+	EReference getExam_QrCodeZone();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.Exam#getPages <em>Pages</em>}'.
@@ -1549,6 +1687,48 @@ public interface CorePackage extends EPackage {
 		EAttribute QUESTION_ZONE__HEIGTH = eINSTANCE.getQuestionZone_Heigth();
 
 		/**
+		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.QrCodeZoneImpl <em>Qr Code Zone</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.istic.tools.scanexam.core.impl.QrCodeZoneImpl
+		 * @see fr.istic.tools.scanexam.core.impl.CorePackageImpl#getQrCodeZone()
+		 * @generated
+		 */
+		EClass QR_CODE_ZONE = eINSTANCE.getQrCodeZone();
+
+		/**
+		 * The meta object literal for the '<em><b>X</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute QR_CODE_ZONE__X = eINSTANCE.getQrCodeZone_X();
+
+		/**
+		 * The meta object literal for the '<em><b>Y</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute QR_CODE_ZONE__Y = eINSTANCE.getQrCodeZone_Y();
+
+		/**
+		 * The meta object literal for the '<em><b>Width</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute QR_CODE_ZONE__WIDTH = eINSTANCE.getQrCodeZone_Width();
+
+		/**
+		 * The meta object literal for the '<em><b>Height</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute QR_CODE_ZONE__HEIGHT = eINSTANCE.getQrCodeZone_Height();
+
+		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.QuestionImpl <em>Question</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1675,6 +1855,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EXAM__NAME = eINSTANCE.getExam_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Qr Code Zone</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXAM__QR_CODE_ZONE = eINSTANCE.getExam_QrCodeZone();
 
 		/**
 		 * The meta object literal for the '<em><b>Pages</b></em>' containment reference list feature.

@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.Exam#getId <em>Id</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.Exam#getName <em>Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.Exam#getQrCodeZone <em>Qr Code Zone</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.Exam#getPages <em>Pages</em>}</li>
  * </ul>
  *
@@ -68,6 +69,28 @@ public interface Exam extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Qr Code Zone</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Qr Code Zone</em>' containment reference.
+	 * @see #setQrCodeZone(QrCodeZone)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getExam_QrCodeZone()
+	 * @model containment="true"
+	 * @generated
+	 */
+	QrCodeZone getQrCodeZone();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.Exam#getQrCodeZone <em>Qr Code Zone</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Qr Code Zone</em>' containment reference.
+	 * @see #getQrCodeZone()
+	 * @generated
+	 */
+	void setQrCodeZone(QrCodeZone value);
 
 	/**
 	 * Returns the value of the '<em><b>Pages</b></em>' containment reference list.

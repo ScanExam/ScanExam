@@ -169,7 +169,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		//dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation)
+		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation, graduationController.pdfManager)
 		dialog.setScene(new Scene(view))
 		dialog.setResizable(false);
 		dialog.show

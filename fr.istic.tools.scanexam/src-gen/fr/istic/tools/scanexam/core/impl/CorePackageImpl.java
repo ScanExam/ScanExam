@@ -12,6 +12,7 @@ import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.HandwritingComment;
 import fr.istic.tools.scanexam.core.Line;
 import fr.istic.tools.scanexam.core.Page;
+import fr.istic.tools.scanexam.core.QrCodeZone;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.StudentInformation;
@@ -40,6 +41,13 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * @generated
 	 */
 	private EClass questionZoneEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass qrCodeZoneEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -239,6 +247,51 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getQrCodeZone() {
+		return qrCodeZoneEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getQrCodeZone_X() {
+		return (EAttribute)qrCodeZoneEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getQrCodeZone_Y() {
+		return (EAttribute)qrCodeZoneEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getQrCodeZone_Width() {
+		return (EAttribute)qrCodeZoneEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getQrCodeZone_Height() {
+		return (EAttribute)qrCodeZoneEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getQuestion() {
 		return questionEClass;
 	}
@@ -374,8 +427,17 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getExam_Pages() {
+	public EReference getExam_QrCodeZone() {
 		return (EReference)examEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getExam_Pages() {
+		return (EReference)examEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -736,6 +798,12 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEAttribute(questionZoneEClass, QUESTION_ZONE__WIDTH);
 		createEAttribute(questionZoneEClass, QUESTION_ZONE__HEIGTH);
 
+		qrCodeZoneEClass = createEClass(QR_CODE_ZONE);
+		createEAttribute(qrCodeZoneEClass, QR_CODE_ZONE__X);
+		createEAttribute(qrCodeZoneEClass, QR_CODE_ZONE__Y);
+		createEAttribute(qrCodeZoneEClass, QR_CODE_ZONE__WIDTH);
+		createEAttribute(qrCodeZoneEClass, QR_CODE_ZONE__HEIGHT);
+
 		questionEClass = createEClass(QUESTION);
 		createEAttribute(questionEClass, QUESTION__ID);
 		createEAttribute(questionEClass, QUESTION__NAME);
@@ -754,6 +822,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		examEClass = createEClass(EXAM);
 		createEAttribute(examEClass, EXAM__ID);
 		createEAttribute(examEClass, EXAM__NAME);
+		createEReference(examEClass, EXAM__QR_CODE_ZONE);
 		createEReference(examEClass, EXAM__PAGES);
 		createEOperation(examEClass, EXAM___COMPUTE_MAX_GRADE);
 
@@ -841,6 +910,12 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEAttribute(getQuestionZone_Width(), theEcorePackage.getEFloat(), "width", null, 0, 1, QuestionZone.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getQuestionZone_Heigth(), theEcorePackage.getEFloat(), "heigth", null, 0, 1, QuestionZone.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(qrCodeZoneEClass, QrCodeZone.class, "QrCodeZone", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getQrCodeZone_X(), theEcorePackage.getEFloat(), "x", null, 0, 1, QrCodeZone.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getQrCodeZone_Y(), theEcorePackage.getEFloat(), "y", null, 0, 1, QrCodeZone.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getQrCodeZone_Width(), theEcorePackage.getEFloat(), "width", null, 0, 1, QrCodeZone.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getQrCodeZone_Height(), theEcorePackage.getEFloat(), "height", null, 0, 1, QrCodeZone.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(questionEClass, Question.class, "Question", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getQuestion_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, Question.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getQuestion_Name(), theEcorePackage.getEString(), "name", null, 0, 1, Question.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -859,6 +934,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEClass(examEClass, Exam.class, "Exam", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getExam_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExam_Name(), theEcorePackage.getEString(), "name", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExam_QrCodeZone(), this.getQrCodeZone(), null, "qrCodeZone", null, 0, 1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExam_Pages(), this.getPage(), null, "pages", null, 0, -1, Exam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getExam__ComputeMaxGrade(), theEcorePackage.getEFloat(), "computeMaxGrade", 0, 1, !IS_UNIQUE, IS_ORDERED);
