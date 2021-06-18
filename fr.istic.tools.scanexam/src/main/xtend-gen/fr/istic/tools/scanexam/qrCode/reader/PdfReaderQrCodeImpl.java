@@ -44,7 +44,6 @@ import org.apache.pdfbox.util.Matrix;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
@@ -131,16 +130,17 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
             final float orientation = this.qrCodeOrientation(result);
             if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
               this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
-            }
-            final Pair<Float, Float> position = this.qrCodePosition(result, bim.getWidth(), bim.getHeight());
-            Float _key = position.getKey();
-            Float _key_1 = qrPos.getKey();
-            final float diffX = ((_key).floatValue() - (_key_1).floatValue());
-            Float _value = position.getValue();
-            Float _value_1 = qrPos.getValue();
-            final float diffY = ((_value).floatValue() - (_value_1).floatValue());
-            if (((((diffX <= (-0.01f)) || (diffX >= 0.01f)) || (diffY <= (-0.01f))) || (diffY >= 0.01f))) {
-              this.repositionPdf(pdDoc, docPath, (page).intValue(), diffX, diffY);
+            } else {
+              final Pair<Float, Float> position = this.qrCodePosition(result, bim.getWidth(), bim.getHeight());
+              Float _key = qrPos.getKey();
+              Float _key_1 = position.getKey();
+              final float diffX = ((_key).floatValue() - (_key_1).floatValue());
+              Float _value = position.getValue();
+              Float _value_1 = qrPos.getValue();
+              final float diffY = ((_value).floatValue() - (_value_1).floatValue());
+              if (((((diffX <= (-0.01f)) || (diffX >= 0.01f)) || (diffY <= (-0.01f))) || (diffY >= 0.01f))) {
+                this.repositionPdf(pdDoc, docPath, (page).intValue(), diffX, diffY);
+              }
             }
           }
           try {
@@ -300,7 +300,20 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param offsetY Longueur vers laquelle décaler le contenu sur l'axe y
    */
   private void repositionPdf(final PDDocument pdDoc, final String docPath, final int page, final float offsetX, final float offsetY) {
-    InputOutput.<String>println("repositionnement du pdf nécessaire");
+    try {
+      final PDPage pdPage = pdDoc.getDocumentCatalog().getPages().get(page);
+      final PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND, 
+        false, false);
+      float _width = pdPage.getMediaBox().getWidth();
+      float _multiply = (offsetX * _width);
+      float _height = pdPage.getMediaBox().getHeight();
+      float _multiply_1 = (offsetY * _height);
+      cs.transform(Matrix.getTranslateInstance(_multiply, _multiply_1));
+      cs.close();
+      pdDoc.save(docPath);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   /**

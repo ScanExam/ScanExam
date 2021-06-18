@@ -100,13 +100,13 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 				val float orientation = qrCodeOrientation(result)
 				if (orientation <= -0.5f || orientation >= 0.5f) {
 					rotatePdf(pdDoc, docPath, page, orientation)
-				}
-
-				val Pair<Float, Float> position = qrCodePosition(result, bim.width, bim.height)
-				val diffX = position.key - qrPos.key
-				val diffY = position.value - qrPos.value
-				if (diffX <= -0.01f || diffX >= 0.01f || diffY <= -0.01f || diffY >= 0.01f) {
-					repositionPdf(pdDoc, docPath, page, diffX, diffY)
+				} else {
+					val Pair<Float, Float> position = qrCodePosition(result, bim.width, bim.height)
+					val diffX = qrPos.key - position.key
+					val diffY = position.value - qrPos.value
+					if (diffX <= -0.01f || diffX >= 0.01f || diffY <= -0.01f || diffY >= 0.01f) {
+						repositionPdf(pdDoc, docPath, page, diffX, diffY)
+					}
 				}
 			}
 
@@ -219,8 +219,12 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param offsetY Longueur vers laquelle décaler le contenu sur l'axe y
 	 */
 	private def void repositionPdf(PDDocument pdDoc, String docPath, int page, float offsetX, float offsetY) {
-		//TODO
-		println("repositionnement du pdf nécessaire")
+		val PDPage pdPage = pdDoc.documentCatalog.pages.get(page)
+		val PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND,
+			false, false)
+		cs.transform(Matrix.getTranslateInstance(offsetX * pdPage.mediaBox.width, offsetY * pdPage.mediaBox.height))
+		cs.close
+		pdDoc.save(docPath)
 	}
 
 	/**
