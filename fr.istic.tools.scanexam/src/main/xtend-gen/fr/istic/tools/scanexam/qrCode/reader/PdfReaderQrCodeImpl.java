@@ -131,7 +131,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
             if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
               this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
             } else {
-              if ((((qrPos != null) && (qrPos.getKey() != null)) && (qrPos.getValue() != null))) {
+              if ((((qrPos.getKey()).floatValue() >= 0.0f) && ((qrPos.getValue()).floatValue() >= 0.0f))) {
                 final Pair<Float, Float> position = this.qrCodePosition(result, bim.getWidth(), bim.getHeight());
                 Float _key = qrPos.getKey();
                 Float _key_1 = position.getKey();

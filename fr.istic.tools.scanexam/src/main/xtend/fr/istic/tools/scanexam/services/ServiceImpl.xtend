@@ -502,7 +502,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @param y la nouvelle position y de la zone
 	 */
 	override void moveQrCode(float x, float y) {
-		println("position x:" + x + " y:" + y)
 		val qrCodeZone = editionTemplate.exam.qrCodeZone
 		qrCodeZone.x = x
 		qrCodeZone.y = y
@@ -690,12 +689,16 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		editionTemplate.exam.name = name
 	}
 
-	override QrCodeZone getQrCodeZone() {
-		return editionTemplate.exam.qrCodeZone
+	override Optional<QrCodeZone> getQrCodeZone() {
+		return Optional.ofNullable(editionTemplate.exam.qrCodeZone)
 	}
-	
-	override Pair<Float, Float> getQrCodePosition() {
-		new Pair<Float, Float>(qrCodeZone.x, qrCodeZone.y)
+
+	override Optional<Pair<Float, Float>> getQrCodePosition() {
+		if (qrCodeZone.isPresent) {
+			return Optional.of(new Pair<Float, Float>(qrCodeZone.get.x, qrCodeZone.get.y))
+		} else {
+			return Optional.empty
+		}
 	}
 
 	/**

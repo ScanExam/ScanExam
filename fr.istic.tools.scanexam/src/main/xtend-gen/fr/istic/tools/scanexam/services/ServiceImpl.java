@@ -46,7 +46,6 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -692,7 +691,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void moveQrCode(final float x, final float y) {
-    InputOutput.<String>println(((("position x:" + Float.valueOf(x)) + " y:") + Float.valueOf(y)));
     final QrCodeZone qrCodeZone = this.editionTemplate.getExam().getQrCodeZone();
     qrCodeZone.setX(x);
     qrCodeZone.setY(y);
@@ -940,15 +938,21 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   @Override
-  public QrCodeZone getQrCodeZone() {
-    return this.editionTemplate.getExam().getQrCodeZone();
+  public Optional<QrCodeZone> getQrCodeZone() {
+    return Optional.<QrCodeZone>ofNullable(this.editionTemplate.getExam().getQrCodeZone());
   }
   
   @Override
-  public javafx.util.Pair<Float, Float> getQrCodePosition() {
-    float _x = this.getQrCodeZone().getX();
-    float _y = this.getQrCodeZone().getY();
-    return new javafx.util.Pair<Float, Float>(Float.valueOf(_x), Float.valueOf(_y));
+  public Optional<javafx.util.Pair<Float, Float>> getQrCodePosition() {
+    boolean _isPresent = this.getQrCodeZone().isPresent();
+    if (_isPresent) {
+      float _x = this.getQrCodeZone().get().getX();
+      float _y = this.getQrCodeZone().get().getY();
+      javafx.util.Pair<Float, Float> _pair = new javafx.util.Pair<Float, Float>(Float.valueOf(_x), Float.valueOf(_y));
+      return Optional.<javafx.util.Pair<Float, Float>>of(_pair);
+    } else {
+      return Optional.<javafx.util.Pair<Float, Float>>empty();
+    }
   }
   
   /**

@@ -25,6 +25,7 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
+import javafx.util.Pair
 
 /**
  * Contrôleur pour l'UI de chargement d'une correction
@@ -128,7 +129,7 @@ class ControllerGraduationCreator {
 	def boolean loadStudentSheets() {
 		val File file = new File(txtFldFileGraduation.text)
 		val PdfReader reader = new PdfReaderQrCodeImpl(new FileInputStream(file), txtFldFileGraduation.text,
-			serviceGraduation.pageAmount, serviceGraduation.qrCodePosition)
+			serviceGraduation.pageAmount, serviceGraduation.qrCodePosition.orElse(new Pair<Float, Float>(-1.0f, -1.0f)))
 		val successStart = reader.readPDf
 		val Task<Void> task = new Task<Void>() {
 			protected override Void call() {

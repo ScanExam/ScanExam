@@ -13,6 +13,7 @@ import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Objects;
+import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -168,8 +169,10 @@ public class ControllerGraduationCreator {
         FileInputStream _fileInputStream = new FileInputStream(file);
         String _text_1 = this.txtFldFileGraduation.getText();
         int _pageAmount = this.serviceGraduation.getPageAmount();
-        Pair<Float, Float> _qrCodePosition = this.serviceGraduation.getQrCodePosition();
-        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _text_1, _pageAmount, _qrCodePosition);
+        Optional<Pair<Float, Float>> _qrCodePosition = this.serviceGraduation.getQrCodePosition();
+        Pair<Float, Float> _pair = new Pair<Float, Float>(Float.valueOf((-1.0f)), Float.valueOf((-1.0f)));
+        Pair<Float, Float> _orElse = _qrCodePosition.orElse(_pair);
+        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _text_1, _pageAmount, _orElse);
         final boolean successStart = reader.readPDf();
         final Task<Void> task = new Task<Void>() {
           @Override

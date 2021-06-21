@@ -723,13 +723,13 @@ class ControllerFxEdition {
 	 */
 	def loadQrCodeZone() {
 		val qrCodeInService = service.getQrCodeZone()
-		if (qrCodeInService !== null) {
+		if (qrCodeInService.isPresent) {
 			val qrCodeBox = new Box(
 				BoxType.QR,
-				qrCodeInService.x * maxX,
-				qrCodeInService.y * maxY,
-				qrCodeInService.width * maxX,
-				qrCodeInService.height * maxY
+				qrCodeInService.get.x * maxX,
+				qrCodeInService.get.y * maxY,
+				qrCodeInService.get.width * maxX,
+				qrCodeInService.get.height * maxY
 			)
 			qrCodeZone = new QrCodeZone(qrCodeBox, this)
 			mainPane.addZone(qrCodeZone.zone)

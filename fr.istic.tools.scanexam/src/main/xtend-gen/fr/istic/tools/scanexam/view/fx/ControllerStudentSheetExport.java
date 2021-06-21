@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class ControllerStudentSheetExport {
@@ -83,13 +84,14 @@ public class ControllerStudentSheetExport {
   public boolean export(final File file, final int number) {
     boolean _xblockexpression = false;
     {
-      QrCodeZone _qrCodeZone = this.service.getQrCodeZone();
+      Optional<QrCodeZone> _qrCodeZone = this.service.getQrCodeZone();
       boolean _tripleEquals = (_qrCodeZone == null);
       if (_tripleEquals) {
+        InputOutput.<String>println("yo");
         this.service.createQrCode(0.025f, 0.875f, 0.1f, 0.1f);
       }
       final QRCodeGenerator generator = new QRCodeGeneratorImpl();
-      generator.createAllExamCopies(this.controllerEdition.getPdfManager().getPdfInputStream(), file, this.service.getQrCodeZone(), 
+      generator.createAllExamCopies(this.controllerEdition.getPdfManager().getPdfInputStream(), file, this.service.getQrCodeZone().get(), 
         this.service.getExamName(), number);
       _xblockexpression = true;
     }

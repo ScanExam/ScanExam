@@ -135,7 +135,10 @@ public interface ServiceGraduation extends Service {
    */
   boolean retractGradeEntry(final int questionId, final int gradeEntryId);
   
-  Pair<Float, Float> getQrCodePosition();
+  /**
+   * Retourne la position de la zone du qr code
+   */
+  Optional<Pair<Float, Float>> getQrCodePosition();
   
   /**
    * @param l'ID de la Question

@@ -36,7 +36,7 @@ public interface ServiceEdition extends Service {
    * Retourne la zone du qr code
    * @return Zone du qr code
    */
-  QrCodeZone getQrCodeZone();
+  Optional<QrCodeZone> getQrCodeZone();
   
   /**
    * Permet de lier une Question q à une zone du PDF définie par un Rectangle R

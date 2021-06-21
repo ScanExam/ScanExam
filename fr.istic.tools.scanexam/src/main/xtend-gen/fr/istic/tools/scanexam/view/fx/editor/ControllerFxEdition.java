@@ -965,18 +965,19 @@ public class ControllerFxEdition {
   public boolean loadQrCodeZone() {
     boolean _xblockexpression = false;
     {
-      final fr.istic.tools.scanexam.core.QrCodeZone qrCodeInService = this.service.getQrCodeZone();
+      final Optional<fr.istic.tools.scanexam.core.QrCodeZone> qrCodeInService = this.service.getQrCodeZone();
       boolean _xifexpression = false;
-      if ((qrCodeInService != null)) {
+      boolean _isPresent = qrCodeInService.isPresent();
+      if (_isPresent) {
         boolean _xblockexpression_1 = false;
         {
-          float _x = qrCodeInService.getX();
+          float _x = qrCodeInService.get().getX();
           double _multiply = (_x * this.maxX);
-          float _y = qrCodeInService.getY();
+          float _y = qrCodeInService.get().getY();
           double _multiply_1 = (_y * this.maxY);
-          float _width = qrCodeInService.getWidth();
+          float _width = qrCodeInService.get().getWidth();
           double _multiply_2 = (_width * this.maxX);
-          float _height = qrCodeInService.getHeight();
+          float _height = qrCodeInService.get().getHeight();
           double _multiply_3 = (_height * this.maxY);
           final Box qrCodeBox = new Box(
             BoxType.QR, _multiply, _multiply_1, _multiply_2, _multiply_3);
