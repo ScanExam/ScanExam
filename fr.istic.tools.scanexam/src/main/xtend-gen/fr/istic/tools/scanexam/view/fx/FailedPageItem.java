@@ -45,6 +45,10 @@ public class FailedPageItem extends HBox {
     return this.num;
   }
   
+  public TextField getField() {
+    return this.field;
+  }
+  
   public void setFocus(final boolean b) {
     if (b) {
       this.setColor(FxSettings.ITEM_HIGHLIGHT_COLOR);

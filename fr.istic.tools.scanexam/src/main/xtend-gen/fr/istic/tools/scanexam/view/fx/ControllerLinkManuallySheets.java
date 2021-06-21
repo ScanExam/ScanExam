@@ -83,15 +83,30 @@ public class ControllerLinkManuallySheets {
   /**
    * Méthode qui sauvegarde les modifications et quitte la fenêtre
    */
-  public void saveAndQuit() {
+  public void saveAndQuit(final InputEvent e) {
     InputOutput.<String>println("save and quit");
+    int _size = this.pageItemList.getChildren().size();
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
+    for (final Integer item : _doubleDotLessThan) {
+      {
+        final String textContent = this.pageItemList.getElement((item).intValue()).getField().getText();
+        InputOutput.<String>println(textContent);
+      }
+    }
+    this.quit(e);
   }
   
   /**
    * Méthode qui quitte la fenêtre sans sauvegarder
    */
   public void cancelAndQuit(final InputEvent e) {
-    InputOutput.<String>println("cancel and quit");
+    this.quit(e);
+  }
+  
+  /**
+   * Méthode qui ferme la fenêtre
+   */
+  public void quit(final InputEvent e) {
     Object _source = e.getSource();
     final Node source = ((Node) _source);
     Window _window = source.getScene().getWindow();

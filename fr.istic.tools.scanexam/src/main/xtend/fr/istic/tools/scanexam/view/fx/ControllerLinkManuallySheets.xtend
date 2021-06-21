@@ -98,16 +98,29 @@ class ControllerLinkManuallySheets {
 	 /**
 	  * Méthode qui sauvegarde les modifications et quitte la fenêtre
 	  */
-	 def void saveAndQuit(){
+	 def void saveAndQuit(InputEvent e){
+	 	//FIXME problème lors du click "invalid argument exception"
 	 	println("save and quit")
-	 	//TODO faire la sauvegarde dans le modèle
+	 	for(item : 0 ..< pageItemList.children.size){
+			val String textContent = pageItemList.getElement(item).field.getText()
+			
+			println(textContent)
+	 	}
+	 	
+	 	quit(e)
 	 }
 	 
 	 /**
 	  * Méthode qui quitte la fenêtre sans sauvegarder
 	  */
 	 def void cancelAndQuit(InputEvent e){
-	 	println("cancel and quit")
+	 	quit(e)
+	 }
+	 
+	 /**
+	  * Méthode qui ferme la fenêtre
+	  */
+	 def void quit(InputEvent e){
 	 	val Node source = e.getSource() as Node
     	val Stage stage = source.getScene().getWindow() as Stage
     	stage.close();
@@ -235,6 +248,10 @@ class FailedPageItem extends HBox {
 		return num
 	}
 	
+	def getField(){
+		field
+	}
+	
 	def void setFocus(boolean b) {//sets the color of the zone and the item in the list
 		if (b) {
 			color = FxSettings.ITEM_HIGHLIGHT_COLOR
@@ -256,9 +273,7 @@ class FailedPageItem extends HBox {
 		this.onMouseClicked = new EventHandler<MouseEvent>(){
 			
 			override handle(MouseEvent event) {
-				//TODO
 				list.controller.indexCurrentPage = list.controller.failedPages.indexOf(num)
-				//println(num)
 				list.controller.updateStatement
 			}
 			
@@ -272,7 +287,7 @@ class FailedPageItemList extends VBox {
 	
 	new (ControllerLinkManuallySheets controller){
 		this.controller = controller
-		updateList
+		initList
 	}
 	
 	def getController(){
@@ -292,9 +307,11 @@ class FailedPageItemList extends VBox {
 		children.clear
 	}
 	
-	def updateList(){
-		clearItems
-		println("current index : " + controller.indexCurrentPage)
+	def FailedPageItem getElement(int i){
+		this.children.get(i) as FailedPageItem
+	}
+	
+	def initList(){
 		for(page : 0 ..< controller.failedPages.size){
 			var item = new FailedPageItem(controller.failedPages.get(page), this)
 			this.children.add(item) 
@@ -303,5 +320,21 @@ class FailedPageItemList extends VBox {
 			else
 				item.focus = false
 		}
+	}
+	
+	def updateList(){
+		var List<Node> children = new ArrayList<Node>()
+		
+		println("children size : " + this.children.size)
+		for(page : 0 ..< controller.failedPages.size){
+			var item = this.children.get(page) as FailedPageItem
+			children.add(item) 
+			if(page == controller.indexCurrentPage)
+				item.focus = true
+			else
+				item.focus = false
+		}
+		clearItems
+		this.children.addAll(children)
 	}
 }
