@@ -244,28 +244,18 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
     try {
       int _xblockexpression = (int) 0;
       {
-        float qrCodeX = 8.0f;
-        float qrCodeY = 8.0f;
-        float qrCodeWidth = 64.0f;
-        float qrCodeHeight = 64.0f;
-        if ((qrCodeZone != null)) {
-          final float docWidth = doc.getPage(numPage).getMediaBox().getWidth();
-          final float docHeight = doc.getPage(numPage).getMediaBox().getHeight();
-          float _width = qrCodeZone.getWidth();
-          float _multiply = (_width * docWidth);
-          qrCodeWidth = _multiply;
-          float _height = qrCodeZone.getHeight();
-          float _multiply_1 = (_height * docHeight);
-          qrCodeHeight = _multiply_1;
-          float _x = qrCodeZone.getX();
-          float _multiply_2 = (_x * docWidth);
-          qrCodeX = _multiply_2;
-          float _y = qrCodeZone.getY();
-          float _multiply_3 = (_y * docHeight);
-          float _minus = (docHeight - _multiply_3);
-          float _minus_1 = (_minus - qrCodeHeight);
-          qrCodeY = _minus_1;
-        }
+        final float docWidth = doc.getPage(numPage).getMediaBox().getWidth();
+        final float docHeight = doc.getPage(numPage).getMediaBox().getHeight();
+        float _width = qrCodeZone.getWidth();
+        final float qrCodeWidth = (_width * docWidth);
+        float _height = qrCodeZone.getHeight();
+        final float qrCodeHeight = (_height * docHeight);
+        float _x = qrCodeZone.getX();
+        final float qrCodeX = (_x * docWidth);
+        float _y = qrCodeZone.getY();
+        float _multiply = (_y * docHeight);
+        float _minus = (docHeight - _multiply);
+        final float qrCodeY = (_minus - qrCodeHeight);
         float _xifexpression = (float) 0;
         if ((qrCodeWidth < qrCodeHeight)) {
           _xifexpression = qrCodeWidth;

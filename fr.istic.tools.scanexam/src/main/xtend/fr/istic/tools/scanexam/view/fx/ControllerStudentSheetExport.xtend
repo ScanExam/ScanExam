@@ -59,6 +59,11 @@ class ControllerStudentSheetExport {
 	}
 
 	def boolean export(File file, int number) {
+		// Si aucune zone de qr code n'a été placée, on en crée une dans le modèle
+		if (service.qrCodeZone === null) {
+			service.createQrCode(0.025f, 0.875f, 0.1f, 0.1f)
+		}
+
 		val QRCodeGenerator generator = new QRCodeGeneratorImpl
 		generator.createAllExamCopies(controllerEdition.pdfManager.getPdfInputStream, file, service.qrCodeZone,
 			service.examName, number)

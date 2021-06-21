@@ -215,18 +215,12 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 */
 	def insertQRCodeInPage(QrCodeZone qrCodeZone, PDDocument doc, int numPage, int numCopie, int nbPagesSujet,
 		String pathImage) {
-		var float qrCodeX = 8.0f
-		var float qrCodeY = 8.0f
-		var float qrCodeWidth = 64.0f
-		var float qrCodeHeight = 64.0f
-		if (qrCodeZone !== null) {
-			val float docWidth = doc.getPage(numPage).mediaBox.width
-			val float docHeight = doc.getPage(numPage).mediaBox.height
-			qrCodeWidth = qrCodeZone.width * docWidth
-			qrCodeHeight = qrCodeZone.height * docHeight
-			qrCodeX = qrCodeZone.x * docWidth
-			qrCodeY = docHeight - (qrCodeZone.y * docHeight) - qrCodeHeight
-		}
+		val float docWidth = doc.getPage(numPage).mediaBox.width
+		val float docHeight = doc.getPage(numPage).mediaBox.height
+		val float qrCodeWidth = qrCodeZone.width * docWidth
+		val float qrCodeHeight = qrCodeZone.height * docHeight
+		val float qrCodeX = qrCodeZone.x * docWidth
+		val float qrCodeY = docHeight - (qrCodeZone.y * docHeight) - qrCodeHeight
 		val float qrCodeSize = qrCodeWidth < qrCodeHeight ? qrCodeWidth : qrCodeHeight
 		val String stringAEncoder = numCopie + "_" + numPage
 
