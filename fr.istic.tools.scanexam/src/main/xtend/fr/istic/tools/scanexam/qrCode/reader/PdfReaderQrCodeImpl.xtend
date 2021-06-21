@@ -100,7 +100,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 				val float orientation = qrCodeOrientation(result)
 				if (orientation <= -0.5f || orientation >= 0.5f) {
 					rotatePdf(pdDoc, docPath, page, orientation)
-				} else {
+				} else if (qrPos !== null && qrPos.key !== null && qrPos.value !== null) {
 					val Pair<Float, Float> position = qrCodePosition(result, bim.width, bim.height)
 					val diffX = qrPos.key - position.key
 					val diffY = position.value - qrPos.value

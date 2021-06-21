@@ -131,15 +131,17 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
             if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
               this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
             } else {
-              final Pair<Float, Float> position = this.qrCodePosition(result, bim.getWidth(), bim.getHeight());
-              Float _key = qrPos.getKey();
-              Float _key_1 = position.getKey();
-              final float diffX = ((_key).floatValue() - (_key_1).floatValue());
-              Float _value = position.getValue();
-              Float _value_1 = qrPos.getValue();
-              final float diffY = ((_value).floatValue() - (_value_1).floatValue());
-              if (((((diffX <= (-0.01f)) || (diffX >= 0.01f)) || (diffY <= (-0.01f))) || (diffY >= 0.01f))) {
-                this.repositionPdf(pdDoc, docPath, (page).intValue(), diffX, diffY);
+              if ((((qrPos != null) && (qrPos.getKey() != null)) && (qrPos.getValue() != null))) {
+                final Pair<Float, Float> position = this.qrCodePosition(result, bim.getWidth(), bim.getHeight());
+                Float _key = qrPos.getKey();
+                Float _key_1 = position.getKey();
+                final float diffX = ((_key).floatValue() - (_key_1).floatValue());
+                Float _value = position.getValue();
+                Float _value_1 = qrPos.getValue();
+                final float diffY = ((_value).floatValue() - (_value_1).floatValue());
+                if (((((diffX <= (-0.01f)) || (diffX >= 0.01f)) || (diffY <= (-0.01f))) || (diffY >= 0.01f))) {
+                  this.repositionPdf(pdDoc, docPath, (page).intValue(), diffX, diffY);
+                }
               }
             }
           }
