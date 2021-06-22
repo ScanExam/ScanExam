@@ -71,7 +71,7 @@ class ControllerLinkManuallySheets {
 	  */
 	 def void init(ServiceGraduation serviceGraduation, PdfManager pdfManager){
 		service = serviceGraduation	
-		failedPages = List.of(2,3,5,7)//service.failedPages
+		failedPages = new ArrayList<Integer>(service.failedPages)
 		indexCurrentPage = 0
 		
 		this.document = PDDocument.load(pdfManager.pdfInputStream)
@@ -99,12 +99,22 @@ class ControllerLinkManuallySheets {
 	  * Méthode qui sauvegarde les modifications et quitte la fenêtre
 	  */
 	 def void saveAndQuit(InputEvent e){
-	 	//FIXME problème lors du click "invalid argument exception"
 	 	println("save and quit")
+	 	
 	 	for(item : 0 ..< pageItemList.children.size){
 			val String textContent = pageItemList.getElement(item).field.getText()
 			
-			println(textContent)
+			val split = textContent.split("_")
+			
+			if(split.size == 2){
+				val id = Integer.parseInt(split.get(0))
+				val page = Integer.parseInt(split.get(1))
+				
+				service.addPageInStudentSheet(id, page)
+				
+				service.failedPages.remove(failedPages.get(item))
+				
+			}
 	 	}
 	 	
 	 	quit(e)
@@ -190,9 +200,7 @@ class ControllerLinkManuallySheets {
 	   */
 	  def void updateStatement(){
 	  	pageItemList.updateList
-	  	
 	  	updateImageView
-	  	//TODO à compléter au fur et a mesure
 	  }
 	  
 	  /**

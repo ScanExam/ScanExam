@@ -69,6 +69,13 @@ public interface ServiceGraduation extends Service {
   Collection<StudentSheet> getStudentSheets();
   
   /**
+   * ajoute une page en plus dans une copie
+   * @param id de la copie
+   * @param numéro de la page à ajouter
+   */
+  void addPageInStudentSheet(final int id, final int page);
+  
+  /**
    * Définit la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
    * @param id un ID de copie d'étudiant
    */

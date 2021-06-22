@@ -5,6 +5,7 @@ import fr.istic.tools.scanexam.view.fx.FailedPageItemList;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import javafx.stage.Window;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.InputOutput;
@@ -54,7 +56,9 @@ public class ControllerLinkManuallySheets {
   public void init(final ServiceGraduation serviceGraduation, final PdfManager pdfManager) {
     try {
       this.service = serviceGraduation;
-      this.failedPages = List.<Integer>of(Integer.valueOf(2), Integer.valueOf(3), Integer.valueOf(5), Integer.valueOf(7));
+      Collection<Integer> _failedPages = this.service.getFailedPages();
+      ArrayList<Integer> _arrayList = new ArrayList<Integer>(_failedPages);
+      this.failedPages = _arrayList;
       this.indexCurrentPage = 0;
       this.document = PDDocument.load(pdfManager.getPdfInputStream());
       PDFRenderer _pDFRenderer = new PDFRenderer(this.document);
@@ -90,7 +94,15 @@ public class ControllerLinkManuallySheets {
     for (final Integer item : _doubleDotLessThan) {
       {
         final String textContent = this.pageItemList.getElement((item).intValue()).getField().getText();
-        InputOutput.<String>println(textContent);
+        final String[] split = textContent.split("_");
+        int _size_1 = ((List<String>)Conversions.doWrapArray(split)).size();
+        boolean _equals = (_size_1 == 2);
+        if (_equals) {
+          final int id = Integer.parseInt(split[0]);
+          final int page = Integer.parseInt(split[1]);
+          this.service.addPageInStudentSheet(id, page);
+          this.service.getFailedPages().remove(this.failedPages.get((item).intValue()));
+        }
       }
     }
     this.quit(e);

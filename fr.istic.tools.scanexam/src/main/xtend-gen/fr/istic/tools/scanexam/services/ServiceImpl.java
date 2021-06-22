@@ -230,6 +230,34 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
+   * définie une nouvelle collection de studentsheets
+   * @param la collection qui va remplacer l'ancienne
+   */
+  public void setStudentSheets(final Collection<StudentSheet> studentSheets) {
+    this.graduationTemplate.getStudentsheets().clear();
+    this.graduationTemplate.getStudentsheets().addAll(studentSheets);
+  }
+  
+  /**
+   * ajoute une page en plus dans une copie
+   * @param id de la copie
+   * @param numéro de la page à ajouter
+   */
+  @Override
+  public void addPageInStudentSheet(final int id, final int page) {
+    Collection<StudentSheet> temp = this.getStudentSheets();
+    for (final StudentSheet sheet : temp) {
+      int _id = sheet.getId();
+      boolean _equals = (_id == id);
+      if (_equals) {
+        sheet.getPosPage().add(Integer.valueOf(page));
+        Collections.<Integer>sort(sheet.getPosPage());
+      }
+    }
+    this.setStudentSheets(temp);
+  }
+  
+  /**
    * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
    * @param id l'ID de la copie
    */

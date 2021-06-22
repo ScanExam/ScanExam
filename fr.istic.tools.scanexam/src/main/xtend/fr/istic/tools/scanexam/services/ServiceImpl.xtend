@@ -177,6 +177,34 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		}
 		return Collections.unmodifiableList(graduationTemplate.studentsheets)
 	}
+	
+	/**
+	 * définie une nouvelle collection de studentsheets
+	 * @param la collection qui va remplacer l'ancienne
+	 */
+	def void setStudentSheets(Collection<StudentSheet> studentSheets){
+		graduationTemplate.studentsheets.clear
+		graduationTemplate.studentsheets.addAll(studentSheets)
+	}
+	
+	/**
+	 * ajoute une page en plus dans une copie
+	 * @param id de la copie
+	 * @param numéro de la page à ajouter
+	 */
+	override addPageInStudentSheet(int id, int page){
+		
+		var Collection<StudentSheet> temp = studentSheets
+		
+		for(sheet : temp){
+			if(sheet.id == id){
+				sheet.posPage.add(page)
+				Collections.sort(sheet.posPage)
+				
+			}
+		}
+		studentSheets = temp
+	}
 
 	/**
 	 * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
