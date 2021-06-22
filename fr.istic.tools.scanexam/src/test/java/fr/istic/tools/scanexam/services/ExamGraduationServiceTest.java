@@ -127,7 +127,7 @@ public class ExamGraduationServiceTest {
 		openTemplate();
 
 		// Nouvelle correction
-		final boolean result = service.initializeCorrection(List.of(sheet1, sheet2, sheet3));
+		final boolean result = service.initializeCorrection(List.of(sheet1, sheet2, sheet3), List.of());
 
 		assertTrue(result);
 
@@ -145,7 +145,7 @@ public class ExamGraduationServiceTest {
 		final var sheet3 = new DataFactory().createStudentSheet(2, List.of(7, 8, 9));
 
 		// Nouvelle correction
-		final boolean result = service.initializeCorrection(List.of(sheet1, sheet2, sheet3));
+		final boolean result = service.initializeCorrection(List.of(sheet1, sheet2, sheet3), List.of());
 
 		assertFalse(result);
 	}

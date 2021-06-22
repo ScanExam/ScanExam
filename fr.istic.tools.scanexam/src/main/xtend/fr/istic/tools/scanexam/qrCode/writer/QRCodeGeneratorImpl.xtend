@@ -17,6 +17,7 @@ import java.nio.file.Path
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import org.apache.logging.log4j.LogManager
 import org.apache.pdfbox.io.MemoryUsageSetting
 import org.apache.pdfbox.multipdf.PDFMergerUtility
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -24,7 +25,12 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
-import org.apache.logging.log4j.LogManager
+import org.apache.pdfbox.pdmodel.font.PDType0Font
+import fr.istic.tools.scanexam.utils.ResourcesUtils
+import fr.istic.tools.scanexam.core.QrCodeZone
+import java.util.EnumMap
+import com.google.zxing.EncodeHintType
+import java.util.Map
 
 class QRCodeGeneratorImpl implements QRCodeGenerator {
 
@@ -32,70 +38,68 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	int nbTreated = 0
 	int numberPagesAllSheets
 	val logger = LogManager.logger
-	
+
 	/**
 	 * Créer toutes les copies d'examen en y insérant les QrCodes correspondant dans chaque pages
 	 * 
 	 * @param inputFile Chemin du sujet maitre
 	 * @param outputPath chemin de sortie
+	 * @param qrCodeZone zone sur le document où insérer le qrcode
 	 * @param idExam l'id de l'examen
 	 * @param nbCopies Nombre de copies de l'examen souhaité
 	 */
-	override createAllExamCopies(InputStream inputFile, File outFile, String idExam, int nbCopie) {
+	override createAllExamCopies(InputStream inputFile, File outFile, QrCodeZone qrCodeZone, String idExam,
+		int nbCopie) {
 
-        try {
-            
-            val byte[] byteArray = newByteArrayOfSize(inputFile.available)
-            
-            inputFile.read(byteArray)
+		try {
 
-            val File temp = File.createTempFile("pdfTemp",".pdf")
-			temp.deleteOnExit            
-            val OutputStream oS = new FileOutputStream(temp)
-            
-            oS.write(byteArray)
-            
-            oS.close
-            
-            val PDDocument doc = PDDocument.load(temp)
-            
-            numberPagesAllSheets = nbCopie * doc.numberOfPages
-            
-            val int nbPages = doc.numberOfPages
+			val byte[] byteArray = newByteArrayOfSize(inputFile.available)
 
-            val MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly()
+			inputFile.read(byteArray)
 
-            //val File f2 = File.createTempFile(idExam, ".pdf")
+			val File temp = File.createTempFile("pdfTemp", ".pdf")
+			temp.deleteOnExit
+			val OutputStream oS = new FileOutputStream(temp)
 
-            var PDFMergerUtility ut = new PDFMergerUtility()
-            
-            for (i : 0 ..< nbCopie) {
-                ut.addSource(temp)
-            }
-            
-            ut.destinationFileName = outFile.absolutePath
-            
-            if(!ut.destinationFileName.contains(".pdf")){
-                ut.destinationFileName = ut.destinationFileName + ".pdf"
-            }
-            
-            memUsSett.tempDir = temp
-            
-            //ut.mergeDocuments(MemoryUsageSetting.setupTempFileOnly())
-            ut.mergeDocuments(memUsSett)
-            
-            
-            
-            val PDDocument docSujetMaitre = PDDocument.load(outFile)
+			oS.write(byteArray)
 
-            createThread(idExam, nbCopie, docSujetMaitre, doc, nbPages, new FileOutputStream(outFile))
+			oS.close
 
+			val PDDocument doc = PDDocument.load(temp)
 
-        } // fin try
-        catch (Exception e) {
-            logger.error("Cannot insert QR codes", e)
-        }
-    }
+			numberPagesAllSheets = nbCopie * doc.numberOfPages
+
+			val int nbPages = doc.numberOfPages
+
+			val MemoryUsageSetting memUsSett = MemoryUsageSetting.setupMainMemoryOnly()
+
+			// val File f2 = File.createTempFile(idExam, ".pdf")
+			var PDFMergerUtility ut = new PDFMergerUtility()
+
+			for (i : 0 ..< nbCopie) {
+				ut.addSource(temp)
+			}
+
+			ut.destinationFileName = outFile.absolutePath
+
+			if (!ut.destinationFileName.contains(".pdf")) {
+				ut.destinationFileName = ut.destinationFileName + ".pdf"
+			}
+
+			memUsSett.tempDir = temp
+
+			// ut.mergeDocuments(MemoryUsageSetting.setupTempFileOnly())
+			ut.mergeDocuments(memUsSett)
+
+			val PDDocument docSujetMaitre = PDDocument.load(outFile)
+
+			createThread(nbCopie, qrCodeZone, docSujetMaitre, doc, nbPages, new FileOutputStream(outFile))
+
+		} // fin try
+		catch (Exception e) {
+			logger.error("Cannot insert QR codes", e)
+		}
+	}
 
 	/**
 	 * Créé un QRCode (21 * 21 carrés) de taille width * height chiffrant la chaine text.
@@ -103,15 +107,18 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	 * @param text Le texte a encoder 
 	 * @param width  Largeur de l'image 
 	 * @param height Hauteur de l'image
+	 * @param margin Marge autour de l'image
 	 * @param filePath Chemin du nouveau fichier 
 	 * 
 	 * @throws WriterException
 	 * @throws IOException
 	 */
-	def generateQRCodeImage(String text, int width, int height, String filePath) {
+	def generateQRCodeImage(String text, int width, int height, int margin, String filePath) {
 		try {
 			val QRCodeWriter qrCodeWriter = new QRCodeWriter()
-			val BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height)
+			val Map<EncodeHintType, Object> hintMap = new EnumMap<EncodeHintType, Object>(EncodeHintType)
+			hintMap.put(EncodeHintType.MARGIN, margin)
+			val BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hintMap)
 			val Path path = FileSystems.getDefault().getPath(filePath)
 			MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path)
 		} catch (WriterException | IOException e) {
@@ -148,13 +155,14 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	}
 
 	/**
-	 * @param name l'intitulé du document
 	 * @param nbCopies nombre de copies désirées
+	 * @param qrCodeZone zone sur le document où insérer le qrcode
 	 * @param docSujetMaitre document dans lequel insérer les Codes
 	 * @param nbPages nombre de pages du sujet Maitre 
 	 *  
 	 */
-	def createThread(String examID, int nbCopie, PDDocument docSujetMaitre, PDDocument doc, int nbPage, OutputStream output) {
+	def createThread(int nbCopie, QrCodeZone qrCodeZone, PDDocument docSujetMaitre, PDDocument doc, int nbPage,
+		OutputStream output) {
 
 		if (nbCopie < 4) {
 			val ExecutorService service = Executors.newFixedThreadPool(1)
@@ -162,17 +170,18 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 
 			val CountDownLatch LatchThreads = new CountDownLatch(1)
 			service.execute(
-				new QRThreadWriter(this, 0, nbCopie, docSujetMaitre, nbPage, LatchThreads, examID, qrcode.absolutePath))
+				new QRThreadWriter(this, 0, nbCopie, qrCodeZone, docSujetMaitre, nbPage, LatchThreads,
+					qrcode.absolutePath))
 			LatchThreads.await()
 			service.shutdown()
-			
+
 			docSujetMaitre.save(output)
 
 			qrcode.deleteOnExit
 		} else {
 
-			val PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, docSujetMaitre, doc, this, nbCopie,
-				examID, output)
+			val PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, qrCodeZone, docSujetMaitre, doc,
+				this, nbCopie, output)
 			manager.start
 
 		}
@@ -182,42 +191,83 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	/**
 	 * Insère le QRCode sur chaque pages d'un sujet (en changeant le numéro de page sur chacunes des pages)
 	 * 
-	 * @param name l'intitulé du document
+	 * @param qrCodeZone zone sur le document où insérer le qrcode
 	 * @param docSujetMaitre le sujet maitre
 	 * @param numCopie le nombre de copies souhaitées
-	 * @param numThread le nombre de threads à executer
 	 * @param nbPagesSuject le nombre de page du sujet maître
+	 * @param pathImage chemin vers l'image du qr code générée
 	 */
-	def insertQRCodeInSubject(String name, PDDocument docSujetMaitre, int numCopie, int nbPagesSujet,
+	def insertQRCodeInSubject(QrCodeZone qrCodeZone, PDDocument docSujetMaitre, int numCopie, int nbPagesSujet,
 		String pathImage) {
-
 		for (i : 0 ..< nbPagesSujet) {
-			insertQRCodeInPage(name, i, docSujetMaitre, numCopie, nbPagesSujet, pathImage)
+			insertQRCodeInPage(qrCodeZone, docSujetMaitre, i, numCopie, nbPagesSujet, pathImage)
 		}
 	}
 
 	/**
-	 * Inèsre un QRCode sur une page
-	 * @param name l'intitulé du document
-	 * @param docSujetMaitre le sujet maitre
-	 * @param numCopie le nombre de copies souhaitées
-	 * @param numThread le nombre de threads à executer
+	 * Insère un QRCode sur une page
+	 * @param qrCodeZone zone sur le document où insérer le qrcode
+	 * @param doc le sujet maitre
+	 * @param numPage numéro de la page où insérer le qr code
+	 * @param numCopie uméro de la copie d'examen
 	 * @param nbPagesSuject le nombre de page du sujet maître
+	 * @param pathImage chemin vers l'image du qr code générée
 	 */
-	def insertQRCodeInPage(String name, int numPage, PDDocument doc, int numCopie, int nbPagesSujet, String pathImage) {
-		val String stringAEncoder = name + "_" + numCopie + "_" + numPage
+	def insertQRCodeInPage(QrCodeZone qrCodeZone, PDDocument doc, int numPage, int numCopie, int nbPagesSujet,
+		String pathImage) {
+		val float docWidth = doc.getPage(numPage).mediaBox.width
+		val float docHeight = doc.getPage(numPage).mediaBox.height
+		val float qrCodeWidth = qrCodeZone.width * docWidth
+		val float qrCodeHeight = qrCodeZone.height * docHeight
+		val float qrCodeX = qrCodeZone.x * docWidth
+		val float qrCodeY = docHeight - (qrCodeZone.y * docHeight) - qrCodeHeight
+		val float qrCodeSize = qrCodeWidth < qrCodeHeight ? qrCodeWidth : qrCodeHeight
+		val String stringAEncoder = numCopie + "_" + numPage
 
-		generateQRCodeImage(stringAEncoder, 350, 350, pathImage)
+		generateQRCodeImage(stringAEncoder, (qrCodeSize * 4) as int, (qrCodeSize * 4) as int, 0, pathImage)
 
 		val PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc)
-		val float scale = 0.3f
 
 		try(val PDPageContentStream contentStream= new PDPageContentStream(doc, doc.getPage(numPage+ ((numCopie*nbPagesSujet))), AppendMode.APPEND, true,
 						true)) {
-
-			contentStream.drawImage(pdImage, 0, 0, pdImage.getWidth() * scale, pdImage.getHeight() * scale)
+			contentStream.drawImage(pdImage, qrCodeX, qrCodeY, qrCodeSize, qrCodeSize)
+			insertTextDataInPage(doc, numPage, contentStream, stringAEncoder)
 			incrementTreated
 		}
+	}
+
+	/**
+	 * Insert des données sous forme textuelle aux 4 coins d'une page
+	 * @param doc PDDocument où inscrire les données
+	 * @param numPage Numéro de la page où inscrire les données
+	 * @param contentStream PDPageContentStream servant à écrire les données
+	 * @param data Données à inscrire
+	 */
+	private def void insertTextDataInPage(PDDocument doc, int numPage, PDPageContentStream contentStream, String data) {
+		val float width = doc.getPage(numPage).mediaBox.width
+		val float height = doc.getPage(numPage).mediaBox.height
+		contentStream.setFont(
+			PDType0Font.load(doc, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 6)
+		// En bas à gauche
+		contentStream.beginText
+		contentStream.newLineAtOffset(60, 4)
+		contentStream.showText(data)
+		contentStream.endText
+		// En haut à gauche
+		contentStream.beginText
+		contentStream.newLineAtOffset(60, height - 12)
+		contentStream.showText(data)
+		contentStream.endText
+		// En bas à droite
+		contentStream.beginText
+		contentStream.newLineAtOffset(width - 92, 4)
+		contentStream.showText(data)
+		contentStream.endText
+		// En haut à droite
+		contentStream.beginText
+		contentStream.newLineAtOffset(width - 92, height - 12)
+		contentStream.showText(data)
+		contentStream.endText
 	}
 
 	override isFinished() {
@@ -227,34 +277,33 @@ class QRCodeGeneratorImpl implements QRCodeGenerator {
 	def setFinished(boolean bool) {
 		this.isFinished = bool
 	}
-	
-	override getNbTreated(){
+
+	override getNbTreated() {
 		return nbTreated
 	}
-	
-	def incrementTreated(){
+
+	def incrementTreated() {
 		nbTreated = nbTreated + 1
 	}
-	
-	override getNumberPagesAllSheets(){
+
+	override getNumberPagesAllSheets() {
 		return numberPagesAllSheets
 	}
-	
-	def getPercentage(){
-		(getNbTreated * 100)/getNumberPagesAllSheets
+
+	def getPercentage() {
+		(getNbTreated * 100) / getNumberPagesAllSheets
 	}
 
 	def static void main(String[] arg) {
 
 		val QRCodeGeneratorImpl gen = new QRCodeGeneratorImpl()
-		//val InputStream input = new ByteArrayInputStream("D:/dataScanExam/in/pfo_example.pdf".getBytes())
-
+		// val InputStream input = new ByteArrayInputStream("D:/dataScanExam/in/pfo_example.pdf".getBytes())
 		val InputStream input2 = new ByteArrayInputStream(
 			Files.readAllBytes(Path.of("D:/dataScanExam/in/pfo_example.pdf")))
 
 		// FileUtils.readFileToByteArray(File input)
 		val File output = new File("D:/dataScanExam/out/melanie.pdf")
-		gen.createAllExamCopies(input2, output, "42PFO2021", 100)
+		gen.createAllExamCopies(input2, output, null, "42PFO2021", 100)
 
 	}
 

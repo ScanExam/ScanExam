@@ -14,6 +14,7 @@ import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 
+
 /** 
  * Classe pour lancer directement la vue en utilisant la librairie JavaFX
  * @author Stefan Locke
@@ -69,8 +70,6 @@ class LauncherFX extends Application implements Launcher {
 			Application.userAgentStylesheet = Application.STYLESHEET_MODENA
 			StyleManager.instance.addUserAgentStylesheet("viewResources/MyStyle.css")
 			//rootScene.stylesheets.add("viewResources/MyStyle.css")
-			
-			
 			
 			controllerGraduation.init(serviceGraduation)
 			

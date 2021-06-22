@@ -57,6 +57,7 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case CorePackage.QUESTION_ZONE: return createQuestionZone();
+			case CorePackage.QR_CODE_ZONE: return createQrCodeZone();
 			case CorePackage.QUESTION: return createQuestion();
 			case CorePackage.GRADE_SCALE: return createGradeScale();
 			case CorePackage.GRADE_ENTRY: return createGradeEntry();
@@ -82,6 +83,16 @@ public class CoreFactoryImpl extends EFactoryImpl implements CoreFactory {
 	public QuestionZone createQuestionZone() {
 		QuestionZoneImpl questionZone = new QuestionZoneImpl();
 		return questionZone;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public QrCodeZone createQrCodeZone() {
+		QrCodeZoneImpl qrCodeZone = new QrCodeZoneImpl();
+		return qrCodeZone;
 	}
 
 	/**

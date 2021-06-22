@@ -43,4 +43,11 @@ public interface PdfReader {
    * @return true si la lecture du PDF est terminée, false sinon
    */
   boolean isFinished();
+  
+  /**
+   * Renvoie la collection du numéro des pages du document des copies qui n'ont pas été détectées
+   * comme étant marquées avec un QRCode
+   * @return la collection du numéro des pages qui n'ont pas été détectées avec un QRCode
+   */
+  Collection<Integer> getFailedPages();
 }

@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.services.api;
 
+import fr.istic.tools.scanexam.core.QrCodeZone;
 import fr.istic.tools.scanexam.services.api.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,6 +9,35 @@ import java.util.Optional;
 
 @SuppressWarnings("all")
 public interface ServiceEdition extends Service {
+  /**
+   * Ajoute les informations de la zone de qr code au modèle
+   * @param x la position x de la zone
+   * @param y la position y de la zone
+   * @param height la hauteur de la zone
+   * @param width la largeur de la zone
+   */
+  void createQrCode(final float x, final float y, final float height, final float width);
+  
+  /**
+   * Redimensionne la zone du qr code
+   * @param height la nouvelle hauteur de la zone
+   * @param width la nouvelle largeur de la zone
+   */
+  void rescaleQrCode(final float height, final float width);
+  
+  /**
+   * Déplace la zone du qr code
+   * @param x la nouvelle position x de la zone
+   * @param y la nouvelle position y de la zone
+   */
+  void moveQrCode(final float x, final float y);
+  
+  /**
+   * Retourne la zone du qr code
+   * @return Zone du qr code
+   */
+  Optional<QrCodeZone> getQrCodeZone();
+  
   /**
    * Permet de lier une Question q à une zone du PDF définie par un Rectangle R
    * @param q Une Question

@@ -156,6 +156,25 @@ class ControllerRoot implements Initializable {
 		dialog.show
 	}
 	
+	/**
+	 * TODO
+	 * Passer le "bouton trop cool" à un sous menu de la barre menu
+	 * Faire son initialisation du controller ici
+	 */
+	 @FXML
+	 def linkManuallySheets(){
+	 	val FXMLLoader loader = new FXMLLoader
+	 	loader.resources = LanguageManager.currentBundle
+	 	val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"))
+		val Stage dialog = new Stage
+		//dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation, graduationController.pdfManager)
+		dialog.setScene(new Scene(view))
+		dialog.setResizable(false);
+		dialog.show
+	 }
+	
 	@FXML
 	def pdfExport() {
 		

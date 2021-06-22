@@ -5,6 +5,7 @@ package fr.istic.tools.scanexam.core.impl;
 import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Exam;
 import fr.istic.tools.scanexam.core.Page;
+import fr.istic.tools.scanexam.core.QrCodeZone;
 import fr.istic.tools.scanexam.core.Question;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +43,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.ExamImpl#getId <em>Id</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.ExamImpl#getName <em>Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.ExamImpl#getQrCodeZone <em>Qr Code Zone</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.ExamImpl#getPages <em>Pages</em>}</li>
  * </ul>
  *
@@ -87,6 +89,16 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getQrCodeZone() <em>Qr Code Zone</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getQrCodeZone()
+	 * @generated
+	 * @ordered
+	 */
+	protected QrCodeZone qrCodeZone;
 
 	/**
 	 * The cached value of the '{@link #getPages() <em>Pages</em>}' containment reference list.
@@ -164,6 +176,49 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public QrCodeZone getQrCodeZone() {
+		return qrCodeZone;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetQrCodeZone(QrCodeZone newQrCodeZone, NotificationChain msgs) {
+		QrCodeZone oldQrCodeZone = qrCodeZone;
+		qrCodeZone = newQrCodeZone;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, CorePackage.EXAM__QR_CODE_ZONE, oldQrCodeZone, newQrCodeZone);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setQrCodeZone(QrCodeZone newQrCodeZone) {
+		if (newQrCodeZone != qrCodeZone) {
+			NotificationChain msgs = null;
+			if (qrCodeZone != null)
+				msgs = ((InternalEObject)qrCodeZone).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - CorePackage.EXAM__QR_CODE_ZONE, null, msgs);
+			if (newQrCodeZone != null)
+				msgs = ((InternalEObject)newQrCodeZone).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - CorePackage.EXAM__QR_CODE_ZONE, null, msgs);
+			msgs = basicSetQrCodeZone(newQrCodeZone, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.EXAM__QR_CODE_ZONE, newQrCodeZone, newQrCodeZone));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Page> getPages() {
 		if (pages == null) {
 			pages = new EObjectContainmentEList<Page>(Page.class, this, CorePackage.EXAM__PAGES);
@@ -209,6 +264,8 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case CorePackage.EXAM__QR_CODE_ZONE:
+				return basicSetQrCodeZone(null, msgs);
 			case CorePackage.EXAM__PAGES:
 				return ((InternalEList<?>)getPages()).basicRemove(otherEnd, msgs);
 		}
@@ -227,6 +284,8 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 				return getId();
 			case CorePackage.EXAM__NAME:
 				return getName();
+			case CorePackage.EXAM__QR_CODE_ZONE:
+				return getQrCodeZone();
 			case CorePackage.EXAM__PAGES:
 				return getPages();
 		}
@@ -247,6 +306,9 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 				return;
 			case CorePackage.EXAM__NAME:
 				setName((String)newValue);
+				return;
+			case CorePackage.EXAM__QR_CODE_ZONE:
+				setQrCodeZone((QrCodeZone)newValue);
 				return;
 			case CorePackage.EXAM__PAGES:
 				getPages().clear();
@@ -270,6 +332,9 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 			case CorePackage.EXAM__NAME:
 				setName(NAME_EDEFAULT);
 				return;
+			case CorePackage.EXAM__QR_CODE_ZONE:
+				setQrCodeZone((QrCodeZone)null);
+				return;
 			case CorePackage.EXAM__PAGES:
 				getPages().clear();
 				return;
@@ -289,6 +354,8 @@ public class ExamImpl extends MinimalEObjectImpl.Container implements Exam {
 				return id != ID_EDEFAULT;
 			case CorePackage.EXAM__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case CorePackage.EXAM__QR_CODE_ZONE:
+				return qrCodeZone != null;
 			case CorePackage.EXAM__PAGES:
 				return pages != null && !pages.isEmpty();
 		}

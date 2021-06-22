@@ -12,7 +12,7 @@ import org.apache.pdfbox.rendering.PDFRenderer
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
-
+import java.util.List
 
 class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	Set<Copie> sheets
@@ -20,6 +20,8 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 	int nbPagesInSheet
 	int nbPagesInPdf
 	PDDocument doc
+	List<Integer> pagesMalLues
+
 
 	new(PDDocument document, int nbPages, int nbCopies) {
 		this.doc = document;
@@ -239,6 +241,10 @@ class PdfReaderWithoutQrCodeImpl implements PdfReaderWithoutQrCode {
 			res += sheets.get(i).setPages.length
 		}
 		return res
+	}
+	
+	override getFailedPages() {
+		return pagesMalLues
 	}
 
 	/*def static void main(String[] arg) {

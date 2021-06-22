@@ -9,6 +9,7 @@ class CorrectionTemplate
 {
 	 contains StudentInformation[] informations
 	 contains StudentSheet[] studentsheets
+	 Integer[] failedPages
 	 String encodedDocument
 }
 

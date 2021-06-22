@@ -31,6 +31,15 @@ public interface CoreFactory extends EFactory {
 	QuestionZone createQuestionZone();
 
 	/**
+	 * Returns a new object of class '<em>Qr Code Zone</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Qr Code Zone</em>'.
+	 * @generated
+	 */
+	QrCodeZone createQrCodeZone();
+
+	/**
 	 * Returns a new object of class '<em>Question</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getInformations <em>Informations</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentsheets <em>Studentsheets</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getFailedPages <em>Failed Pages</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}</li>
  * </ul>
  *
@@ -51,6 +52,18 @@ public interface CorrectionTemplate extends EObject {
 	 * @generated
 	 */
 	EList<StudentSheet> getStudentsheets();
+
+	/**
+	 * Returns the value of the '<em><b>Failed Pages</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.Integer}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Failed Pages</em>' attribute list.
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate_FailedPages()
+	 * @model unique="false"
+	 * @generated
+	 */
+	EList<Integer> getFailedPages();
 
 	/**
 	 * Returns the value of the '<em><b>Encoded Document</b></em>' attribute.

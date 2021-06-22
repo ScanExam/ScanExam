@@ -11,6 +11,7 @@ import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.ControllerConfiguration;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationCreator;
 import fr.istic.tools.scanexam.view.fx.ControllerGraduationLoader;
+import fr.istic.tools.scanexam.view.fx.ControllerLinkManuallySheets;
 import fr.istic.tools.scanexam.view.fx.ControllerSendMail;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
@@ -211,6 +212,32 @@ public class ControllerRoot implements Initializable {
       _icons.add(_image);
       loader.<ControllerConfiguration>getController().initialize();
       Scene _scene = new Scene(view, 384, 280);
+      dialog.setScene(_scene);
+      dialog.setResizable(false);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  /**
+   * TODO
+   * Passer le "bouton trop cool" à un sous menu de la barre menu
+   * Faire son initialisation du controller ici
+   */
+  @FXML
+  public void linkManuallySheets() {
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"));
+      final Stage dialog = new Stage();
+      ObservableList<Image> _icons = dialog.getIcons();
+      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
+      Image _image = new Image(_inputStreamResource);
+      _icons.add(_image);
+      loader.<ControllerLinkManuallySheets>getController().init(this.serviceGraduation, this.graduationController.getPdfManager());
+      Scene _scene = new Scene(view);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();

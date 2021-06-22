@@ -72,6 +72,12 @@ public class CoreSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case CorePackage.QR_CODE_ZONE: {
+				QrCodeZone qrCodeZone = (QrCodeZone)theEObject;
+				T result = caseQrCodeZone(qrCodeZone);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case CorePackage.QUESTION: {
 				Question question = (Question)theEObject;
 				T result = caseQuestion(question);
@@ -161,6 +167,21 @@ public class CoreSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseQuestionZone(QuestionZone object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Qr Code Zone</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Qr Code Zone</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseQrCodeZone(QrCodeZone object) {
 		return null;
 	}
 

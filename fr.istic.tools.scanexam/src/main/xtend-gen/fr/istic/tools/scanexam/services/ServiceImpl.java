@@ -7,6 +7,7 @@ import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.GradeScale;
 import fr.istic.tools.scanexam.core.Page;
+import fr.istic.tools.scanexam.core.QrCodeZone;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.QuestionZone;
 import fr.istic.tools.scanexam.core.StudentInformation;
@@ -132,7 +133,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @returns "true" si la correction a pu être créée, "false" sinon
    */
   @Override
-  public boolean initializeCorrection(final Collection<StudentSheet> studentSheets) {
+  public boolean initializeCorrection(final Collection<StudentSheet> studentSheets, final Collection<Integer> failedPages) {
     this.graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate();
     try {
       for (final StudentSheet sheet : studentSheets) {
@@ -152,6 +153,10 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
         return Integer.valueOf(s.getId());
       };
       this.graduationTemplate.getStudentsheets().addAll(IterableExtensions.<StudentSheet, Integer>sortBy(studentSheets, _function));
+      final Function1<Integer, Integer> _function_1 = (Integer a) -> {
+        return a;
+      };
+      this.graduationTemplate.getFailedPages().addAll(IterableExtensions.<Integer, Integer>sortBy(failedPages, _function_1));
       return true;
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
@@ -264,6 +269,14 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   @Override
   public int getPageAmount() {
     return this.getTemplatePageAmount();
+  }
+  
+  /**
+   * @return les pages qui n'ont pas été détectées avec un QRCode
+   */
+  @Override
+  public Collection<Integer> getFailedPages() {
+    return this.graduationTemplate.getFailedPages();
   }
   
   /**
@@ -640,6 +653,49 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     return _xblockexpression;
   }
   
+  /**
+   * Crée une nouvelle question et la zone associée
+   * @param l'index de la page sur laquelle mettre la question
+   * @param x la coordonnée X de la zone de la question
+   * @param y la coordonnée Y de la zone de la question
+   * @param height la hauteur de la zone de la question
+   * @param width la longueur de la zone de la question
+   */
+  @Override
+  public void createQrCode(final float x, final float y, final float height, final float width) {
+    Exam _exam = this.editionTemplate.getExam();
+    _exam.setQrCodeZone(CoreFactory.eINSTANCE.createQrCodeZone());
+    final QrCodeZone qrCodeZone = this.editionTemplate.getExam().getQrCodeZone();
+    qrCodeZone.setX(x);
+    qrCodeZone.setY(y);
+    qrCodeZone.setWidth(width);
+    qrCodeZone.setHeight(height);
+  }
+  
+  /**
+   * Redimensionne la zone du qr code
+   * @param heigth la nouvelle hauteur de la zone
+   * @param width la nouvelle largeur de la zone
+   */
+  @Override
+  public void rescaleQrCode(final float height, final float width) {
+    final QrCodeZone qrCodeZone = this.editionTemplate.getExam().getQrCodeZone();
+    qrCodeZone.setWidth(width);
+    qrCodeZone.setHeight(height);
+  }
+  
+  /**
+   * Déplace la zone du qr code
+   * @param x la nouvelle position x de la zone
+   * @param y la nouvelle position y de la zone
+   */
+  @Override
+  public void moveQrCode(final float x, final float y) {
+    final QrCodeZone qrCodeZone = this.editionTemplate.getExam().getQrCodeZone();
+    qrCodeZone.setX(x);
+    qrCodeZone.setY(y);
+  }
+  
   private File editionFile;
   
   private int questionId;
@@ -881,6 +937,24 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     _exam.setName(name);
   }
   
+  @Override
+  public Optional<QrCodeZone> getQrCodeZone() {
+    return Optional.<QrCodeZone>ofNullable(this.editionTemplate.getExam().getQrCodeZone());
+  }
+  
+  @Override
+  public Optional<javafx.util.Pair<Float, Float>> getQrCodePosition() {
+    boolean _isPresent = this.getQrCodeZone().isPresent();
+    if (_isPresent) {
+      float _x = this.getQrCodeZone().get().getX();
+      float _y = this.getQrCodeZone().get().getY();
+      javafx.util.Pair<Float, Float> _pair = new javafx.util.Pair<Float, Float>(Float.valueOf(_x), Float.valueOf(_y));
+      return Optional.<javafx.util.Pair<Float, Float>>of(_pair);
+    } else {
+      return Optional.<javafx.util.Pair<Float, Float>>empty();
+    }
+  }
+  
   /**
    * @param pageIndex l'ID d'une page
    * @return la liste des Questions sur la page dont l'ID est <i>pageIndex</i>
@@ -957,7 +1031,8 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     int _xblockexpression = (int) 0;
     {
       final DataFactory factory = new DataFactory();
-      final Comment annot = factory.createTextComment(this.annotationId, text, ((float) x), ((float) y), ((float) width), ((float) height), ((float) pointerX), ((float) pointerY), pageId);
+      final Comment annot = factory.createTextComment(this.annotationId, text, ((float) x), ((float) y), ((float) width), 
+        ((float) height), ((float) pointerX), ((float) pointerY), pageId);
       final StudentSheet sheet = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
       sheet.getGrades().get(questionId).getComments().add(annot);
       _xblockexpression = this.annotationId++;

@@ -27,6 +27,12 @@ import java.util.ArrayList
 import java.util.Collections
 import java.io.InputStream
 import org.apache.logging.log4j.LogManager
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.util.Matrix
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import com.google.zxing.ResultPoint
+import javafx.util.Pair
 
 class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
@@ -35,15 +41,19 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	int nbPagesInSheet
 	int nbPagesInPdf
 	PDDocument doc
+	String docPath
+	Pair<Float, Float> qrPos
 	boolean isFinished
 	List<Integer> pagesMalLues;
-	
+
 	int missingSheets
 	int treatedSheets
 
-	new(InputStream input, int nbPages) {
+	new(InputStream input, String docPath, int nbPages, Pair<Float, Float> qrPos) {
 		this.doc = PDDocument.load(input)
+		this.docPath = docPath
 		this.nbPagesInSheet = nbPages
+		this.qrPos = qrPos
 		this.isFinished = false
 		missingSheets = 0
 		treatedSheets = 0
@@ -53,7 +63,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	override readPDf() {
 		try {
 			this.nbPagesInPdf = doc.numberOfPages
-			createThread(doc.numberOfPages, doc)
+			createThread(doc.numberOfPages, doc, docPath, qrPos)
 		} catch (Exception e) {
 			logger.error("Cannot read PDF", e)
 			return false
@@ -61,35 +71,181 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		return true
 	}
 
-	def void readQRCodeImage(PDFRenderer pdfRenderer, int startPages, int endPages) throws IOException {
-		pagesMalLues = new ArrayList<Integer>()
+	/**
+	 * Analyse les qr codes, corrige les problèmes de numérisation (ex: à l'envers) et lie les pages aux élèves
+	 * @param pdDoc Document à analyser
+	 * @param docPath Chemin du document à analyser
+	 * @param pdfRenderer Rendu du document à analyser
+	 * @param startPages Première page à analyser
+	 * @param endPages Dernière page à analyser
+	 * @param qrPos Position où devrait ce trouver le qr code
+	 */
+	def void readQRCodeImage(PDDocument pdDoc, String docPath, PDFRenderer pdfRenderer, int startPages, int endPages,
+		Pair<Float, Float> qrPos) throws IOException {
+		pagesMalLues = new ArrayList<Integer>
 		for (page : startPages ..< endPages) {
-			
-			//des fois (randoms) outofmemory
+			// des fois (randoms) outofmemory
 			var BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 250, ImageType.GRAY)
+			val LuminanceSource source = new BufferedImageLuminanceSource(bim)
+			val BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source))
+			val MultiFormatReader mfr = new MultiFormatReader
+
+			val Result result = mfr.decodeWithState(bitmap)
 			val Pattern pattern = Pattern.compile("_")
-			val String[] items = pattern.split(decodeQRCodeBuffered(bim))
-			
+			val String[] items = pattern.split(result.text)
+
 			try {
+				if (result !== null) {
+					val float orientation = qrCodeOrientation(result)
+					val Pair<Float, Float> position = qrCodePosition(result, orientation, bim.width, bim.height)
+					if (orientation <= -0.5f || orientation >= 0.5f) {
+						rotatePdf(pdDoc, docPath, page, orientation)
+					}
+					if (qrPos.key >= 0.0f && qrPos.value >= 0.0f) {
+						val diffX = qrPos.key - position.key
+						val diffY = position.value - qrPos.value
+						if (diffX <= -0.01f || diffX >= 0.01f || diffY <= -0.01f || diffY >= 0.01f) {
+							repositionPdf(pdDoc, docPath, page, diffX, diffY)
+						}
+					}
+				}
 				val Copie cop = new Copie(Integer.parseInt(items.get(items.size - 2)), page,
-				Integer.parseInt(items.get(items.size - 1)))
+					Integer.parseInt(items.get(items.size - 1)))
 
 				synchronized (sheets) {
 					addCopie(cop)
 				}
-			} catch(ArrayIndexOutOfBoundsException e){
+			} catch (ArrayIndexOutOfBoundsException e) {
 				pagesMalLues.add(page)
 				logger.error("Cannot read QRCode in page " + page, e)
-			}
-			finally{
+			} finally {
 				treatedSheets++
 			}
-			
-			//déréférencement de la variable, pour contrer le pb d'overflow de mémoire
-			bim = null
+			bim.flush
 			System.gc
-			
+
 		}
+	}
+
+	/**
+	 * Retourne l'orientation d'un QR code sous la forme d'un angle compris entre
+	 * ]-180;180]°. Plus le QR code est orienté vers la droite plus il gagne de
+	 * dégrés.
+	 * 
+	 * @param result Résultat du dédodage du QR code
+	 * @return Orientation du QR code
+	 */
+	private def float qrCodeOrientation(Result result) {
+		val ResultPoint[] resultPoints = result.resultPoints
+		val ResultPoint a = resultPoints.get(1)
+		val ResultPoint b = resultPoints.get(2)
+
+		val float distanceX = b.x - a.x
+		val float distanceY = b.y - a.y
+		var float angle = (Math.atan(distanceY / distanceX) * (180 / Math.PI)) as float
+		if (angle > 0 && a.getX() > b.getX() && a.getY() >= b.getY()) {
+			angle -= 180
+		} else if (angle <= 0 && b.getX() < a.getX() && b.getY() >= a.getY()) {
+			angle += 180
+		}
+		return angle
+	}
+
+	/**
+	 * Retourne la position d'un QR code en pixel. On considère que le point
+	 * d'origine du QR code est en haut à gauche et que les coordonnées (0, 0) sont
+	 * sont bas à gauche de la page. Ne marche que si le code à un angle de 0 ou
+	 * 180°.
+	 * 
+	 * @param result    Résultat du dédodage du QR code
+	 * @param docWidth  Laugueur du document où se trouve le QR code
+	 * @param docHeight Hauteur du document où se trouve le QR code
+	 * @return Paire contenant les positions x et y du QR code
+	 */
+	private def Pair<Float, Float> qrCodePosition(Result result, float orientation, float docWidth, float docHeight) {
+		val ResultPoint[] resultPoints = result.resultPoints
+		val ResultPoint a = resultPoints.get(1)
+		val ResultPoint b = resultPoints.get(2)
+		val ResultPoint c = resultPoints.get(0)
+
+		val Pair<Float, Float> disorientedA = rotatePoint(new Pair<Float, Float>(a.x, a.y),
+			new Pair<Float, Float>(docWidth / 2, docHeight / 2), orientation)
+		val Pair<Float, Float> disorientedB = rotatePoint(new Pair<Float, Float>(b.x, b.y),
+			new Pair<Float, Float>(docWidth / 2, docHeight / 2), orientation)
+		val Pair<Float, Float> disorientedC = rotatePoint(new Pair<Float, Float>(c.x, c.y),
+			new Pair<Float, Float>(docWidth / 2, docHeight / 2), orientation)
+
+		var float x = (disorientedB.key + disorientedA.key) / 2
+		var float y = (disorientedC.value + disorientedA.value) / 2
+
+		// Point d'origine en haut à gauche
+		val double widthX2 = Math.pow(disorientedB.key - disorientedA.key, 2)
+		val double widthY2 = Math.pow(disorientedB.value - disorientedA.value, 2)
+		var double width = Math.sqrt(widthX2 + widthY2)
+		val double heightX2 = Math.pow(disorientedC.key - disorientedA.key, 2)
+		val double heightY2 = Math.pow(disorientedC.value - disorientedA.value, 2)
+		var double height = Math.sqrt(heightX2 + heightY2)
+		width /= (4.0f / 3.0f)
+		height /= (4.0f / 3.0f)
+		x -= width as float
+		y -= height as float
+
+		return new Pair<Float, Float>(x / docWidth, y / docHeight)
+	}
+
+	/**
+	 * Retourne l'image d'un point par une rotation (repère X de gauche à droite, Y du
+	 * haut vers le bas).
+	 * @param point Point à transformer
+	 * @param centre Centre de la rotation
+	 * @param angle Angle en degrés
+	 * @return Image de M par la rotation d'angle angle autour du centre
+	 */
+	private def Pair<Float, Float> rotatePoint(Pair<Float, Float> point, Pair<Float, Float> center, float angle) {
+		val angleRad = angle * Math.PI / 180
+		val xPoint = point.key - center.key
+		val yPoint = point.value - center.value
+		val x = xPoint * Math.cos(angleRad) + yPoint * Math.sin(angleRad) + center.key
+		val y = - xPoint * Math.sin(angleRad) + yPoint * Math.cos(angleRad) + center.value
+		return new Pair<Float, Float>(x as float, y as float)
+	}
+
+	/**
+	 * Réoriente le contenu d'une page de pdf selon un angle donné
+	 * @param pdDoc Document sur lequel travailler
+	 * @param docPath Chemin du document sur lequel travailler
+	 * @param page Page où effectuer la rotation
+	 * @param rotation Nouvelle inclinaison du contenu
+	 */
+	private def void rotatePdf(PDDocument pdDoc, String docPath, int page, float rotation) {
+		val PDPage pdPage = pdDoc.documentCatalog.pages.get(page)
+		val PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND,
+			false, false)
+		val PDRectangle cropBox = pdPage.cropBox
+		val float tx = (cropBox.lowerLeftX + cropBox.upperRightX) / 2
+		val float ty = (cropBox.lowerLeftY + cropBox.upperRightY) / 2
+		cs.transform(Matrix.getTranslateInstance(tx, ty))
+		cs.transform(Matrix.getRotateInstance(Math.toRadians(rotation), 0, 0))
+		cs.transform(Matrix.getTranslateInstance(-tx, -ty))
+		cs.close
+		pdDoc.save(docPath)
+	}
+
+	/**
+	 * Repositionne le contenu d'une page de pdf selon un les longueurs x et y données
+	 * @param pdDoc Document sur lequel travailler
+	 * @param docPath Chemin du document sur lequel travailler
+	 * @param page Page où effectuer la rotation
+	 * @param offsetX Longueur vers laquelle décaler le contenu sur l'axe x
+	 * @param offsetY Longueur vers laquelle décaler le contenu sur l'axe y
+	 */
+	private def void repositionPdf(PDDocument pdDoc, String docPath, int page, float offsetX, float offsetY) {
+		val PDPage pdPage = pdDoc.documentCatalog.pages.get(page)
+		val PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND,
+			false, false)
+		cs.transform(Matrix.getTranslateInstance(offsetX * pdPage.mediaBox.width, offsetY * pdPage.mediaBox.height))
+		cs.close
+		pdDoc.save(docPath)
 	}
 
 	/**
@@ -120,13 +276,13 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
 	/**
 	 * 
-	 * @param nbCopies nombre de copies désirées
-	 * @param docSujetMaitre document dans lequel insérer les Codes
-	 *  
+	 * @param nbPage nombre de copies désirées
+	 * @param doc document dans lequel insérer les Codes
+	 * @param docPath chemin du document dans lequel insérer les Codes
+	 * @param qrPos Position à laquelle devrait se trouver les qr codes
 	 */
-	def createThread(int nbPage, PDDocument doc) {
-
-		val PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, this)
+	def createThread(int nbPage, PDDocument doc, String docPath, Pair<Float, Float> qrPos) {
+		val PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, qrPos, this)
 		manager.start
 	}
 
@@ -137,19 +293,19 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	def boolean isExamenComplete() {
 		var boolean ret = true
 		var List<Integer> idSheets = new ArrayList<Integer>()
-		
+
 		for (i : 0 ..< sheets.length) {
 			ret = ret && sheets.get(i).isCopyComplete(nbPagesInSheet)
 			idSheets.add(sheets.get(i).numCopie)
 		}
-		
-		Collections.sort(idSheets, [a, b |
+
+		Collections.sort(idSheets, [ a, b |
 			a - b
 		])
-		
+
 		missingSheets = Math.abs(idSheets.get(idSheets.size - 1) - (idSheets.size - 1))
 		ret = ret && (missingSheets == 0)
-		
+
 		return ret
 	}
 
@@ -256,7 +412,6 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
 		temp = uncompleteCopies
 
-
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
@@ -288,27 +443,30 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	override getNbPagesTreated() {
 		return treatedSheets
 	}
-	
-	override isFinished(){
+
+	override isFinished() {
 		return isFinished
 	}
-	
-	def setFinished(boolean bool){
+
+	def setFinished(boolean bool) {
 		this.isFinished = bool
 	}
 
-	/*def static void main(String[] arg) {
-		val File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf")
-		val PDDocument doc = PDDocument.load(pdf)
-		val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8)
-		
-		qrcodeReader.readPDf
+	override getFailedPages() {
+		return pagesMalLues
+	}
+
+/*def static void main(String[] arg) {
+ * 	val File pdf = new File("./src/main/resources/QRCode/pfo_example_Inserted.pdf")
+ * 	val PDDocument doc = PDDocument.load(pdf)
+ * 	val PdfReaderQrCodeImpl qrcodeReader = new PdfReaderQrCodeImpl(doc, 8)
+ * 	
+ * 	qrcodeReader.readPDf
 
 
-		while (qrcodeReader.getNbPagesTreated != qrcodeReader.getNbPagesPdf) {
-		}
-		
-		qrcodeReader.isExamenComplete
-	}*/
-
+ * 	while (qrcodeReader.getNbPagesTreated != qrcodeReader.getNbPagesPdf) {
+ * 	}
+ * 	
+ * 	qrcodeReader.isExamenComplete
+ }*/
 }

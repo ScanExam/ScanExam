@@ -18,6 +18,7 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
+import javafx.util.Pair;
 
 public class TestReaderWithQRCode {
 
@@ -34,12 +35,12 @@ public class TestReaderWithQRCode {
 		InputStream inStreamGood = ResourcesUtils.getInputStreamResource("QRCode/pfo_example_Inserted_Good.pdf");
 		if (inStreamGood != null) {
 			//docGood = PDDocument.load(inStreamGood);
-			readerGood = new PdfReaderQrCodeImpl(inStreamGood, nbPages);
+			readerGood = new PdfReaderQrCodeImpl(inStreamGood, "main/resources/QRCode/pfo_example_Inserted_Good.pdf", nbPages, new Pair<Float, Float>(0.024853043f, 0.8928047f));
 		}
 		InputStream inStreamDirty = ResourcesUtils.getInputStreamResource("QRCode/pfo_example_Inserted_Dirty.pdf");
 		if (inStreamDirty != null) {
 			//docDirty = PDDocument.load(inStreamDirty);
-			readerDirty = new PdfReaderQrCodeImpl(inStreamDirty, nbPages);
+			readerDirty = new PdfReaderQrCodeImpl(inStreamDirty, "main/resources/QRCode/pfo_example_Inserted_Dirty.pdf", nbPages, new Pair<Float, Float>(0.024853043f, 0.8928047f));
 		}
 		
 		readerGood.readPDf();

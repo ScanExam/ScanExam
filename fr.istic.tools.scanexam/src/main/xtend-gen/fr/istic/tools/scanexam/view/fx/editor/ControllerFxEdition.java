@@ -8,8 +8,10 @@ import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
 import fr.istic.tools.scanexam.view.fx.editor.Box;
+import fr.istic.tools.scanexam.view.fx.editor.BoxType;
 import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
 import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
+import fr.istic.tools.scanexam.view.fx.editor.QrCodeZone;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionItemEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionListEdition;
 import fr.istic.tools.scanexam.view.fx.editor.QuestionOptionsEdition;
@@ -46,9 +48,21 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend.lib.annotations.Accessors;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 
+/**
+ * This controller controlls the main components of the edition
+ * This controlle is associated with a FXML, the static version of the ui.
+ * This FX contains "containers" where we will place our dynamic components.
+ * These components are initiated during the init method, that is called after the loading of the FXML in the launcher.
+ * 
+ * This class has differenc sections :
+ * 	-Mouse events (mouse inputs for moving the pdf, moving boxes ect).
+ * 	-Box management(creating, resizing ect).
+ * 	-loading/saving (loading a new model, saving).
+ * 	-pdf page management.
+ * 	-interactions with the service.
+ */
 @SuppressWarnings("all")
 public class ControllerFxEdition {
   public enum SelectedTool {
@@ -67,6 +81,8 @@ public class ControllerFxEdition {
     RESIZE_TOOL;
   }
   
+  private Logger logger = LogManager.getLogger();
+  
   private ServiceEdition service;
   
   private double maxX;
@@ -76,33 +92,47 @@ public class ControllerFxEdition {
   private boolean pdfLoaded = false;
   
   /**
-   * Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings
+   * Permet d'éviter de render plusieurs fois lorsque la valeur de la ChoiceBox est mise à jour par le code
+   * (et non l'utilisateur) et qu'elle entraîne un render à cause des bndings.
    */
   private boolean renderFlag = true;
   
-  @Accessors
-  private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
+  private double mouseOriginX = 0d;
   
-  private Logger logger = LogManager.getLogger();
+  private double mouseOriginY = 0d;
   
-  public ControllerFxEdition.SelectedTool getSelectedTool() {
-    return this.currentTool;
-  }
+  private double objectOriginX = 0d;
   
-  public ControllerFxEdition.SelectedTool setSelectedTool(final ControllerFxEdition.SelectedTool tool) {
-    return this.currentTool = tool;
-  }
+  private double objectOriginY = 0d;
+  
+  private Box currentRectangle = null;
+  
+  private EdgeLocation edge = null;
+  
+  private double offsetX;
+  
+  private double offsetY;
+  
+  private List<Question> questions;
+  
+  private QrCodeZone qrCodeZone;
+  
+  /**
+   * Setters for the current tool selected
+   */
+  private ControllerFxEdition.SelectedTool currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
   
   @FXML
   private ToggleButton createBoxButton;
+  
+  @FXML
+  private ToggleButton createQrButton;
   
   @FXML
   private Button nextPageButton;
   
   @FXML
   private Button previousPageButton;
-  
-  private PdfPane mainPane;
   
   @FXML
   private ScrollPane questionListContainer;
@@ -116,118 +146,23 @@ public class ControllerFxEdition {
   @FXML
   private Label pageNumberLabel;
   
-  private QuestionListEdition questionList;
-  
-  private QuestionOptionsEdition questionEditor;
-  
   @FXML
   private AnchorPane mainPaneContainer;
   
   @Accessors
+  private BooleanProperty loadedModel = new SimpleBooleanProperty(this, "Is a model loaded", false);
+  
+  @Accessors
+  private QuestionListEdition questionList;
+  
+  @Accessors
+  private QuestionOptionsEdition questionEditor;
+  
+  @Accessors
   private PdfManager pdfManager;
   
-  @FXML
-  public void pressed() {
-  }
-  
-  @FXML
-  public void questionAreaPressed() {
-    boolean _isSelected = this.createBoxButton.isSelected();
-    if (_isSelected) {
-      this.setToQuestionAreaTool();
-    } else {
-      this.setToNoTool();
-    }
-  }
-  
-  @FXML
-  public void iDAreaPressed() {
-    this.setToIDAreaTool();
-  }
-  
-  @FXML
-  public void qRArearessed() {
-    this.setToQRAreaTool();
-  }
-  
-  @FXML
-  public void movePressed() {
-    this.setToMoveCameraTool();
-  }
-  
-  @FXML
-  public void nextPagePressed() {
-    if (this.pdfLoaded) {
-      this.nextPage();
-    }
-  }
-  
-  @FXML
-  public void saveTemplatePressed() {
-    if (this.pdfLoaded) {
-      this.saveTemplate();
-    }
-  }
-  
-  @FXML
-  public void loadTemplatePressed() {
-    this.loadTemplate();
-  }
-  
-  @FXML
-  public void previousPagePressed() {
-    if (this.pdfLoaded) {
-      this.previousPage();
-    }
-  }
-  
-  @FXML
-  public void switchToCorrectorPressed() {
-  }
-  
-  @FXML
-  public void mainMouseEvent(final MouseEvent e) {
-    if (this.pdfLoaded) {
-      MouseButton _button = e.getButton();
-      boolean _equals = Objects.equal(_button, MouseButton.SECONDARY);
-      if (_equals) {
-        this.moveImage(e);
-      } else {
-        this.chooseMouseAction(e);
-      }
-    }
-  }
-  
-  public PdfPane getMainPane() {
-    return this.mainPane;
-  }
-  
-  public QuestionListEdition getQuestionList() {
-    return this.questionList;
-  }
-  
-  /**
-   * Called When we decide to focus on a specific question
-   */
-  public void selectQuestion(final QuestionItemEdition item) {
-    if ((item == null)) {
-      this.questionList.removeFocus();
-      this.questionEditor.hideAll();
-      return;
-    }
-    this.currentRectangle = item.getZone();
-    this.questionList.select(item);
-    this.questionEditor.select(item);
-  }
-  
-  public void save(final File path) {
-    final ByteArrayOutputStream outputStream = this.pdfManager.getPdfOutputStream();
-    this.service.saveEdition(outputStream, path);
-  }
-  
-  public void close() {
-    System.exit(0);
-  }
+  @Accessors
+  private PdfPane mainPane;
   
   public void init(final ServiceEdition serviceEdition) {
     this.service = serviceEdition;
@@ -253,7 +188,33 @@ public class ControllerFxEdition {
     this.nextPageButton.disableProperty().bind(this.loadedModel.not());
     this.previousPageButton.disableProperty().bind(this.loadedModel.not());
     this.createBoxButton.disableProperty().bind(this.loadedModel.not());
+    this.createQrButton.disableProperty().bind(this.loadedModel.not());
     this.pageChoice.disableProperty().bind(this.loadedModel.not());
+  }
+  
+  /**
+   * --LOADING NEW TEMPLATE--
+   */
+  public List<Integer> initLoading(final int pageNumber) {
+    LinkedList<Integer> _xblockexpression = null;
+    {
+      this.questions = this.service.getQuestionAtPage(pageNumber);
+      LinkedList<Integer> ids = new LinkedList<Integer>();
+      for (final Question q : this.questions) {
+        ids.add(Integer.valueOf(q.getId()));
+      }
+      _xblockexpression = ids;
+    }
+    return _xblockexpression;
+  }
+  
+  public void save(final File path) {
+    final ByteArrayOutputStream outputStream = this.pdfManager.getPdfOutputStream();
+    this.service.saveEdition(outputStream, path);
+  }
+  
+  public void close() {
+    System.exit(0);
   }
   
   public void chooseMouseAction(final MouseEvent e) {
@@ -286,20 +247,31 @@ public class ControllerFxEdition {
     }
   }
   
-  private double mouseOriginX = 0d;
+  /**
+   * Called When we decide to focus on a specific question
+   */
+  public void selectQuestion(final QuestionItemEdition item) {
+    if ((item == null)) {
+      this.questionList.removeFocus();
+      this.questionEditor.hideAll();
+      return;
+    }
+    this.currentRectangle = item.getZone();
+    if ((this.qrCodeZone != null)) {
+      this.qrCodeZone.getZone().setFocus(false);
+    }
+    this.questionList.select(item);
+    this.questionEditor.select(item);
+  }
   
-  private double mouseOriginY = 0d;
-  
-  private double objectOriginX = 0d;
-  
-  private double objectOriginY = 0d;
-  
-  private Box currentRectangle = null;
-  
-  private EdgeLocation edge = null;
-  
-  public EdgeLocation setEdgeLoc(final EdgeLocation edge) {
-    return this.edge = edge;
+  /**
+   * Sélectionne la zone de qr code
+   */
+  public void selectQr() {
+    this.questionList.removeFocus();
+    this.questionEditor.hideAll();
+    this.currentRectangle = this.qrCodeZone.getZone();
+    this.currentRectangle.setFocus(true);
   }
   
   /**
@@ -322,35 +294,56 @@ public class ControllerFxEdition {
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
     if (_equals_1) {
-      double xDelta = (mousePositionX - this.mouseOriginX);
-      double yDelta = (mousePositionY - this.mouseOriginY);
-      if ((xDelta > 0)) {
-        this.currentRectangle.width(xDelta);
+      this.edge = EdgeLocation.SOUTHEAST;
+      BoxType _type = this.currentRectangle.getType();
+      if (_type != null) {
+        switch (_type) {
+          case QUESTION:
+            this.draggedQuestion(mousePositionX, mousePositionY);
+            break;
+          case QR:
+            this.draggedQrCode(mousePositionX, mousePositionY);
+            break;
+          default:
+            break;
+        }
       } else {
-        this.currentRectangle.width(Math.abs(xDelta));
-        double _abs = Math.abs(xDelta);
-        double _minus = (this.mouseOriginX - _abs);
-        this.currentRectangle.x(_minus);
-      }
-      if ((yDelta > 0)) {
-        this.currentRectangle.height(yDelta);
-      } else {
-        this.currentRectangle.height(Math.abs(yDelta));
-        double _abs_1 = Math.abs(yDelta);
-        double _minus_1 = (this.mouseOriginY - _abs_1);
-        this.currentRectangle.y(_minus_1);
       }
     }
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
     if (_equals_2) {
-      if (((this.currentRectangle.getWidth() > FxSettings.MINIMUM_ZONE_SIZE) && (this.currentRectangle.getHeight() > FxSettings.MINIMUM_ZONE_SIZE))) {
-        this.questionList.newQuestion(this.currentRectangle);
+      if (((this.currentRectangle.getWidth() > FxSettings.MINIMUM_ZONE_SIZE) && 
+        (this.currentRectangle.getHeight() > FxSettings.MINIMUM_ZONE_SIZE))) {
+        boolean _equals_3 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
+        if (_equals_3) {
+          this.questionList.newQuestion(this.currentRectangle);
+        } else {
+          boolean _equals_4 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
+          if (_equals_4) {
+            QrCodeZone _qrCodeZone = new QrCodeZone(this.currentRectangle, this);
+            this.qrCodeZone = _qrCodeZone;
+          } else {
+            BoxType _type_1 = this.currentRectangle.getType();
+            boolean _equals_5 = Objects.equal(_type_1, BoxType.QR);
+            if (_equals_5) {
+              this.qrCodeZone.updateInModel();
+            }
+          }
+        }
       } else {
         this.mainPane.removeZone(this.currentRectangle);
       }
+      boolean _equals_6 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
+      if (_equals_6) {
+        this.createBoxButton.setSelected(false);
+      } else {
+        boolean _equals_7 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
+        if (_equals_7) {
+          this.createQrButton.setSelected(false);
+        }
+      }
       this.setToNoTool();
-      this.createBoxButton.setSelected(false);
     }
   }
   
@@ -359,10 +352,6 @@ public class ControllerFxEdition {
    * Called when we click on a pdf with the move tool selected
    * the box is limited to inside the pdf
    */
-  private double offsetX;
-  
-  private double offsetY;
-  
   public void moveBox(final MouseEvent e) {
     double mousePositionX = Math.max(FxSettings.BOX_BORDER_THICKNESS, 
       Math.min(e.getX(), (this.maxX - FxSettings.BOX_BORDER_THICKNESS)));
@@ -410,103 +399,365 @@ public class ControllerFxEdition {
     EventType<? extends MouseEvent> _eventType_1 = e.getEventType();
     boolean _equals_1 = Objects.equal(_eventType_1, MouseEvent.MOUSE_DRAGGED);
     if (_equals_1) {
-      final EdgeLocation edge = this.edge;
-      if (edge != null) {
-        switch (edge) {
-          case SOUTH:
-            double _y_1 = this.currentRectangle.getY();
-            double _minus_2 = (_y_1 - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus_2));
+      BoxType _type = this.currentRectangle.getType();
+      if (_type != null) {
+        switch (_type) {
+          case QUESTION:
+            this.draggedQuestion(mousePositionX, mousePositionY);
             break;
-          case EAST:
-            double _x_1 = this.currentRectangle.getX();
-            double _minus_3 = (_x_1 - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_3));
-            break;
-          case NORTH:
-            double _height = this.currentRectangle.getHeight();
-            double _minus_4 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_4));
-            double _y_2 = this.currentRectangle.getY();
-            double _minus_5 = (_y_2 - this.mouseOriginY);
-            double _minus_6 = (this.objectOriginY - _minus_5);
-            this.currentRectangle.height(Math.abs(_minus_6));
-            break;
-          case WEST:
-            double _width = this.currentRectangle.getWidth();
-            double _minus_7 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_7));
-            double _x_2 = this.currentRectangle.getX();
-            double _minus_8 = (_x_2 - this.mouseOriginX);
-            double _minus_9 = (this.objectOriginX - _minus_8);
-            this.currentRectangle.width(Math.abs(_minus_9));
-            break;
-          case NORTHEAST:
-            double _height_1 = this.currentRectangle.getHeight();
-            double _minus_10 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_1);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_10));
-            double _y_3 = this.currentRectangle.getY();
-            double _minus_11 = (_y_3 - this.mouseOriginY);
-            double _minus_12 = (this.objectOriginY - _minus_11);
-            this.currentRectangle.height(Math.abs(_minus_12));
-            double _x_3 = this.currentRectangle.getX();
-            double _minus_13 = (_x_3 - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_13));
-            break;
-          case NORTHWEST:
-            double _height_2 = this.currentRectangle.getHeight();
-            double _minus_14 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_2);
-            this.currentRectangle.y(Math.min(mousePositionY, _minus_14));
-            double _y_4 = this.currentRectangle.getY();
-            double _minus_15 = (_y_4 - this.mouseOriginY);
-            double _minus_16 = (this.objectOriginY - _minus_15);
-            this.currentRectangle.height(Math.abs(_minus_16));
-            double _width_1 = this.currentRectangle.getWidth();
-            double _minus_17 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_1);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_17));
-            double _x_4 = this.currentRectangle.getX();
-            double _minus_18 = (_x_4 - this.mouseOriginX);
-            double _minus_19 = (this.objectOriginX - _minus_18);
-            this.currentRectangle.width(Math.abs(_minus_19));
-            break;
-          case SOUTHEAST:
-            double _y_5 = this.currentRectangle.getY();
-            double _minus_20 = (_y_5 - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus_20));
-            double _x_5 = this.currentRectangle.getX();
-            double _minus_21 = (_x_5 - mousePositionX);
-            this.currentRectangle.width(Math.abs(_minus_21));
-            break;
-          case SOUTHWEST:
-            double _y_6 = this.currentRectangle.getY();
-            double _minus_22 = (_y_6 - mousePositionY);
-            this.currentRectangle.height(Math.abs(_minus_22));
-            double _width_2 = this.currentRectangle.getWidth();
-            double _minus_23 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_2);
-            this.currentRectangle.x(Math.min(mousePositionX, _minus_23));
-            double _x_6 = this.currentRectangle.getX();
-            double _minus_24 = (_x_6 - this.mouseOriginX);
-            double _minus_25 = (this.objectOriginX - _minus_24);
-            this.currentRectangle.width(Math.abs(_minus_25));
-            break;
-          case NONE:
-            double _width_3 = this.currentRectangle.getWidth();
-            double _minus_26 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_3);
-            this.currentRectangle.x(Math.max(Math.min((mousePositionX - this.offsetX), _minus_26), FxSettings.BOX_BORDER_THICKNESS));
-            double _height_3 = this.currentRectangle.getHeight();
-            double _minus_27 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_3);
-            this.currentRectangle.y(Math.max(Math.min((mousePositionY - this.offsetY), _minus_27), FxSettings.BOX_BORDER_THICKNESS));
+          case QR:
+            this.draggedQrCode(mousePositionX, mousePositionY);
             break;
           default:
             break;
         }
+      } else {
       }
     }
     EventType<? extends MouseEvent> _eventType_2 = e.getEventType();
     boolean _equals_2 = Objects.equal(_eventType_2, MouseEvent.MOUSE_RELEASED);
     if (_equals_2) {
       this.setToNoTool();
-      this.questionList.updateInModel(this.currentRectangle.getQuestionItem());
+      BoxType _type_1 = this.currentRectangle.getType();
+      if (_type_1 != null) {
+        switch (_type_1) {
+          case QUESTION:
+            this.questionList.updateInModel(this.currentRectangle.getQuestionItem());
+            break;
+          case QR:
+            this.qrCodeZone.updateInModel();
+            break;
+          default:
+            break;
+        }
+      } else {
+      }
+    }
+  }
+  
+  /**
+   * Gère le redimensionnage des questions
+   * @param mouse PositionX Position sur l'axe X de la souris
+   * @param mouse PositionX Position sur l'axe Y de la souris
+   */
+  private void draggedQuestion(final double mousePositionX, final double mousePositionY) {
+    final EdgeLocation edge = this.edge;
+    if (edge != null) {
+      switch (edge) {
+        case SOUTH:
+          double _y = this.currentRectangle.getY();
+          boolean _greaterThan = (mousePositionY > _y);
+          if (_greaterThan) {
+            double _y_1 = this.currentRectangle.getY();
+            double _minus = (mousePositionY - _y_1);
+            this.currentRectangle.height(_minus);
+          } else {
+            this.edge = EdgeLocation.NORTH;
+          }
+          break;
+        case EAST:
+          double _x = this.currentRectangle.getX();
+          boolean _greaterThan_1 = (mousePositionX > _x);
+          if (_greaterThan_1) {
+            double _x_1 = this.currentRectangle.getX();
+            double _minus_1 = (mousePositionX - _x_1);
+            this.currentRectangle.width(_minus_1);
+          } else {
+            this.edge = EdgeLocation.WEST;
+          }
+          break;
+        case NORTH:
+          double _y_2 = this.currentRectangle.getY();
+          double _height = this.currentRectangle.getHeight();
+          double _plus = (_y_2 + _height);
+          boolean _lessThan = (mousePositionY < _plus);
+          if (_lessThan) {
+            final double initialY = this.currentRectangle.getY();
+            this.currentRectangle.y(mousePositionY);
+            double _height_1 = this.currentRectangle.getHeight();
+            double _minus_2 = (_height_1 - (mousePositionY - initialY));
+            this.currentRectangle.height(_minus_2);
+          } else {
+            this.edge = EdgeLocation.SOUTH;
+          }
+          break;
+        case WEST:
+          double _x_2 = this.currentRectangle.getX();
+          double _width = this.currentRectangle.getWidth();
+          double _plus_1 = (_x_2 + _width);
+          boolean _lessThan_1 = (mousePositionX < _plus_1);
+          if (_lessThan_1) {
+            final double initialX = this.currentRectangle.getX();
+            this.currentRectangle.x(mousePositionX);
+            double _width_1 = this.currentRectangle.getWidth();
+            double _minus_3 = (_width_1 - (mousePositionX - initialX));
+            this.currentRectangle.width(_minus_3);
+          } else {
+            this.edge = EdgeLocation.EAST;
+          }
+          break;
+        case NORTHEAST:
+          double _y_3 = this.currentRectangle.getY();
+          double _height_2 = this.currentRectangle.getHeight();
+          double _plus_2 = (_y_3 + _height_2);
+          boolean _lessThan_2 = (mousePositionY < _plus_2);
+          if (_lessThan_2) {
+            final double initialY_1 = this.currentRectangle.getY();
+            this.currentRectangle.y(mousePositionY);
+            double _height_3 = this.currentRectangle.getHeight();
+            double _minus_4 = (_height_3 - (mousePositionY - initialY_1));
+            this.currentRectangle.height(_minus_4);
+          } else {
+            this.edge = EdgeLocation.SOUTHEAST;
+          }
+          double _x_3 = this.currentRectangle.getX();
+          boolean _greaterThan_2 = (mousePositionX > _x_3);
+          if (_greaterThan_2) {
+            double _x_4 = this.currentRectangle.getX();
+            double _minus_5 = (mousePositionX - _x_4);
+            this.currentRectangle.width(_minus_5);
+          } else {
+            this.edge = EdgeLocation.NORTHWEST;
+          }
+          break;
+        case NORTHWEST:
+          double _y_4 = this.currentRectangle.getY();
+          double _height_4 = this.currentRectangle.getHeight();
+          double _plus_3 = (_y_4 + _height_4);
+          boolean _lessThan_3 = (mousePositionY < _plus_3);
+          if (_lessThan_3) {
+            final double initialY_2 = this.currentRectangle.getY();
+            this.currentRectangle.y(mousePositionY);
+            double _height_5 = this.currentRectangle.getHeight();
+            double _minus_6 = (_height_5 - (mousePositionY - initialY_2));
+            this.currentRectangle.height(_minus_6);
+          } else {
+            this.edge = EdgeLocation.SOUTHWEST;
+          }
+          double _x_5 = this.currentRectangle.getX();
+          double _width_2 = this.currentRectangle.getWidth();
+          double _plus_4 = (_x_5 + _width_2);
+          boolean _lessThan_4 = (mousePositionX < _plus_4);
+          if (_lessThan_4) {
+            final double initialX_1 = this.currentRectangle.getX();
+            this.currentRectangle.x(mousePositionX);
+            double _width_3 = this.currentRectangle.getWidth();
+            double _minus_7 = (_width_3 - (mousePositionX - initialX_1));
+            this.currentRectangle.width(_minus_7);
+          } else {
+            this.edge = EdgeLocation.NORTHEAST;
+          }
+          break;
+        case SOUTHEAST:
+          double _y_5 = this.currentRectangle.getY();
+          boolean _greaterThan_3 = (mousePositionY > _y_5);
+          if (_greaterThan_3) {
+            double _y_6 = this.currentRectangle.getY();
+            double _minus_8 = (mousePositionY - _y_6);
+            this.currentRectangle.height(_minus_8);
+          } else {
+            this.edge = EdgeLocation.NORTHEAST;
+          }
+          double _x_6 = this.currentRectangle.getX();
+          boolean _greaterThan_4 = (mousePositionX > _x_6);
+          if (_greaterThan_4) {
+            double _x_7 = this.currentRectangle.getX();
+            double _minus_9 = (mousePositionX - _x_7);
+            this.currentRectangle.width(_minus_9);
+          } else {
+            this.edge = EdgeLocation.SOUTHWEST;
+          }
+          break;
+        case SOUTHWEST:
+          double _y_7 = this.currentRectangle.getY();
+          boolean _greaterThan_5 = (mousePositionY > _y_7);
+          if (_greaterThan_5) {
+            double _y_8 = this.currentRectangle.getY();
+            double _minus_10 = (mousePositionY - _y_8);
+            this.currentRectangle.height(_minus_10);
+          } else {
+            this.edge = EdgeLocation.NORTHWEST;
+          }
+          double _x_8 = this.currentRectangle.getX();
+          double _width_4 = this.currentRectangle.getWidth();
+          double _plus_5 = (_x_8 + _width_4);
+          boolean _lessThan_5 = (mousePositionX < _plus_5);
+          if (_lessThan_5) {
+            final double initialX_2 = this.currentRectangle.getX();
+            this.currentRectangle.x(mousePositionX);
+            double _width_5 = this.currentRectangle.getWidth();
+            double _minus_11 = (_width_5 - (mousePositionX - initialX_2));
+            this.currentRectangle.width(_minus_11);
+          } else {
+            this.edge = EdgeLocation.SOUTHEAST;
+          }
+          break;
+        case NONE:
+          double _width_6 = this.currentRectangle.getWidth();
+          double _minus_12 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_6);
+          this.currentRectangle.x(
+            Math.max(
+              Math.min((mousePositionX - this.offsetX), _minus_12), FxSettings.BOX_BORDER_THICKNESS));
+          double _height_6 = this.currentRectangle.getHeight();
+          double _minus_13 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_6);
+          this.currentRectangle.y(
+            Math.max(
+              Math.min((mousePositionY - this.offsetY), _minus_13), FxSettings.BOX_BORDER_THICKNESS));
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  
+  /**
+   * Gère le redimensionnage du qr code
+   * @param mouse PositionX Position sur l'axe X de la souris
+   * @param mouse PositionX Position sur l'axe Y de la souris
+   */
+  private void draggedQrCode(final double mousePositionX, final double mousePositionY) {
+    final EdgeLocation edge = this.edge;
+    if (edge != null) {
+      switch (edge) {
+        case SOUTH:
+          double _y = this.currentRectangle.getY();
+          boolean _greaterThan = (mousePositionY > _y);
+          if (_greaterThan) {
+            final double initialX = this.currentRectangle.getX();
+            final double initialHeight = this.currentRectangle.getHeight();
+            double _y_1 = this.currentRectangle.getY();
+            double _minus = (mousePositionY - _y_1);
+            this.currentRectangle.height(_minus);
+            double _height = this.currentRectangle.getHeight();
+            double _minus_1 = (_height - initialHeight);
+            double _minus_2 = (initialX - _minus_1);
+            this.currentRectangle.x(_minus_2);
+            this.currentRectangle.width(this.currentRectangle.getHeight());
+          } else {
+            this.edge = EdgeLocation.NORTH;
+          }
+          break;
+        case EAST:
+          double _x = this.currentRectangle.getX();
+          boolean _greaterThan_1 = (mousePositionX > _x);
+          if (_greaterThan_1) {
+            double _x_1 = this.currentRectangle.getX();
+            double _minus_3 = (mousePositionX - _x_1);
+            this.currentRectangle.width(_minus_3);
+            this.currentRectangle.height(this.currentRectangle.getWidth());
+          } else {
+            this.edge = EdgeLocation.WEST;
+          }
+          break;
+        case NORTH:
+          double _y_2 = this.currentRectangle.getY();
+          double _height_1 = this.currentRectangle.getHeight();
+          double _plus = (_y_2 + _height_1);
+          boolean _lessThan = (mousePositionY < _plus);
+          if (_lessThan) {
+            final double initialY = this.currentRectangle.getY();
+            this.currentRectangle.y(mousePositionY);
+            double _height_2 = this.currentRectangle.getHeight();
+            double _minus_4 = (_height_2 - (mousePositionY - initialY));
+            this.currentRectangle.height(_minus_4);
+            this.currentRectangle.width(this.currentRectangle.getHeight());
+          } else {
+            this.edge = EdgeLocation.SOUTH;
+          }
+          break;
+        case WEST:
+          double _x_2 = this.currentRectangle.getX();
+          double _width = this.currentRectangle.getWidth();
+          double _plus_1 = (_x_2 + _width);
+          boolean _lessThan_1 = (mousePositionX < _plus_1);
+          if (_lessThan_1) {
+            final double initialX_1 = this.currentRectangle.getX();
+            final double initialY_1 = this.currentRectangle.getY();
+            final double initialWidth = this.currentRectangle.getWidth();
+            this.currentRectangle.x(mousePositionX);
+            double _width_1 = this.currentRectangle.getWidth();
+            double _minus_5 = (_width_1 - (mousePositionX - initialX_1));
+            this.currentRectangle.width(_minus_5);
+            double _width_2 = this.currentRectangle.getWidth();
+            double _minus_6 = (_width_2 - initialWidth);
+            double _minus_7 = (initialY_1 - _minus_6);
+            this.currentRectangle.y(_minus_7);
+            this.currentRectangle.height(this.currentRectangle.getWidth());
+          } else {
+            this.edge = EdgeLocation.EAST;
+          }
+          break;
+        case NORTHEAST:
+          if (((mousePositionY < (this.currentRectangle.getY() + this.currentRectangle.getHeight())) && (mousePositionX > this.currentRectangle.getX()))) {
+            final double initialY_2 = this.currentRectangle.getY();
+            this.currentRectangle.y(mousePositionY);
+            double _height_3 = this.currentRectangle.getHeight();
+            double _minus_8 = (_height_3 - (mousePositionY - initialY_2));
+            this.currentRectangle.height(_minus_8);
+            this.currentRectangle.width(this.currentRectangle.getHeight());
+          } else {
+            this.edge = EdgeLocation.SOUTHWEST;
+          }
+          break;
+        case NORTHWEST:
+          if (((mousePositionY < (this.currentRectangle.getY() + this.currentRectangle.getHeight())) && (mousePositionX < (this.currentRectangle.getX() + this.currentRectangle.getWidth())))) {
+            final double initialX_2 = this.currentRectangle.getX();
+            final double initialY_3 = this.currentRectangle.getY();
+            final double initialWidth_1 = this.currentRectangle.getWidth();
+            this.currentRectangle.x(mousePositionX);
+            double _width_3 = this.currentRectangle.getWidth();
+            double _minus_9 = (_width_3 - (mousePositionX - initialX_2));
+            this.currentRectangle.width(_minus_9);
+            double _width_4 = this.currentRectangle.getWidth();
+            double _minus_10 = (_width_4 - initialWidth_1);
+            double _minus_11 = (initialY_3 - _minus_10);
+            this.currentRectangle.y(_minus_11);
+            this.currentRectangle.height(this.currentRectangle.getWidth());
+          } else {
+            this.edge = EdgeLocation.SOUTHEAST;
+          }
+          break;
+        case SOUTHEAST:
+          if (((mousePositionY > this.currentRectangle.getY()) && (mousePositionX > this.currentRectangle.getX()))) {
+            double _x_3 = this.currentRectangle.getX();
+            double _minus_12 = (mousePositionX - _x_3);
+            this.currentRectangle.width(_minus_12);
+            this.currentRectangle.height(this.currentRectangle.getWidth());
+          } else {
+            this.edge = EdgeLocation.NORTHWEST;
+          }
+          break;
+        case SOUTHWEST:
+          if (((mousePositionY > this.currentRectangle.getY()) && (mousePositionX < (this.currentRectangle.getX() + this.currentRectangle.getWidth())))) {
+            final double initialX_3 = this.currentRectangle.getX();
+            final double initialHeight_1 = this.currentRectangle.getHeight();
+            double _y_3 = this.currentRectangle.getY();
+            double _minus_13 = (mousePositionY - _y_3);
+            this.currentRectangle.height(_minus_13);
+            double _height_4 = this.currentRectangle.getHeight();
+            double _minus_14 = (_height_4 - initialHeight_1);
+            double _minus_15 = (initialX_3 - _minus_14);
+            this.currentRectangle.x(_minus_15);
+            this.currentRectangle.width(this.currentRectangle.getHeight());
+          } else {
+            this.edge = EdgeLocation.NORTHEAST;
+          }
+          break;
+        case NONE:
+          double _width_5 = this.currentRectangle.getWidth();
+          double _minus_16 = ((this.maxX - FxSettings.BOX_BORDER_THICKNESS) - _width_5);
+          this.currentRectangle.x(
+            Math.max(
+              Math.min((mousePositionX - this.offsetX), _minus_16), FxSettings.BOX_BORDER_THICKNESS));
+          double _height_5 = this.currentRectangle.getHeight();
+          double _minus_17 = ((this.maxY - FxSettings.BOX_BORDER_THICKNESS) - _height_5);
+          this.currentRectangle.y(
+            Math.max(
+              Math.min((mousePositionY - this.offsetY), _minus_17), FxSettings.BOX_BORDER_THICKNESS));
+          break;
+        default:
+          break;
+      }
     }
   }
   
@@ -548,78 +799,22 @@ public class ControllerFxEdition {
   }
   
   /**
-   * Used to zoom in and out the pdf image
-   * 
-   * Using the scale allows the children of the pane to also scale accordingly
-   */
-  @FXML
-  public void ZoomImage(final ScrollEvent e) {
-    Object _source = e.getSource();
-    Node source = ((Node) _source);
-    double _deltaY = e.getDeltaY();
-    boolean _lessThan = (_deltaY < 0);
-    if (_lessThan) {
-      double _scaleX = source.getScaleX();
-      double _multiply = (_scaleX * 0.95);
-      source.setScaleX(_multiply);
-      double _scaleY = source.getScaleY();
-      double _multiply_1 = (_scaleY * 0.95);
-      source.setScaleY(_multiply_1);
-    } else {
-      double _scaleX_1 = source.getScaleX();
-      double _multiply_2 = (_scaleX_1 * 1.05);
-      source.setScaleX(_multiply_2);
-      double _scaleY_1 = source.getScaleY();
-      double _multiply_3 = (_scaleY_1 * 1.05);
-      source.setScaleY(_multiply_3);
-    }
-  }
-  
-  /**
-   * Setters for the current tool selected
-   */
-  private ControllerFxEdition.SelectedTool currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
-  
-  public void setToMoveCameraTool() {
-    this.mainPane.setCursor(Cursor.OPEN_HAND);
-    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_CAMERA_TOOL;
-  }
-  
-  public void setToQuestionAreaTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.QUESTION_AREA;
-  }
-  
-  public void setToIDAreaTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.ID_AREA;
-  }
-  
-  public void setToQRAreaTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.QR_AREA;
-  }
-  
-  public void setToMoveTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_TOOL;
-  }
-  
-  public void setToResizeTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.RESIZE_TOOL;
-  }
-  
-  public void setToNoTool() {
-    this.mainPane.setCursor(Cursor.DEFAULT);
-    this.currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
-  }
-  
-  /**
    * returns a new Box with the right type corresponding to the current tool //TODO maybe move to box as a static method
    */
   public Box createZone(final double x, final double y) {
-    return new Box(x, y, 0, 0);
+    Box _xifexpression = null;
+    boolean _equals = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QUESTION_AREA);
+    if (_equals) {
+      _xifexpression = new Box(BoxType.QUESTION, x, y, 0, 0);
+    } else {
+      Box _xifexpression_1 = null;
+      boolean _equals_1 = Objects.equal(this.currentTool, ControllerFxEdition.SelectedTool.QR_AREA);
+      if (_equals_1) {
+        _xifexpression_1 = new Box(BoxType.QR, x, y, 0, 0);
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    return _xifexpression;
   }
   
   /**
@@ -703,7 +898,9 @@ public class ControllerFxEdition {
       java.util.Objects.<File>requireNonNull(file);
       final boolean success = this.load(file.getPath());
       if ((!success)) {
-        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, "studentSheetLoader.templateConfirmationDialog.title", "studentSheetLoader.templateConfirmationDialog.fail", null);
+        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, 
+          "studentSheetLoader.templateConfirmationDialog.title", 
+          "studentSheetLoader.templateConfirmationDialog.fail", null);
       } else {
         this.render();
       }
@@ -727,6 +924,7 @@ public class ControllerFxEdition {
       this.clearVue();
       this.initPageSelection();
       this.renderDocument();
+      this.loadQrCodeZone();
       this.loadBoxes();
       _xblockexpression = this.postLoad();
     }
@@ -750,7 +948,8 @@ public class ControllerFxEdition {
             double _multiply_2 = (_questionWidth * this.maxX);
             double _questionHeight = this.questionHeight(i);
             double _multiply_3 = (_questionHeight * this.maxY);
-            Box box = new Box(_multiply, _multiply_1, _multiply_2, _multiply_3);
+            Box box = new Box(
+              BoxType.QUESTION, _multiply, _multiply_1, _multiply_2, _multiply_3);
             this.mainPane.addZone(box);
             this.questionList.loadQuestion(box, this.questionName(i), p, i, this.questionWorth(i));
           }
@@ -758,6 +957,39 @@ public class ControllerFxEdition {
       }
     }
     this.questionList.showOnlyPage(this.pdfManager.currentPdfPageNumber());
+  }
+  
+  /**
+   * Chage la zone de qr code
+   */
+  public boolean loadQrCodeZone() {
+    boolean _xblockexpression = false;
+    {
+      final Optional<fr.istic.tools.scanexam.core.QrCodeZone> qrCodeInService = this.service.getQrCodeZone();
+      boolean _xifexpression = false;
+      boolean _isPresent = qrCodeInService.isPresent();
+      if (_isPresent) {
+        boolean _xblockexpression_1 = false;
+        {
+          float _x = qrCodeInService.get().getX();
+          double _multiply = (_x * this.maxX);
+          float _y = qrCodeInService.get().getY();
+          double _multiply_1 = (_y * this.maxY);
+          float _width = qrCodeInService.get().getWidth();
+          double _multiply_2 = (_width * this.maxX);
+          float _height = qrCodeInService.get().getHeight();
+          double _multiply_3 = (_height * this.maxY);
+          final Box qrCodeBox = new Box(
+            BoxType.QR, _multiply, _multiply_1, _multiply_2, _multiply_3);
+          QrCodeZone _qrCodeZone = new QrCodeZone(qrCodeBox, this);
+          this.qrCodeZone = _qrCodeZone;
+          _xblockexpression_1 = this.mainPane.addZone(this.qrCodeZone.getZone());
+        }
+        _xifexpression = _xblockexpression_1;
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
   }
   
   public boolean postLoad() {
@@ -844,6 +1076,18 @@ public class ControllerFxEdition {
     this.questionEditor.hideAll();
   }
   
+  public void createQrCode(final double x, final double y, final double height, final double width) {
+    this.service.createQrCode(((float) x), ((float) y), ((float) height), ((float) width));
+  }
+  
+  public void resizeQrCode(final double height, final double width) {
+    this.service.rescaleQrCode(((float) height), ((float) width));
+  }
+  
+  public void moveQrCode(final double x, final double y) {
+    this.service.moveQrCode(((float) x), ((float) y));
+  }
+  
   public int createQuestion(final double x, final double y, final double height, final double width) {
     return this.service.createQuestion(this.pdfManager.getPdfPageIndex(), ((float) x), ((float) y), ((float) height), ((float) width));
   }
@@ -876,22 +1120,13 @@ public class ControllerFxEdition {
   }
   
   /**
-   * --LOADING NEW TEMPLATE--
+   * Supprime la zone de qr code de l'écran
    */
-  public List<Integer> initLoading(final int pageNumber) {
-    LinkedList<Integer> _xblockexpression = null;
-    {
-      this.questions = this.service.getQuestionAtPage(pageNumber);
-      LinkedList<Integer> ids = new LinkedList<Integer>();
-      for (final Question q : this.questions) {
-        ids.add(Integer.valueOf(q.getId()));
-      }
-      _xblockexpression = ids;
+  public void removeQrCodeZone() {
+    if ((this.qrCodeZone != null)) {
+      this.mainPane.removeZone(this.qrCodeZone.getZone());
     }
-    return _xblockexpression;
   }
-  
-  private List<Question> questions;
   
   /**
    * Loads the next question into questionToLoad
@@ -939,7 +1174,6 @@ public class ControllerFxEdition {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getHeigth();
-          InputOutput.<String>print(("h = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;
@@ -956,7 +1190,6 @@ public class ControllerFxEdition {
         boolean _equals = (_id == id);
         if (_equals) {
           result = q.getZone().getWidth();
-          InputOutput.<String>print(("w = " + Double.valueOf(result)));
         }
       }
       _xblockexpression = result;
@@ -1000,6 +1233,155 @@ public class ControllerFxEdition {
     return _xblockexpression;
   }
   
+  public ControllerFxEdition.SelectedTool getSelectedTool() {
+    return this.currentTool;
+  }
+  
+  public EdgeLocation setEdgeLoc(final EdgeLocation edge) {
+    return this.edge = edge;
+  }
+  
+  public ControllerFxEdition.SelectedTool setSelectedTool(final ControllerFxEdition.SelectedTool tool) {
+    return this.currentTool = tool;
+  }
+  
+  public void setToMoveCameraTool() {
+    this.mainPane.setCursor(Cursor.OPEN_HAND);
+    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_CAMERA_TOOL;
+  }
+  
+  public void setToQuestionAreaTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.QUESTION_AREA;
+  }
+  
+  public void setToIDAreaTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.ID_AREA;
+  }
+  
+  public void setToQRAreaTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.QR_AREA;
+  }
+  
+  public void setToMoveTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.MOVE_TOOL;
+  }
+  
+  public void setToResizeTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.RESIZE_TOOL;
+  }
+  
+  public void setToNoTool() {
+    this.mainPane.setCursor(Cursor.DEFAULT);
+    this.currentTool = ControllerFxEdition.SelectedTool.NO_TOOL;
+  }
+  
+  @FXML
+  public void questionAreaPressed() {
+    boolean _isSelected = this.createBoxButton.isSelected();
+    if (_isSelected) {
+      this.setToQuestionAreaTool();
+    } else {
+      this.setToNoTool();
+    }
+  }
+  
+  @FXML
+  public void iDAreaPressed() {
+    this.setToIDAreaTool();
+  }
+  
+  @FXML
+  public void qrAreaPressed() {
+    boolean _isSelected = this.createQrButton.isSelected();
+    if (_isSelected) {
+      this.removeQrCodeZone();
+      this.setToQRAreaTool();
+    } else {
+      this.setToNoTool();
+    }
+  }
+  
+  @FXML
+  public void movePressed() {
+    this.setToMoveCameraTool();
+  }
+  
+  @FXML
+  public void nextPagePressed() {
+    if (this.pdfLoaded) {
+      this.nextPage();
+    }
+  }
+  
+  @FXML
+  public void saveTemplatePressed() {
+    if (this.pdfLoaded) {
+      this.saveTemplate();
+    }
+  }
+  
+  @FXML
+  public void loadTemplatePressed() {
+    this.loadTemplate();
+  }
+  
+  @FXML
+  public void previousPagePressed() {
+    if (this.pdfLoaded) {
+      this.previousPage();
+    }
+  }
+  
+  @FXML
+  public void switchToCorrectorPressed() {
+  }
+  
+  @FXML
+  public void mainMouseEvent(final MouseEvent e) {
+    if (this.pdfLoaded) {
+      MouseButton _button = e.getButton();
+      boolean _equals = Objects.equal(_button, MouseButton.SECONDARY);
+      if (_equals) {
+        this.moveImage(e);
+      } else {
+        this.chooseMouseAction(e);
+      }
+    }
+  }
+  
+  /**
+   * Used to zoom in and out the pdf image
+   * 
+   * Using the scale allows the children of the pane to also scale accordingly
+   */
+  @FXML
+  public void ZoomImage(final ScrollEvent e) {
+    Object _source = e.getSource();
+    Node source = ((Node) _source);
+    double _deltaY = e.getDeltaY();
+    boolean _lessThan = (_deltaY < 0);
+    if (_lessThan) {
+      double _scaleX = source.getScaleX();
+      double _multiply = (_scaleX * 0.95);
+      source.setScaleX(_multiply);
+      double _scaleY = source.getScaleY();
+      double _multiply_1 = (_scaleY * 0.95);
+      source.setScaleY(_multiply_1);
+    } else {
+      double _scaleX_1 = source.getScaleX();
+      double _multiply_2 = (_scaleX_1 * 1.05);
+      source.setScaleX(_multiply_2);
+      double _scaleY_1 = source.getScaleY();
+      double _multiply_3 = (_scaleY_1 * 1.05);
+      source.setScaleY(_multiply_3);
+    }
+  }
+  
   @Pure
   public BooleanProperty getLoadedModel() {
     return this.loadedModel;
@@ -1010,11 +1392,38 @@ public class ControllerFxEdition {
   }
   
   @Pure
+  public QuestionListEdition getQuestionList() {
+    return this.questionList;
+  }
+  
+  public void setQuestionList(final QuestionListEdition questionList) {
+    this.questionList = questionList;
+  }
+  
+  @Pure
+  public QuestionOptionsEdition getQuestionEditor() {
+    return this.questionEditor;
+  }
+  
+  public void setQuestionEditor(final QuestionOptionsEdition questionEditor) {
+    this.questionEditor = questionEditor;
+  }
+  
+  @Pure
   public PdfManager getPdfManager() {
     return this.pdfManager;
   }
   
   public void setPdfManager(final PdfManager pdfManager) {
     this.pdfManager = pdfManager;
+  }
+  
+  @Pure
+  public PdfPane getMainPane() {
+    return this.mainPane;
+  }
+  
+  public void setMainPane(final PdfPane mainPane) {
+    this.mainPane = mainPane;
   }
 }

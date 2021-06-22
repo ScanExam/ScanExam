@@ -72,6 +72,10 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 				return createQuestionZoneAdapter();
 			}
 			@Override
+			public Adapter caseQrCodeZone(QrCodeZone object) {
+				return createQrCodeZoneAdapter();
+			}
+			@Override
 			public Adapter caseQuestion(Question object) {
 				return createQuestionAdapter();
 			}
@@ -150,6 +154,20 @@ public class CoreAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createQuestionZoneAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link fr.istic.tools.scanexam.core.QrCodeZone <em>Qr Code Zone</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see fr.istic.tools.scanexam.core.QrCodeZone
+	 * @generated
+	 */
+	public Adapter createQrCodeZoneAdapter() {
 		return null;
 	}
 

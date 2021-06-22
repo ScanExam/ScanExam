@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -34,6 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getInformations <em>Informations</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentsheets <em>Studentsheets</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getFailedPages <em>Failed Pages</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  * </ul>
  *
@@ -59,6 +61,16 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected EList<StudentSheet> studentsheets;
+
+	/**
+	 * The cached value of the '{@link #getFailedPages() <em>Failed Pages</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFailedPages()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Integer> failedPages;
 
 	/**
 	 * The default value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
@@ -128,6 +140,18 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Integer> getFailedPages() {
+		if (failedPages == null) {
+			failedPages = new EDataTypeEList<Integer>(Integer.class, this, TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES);
+		}
+		return failedPages;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getEncodedDocument() {
 		return encodedDocument;
 	}
@@ -172,6 +196,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return getInformations();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return getStudentsheets();
+			case TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES:
+				return getFailedPages();
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return getEncodedDocument();
 		}
@@ -195,6 +221,10 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				getStudentsheets().clear();
 				getStudentsheets().addAll((Collection<? extends StudentSheet>)newValue);
 				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES:
+				getFailedPages().clear();
+				getFailedPages().addAll((Collection<? extends Integer>)newValue);
+				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument((String)newValue);
 				return;
@@ -216,6 +246,9 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				getStudentsheets().clear();
 				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES:
+				getFailedPages().clear();
+				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
@@ -235,6 +268,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return informations != null && !informations.isEmpty();
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return studentsheets != null && !studentsheets.isEmpty();
+			case TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES:
+				return failedPages != null && !failedPages.isEmpty();
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 		}
@@ -251,7 +286,9 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (encodedDocument: ");
+		result.append(" (failedPages: ");
+		result.append(failedPages);
+		result.append(", encodedDocument: ");
 		result.append(encodedDocument);
 		result.append(')');
 		return result.toString();

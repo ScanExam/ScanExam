@@ -21,6 +21,15 @@ import javafx.scene.paint.Color;
 
 /**
  * [JavaFX] Item question dans la liste de gauche des questions
+ * 
+ * This component is used as an item for the QuestionListEdition class.
+ * We store the name, id , worth, and page position of the question, as well as a  referece to the box on the pdf
+ * The main interaction with this class is changing its details such as worth and name ect,
+ * setFocus is used when this item is clicked in the list .
+ * 
+ * Fixes to do : completely link to model, only store names for displaying the list and id, and use those to find the items in the model when we need box dimentions or worth.
+ * 
+ * 
  * @author Stefan Locke, Julien Cochet
  */
 @SuppressWarnings("all")
@@ -98,12 +107,13 @@ public class QuestionItemEdition extends VBox {
     this.list = list;
     this.zone = zone;
     this.zone.setQuestionItem(this);
+    this.type = BoxType.QUESTION;
     Label _label = new Label("New Question");
     this.name = _label;
     this.getChildren().addAll(this.top, this.middle, this.bottom);
     this.top.getChildren().addAll(this.name);
     VBox.setVgrow(this, Priority.ALWAYS);
-    zone.setupEvents();
+    zone.setupEvents(this.type);
     this.scale = 1f;
     this.getStyleClass().add("ListItem");
     Insets _insets = new Insets(2);
@@ -126,20 +136,15 @@ public class QuestionItemEdition extends VBox {
   }
   
   /**
-   * def setNameEditable(){
-   * 	name.editable = true
-   * 	name.selectAll
-   * }
-   * 
-   * def commitNameChange(){
-   * 	name.editable = false
-   * 	list.updateInModel(this)
-   * }
+   * Used to stetup the context menu (right click), called on the setupevent Method
    */
   public Object setupContextMenu() {
     return null;
   }
   
+  /**
+   * Used to setup events for this item, called at the end of the constructor.
+   */
   public void setupEvents(final QuestionItemEdition item) {
     this.remove.setOnAction(new EventHandler<ActionEvent>() {
       @Override
@@ -199,8 +204,8 @@ public class QuestionItemEdition extends VBox {
   }
   
   /**
-   * Sets the color of the zone and the item in the list
-   * @param b True for highlight color
+   * Sets the focused state of the zone and the item in the list
+   * @param b true if we want to highlight this item, false if not.
    */
   public void setFocus(final boolean b) {
     if (b) {
@@ -214,6 +219,10 @@ public class QuestionItemEdition extends VBox {
     }
   }
   
+  /**
+   * Changes the color of the item in the list.
+   * @param color the color we want the background to be
+   */
   public void setColor(final Color color) {
     BackgroundFill bf = new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY);
     Background _background = new Background(bf);

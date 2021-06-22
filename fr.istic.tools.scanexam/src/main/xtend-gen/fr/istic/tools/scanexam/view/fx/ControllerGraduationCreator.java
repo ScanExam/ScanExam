@@ -13,6 +13,7 @@ import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Objects;
+import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -30,6 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -124,7 +126,8 @@ public class ControllerGraduationCreator {
     this.controllerEdition = controllerEdition;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
-      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(this.txtFldFileGraduation.textProperty().isEmpty()).or(this.txtFldGraduationName.textProperty().isEmpty()).or(
+      this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(
+        this.txtFldFileGraduation.textProperty().isEmpty()).or(this.txtFldGraduationName.textProperty().isEmpty()).or(
         this.rbLoadModel.selectedProperty().and(this.txtFldFile.textProperty().isEmpty())));
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator(".xmi");
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
@@ -164,8 +167,12 @@ public class ControllerGraduationCreator {
         String _text = this.txtFldFileGraduation.getText();
         final File file = new File(_text);
         FileInputStream _fileInputStream = new FileInputStream(file);
+        String _text_1 = this.txtFldFileGraduation.getText();
         int _pageAmount = this.serviceGraduation.getPageAmount();
-        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _pageAmount);
+        Optional<Pair<Float, Float>> _qrCodePosition = this.serviceGraduation.getQrCodePosition();
+        Pair<Float, Float> _pair = new Pair<Float, Float>(Float.valueOf((-1.0f)), Float.valueOf((-1.0f)));
+        Pair<Float, Float> _orElse = _qrCodePosition.orElse(_pair);
+        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _text_1, _pageAmount, _orElse);
         final boolean successStart = reader.readPDf();
         final Task<Void> task = new Task<Void>() {
           @Override
@@ -174,11 +181,15 @@ public class ControllerGraduationCreator {
             while ((!reader.isFinished())) {
               {
                 this.updateProgress(reader.getNbPagesTreated(), reader.getNbPagesPdf());
-                this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
+                this.updateMessage(
+                  String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), 
+                    Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
               }
             }
             this.updateProgress(reader.getNbPagesTreated(), reader.getNbPagesPdf());
-            this.updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
+            this.updateMessage(
+              String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), 
+                Integer.valueOf(reader.getNbPagesTreated()), Integer.valueOf(reader.getNbPagesPdf())));
             return null;
           }
         };
@@ -195,7 +206,8 @@ public class ControllerGraduationCreator {
         service.setOnSucceeded(_function_1);
         service.start();
         Window _window = this.mainPane.getScene().getWindow();
-        ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), ((Stage) _window));
+        ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), 
+          ((Stage) _window));
         _xblockexpression = successStart;
       }
       return _xblockexpression;
@@ -264,7 +276,9 @@ public class ControllerGraduationCreator {
       boolean _loadStudentSheets = this.loadStudentSheets();
       boolean _not = (!_loadStudentSheets);
       if (_not) {
-        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null);
+        DialogMessageSender.sendTranslateDialog(Alert.AlertType.ERROR, 
+          "studentSheetLoader.graduationConfirmationDialog.title", 
+          "studentSheetLoader.graduationConfirmationDialog.fail", null);
       }
     }
   }
@@ -275,7 +289,7 @@ public class ControllerGraduationCreator {
    * @param file le PDF
    */
   public void onFinish(final PdfReader reader, final File file) {
-    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets());
+    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages());
     this.serviceGraduation.setExamName(this.txtFldGraduationName.getText());
     this.controllerGraduation.getPdfManager().create(file);
     this.controllerGraduation.setToLoaded();

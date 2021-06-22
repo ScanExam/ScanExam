@@ -85,13 +85,22 @@ public interface TemplatesPackage extends EPackage {
 	int CORRECTION_TEMPLATE__STUDENTSHEETS = 1;
 
 	/**
+	 * The feature id for the '<em><b>Failed Pages</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CORRECTION_TEMPLATE__FAILED_PAGES = 2;
+
+	/**
 	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 2;
+	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 3;
 
 	/**
 	 * The number of structural features of the '<em>Correction Template</em>' class.
@@ -100,7 +109,7 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE_FEATURE_COUNT = 3;
+	int CORRECTION_TEMPLATE_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Correction Template</em>' class.
@@ -189,6 +198,17 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getCorrectionTemplate_Studentsheets();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getFailedPages <em>Failed Pages</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Failed Pages</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getFailedPages()
+	 * @see #getCorrectionTemplate()
+	 * @generated
+	 */
+	EAttribute getCorrectionTemplate_FailedPages();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}'.
@@ -281,6 +301,14 @@ public interface TemplatesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CORRECTION_TEMPLATE__STUDENTSHEETS = eINSTANCE.getCorrectionTemplate_Studentsheets();
+
+		/**
+		 * The meta object literal for the '<em><b>Failed Pages</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CORRECTION_TEMPLATE__FAILED_PAGES = eINSTANCE.getCorrectionTemplate_FailedPages();
 
 		/**
 		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.

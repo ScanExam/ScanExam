@@ -25,6 +25,7 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
+import javafx.util.Pair
 
 /**
  * Contrôleur pour l'UI de chargement d'une correction
@@ -59,7 +60,7 @@ class ControllerGraduationCreator {
 	/* TextField de la saisie du path pour les copies */
 	@FXML
 	var FormattedTextField txtFldFileGraduation
-	
+
 	/* TextField de la saisie du nom de la correction */
 	@FXML
 	var FormattedTextField txtFldGraduationName
@@ -76,21 +77,19 @@ class ControllerGraduationCreator {
 	@FXML
 	var Pane hoverPane
 
-
-	
 	var ControllerFxGraduation controllerGraduation;
 
 	static val logger = LogManager.logger
 
 	var ServiceGraduation serviceGraduation
 	var ControllerFxEdition controllerEdition
-	
 
 	/**
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
-	def initialize(ServiceGraduation serviceGraduation, ControllerFxEdition controllerEdition, ControllerFxGraduation controllerGraduation) {
+	def initialize(ServiceGraduation serviceGraduation, ControllerFxEdition controllerEdition,
+		ControllerFxGraduation controllerGraduation) {
 
 		this.controllerGraduation = controllerGraduation
 		this.serviceGraduation = serviceGraduation
@@ -101,12 +100,9 @@ class ControllerGraduationCreator {
 		// - Au moins l'un des composants activés est dans un état de "Mauvais format"
 		// - Au moins l'un des composants activés est vide
 		btnOk.disableProperty.bind(
-			txtFldFile.wrongFormattedProperty
-			.or(txtFldFileGraduation.wrongFormattedProperty)
-			.or(txtFldFileGraduation.textProperty.isEmpty)
-			.or(txtFldGraduationName.textProperty.isEmpty)
-			.or(rbLoadModel.selectedProperty
-				.and(txtFldFile.textProperty.isEmpty)
+			txtFldFile.wrongFormattedProperty.or(txtFldFileGraduation.wrongFormattedProperty).or(
+				txtFldFileGraduation.textProperty.isEmpty).or(txtFldGraduationName.textProperty.isEmpty).or(
+				rbLoadModel.selectedProperty.and(txtFldFile.textProperty.isEmpty)
 			)
 		)
 
@@ -125,34 +121,40 @@ class ControllerGraduationCreator {
 			rbLoadModel.selected = true
 		}
 	}
-	
+
 	/**
 	 * Lance le chargement des StudentSheets
 	 * @return true si le lancement a bien pu être effectué, false sinon
 	 */
 	def boolean loadStudentSheets() {
 		val File file = new File(txtFldFileGraduation.text)
-		val PdfReader reader = new PdfReaderQrCodeImpl(new FileInputStream(file), serviceGraduation.pageAmount)
+		val PdfReader reader = new PdfReaderQrCodeImpl(new FileInputStream(file), txtFldFileGraduation.text,
+			serviceGraduation.pageAmount, serviceGraduation.qrCodePosition.orElse(new Pair<Float, Float>(-1.0f, -1.0f)))
 		val successStart = reader.readPDf
-		val Task<Void> task = new Task<Void>(){
+		val Task<Void> task = new Task<Void>() {
 			protected override Void call() {
 				updateProgress(0, 1)
-				while(!reader.isFinished) {
+				while (!reader.isFinished) {
 					updateProgress(reader.nbPagesTreated, reader.nbPagesPdf)
-					updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), reader.nbPagesTreated, reader.nbPagesPdf))
+					updateMessage(
+						String.format(LanguageManager.translate("studentSheetLoader.progressMessage"),
+							reader.nbPagesTreated, reader.nbPagesPdf))
 				}
 				updateProgress(reader.nbPagesTreated, reader.nbPagesPdf)
-				updateMessage(String.format(LanguageManager.translate("studentSheetLoader.progressMessage"), reader.nbPagesTreated, reader.nbPagesPdf))
+				updateMessage(
+					String.format(LanguageManager.translate("studentSheetLoader.progressMessage"),
+						reader.nbPagesTreated, reader.nbPagesPdf))
 				return null
 			}
 		}
 		val Service<Void> service = [task]
-		service.onSucceeded = [e | onFinish(reader, file)]
+		service.onSucceeded = [e|onFinish(reader, file)]
 		service.start
-		ControllerWaiting.openWaitingDialog(service.messageProperty, service.progressProperty, mainPane.getScene().getWindow() as Stage)
+		ControllerWaiting.openWaitingDialog(service.messageProperty, service.progressProperty,
+			mainPane.getScene().getWindow() as Stage)
 		successStart
 	}
-	
+
 	/**
 	 * Anime toutes les composants vides
 	 */
@@ -198,19 +200,21 @@ class ControllerGraduationCreator {
 
 	@FXML
 	def valid() {
-		if(rbUseLoaded.selected || controllerEdition.loadTemplate(new File(txtFldFile.text))) {
-			if(!loadStudentSheets)
-				DialogMessageSender.sendTranslateDialog(AlertType.ERROR, "studentSheetLoader.graduationConfirmationDialog.title", "studentSheetLoader.graduationConfirmationDialog.fail", null)
+		if (rbUseLoaded.selected || controllerEdition.loadTemplate(new File(txtFldFile.text))) {
+			if (!loadStudentSheets)
+				DialogMessageSender.sendTranslateDialog(AlertType.ERROR,
+					"studentSheetLoader.graduationConfirmationDialog.title",
+					"studentSheetLoader.graduationConfirmationDialog.fail", null)
 		}
 	}
-	
+
 	/**
 	 * Fonction exécutée lorsque le chargement des copies est fini
 	 * @param reader le PdfReader s'étant occupé du chargement des copies
 	 * @param file le PDF
 	 */
 	def onFinish(PdfReader reader, File file) {
-		serviceGraduation.initializeCorrection(reader.completeStudentSheets)
+		serviceGraduation.initializeCorrection(reader.completeStudentSheets, reader.failedPages)
 		serviceGraduation.examName = txtFldGraduationName.text
 		controllerGraduation.pdfManager.create(file)
 		controllerGraduation.setToLoaded

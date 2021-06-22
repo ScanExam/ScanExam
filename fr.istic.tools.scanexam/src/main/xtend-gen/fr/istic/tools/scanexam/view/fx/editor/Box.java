@@ -1,6 +1,8 @@
 package fr.istic.tools.scanexam.view.fx.editor;
 
+import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
+import fr.istic.tools.scanexam.view.fx.editor.BoxType;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.editor.EdgeLocation;
 import fr.istic.tools.scanexam.view.fx.editor.PdfPane;
@@ -13,16 +15,27 @@ import javafx.scene.shape.Rectangle;
 
 @SuppressWarnings("all")
 public class Box extends Rectangle {
-  public Box(final QuestionItemEdition item, final double x, final double y, final double width, final double height) {
+  /**
+   * Type de boîte (question, qr code, etc.)
+   */
+  private BoxType type;
+  
+  public Box(final QuestionItemEdition item, final BoxType type, final double x, final double y, final double width, final double height) {
     super(x, y, width, height);
+    this.type = type;
     this.questionItem = item;
     this.setStrokeWidth(FxSettings.BOX_BORDER_THICKNESS);
-    this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+    boolean _equals = Objects.equal(this.type, BoxType.QR);
+    if (_equals) {
+      this.setStroke(FxSettings.QRZONE_BORDER_NORMAL_COLOR);
+    } else {
+      this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+    }
     this.setFill(FxSettings.BOX_NORMAL_COLOR);
   }
   
-  public Box(final double x, final double y, final double width, final double height) {
-    this(null, x, y, width, height);
+  public Box(final BoxType type, final double x, final double y, final double width, final double height) {
+    this(null, type, x, y, width, height);
   }
   
   private QuestionItemEdition questionItem;
@@ -31,6 +44,10 @@ public class Box extends Rectangle {
   
   public QuestionItemEdition getQuestionItem() {
     return this.questionItem;
+  }
+  
+  public BoxType getType() {
+    return this.type;
   }
   
   public QuestionItemEdition setQuestionItem(final QuestionItemEdition item) {
@@ -50,7 +67,12 @@ public class Box extends Rectangle {
       this.setStroke(FxSettings.BOX_BORDER_HIGHLIGHT_COLOR);
       this.setFill(FxSettings.BOX_HIGHLIGHT_COLOR);
     } else {
-      this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+      boolean _equals = Objects.equal(this.type, BoxType.QR);
+      if (_equals) {
+        this.setStroke(FxSettings.QRZONE_BORDER_NORMAL_COLOR);
+      } else {
+        this.setStroke(FxSettings.BOX_BORDER_NORMAL_COLOR);
+      }
       this.setFill(FxSettings.BOX_NORMAL_COLOR);
     }
   }
@@ -76,7 +98,8 @@ public class Box extends Rectangle {
   }
   
   public boolean checkOnNorthBorder(final MouseEvent e) {
-    if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < ((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
+    if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && 
+      (e.getX() < ((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
       if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < (this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
         return true;
       }
@@ -85,8 +108,10 @@ public class Box extends Rectangle {
   }
   
   public boolean checkOnSouthBorder(final MouseEvent e) {
-    if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < ((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
-      if (((e.getY() > ((this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())) && (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
+    if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && 
+      (e.getX() < ((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
+      if (((e.getY() > ((this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())) && 
+        (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
         return true;
       }
     }
@@ -95,7 +120,8 @@ public class Box extends Rectangle {
   
   public boolean checkOnWestBorder(final MouseEvent e) {
     if (((e.getX() > (this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getX() < (this.getX() + FxSettings.ZONE_RESIZE_TOLERANCE)))) {
-      if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
+      if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && 
+        (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
         return true;
       }
     }
@@ -103,8 +129,10 @@ public class Box extends Rectangle {
   }
   
   public boolean checkOnEastBorder(final MouseEvent e) {
-    if (((e.getX() > ((this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())) && (e.getX() < (((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())))) {
-      if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
+    if (((e.getX() > ((this.getX() - FxSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())) && 
+      (e.getX() < (((this.getX() + this.getWidth()) + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getWidth())))) {
+      if (((e.getY() > (this.getY() - FxSettings.ZONE_RESIZE_TOLERANCE)) && 
+        (e.getY() < ((this.getY() + FxSettings.ZONE_RESIZE_TOLERANCE) + this.getHeight())))) {
         return true;
       }
     }
@@ -115,7 +143,7 @@ public class Box extends Rectangle {
     return null;
   }
   
-  public void setupEvents() {
+  public void setupEvents(final BoxType type) {
     final Box zone = this;
     zone.setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
@@ -124,7 +152,15 @@ public class Box extends Rectangle {
         boolean onSouth = Box.this.checkOnSouthBorder(event);
         boolean onEast = Box.this.checkOnEastBorder(event);
         boolean onWest = Box.this.checkOnWestBorder(event);
-        Box.this.pane.getController().selectQuestion(Box.this.questionItem);
+        boolean _equals = Objects.equal(type, BoxType.QUESTION);
+        if (_equals) {
+          Box.this.pane.getController().selectQuestion(Box.this.questionItem);
+        } else {
+          boolean _equals_1 = Objects.equal(type, BoxType.QR);
+          if (_equals_1) {
+            Box.this.pane.getController().selectQr();
+          }
+        }
         Box.this.pane.getController().setToResizeTool();
         ControllerFxEdition _controller = Box.this.pane.getController();
         _controller.setEdgeLoc(EdgeLocation.NONE);
