@@ -82,35 +82,33 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 */
 	def void readQRCodeImage(PDDocument pdDoc, String docPath, PDFRenderer pdfRenderer, int startPages, int endPages,
 		Pair<Float, Float> qrPos) throws IOException {
-		pagesMalLues = new ArrayList<Integer>()
+		pagesMalLues = new ArrayList<Integer>
 		for (page : startPages ..< endPages) {
-
 			// des fois (randoms) outofmemory
 			var BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 250, ImageType.GRAY)
-
 			val LuminanceSource source = new BufferedImageLuminanceSource(bim)
 			val BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source))
 			val MultiFormatReader mfr = new MultiFormatReader
-			val Result result = mfr.decodeWithState(bitmap)
 
+			val Result result = mfr.decodeWithState(bitmap)
 			val Pattern pattern = Pattern.compile("_")
 			val String[] items = pattern.split(result.text)
 
-			if (result !== null) {
-				val float orientation = qrCodeOrientation(result)
-				if (orientation <= -0.5f || orientation >= 0.5f) {
-					rotatePdf(pdDoc, docPath, page, orientation)
-				} else if (qrPos.key >= 0.0f && qrPos.value >= 0.0f) {
-					val Pair<Float, Float> position = qrCodePosition(result, bim.width, bim.height)
-					val diffX = qrPos.key - position.key
-					val diffY = position.value - qrPos.value
-					if (diffX <= -0.01f || diffX >= 0.01f || diffY <= -0.01f || diffY >= 0.01f) {
-						repositionPdf(pdDoc, docPath, page, diffX, diffY)
+			try {
+				if (result !== null) {
+					val float orientation = qrCodeOrientation(result)
+					val Pair<Float, Float> position = qrCodePosition(result, orientation, bim.width, bim.height)
+					if (orientation <= -0.5f || orientation >= 0.5f) {
+						rotatePdf(pdDoc, docPath, page, orientation)
+					}
+					if (qrPos.key >= 0.0f && qrPos.value >= 0.0f) {
+						val diffX = qrPos.key - position.key
+						val diffY = position.value - qrPos.value
+						if (diffX <= -0.01f || diffX >= 0.01f || diffY <= -0.01f || diffY >= 0.01f) {
+							repositionPdf(pdDoc, docPath, page, diffX, diffY)
+						}
 					}
 				}
-			}
-
-			try {
 				val Copie cop = new Copie(Integer.parseInt(items.get(items.size - 2)), page,
 					Integer.parseInt(items.get(items.size - 1)))
 
@@ -123,9 +121,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 			} finally {
 				treatedSheets++
 			}
-
-			// déréférencement de la variable, pour contrer le pb d'overflow de mémoire
-			bim = null
+			bim.flush
 			System.gc
 
 		}
@@ -166,20 +162,28 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param docHeight Hauteur du document où se trouve le QR code
 	 * @return Paire contenant les positions x et y du QR code
 	 */
-	private def Pair<Float, Float> qrCodePosition(Result result, float docWidth, float docHeight) {
+	private def Pair<Float, Float> qrCodePosition(Result result, float orientation, float docWidth, float docHeight) {
 		val ResultPoint[] resultPoints = result.resultPoints
 		val ResultPoint a = resultPoints.get(1)
 		val ResultPoint b = resultPoints.get(2)
 		val ResultPoint c = resultPoints.get(0)
-		var float x = (b.x + a.x) / 2
-		var float y = (c.y + a.y) / 2
+
+		val Pair<Float, Float> disorientedA = rotatePoint(new Pair<Float, Float>(a.x, a.y),
+			new Pair<Float, Float>(docWidth / 2, docHeight / 2), orientation)
+		val Pair<Float, Float> disorientedB = rotatePoint(new Pair<Float, Float>(b.x, b.y),
+			new Pair<Float, Float>(docWidth / 2, docHeight / 2), orientation)
+		val Pair<Float, Float> disorientedC = rotatePoint(new Pair<Float, Float>(c.x, c.y),
+			new Pair<Float, Float>(docWidth / 2, docHeight / 2), orientation)
+
+		var float x = (disorientedB.key + disorientedA.key) / 2
+		var float y = (disorientedC.value + disorientedA.value) / 2
 
 		// Point d'origine en haut à gauche
-		val double widthX2 = Math.pow(b.x - a.x, 2)
-		val double widthY2 = Math.pow(b.y - a.y, 2)
+		val double widthX2 = Math.pow(disorientedB.key - disorientedA.key, 2)
+		val double widthY2 = Math.pow(disorientedB.value - disorientedA.value, 2)
 		var double width = Math.sqrt(widthX2 + widthY2)
-		val double heightX2 = Math.pow(c.x - a.x, 2)
-		val double heightY2 = Math.pow(c.y - a.y, 2)
+		val double heightX2 = Math.pow(disorientedC.key - disorientedA.key, 2)
+		val double heightY2 = Math.pow(disorientedC.value - disorientedA.value, 2)
 		var double height = Math.sqrt(heightX2 + heightY2)
 		width /= (4.0f / 3.0f)
 		height /= (4.0f / 3.0f)
@@ -187,6 +191,23 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		y -= height as float
 
 		return new Pair<Float, Float>(x / docWidth, y / docHeight)
+	}
+
+	/**
+	 * Retourne l'image d'un point par une rotation (repère X de gauche à droite, Y du
+	 * haut vers le bas).
+	 * @param point Point à transformer
+	 * @param centre Centre de la rotation
+	 * @param angle Angle en degrés
+	 * @return Image de M par la rotation d'angle angle autour du centre
+	 */
+	private def Pair<Float, Float> rotatePoint(Pair<Float, Float> point, Pair<Float, Float> center, float angle) {
+		val angleRad = angle * Math.PI / 180
+		val xPoint = point.key - center.key
+		val yPoint = point.value - center.value
+		val x = xPoint * Math.cos(angleRad) + yPoint * Math.sin(angleRad) + center.key
+		val y = - xPoint * Math.sin(angleRad) + yPoint * Math.cos(angleRad) + center.value
+		return new Pair<Float, Float>(x as float, y as float)
 	}
 
 	/**

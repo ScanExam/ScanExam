@@ -126,13 +126,14 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
           final Result result = mfr.decodeWithState(bitmap);
           final Pattern pattern = Pattern.compile("_");
           final String[] items = pattern.split(result.getText());
-          if ((result != null)) {
-            final float orientation = this.qrCodeOrientation(result);
-            if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
-              this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
-            } else {
+          try {
+            if ((result != null)) {
+              final float orientation = this.qrCodeOrientation(result);
+              final Pair<Float, Float> position = this.qrCodePosition(result, orientation, bim.getWidth(), bim.getHeight());
+              if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
+                this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
+              }
               if ((((qrPos.getKey()).floatValue() >= 0.0f) && ((qrPos.getValue()).floatValue() >= 0.0f))) {
-                final Pair<Float, Float> position = this.qrCodePosition(result, bim.getWidth(), bim.getHeight());
                 Float _key = qrPos.getKey();
                 Float _key_1 = position.getKey();
                 final float diffX = ((_key).floatValue() - (_key_1).floatValue());
@@ -144,8 +145,6 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
                 }
               }
             }
-          }
-          try {
             int _size = ((List<String>)Conversions.doWrapArray(items)).size();
             int _minus = (_size - 2);
             int _parseInt = Integer.parseInt(items[_minus]);
@@ -167,7 +166,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
           } finally {
             this.treatedSheets++;
           }
-          bim = null;
+          bim.flush();
           System.gc();
         }
       }
@@ -220,46 +219,94 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param docHeight Hauteur du document où se trouve le QR code
    * @return Paire contenant les positions x et y du QR code
    */
-  private Pair<Float, Float> qrCodePosition(final Result result, final float docWidth, final float docHeight) {
+  private Pair<Float, Float> qrCodePosition(final Result result, final float orientation, final float docWidth, final float docHeight) {
     final ResultPoint[] resultPoints = result.getResultPoints();
     final ResultPoint a = resultPoints[1];
     final ResultPoint b = resultPoints[2];
     final ResultPoint c = resultPoints[0];
-    float _x = b.getX();
-    float _x_1 = a.getX();
-    float _plus = (_x + _x_1);
+    float _x = a.getX();
+    float _y = a.getY();
+    Pair<Float, Float> _pair = new Pair<Float, Float>(Float.valueOf(_x), Float.valueOf(_y));
+    Pair<Float, Float> _pair_1 = new Pair<Float, Float>(Float.valueOf((docWidth / 2)), Float.valueOf((docHeight / 2)));
+    final Pair<Float, Float> disorientedA = this.rotatePoint(_pair, _pair_1, orientation);
+    float _x_1 = b.getX();
+    float _y_1 = b.getY();
+    Pair<Float, Float> _pair_2 = new Pair<Float, Float>(Float.valueOf(_x_1), Float.valueOf(_y_1));
+    Pair<Float, Float> _pair_3 = new Pair<Float, Float>(Float.valueOf((docWidth / 2)), Float.valueOf((docHeight / 2)));
+    final Pair<Float, Float> disorientedB = this.rotatePoint(_pair_2, _pair_3, orientation);
+    float _x_2 = c.getX();
+    float _y_2 = c.getY();
+    Pair<Float, Float> _pair_4 = new Pair<Float, Float>(Float.valueOf(_x_2), Float.valueOf(_y_2));
+    Pair<Float, Float> _pair_5 = new Pair<Float, Float>(Float.valueOf((docWidth / 2)), Float.valueOf((docHeight / 2)));
+    final Pair<Float, Float> disorientedC = this.rotatePoint(_pair_4, _pair_5, orientation);
+    Float _key = disorientedB.getKey();
+    Float _key_1 = disorientedA.getKey();
+    float _plus = ((_key).floatValue() + (_key_1).floatValue());
     float x = (_plus / 2);
-    float _y = c.getY();
-    float _y_1 = a.getY();
-    float _plus_1 = (_y + _y_1);
+    Float _value = disorientedC.getValue();
+    Float _value_1 = disorientedA.getValue();
+    float _plus_1 = ((_value).floatValue() + (_value_1).floatValue());
     float y = (_plus_1 / 2);
-    float _x_2 = b.getX();
-    float _x_3 = a.getX();
-    float _minus = (_x_2 - _x_3);
+    Float _key_2 = disorientedB.getKey();
+    Float _key_3 = disorientedA.getKey();
+    float _minus = ((_key_2).floatValue() - (_key_3).floatValue());
     final double widthX2 = Math.pow(_minus, 2);
-    float _y_2 = b.getY();
-    float _y_3 = a.getY();
-    float _minus_1 = (_y_2 - _y_3);
+    Float _value_2 = disorientedB.getValue();
+    Float _value_3 = disorientedA.getValue();
+    float _minus_1 = ((_value_2).floatValue() - (_value_3).floatValue());
     final double widthY2 = Math.pow(_minus_1, 2);
     double width = Math.sqrt((widthX2 + widthY2));
-    float _x_4 = c.getX();
-    float _x_5 = a.getX();
-    float _minus_2 = (_x_4 - _x_5);
+    Float _key_4 = disorientedC.getKey();
+    Float _key_5 = disorientedA.getKey();
+    float _minus_2 = ((_key_4).floatValue() - (_key_5).floatValue());
     final double heightX2 = Math.pow(_minus_2, 2);
-    float _y_4 = c.getY();
-    float _y_5 = a.getY();
-    float _minus_3 = (_y_4 - _y_5);
+    Float _value_4 = disorientedC.getValue();
+    Float _value_5 = disorientedA.getValue();
+    float _minus_3 = ((_value_4).floatValue() - (_value_5).floatValue());
     final double heightY2 = Math.pow(_minus_3, 2);
     double height = Math.sqrt((heightX2 + heightY2));
     double _width = width;
     width = (_width / (4.0f / 3.0f));
     double _height = height;
     height = (_height / (4.0f / 3.0f));
-    float _x_6 = x;
-    x = (_x_6 - ((float) width));
-    float _y_6 = y;
-    y = (_y_6 - ((float) height));
+    float _x_3 = x;
+    x = (_x_3 - ((float) width));
+    float _y_3 = y;
+    y = (_y_3 - ((float) height));
     return new Pair<Float, Float>(Float.valueOf((x / docWidth)), Float.valueOf((y / docHeight)));
+  }
+  
+  /**
+   * Retourne l'image d'un point par une rotation (repère X de gauche à droite, Y du
+   * haut vers le bas).
+   * @param point Point à transformer
+   * @param centre Centre de la rotation
+   * @param angle Angle en degrés
+   * @return Image de M par la rotation d'angle angle autour du centre
+   */
+  private Pair<Float, Float> rotatePoint(final Pair<Float, Float> point, final Pair<Float, Float> center, final float angle) {
+    final double angleRad = ((angle * Math.PI) / 180);
+    Float _key = point.getKey();
+    Float _key_1 = center.getKey();
+    final float xPoint = ((_key).floatValue() - (_key_1).floatValue());
+    Float _value = point.getValue();
+    Float _value_1 = center.getValue();
+    final float yPoint = ((_value).floatValue() - (_value_1).floatValue());
+    double _cos = Math.cos(angleRad);
+    double _multiply = (xPoint * _cos);
+    double _sin = Math.sin(angleRad);
+    double _multiply_1 = (yPoint * _sin);
+    double _plus = (_multiply + _multiply_1);
+    Float _key_2 = center.getKey();
+    final double x = (_plus + (_key_2).floatValue());
+    double _sin_1 = Math.sin(angleRad);
+    double _multiply_2 = ((-xPoint) * _sin_1);
+    double _cos_1 = Math.cos(angleRad);
+    double _multiply_3 = (yPoint * _cos_1);
+    double _plus_1 = (_multiply_2 + _multiply_3);
+    Float _value_2 = center.getValue();
+    final double y = (_plus_1 + (_value_2).floatValue());
+    return new Pair<Float, Float>(Float.valueOf(((float) x)), Float.valueOf(((float) y)));
   }
   
   /**
