@@ -1,38 +1,34 @@
 package fr.istic.tools.scanexam.qrCode.reader
 
-import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
-import com.google.zxing.DecodeHintType
 import com.google.zxing.LuminanceSource
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.NotFoundException
 import com.google.zxing.Result
+import com.google.zxing.ResultPoint
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource
 import com.google.zxing.common.HybridBinarizer
-import fr.istic.tools.scanexam.utils.DataFactory
 import fr.istic.tools.scanexam.core.StudentSheet
+import fr.istic.tools.scanexam.utils.DataFactory
 import java.awt.image.BufferedImage
 import java.io.IOException
-import java.util.HashMap
+import java.io.InputStream
+import java.util.ArrayList
+import java.util.Collections
 import java.util.HashSet
-import java.util.Map
+import java.util.List
 import java.util.Set
 import java.util.regex.Pattern
 import java.util.stream.Collectors
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.rendering.ImageType
-import org.apache.pdfbox.rendering.PDFRenderer
-import java.util.List
-import java.util.ArrayList
-import java.util.Collections
-import java.io.InputStream
+import javafx.util.Pair
 import org.apache.logging.log4j.LogManager
-import org.apache.pdfbox.pdmodel.common.PDRectangle
-import org.apache.pdfbox.util.Matrix
+import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
-import com.google.zxing.ResultPoint
-import javafx.util.Pair
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.rendering.ImageType
+import org.apache.pdfbox.rendering.PDFRenderer
+import org.apache.pdfbox.util.Matrix
 
 class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
@@ -90,23 +86,21 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 			val BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source))
 			val MultiFormatReader mfr = new MultiFormatReader
 
-			val Result result = mfr.decodeWithState(bitmap)
-			val Pattern pattern = Pattern.compile("_")
-			val String[] items = pattern.split(result.text)
-
 			try {
-				if (result !== null) {
-					val float orientation = qrCodeOrientation(result)
-					val Pair<Float, Float> position = qrCodePosition(result, orientation, bim.width, bim.height)
-					if (orientation <= -0.5f || orientation >= 0.5f) {
-						rotatePdf(pdDoc, docPath, page, orientation)
-					}
-					if (qrPos.key >= 0.0f && qrPos.value >= 0.0f) {
-						val diffX = qrPos.key - position.key
-						val diffY = position.value - qrPos.value
-						if (diffX <= -0.01f || diffX >= 0.01f || diffY <= -0.01f || diffY >= 0.01f) {
-							repositionPdf(pdDoc, docPath, page, diffX, diffY)
-						}
+				val Result result = mfr.decodeWithState(bitmap)
+				val Pattern pattern = Pattern.compile("_")
+				val String[] items = pattern.split(result.text)
+
+				val float orientation = qrCodeOrientation(result)
+				val Pair<Float, Float> position = qrCodePosition(result, orientation, bim.width, bim.height)
+				if (orientation <= -0.5f || orientation >= 0.5f) {
+					rotatePdf(pdDoc, docPath, page, orientation)
+				}
+				if (qrPos.key >= 0.0f && qrPos.value >= 0.0f) {
+					val diffX = qrPos.key - position.key
+					val diffY = position.value - qrPos.value
+					if (diffX <= -0.01f || diffX >= 0.01f || diffY <= -0.01f || diffY >= 0.01f) {
+						repositionPdf(pdDoc, docPath, page, diffX, diffY)
 					}
 				}
 				val Copie cop = new Copie(Integer.parseInt(items.get(items.size - 2)), page,
@@ -115,7 +109,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 				synchronized (sheets) {
 					addCopie(cop)
 				}
-			} catch (ArrayIndexOutOfBoundsException e) {
+			} catch (ArrayIndexOutOfBoundsException | NotFoundException e) {
 				pagesMalLues.add(page)
 				logger.error("Cannot read QRCode in page " + page, e)
 			} finally {
@@ -246,32 +240,6 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		cs.transform(Matrix.getTranslateInstance(offsetX * pdPage.mediaBox.width, offsetY * pdPage.mediaBox.height))
 		cs.close
 		pdDoc.save(docPath)
-	}
-
-	/**
-	 * @param qrCodeimage la bufferedImage a décoder
-	 * @return le texte decode du QRCOde se trouvant dans qrCodeImage
-	 * @throws IOException
-	 * 
-	 * Décode le contenu de qrCodeImage et affiche le contenu
-	 * décodé dans le system.out
-	 */
-	def String decodeQRCodeBuffered(BufferedImage bufferedImage) throws IOException {
-		val LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage)
-		val BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source))
-
-		val Map<DecodeHintType, Object> map = new HashMap()
-		map.put(DecodeHintType.ALLOWED_EAN_EXTENSIONS, BarcodeFormat.QR_CODE)
-
-		try {
-			val MultiFormatReader mfr = new MultiFormatReader()
-			mfr.setHints(map)
-			val Result result = mfr.decodeWithState(bitmap)
-			return result.getText()
-		} catch (NotFoundException e) {
-			logger.error("No QR in this image", e)
-			return ""
-		}
 	}
 
 	/**
