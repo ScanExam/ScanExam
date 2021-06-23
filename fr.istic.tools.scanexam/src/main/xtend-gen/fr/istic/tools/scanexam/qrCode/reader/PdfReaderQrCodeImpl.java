@@ -1,8 +1,6 @@
 package fr.istic.tools.scanexam.qrCode.reader;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
-import com.google.zxing.DecodeHintType;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
@@ -23,10 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -112,66 +108,60 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param qrPos Position où devrait ce trouver le qr code
    */
   public void readQRCodeImage(final PDDocument pdDoc, final String docPath, final PDFRenderer pdfRenderer, final int startPages, final int endPages, final Pair<Float, Float> qrPos) throws IOException {
-    try {
-      ArrayList<Integer> _arrayList = new ArrayList<Integer>();
-      this.pagesMalLues = _arrayList;
-      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(startPages, endPages, true);
-      for (final Integer page : _doubleDotLessThan) {
-        {
-          BufferedImage bim = pdfRenderer.renderImageWithDPI((page).intValue(), 250, ImageType.GRAY);
-          final LuminanceSource source = new BufferedImageLuminanceSource(bim);
-          HybridBinarizer _hybridBinarizer = new HybridBinarizer(source);
-          final BinaryBitmap bitmap = new BinaryBitmap(_hybridBinarizer);
-          final MultiFormatReader mfr = new MultiFormatReader();
+    ArrayList<Integer> _arrayList = new ArrayList<Integer>();
+    this.pagesMalLues = _arrayList;
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(startPages, endPages, true);
+    for (final Integer page : _doubleDotLessThan) {
+      {
+        BufferedImage bim = pdfRenderer.renderImageWithDPI((page).intValue(), 250, ImageType.GRAY);
+        final LuminanceSource source = new BufferedImageLuminanceSource(bim);
+        HybridBinarizer _hybridBinarizer = new HybridBinarizer(source);
+        final BinaryBitmap bitmap = new BinaryBitmap(_hybridBinarizer);
+        final MultiFormatReader mfr = new MultiFormatReader();
+        try {
           final Result result = mfr.decodeWithState(bitmap);
           final Pattern pattern = Pattern.compile("_");
           final String[] items = pattern.split(result.getText());
-          try {
-            if ((result != null)) {
-              final float orientation = this.qrCodeOrientation(result);
-              final Pair<Float, Float> position = this.qrCodePosition(result, orientation, bim.getWidth(), bim.getHeight());
-              if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
-                this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
-              }
-              if ((((qrPos.getKey()).floatValue() >= 0.0f) && ((qrPos.getValue()).floatValue() >= 0.0f))) {
-                Float _key = qrPos.getKey();
-                Float _key_1 = position.getKey();
-                final float diffX = ((_key).floatValue() - (_key_1).floatValue());
-                Float _value = position.getValue();
-                Float _value_1 = qrPos.getValue();
-                final float diffY = ((_value).floatValue() - (_value_1).floatValue());
-                if (((((diffX <= (-0.01f)) || (diffX >= 0.01f)) || (diffY <= (-0.01f))) || (diffY >= 0.01f))) {
-                  this.repositionPdf(pdDoc, docPath, (page).intValue(), diffX, diffY);
-                }
-              }
-            }
-            int _size = ((List<String>)Conversions.doWrapArray(items)).size();
-            int _minus = (_size - 2);
-            int _parseInt = Integer.parseInt(items[_minus]);
-            int _size_1 = ((List<String>)Conversions.doWrapArray(items)).size();
-            int _minus_1 = (_size_1 - 1);
-            int _parseInt_1 = Integer.parseInt(items[_minus_1]);
-            final Copie cop = new Copie(_parseInt, (page).intValue(), _parseInt_1);
-            synchronized (this.sheets) {
-              this.addCopie(cop);
-            }
-          } catch (final Throwable _t) {
-            if (_t instanceof ArrayIndexOutOfBoundsException) {
-              final ArrayIndexOutOfBoundsException e = (ArrayIndexOutOfBoundsException)_t;
-              this.pagesMalLues.add(page);
-              this.logger.error(("Cannot read QRCode in page " + page), e);
-            } else {
-              throw Exceptions.sneakyThrow(_t);
-            }
-          } finally {
-            this.treatedSheets++;
+          final float orientation = this.qrCodeOrientation(result);
+          final Pair<Float, Float> position = this.qrCodePosition(result, orientation, bim.getWidth(), bim.getHeight());
+          if (((orientation <= (-0.5f)) || (orientation >= 0.5f))) {
+            this.rotatePdf(pdDoc, docPath, (page).intValue(), orientation);
           }
-          bim.flush();
-          System.gc();
+          if ((((qrPos.getKey()).floatValue() >= 0.0f) && ((qrPos.getValue()).floatValue() >= 0.0f))) {
+            Float _key = qrPos.getKey();
+            Float _key_1 = position.getKey();
+            final float diffX = ((_key).floatValue() - (_key_1).floatValue());
+            Float _value = position.getValue();
+            Float _value_1 = qrPos.getValue();
+            final float diffY = ((_value).floatValue() - (_value_1).floatValue());
+            if (((((diffX <= (-0.01f)) || (diffX >= 0.01f)) || (diffY <= (-0.01f))) || (diffY >= 0.01f))) {
+              this.repositionPdf(pdDoc, docPath, (page).intValue(), diffX, diffY);
+            }
+          }
+          int _size = ((List<String>)Conversions.doWrapArray(items)).size();
+          int _minus = (_size - 2);
+          int _parseInt = Integer.parseInt(items[_minus]);
+          int _size_1 = ((List<String>)Conversions.doWrapArray(items)).size();
+          int _minus_1 = (_size_1 - 1);
+          int _parseInt_1 = Integer.parseInt(items[_minus_1]);
+          final Copie cop = new Copie(_parseInt, (page).intValue(), _parseInt_1);
+          synchronized (this.sheets) {
+            this.addCopie(cop);
+          }
+        } catch (final Throwable _t) {
+          if (_t instanceof ArrayIndexOutOfBoundsException || _t instanceof NotFoundException) {
+            final Exception e = (Exception)_t;
+            this.pagesMalLues.add(page);
+            this.logger.error(("Cannot read QRCode in page " + page), e);
+          } else {
+            throw Exceptions.sneakyThrow(_t);
+          }
+        } finally {
+          this.treatedSheets++;
         }
+        bim.flush();
+        System.gc();
       }
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
     }
   }
   
@@ -362,36 +352,6 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
       pdDoc.save(docPath);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  /**
-   * @param qrCodeimage la bufferedImage a décoder
-   * @return le texte decode du QRCOde se trouvant dans qrCodeImage
-   * @throws IOException
-   * 
-   * Décode le contenu de qrCodeImage et affiche le contenu
-   * décodé dans le system.out
-   */
-  public String decodeQRCodeBuffered(final BufferedImage bufferedImage) throws IOException {
-    final LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
-    HybridBinarizer _hybridBinarizer = new HybridBinarizer(source);
-    final BinaryBitmap bitmap = new BinaryBitmap(_hybridBinarizer);
-    final Map<DecodeHintType, Object> map = new HashMap<DecodeHintType, Object>();
-    map.put(DecodeHintType.ALLOWED_EAN_EXTENSIONS, BarcodeFormat.QR_CODE);
-    try {
-      final MultiFormatReader mfr = new MultiFormatReader();
-      mfr.setHints(map);
-      final Result result = mfr.decodeWithState(bitmap);
-      return result.getText();
-    } catch (final Throwable _t) {
-      if (_t instanceof NotFoundException) {
-        final NotFoundException e = (NotFoundException)_t;
-        this.logger.error("No QR in this image", e);
-        return "";
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
     }
   }
   
