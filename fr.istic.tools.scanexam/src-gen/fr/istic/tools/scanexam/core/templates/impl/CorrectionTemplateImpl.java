@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getInformations <em>Informations</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getStudentsheets <em>Studentsheets</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getFailedPages <em>Failed Pages</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getUncompleteStudentSheets <em>Uncomplete Student Sheets</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.impl.CorrectionTemplateImpl#getEncodedDocument <em>Encoded Document</em>}</li>
  * </ul>
  *
@@ -71,6 +72,16 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected EList<Integer> failedPages;
+
+	/**
+	 * The cached value of the '{@link #getUncompleteStudentSheets() <em>Uncomplete Student Sheets</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUncompleteStudentSheets()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StudentSheet> uncompleteStudentSheets;
 
 	/**
 	 * The default value of the '{@link #getEncodedDocument() <em>Encoded Document</em>}' attribute.
@@ -152,6 +163,18 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<StudentSheet> getUncompleteStudentSheets() {
+		if (uncompleteStudentSheets == null) {
+			uncompleteStudentSheets = new EObjectContainmentEList<StudentSheet>(StudentSheet.class, this, TemplatesPackage.CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS);
+		}
+		return uncompleteStudentSheets;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getEncodedDocument() {
 		return encodedDocument;
 	}
@@ -180,6 +203,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return ((InternalEList<?>)getInformations()).basicRemove(otherEnd, msgs);
 			case TemplatesPackage.CORRECTION_TEMPLATE__STUDENTSHEETS:
 				return ((InternalEList<?>)getStudentsheets()).basicRemove(otherEnd, msgs);
+			case TemplatesPackage.CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS:
+				return ((InternalEList<?>)getUncompleteStudentSheets()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -198,6 +223,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return getStudentsheets();
 			case TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES:
 				return getFailedPages();
+			case TemplatesPackage.CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS:
+				return getUncompleteStudentSheets();
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return getEncodedDocument();
 		}
@@ -225,6 +252,10 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				getFailedPages().clear();
 				getFailedPages().addAll((Collection<? extends Integer>)newValue);
 				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS:
+				getUncompleteStudentSheets().clear();
+				getUncompleteStudentSheets().addAll((Collection<? extends StudentSheet>)newValue);
+				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument((String)newValue);
 				return;
@@ -249,6 +280,9 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 			case TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES:
 				getFailedPages().clear();
 				return;
+			case TemplatesPackage.CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS:
+				getUncompleteStudentSheets().clear();
+				return;
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				setEncodedDocument(ENCODED_DOCUMENT_EDEFAULT);
 				return;
@@ -270,6 +304,8 @@ public class CorrectionTemplateImpl extends MinimalEObjectImpl.Container impleme
 				return studentsheets != null && !studentsheets.isEmpty();
 			case TemplatesPackage.CORRECTION_TEMPLATE__FAILED_PAGES:
 				return failedPages != null && !failedPages.isEmpty();
+			case TemplatesPackage.CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS:
+				return uncompleteStudentSheets != null && !uncompleteStudentSheets.isEmpty();
 			case TemplatesPackage.CORRECTION_TEMPLATE__ENCODED_DOCUMENT:
 				return ENCODED_DOCUMENT_EDEFAULT == null ? encodedDocument != null : !ENCODED_DOCUMENT_EDEFAULT.equals(encodedDocument);
 		}

@@ -32,10 +32,12 @@ public interface ServiceGraduation extends Service {
   
   /**
    * Crée une nouvelle correction à partir d'une liste de StudentSheets
-   * @params studentSheets une liste de StudenSheet
+   * @param studentSheets une liste de StudenSheet
+   * @param failedPages la liste des pages mal lues
+   * @param uncompleteStudentSheets les studentSheets incomplètes
    * @returns "true" si la correction a pu être créée, "false" sinon
    */
-  boolean initializeCorrection(final Collection<StudentSheet> studentSheets, final Collection<Integer> failedPages);
+  boolean initializeCorrection(final Collection<StudentSheet> studentSheets, final Collection<Integer> failedPages, final Collection<StudentSheet> uncompleteStudentSheets);
   
   int getAbsolutePageNumber(final int studentId, final int offset);
   

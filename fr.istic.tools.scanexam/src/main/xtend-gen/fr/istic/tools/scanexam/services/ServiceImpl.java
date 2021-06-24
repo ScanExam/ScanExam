@@ -46,6 +46,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -133,21 +134,11 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @returns "true" si la correction a pu être créée, "false" sinon
    */
   @Override
-  public boolean initializeCorrection(final Collection<StudentSheet> studentSheets, final Collection<Integer> failedPages) {
+  public boolean initializeCorrection(final Collection<StudentSheet> studentSheets, final Collection<Integer> failedPages, final Collection<StudentSheet> uncompleteStudentSheets) {
     this.graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate();
     try {
       for (final StudentSheet sheet : studentSheets) {
-        for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
-          {
-            final Page examPage = this.getPage(i);
-            for (int j = 0; (j < examPage.getQuestions().size()); j++) {
-              {
-                Grade grade = CoreFactory.eINSTANCE.createGrade();
-                sheet.getGrades().add(grade);
-              }
-            }
-          }
-        }
+        this.initSheet(sheet);
       }
       final Function1<StudentSheet, Integer> _function = (StudentSheet s) -> {
         return Integer.valueOf(s.getId());
@@ -157,12 +148,30 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
         return a;
       };
       this.graduationTemplate.getFailedPages().addAll(IterableExtensions.<Integer, Integer>sortBy(failedPages, _function_1));
+      final Function1<StudentSheet, Integer> _function_2 = (StudentSheet s) -> {
+        return Integer.valueOf(s.getId());
+      };
+      this.graduationTemplate.getUncompleteStudentSheets().addAll(IterableExtensions.<StudentSheet, Integer>sortBy(uncompleteStudentSheets, _function_2));
       return true;
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         return false;
       } else {
         throw Exceptions.sneakyThrow(_t);
+      }
+    }
+  }
+  
+  public void initSheet(final StudentSheet sheet) {
+    for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
+      {
+        final Page examPage = this.getPage(i);
+        for (int j = 0; (j < examPage.getQuestions().size()); j++) {
+          {
+            Grade grade = CoreFactory.eINSTANCE.createGrade();
+            sheet.getGrades().add(grade);
+          }
+        }
       }
     }
   }
@@ -235,7 +244,13 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   public void setStudentSheets(final Collection<StudentSheet> studentSheets) {
     this.graduationTemplate.getStudentsheets().clear();
+    int _size = studentSheets.size();
+    String _plus = ("avant ajout (le set) " + Integer.valueOf(_size));
+    InputOutput.<String>println(_plus);
     this.graduationTemplate.getStudentsheets().addAll(studentSheets);
+    int _size_1 = this.graduationTemplate.getStudentsheets().size();
+    String _plus_1 = ("après ajout : " + Integer.valueOf(_size_1));
+    InputOutput.<String>println(_plus_1);
   }
   
   /**
@@ -245,7 +260,12 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    */
   @Override
   public void addPageInStudentSheet(final int id, final int page) {
-    Collection<StudentSheet> temp = this.getStudentSheets();
+    Collection<StudentSheet> temp = new ArrayList<StudentSheet>();
+    Collections.<StudentSheet>addAll(temp, ((StudentSheet[])Conversions.unwrapArray(this.graduationTemplate.getUncompleteStudentSheets(), StudentSheet.class)));
+    boolean found = false;
+    int _size = temp.size();
+    String _plus = ("temp size = " + Integer.valueOf(_size));
+    InputOutput.<String>println(_plus);
     for (final StudentSheet sheet : temp) {
       int _id = sheet.getId();
       boolean _equals = (_id == id);
@@ -254,7 +274,13 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
         Collections.<Integer>sort(sheet.getPosPage());
       }
     }
-    this.setStudentSheets(temp);
+    if ((!found)) {
+    } else {
+      int _size_1 = temp.size();
+      String _plus_1 = ("après modif de temp : " + Integer.valueOf(_size_1));
+      InputOutput.<String>println(_plus_1);
+      this.setStudentSheets(temp);
+    }
   }
   
   /**

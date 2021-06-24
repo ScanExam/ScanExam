@@ -94,13 +94,22 @@ public interface TemplatesPackage extends EPackage {
 	int CORRECTION_TEMPLATE__FAILED_PAGES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Uncomplete Student Sheets</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS = 3;
+
+	/**
 	 * The feature id for the '<em><b>Encoded Document</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 3;
+	int CORRECTION_TEMPLATE__ENCODED_DOCUMENT = 4;
 
 	/**
 	 * The number of structural features of the '<em>Correction Template</em>' class.
@@ -109,7 +118,7 @@ public interface TemplatesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CORRECTION_TEMPLATE_FEATURE_COUNT = 4;
+	int CORRECTION_TEMPLATE_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Correction Template</em>' class.
@@ -211,6 +220,17 @@ public interface TemplatesPackage extends EPackage {
 	EAttribute getCorrectionTemplate_FailedPages();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getUncompleteStudentSheets <em>Uncomplete Student Sheets</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Uncomplete Student Sheets</em>'.
+	 * @see fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getUncompleteStudentSheets()
+	 * @see #getCorrectionTemplate()
+	 * @generated
+	 */
+	EReference getCorrectionTemplate_UncompleteStudentSheets();
+
+	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -309,6 +329,14 @@ public interface TemplatesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CORRECTION_TEMPLATE__FAILED_PAGES = eINSTANCE.getCorrectionTemplate_FailedPages();
+
+		/**
+		 * The meta object literal for the '<em><b>Uncomplete Student Sheets</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS = eINSTANCE.getCorrectionTemplate_UncompleteStudentSheets();
 
 		/**
 		 * The meta object literal for the '<em><b>Encoded Document</b></em>' attribute feature.

@@ -289,7 +289,7 @@ public class ControllerGraduationCreator {
    * @param file le PDF
    */
   public void onFinish(final PdfReader reader, final File file) {
-    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages());
+    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages(), reader.getUncompleteStudentSheets());
     this.serviceGraduation.setExamName(this.txtFldGraduationName.getText());
     this.controllerGraduation.getPdfManager().create(file);
     this.controllerGraduation.setToLoaded();
