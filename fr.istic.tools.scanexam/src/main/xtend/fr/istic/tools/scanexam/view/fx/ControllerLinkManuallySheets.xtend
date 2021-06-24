@@ -25,6 +25,8 @@ import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
 import javafx.geometry.Insets
 import javafx.scene.layout.Background
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation
 
 /** 
  * Controlleur de l'UI qui permet de réassigner des pages à des copies manuellement
@@ -62,6 +64,9 @@ class ControllerLinkManuallySheets {
 	//le composant liste
 	var FailedPageItemList pageItemList
 	
+	//le controller de correction
+	var ControllerFxGraduation controllerGrad
+	
 	/********************
 	 ***** METHODES *****
 	 ********************/
@@ -69,8 +74,9 @@ class ControllerLinkManuallySheets {
 	 /**
 	  * Initialise la fenêtre
 	  */
-	 def void init(ServiceGraduation serviceGraduation, PdfManager pdfManager){
+	 def void init(ServiceGraduation serviceGraduation, PdfManager pdfManager, ControllerFxGraduation controllerGraduation){
 		service = serviceGraduation	
+		controllerGrad = controllerGraduation
 		failedPages = new ArrayList<Integer>(service.failedPages)
 		indexCurrentPage = 0
 		
@@ -110,13 +116,17 @@ class ControllerLinkManuallySheets {
 				val id = Integer.parseInt(split.get(0))
 				val page = Integer.parseInt(split.get(1))
 				
-				service.addPageInStudentSheet(id, page)
+				service.addPageInStudentSheet(id - 1, page)
 				
 				service.failedPages.remove(failedPages.get(item))
 				
 			}
 	 	}
 	 	
+	 	//TODO FIXME faire que le focus se fasse bien sur le bon student et que la page affichée soit celle de l'étudiant à la question courante
+	 	controllerGrad.studentList.clearItems
+	 	controllerGrad.loadStudents
+	 	controllerGrad.focusStudent(controllerGrad.studentList.children.get(0) as StudentItemGraduation)
 	 	quit(e)
 	 }
 	 

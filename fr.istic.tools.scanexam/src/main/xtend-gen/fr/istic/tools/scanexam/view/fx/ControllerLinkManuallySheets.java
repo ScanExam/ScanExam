@@ -3,6 +3,8 @@ package fr.istic.tools.scanexam.view.fx;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.view.fx.FailedPageItemList;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,12 +52,15 @@ public class ControllerLinkManuallySheets {
   
   private FailedPageItemList pageItemList;
   
+  private ControllerFxGraduation controllerGrad;
+  
   /**
    * Initialise la fenêtre
    */
-  public void init(final ServiceGraduation serviceGraduation, final PdfManager pdfManager) {
+  public void init(final ServiceGraduation serviceGraduation, final PdfManager pdfManager, final ControllerFxGraduation controllerGraduation) {
     try {
       this.service = serviceGraduation;
+      this.controllerGrad = controllerGraduation;
       Collection<Integer> _failedPages = this.service.getFailedPages();
       ArrayList<Integer> _arrayList = new ArrayList<Integer>(_failedPages);
       this.failedPages = _arrayList;
@@ -100,11 +105,15 @@ public class ControllerLinkManuallySheets {
         if (_equals) {
           final int id = Integer.parseInt(split[0]);
           final int page = Integer.parseInt(split[1]);
-          this.service.addPageInStudentSheet(id, page);
+          this.service.addPageInStudentSheet((id - 1), page);
           this.service.getFailedPages().remove(this.failedPages.get((item).intValue()));
         }
       }
     }
+    this.controllerGrad.getStudentList().clearItems();
+    this.controllerGrad.loadStudents();
+    Node _get = this.controllerGrad.getStudentList().getChildren().get(0);
+    this.controllerGrad.focusStudent(((StudentItemGraduation) _get));
     this.quit(e);
   }
   

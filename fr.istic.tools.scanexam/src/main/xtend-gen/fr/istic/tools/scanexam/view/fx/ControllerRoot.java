@@ -236,7 +236,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerLinkManuallySheets>getController().init(this.serviceGraduation, this.graduationController.getPdfManager());
+      loader.<ControllerLinkManuallySheets>getController().init(this.serviceGraduation, this.graduationController.getPdfManager(), this.graduationController);
       Scene _scene = new Scene(view);
       dialog.setScene(_scene);
       dialog.setResizable(false);

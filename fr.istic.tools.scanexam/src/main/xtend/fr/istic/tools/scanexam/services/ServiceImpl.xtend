@@ -183,17 +183,6 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 	
 	/**
-	 * définie une nouvelle collection de studentsheets
-	 * @param la collection qui va remplacer l'ancienne
-	 */
-	def void setStudentSheets(Collection<StudentSheet> studentSheets){
-		graduationTemplate.studentsheets.clear
-		println("avant ajout (le set) " + studentSheets.size)
-		graduationTemplate.studentsheets.addAll(studentSheets)
-		println("après ajout : " + graduationTemplate.studentsheets.size)
-	}
-	
-	/**
 	 * ajoute une page en plus dans une copie
 	 * @param id de la copie
 	 * @param numéro de la page à ajouter
@@ -202,24 +191,56 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		
 		var Collection<StudentSheet> temp = new ArrayList
 		Collections.addAll(temp, graduationTemplate.uncompleteStudentSheets)
+		
+		var boolean complete = false
 		var boolean found = false
 		println("temp size = " + temp.size)
-		//TODO penser au fait que ce soit la première page trouvée d'une student sheet
-		//ici on a que les studentsheet complete, il faut aller chercher dans les incomplètes afin de compléter au fur et a mesure
+		
 		for(sheet : temp){
+			println("sheet id : " + sheet.id + ", id : " + id)
 			if(sheet.id == id){
+				found = true
 				sheet.posPage.add(page)
+				var i = 0
+				while(i < sheet.posPage.size){//on retire un des -1 présent dans les uncompletes
+					if(sheet.posPage.get(i) == -1){
+						sheet.posPage.remove(i)
+						i = sheet.posPage.size + 1 //pour sortir
+					}
+					i++
+				}
 				Collections.sort(sheet.posPage)
-				
+
+				if(!sheet.posPage.contains(-1))
+					complete = true
 			}
 		}
 		
 		if(!found){//si pas trouvé dans les incomplètes
+			//ajouter la page dans une nouvelle studentsheet puis l'ajouter dans uncompletestudentsheets, et vérifier si elle est complète (sujet de une page)
+			val int[] pages = newIntArrayOfSize(templatePageAmount)
+			for (e : 0 ..< templatePageAmount) {
+				if(e == 0)
+					pages.set(e, page)
+				else
+					pages.set(e, -1)
+			}
+			Collections.sort(pages)
+			val dF = new DataFactory()
+			graduationTemplate.uncompleteStudentSheets.add(dF.createStudentSheet(id, pages))
+			if(!pages.contains(-1))
+					complete = true
 			
 		}
-		else{
-			println("après modif de temp : " + temp.size)
-			studentSheets = temp
+		
+		if(complete){
+			val completeSheet = graduationTemplate.uncompleteStudentSheets.filter[s|s.id==id].get(0)
+			
+			initSheet(completeSheet)
+			println("studentsheets size " + graduationTemplate.studentsheets.size)
+			graduationTemplate.studentsheets.add(completeSheet)
+			
+			println("studentsheets size " + graduationTemplate.studentsheets.size)
 		}
 		
 	}

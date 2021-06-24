@@ -41,6 +41,7 @@ import javafx.scene.Parent
 import javafx.stage.Stage
 import javafx.scene.Scene
 import fr.istic.tools.scanexam.utils.ResourcesUtils
+import java.util.Collections
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -410,6 +411,7 @@ class ControllerFxGraduation {
             stage.show
         }
         catch(IOException e){
+        	//TODO faire mieux pour le catch
             println("c'est cassé")
         }
         catch(NullPointerException e){
@@ -618,7 +620,7 @@ class ControllerFxGraduation {
 	def void loadStudents(){
 		logger.info("Loading Students")
 		var ids = studentIds
-		
+		Collections.sort(ids)
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
 			var name = service.getStudentName(i).orElse("");

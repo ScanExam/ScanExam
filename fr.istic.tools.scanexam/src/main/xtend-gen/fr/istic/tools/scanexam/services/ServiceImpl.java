@@ -41,6 +41,7 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.xbase.lib.ArrayExtensions;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
@@ -239,21 +240,6 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * définie une nouvelle collection de studentsheets
-   * @param la collection qui va remplacer l'ancienne
-   */
-  public void setStudentSheets(final Collection<StudentSheet> studentSheets) {
-    this.graduationTemplate.getStudentsheets().clear();
-    int _size = studentSheets.size();
-    String _plus = ("avant ajout (le set) " + Integer.valueOf(_size));
-    InputOutput.<String>println(_plus);
-    this.graduationTemplate.getStudentsheets().addAll(studentSheets);
-    int _size_1 = this.graduationTemplate.getStudentsheets().size();
-    String _plus_1 = ("après ajout : " + Integer.valueOf(_size_1));
-    InputOutput.<String>println(_plus_1);
-  }
-  
-  /**
    * ajoute une page en plus dans une copie
    * @param id de la copie
    * @param numéro de la page à ajouter
@@ -262,24 +248,80 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   public void addPageInStudentSheet(final int id, final int page) {
     Collection<StudentSheet> temp = new ArrayList<StudentSheet>();
     Collections.<StudentSheet>addAll(temp, ((StudentSheet[])Conversions.unwrapArray(this.graduationTemplate.getUncompleteStudentSheets(), StudentSheet.class)));
+    boolean complete = false;
     boolean found = false;
     int _size = temp.size();
     String _plus = ("temp size = " + Integer.valueOf(_size));
     InputOutput.<String>println(_plus);
     for (final StudentSheet sheet : temp) {
-      int _id = sheet.getId();
-      boolean _equals = (_id == id);
-      if (_equals) {
-        sheet.getPosPage().add(Integer.valueOf(page));
-        Collections.<Integer>sort(sheet.getPosPage());
+      {
+        int _id = sheet.getId();
+        String _plus_1 = ("sheet id : " + Integer.valueOf(_id));
+        String _plus_2 = (_plus_1 + ", id : ");
+        String _plus_3 = (_plus_2 + Integer.valueOf(id));
+        InputOutput.<String>println(_plus_3);
+        int _id_1 = sheet.getId();
+        boolean _equals = (_id_1 == id);
+        if (_equals) {
+          found = true;
+          sheet.getPosPage().add(Integer.valueOf(page));
+          int i = 0;
+          while ((i < sheet.getPosPage().size())) {
+            {
+              Integer _get = sheet.getPosPage().get(i);
+              boolean _equals_1 = ((_get).intValue() == (-1));
+              if (_equals_1) {
+                sheet.getPosPage().remove(i);
+                int _size_1 = sheet.getPosPage().size();
+                int _plus_4 = (_size_1 + 1);
+                i = _plus_4;
+              }
+              i++;
+            }
+          }
+          Collections.<Integer>sort(sheet.getPosPage());
+          boolean _contains = sheet.getPosPage().contains(Integer.valueOf((-1)));
+          boolean _not = (!_contains);
+          if (_not) {
+            complete = true;
+          }
+        }
       }
     }
     if ((!found)) {
-    } else {
-      int _size_1 = temp.size();
-      String _plus_1 = ("après modif de temp : " + Integer.valueOf(_size_1));
+      final int[] pages = new int[this.getTemplatePageAmount()];
+      int _templatePageAmount = this.getTemplatePageAmount();
+      ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _templatePageAmount, true);
+      for (final Integer e : _doubleDotLessThan) {
+        if (((e).intValue() == 0)) {
+          pages[(e).intValue()] = page;
+        } else {
+          pages[(e).intValue()] = (-1);
+        }
+      }
+      Collections.<Integer>sort(((List<Integer>)Conversions.doWrapArray(pages)));
+      final DataFactory dF = new DataFactory();
+      this.graduationTemplate.getUncompleteStudentSheets().add(dF.createStudentSheet(id, ((List<Integer>)Conversions.doWrapArray(pages))));
+      boolean _contains = ArrayExtensions.contains(pages, (-1));
+      boolean _not = (!_contains);
+      if (_not) {
+        complete = true;
+      }
+    }
+    if (complete) {
+      final Function1<StudentSheet, Boolean> _function = (StudentSheet s) -> {
+        int _id = s.getId();
+        return Boolean.valueOf((_id == id));
+      };
+      final StudentSheet completeSheet = ((StudentSheet[])Conversions.unwrapArray(IterableExtensions.<StudentSheet>filter(this.graduationTemplate.getUncompleteStudentSheets(), _function), StudentSheet.class))[0];
+      this.initSheet(completeSheet);
+      int _size_1 = this.graduationTemplate.getStudentsheets().size();
+      String _plus_1 = ("studentsheets size " + Integer.valueOf(_size_1));
       InputOutput.<String>println(_plus_1);
-      this.setStudentSheets(temp);
+      this.graduationTemplate.getStudentsheets().add(completeSheet);
+      int _size_2 = this.graduationTemplate.getStudentsheets().size();
+      String _plus_2 = ("studentsheets size " + Integer.valueOf(_size_2));
+      InputOutput.<String>println(_plus_2);
     }
   }
   

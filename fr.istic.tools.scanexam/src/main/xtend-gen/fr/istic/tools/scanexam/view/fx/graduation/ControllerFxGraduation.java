@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -816,6 +817,7 @@ public class ControllerFxGraduation {
   public void loadStudents() {
     ControllerFxGraduation.logger.info("Loading Students");
     LinkedList<Integer> ids = this.getStudentIds();
+    Collections.<Integer>sort(ids);
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
