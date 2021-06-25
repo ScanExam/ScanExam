@@ -52,6 +52,8 @@ class ControllerRoot implements Initializable {
 	@FXML
 	MenuItem pdfExportGradeButton;
 	@FXML
+	MenuItem linkManuallySheetsButton
+	@FXML
 	TabPane tabPane;
 
 	@Accessors
@@ -300,6 +302,13 @@ class ControllerRoot implements Initializable {
 	}
 
 	def init(ServiceEdition serviceEdition, ServiceGraduation serviceGraduation) {
+		/*
+		 * FIXME
+		 * la méthode graduationController.loadedModel.not ne vérifie pas si
+		 * un élément peut générer une NPE. Plusieurs exemples :
+		 * - pour l'export des notes : si le grader ne contient pas encore de notes : NPE
+		 * - pour lier les pages mal reconnues : si il n'y a pas de pages mal reconnues : NPE
+		 */
 		this.serviceEdition = serviceEdition
 		this.serviceGraduation = serviceGraduation
 		saveGraduationButton.disableProperty.bind(graduationController.loadedModel.not)
@@ -309,6 +318,7 @@ class ControllerRoot implements Initializable {
 		pdfExportButton.disableProperty.bind(graduationController.loadedModel.not)
 		sendMailButton.disableProperty.bind(graduationController.loadedModel.not)
 		pdfExportGradeButton.disableProperty.bind(graduationController.loadedModel.not)
+		linkManuallySheetsButton.disableProperty.bind(graduationController.loadedModel.not)
 	}
 
 	override initialize(URL location, ResourceBundle resources) {
