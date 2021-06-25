@@ -29,7 +29,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import javafx.scene.control.TabPane
 
 class ControllerRoot implements Initializable {
-	
+
 	@FXML
 	Tab correctorTab;
 	@FXML
@@ -50,49 +50,44 @@ class ControllerRoot implements Initializable {
 	@FXML
 	MenuItem sendMailButton;
 	@FXML
-	MenuItem pdfExportGradeButton;	
+	MenuItem pdfExportGradeButton;
 	@FXML
 	TabPane tabPane;
-	
-	
+
 	@Accessors
 	ControllerFxGraduation graduationController;
-	
+
 	@Accessors
 	ControllerFxEdition editionController;
-	
+
 	var ServiceEdition serviceEdition
 	var ServiceGraduation serviceGraduation
-	
+
 	static val logger = LogManager.logger
 
-	
-	
-	
-	def init(){
-		tabPane.selectionModel.selectedItemProperty.addListener([obs,oldVal,newVal | graduationController.changedTab])
+	def init() {
+		tabPane.selectionModel.selectedItemProperty.addListener([obs, oldVal, newVal|graduationController.changedTab])
 	}
-	
-	def setEditorNode(Node n){
+
+	def setEditorNode(Node n) {
 		editorTab.content = n
 	}
-	
-	def setGraduationNode(Node n){
+
+	def setGraduationNode(Node n) {
 		correctorTab.content = n
 	}
-	
+
 	@FXML
-	def loadTemplatePressedEditor(){
+	def loadTemplatePressedEditor() {
 		tabPane.getSelectionModel().select(editorTab)
 		editionController.loadTemplatePressed
 	}
-	
+
 	@FXML
 	def saveGraduation() {
 		graduationController.saveExam
 	}
-	
-	
+
 	@FXML
 	def loadTemplatePressedCorrector() {
 		tabPane.getSelectionModel().select(correctorTab)
@@ -102,12 +97,13 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, editionController, graduationController)
+		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, editionController,
+			graduationController)
 		dialog.setScene(new Scene(view, 384, 355))
 		dialog.setResizable(false)
 		dialog.show
 	}
-	
+
 	@FXML
 	def createNewTemplatePressed() {
 		tabPane.getSelectionModel().select(editorTab)
@@ -122,14 +118,14 @@ class ControllerRoot implements Initializable {
 		dialog.setResizable(false);
 		dialog.show
 	}
-	
+
 	@FXML
-	def SaveTemplatePressed(){
+	def SaveTemplatePressed() {
 		editionController.saveTemplatePressed
 	}
-	
+
 	@FXML
-	def loadStudentList() { 
+	def loadStudentList() {
 		val FXMLLoader loader = new FXMLLoader
 		loader.setResources(LanguageManager.currentBundle)
 		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"))
@@ -141,7 +137,7 @@ class ControllerRoot implements Initializable {
 		dialog.setResizable(false);
 		dialog.show
 	}
-	
+
 	@FXML
 	def updateConfig() {
 		val FXMLLoader loader = new FXMLLoader
@@ -155,33 +151,33 @@ class ControllerRoot implements Initializable {
 		dialog.setResizable(false);
 		dialog.show
 	}
-	
+
 	/**
 	 * TODO
 	 * Passer le "bouton trop cool" à un sous menu de la barre menu
 	 * Faire son initialisation du controller ici
 	 */
-	 @FXML
-	 def linkManuallySheets(){
-	 	val FXMLLoader loader = new FXMLLoader
-	 	loader.resources = LanguageManager.currentBundle
-	 	val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"))
+	@FXML
+	def linkManuallySheets() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.resources = LanguageManager.currentBundle
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"))
 		val Stage dialog = new Stage
-		//dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
+		// dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation, graduationController.pdfManager, graduationController)
+		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation, graduationController.pdfManager,
+			graduationController)
 		dialog.setScene(new Scene(view))
 		dialog.setResizable(false);
 		dialog.show
-	 }
-	
+	}
+
 	@FXML
 	def pdfExport() {
-		
+
 		// Vérification de copies avec aucun nom associé
-		
 		val nameList = serviceGraduation.studentNames
-		
+
 		if (nameList.empty) {
 			DialogMessageSender.sendTranslateDialog(
 				AlertType.WARNING,
@@ -191,24 +187,26 @@ class ControllerRoot implements Initializable {
 			);
 			return
 		}
-		
+
 		val studentSheets = serviceGraduation.studentSheets
 		val nbSheetWithoutName = if (!nameList.empty)
-			studentSheets.filter(x|!nameList.contains(x.studentName)).size as int
-		else
-			-1
-			
+				studentSheets.filter(x|!nameList.contains(x.studentName)).size as int
+			else
+				-1
+
 		DialogMessageSender.sendDialog(
-				AlertType.WARNING,
-				LanguageManager.translate("sendMail.noStudentDataHeader"),
-				nbSheetWithoutName > 1 ? String.format(LanguageManager.translate("sendMail.notAllStudent"),
-					nbSheetWithoutName) : LanguageManager.translate("sendMail.notAllStudent1"),
-				null
+			AlertType.WARNING,
+			LanguageManager.translate("sendMail.noStudentDataHeader"),
+			nbSheetWithoutName > 1
+				? String.format(LanguageManager.translate("sendMail.notAllStudent"), nbSheetWithoutName)
+				: LanguageManager.translate("sendMail.notAllStudent1"),
+			null
 		)
-			
-		//Sélection du dossier	
+
+		// Sélection du dossier	
 		var dirChooser = new DirectoryChooser
-		dirChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Documents")
+		dirChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
+			"Documents")
 		var directory = dirChooser.showDialog(new Stage)
 		if (directory === null) {
 			logger.warn("Directory not chosen")
@@ -217,7 +215,7 @@ class ControllerRoot implements Initializable {
 			graduationController.exportGraduationToPdf(directory)
 		}
 	}
-	
+
 	@FXML
 	def sendMail() {
 		val config = ConfigurationManager.instance
@@ -246,7 +244,7 @@ class ControllerRoot implements Initializable {
 			dialog.show
 		}
 	}
-	
+
 	@FXML
 	def loadStudentCopiesPressed() {
 		tabPane.getSelectionModel().select(correctorTab)
@@ -256,12 +254,13 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerGraduationCreator>controller.initialize(serviceGraduation, editionController, graduationController)
+		loader.<ControllerGraduationCreator>controller.initialize(serviceGraduation, editionController,
+			graduationController)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show
 	}
-	
+
 	@FXML
 	def exportToSheets() {
 		val FXMLLoader loader = new FXMLLoader
@@ -270,29 +269,43 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerStudentSheetExport>controller.initialize(editionController,serviceEdition)
+		loader.<ControllerStudentSheetExport>controller.initialize(editionController, serviceEdition)
 		dialog.setScene(new Scene(view, 384, 107))
 		dialog.setResizable(false);
 		dialog.show
 	}
-	
+
+	@FXML
+	def exportStudentsQrCodes() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(
+			ResourcesUtils.getInputStreamResource("viewResources/StudentsQrCodeDocGeneratorUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.exportStudentsQrCodes"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
+		loader.<ControllerStudentsQrCodeDocGenerator>controller.initialize
+		dialog.setScene(new Scene(view, 384, 107))
+		dialog.setResizable(false)
+		dialog.show
+	}
+
 	@FXML
 	def gradeExport() {
 		graduationController.exportGrades
 	}
-	
+
 	@FXML
-	def saveCorrection(){
+	def saveCorrection() {
 		graduationController.saveExam
 	}
-	
+
 	@FXML
-	def toggleAutoZoom(){
+	def toggleAutoZoom() {
 		graduationController.toAutoZoom = autoZoom.selected
 	}
-	
-	
-	def init(ServiceEdition serviceEdition, ServiceGraduation serviceGraduation){
+
+	def init(ServiceEdition serviceEdition, ServiceGraduation serviceGraduation) {
 		this.serviceEdition = serviceEdition
 		this.serviceGraduation = serviceGraduation
 		saveGraduationButton.disableProperty.bind(graduationController.loadedModel.not)
@@ -303,9 +316,8 @@ class ControllerRoot implements Initializable {
 		sendMailButton.disableProperty.bind(graduationController.loadedModel.not)
 		pdfExportGradeButton.disableProperty.bind(graduationController.loadedModel.not)
 	}
-	
+
 	override initialize(URL location, ResourceBundle resources) {
-		
 	}
-	
+
 }

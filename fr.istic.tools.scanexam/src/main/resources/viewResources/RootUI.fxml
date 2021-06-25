@@ -20,6 +20,7 @@
 						<MenuItem fx:id="loadTemplate" mnemonicParsing="false" onAction="#loadTemplatePressedEditor" text="%menu.file.loadTemplate" />
 						<MenuItem fx:id="saveTemplateButton" mnemonicParsing="false" onAction="#SaveTemplatePressed" text="%menu.file.saveTemplate" />
 						<MenuItem fx:id="exportToExamButton" mnemonicParsing="false" onAction="#exportToSheets" text="%menu.file.exportToExam" />
+                  		<MenuItem mnemonicParsing="false" onAction="#exportStudentsQrCodes" text="%menu.file.exportStudentsQrCodes" />
                   <SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="loadStudent" disable="false" mnemonicParsing="false" onAction="#loadStudentCopiesPressed" text="%menu.file.loadStudentSheet" />
 						<MenuItem mnemonicParsing="false" onAction="#loadTemplatePressedCorrector" text="%menu.file.loadGraduation" />
