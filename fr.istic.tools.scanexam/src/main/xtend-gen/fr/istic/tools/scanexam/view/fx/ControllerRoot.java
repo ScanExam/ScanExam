@@ -391,7 +391,7 @@ public class ControllerRoot implements Initializable {
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
       loader.<ControllerStudentsQrCodeDocGenerator>getController().initialize();
-      Scene _scene = new Scene(view, 384, 107);
+      Scene _scene = new Scene(view, 384, 191);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();

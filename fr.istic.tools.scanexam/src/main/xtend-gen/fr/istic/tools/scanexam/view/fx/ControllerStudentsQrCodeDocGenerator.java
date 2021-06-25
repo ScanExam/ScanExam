@@ -62,6 +62,18 @@ public class ControllerStudentsQrCodeDocGenerator {
   public FormattedTextField txtFldFile;
   
   /**
+   * Largueur des étiquettes
+   */
+  @FXML
+  public FormattedTextField labelWidth;
+  
+  /**
+   * Hauteur des étiquettes
+   */
+  @FXML
+  public FormattedTextField labelHeight;
+  
+  /**
    * Bouton de validation
    */
   @FXML
@@ -78,7 +90,7 @@ public class ControllerStudentsQrCodeDocGenerator {
     if (_not) {
       String _text = this.txtFldFile.getText();
       File _file = new File(_text);
-      final ControllerStudentsQrCodeDocGenerator.LoadState state = this.exportStudentsQrCodes(_file, saveFile.get());
+      final ControllerStudentsQrCodeDocGenerator.LoadState state = this.exportStudentsQrCodes(_file, Float.parseFloat(this.labelWidth.getText()), Float.parseFloat(this.labelHeight.getText()), true, saveFile.get());
       boolean _isDisable = this.btnOk.isDisable();
       boolean _not_1 = (!_isDisable);
       if (_not_1) {
@@ -207,12 +219,15 @@ public class ControllerStudentsQrCodeDocGenerator {
   /**
    * Envoie la liste des étudiants et le fichier où enregistrer le document des qr codes au générateur
    * @param studentsList Chemin du fichier contenant la liste des étudiants
+   * @param labelWidth Largeur des étiquettes en mm
+   * @param labelHeight Hauteur des étiquettes en mm
+   * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
    * @param exportFile Chemin du fichier où enregistrer le document des qr codes
    * @return un LoadState représentant l'état terminal de l'export des qr codes
    */
-  private ControllerStudentsQrCodeDocGenerator.LoadState exportStudentsQrCodes(final File studentsList, final File exportFile) {
+  private ControllerStudentsQrCodeDocGenerator.LoadState exportStudentsQrCodes(final File studentsList, final float labelWidth, final float labelHeight, final boolean alphabeticalOrder, final File exportFile) {
     final StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator();
-    generator.generateDocument(studentsList, exportFile);
+    generator.generateDocument(studentsList, labelWidth, labelHeight, alphabeticalOrder, exportFile);
     return ControllerStudentsQrCodeDocGenerator.LoadState.SUCCESS;
   }
 }

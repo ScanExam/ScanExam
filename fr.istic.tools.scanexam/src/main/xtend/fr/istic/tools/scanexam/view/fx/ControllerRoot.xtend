@@ -279,7 +279,7 @@ class ControllerRoot implements Initializable {
 		dialog.setTitle(LanguageManager.translate("menu.file.exportStudentsQrCodes"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
 		loader.<ControllerStudentsQrCodeDocGenerator>controller.initialize
-		dialog.setScene(new Scene(view, 384, 107))
+		dialog.setScene(new Scene(view, 384, 191))
 		dialog.setResizable(false)
 		dialog.show
 	}

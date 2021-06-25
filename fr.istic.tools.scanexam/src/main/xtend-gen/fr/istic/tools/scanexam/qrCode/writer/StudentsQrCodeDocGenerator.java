@@ -22,6 +22,7 @@ import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Classe pour générer un document contenant le nom, prénom de chaque élève accompagné d'un qr code.
@@ -31,32 +32,25 @@ import org.eclipse.xtext.xbase.lib.Functions.Function0;
 @SuppressWarnings("all")
 public class StudentsQrCodeDocGenerator {
   /**
-   * Nombre de qr codes par ligne
-   */
-  private final int qrCodeByLine = 3;
-  
-  /**
    * Marge autour des qr codes en pixel
    */
-  private final int qrCodeMargin = 0;
-  
-  /**
-   * Limite de caractères par ligne
-   */
-  private final int lineLimit = 32;
+  private final int qrCodeMargin = 1;
   
   /**
    * Produit le document contenant les qr codes d'identification d'élèves à partir d'un fichier XLS
    * @param file Fichier XLS contenant les identifiants des étudiants
+   * @param labelWidth Largeur des étiquettes en mm
+   * @param labelHeight Hauteur des étiquettes en mm
+   * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
    * @param outputFile Fichier pdf où enregistrer le pdf généré
    */
-  public void generateDocument(final File file, final File outputFile) {
+  public void generateDocument(final File file, final float labelWidth, final float labelHeight, final boolean alphabeticalOrder, final File outputFile) {
     try {
-      final List<String> students = this.loadStudentsFromFile(file);
+      final List<String> students = this.loadStudentsFromFile(file, alphabeticalOrder);
       final PDDocument document = new PDDocument();
       int studentIndex = 0;
       while ((studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length)) {
-        studentIndex = this.addPage(document, students, studentIndex);
+        studentIndex = this.addPage(document, students, studentIndex, labelWidth, labelHeight);
       }
       document.save(outputFile);
       document.close();
@@ -68,14 +62,16 @@ public class StudentsQrCodeDocGenerator {
   /**
    * Produit le document contenant les qr codes d'identification d'élèves à partir d'une liste d'étudiants
    * @param students Noms/identifiants des élèves
+   * @param labelWidth Largeur des étiquettes en mm
+   * @param labelHeight Hauteur des étiquettes en mm
    * @param outputFile Fichier pdf où enregistrer le pdf généré
    */
-  public void generateDocument(final List<String> students, final File outputFile) {
+  public void generateDocument(final List<String> students, final float labelWidth, final float labelHeight, final File outputFile) {
     try {
       final PDDocument document = new PDDocument();
       int studentIndex = 0;
-      while ((studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length)) {
-        studentIndex = this.addPage(document, students, studentIndex);
+      while (((studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length) && (studentIndex != (-1)))) {
+        studentIndex = this.addPage(document, students, studentIndex, labelWidth, labelHeight);
       }
       document.save(outputFile);
       document.close();
@@ -87,9 +83,10 @@ public class StudentsQrCodeDocGenerator {
   /**
    * Charge la liste des étudiants à partir d'un fichier XLS
    * @param file Fichier XLS contenant les identifiants des étudiants
+   * @param sort True pour ranger les étudiants par ordre alphabetique
    * @return Identifiants des étudiants sous forme de liste
    */
-  private List<String> loadStudentsFromFile(final File file) {
+  private List<String> loadStudentsFromFile(final File file, final boolean sort) {
     final List<String> students = new ArrayList<String>();
     try (final Workbook workbook = new Function0<Workbook>() {
       @Override
@@ -123,7 +120,11 @@ public class StudentsQrCodeDocGenerator {
         throw Exceptions.sneakyThrow(_t);
       }
     }
-    return students;
+    if (sort) {
+      return IterableExtensions.<String>sort(students);
+    } else {
+      return students;
+    }
   }
   
   /**
@@ -131,39 +132,58 @@ public class StudentsQrCodeDocGenerator {
    * @param document Document auquel ajouter la page
    * @param students Noms/identifiants des élèves à inscrire sur cette page
    * @param firstStudent Index de l'étudiant par lequel commencer
-   * @return Si tout les qr codes n'ont pas pu être mis, index du prochain élève à insérer ; taille de la collection d'élèves sinon
+   * @param labelWidth Largeur des étiquettes en mm
+   * @param labelHeight Hauteur des étiquettes en mm
+   * @return Si aucun qr code n'a été mis, -1 ; si tout les qr codes n'ont pas pu être mis, index du prochain élève à insérer ; taille de la collection d'élèves sinon
    */
-  private int addPage(final PDDocument document, final List<String> students, final int firstStudent) {
+  private int addPage(final PDDocument document, final List<String> students, final int firstStudent, final float labelWidth, final float labelHeight) {
     try {
       final PDPage page = new PDPage();
       document.addPage(page);
       final PDPageContentStream contentStream = new PDPageContentStream(document, page);
-      float _width = page.getMediaBox().getWidth();
-      final int qrCodeSize = Float.valueOf((_width / (this.qrCodeByLine * 2))).intValue();
-      int _intValue = Float.valueOf(page.getMediaBox().getHeight()).intValue();
-      int qrCodePosY = (_intValue - qrCodeSize);
+      final int pageWidthPixel = Float.valueOf(page.getMediaBox().getWidth()).intValue();
+      final int pageHeightPixel = Float.valueOf(page.getMediaBox().getHeight()).intValue();
+      final int labelWidthPixel = Float.valueOf(((labelWidth * pageWidthPixel) / 210)).intValue();
+      final int labelHeightPixel = Float.valueOf(((labelHeight * pageHeightPixel) / 297)).intValue();
+      final int xMarginPixel = ((pageWidthPixel % labelWidthPixel) / 2);
+      final int yMarginPixel = ((pageHeightPixel % labelHeightPixel) / 2);
+      int _xifexpression = (int) 0;
+      if ((labelWidthPixel < labelHeightPixel)) {
+        _xifexpression = labelWidthPixel;
+      } else {
+        _xifexpression = labelHeightPixel;
+      }
+      final int qrCodeSize = _xifexpression;
+      int posX = xMarginPixel;
+      int posY = ((pageHeightPixel - yMarginPixel) - labelHeightPixel);
       int studentIndex = firstStudent;
-      while (((qrCodePosY >= 0) && (studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length))) {
+      while (((posY >= yMarginPixel) && (studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length))) {
         {
-          int qrCodeOnLine = 0;
-          while (((qrCodeOnLine < this.qrCodeByLine) && (studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length))) {
+          while ((((posX + (labelWidthPixel * 2)) <= (pageHeightPixel - xMarginPixel)) && 
+            (studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length))) {
             {
-              final int qrCodePosX = ((qrCodeOnLine * 2) * qrCodeSize);
               final String data = students.get(studentIndex);
-              this.insertQrCode(contentStream, document, qrCodePosX, qrCodePosY, qrCodeSize, data);
-              int _intValue_1 = Float.valueOf((qrCodeSize * 0.8f)).intValue();
-              int _plus = (qrCodePosY + _intValue_1);
-              this.insertText(contentStream, document, (qrCodePosX + qrCodeSize), _plus, data);
-              qrCodeOnLine++;
+              this.insertQrCode(contentStream, document, (posX + ((labelWidthPixel - qrCodeSize) / 2)), posY, qrCodeSize, data);
+              int _intValue = Float.valueOf((labelHeightPixel * 0.8f)).intValue();
+              int _plus = (posY + _intValue);
+              this.insertText(contentStream, document, ((posX + labelWidthPixel) + 4), _plus, 
+                (labelWidthPixel / 5), data);
+              int _posX = posX;
+              posX = (_posX + (labelWidthPixel * 2));
               studentIndex++;
             }
           }
-          int _qrCodePosY = qrCodePosY;
-          qrCodePosY = (_qrCodePosY - qrCodeSize);
+          posX = xMarginPixel;
+          int _posY = posY;
+          posY = (_posY - labelHeightPixel);
         }
       }
       contentStream.close();
-      return studentIndex;
+      if ((studentIndex == firstStudent)) {
+        return (-1);
+      } else {
+        return studentIndex;
+      }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -199,16 +219,17 @@ public class StudentsQrCodeDocGenerator {
    * @param document Document auquel ajouter le texte
    * @param posX Position du texte sur l'axe X
    * @param posX Position du texte sur l'axe Y
+   * @param charByLine Nombre maximal de caractères par string
    * @param text Texte à écrire
    */
-  private void insertText(final PDPageContentStream contentStream, final PDDocument document, final int posX, final int posY, final String text) {
+  private void insertText(final PDPageContentStream contentStream, final PDDocument document, final int posX, final int posY, final int charByLine, final String text) {
     try {
       contentStream.beginText();
       contentStream.setFont(
         PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 6);
       contentStream.setLeading(8.0f);
       contentStream.newLineAtOffset(posX, posY);
-      final String[] splitedTexts = ((String[])Conversions.unwrapArray(this.splitString(text, this.lineLimit), String.class));
+      final String[] splitedTexts = ((String[])Conversions.unwrapArray(this.splitString(text, charByLine), String.class));
       for (final String splitedText : splitedTexts) {
         {
           contentStream.showText(splitedText);

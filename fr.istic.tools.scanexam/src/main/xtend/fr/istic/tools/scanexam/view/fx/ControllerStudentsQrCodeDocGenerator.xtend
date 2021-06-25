@@ -46,7 +46,12 @@ class ControllerStudentsQrCodeDocGenerator {
 	/** Champ du fichier à charger */
 	@FXML
 	public FormattedTextField txtFldFile
-	/** Champ du fichier où enregistrer */
+	/** Largueur des étiquettes */
+	@FXML
+	public FormattedTextField labelWidth
+	/** Hauteur des étiquettes */
+	@FXML
+	public FormattedTextField labelHeight
 	/** Bouton de validation */
 	@FXML
 	public Button btnOk
@@ -60,7 +65,7 @@ class ControllerStudentsQrCodeDocGenerator {
 	def void saveAndQuit() {
 		val Optional<File> saveFile = selectSavePath
 		if (!saveFile.empty) {
-			val state = exportStudentsQrCodes(new File(txtFldFile.text), saveFile.get)
+			val state = exportStudentsQrCodes(new File(txtFldFile.text), Float.parseFloat(labelWidth.text), Float.parseFloat(labelHeight.text), true, saveFile.get)
 			if (!btnOk.disable)
 				dispDialog(state)
 			quit
@@ -149,12 +154,15 @@ class ControllerStudentsQrCodeDocGenerator {
 	/**
 	 * Envoie la liste des étudiants et le fichier où enregistrer le document des qr codes au générateur
 	 * @param studentsList Chemin du fichier contenant la liste des étudiants
+	 * @param labelWidth Largeur des étiquettes en mm
+	 * @param labelHeight Hauteur des étiquettes en mm
+	 * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
 	 * @param exportFile Chemin du fichier où enregistrer le document des qr codes
 	 * @return un LoadState représentant l'état terminal de l'export des qr codes
 	 */
-	private def LoadState exportStudentsQrCodes(File studentsList, File exportFile) {
+	private def LoadState exportStudentsQrCodes(File studentsList, float labelWidth, float labelHeight, boolean alphabeticalOrder, File exportFile) {
 		val StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator
-		generator.generateDocument(studentsList, exportFile)
+		generator.generateDocument(studentsList, labelWidth, labelHeight, alphabeticalOrder, exportFile)
 		return LoadState.SUCCESS
 	}
 

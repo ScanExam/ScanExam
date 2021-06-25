@@ -29,12 +29,8 @@ class StudentsQrCodeDocGenerator {
 	 * VARIABLES
 	 */
 	// ----------------------------------------------------------------------------------------------------
-	/** Nombre de qr codes par ligne */
-	val int qrCodeByLine = 3
 	/** Marge autour des qr codes en pixel */
-	val int qrCodeMargin = 0
-	/** Limite de caractères par ligne */
-	val int lineLimit = 32
+	val int qrCodeMargin = 1
 
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -44,14 +40,18 @@ class StudentsQrCodeDocGenerator {
 	/**
 	 * Produit le document contenant les qr codes d'identification d'élèves à partir d'un fichier XLS
 	 * @param file Fichier XLS contenant les identifiants des étudiants
+	 * @param labelWidth Largeur des étiquettes en mm
+	 * @param labelHeight Hauteur des étiquettes en mm
+	 * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
 	 * @param outputFile Fichier pdf où enregistrer le pdf généré
 	 */
-	def void generateDocument(File file, File outputFile) {
-		val List<String> students = loadStudentsFromFile(file)
+	def void generateDocument(File file, float labelWidth, float labelHeight, boolean alphabeticalOrder,
+		File outputFile) {
+		val List<String> students = loadStudentsFromFile(file, alphabeticalOrder)
 		val PDDocument document = new PDDocument
 		var studentIndex = 0
 		while (studentIndex < students.length) {
-			studentIndex = addPage(document, students, studentIndex)
+			studentIndex = addPage(document, students, studentIndex, labelWidth, labelHeight)
 		}
 		document.save(outputFile)
 		document.close
@@ -60,13 +60,15 @@ class StudentsQrCodeDocGenerator {
 	/**
 	 * Produit le document contenant les qr codes d'identification d'élèves à partir d'une liste d'étudiants
 	 * @param students Noms/identifiants des élèves
+	 * @param labelWidth Largeur des étiquettes en mm
+	 * @param labelHeight Hauteur des étiquettes en mm
 	 * @param outputFile Fichier pdf où enregistrer le pdf généré
 	 */
-	def void generateDocument(List<String> students, File outputFile) {
+	def void generateDocument(List<String> students, float labelWidth, float labelHeight, File outputFile) {
 		val PDDocument document = new PDDocument
 		var studentIndex = 0
-		while (studentIndex < students.length) {
-			studentIndex = addPage(document, students, studentIndex)
+		while (studentIndex < students.length && studentIndex != -1) {
+			studentIndex = addPage(document, students, studentIndex, labelWidth, labelHeight)
 		}
 		document.save(outputFile)
 		document.close
@@ -75,9 +77,10 @@ class StudentsQrCodeDocGenerator {
 	/**
 	 * Charge la liste des étudiants à partir d'un fichier XLS
 	 * @param file Fichier XLS contenant les identifiants des étudiants
+	 * @param sort True pour ranger les étudiants par ordre alphabetique
 	 * @return Identifiants des étudiants sous forme de liste
 	 */
-	private def List<String> loadStudentsFromFile(File file) {
+	private def List<String> loadStudentsFromFile(File file, boolean sort) {
 		val List<String> students = new ArrayList
 		try(val Workbook workbook = WorkbookFactory.create(new FileInputStream(file))) {
 			val Sheet sheet = workbook.getSheetAt(0)
@@ -94,7 +97,11 @@ class StudentsQrCodeDocGenerator {
 		} catch (IOException e) {
 			e.printStackTrace
 		}
-		return students
+		if (sort) {
+			return students.sort
+		} else {
+			return students
+		}
 	}
 
 	/**
@@ -102,31 +109,49 @@ class StudentsQrCodeDocGenerator {
 	 * @param document Document auquel ajouter la page
 	 * @param students Noms/identifiants des élèves à inscrire sur cette page
 	 * @param firstStudent Index de l'étudiant par lequel commencer
-	 * @return Si tout les qr codes n'ont pas pu être mis, index du prochain élève à insérer ; taille de la collection d'élèves sinon
+	 * @param labelWidth Largeur des étiquettes en mm
+	 * @param labelHeight Hauteur des étiquettes en mm
+	 * @return Si aucun qr code n'a été mis, -1 ; si tout les qr codes n'ont pas pu être mis, index du prochain élève à insérer ; taille de la collection d'élèves sinon
 	 */
-	private def int addPage(PDDocument document, List<String> students, int firstStudent) {
+	private def int addPage(PDDocument document, List<String> students, int firstStudent, float labelWidth,
+		float labelHeight) {
 		val PDPage page = new PDPage
 		document.addPage(page)
 		val PDPageContentStream contentStream = new PDPageContentStream(document, page)
 
-		val int qrCodeSize = (page.mediaBox.width / (qrCodeByLine * 2)).intValue
-		var int qrCodePosY = page.mediaBox.height.intValue - qrCodeSize
+		val int pageWidthPixel = page.mediaBox.width.intValue
+		val int pageHeightPixel = page.mediaBox.height.intValue
+		val int labelWidthPixel = (labelWidth * pageWidthPixel / 210).intValue
+		val int labelHeightPixel = (labelHeight * pageHeightPixel / 297).intValue
+		val int xMarginPixel = (pageWidthPixel % labelWidthPixel) / 2
+		val int yMarginPixel = (pageHeightPixel % labelHeightPixel) / 2
+
+		val int qrCodeSize = labelWidthPixel < labelHeightPixel ? labelWidthPixel : labelHeightPixel
+		var int posX = xMarginPixel
+		var int posY = pageHeightPixel - yMarginPixel - labelHeightPixel
+
 		var studentIndex = firstStudent
-		while (qrCodePosY >= 0 && studentIndex < students.length) {
-			var qrCodeOnLine = 0
-			while (qrCodeOnLine < qrCodeByLine && studentIndex < students.length) {
-				val int qrCodePosX = qrCodeOnLine * 2 * qrCodeSize
+
+		while (posY >= yMarginPixel && studentIndex < students.length) {
+			while ((posX + (labelWidthPixel * 2)) <= (pageHeightPixel - xMarginPixel) &&
+				studentIndex < students.length) {
 				val String data = students.get(studentIndex)
-				insertQrCode(contentStream, document, qrCodePosX, qrCodePosY, qrCodeSize, data)
-				insertText(contentStream, document, qrCodePosX + qrCodeSize,
-					qrCodePosY + (qrCodeSize * 0.8f).intValue, data)
-				qrCodeOnLine++
+				insertQrCode(contentStream, document, posX + ((labelWidthPixel - qrCodeSize) / 2), posY, qrCodeSize,
+					data)
+				insertText(contentStream, document, posX + labelWidthPixel + 4, posY + (labelHeightPixel * 0.8f).intValue,
+					labelWidthPixel / 5, data)
+				posX += (labelWidthPixel * 2)
 				studentIndex++
 			}
-			qrCodePosY -= qrCodeSize
+			posX = xMarginPixel
+			posY -= labelHeightPixel
 		}
 		contentStream.close
-		return studentIndex
+		if (studentIndex === firstStudent) {
+			return -1
+		} else {
+			return studentIndex
+		}
 	}
 
 	/**
@@ -156,16 +181,17 @@ class StudentsQrCodeDocGenerator {
 	 * @param document Document auquel ajouter le texte
 	 * @param posX Position du texte sur l'axe X
 	 * @param posX Position du texte sur l'axe Y
+	 * @param charByLine Nombre maximal de caractères par string
 	 * @param text Texte à écrire
 	 */
 	private def void insertText(PDPageContentStream contentStream, PDDocument document, int posX, int posY,
-		String text) {
+		int charByLine, String text) {
 		contentStream.beginText
 		contentStream.setFont(
 			PDType0Font.load(document, ResourcesUtils.getInputStreamResource("resources_annotation/arial.ttf")), 6)
 		contentStream.setLeading(8.0f)
 		contentStream.newLineAtOffset(posX, posY)
-		val String[] splitedTexts = splitString(text, lineLimit)
+		val String[] splitedTexts = splitString(text, charByLine)
 		for (splitedText : splitedTexts) {
 			contentStream.showText(splitedText)
 			contentStream.newLine
