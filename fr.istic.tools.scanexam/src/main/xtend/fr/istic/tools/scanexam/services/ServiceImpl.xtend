@@ -118,7 +118,10 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 
 	}
 	
-	
+	/**
+	 * initialise les "grades" pour la studentsheet
+	 * @param sheet la copie de l'élève
+	 */
 	def void initSheet(StudentSheet sheet){
 		for (var i = 0; i < templatePageAmount; i++) {
 			val examPage = getPage(i);

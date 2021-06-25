@@ -27,6 +27,8 @@ import javafx.geometry.Insets
 import javafx.scene.layout.Background
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation
+import javafx.beans.binding.Bindings
+import fr.istic.tools.scanexam.config.LanguageManager
 
 /** 
  * Controlleur de l'UI qui permet de réassigner des pages à des copies manuellement
@@ -45,6 +47,10 @@ class ControllerLinkManuallySheets {
 	//Image de la page du PDF
 	@FXML
 	var ImageView pageImageView
+	
+	//Label des pages restantes
+	@FXML
+	var Label lastingPages
 	
 	//Service de correction (passerelle vers les données)
 	var ServiceGraduation service
@@ -85,6 +91,7 @@ class ControllerLinkManuallySheets {
 		pdfRenderer = new PDFRenderer(document)
 		
 		updateImageView
+		updateLabelLastingPages
 		pageItemList = new FailedPageItemList(this)
 		listPane.content = pageItemList
 	 }
@@ -127,6 +134,7 @@ class ControllerLinkManuallySheets {
 	 	controllerGrad.studentList.clearItems
 	 	controllerGrad.loadStudents
 	 	controllerGrad.focusStudent(controllerGrad.studentList.children.get(0) as StudentItemGraduation)
+	 	controllerGrad.updateDisplayedPage
 	 	quit(e)
 	 }
 	 
@@ -150,7 +158,6 @@ class ControllerLinkManuallySheets {
 	  * Méthode qui ignore la page sélectionnée et la retire du champ d'action
 	  */
 	 def void ignorePage(){
-	 	println("ignore page")
 	 		 	
 	 	var List<Integer> temp = new ArrayList<Integer>()
 	 	for(i : 0 ..< failedPages.size){
@@ -164,9 +171,7 @@ class ControllerLinkManuallySheets {
 	 		failedPages = new ArrayList
 	 	
 	 	
-	 	if(failedPages.size > 0)
-	 		println("on continue")
-	 	else
+	 	if(failedPages.size <= 0)
 	 		indexCurrentPage = -1
 	 	
 	 	updateStatement
@@ -181,8 +186,7 @@ class ControllerLinkManuallySheets {
 			  	if(indexCurrentPage < failedPages.size - 1)
 			  		indexCurrentPage++
 			  	else
-			  		indexCurrentPage = 0
-			  	println("next")			 	
+			  		indexCurrentPage = 0		 	
 			 	updateStatement
 		  }
 	 	}
@@ -197,8 +201,7 @@ class ControllerLinkManuallySheets {
 			 	if(indexCurrentPage > 0)
 			  		indexCurrentPage--
 			  	else
-			  		indexCurrentPage = failedPages.size-1
-			  	println("prev")		  	
+			  		indexCurrentPage = failedPages.size-1	  	
 			  	updateStatement
 		  }
 	  	}
@@ -210,6 +213,7 @@ class ControllerLinkManuallySheets {
 	   */
 	  def void updateStatement(){
 	  	pageItemList.updateList
+	  	updateLabelLastingPages
 	  	updateImageView
 	  }
 	  
@@ -231,6 +235,10 @@ class ControllerLinkManuallySheets {
 	  	pageImageView.fitHeight = 650
 	  	pageImageView.fitWidth = 500
 	  	
+	  }
+	  
+	  def void updateLabelLastingPages(){
+	  	lastingPages.textProperty.bind(Bindings.format(failedPages.size + " " + LanguageManager.translate("linkSheets.lastingPages")))
 	  }
 	  
 }
@@ -273,10 +281,12 @@ class FailedPageItem extends HBox {
 	def void setFocus(boolean b) {//sets the color of the zone and the item in the list
 		if (b) {
 			color = FxSettings.ITEM_HIGHLIGHT_COLOR
+			numPage.textFill = Color.WHITE
 			//this.name.styleClass.add("focusedText")	
 		}
 		else {
 			color = FxSettings.ITEM_NORMAL_COLOR
+			numPage.textFill = Color.BLACK
 			//this.name.styleClass.remove("focusedText")	
 		}
 	}
@@ -300,7 +310,6 @@ class FailedPageItem extends HBox {
 }
 
 class FailedPageItemList extends VBox {
-	//il y a un champ children pour append des éléments à la VBox
 	ControllerLinkManuallySheets controller
 	
 	new (ControllerLinkManuallySheets controller){

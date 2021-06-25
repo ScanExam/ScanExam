@@ -33,7 +33,7 @@
 				<Menu fx:id="menuEdit" mnemonicParsing="false" text="%menu.edit">
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#updateConfig" text="%menu.edit.updateconfig" />
-						<MenuItem onAction="#linkManuallySheets" text="oui" />
+						<MenuItem onAction="#linkManuallySheets" text="%menu.edit.LinkManuallySheets" />
 						<MenuItem fx:id="pdfExportButton" mnemonicParsing="false" onAction="#pdfExport" text="%menu.edit.pdfExport" />
 						<MenuItem fx:id="pdfExportGradeButton" mnemonicParsing="false" onAction="#gradeExport" text="%menu.edit.gradeExport" />
 						<MenuItem fx:id="sendMailButton" mnemonicParsing="false" onAction="#sendMail" text="%menu.edit.sendmail" />

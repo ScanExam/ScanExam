@@ -163,6 +163,10 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     }
   }
   
+  /**
+   * initialise les "grades" pour la studentsheet
+   * @param sheet la copie de l'élève
+   */
   public void initSheet(final StudentSheet sheet) {
     for (int i = 0; (i < this.getTemplatePageAmount()); i++) {
       {

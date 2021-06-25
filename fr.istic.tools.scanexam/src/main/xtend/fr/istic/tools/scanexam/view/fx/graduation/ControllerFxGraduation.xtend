@@ -1088,6 +1088,7 @@ class ControllerFxGraduation {
 			logger.warn("File not chosen")
 		}
 	 (new GradesExportImpl).exportGrades(service.studentSheets, file)
+	 //FIXME npe générée si la correction n'a pas commencée (pas de notes attribuées)
 	}
 	
 	def applyGrade(int questionId,int gradeId) {
