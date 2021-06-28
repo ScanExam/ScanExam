@@ -101,31 +101,38 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @params studentSheets une liste de StudenSheet
 	 * @returns "true" si la correction a pu être créée, "false" sinon
 	 */
-	override boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages) {
+	override boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages, Collection<StudentSheet> uncompleteStudentSheets) {
 		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
 		try {
 			for (StudentSheet sheet : studentSheets) {
-				for (var i = 0; i < templatePageAmount; i++) {
-					val examPage = getPage(i);
-					for (var j = 0; j < examPage.questions.size; j++) // TODO +1?
-					{
-						var grade = CoreFactory.eINSTANCE.createGrade()
-						sheet.grades.add(grade);
-					}
-				}
-
+				initSheet(sheet)
 			}
 
 			graduationTemplate.studentsheets.addAll(studentSheets.sortBy[s|s.id])
 			graduationTemplate.failedPages.addAll(failedPages.sortBy[a|a])
+			graduationTemplate.uncompleteStudentSheets.addAll(uncompleteStudentSheets.sortBy[s|s.id])
 			return true
 		} catch (Exception ex) {
 			return false;
 		}
 
 	}
+	
+	/**
+	 * initialise les "grades" pour la studentsheet
+	 * @param sheet la copie de l'élève
+	 */
+	def void initSheet(StudentSheet sheet){
+		for (var i = 0; i < templatePageAmount; i++) {
+			val examPage = getPage(i);
+			for (var j = 0; j < examPage.questions.size; j++)
+			{
+				var grade = CoreFactory.eINSTANCE.createGrade()
+				sheet.grades.add(grade);
+			}
+		}
+	}
 
-	// TODO si les pages sont dans le désordre ?
 	override int getAbsolutePageNumber(int studentId, int offset) {
 		val pageId = studentSheets.findFirst[x|x.id == studentId].posPage.get(offset);
 		return pageId;
@@ -176,6 +183,69 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 			return List.of();
 		}
 		return Collections.unmodifiableList(graduationTemplate.studentsheets)
+	}
+	
+	/**
+	 * ajoute une page en plus dans une copie
+	 * @param id de la copie
+	 * @param numéro de la page à ajouter
+	 */
+	override addPageInStudentSheet(int id, int page){
+		
+		var Collection<StudentSheet> temp = new ArrayList
+		Collections.addAll(temp, graduationTemplate.uncompleteStudentSheets)
+		
+		var boolean complete = false
+		var boolean found = false
+		println("temp size = " + temp.size)
+		
+		for(sheet : temp){
+			println("sheet id : " + sheet.id + ", id : " + id)
+			if(sheet.id == id){
+				found = true
+				sheet.posPage.add(page)
+				var i = 0
+				while(i < sheet.posPage.size){//on retire un des -1 présent dans les uncompletes
+					if(sheet.posPage.get(i) == -1){
+						sheet.posPage.remove(i)
+						i = sheet.posPage.size + 1 //pour sortir
+					}
+					i++
+				}
+				Collections.sort(sheet.posPage)
+
+				if(!sheet.posPage.contains(-1))
+					complete = true
+			}
+		}
+		
+		if(!found){//si pas trouvé dans les incomplètes
+			//ajouter la page dans une nouvelle studentsheet puis l'ajouter dans uncompletestudentsheets, et vérifier si elle est complète (sujet de une page)
+			val int[] pages = newIntArrayOfSize(templatePageAmount)
+			for (e : 0 ..< templatePageAmount) {
+				if(e == 0)
+					pages.set(e, page)
+				else
+					pages.set(e, -1)
+			}
+			Collections.sort(pages)
+			val dF = new DataFactory()
+			graduationTemplate.uncompleteStudentSheets.add(dF.createStudentSheet(id, pages))
+			if(!pages.contains(-1))
+					complete = true
+			
+		}
+		
+		if(complete){
+			val completeSheet = graduationTemplate.uncompleteStudentSheets.filter[s|s.id==id].get(0)
+			
+			initSheet(completeSheet)
+			println("studentsheets size " + graduationTemplate.studentsheets.size)
+			graduationTemplate.studentsheets.add(completeSheet)
+			
+			println("studentsheets size " + graduationTemplate.studentsheets.size)
+		}
+		
 	}
 
 	/**

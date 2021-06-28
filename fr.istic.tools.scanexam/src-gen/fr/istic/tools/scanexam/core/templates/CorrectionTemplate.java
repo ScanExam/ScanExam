@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getInformations <em>Informations</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getStudentsheets <em>Studentsheets</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getFailedPages <em>Failed Pages</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getUncompleteStudentSheets <em>Uncomplete Student Sheets</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.templates.CorrectionTemplate#getEncodedDocument <em>Encoded Document</em>}</li>
  * </ul>
  *
@@ -64,6 +65,18 @@ public interface CorrectionTemplate extends EObject {
 	 * @generated
 	 */
 	EList<Integer> getFailedPages();
+
+	/**
+	 * Returns the value of the '<em><b>Uncomplete Student Sheets</b></em>' containment reference list.
+	 * The list contents are of type {@link fr.istic.tools.scanexam.core.StudentSheet}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Uncomplete Student Sheets</em>' containment reference list.
+	 * @see fr.istic.tools.scanexam.core.templates.TemplatesPackage#getCorrectionTemplate_UncompleteStudentSheets()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StudentSheet> getUncompleteStudentSheets();
 
 	/**
 	 * Returns the value of the '<em><b>Encoded Document</b></em>' attribute.

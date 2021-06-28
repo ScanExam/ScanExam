@@ -4,6 +4,7 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
+import fr.istic.tools.scanexam.view.fx.ControllerRoot;
 import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator;
@@ -23,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -116,14 +118,17 @@ public class ControllerGraduationCreator {
   
   private ControllerFxEdition controllerEdition;
   
+  private ControllerRoot controllerRoot;
+  
   /**
    * Initialise le composant avec le presenter composé en paramètre
    * @param loader le presenter
    */
-  public void initialize(final ServiceGraduation serviceGraduation, final ControllerFxEdition controllerEdition, final ControllerFxGraduation controllerGraduation) {
+  public void initialize(final ServiceGraduation serviceGraduation, final ControllerFxEdition controllerEdition, final ControllerFxGraduation controllerGraduation, final ControllerRoot controllerRoot) {
     this.controllerGraduation = controllerGraduation;
     this.serviceGraduation = serviceGraduation;
     this.controllerEdition = controllerEdition;
+    this.controllerRoot = controllerRoot;
     this.hBoxLoad.disableProperty().bind(this.rbLoadModel.selectedProperty().not());
     this.btnOk.disableProperty().bind(
       this.txtFldFile.wrongFormattedProperty().or(this.txtFldFileGraduation.wrongFormattedProperty()).or(
@@ -289,10 +294,39 @@ public class ControllerGraduationCreator {
    * @param file le PDF
    */
   public void onFinish(final PdfReader reader, final File file) {
-    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages());
+    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages(), reader.getUncompleteStudentSheets());
     this.serviceGraduation.setExamName(this.txtFldGraduationName.getText());
     this.controllerGraduation.getPdfManager().create(file);
     this.controllerGraduation.setToLoaded();
     this.quit();
+    int _size = reader.getFailedPages().size();
+    boolean _notEquals = (_size != 0);
+    if (_notEquals) {
+      this.proposeLinkManuallyFailedPages(reader);
+    }
+  }
+  
+  /**
+   * Méthode qui propose à l'utilisateur si il souhaite lier les pages non reconnues à la fin de la lecture
+   * @param reader le PdfReader qui s'est occupé de la lecture
+   * @author Romain Caruana
+   */
+  public void proposeLinkManuallyFailedPages(final PdfReader reader) {
+    final Alert alertBox = new Alert(Alert.AlertType.CONFIRMATION);
+    alertBox.setTitle(LanguageManager.translate("proposeFailed.title"));
+    String _translate = LanguageManager.translate("proposeFailed.content.start");
+    String _plus = (_translate + " ");
+    int _size = reader.getFailedPages().size();
+    String _plus_1 = (_plus + Integer.valueOf(_size));
+    String _plus_2 = (_plus_1 + " ");
+    String _translate_1 = LanguageManager.translate("proposeFailed.content.end");
+    String _plus_3 = (_plus_2 + _translate_1);
+    alertBox.setContentText(_plus_3);
+    final Optional<ButtonType> result = alertBox.showAndWait();
+    ButtonType _get = result.get();
+    boolean _equals = com.google.common.base.Objects.equal(_get, ButtonType.OK);
+    if (_equals) {
+      this.controllerRoot.linkManuallySheets();
+    }
   }
 }

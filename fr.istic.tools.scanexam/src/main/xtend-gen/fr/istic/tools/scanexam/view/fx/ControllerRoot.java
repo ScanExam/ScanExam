@@ -85,6 +85,9 @@ public class ControllerRoot implements Initializable {
   private MenuItem pdfExportGradeButton;
   
   @FXML
+  private MenuItem linkManuallySheetsButton;
+  
+  @FXML
   private TabPane tabPane;
   
   @Accessors
@@ -138,7 +141,8 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationLoader>getController().initialize(this.serviceGraduation, this.editionController, this.graduationController);
+      loader.<ControllerGraduationLoader>getController().initialize(this.serviceGraduation, this.editionController, 
+        this.graduationController);
       Scene _scene = new Scene(view, 384, 355);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -220,11 +224,6 @@ public class ControllerRoot implements Initializable {
     }
   }
   
-  /**
-   * TODO
-   * Passer le "bouton trop cool" à un sous menu de la barre menu
-   * Faire son initialisation du controller ici
-   */
   @FXML
   public void linkManuallySheets() {
     try {
@@ -236,7 +235,9 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerLinkManuallySheets>getController().init(this.serviceGraduation, this.graduationController.getPdfManager());
+      loader.<ControllerLinkManuallySheets>getController().init(this.serviceGraduation, this.graduationController.getPdfManager(), 
+        this.graduationController);
+      dialog.setTitle(LanguageManager.translate("menu.edit.linkSheetsTitle"));
       Scene _scene = new Scene(view);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -287,7 +288,8 @@ public class ControllerRoot implements Initializable {
     String _property = System.getProperty("user.home");
     String _property_1 = System.getProperty("file.separator");
     String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + "Documents");
+    String _plus_1 = (_plus + 
+      "Documents");
     File _file = new File(_plus_1);
     dirChooser.setInitialDirectory(_file);
     Stage _stage = new Stage();
@@ -345,7 +347,8 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerGraduationCreator>getController().initialize(this.serviceGraduation, this.editionController, this.graduationController);
+      loader.<ControllerGraduationCreator>getController().initialize(this.serviceGraduation, this.editionController, 
+        this.graduationController, this);
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);
       dialog.setResizable(false);
@@ -369,6 +372,28 @@ public class ControllerRoot implements Initializable {
       _icons.add(_image);
       loader.<ControllerStudentSheetExport>getController().initialize(this.editionController, this.serviceEdition);
       Scene _scene = new Scene(view, 384, 107);
+      dialog.setScene(_scene);
+      dialog.setResizable(false);
+      dialog.show();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @FXML
+  public void exportStudentsQrCodes() {
+    try {
+      final FXMLLoader loader = new FXMLLoader();
+      loader.setResources(LanguageManager.getCurrentBundle());
+      final Parent view = loader.<Parent>load(
+        ResourcesUtils.getInputStreamResource("viewResources/StudentsQrCodeDocGeneratorUI.fxml"));
+      final Stage dialog = new Stage();
+      dialog.setTitle(LanguageManager.translate("menu.file.exportStudentsQrCodes"));
+      ObservableList<Image> _icons = dialog.getIcons();
+      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
+      Image _image = new Image(_inputStreamResource);
+      _icons.add(_image);
+      Scene _scene = new Scene(view, 384, 276);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();
@@ -402,6 +427,7 @@ public class ControllerRoot implements Initializable {
     this.pdfExportButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
     this.sendMailButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
     this.pdfExportGradeButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
+    this.linkManuallySheetsButton.disableProperty().bind(this.graduationController.getLoadedModel().not());
   }
   
   @Override

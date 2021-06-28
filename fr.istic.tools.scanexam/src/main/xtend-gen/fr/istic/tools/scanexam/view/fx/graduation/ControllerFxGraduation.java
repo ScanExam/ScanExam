@@ -7,7 +7,6 @@ import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.exportation.ExportExamToPdf;
 import fr.istic.tools.scanexam.exportation.GradesExportImpl;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
-import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
@@ -25,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -37,9 +37,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -56,13 +54,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtend.lib.annotations.Accessors;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 
@@ -508,27 +503,6 @@ public class ControllerFxGraduation {
     this.mainPane.unZoom();
   }
   
-  public void goToManuallyLinkSheets() {
-    try {
-      final FXMLLoader loader = new FXMLLoader();
-      Parent root = loader.<Parent>load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"));
-      final Scene scene = new Scene(root);
-      Stage stage = new Stage();
-      stage.setTitle("Lier les pages mal analysées");
-      stage.setScene(scene);
-      stage.show();
-    } catch (final Throwable _t) {
-      if (_t instanceof IOException) {
-        InputOutput.<String>println("c\'est cassé");
-      } else if (_t instanceof NullPointerException) {
-        final NullPointerException e_1 = (NullPointerException)_t;
-        e_1.printStackTrace();
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
-  }
-  
   public void init(final ServiceGraduation serviceGraduation) {
     this.parentPane.getStyleClass().add("parentPane");
     PdfManager _pdfManager = new PdfManager();
@@ -816,12 +790,16 @@ public class ControllerFxGraduation {
   public void loadStudents() {
     ControllerFxGraduation.logger.info("Loading Students");
     LinkedList<Integer> ids = this.getStudentIds();
+    Collections.<Integer>sort(ids);
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
         String name = this.service.getStudentName(i).orElse("");
         if (((name == null) || (name == ""))) {
-          student.setStudentName(LanguageManager.translate("name.default"));
+          String _translate = LanguageManager.translate("name.default");
+          String _plus = (_translate + " ");
+          String _plus_1 = (_plus + Integer.valueOf(i));
+          student.setStudentName(_plus_1);
         } else {
           student.setStudentName(name);
         }

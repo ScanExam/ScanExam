@@ -1,14 +1,20 @@
 package fr.istic.tools.scanexam.view.fx;
 
+import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.view.fx.FailedPageItemList;
 import fr.istic.tools.scanexam.view.fx.PdfManager;
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import javafx.beans.binding.Bindings;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
@@ -17,6 +23,7 @@ import javafx.stage.Window;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.InputOutput;
@@ -36,6 +43,9 @@ public class ControllerLinkManuallySheets {
   @FXML
   private ImageView pageImageView;
   
+  @FXML
+  private Label lastingPages;
+  
   private ServiceGraduation service;
   
   private int indexCurrentPage;
@@ -48,18 +58,24 @@ public class ControllerLinkManuallySheets {
   
   private FailedPageItemList pageItemList;
   
+  private ControllerFxGraduation controllerGrad;
+  
   /**
    * Initialise la fenêtre
    */
-  public void init(final ServiceGraduation serviceGraduation, final PdfManager pdfManager) {
+  public void init(final ServiceGraduation serviceGraduation, final PdfManager pdfManager, final ControllerFxGraduation controllerGraduation) {
     try {
       this.service = serviceGraduation;
-      this.failedPages = List.<Integer>of(Integer.valueOf(2), Integer.valueOf(3), Integer.valueOf(5), Integer.valueOf(7));
+      this.controllerGrad = controllerGraduation;
+      Collection<Integer> _failedPages = this.service.getFailedPages();
+      ArrayList<Integer> _arrayList = new ArrayList<Integer>(_failedPages);
+      this.failedPages = _arrayList;
       this.indexCurrentPage = 0;
       this.document = PDDocument.load(pdfManager.getPdfInputStream());
       PDFRenderer _pDFRenderer = new PDFRenderer(this.document);
       this.pdfRenderer = _pDFRenderer;
       this.updateImageView();
+      this.updateLabelLastingPages();
       FailedPageItemList _failedPageItemList = new FailedPageItemList(this);
       this.pageItemList = _failedPageItemList;
       this.listPane.setContent(this.pageItemList);
@@ -90,9 +106,22 @@ public class ControllerLinkManuallySheets {
     for (final Integer item : _doubleDotLessThan) {
       {
         final String textContent = this.pageItemList.getElement((item).intValue()).getField().getText();
-        InputOutput.<String>println(textContent);
+        final String[] split = textContent.split("_");
+        int _size_1 = ((List<String>)Conversions.doWrapArray(split)).size();
+        boolean _equals = (_size_1 == 2);
+        if (_equals) {
+          final int id = Integer.parseInt(split[0]);
+          final int page = Integer.parseInt(split[1]);
+          this.service.addPageInStudentSheet((id - 1), page);
+          this.service.getFailedPages().remove(this.failedPages.get((item).intValue()));
+        }
       }
     }
+    this.controllerGrad.getStudentList().clearItems();
+    this.controllerGrad.loadStudents();
+    Node _get = this.controllerGrad.getStudentList().getChildren().get(0);
+    this.controllerGrad.focusStudent(((StudentItemGraduation) _get));
+    this.controllerGrad.updateDisplayedPage();
     this.quit(e);
   }
   
@@ -118,7 +147,6 @@ public class ControllerLinkManuallySheets {
    * Méthode qui ignore la page sélectionnée et la retire du champ d'action
    */
   public void ignorePage() {
-    InputOutput.<String>println("ignore page");
     List<Integer> temp = new ArrayList<Integer>();
     int _size = this.failedPages.size();
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _size, true);
@@ -136,10 +164,8 @@ public class ControllerLinkManuallySheets {
       this.failedPages = _arrayList;
     }
     int _size_2 = this.failedPages.size();
-    boolean _greaterThan_1 = (_size_2 > 0);
-    if (_greaterThan_1) {
-      InputOutput.<String>println("on continue");
-    } else {
+    boolean _lessEqualsThan = (_size_2 <= 0);
+    if (_lessEqualsThan) {
       this.indexCurrentPage = (-1);
     }
     this.updateStatement();
@@ -161,7 +187,6 @@ public class ControllerLinkManuallySheets {
         } else {
           this.indexCurrentPage = 0;
         }
-        InputOutput.<String>println("next");
         this.updateStatement();
       }
     }
@@ -182,7 +207,6 @@ public class ControllerLinkManuallySheets {
           int _minus = (_size_1 - 1);
           this.indexCurrentPage = _minus;
         }
-        InputOutput.<String>println("prev");
         this.updateStatement();
       }
     }
@@ -193,6 +217,7 @@ public class ControllerLinkManuallySheets {
    */
   public void updateStatement() {
     this.pageItemList.updateList();
+    this.updateLabelLastingPages();
     this.updateImageView();
   }
   
@@ -217,5 +242,13 @@ public class ControllerLinkManuallySheets {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  public void updateLabelLastingPages() {
+    int _size = this.failedPages.size();
+    String _plus = (Integer.valueOf(_size) + " ");
+    String _translate = LanguageManager.translate("linkSheets.lastingPages");
+    String _plus_1 = (_plus + _translate);
+    this.lastingPages.textProperty().bind(Bindings.format(_plus_1));
   }
 }

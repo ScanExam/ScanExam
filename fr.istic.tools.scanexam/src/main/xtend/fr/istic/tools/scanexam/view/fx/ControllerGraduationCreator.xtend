@@ -26,6 +26,9 @@ import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import javafx.util.Pair
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
+import java.util.Optional
 
 /**
  * Contrôleur pour l'UI de chargement d'une correction
@@ -83,17 +86,19 @@ class ControllerGraduationCreator {
 
 	var ServiceGraduation serviceGraduation
 	var ControllerFxEdition controllerEdition
+	var ControllerRoot controllerRoot
 
 	/**
 	 * Initialise le composant avec le presenter composé en paramètre
 	 * @param loader le presenter
 	 */
 	def initialize(ServiceGraduation serviceGraduation, ControllerFxEdition controllerEdition,
-		ControllerFxGraduation controllerGraduation) {
+		ControllerFxGraduation controllerGraduation, ControllerRoot controllerRoot) {
 
 		this.controllerGraduation = controllerGraduation
 		this.serviceGraduation = serviceGraduation
 		this.controllerEdition = controllerEdition
+		this.controllerRoot = controllerRoot
 		hBoxLoad.disableProperty.bind(rbLoadModel.selectedProperty.not)
 
 		// Condition pour que le bouton de validation soit désactivé :
@@ -214,10 +219,35 @@ class ControllerGraduationCreator {
 	 * @param file le PDF
 	 */
 	def onFinish(PdfReader reader, File file) {
-		serviceGraduation.initializeCorrection(reader.completeStudentSheets, reader.failedPages)
+		serviceGraduation.initializeCorrection(reader.completeStudentSheets, reader.failedPages, reader.uncompleteStudentSheets)
 		serviceGraduation.examName = txtFldGraduationName.text
 		controllerGraduation.pdfManager.create(file)
 		controllerGraduation.setToLoaded
 		quit
+		
+		if(reader.failedPages.size != 0)
+		{
+			proposeLinkManuallyFailedPages(reader)
+		}
+	}
+	
+	/**
+	 * Méthode qui propose à l'utilisateur si il souhaite lier les pages non reconnues à la fin de la lecture
+	 * @param reader le PdfReader qui s'est occupé de la lecture
+	 * @author Romain Caruana
+	 */
+	def proposeLinkManuallyFailedPages(PdfReader reader){
+		val Alert alertBox = new Alert(AlertType.CONFIRMATION)
+		
+		alertBox.title = LanguageManager.translate("proposeFailed.title")
+		alertBox.contentText = LanguageManager.translate("proposeFailed.content.start") + " " 
+							   + reader.failedPages.size + " " + LanguageManager.translate("proposeFailed.content.end")
+		
+		val Optional<ButtonType> result = alertBox.showAndWait
+		
+		if(result.get() == ButtonType.OK)
+     		controllerRoot.linkManuallySheets
+
+		
 	}
 }

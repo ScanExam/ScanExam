@@ -144,8 +144,17 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getCorrectionTemplate_UncompleteStudentSheets() {
+		return (EReference)correctionTemplateEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getCorrectionTemplate_EncodedDocument() {
-		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)correctionTemplateEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -207,6 +216,7 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		createEReference(correctionTemplateEClass, CORRECTION_TEMPLATE__INFORMATIONS);
 		createEReference(correctionTemplateEClass, CORRECTION_TEMPLATE__STUDENTSHEETS);
 		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__FAILED_PAGES);
+		createEReference(correctionTemplateEClass, CORRECTION_TEMPLATE__UNCOMPLETE_STUDENT_SHEETS);
 		createEAttribute(correctionTemplateEClass, CORRECTION_TEMPLATE__ENCODED_DOCUMENT);
 
 		creationTemplateEClass = createEClass(CREATION_TEMPLATE);
@@ -251,7 +261,8 @@ public class TemplatesPackageImpl extends EPackageImpl implements TemplatesPacka
 		initEClass(correctionTemplateEClass, CorrectionTemplate.class, "CorrectionTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCorrectionTemplate_Informations(), theCorePackage.getStudentInformation(), null, "informations", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCorrectionTemplate_Studentsheets(), theCorePackage.getStudentSheet(), null, "studentsheets", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCorrectionTemplate_FailedPages(), theEcorePackage.getEIntegerObject(), "failedPages", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCorrectionTemplate_FailedPages(), theEcorePackage.getEInt(), "failedPages", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCorrectionTemplate_UncompleteStudentSheets(), theCorePackage.getStudentSheet(), null, "uncompleteStudentSheets", null, 0, -1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCorrectionTemplate_EncodedDocument(), theEcorePackage.getEString(), "encodedDocument", null, 0, 1, CorrectionTemplate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(creationTemplateEClass, CreationTemplate.class, "CreationTemplate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

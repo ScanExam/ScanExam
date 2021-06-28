@@ -52,8 +52,10 @@ public class FailedPageItem extends HBox {
   public void setFocus(final boolean b) {
     if (b) {
       this.setColor(FxSettings.ITEM_HIGHLIGHT_COLOR);
+      this.numPage.setTextFill(Color.WHITE);
     } else {
       this.setColor(FxSettings.ITEM_NORMAL_COLOR);
+      this.numPage.setTextFill(Color.BLACK);
     }
   }
   

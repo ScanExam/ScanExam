@@ -31,10 +31,12 @@ interface ServiceGraduation extends Service {
 
 	/**
 	 * Crée une nouvelle correction à partir d'une liste de StudentSheets
-	 * @params studentSheets une liste de StudenSheet
+	 * @param studentSheets une liste de StudenSheet
+	 * @param failedPages la liste des pages mal lues
+	 * @param uncompleteStudentSheets les studentSheets incomplètes
 	 * @returns "true" si la correction a pu être créée, "false" sinon
 	 */
-	def boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages)
+	def boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages, Collection<StudentSheet> uncompleteStudentSheets)
 
 	def int getAbsolutePageNumber(int studentId, int offset)
 
@@ -69,6 +71,13 @@ interface ServiceGraduation extends Service {
 	 * @return la liste non modifiable de tous les StudentSheets
 	 */
 	def Collection<StudentSheet> getStudentSheets()
+	
+	/**
+	 * ajoute une page en plus dans une copie
+	 * @param id de la copie
+	 * @param numéro de la page à ajouter
+	 */
+	 def void addPageInStudentSheet(int id, int page)
 
 	/**
 	 * Définit la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
