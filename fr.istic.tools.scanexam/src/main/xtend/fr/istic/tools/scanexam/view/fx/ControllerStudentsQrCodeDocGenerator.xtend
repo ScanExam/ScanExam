@@ -18,6 +18,11 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
+import javafx.scene.control.CheckBox
+import javafx.scene.control.MenuButton
+import javafx.scene.control.MenuItem
+import javafx.event.EventHandler
+import javafx.event.ActionEvent
 
 /**
  * Classe gérant l'interface de génération de document qr code d'élèves
@@ -46,6 +51,12 @@ class ControllerStudentsQrCodeDocGenerator {
 	/** Champ du fichier à charger */
 	@FXML
 	public FormattedTextField txtFldFile
+	/** Indique si les élèves doivent être rangé par ordre alphabétique */
+	@FXML
+	public CheckBox alphabeticalOrder
+	/** Menu des formats d'étiquettes prédéfinis */
+	@FXML
+	public MenuButton formatMenu
 	/** Largueur des étiquettes */
 	@FXML
 	public FormattedTextField labelWidth
@@ -64,8 +75,10 @@ class ControllerStudentsQrCodeDocGenerator {
 	@FXML
 	def void saveAndQuit() {
 		val Optional<File> saveFile = selectSavePath
-		if (!saveFile.empty) {
-			val state = exportStudentsQrCodes(new File(txtFldFile.text), Float.parseFloat(labelWidth.text), Float.parseFloat(labelHeight.text), true, saveFile.get)
+		if (!saveFile.empty && labelWidth.text != "" && labelHeight.text != "") {
+			val state = exportStudentsQrCodes(new File(txtFldFile.text),
+				Float.parseFloat(labelWidth.text.replace(",", ".")),
+				Float.parseFloat(labelHeight.text.replace(",", ".")), alphabeticalOrder.isSelected, saveFile.get)
 			if (!btnOk.disable)
 				dispDialog(state)
 			quit
@@ -84,11 +97,28 @@ class ControllerStudentsQrCodeDocGenerator {
 	def void initialize() {
 		btnOk.disableProperty.bind(txtFldFile.wrongFormattedProperty)
 
-		txtFldFile.addFormatValidator( text |
-			supportedFormat.map[f|f.substring(1)].findFirst[f|text.endsWith(f)] !== null ? Optional.empty : Optional.of(
-				"file.info.fileNotValid")
+		txtFldFile.addFormatValidator(
+			text |
+				supportedFormat.map[f|f.substring(1)].findFirst[f|text.endsWith(f)] !== null
+					? Optional.empty
+					: Optional.of("file.info.fileNotValid")
 		)
 		txtFldFile.addFormatValidator(new ValidFilePathValidator)
+
+		val EventHandler<ActionEvent> formatMenuEvent = new EventHandler<ActionEvent> {
+			override handle(ActionEvent e) {
+				val String selection = (e.source as MenuItem).text
+				selectFormat(selection)
+				formatMenu.text = selection
+			}
+		}
+		formatMenu.items.add(new MenuItem("99.1 x 57.0mm"))
+		formatMenu.items.add(new MenuItem("63.5 x 38.1mm"))
+		formatMenu.items.add(new MenuItem("45.7 x 21.2mm"))
+		formatMenu.items.add(new MenuItem(LanguageManager.translate("studentsQrCodeDoc.custom")))
+		for (item : formatMenu.items) {
+			item.onAction = formatMenuEvent
+		}
 	}
 
 	/**
@@ -160,10 +190,19 @@ class ControllerStudentsQrCodeDocGenerator {
 	 * @param exportFile Chemin du fichier où enregistrer le document des qr codes
 	 * @return un LoadState représentant l'état terminal de l'export des qr codes
 	 */
-	private def LoadState exportStudentsQrCodes(File studentsList, float labelWidth, float labelHeight, boolean alphabeticalOrder, File exportFile) {
+	private def LoadState exportStudentsQrCodes(File studentsList, float labelWidth, float labelHeight,
+		boolean alphabeticalOrder, File exportFile) {
 		val StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator
 		generator.generateDocument(studentsList, labelWidth, labelHeight, alphabeticalOrder, exportFile)
 		return LoadState.SUCCESS
+	}
+
+	private def void selectFormat(String itemText) {
+		if (itemText != "Personnalisé") {
+			val dimensions = itemText.split(" x ")
+			labelWidth.text = dimensions.get(0)
+			labelHeight.text = dimensions.get(1).substring(0, dimensions.get(1).length - 2)
+		}
 	}
 
 }

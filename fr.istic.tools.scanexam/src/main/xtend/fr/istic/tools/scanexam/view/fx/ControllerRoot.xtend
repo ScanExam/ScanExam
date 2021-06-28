@@ -155,19 +155,20 @@ class ControllerRoot implements Initializable {
 	}
 
 	@FXML
-	def linkManuallySheets(){
-	 	val FXMLLoader loader = new FXMLLoader
-	 	loader.resources = LanguageManager.currentBundle
-	 	val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"))
+	def linkManuallySheets() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.resources = LanguageManager.currentBundle
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"))
 		val Stage dialog = new Stage
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
-		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation, graduationController.pdfManager, graduationController)
+		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation, graduationController.pdfManager,
+			graduationController)
 		dialog.title = LanguageManager.translate("menu.edit.linkSheetsTitle")
 		dialog.setScene(new Scene(view))
 		dialog.setResizable(false);
 		dialog.show
-	 }
-	
+	}
+
 	@FXML
 	def pdfExport() {
 
@@ -193,9 +194,8 @@ class ControllerRoot implements Initializable {
 		DialogMessageSender.sendDialog(
 			AlertType.WARNING,
 			LanguageManager.translate("sendMail.noStudentDataHeader"),
-			nbSheetWithoutName > 1
-				? String.format(LanguageManager.translate("sendMail.notAllStudent"), nbSheetWithoutName)
-				: LanguageManager.translate("sendMail.notAllStudent1"),
+			nbSheetWithoutName > 1 ? String.format(LanguageManager.translate("sendMail.notAllStudent"),
+				nbSheetWithoutName) : LanguageManager.translate("sendMail.notAllStudent1"),
 			null
 		)
 
@@ -280,8 +280,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.exportStudentsQrCodes"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		loader.<ControllerStudentsQrCodeDocGenerator>controller.initialize
-		dialog.setScene(new Scene(view, 384, 191))
+		dialog.setScene(new Scene(view, 384, 276))
 		dialog.setResizable(false)
 		dialog.show
 	}

@@ -13,9 +13,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -62,6 +67,18 @@ public class ControllerStudentsQrCodeDocGenerator {
   public FormattedTextField txtFldFile;
   
   /**
+   * Indique si les élèves doivent être rangé par ordre alphabétique
+   */
+  @FXML
+  public CheckBox alphabeticalOrder;
+  
+  /**
+   * Menu des formats d'étiquettes prédéfinis
+   */
+  @FXML
+  public MenuButton formatMenu;
+  
+  /**
    * Largueur des étiquettes
    */
   @FXML
@@ -85,15 +102,15 @@ public class ControllerStudentsQrCodeDocGenerator {
   @FXML
   public void saveAndQuit() {
     final Optional<File> saveFile = this.selectSavePath();
-    boolean _isEmpty = saveFile.isEmpty();
-    boolean _not = (!_isEmpty);
-    if (_not) {
+    if ((((!saveFile.isEmpty()) && (!Objects.equal(this.labelWidth.getText(), ""))) && (!Objects.equal(this.labelHeight.getText(), "")))) {
       String _text = this.txtFldFile.getText();
       File _file = new File(_text);
-      final ControllerStudentsQrCodeDocGenerator.LoadState state = this.exportStudentsQrCodes(_file, Float.parseFloat(this.labelWidth.getText()), Float.parseFloat(this.labelHeight.getText()), true, saveFile.get());
+      final ControllerStudentsQrCodeDocGenerator.LoadState state = this.exportStudentsQrCodes(_file, 
+        Float.parseFloat(this.labelWidth.getText().replace(",", ".")), 
+        Float.parseFloat(this.labelHeight.getText().replace(",", ".")), this.alphabeticalOrder.isSelected(), saveFile.get());
       boolean _isDisable = this.btnOk.isDisable();
-      boolean _not_1 = (!_isDisable);
-      if (_not_1) {
+      boolean _not = (!_isDisable);
+      if (_not) {
         this.dispDialog(state);
       }
       this.quit();
@@ -125,14 +142,39 @@ public class ControllerStudentsQrCodeDocGenerator {
       if (_tripleNotEquals) {
         _xifexpression = Optional.<String>empty();
       } else {
-        _xifexpression = Optional.<String>of(
-          "file.info.fileNotValid");
+        _xifexpression = Optional.<String>of("file.info.fileNotValid");
       }
       return _xifexpression;
     };
     this.txtFldFile.addFormatValidator(_function);
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator();
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
+    final EventHandler<ActionEvent> formatMenuEvent = new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(final ActionEvent e) {
+        Object _source = e.getSource();
+        final String selection = ((MenuItem) _source).getText();
+        ControllerStudentsQrCodeDocGenerator.this.selectFormat(selection);
+        ControllerStudentsQrCodeDocGenerator.this.formatMenu.setText(selection);
+      }
+    };
+    ObservableList<MenuItem> _items = this.formatMenu.getItems();
+    MenuItem _menuItem = new MenuItem("99.1 x 57.0mm");
+    _items.add(_menuItem);
+    ObservableList<MenuItem> _items_1 = this.formatMenu.getItems();
+    MenuItem _menuItem_1 = new MenuItem("63.5 x 38.1mm");
+    _items_1.add(_menuItem_1);
+    ObservableList<MenuItem> _items_2 = this.formatMenu.getItems();
+    MenuItem _menuItem_2 = new MenuItem("45.7 x 21.2mm");
+    _items_2.add(_menuItem_2);
+    ObservableList<MenuItem> _items_3 = this.formatMenu.getItems();
+    String _translate = LanguageManager.translate("studentsQrCodeDoc.custom");
+    MenuItem _menuItem_3 = new MenuItem(_translate);
+    _items_3.add(_menuItem_3);
+    ObservableList<MenuItem> _items_4 = this.formatMenu.getItems();
+    for (final MenuItem item : _items_4) {
+      item.setOnAction(formatMenuEvent);
+    }
   }
   
   /**
@@ -229,5 +271,16 @@ public class ControllerStudentsQrCodeDocGenerator {
     final StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator();
     generator.generateDocument(studentsList, labelWidth, labelHeight, alphabeticalOrder, exportFile);
     return ControllerStudentsQrCodeDocGenerator.LoadState.SUCCESS;
+  }
+  
+  private void selectFormat(final String itemText) {
+    boolean _notEquals = (!Objects.equal(itemText, "Personnalisé"));
+    if (_notEquals) {
+      final String[] dimensions = itemText.split(" x ");
+      this.labelWidth.setText(dimensions[0]);
+      int _length = (dimensions[1]).length();
+      int _minus = (_length - 2);
+      this.labelHeight.setText((dimensions[1]).substring(0, _minus));
+    }
   }
 }

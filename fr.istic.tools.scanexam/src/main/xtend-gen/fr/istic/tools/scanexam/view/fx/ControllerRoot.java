@@ -15,7 +15,6 @@ import fr.istic.tools.scanexam.view.fx.ControllerLinkManuallySheets;
 import fr.istic.tools.scanexam.view.fx.ControllerSendMail;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentListLoader;
 import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
-import fr.istic.tools.scanexam.view.fx.ControllerStudentsQrCodeDocGenerator;
 import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
@@ -236,7 +235,8 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerLinkManuallySheets>getController().init(this.serviceGraduation, this.graduationController.getPdfManager(), this.graduationController);
+      loader.<ControllerLinkManuallySheets>getController().init(this.serviceGraduation, this.graduationController.getPdfManager(), 
+        this.graduationController);
       dialog.setTitle(LanguageManager.translate("menu.edit.linkSheetsTitle"));
       Scene _scene = new Scene(view);
       dialog.setScene(_scene);
@@ -393,8 +393,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      loader.<ControllerStudentsQrCodeDocGenerator>getController().initialize();
-      Scene _scene = new Scene(view, 384, 191);
+      Scene _scene = new Scene(view, 384, 276);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();
