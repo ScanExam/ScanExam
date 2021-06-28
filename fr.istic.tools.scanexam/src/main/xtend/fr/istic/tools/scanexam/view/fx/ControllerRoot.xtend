@@ -251,7 +251,7 @@ class ControllerRoot implements Initializable {
 		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		loader.<ControllerGraduationCreator>controller.initialize(serviceGraduation, editionController,
-			graduationController)
+			graduationController, this)
 		dialog.setScene(new Scene(view, 384, 405))
 		dialog.setResizable(false);
 		dialog.show

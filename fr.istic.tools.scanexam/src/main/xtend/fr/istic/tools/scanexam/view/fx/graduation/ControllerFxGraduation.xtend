@@ -36,11 +36,6 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
-import javafx.fxml.FXMLLoader
-import javafx.scene.Parent
-import javafx.stage.Stage
-import javafx.scene.Scene
-import fr.istic.tools.scanexam.utils.ResourcesUtils
 import java.util.Collections
 
 /**
@@ -397,27 +392,6 @@ class ControllerFxGraduation {
 		grader.layoutY = 0;
 		mainPane.unZoom
 	}
-	
-	def void goToManuallyLinkSheets(){
-        
-        try{
-            val FXMLLoader loader = new FXMLLoader
-            //loader.setResources(LanguageManager.currentBundle)
-            var Parent root =  loader.load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"))
-            val Scene scene = new Scene(root)
-            var Stage stage = new Stage()
-            stage.title = "Lier les pages mal analysées"
-            stage.scene = scene
-            stage.show
-        }
-        catch(IOException e){
-        	//TODO faire mieux pour le catch
-            println("c'est cassé")
-        }
-        catch(NullPointerException e){
-            e.printStackTrace
-        }
-    }
 
 	// ---------------------------------//
 	
@@ -625,7 +599,7 @@ class ControllerFxGraduation {
 			var student = new StudentItemGraduation(i)
 			var name = service.getStudentName(i).orElse("");
 			if (name === null || name === "") {
-				student.studentName = LanguageManager.translate("name.default")
+				student.studentName = LanguageManager.translate("name.default") + " " + i
 				}
 			else {
 				student.studentName = name

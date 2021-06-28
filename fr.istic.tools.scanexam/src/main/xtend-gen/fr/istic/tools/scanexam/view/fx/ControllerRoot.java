@@ -348,7 +348,7 @@ public class ControllerRoot implements Initializable {
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
       loader.<ControllerGraduationCreator>getController().initialize(this.serviceGraduation, this.editionController, 
-        this.graduationController);
+        this.graduationController, this);
       Scene _scene = new Scene(view, 384, 405);
       dialog.setScene(_scene);
       dialog.setResizable(false);
