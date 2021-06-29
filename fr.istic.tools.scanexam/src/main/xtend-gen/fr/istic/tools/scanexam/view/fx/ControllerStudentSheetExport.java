@@ -2,6 +2,7 @@ package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.QrCodeZone;
+import fr.istic.tools.scanexam.qrCode.QrCodeType;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
@@ -19,7 +20,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class ControllerStudentSheetExport {
@@ -74,25 +74,23 @@ public class ControllerStudentSheetExport {
     final Optional<File> fileOpt = this.loadFolder();
     boolean _isPresent = fileOpt.isPresent();
     if (_isPresent) {
-      boolean _export = this.export(fileOpt.get(), Integer.parseInt(this.txtFlbNbSheet.getText()));
+      boolean _export = this.export(fileOpt.get(), QrCodeType.SHEET_PAGE, Integer.parseInt(this.txtFlbNbSheet.getText()));
       if (_export) {
         this.quit();
       }
     }
   }
   
-  public boolean export(final File file, final int number) {
+  public boolean export(final File file, final int qrCodeType, final int number) {
     boolean _xblockexpression = false;
     {
       Optional<QrCodeZone> _qrCodeZone = this.service.getQrCodeZone();
       boolean _tripleEquals = (_qrCodeZone == null);
       if (_tripleEquals) {
-        InputOutput.<String>println("yo");
         this.service.createQrCode(0.025f, 0.875f, 0.1f, 0.1f);
       }
       final QRCodeGenerator generator = new QRCodeGeneratorImpl();
-      generator.createAllExamCopies(this.controllerEdition.getPdfManager().getPdfInputStream(), file, this.service.getQrCodeZone().get(), 
-        this.service.getExamName(), number);
+      generator.createAllExamCopies(this.controllerEdition.getPdfManager().getPdfInputStream(), file, this.service.getQrCodeZone().get(), qrCodeType, number);
       _xblockexpression = true;
     }
     return _xblockexpression;

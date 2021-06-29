@@ -12,10 +12,10 @@ public interface QRCodeGenerator {
    * @param inputFile Chemin du sujet maitre
    * @param outputPath chemin de sortie
    * @param qrCodeZone zone sur le document où insérer le qrcode
-   * @param idExam l'id de l'examen
+   * @param qrCodeType Type de qr code à insérer
    * @param nbCopies Nombre de copies de l'examen souhaité
    */
-  void createAllExamCopies(final InputStream inputFile, final File outputPath, final QrCodeZone qrCodeZone, final String idExam, final int nbCopie);
+  void createAllExamCopies(final InputStream inputFile, final File outputPath, final QrCodeZone qrCodeZone, final int qrCodeType, final int nbCopie);
   
   boolean isFinished();
   

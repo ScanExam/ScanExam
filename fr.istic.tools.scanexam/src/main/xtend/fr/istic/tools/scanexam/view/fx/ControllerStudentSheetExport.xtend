@@ -15,6 +15,7 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.qrCode.QrCodeType
 
 class ControllerStudentSheetExport {
 
@@ -53,21 +54,20 @@ class ControllerStudentSheetExport {
 	def exportAndQuit() {
 		val fileOpt = loadFolder
 		if (fileOpt.isPresent) {
-			if (export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
+			if (export(fileOpt.get, QrCodeType.SHEET_PAGE, Integer.parseInt(txtFlbNbSheet.text)))
 				quit
 		}
 	}
 
-	def boolean export(File file, int number) {
+	def boolean export(File file, int qrCodeType, int number) {
 		// Si aucune zone de qr code n'a été placée, on en crée une dans le modèle
 		if (service.qrCodeZone === null) {
-			println("yo")
 			service.createQrCode(0.025f, 0.875f, 0.1f, 0.1f)
 		}
 
 		val QRCodeGenerator generator = new QRCodeGeneratorImpl
 		generator.createAllExamCopies(controllerEdition.pdfManager.getPdfInputStream, file, service.qrCodeZone.get,
-			service.examName, number)
+			qrCodeType, number)
 		true
 	}
 

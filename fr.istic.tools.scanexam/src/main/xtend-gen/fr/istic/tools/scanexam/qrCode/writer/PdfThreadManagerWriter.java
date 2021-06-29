@@ -20,6 +20,11 @@ public class PdfThreadManagerWriter extends Thread implements Runnable {
    */
   private QrCodeZone qrCodeZone;
   
+  /**
+   * Type de qr code à insérer
+   */
+  private int qrCodeType;
+  
   private PDDocument docSujetMaitre;
   
   private PDDocument doc;
@@ -30,9 +35,10 @@ public class PdfThreadManagerWriter extends Thread implements Runnable {
   
   private OutputStream output;
   
-  public PdfThreadManagerWriter(final int nbPage, final QrCodeZone qrCodeZone, final PDDocument docSujetMaitre, final PDDocument doc, final QRCodeGeneratorImpl writer, final int nbCopie, final OutputStream output) {
+  public PdfThreadManagerWriter(final int nbPage, final QrCodeZone qrCodeZone, final int qrCodeType, final PDDocument docSujetMaitre, final PDDocument doc, final QRCodeGeneratorImpl writer, final int nbCopie, final OutputStream output) {
     this.nbPage = nbPage;
     this.qrCodeZone = qrCodeZone;
+    this.qrCodeType = qrCodeType;
     this.docSujetMaitre = docSujetMaitre;
     this.writer = writer;
     this.nbCopie = nbCopie;
@@ -50,16 +56,16 @@ public class PdfThreadManagerWriter extends Thread implements Runnable {
       File qrcode2 = File.createTempFile("qrcode2", ".png");
       File qrcode3 = File.createTempFile("qrcode3", ".png");
       String _absolutePath = qrcode0.getAbsolutePath();
-      QRThreadWriter _qRThreadWriter = new QRThreadWriter(this.writer, 0, (this.nbCopie / 4), this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath);
+      QRThreadWriter _qRThreadWriter = new QRThreadWriter(this.writer, this.qrCodeType, 0, (this.nbCopie / 4), this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath);
       service.execute(_qRThreadWriter);
       String _absolutePath_1 = qrcode1.getAbsolutePath();
-      QRThreadWriter _qRThreadWriter_1 = new QRThreadWriter(this.writer, (this.nbCopie / 4), (this.nbCopie / 2), this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath_1);
+      QRThreadWriter _qRThreadWriter_1 = new QRThreadWriter(this.writer, this.qrCodeType, (this.nbCopie / 4), (this.nbCopie / 2), this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath_1);
       service.execute(_qRThreadWriter_1);
       String _absolutePath_2 = qrcode2.getAbsolutePath();
-      QRThreadWriter _qRThreadWriter_2 = new QRThreadWriter(this.writer, (this.nbCopie / 2), ((3 * this.nbCopie) / 4), this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath_2);
+      QRThreadWriter _qRThreadWriter_2 = new QRThreadWriter(this.writer, this.qrCodeType, (this.nbCopie / 2), ((3 * this.nbCopie) / 4), this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath_2);
       service.execute(_qRThreadWriter_2);
       String _absolutePath_3 = qrcode3.getAbsolutePath();
-      QRThreadWriter _qRThreadWriter_3 = new QRThreadWriter(this.writer, ((3 * this.nbCopie) / 4), this.nbCopie, this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath_3);
+      QRThreadWriter _qRThreadWriter_3 = new QRThreadWriter(this.writer, this.qrCodeType, ((3 * this.nbCopie) / 4), this.nbCopie, this.qrCodeZone, this.docSujetMaitre, this.nbPage, latchThreads, _absolutePath_3);
       service.execute(_qRThreadWriter_3);
       latchThreads.await();
       this.writer.setFinished(true);
