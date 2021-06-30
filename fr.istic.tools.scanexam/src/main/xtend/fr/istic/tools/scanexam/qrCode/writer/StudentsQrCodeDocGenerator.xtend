@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.DataFormatter
 import java.io.IOException
+import fr.istic.tools.scanexam.qrCode.QrCodeType
 
 /**
  * Classe pour générer un document contenant le nom, prénom de chaque élève accompagné d'un qr code.
@@ -135,11 +136,11 @@ class StudentsQrCodeDocGenerator {
 		while (posY >= yMarginPixel && studentIndex < students.length) {
 			while ((posX + (labelWidthPixel * 2)) <= (pageHeightPixel - xMarginPixel) &&
 				studentIndex < students.length) {
-				val String data = students.get(studentIndex)
+				val String name = students.get(studentIndex)
 				insertQrCode(contentStream, document, posX + ((labelWidthPixel - qrCodeSize) / 2), posY, qrCodeSize,
-					data)
-				insertText(contentStream, document, posX + labelWidthPixel + 4, posY + (labelHeightPixel * 0.8f).intValue,
-					labelWidthPixel / 5, data)
+					QrCodeType.STUDENT + "_" + name)
+				insertText(contentStream, document, posX + labelWidthPixel + 4,
+					posY + (labelHeightPixel * 0.8f).intValue, labelWidthPixel / 5, name)
 				posX += (labelWidthPixel * 2)
 				studentIndex++
 			}

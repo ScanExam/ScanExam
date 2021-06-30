@@ -15,12 +15,30 @@ public class Copie {
   
   private final int numCopie;
   
+  private final String studentName;
+  
   public Copie(final int numCopie, final int numPageInPDF, final int numPageInSubject) {
     this.numCopie = numCopie;
     HashSet<Page> _hashSet = new HashSet<Page>();
     this.setPages = _hashSet;
     Page _page = new Page(numPageInSubject, numPageInPDF);
     this.setPages.add(_page);
+    this.studentName = null;
+  }
+  
+  public Copie(final int numCopie, final int numPageInPDF, final int numPageInSubject, final String studentName) {
+    this.numCopie = numCopie;
+    HashSet<Page> _hashSet = new HashSet<Page>();
+    this.setPages = _hashSet;
+    Page _page = new Page(numPageInSubject, numPageInPDF);
+    this.setPages.add(_page);
+    this.studentName = studentName;
+  }
+  
+  public Copie(final int numCopie, final Set<Page> setPages, final String studentName) {
+    this.numCopie = numCopie;
+    this.setPages = setPages;
+    this.studentName = studentName;
   }
   
   public void addInSet(final Set<Page> pages) {
@@ -37,6 +55,10 @@ public class Copie {
   
   public Set<Page> getPagesCopie() {
     return this.setPages;
+  }
+  
+  public String getStudentName() {
+    return this.studentName;
   }
   
   public boolean isCopyComplete(final int nbPageSubject) {
@@ -59,14 +81,20 @@ public class Copie {
   
   @Override
   public String toString() {
-    String res = (("Copie " + Integer.valueOf(this.numCopie)) + "[\n");
+    String res = ("Copie " + Integer.valueOf(this.numCopie));
+    if ((this.studentName != null)) {
+      String _res = res;
+      res = (_res + (" " + this.studentName));
+    }
+    String _res_1 = res;
+    res = (_res_1 + "[\n");
     int _length = ((Object[])Conversions.unwrapArray(this.setPages, Object.class)).length;
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
     for (final Integer i : _doubleDotLessThan) {
-      String _res = res;
+      String _res_2 = res;
       String _string = (((Page[])Conversions.unwrapArray(this.setPages, Page.class))[(i).intValue()]).toString();
       String _plus = (_string + "\n");
-      res = (_res + _plus);
+      res = (_res_2 + _plus);
     }
     return (res + "]");
   }
@@ -77,7 +105,8 @@ public class Copie {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((this.setPages== null) ? 0 : this.setPages.hashCode());
-    return prime * result + this.numCopie;
+    result = prime * result + this.numCopie;
+    return prime * result + ((this.studentName== null) ? 0 : this.studentName.hashCode());
   }
   
   @Override
@@ -96,6 +125,11 @@ public class Copie {
     } else if (!this.setPages.equals(other.setPages))
       return false;
     if (other.numCopie != this.numCopie)
+      return false;
+    if (this.studentName == null) {
+      if (other.studentName != null)
+        return false;
+    } else if (!this.studentName.equals(other.studentName))
       return false;
     return true;
   }

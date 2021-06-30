@@ -2,7 +2,7 @@ package fr.istic.tools.scanexam.view.fx;
 
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader;
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl;
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeV2Impl;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.view.fx.ControllerRoot;
 import fr.istic.tools.scanexam.view.fx.ControllerWaiting;
@@ -177,7 +177,7 @@ public class ControllerGraduationCreator {
         Optional<Pair<Float, Float>> _qrCodePosition = this.serviceGraduation.getQrCodePosition();
         Pair<Float, Float> _pair = new Pair<Float, Float>(Float.valueOf((-1.0f)), Float.valueOf((-1.0f)));
         Pair<Float, Float> _orElse = _qrCodePosition.orElse(_pair);
-        final PdfReader reader = new PdfReaderQrCodeImpl(_fileInputStream, _text_1, _pageAmount, _orElse);
+        final PdfReader reader = new PdfReaderQrCodeV2Impl(_fileInputStream, _text_1, _pageAmount, _orElse);
         final boolean successStart = reader.readPDf();
         final Task<Void> task = new Task<Void>() {
           @Override
@@ -294,7 +294,8 @@ public class ControllerGraduationCreator {
    * @param file le PDF
    */
   public void onFinish(final PdfReader reader, final File file) {
-    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages(), reader.getUncompleteStudentSheets());
+    this.serviceGraduation.initializeCorrection(reader.getCompleteStudentSheets(), reader.getFailedPages(), 
+      reader.getUncompleteStudentSheets());
     this.serviceGraduation.setExamName(this.txtFldGraduationName.getText());
     this.controllerGraduation.getPdfManager().create(file);
     this.controllerGraduation.setToLoaded();

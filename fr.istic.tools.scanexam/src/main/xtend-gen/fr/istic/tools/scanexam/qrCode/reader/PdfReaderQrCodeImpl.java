@@ -43,27 +43,27 @@ import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 @SuppressWarnings("all")
 public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
-  private final Logger logger = LogManager.getLogger();
+  protected final Logger logger = LogManager.getLogger();
   
-  private Set<Copie> sheets;
+  protected Set<Copie> sheets;
   
-  private int nbPagesInSheet;
+  protected int nbPagesInSheet;
   
-  private int nbPagesInPdf;
+  protected int nbPagesInPdf;
   
-  private PDDocument doc;
+  protected PDDocument doc;
   
-  private String docPath;
+  protected String docPath;
   
-  private Pair<Float, Float> qrPos;
+  protected Pair<Float, Float> qrPos;
   
-  private boolean isFinished;
+  protected boolean isFinished;
   
-  private List<Integer> pagesMalLues;
+  protected List<Integer> pagesMalLues;
   
-  private int missingSheets;
+  protected int missingSheets;
   
-  private int treatedSheets;
+  protected int treatedSheets;
   
   public PdfReaderQrCodeImpl(final InputStream input, final String docPath, final int nbPages, final Pair<Float, Float> qrPos) {
     try {
@@ -173,7 +173,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param result Résultat du dédodage du QR code
    * @return Orientation du QR code
    */
-  private float qrCodeOrientation(final Result result) {
+  protected float qrCodeOrientation(final Result result) {
     final ResultPoint[] resultPoints = result.getResultPoints();
     final ResultPoint a = resultPoints[1];
     final ResultPoint b = resultPoints[2];
@@ -209,7 +209,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param docHeight Hauteur du document où se trouve le QR code
    * @return Paire contenant les positions x et y du QR code
    */
-  private Pair<Float, Float> qrCodePosition(final Result result, final float orientation, final float docWidth, final float docHeight) {
+  protected Pair<Float, Float> qrCodePosition(final Result result, final float orientation, final float docWidth, final float docHeight) {
     final ResultPoint[] resultPoints = result.getResultPoints();
     final ResultPoint a = resultPoints[1];
     final ResultPoint b = resultPoints[2];
@@ -274,7 +274,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param angle Angle en degrés
    * @return Image de M par la rotation d'angle angle autour du centre
    */
-  private Pair<Float, Float> rotatePoint(final Pair<Float, Float> point, final Pair<Float, Float> center, final float angle) {
+  protected Pair<Float, Float> rotatePoint(final Pair<Float, Float> point, final Pair<Float, Float> center, final float angle) {
     final double angleRad = ((angle * Math.PI) / 180);
     Float _key = point.getKey();
     Float _key_1 = center.getKey();
@@ -306,7 +306,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param page Page où effectuer la rotation
    * @param rotation Nouvelle inclinaison du contenu
    */
-  private void rotatePdf(final PDDocument pdDoc, final String docPath, final int page, final float rotation) {
+  protected void rotatePdf(final PDDocument pdDoc, final String docPath, final int page, final float rotation) {
     try {
       final PDPage pdPage = pdDoc.getDocumentCatalog().getPages().get(page);
       final PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND, 
@@ -338,7 +338,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param offsetX Longueur vers laquelle décaler le contenu sur l'axe x
    * @param offsetY Longueur vers laquelle décaler le contenu sur l'axe y
    */
-  private void repositionPdf(final PDDocument pdDoc, final String docPath, final int page, final float offsetX, final float offsetY) {
+  protected void repositionPdf(final PDDocument pdDoc, final String docPath, final int page, final float offsetX, final float offsetY) {
     try {
       final PDPage pdPage = pdDoc.getDocumentCatalog().getPages().get(page);
       final PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND, 
@@ -356,6 +356,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
   }
   
   /**
+   * Crée un thread lisant des qr codes
    * @param nbPage nombre de copies désirées
    * @param doc document dans lequel insérer les Codes
    * @param docPath chemin du document dans lequel insérer les Codes
@@ -449,7 +450,7 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * Ajoute une copie lu au tas de copies déjà lues. Si la copie existe déjà, on merge les pages
    * @param sheet la copie à ajouter
    */
-  public Boolean addCopie(final Copie copie) {
+  public boolean addCopie(final Copie copie) {
     boolean _xblockexpression = false;
     {
       boolean trouve = false;
@@ -468,13 +469,32 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
       i--;
       boolean _xifexpression = false;
       if (trouve) {
-        (((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[i]).addInSet(copie.getPagesCopie());
+        boolean _xblockexpression_1 = false;
+        {
+          final Copie oldCopie = ((Copie[])Conversions.unwrapArray(this.sheets, Copie.class))[i];
+          this.sheets.remove(oldCopie);
+          final int numCopie = oldCopie.getNumCopie();
+          final Set<Page> pages = oldCopie.getPagesCopie();
+          pages.addAll(copie.getPagesCopie());
+          String _xifexpression_1 = null;
+          String _studentName = oldCopie.getStudentName();
+          boolean _tripleNotEquals = (_studentName != null);
+          if (_tripleNotEquals) {
+            _xifexpression_1 = oldCopie.getStudentName();
+          } else {
+            _xifexpression_1 = copie.getStudentName();
+          }
+          final String studentName = _xifexpression_1;
+          final Copie newCopie = new Copie(numCopie, pages, studentName);
+          _xblockexpression_1 = this.sheets.add(newCopie);
+        }
+        _xifexpression = _xblockexpression_1;
       } else {
         _xifexpression = this.sheets.add(copie);
       }
       _xblockexpression = _xifexpression;
     }
-    return Boolean.valueOf(_xblockexpression);
+    return _xblockexpression;
   }
   
   /**
@@ -504,15 +524,21 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
         final int[] pagesArray = new int[this.nbPagesInSheet];
         final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
-        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
+        final String studentName = (((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getStudentName();
+        final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
+        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
         ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
         for (final Integer j : _doubleDotLessThan_1) {
-          final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
           final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
-          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
-            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
+          final Set<Copie> _converted_temp_5 = (Set<Copie>)temp;
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
+            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_5, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
+        if ((studentName != null)) {
+          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray)), studentName));
+        } else {
+          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
+        }
       }
     }
     return res;
@@ -537,20 +563,26 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
         final Set<Copie> _converted_temp_1 = (Set<Copie>)temp;
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
         final int[] pagesArray = new int[this.nbPagesInSheet];
+        final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
+        final String studentName = (((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getStudentName();
         ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, this.nbPagesInSheet, true);
         for (final Integer e : _doubleDotLessThan_1) {
           pagesArray[(e).intValue()] = (-1);
         }
-        final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
-        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
+        final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
+        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
         ExclusiveRange _doubleDotLessThan_2 = new ExclusiveRange(0, _length_1, true);
         for (final Integer j : _doubleDotLessThan_2) {
-          final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
           final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
-          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
-            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
+          final Set<Copie> _converted_temp_5 = (Set<Copie>)temp;
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
+            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_5, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
+        if ((studentName != null)) {
+          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray)), studentName));
+        } else {
+          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
+        }
       }
     }
     return res;

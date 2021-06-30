@@ -17,7 +17,7 @@ import fr.istic.tools.scanexam.core.StudentInformation
  * @author Antoine Degas
  */
 class DataFactory {
-	
+
 	/** 
 	 * Un rectangle permet de définir une zone sur l'interface graphique
 	 * @param x
@@ -27,7 +27,7 @@ class DataFactory {
 	 * @return une instance d'objet de type {@link Rectangle}
 	 * @author Antoine Degas
 	 */
-	def QuestionZone createRectangle(float x, float y, float width, float height){
+	def QuestionZone createRectangle(float x, float y, float width, float height) {
 		val rec = CoreFactory.eINSTANCE.createQuestionZone
 		rec.x = x
 		rec.y = y
@@ -35,47 +35,62 @@ class DataFactory {
 		rec.heigth = height
 		rec
 	}
-	
+
 	/** 
 	 * @return une instance d'objet de type {@link StudentSheet}
 	 * @author Antoine Degas
 	 */
-	def StudentSheet createStudentSheet(int idSheet, List<Integer> pages){
+	def StudentSheet createStudentSheet(int idSheet, List<Integer> pages) {
 		val sheet = CoreFactory.eINSTANCE.createStudentSheet
 		sheet.id = idSheet
-		
+
 		sheet.posPage.addAll(pages)
 		sheet
 	}
-	
+
+	/** 
+	 * @return une instance d'objet de type {@link StudentSheet} avec le nom de l'étudiant
+	 * @author Julien Cochet
+	 */
+	def StudentSheet createStudentSheet(int idSheet, List<Integer> pages, String studentName) {
+		val sheet = CoreFactory.eINSTANCE.createStudentSheet
+		sheet.id = idSheet
+
+		sheet.posPage.addAll(pages)
+
+		sheet.studentName = studentName
+
+		sheet
+	}
+
 	/** 
 	 * @return une instance d'objet de type {@link StudentInformation}
 	 * @author Théo Giraudet
 	 */
-	def StudentInformation createStudentInformation(String name, String address){
+	def StudentInformation createStudentInformation(String name, String address) {
 		val infos = CoreFactory.eINSTANCE.createStudentInformation
 		infos.name = name
 		infos.emailAddress = address
 		infos
 	}
-	
+
 	/** 
 	 * @return une instance d'objet de type {@link Grade}
 	 * @author Antoine Degas
 	 */
-	def Grade createGrade(){
+	def Grade createGrade() {
 		CoreFactory.eINSTANCE.createGrade
 	}
-	
+
 	/** 
 	 * @return une instance d'objet de type {@link GradeScale}
 	 * @author Antoine Degas
 	 */
-	def GradeScale createGradeScale(){
+	def GradeScale createGradeScale() {
 		CoreFactory.eINSTANCE.createGradeScale
-		
+
 	}
-	
+
 	/** 
 	 * @return une instance d'objet de type {@link GradeEntry}
 	 * @author Théo Giraudet
@@ -87,19 +102,20 @@ class DataFactory {
 		scale.step = point
 		scale
 	}
-	
+
 	/** Une question contient un identifiant et un {@link GradeScale} 
 	 * @param id identifiant de la question
 	 * @return une instance d'objet de type {@link Question}
 	 * @author Antoine Degas
 	 */
-	def Question createQuestion(int id){
+	def Question createQuestion(int id) {
 		val question = CoreFactory.eINSTANCE.createQuestion
 		question.id = id
 		question
 	}
-	
-	def Comment createTextComment(int id, String text, float x, float y , float h, float w,float pointerX,float pointerY, int pageId){
+
+	def Comment createTextComment(int id, String text, float x, float y, float h, float w, float pointerX,
+		float pointerY, int pageId) {
 		val annot = CoreFactory.eINSTANCE.createTextComment
 		annot.x = x
 		annot.y = y
@@ -111,4 +127,3 @@ class DataFactory {
 		annot
 	}
 }
-

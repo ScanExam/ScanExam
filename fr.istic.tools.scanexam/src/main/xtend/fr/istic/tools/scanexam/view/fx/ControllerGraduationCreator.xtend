@@ -2,7 +2,7 @@ package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.LanguageManager
 import fr.istic.tools.scanexam.qrCode.reader.PdfReader
-import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeImpl
+import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCodeV2Impl
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.ValidFilePathValidator
@@ -12,11 +12,14 @@ import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
 import java.io.File
 import java.io.FileInputStream
 import java.util.Objects
+import java.util.Optional
 import javafx.concurrent.Service
 import javafx.concurrent.Task
 import javafx.fxml.FXML
+import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
 import javafx.scene.control.RadioButton
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
@@ -24,11 +27,8 @@ import javafx.scene.layout.VBox
 import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
-import org.apache.logging.log4j.LogManager
 import javafx.util.Pair
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
-import java.util.Optional
+import org.apache.logging.log4j.LogManager
 
 /**
  * Contrôleur pour l'UI de chargement d'une correction
@@ -133,7 +133,7 @@ class ControllerGraduationCreator {
 	 */
 	def boolean loadStudentSheets() {
 		val File file = new File(txtFldFileGraduation.text)
-		val PdfReader reader = new PdfReaderQrCodeImpl(new FileInputStream(file), txtFldFileGraduation.text,
+		val PdfReader reader = new PdfReaderQrCodeV2Impl(new FileInputStream(file), txtFldFileGraduation.text,
 			serviceGraduation.pageAmount, serviceGraduation.qrCodePosition.orElse(new Pair<Float, Float>(-1.0f, -1.0f)))
 		val successStart = reader.readPDf
 		val Task<Void> task = new Task<Void>() {
@@ -219,35 +219,34 @@ class ControllerGraduationCreator {
 	 * @param file le PDF
 	 */
 	def onFinish(PdfReader reader, File file) {
-		serviceGraduation.initializeCorrection(reader.completeStudentSheets, reader.failedPages, reader.uncompleteStudentSheets)
+		serviceGraduation.initializeCorrection(reader.completeStudentSheets, reader.failedPages,
+			reader.uncompleteStudentSheets)
 		serviceGraduation.examName = txtFldGraduationName.text
 		controllerGraduation.pdfManager.create(file)
 		controllerGraduation.setToLoaded
 		quit
-		
-		if(reader.failedPages.size != 0)
-		{
+
+		if (reader.failedPages.size != 0) {
 			proposeLinkManuallyFailedPages(reader)
 		}
 	}
-	
+
 	/**
 	 * Méthode qui propose à l'utilisateur si il souhaite lier les pages non reconnues à la fin de la lecture
 	 * @param reader le PdfReader qui s'est occupé de la lecture
 	 * @author Romain Caruana
 	 */
-	def proposeLinkManuallyFailedPages(PdfReader reader){
+	def proposeLinkManuallyFailedPages(PdfReader reader) {
 		val Alert alertBox = new Alert(AlertType.CONFIRMATION)
-		
-		alertBox.title = LanguageManager.translate("proposeFailed.title")
-		alertBox.contentText = LanguageManager.translate("proposeFailed.content.start") + " " 
-							   + reader.failedPages.size + " " + LanguageManager.translate("proposeFailed.content.end")
-		
-		val Optional<ButtonType> result = alertBox.showAndWait
-		
-		if(result.get() == ButtonType.OK)
-     		controllerRoot.linkManuallySheets
 
-		
+		alertBox.title = LanguageManager.translate("proposeFailed.title")
+		alertBox.contentText = LanguageManager.translate("proposeFailed.content.start") + " " +
+			reader.failedPages.size + " " + LanguageManager.translate("proposeFailed.content.end")
+
+		val Optional<ButtonType> result = alertBox.showAndWait
+
+		if (result.get() == ButtonType.OK)
+			controllerRoot.linkManuallySheets
+
 	}
 }

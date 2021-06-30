@@ -32,18 +32,18 @@ import org.apache.pdfbox.util.Matrix
 
 class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
-	val logger = LogManager.logger
-	Set<Copie> sheets
-	int nbPagesInSheet
-	int nbPagesInPdf
-	PDDocument doc
-	String docPath
-	Pair<Float, Float> qrPos
-	boolean isFinished
-	List<Integer> pagesMalLues;
+	protected val logger = LogManager.logger
+	protected Set<Copie> sheets
+	protected int nbPagesInSheet
+	protected int nbPagesInPdf
+	protected PDDocument doc
+	protected String docPath
+	protected Pair<Float, Float> qrPos
+	protected boolean isFinished
+	protected List<Integer> pagesMalLues;
 
-	int missingSheets
-	int treatedSheets
+	protected int missingSheets
+	protected int treatedSheets
 
 	new(InputStream input, String docPath, int nbPages, Pair<Float, Float> qrPos) {
 		this.doc = PDDocument.load(input)
@@ -129,7 +129,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param result Résultat du dédodage du QR code
 	 * @return Orientation du QR code
 	 */
-	private def float qrCodeOrientation(Result result) {
+	protected def float qrCodeOrientation(Result result) {
 		val ResultPoint[] resultPoints = result.resultPoints
 		val ResultPoint a = resultPoints.get(1)
 		val ResultPoint b = resultPoints.get(2)
@@ -156,7 +156,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param docHeight Hauteur du document où se trouve le QR code
 	 * @return Paire contenant les positions x et y du QR code
 	 */
-	private def Pair<Float, Float> qrCodePosition(Result result, float orientation, float docWidth, float docHeight) {
+	protected def Pair<Float, Float> qrCodePosition(Result result, float orientation, float docWidth, float docHeight) {
 		val ResultPoint[] resultPoints = result.resultPoints
 		val ResultPoint a = resultPoints.get(1)
 		val ResultPoint b = resultPoints.get(2)
@@ -195,7 +195,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param angle Angle en degrés
 	 * @return Image de M par la rotation d'angle angle autour du centre
 	 */
-	private def Pair<Float, Float> rotatePoint(Pair<Float, Float> point, Pair<Float, Float> center, float angle) {
+	protected def Pair<Float, Float> rotatePoint(Pair<Float, Float> point, Pair<Float, Float> center, float angle) {
 		val angleRad = angle * Math.PI / 180
 		val xPoint = point.key - center.key
 		val yPoint = point.value - center.value
@@ -211,7 +211,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param page Page où effectuer la rotation
 	 * @param rotation Nouvelle inclinaison du contenu
 	 */
-	private def void rotatePdf(PDDocument pdDoc, String docPath, int page, float rotation) {
+	protected def void rotatePdf(PDDocument pdDoc, String docPath, int page, float rotation) {
 		val PDPage pdPage = pdDoc.documentCatalog.pages.get(page)
 		val PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND,
 			false, false)
@@ -233,7 +233,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param offsetX Longueur vers laquelle décaler le contenu sur l'axe x
 	 * @param offsetY Longueur vers laquelle décaler le contenu sur l'axe y
 	 */
-	private def void repositionPdf(PDDocument pdDoc, String docPath, int page, float offsetX, float offsetY) {
+	protected def void repositionPdf(PDDocument pdDoc, String docPath, int page, float offsetX, float offsetY) {
 		val PDPage pdPage = pdDoc.documentCatalog.pages.get(page)
 		val PDPageContentStream cs = new PDPageContentStream(pdDoc, pdPage, PDPageContentStream.AppendMode.PREPEND,
 			false, false)
@@ -243,7 +243,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	}
 
 	/**
-	 * 
+	 * Crée un thread lisant des qr codes
 	 * @param nbPage nombre de copies désirées
 	 * @param doc document dans lequel insérer les Codes
 	 * @param docPath chemin du document dans lequel insérer les Codes
@@ -330,9 +330,17 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		} // while
 		i--
 		if (trouve) {
-			sheets.get(i).addInSet(copie.pagesCopie)
-		} else
+			val Copie oldCopie = sheets.get(i)
+			sheets.remove(oldCopie)
+			val int numCopie = oldCopie.numCopie
+			val Set<Page> pages = oldCopie.pagesCopie
+			pages.addAll(copie.pagesCopie)
+			val String studentName = oldCopie.studentName !== null ? oldCopie.studentName : copie.studentName
+			val Copie newCopie = new Copie(numCopie, pages, studentName)
+			sheets.add(newCopie)
+		} else {
 			sheets.add(copie)
+		}
 	}
 
 	/**
@@ -357,12 +365,17 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
+			val studentName = temp.get(i).studentName
 
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
 				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject,
 					temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-			res.add(dF.createStudentSheet(index, pagesArray))
+			if (studentName !== null) {
+				res.add(dF.createStudentSheet(index, pagesArray, studentName))
+			} else {
+				res.add(dF.createStudentSheet(index, pagesArray))
+			}
 
 		}
 		return res
@@ -383,6 +396,7 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
+			val studentName = temp.get(i).studentName
 			for (e : 0 ..< nbPagesInSheet) {
 				pagesArray.set(e, -1)
 			}
@@ -391,7 +405,11 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject,
 					temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-			res.add(dF.createStudentSheet(index, pagesArray))
+			if (studentName !== null) {
+				res.add(dF.createStudentSheet(index, pagesArray, studentName))
+			} else {
+				res.add(dF.createStudentSheet(index, pagesArray))
+			}
 		}
 		return res
 	}
