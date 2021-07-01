@@ -266,7 +266,7 @@ class ControllerRoot implements Initializable {
 		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		loader.<ControllerStudentSheetExport>controller.initialize(editionController, serviceEdition)
-		dialog.setScene(new Scene(view, 384, 107))
+		dialog.setScene(new Scene(view, 384, 160))
 		dialog.setResizable(false);
 		dialog.show
 	}
