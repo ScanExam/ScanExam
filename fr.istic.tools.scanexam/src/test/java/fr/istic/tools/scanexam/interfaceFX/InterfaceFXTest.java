@@ -20,6 +20,7 @@ import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.view.fx.ControllerRoot;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -76,7 +77,7 @@ class InterfaceFXTest {
 		Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
 		StyleManager.getInstance().addUserAgentStylesheet("viewResources/MyStyle.css");
 
-		controllerGraduation.init(service);
+		controllerGraduation.init(service, new ControllerFxStudents());
 
 
 		controllerEdition.init(service);

@@ -51,7 +51,7 @@
 			<tabs>
 				<Tab fx:id="editorTab" text="%tabs.editor" />
 				<Tab fx:id="correctorTab" text="%tabs.graduation" />
-            <Tab text="\%tabs.students" />
+            	<Tab fx:id="studentsTab" text="%tabs.students" />
 			</tabs>
 			<opaqueInsets>
 				<Insets />

@@ -4,4 +4,7 @@ import javafx.scene.layout.VBox
 
 class StudentItemList extends VBox {
 	
+	def addItem(StudentItem item){
+		this.children.add(item)
+	}
 }

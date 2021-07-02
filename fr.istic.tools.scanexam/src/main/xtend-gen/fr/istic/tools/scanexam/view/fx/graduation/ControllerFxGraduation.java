@@ -18,6 +18,7 @@ import fr.istic.tools.scanexam.view.fx.graduation.StudentDetails;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentItemGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.StudentListGraduation;
 import fr.istic.tools.scanexam.view.fx.graduation.TextAnotation;
+import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -105,6 +106,8 @@ public class ControllerFxGraduation {
   private StudentListGraduation studentList;
   
   private StudentDetails studentDetails;
+  
+  private ControllerFxStudents studentsController;
   
   public PdfPaneWithAnotations mainPane;
   
@@ -503,7 +506,8 @@ public class ControllerFxGraduation {
     this.mainPane.unZoom();
   }
   
-  public void init(final ServiceGraduation serviceGraduation) {
+  public void init(final ServiceGraduation serviceGraduation, final ControllerFxStudents studentsController) {
+    this.studentsController = studentsController;
     this.parentPane.getStyleClass().add("parentPane");
     PdfManager _pdfManager = new PdfManager();
     this.pdfManager = _pdfManager;
@@ -978,6 +982,11 @@ public class ControllerFxGraduation {
       this.updateQuestionList();
       this.setSelectedQuestion();
     }
+    int _size = this.getStudentIds().size();
+    boolean _notEquals = (_size != 0);
+    if (_notEquals) {
+      this.studentsController.update();
+    }
   }
   
   public void updateQuestionList() {
@@ -1118,6 +1127,15 @@ public class ControllerFxGraduation {
   
   public void updateGlobalGrade() {
     this.studentDetails.updateGrade();
+  }
+  
+  /**
+   * Retourne la note maximale d'une question
+   * @param idQuest la question sélectionnée
+   * @return la note maximale d'une question
+   */
+  public float getQuestionMaxGrade(final int idQuest) {
+    return this.service.getQuestion(idQuest).getGradeScale().getMaxPoint();
   }
   
   /**

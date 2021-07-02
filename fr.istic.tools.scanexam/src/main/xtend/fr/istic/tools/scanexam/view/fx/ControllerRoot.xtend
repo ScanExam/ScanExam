@@ -27,6 +27,7 @@ import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
 import javafx.scene.control.TabPane
+import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents
 
 class ControllerRoot implements Initializable {
 
@@ -34,6 +35,9 @@ class ControllerRoot implements Initializable {
 	Tab correctorTab;
 	@FXML
 	Tab editorTab;
+	@FXML
+	Tab studentsTab
+	
 	@FXML
 	CheckMenuItem autoZoom;
 	/* BUTTONS */
@@ -61,6 +65,9 @@ class ControllerRoot implements Initializable {
 
 	@Accessors
 	ControllerFxEdition editionController;
+	
+	@Accessors
+	ControllerFxStudents studentsController
 
 	var ServiceEdition serviceEdition
 	var ServiceGraduation serviceGraduation
@@ -77,6 +84,10 @@ class ControllerRoot implements Initializable {
 
 	def setGraduationNode(Node n) {
 		correctorTab.content = n
+	}
+	
+	def setStudentsNode(Node n){
+		studentsTab.content = n
 	}
 
 	@FXML

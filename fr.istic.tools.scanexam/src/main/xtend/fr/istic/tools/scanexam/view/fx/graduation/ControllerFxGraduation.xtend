@@ -37,6 +37,7 @@ import javafx.stage.FileChooser.ExtensionFilter
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
 import java.util.Collections
+import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents
 
 /**
  * Class used by the JavaFX library as a controller for the view. 
@@ -68,6 +69,7 @@ class ControllerFxGraduation {
 	StudentListGraduation studentList;
 	StudentDetails studentDetails;
 	
+	ControllerFxStudents studentsController
 	
 	public PdfPaneWithAnotations mainPane;
 
@@ -395,7 +397,9 @@ class ControllerFxGraduation {
 
 	// ---------------------------------//
 	
-	def init(ServiceGraduation serviceGraduation){
+	def init(ServiceGraduation serviceGraduation, ControllerFxStudents studentsController){
+		
+		this.studentsController = studentsController
 		
 		parentPane.styleClass.add("parentPane")
 		
@@ -769,6 +773,9 @@ class ControllerFxGraduation {
 			setSelectedQuestion
 		}
 		
+		if(studentIds.size != 0)//TODO à changer pour faire dès qu'il y a un changement dans l'onglet de correction
+			studentsController.update
+		
 	}
 	
 	
@@ -913,6 +920,15 @@ class ControllerFxGraduation {
 	
 	def updateGlobalGrade(){
 		studentDetails.updateGrade
+	}
+	
+	/**
+	 * Retourne la note maximale d'une question
+	 * @param idQuest la question sélectionnée
+	 * @return la note maximale d'une question
+	 */
+	def getQuestionMaxGrade(int idQuest){
+		service.getQuestion(idQuest).gradeScale.maxPoint
 	}
 	
 	/**
