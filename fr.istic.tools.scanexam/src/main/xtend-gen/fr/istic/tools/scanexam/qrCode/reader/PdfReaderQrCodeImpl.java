@@ -9,6 +9,7 @@ import com.google.zxing.ResultPoint;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import fr.istic.tools.scanexam.core.StudentSheet;
+import fr.istic.tools.scanexam.qrCode.QrCodeType;
 import fr.istic.tools.scanexam.qrCode.reader.Copie;
 import fr.istic.tools.scanexam.qrCode.reader.Page;
 import fr.istic.tools.scanexam.qrCode.reader.PdfReaderQrCode;
@@ -363,7 +364,8 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
    * @param qrPos Position à laquelle devrait se trouver les qr codes
    */
   public void createThread(final int nbPage, final PDDocument doc, final String docPath, final Pair<Float, Float> qrPos) {
-    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, qrPos, this);
+    final PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, qrPos, 
+      QrCodeType.SHEET_PAGE, this);
     manager.start();
   }
   

@@ -14,10 +14,11 @@ class PdfReaderQrCodeThread extends Thread implements Runnable {
 	int borneInf
 	int borneMax
 	Pair<Float, Float> qrPos
+	val int qrCodeType
 	CountDownLatch countDown
 
 	new(PdfReaderQrCodeImpl reader, PDDocument pdDoc, String docPath, int inf, int max, PDFRenderer pdf,
-		Pair<Float, Float> qrPos, CountDownLatch countDown) {
+		Pair<Float, Float> qrPos, int qrCodeType, CountDownLatch countDown) {
 		this.reader = reader
 		this.pdDoc = pdDoc
 		this.docPath = docPath
@@ -25,11 +26,13 @@ class PdfReaderQrCodeThread extends Thread implements Runnable {
 		this.borneInf = inf
 		this.borneMax = max
 		this.qrPos = qrPos
+		this.qrCodeType = qrCodeType
 		this.countDown = countDown
 	}
 
 	override run() {
-		this.reader.readQRCodeImage(this.pdDoc, this.docPath, this.pdf, this.borneInf, this.borneMax, this.qrPos)
+		(this.reader as PdfReaderQrCodeV2Impl).readQRCodeImage(this.pdDoc, this.docPath, this.pdf, this.borneInf,
+			this.borneMax, this.qrPos, this.qrCodeType)
 		countDown.countDown
 	}
 }

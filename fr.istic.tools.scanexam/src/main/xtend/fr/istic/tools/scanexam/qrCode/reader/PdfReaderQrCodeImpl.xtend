@@ -29,6 +29,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.rendering.ImageType
 import org.apache.pdfbox.rendering.PDFRenderer
 import org.apache.pdfbox.util.Matrix
+import fr.istic.tools.scanexam.qrCode.QrCodeType
 
 class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 
@@ -250,7 +251,8 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 	 * @param qrPos Position à laquelle devrait se trouver les qr codes
 	 */
 	def createThread(int nbPage, PDDocument doc, String docPath, Pair<Float, Float> qrPos) {
-		val PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, qrPos, this)
+		val PdfReaderThreadManager manager = new PdfReaderThreadManager(nbPage, doc, docPath, qrPos,
+			QrCodeType.SHEET_PAGE, this)
 		manager.start
 	}
 
