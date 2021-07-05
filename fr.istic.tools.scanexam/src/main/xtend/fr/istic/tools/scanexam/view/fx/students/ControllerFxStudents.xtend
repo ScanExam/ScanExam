@@ -12,6 +12,10 @@ import javafx.scene.control.Label
 import javafx.geometry.Insets
 import fr.istic.tools.scanexam.config.LanguageManager
 import java.util.ArrayList
+import javafx.scene.control.MenuItem
+import javafx.scene.control.ContextMenu
+import javafx.event.EventHandler
+import javafx.scene.input.ContextMenuEvent
 
 class ControllerFxStudents {
 	
@@ -22,11 +26,16 @@ class ControllerFxStudents {
 	
 	ServiceGraduation serviceGrad
 	
+	ContextMenu menu
+	
+	
 	def init(ServiceGraduation serviceG){
 		this.serviceGrad = serviceG
 		
 		this.grille = new GridPane
 		
+		this.menu = new ContextMenu
+			
 	}
 	
 	def update(){
@@ -35,10 +44,12 @@ class ControllerFxStudents {
 		
 		updateQuestionList
 		updateStudentsList
+		addContextMenuOnEachLines()
 		
 		grille.padding = new Insets(10,10,10,10)
 		
 		mainPane.content = grille
+		this.grille.gridLinesVisible = true
 		
 	}
 	
@@ -85,8 +96,7 @@ class ControllerFxStudents {
 				grille.add(question, questions.indexOf(question), sheet.id + 1)
 			}
 		}
-		
-		//mainPane.content = studentsList
+
 	}
 	
 	def updateQuestionList(){
@@ -95,7 +105,7 @@ class ControllerFxStudents {
 			tete.padding = new Insets(5,5,5,5)
 			grille.add(tete, i, 0)
 		}
-		/* TODO à changer un jour car pour le moment
+		/* FIXME à changer un jour car pour le moment
 		 * on part du principe qu'on sélectionne toujours une zone
 		 * pour l'identifiant (eq. à la question 0)
 		 * Conflit d'intérêt avec uniquement les QRCodes pour étudiants et pas d'entête
@@ -103,6 +113,32 @@ class ControllerFxStudents {
 		var total = new Label(LanguageManager.translate("studentsTab.total"))
 		total.padding = new Insets(5,5,5,5)
 		grille.add(total, serviceGrad.numberOfQuestions, 0)
+	}
+	
+	def addContextMenuOnEachLines(){
+	
+		for(line : 0 ..< grille.rowCount){
+			for(col : 0 ..< grille.columnCount){
+				
+				
+				
+				grille.children.get(line * grille.columnCount + col)
+					.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>(){
+						
+						override handle(ContextMenuEvent event){
+							val MenuItem itemTest = new MenuItem("Bonjour " + line * grille.columnCount + col)
+							menu.items.clear
+							menu.items.add(itemTest)
+							/* TODO
+							 * faire pour chaque ligne et voir si possibilité de récupérer l'id de la sheet
+							 */
+							menu.show(grille, event.screenX, event.screenY)
+			}
+		})
+				
+				
+			}
+		}
 	}
 	
 }

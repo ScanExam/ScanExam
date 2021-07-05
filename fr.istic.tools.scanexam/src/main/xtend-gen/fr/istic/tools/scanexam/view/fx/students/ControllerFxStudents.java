@@ -9,10 +9,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.GridPane;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
@@ -27,12 +33,16 @@ public class ControllerFxStudents {
   
   private ServiceGraduation serviceGrad;
   
-  public GridPane init(final ServiceGraduation serviceG) {
-    GridPane _xblockexpression = null;
+  private ContextMenu menu;
+  
+  public ContextMenu init(final ServiceGraduation serviceG) {
+    ContextMenu _xblockexpression = null;
     {
       this.serviceGrad = serviceG;
       GridPane _gridPane = new GridPane();
-      _xblockexpression = this.grille = _gridPane;
+      this.grille = _gridPane;
+      ContextMenu _contextMenu = new ContextMenu();
+      _xblockexpression = this.menu = _contextMenu;
     }
     return _xblockexpression;
   }
@@ -41,9 +51,11 @@ public class ControllerFxStudents {
     this.grille.getChildren().clear();
     this.updateQuestionList();
     this.updateStudentsList();
+    this.addContextMenuOnEachLines();
     Insets _insets = new Insets(10, 10, 10, 10);
     this.grille.setPadding(_insets);
     this.mainPane.setContent(this.grille);
+    this.grille.setGridLinesVisible(true);
   }
   
   public void updateStudentsList() {
@@ -129,5 +141,34 @@ public class ControllerFxStudents {
     Insets _insets = new Insets(5, 5, 5, 5);
     total.setPadding(_insets);
     this.grille.add(total, this.serviceGrad.numberOfQuestions(), 0);
+  }
+  
+  public void addContextMenuOnEachLines() {
+    int _rowCount = this.grille.getRowCount();
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _rowCount, true);
+    for (final Integer line : _doubleDotLessThan) {
+      int _columnCount = this.grille.getColumnCount();
+      ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _columnCount, true);
+      for (final Integer col : _doubleDotLessThan_1) {
+        ObservableList<Node> _children = this.grille.getChildren();
+        int _columnCount_1 = this.grille.getColumnCount();
+        int _multiply = ((line).intValue() * _columnCount_1);
+        int _plus = (_multiply + (col).intValue());
+        Node _get = _children.get(_plus);
+        _get.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+          @Override
+          public void handle(final ContextMenuEvent event) {
+            int _columnCount = ControllerFxStudents.this.grille.getColumnCount();
+            int _multiply = ((line).intValue() * _columnCount);
+            String _plus = ("Bonjour " + Integer.valueOf(_multiply));
+            String _plus_1 = (_plus + col);
+            final MenuItem itemTest = new MenuItem(_plus_1);
+            ControllerFxStudents.this.menu.getItems().clear();
+            ControllerFxStudents.this.menu.getItems().add(itemTest);
+            ControllerFxStudents.this.menu.show(ControllerFxStudents.this.grille, event.getScreenX(), event.getScreenY());
+          }
+        });
+      }
+    }
   }
 }
