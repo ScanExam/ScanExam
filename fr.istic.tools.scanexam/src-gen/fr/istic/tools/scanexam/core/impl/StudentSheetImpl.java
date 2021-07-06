@@ -4,16 +4,11 @@ package fr.istic.tools.scanexam.core.impl;
 
 import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Grade;
-import fr.istic.tools.scanexam.core.GradeEntry;
 import fr.istic.tools.scanexam.core.StudentSheet;
 
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
-import java.util.Optional;
-
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -204,25 +199,9 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	public float computeGrade() {
 		float result = 0f;
 		for (int i = 0; (i < this.getGrades().size()); i++) {
-			{
-				final Function<GradeEntry, Float> _function = new Function<GradeEntry, Float>() {
-					public Float apply(final GradeEntry grade) {
-						return Float.valueOf(grade.getStep());
-					}
-				};
-				final BinaryOperator<Float> _function_1 = new BinaryOperator<Float>() {
-					public Float apply(final Float acc, final Float v) {
-						return Float.valueOf(((v).floatValue() + (acc).floatValue()));
-					}
-				};
-				final Optional<Float> res = this.getGrades().get(i).getEntries().stream().<Float>map(_function).reduce(_function_1);
-				boolean _isPresent = res.isPresent();
-				if (_isPresent) {
-					float _result = result;
-					Float _get = res.get();
-					result = (_result + (_get).floatValue());
-				}
-			}
+			float _result = result;
+			float _gradeValue = this.getGrades().get(i).getGradeValue();
+			result = (_result + _gradeValue);
 		}
 		return result;
 	}

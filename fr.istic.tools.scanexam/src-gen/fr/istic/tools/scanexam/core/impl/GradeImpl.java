@@ -7,7 +7,13 @@ import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.GradeEntry;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
+import java.util.Optional;
+
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -105,6 +111,38 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public float getGradeValue() {
+		Float _xblockexpression = null;
+		{
+			final Function<GradeEntry, Float> _function = new Function<GradeEntry, Float>() {
+				public Float apply(final GradeEntry grade) {
+					return Float.valueOf(grade.getStep());
+				}
+			};
+			final BinaryOperator<Float> _function_1 = new BinaryOperator<Float>() {
+				public Float apply(final Float acc, final Float v) {
+					return Float.valueOf(((v).floatValue() + (acc).floatValue()));
+				}
+			};
+			final Optional<Float> res = this.getEntries().stream().<Float>map(_function).reduce(_function_1);
+			Float _xifexpression = null;
+			boolean _isPresent = res.isPresent();
+			if (_isPresent) {
+				_xifexpression = res.get();
+			}
+			else {
+				_xifexpression = Float.valueOf(0f);
+			}
+			_xblockexpression = _xifexpression;
+		}
+		return (_xblockexpression).floatValue();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -183,6 +221,20 @@ public class GradeImpl extends MinimalEObjectImpl.Container implements Grade {
 				return comments != null && !comments.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case CorePackage.GRADE___GET_GRADE_VALUE:
+				return getGradeValue();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //GradeImpl

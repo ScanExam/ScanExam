@@ -808,13 +808,22 @@ public interface CorePackage extends EPackage {
 	int GRADE_FEATURE_COUNT = 2;
 
 	/**
+	 * The operation id for the '<em>Get Grade Value</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GRADE___GET_GRADE_VALUE = 0;
+
+	/**
 	 * The number of operations of the '<em>Grade</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GRADE_OPERATION_COUNT = 0;
+	int GRADE_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl <em>Student Sheet</em>}' class.
@@ -1516,6 +1525,16 @@ public interface CorePackage extends EPackage {
 	EReference getGrade_Comments();
 
 	/**
+	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.Grade#getGradeValue() <em>Get Grade Value</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Grade Value</em>' operation.
+	 * @see fr.istic.tools.scanexam.core.Grade#getGradeValue()
+	 * @generated
+	 */
+	EOperation getGrade__GetGradeValue();
+
+	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.StudentSheet <em>Student Sheet</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2091,6 +2110,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EReference GRADE__COMMENTS = eINSTANCE.getGrade_Comments();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Grade Value</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation GRADE___GET_GRADE_VALUE = eINSTANCE.getGrade__GetGradeValue();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl <em>Student Sheet</em>}' class.

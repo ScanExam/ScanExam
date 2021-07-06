@@ -87,6 +87,13 @@ class Line {
 class Grade {
 	refers GradeEntry[] entries
 	contains Comment[] comments
+	op float getGradeValue(){
+		val res = entries.stream.map(grade|grade.step).reduce[acc, v|v + acc]
+		if(res.isPresent)
+			res.get
+		else
+			0f
+	}
 }
 
 class StudentSheet {
@@ -98,9 +105,7 @@ class StudentSheet {
 		var result = 0f;
 
 		for (var i = 0; i < grades.size; i++) {
-			val res = grades.get(i).entries.stream.map(grade|grade.step).reduce[acc, v|v + acc]
-			if (res.isPresent)
-				result += res.get
+			result += grades.get(i).getGradeValue()
 		}
 
 		return result

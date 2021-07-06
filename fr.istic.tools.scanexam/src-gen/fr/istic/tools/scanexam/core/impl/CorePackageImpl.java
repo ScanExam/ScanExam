@@ -679,6 +679,15 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getGrade__GetGradeValue() {
+		return gradeEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getStudentSheet() {
 		return studentSheetEClass;
 	}
@@ -856,6 +865,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		gradeEClass = createEClass(GRADE);
 		createEReference(gradeEClass, GRADE__ENTRIES);
 		createEReference(gradeEClass, GRADE__COMMENTS);
+		createEOperation(gradeEClass, GRADE___GET_GRADE_VALUE);
 
 		studentSheetEClass = createEClass(STUDENT_SHEET);
 		createEAttribute(studentSheetEClass, STUDENT_SHEET__ID);
@@ -969,6 +979,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEClass(gradeEClass, Grade.class, "Grade", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGrade_Entries(), this.getGradeEntry(), null, "entries", null, 0, -1, Grade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGrade_Comments(), this.getComment(), null, "comments", null, 0, -1, Grade.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getGrade__GetGradeValue(), theEcorePackage.getEFloat(), "getGradeValue", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(studentSheetEClass, StudentSheet.class, "StudentSheet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStudentSheet_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
