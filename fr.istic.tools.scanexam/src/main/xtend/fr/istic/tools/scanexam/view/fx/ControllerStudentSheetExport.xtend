@@ -15,12 +15,25 @@ import javafx.stage.FileChooser
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.qrCode.QrCodeType
+import javafx.scene.control.CheckBox
+import javafx.event.EventHandler
+import javafx.event.ActionEvent
+import javafx.scene.control.Label
 
 class ControllerStudentSheetExport {
 
 	/* Composant racine */
 	@FXML
 	var VBox mainPane
+
+	/** CComposant indiquant si les copies doivent être différenciée */
+	@FXML
+	var CheckBox copiesDiff
+
+	/* Label devant la saisie pour le nombre de copies voulues */
+	@FXML
+	var Label lblNbSheet
 
 	/* TextField pour saisir le nombre de copies voulues */
 	@FXML
@@ -43,9 +56,18 @@ class ControllerStudentSheetExport {
 	def initialize(ControllerFxEdition controllerEdition, ServiceEdition service) {
 		this.service = service
 		this.controllerEdition = controllerEdition
+
+		enableNbSheet(copiesDiff.selected)
+		copiesDiff.setOnAction(new EventHandler<ActionEvent> {
+			override handle(ActionEvent e) {
+				enableNbSheet(copiesDiff.selected)
+			}
+		})
+
 		txtFlbNbSheet.addFormatValidator [ str |
 			Integer.parseInt(str) > 0 ? Optional.empty : Optional.of("exportStudentSheet.errorZeroValue")
 		]
+
 		btnExport.disableProperty.bind(txtFlbNbSheet.wrongFormattedProperty)
 	}
 
@@ -53,21 +75,24 @@ class ControllerStudentSheetExport {
 	def exportAndQuit() {
 		val fileOpt = loadFolder
 		if (fileOpt.isPresent) {
-			if (export(fileOpt.get, Integer.parseInt(txtFlbNbSheet.text)))
+			var boolean exported = copiesDiff.selected
+					? export(fileOpt.get, QrCodeType.SHEET_PAGE, Integer.parseInt(txtFlbNbSheet.text))
+					: export(fileOpt.get, QrCodeType.PAGE, 1)
+			if (exported) {
 				quit
+			}
 		}
 	}
 
-	def boolean export(File file, int number) {
+	def boolean export(File file, int qrCodeType, int number) {
 		// Si aucune zone de qr code n'a été placée, on en crée une dans le modèle
 		if (service.qrCodeZone === null) {
-			println("yo")
 			service.createQrCode(0.025f, 0.875f, 0.1f, 0.1f)
 		}
 
 		val QRCodeGenerator generator = new QRCodeGeneratorImpl
 		generator.createAllExamCopies(controllerEdition.pdfManager.getPdfInputStream, file, service.qrCodeZone.get,
-			service.examName, number)
+			qrCodeType, number)
 		true
 	}
 
@@ -93,5 +118,14 @@ class ControllerStudentSheetExport {
 			logger.warn("Folder not chosen")
 			return Optional.empty
 		}
+	}
+
+	/**
+	 * Active ou non les champs se rapportant à la saisie pour le nombre de copies voulues
+	 * @param enable True pour activer les champs
+	 */
+	private def void enableNbSheet(boolean enable) {
+		lblNbSheet.disable = !enable
+		txtFlbNbSheet.disable = !enable
 	}
 }

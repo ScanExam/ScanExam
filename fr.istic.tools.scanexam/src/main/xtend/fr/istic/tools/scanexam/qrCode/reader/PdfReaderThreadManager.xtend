@@ -6,6 +6,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.CountDownLatch
 import org.apache.pdfbox.pdmodel.PDDocument
 import javafx.util.Pair
+import fr.istic.tools.scanexam.qrCode.QrCodeType
 
 class PdfReaderThreadManager extends Thread implements Runnable {
 
@@ -13,34 +14,38 @@ class PdfReaderThreadManager extends Thread implements Runnable {
 	PDDocument doc
 	String docPath
 	Pair<Float, Float> qrPos
+	val int qrCodeType
+	val int nbThread
 	PdfReaderQrCodeImpl reader
 
-	new(int nbPage, PDDocument doc, String docPath, Pair<Float, Float> qrPos, PdfReaderQrCodeImpl reader) {
+	new(int nbPage, PDDocument doc, String docPath, Pair<Float, Float> qrPos, int qrCodeType,
+		PdfReaderQrCodeImpl reader) {
 		this.nbPage = nbPage
 		this.doc = doc
 		this.docPath = docPath
 		this.qrPos = qrPos
+		this.qrCodeType = qrCodeType
+		if (this.qrCodeType == QrCodeType.PAGE) {
+			this.nbThread = 1
+		} else {
+			this.nbThread = 4
+		}
 		this.reader = reader
 	}
 
 	override run() {
-		val ExecutorService service = Executors.newFixedThreadPool(4)
-		val CountDownLatch latchThreads = new CountDownLatch(4)
+		val ExecutorService service = Executors.newFixedThreadPool(nbThread)
+		val CountDownLatch latchThreads = new CountDownLatch(nbThread)
 		val PDFRenderer pdf = new PDFRenderer(doc)
-		service.execute(new PdfReaderQrCodeThread(reader, doc, docPath, 0, (nbPage / 4), pdf, qrPos, latchThreads))
-		service.execute(
-			new PdfReaderQrCodeThread(reader, doc, docPath, (nbPage / 4), (nbPage / 2), pdf, qrPos, latchThreads))
-		service.execute(
-			new PdfReaderQrCodeThread(reader, doc, docPath, (nbPage / 2), (3 * nbPage / 4), pdf, qrPos, latchThreads))
-		service.execute(
-			new PdfReaderQrCodeThread(reader, doc, docPath, (3 * nbPage / 4), nbPage, pdf, qrPos, latchThreads))
-
-		latchThreads.await()
+		for (i : 0 ..< nbThread) {
+			service.execute(
+				new PdfReaderQrCodeThread(reader, doc, docPath, (i * nbPage / nbThread), ((i + 1) * nbPage / nbThread),
+					pdf, qrPos, qrCodeType, latchThreads))
+		}
+		latchThreads.await
 		reader.setFinished(true)
 		service.shutdown()
-
 		doc.close
-
 	}
 
 }

@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.qrCode.writer;
 
+import fr.istic.tools.scanexam.qrCode.QrCodeType;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.io.File;
@@ -162,12 +163,13 @@ public class StudentsQrCodeDocGenerator {
           while ((((posX + (labelWidthPixel * 2)) <= (pageHeightPixel - xMarginPixel)) && 
             (studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length))) {
             {
-              final String data = students.get(studentIndex);
-              this.insertQrCode(contentStream, document, (posX + ((labelWidthPixel - qrCodeSize) / 2)), posY, qrCodeSize, data);
+              final String name = students.get(studentIndex);
+              String _plus = (Integer.valueOf(QrCodeType.STUDENT) + "_");
+              String _plus_1 = (_plus + name);
+              this.insertQrCode(contentStream, document, (posX + ((labelWidthPixel - qrCodeSize) / 2)), posY, qrCodeSize, _plus_1);
               int _intValue = Float.valueOf((labelHeightPixel * 0.8f)).intValue();
-              int _plus = (posY + _intValue);
-              this.insertText(contentStream, document, ((posX + labelWidthPixel) + 4), _plus, 
-                (labelWidthPixel / 5), data);
+              int _plus_2 = (posY + _intValue);
+              this.insertText(contentStream, document, ((posX + labelWidthPixel) + 4), _plus_2, (labelWidthPixel / 5), name);
               int _posX = posX;
               posX = (_posX + (labelWidthPixel * 2));
               studentIndex++;

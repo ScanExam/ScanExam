@@ -15,6 +15,11 @@ public class QRThreadWriter extends Thread implements Runnable {
   private int borneMax;
   
   /**
+   * Type de qr code à insérer
+   */
+  private int qrCodeType;
+  
+  /**
    * Zone sur le document où insérer le qrcode
    */
   private QrCodeZone qrCodeZone;
@@ -27,10 +32,11 @@ public class QRThreadWriter extends Thread implements Runnable {
   
   private String pathImage;
   
-  public QRThreadWriter(final QRCodeGeneratorImpl writer, final int inf, final int max, final QrCodeZone qrCodeZone, final PDDocument docSujetMaitre, final int nbPages, final CountDownLatch countDown, final String pathImage) {
+  public QRThreadWriter(final QRCodeGeneratorImpl writer, final int qrCodeType, final int inf, final int max, final QrCodeZone qrCodeZone, final PDDocument docSujetMaitre, final int nbPages, final CountDownLatch countDown, final String pathImage) {
     this.writer = writer;
     this.borneInf = inf;
     this.borneMax = max;
+    this.qrCodeType = qrCodeType;
     this.qrCodeZone = qrCodeZone;
     this.docSujetMaitre = docSujetMaitre;
     this.nbPages = nbPages;
@@ -42,7 +48,7 @@ public class QRThreadWriter extends Thread implements Runnable {
   public void run() {
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(this.borneInf, this.borneMax, true);
     for (final Integer i : _doubleDotLessThan) {
-      this.writer.insertQRCodeInSubject(this.qrCodeZone, this.docSujetMaitre, (i).intValue(), this.nbPages, this.pathImage);
+      this.writer.insertQRCodeInSubject(this.qrCodeZone, this.docSujetMaitre, (i).intValue(), this.nbPages, this.qrCodeType, this.pathImage);
     }
     this.countDown.countDown();
   }

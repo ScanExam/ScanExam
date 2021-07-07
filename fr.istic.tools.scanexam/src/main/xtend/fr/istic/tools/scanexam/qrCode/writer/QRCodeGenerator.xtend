@@ -12,10 +12,10 @@ interface QRCodeGenerator {
 	 * @param inputFile Chemin du sujet maitre
 	 * @param outputPath chemin de sortie
 	 * @param qrCodeZone zone sur le document où insérer le qrcode
-	 * @param idExam l'id de l'examen
+	 * @param qrCodeType Type de qr code à insérer
 	 * @param nbCopies Nombre de copies de l'examen souhaité
 	 */
-	def void createAllExamCopies(InputStream inputFile, File outputPath, QrCodeZone qrCodeZone, String idExam,
+	def void createAllExamCopies(InputStream inputFile, File outputPath, QrCodeZone qrCodeZone, int qrCodeType,
 		int nbCopie)
 
 	def boolean isFinished()

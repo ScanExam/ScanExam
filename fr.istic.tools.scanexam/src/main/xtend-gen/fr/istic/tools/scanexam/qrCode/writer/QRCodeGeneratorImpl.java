@@ -7,6 +7,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import fr.istic.tools.scanexam.core.QrCodeZone;
+import fr.istic.tools.scanexam.qrCode.QrCodeType;
 import fr.istic.tools.scanexam.qrCode.writer.PdfThreadManagerWriter;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGenerator;
 import fr.istic.tools.scanexam.qrCode.writer.QRThreadWriter;
@@ -55,11 +56,11 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param inputFile Chemin du sujet maitre
    * @param outputPath chemin de sortie
    * @param qrCodeZone zone sur le document où insérer le qrcode
-   * @param idExam l'id de l'examen
+   * @param qrCodeType Type de qr code à insérer
    * @param nbCopies Nombre de copies de l'examen souhaité
    */
   @Override
-  public void createAllExamCopies(final InputStream inputFile, final File outFile, final QrCodeZone qrCodeZone, final String idExam, final int nbCopie) {
+  public void createAllExamCopies(final InputStream inputFile, final File outFile, final QrCodeZone qrCodeZone, final int qrCodeType, final int nbCopie) {
     try {
       final byte[] byteArray = new byte[inputFile.available()];
       inputFile.read(byteArray);
@@ -91,7 +92,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       ut.mergeDocuments(memUsSett);
       final PDDocument docSujetMaitre = PDDocument.load(outFile);
       FileOutputStream _fileOutputStream = new FileOutputStream(outFile);
-      this.createThread(nbCopie, qrCodeZone, docSujetMaitre, doc, nbPages, _fileOutputStream);
+      this.createThread(nbCopie, qrCodeZone, qrCodeType, docSujetMaitre, doc, nbPages, _fileOutputStream);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
@@ -100,6 +101,32 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
         throw Exceptions.sneakyThrow(_t);
       }
     }
+  }
+  
+  /**
+   * Créé un qr code d'une taille correspondante à une zone de qr code.
+   * Un fichier PNG du QRCode est créé en suivant le filePath
+   * @param qrCodeZone Zone du qr code
+   * @param doc Sujet où se trouve la zone
+   * @param numPage Numéro de la page où se trouve la zone de qr code
+   * @param data Données à inscrire dans le qr code
+   * @param pathImage Chemin vers l'image du qr code générée
+   */
+  private void generateQrCodeImageWithQrCodeZone(final QrCodeZone qrCodeZone, final PDDocument doc, final int numPage, final String data, final String pathImage) {
+    final float docWidth = doc.getPage(numPage).getMediaBox().getWidth();
+    final float docHeight = doc.getPage(numPage).getMediaBox().getHeight();
+    float _width = qrCodeZone.getWidth();
+    final float qrCodeWidth = (_width * docWidth);
+    float _height = qrCodeZone.getHeight();
+    final float qrCodeHeight = (_height * docHeight);
+    float _xifexpression = (float) 0;
+    if ((qrCodeWidth < qrCodeHeight)) {
+      _xifexpression = qrCodeWidth;
+    } else {
+      _xifexpression = qrCodeHeight;
+    }
+    final float qrCodeSize = _xifexpression;
+    this.generateQRCodeImage(data, ((int) (qrCodeSize * 4)), ((int) (qrCodeSize * 4)), 0, pathImage);
   }
   
   /**
@@ -190,24 +217,25 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
   /**
    * @param nbCopies nombre de copies désirées
    * @param qrCodeZone zone sur le document où insérer le qrcode
+   * @param qrCodeType Type de qr code à insérer
    * @param docSujetMaitre document dans lequel insérer les Codes
    * @param nbPages nombre de pages du sujet Maitre
    */
-  public void createThread(final int nbCopie, final QrCodeZone qrCodeZone, final PDDocument docSujetMaitre, final PDDocument doc, final int nbPage, final OutputStream output) {
+  public void createThread(final int nbCopie, final QrCodeZone qrCodeZone, final int qrCodeType, final PDDocument docSujetMaitre, final PDDocument doc, final int nbPage, final OutputStream output) {
     try {
       if ((nbCopie < 4)) {
         final ExecutorService service = Executors.newFixedThreadPool(1);
         File qrcode = File.createTempFile("qrcode", ".png");
         final CountDownLatch LatchThreads = new CountDownLatch(1);
         String _absolutePath = qrcode.getAbsolutePath();
-        QRThreadWriter _qRThreadWriter = new QRThreadWriter(this, 0, nbCopie, qrCodeZone, docSujetMaitre, nbPage, LatchThreads, _absolutePath);
+        QRThreadWriter _qRThreadWriter = new QRThreadWriter(this, qrCodeType, 0, nbCopie, qrCodeZone, docSujetMaitre, nbPage, LatchThreads, _absolutePath);
         service.execute(_qRThreadWriter);
         LatchThreads.await();
         service.shutdown();
         docSujetMaitre.save(output);
         qrcode.deleteOnExit();
       } else {
-        final PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, qrCodeZone, docSujetMaitre, doc, this, nbCopie, output);
+        final PdfThreadManagerWriter manager = new PdfThreadManagerWriter(nbPage, qrCodeZone, qrCodeType, docSujetMaitre, doc, this, nbCopie, output);
         manager.start();
       }
     } catch (Throwable _e) {
@@ -222,17 +250,38 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param docSujetMaitre le sujet maitre
    * @param numCopie le nombre de copies souhaitées
    * @param nbPagesSuject le nombre de page du sujet maître
+   * @param qrCodeType Type de qr code à insérer
    * @param pathImage chemin vers l'image du qr code générée
    */
-  public void insertQRCodeInSubject(final QrCodeZone qrCodeZone, final PDDocument docSujetMaitre, final int numCopie, final int nbPagesSujet, final String pathImage) {
+  public void insertQRCodeInSubject(final QrCodeZone qrCodeZone, final PDDocument docSujetMaitre, final int numCopie, final int nbPagesSujet, final int qrCodeType, final String pathImage) {
     ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, nbPagesSujet, true);
     for (final Integer i : _doubleDotLessThan) {
-      this.insertQRCodeInPage(qrCodeZone, docSujetMaitre, (i).intValue(), numCopie, nbPagesSujet, pathImage);
+      this.insertQRCodeInPage(qrCodeZone, docSujetMaitre, (i).intValue(), numCopie, nbPagesSujet, qrCodeType, pathImage);
     }
   }
   
   /**
-   * Insère un QRCode sur une page
+   * Insère sur une page un QRCode
+   * @param qrCodeZone zone sur le document où insérer le qrcode
+   * @param doc le sujet maitre
+   * @param numPage numéro de la page où insérer le qr code
+   * @param numCopie uméro de la copie d'examen
+   * @param nbPagesSuject le nombre de page du sujet maître
+   * @param qrCodeType Type de qr code à insérer
+   * @param pathImage chemin vers l'image du qr code générée
+   */
+  public void insertQRCodeInPage(final QrCodeZone qrCodeZone, final PDDocument doc, final int numPage, final int numCopie, final int nbPagesSujet, final int qrCodeType, final String pathImage) {
+    if ((qrCodeType == QrCodeType.SHEET_PAGE)) {
+      this.insertSheetAndPageQRCodeInPage(qrCodeZone, doc, numPage, numCopie, nbPagesSujet, pathImage);
+    } else {
+      if ((qrCodeType == QrCodeType.PAGE)) {
+        this.insertPageQRCodeInPage(qrCodeZone, doc, numPage, pathImage);
+      }
+    }
+  }
+  
+  /**
+   * Insère sur une page un QRCode contenant l'identifiant de la copie et le numéro de la page
    * @param qrCodeZone zone sur le document où insérer le qrcode
    * @param doc le sujet maitre
    * @param numPage numéro de la page où insérer le qr code
@@ -240,22 +289,67 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
    * @param nbPagesSuject le nombre de page du sujet maître
    * @param pathImage chemin vers l'image du qr code générée
    */
-  public int insertQRCodeInPage(final QrCodeZone qrCodeZone, final PDDocument doc, final int numPage, final int numCopie, final int nbPagesSujet, final String pathImage) {
+  private void insertSheetAndPageQRCodeInPage(final QrCodeZone qrCodeZone, final PDDocument doc, final int numPage, final int numCopie, final int nbPagesSujet, final String pathImage) {
+    String _plus = (Integer.valueOf(QrCodeType.SHEET_PAGE) + "_");
+    String _plus_1 = (_plus + Integer.valueOf(numCopie));
+    String _plus_2 = (_plus_1 + "_");
+    final String data = (_plus_2 + Integer.valueOf(numPage));
+    this.generateQrCodeImageWithQrCodeZone(qrCodeZone, doc, numPage, data, pathImage);
+    final PDPage page = doc.getPage((numPage + (numCopie * nbPagesSujet)));
+    this.insertQrCodeImageInPage(doc, page, numPage, qrCodeZone, pathImage, data);
+  }
+  
+  /**
+   * Insère sur une page un QRCode contenant le numéro de la page uniquement
+   * @param qrCodeZone zone sur le document où insérer le qrcode
+   * @param doc le sujet maitre
+   * @param numPage numéro de la page où insérer le qr code
+   * @param pathImage chemin vers l'image du qr code générée
+   */
+  private void insertPageQRCodeInPage(final QrCodeZone qrCodeZone, final PDDocument doc, final int numPage, final String pathImage) {
+    String _plus = (Integer.valueOf(QrCodeType.PAGE) + "_");
+    final String data = (_plus + Integer.valueOf(numPage));
+    this.generateQrCodeImageWithQrCodeZone(qrCodeZone, doc, numPage, data, pathImage);
+    final PDPage page = doc.getPage(numPage);
+    this.insertQrCodeImageInPage(doc, page, numPage, qrCodeZone, pathImage, data);
+  }
+  
+  /**
+   * Insère l'image d'un qr code sur une page ainsi que ses données sous forme de texte aux 4 coins de la page
+   * @param doc le sujet maitre
+   * @param page la page où insérer l'image
+   * @param numPage numéro de la page où insérer le qr code
+   * @param qrCodeZone zone sur le document où insérer le qrcode
+   * @param pathImage chemin vers l'image du qr code générée
+   * @param data donnée inscrite dans le qr code
+   */
+  private void insertQrCodeImageInPage(final PDDocument doc, final PDPage page, final int numPage, final QrCodeZone qrCodeZone, final String pathImage, final String data) {
     try {
-      int _xblockexpression = (int) 0;
-      {
+      final PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc);
+      try (final PDPageContentStream contentStream = new Function0<PDPageContentStream>() {
+        @Override
+        public PDPageContentStream apply() {
+          try {
+            return new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, true, true);
+          } catch (Throwable _e) {
+            throw Exceptions.sneakyThrow(_e);
+          }
+        }
+      }.apply()) {
         final float docWidth = doc.getPage(numPage).getMediaBox().getWidth();
         final float docHeight = doc.getPage(numPage).getMediaBox().getHeight();
-        float _width = qrCodeZone.getWidth();
-        final float qrCodeWidth = (_width * docWidth);
-        float _height = qrCodeZone.getHeight();
-        final float qrCodeHeight = (_height * docHeight);
         float _x = qrCodeZone.getX();
         final float qrCodeX = (_x * docWidth);
         float _y = qrCodeZone.getY();
         float _multiply = (_y * docHeight);
         float _minus = (docHeight - _multiply);
-        final float qrCodeY = (_minus - qrCodeHeight);
+        float _height = qrCodeZone.getHeight();
+        float _multiply_1 = (_height * docHeight);
+        final float qrCodeY = (_minus - _multiply_1);
+        float _width = qrCodeZone.getWidth();
+        final float qrCodeWidth = (_width * docWidth);
+        float _height_1 = qrCodeZone.getHeight();
+        final float qrCodeHeight = (_height_1 * docHeight);
         float _xifexpression = (float) 0;
         if ((qrCodeWidth < qrCodeHeight)) {
           _xifexpression = qrCodeWidth;
@@ -263,34 +357,10 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
           _xifexpression = qrCodeHeight;
         }
         final float qrCodeSize = _xifexpression;
-        String _plus = (Integer.valueOf(numCopie) + "_");
-        final String stringAEncoder = (_plus + Integer.valueOf(numPage));
-        this.generateQRCodeImage(stringAEncoder, ((int) (qrCodeSize * 4)), ((int) (qrCodeSize * 4)), 0, pathImage);
-        final PDImageXObject pdImage = PDImageXObject.createFromFile(pathImage, doc);
-        int _xtrycatchfinallyexpression = (int) 0;
-        try (final PDPageContentStream contentStream = new Function0<PDPageContentStream>() {
-          @Override
-          public PDPageContentStream apply() {
-            try {
-              PDPage _page = doc.getPage((numPage + (numCopie * nbPagesSujet)));
-              return new PDPageContentStream(doc, _page, PDPageContentStream.AppendMode.APPEND, true, 
-                true);
-            } catch (Throwable _e) {
-              throw Exceptions.sneakyThrow(_e);
-            }
-          }
-        }.apply()) {
-          int _xblockexpression_1 = (int) 0;
-          {
-            contentStream.drawImage(pdImage, qrCodeX, qrCodeY, qrCodeSize, qrCodeSize);
-            this.insertTextDataInPage(doc, numPage, contentStream, stringAEncoder);
-            _xblockexpression_1 = this.incrementTreated();
-          }
-          _xtrycatchfinallyexpression = _xblockexpression_1;
-        }
-        _xblockexpression = _xtrycatchfinallyexpression;
+        contentStream.drawImage(pdImage, qrCodeX, qrCodeY, qrCodeSize, qrCodeSize);
+        this.insertTextDataInPage(doc, numPage, contentStream, data);
+        this.incrementTreated();
       }
-      return _xblockexpression;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -366,7 +436,7 @@ public class QRCodeGeneratorImpl implements QRCodeGenerator {
       byte[] _readAllBytes = Files.readAllBytes(Path.of("D:/dataScanExam/in/pfo_example.pdf"));
       final InputStream input2 = new ByteArrayInputStream(_readAllBytes);
       final File output = new File("D:/dataScanExam/out/melanie.pdf");
-      gen.createAllExamCopies(input2, output, null, "42PFO2021", 100);
+      gen.createAllExamCopies(input2, output, null, QrCodeType.SHEET_PAGE, 100);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

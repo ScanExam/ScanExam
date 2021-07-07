@@ -11,18 +11,21 @@ import fr.istic.tools.scanexam.core.QrCodeZone
 class PdfThreadManagerWriter extends Thread implements Runnable {
 
 	int nbPage
-	/* Zone sur le document où insérer le qrcode */
+	/** Zone sur le document où insérer le qrcode */
 	QrCodeZone qrCodeZone
+	/** Type de qr code à insérer */
+	int qrCodeType
 	PDDocument docSujetMaitre
 	PDDocument doc
 	QRCodeGeneratorImpl writer
 	int nbCopie
 	OutputStream output
 
-	new(int nbPage, QrCodeZone qrCodeZone, PDDocument docSujetMaitre, PDDocument doc, QRCodeGeneratorImpl writer,
-		int nbCopie, OutputStream output) {
+	new(int nbPage, QrCodeZone qrCodeZone, int qrCodeType, PDDocument docSujetMaitre, PDDocument doc,
+		QRCodeGeneratorImpl writer, int nbCopie, OutputStream output) {
 		this.nbPage = nbPage
 		this.qrCodeZone = qrCodeZone
+		this.qrCodeType = qrCodeType
 		this.docSujetMaitre = docSujetMaitre
 		this.writer = writer
 		this.nbCopie = nbCopie
@@ -40,17 +43,17 @@ class PdfThreadManagerWriter extends Thread implements Runnable {
 		var File qrcode3 = File.createTempFile("qrcode3", ".png")
 
 		service.execute(
-			new QRThreadWriter(writer, 0, (nbCopie / 4), qrCodeZone, docSujetMaitre, nbPage, latchThreads,
+			new QRThreadWriter(writer, qrCodeType, 0, (nbCopie / 4), qrCodeZone, docSujetMaitre, nbPage, latchThreads,
 				qrcode0.absolutePath))
 		service.execute(
-			new QRThreadWriter(writer, (nbCopie / 4), (nbCopie / 2), qrCodeZone, docSujetMaitre, nbPage, latchThreads,
-				qrcode1.absolutePath))
+			new QRThreadWriter(writer, qrCodeType, (nbCopie / 4), (nbCopie / 2), qrCodeZone, docSujetMaitre, nbPage,
+				latchThreads, qrcode1.absolutePath))
 		service.execute(
-			new QRThreadWriter(writer, (nbCopie / 2), (3 * nbCopie / 4), qrCodeZone, docSujetMaitre, nbPage,
+			new QRThreadWriter(writer, qrCodeType, (nbCopie / 2), (3 * nbCopie / 4), qrCodeZone, docSujetMaitre, nbPage,
 				latchThreads, qrcode2.absolutePath))
 		service.execute(
-			new QRThreadWriter(writer, (3 * nbCopie / 4), nbCopie, qrCodeZone, docSujetMaitre, nbPage, latchThreads,
-				qrcode3.absolutePath))
+			new QRThreadWriter(writer, qrCodeType, (3 * nbCopie / 4), nbCopie, qrCodeZone, docSujetMaitre, nbPage,
+				latchThreads, qrcode3.absolutePath))
 
 		latchThreads.await()
 		writer.setFinished(true)

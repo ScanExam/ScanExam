@@ -18,6 +18,7 @@ import fr.istic.tools.scanexam.view.fx.ControllerStudentSheetExport;
 import fr.istic.tools.scanexam.view.fx.ControllerTemplateCreator;
 import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
+import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.io.InputStream;
@@ -58,6 +59,9 @@ public class ControllerRoot implements Initializable {
   private Tab editorTab;
   
   @FXML
+  private Tab studentsTab;
+  
+  @FXML
   private CheckMenuItem autoZoom;
   
   /**
@@ -96,6 +100,9 @@ public class ControllerRoot implements Initializable {
   @Accessors
   private ControllerFxEdition editionController;
   
+  @Accessors
+  private ControllerFxStudents studentsController;
+  
   private ServiceEdition serviceEdition;
   
   private ServiceGraduation serviceGraduation;
@@ -115,6 +122,10 @@ public class ControllerRoot implements Initializable {
   
   public void setGraduationNode(final Node n) {
     this.correctorTab.setContent(n);
+  }
+  
+  public void setStudentsNode(final Node n) {
+    this.studentsTab.setContent(n);
   }
   
   @FXML
@@ -371,7 +382,7 @@ public class ControllerRoot implements Initializable {
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
       loader.<ControllerStudentSheetExport>getController().initialize(this.editionController, this.serviceEdition);
-      Scene _scene = new Scene(view, 384, 107);
+      Scene _scene = new Scene(view, 384, 160);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();
@@ -450,5 +461,14 @@ public class ControllerRoot implements Initializable {
   
   public void setEditionController(final ControllerFxEdition editionController) {
     this.editionController = editionController;
+  }
+  
+  @Pure
+  public ControllerFxStudents getStudentsController() {
+    return this.studentsController;
+  }
+  
+  public void setStudentsController(final ControllerFxStudents studentsController) {
+    this.studentsController = studentsController;
   }
 }

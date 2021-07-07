@@ -27,6 +27,7 @@ import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
 import javafx.scene.control.TabPane
+import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents
 
 class ControllerRoot implements Initializable {
 
@@ -34,6 +35,9 @@ class ControllerRoot implements Initializable {
 	Tab correctorTab;
 	@FXML
 	Tab editorTab;
+	@FXML
+	Tab studentsTab
+	
 	@FXML
 	CheckMenuItem autoZoom;
 	/* BUTTONS */
@@ -61,6 +65,9 @@ class ControllerRoot implements Initializable {
 
 	@Accessors
 	ControllerFxEdition editionController;
+	
+	@Accessors
+	ControllerFxStudents studentsController
 
 	var ServiceEdition serviceEdition
 	var ServiceGraduation serviceGraduation
@@ -77,6 +84,10 @@ class ControllerRoot implements Initializable {
 
 	def setGraduationNode(Node n) {
 		correctorTab.content = n
+	}
+	
+	def setStudentsNode(Node n){
+		studentsTab.content = n
 	}
 
 	@FXML
@@ -266,7 +277,7 @@ class ControllerRoot implements Initializable {
 		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
 		loader.<ControllerStudentSheetExport>controller.initialize(editionController, serviceEdition)
-		dialog.setScene(new Scene(view, 384, 107))
+		dialog.setScene(new Scene(view, 384, 160))
 		dialog.setResizable(false);
 		dialog.show
 	}

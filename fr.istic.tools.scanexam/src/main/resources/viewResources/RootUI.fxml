@@ -10,7 +10,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerRoot">
+<VBox prefHeight="720.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.tools.scanexam.view.fx.ControllerRoot">
 	<children>
 		<MenuBar>
 			<menus>
@@ -51,6 +51,7 @@
 			<tabs>
 				<Tab fx:id="editorTab" text="%tabs.editor" />
 				<Tab fx:id="correctorTab" text="%tabs.graduation" />
+            	<Tab fx:id="studentsTab" text="%tabs.students" />
 			</tabs>
 			<opaqueInsets>
 				<Insets />
