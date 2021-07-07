@@ -76,7 +76,7 @@ class LauncherFX extends Application implements Launcher {
 			//rootScene.stylesheets.add("viewResources/MyStyle.css")
 			
 			
-			controllerStudents.init(serviceGraduation)
+			controllerStudents.init(serviceGraduation, controllerRoot)
 			controllerGraduation.init(serviceGraduation, controllerStudents)
 			controllerEdition.init(serviceEdition)
 			

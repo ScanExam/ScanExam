@@ -3,6 +3,7 @@ package fr.istic.tools.scanexam.view.fx.students;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
+import fr.istic.tools.scanexam.view.fx.ControllerRoot;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -10,10 +11,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
@@ -29,24 +34,24 @@ public class ControllerFxStudents {
   
   private ServiceGraduation serviceGrad;
   
-  private ContextMenu menu;
+  private ControllerRoot controllerRoot;
   
-  public ContextMenu init(final ServiceGraduation serviceG) {
-    ContextMenu _xblockexpression = null;
+  public ControllerRoot init(final ServiceGraduation serviceG, final ControllerRoot rootController) {
+    ControllerRoot _xblockexpression = null;
     {
       this.serviceGrad = serviceG;
-      ContextMenu _contextMenu = new ContextMenu();
-      _xblockexpression = this.menu = _contextMenu;
+      _xblockexpression = this.controllerRoot = rootController;
     }
     return _xblockexpression;
   }
   
-  public void update() {
+  public Object update() {
     this.initTable();
     this.updateQuestionList();
     this.updateStudentsList();
     this.addContextMenuOnEachLines();
     this.mainPane.setContent(this.table);
+    return null;
   }
   
   public void updateStudentsList() {
@@ -113,7 +118,28 @@ public class ControllerFxStudents {
     this.table.setPrefWidth(720);
   }
   
-  public Object addContextMenuOnEachLines() {
-    return null;
+  public void addContextMenuOnEachLines() {
+    this.table.setRowFactory(new Callback<TableView<StudentSheet>, TableRow<StudentSheet>>() {
+      @Override
+      public TableRow<StudentSheet> call(final TableView<StudentSheet> tableView) {
+        final TableRow<StudentSheet> row = new TableRow<StudentSheet>();
+        final ContextMenu sheetMenu = new ContextMenu();
+        String _translate = LanguageManager.translate("studentsTab.contextMenu.goToSheet");
+        final MenuItem goToSheet = new MenuItem(_translate);
+        goToSheet.setOnAction(new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(final ActionEvent action) {
+            ControllerFxStudents.this.gotToSheet(row.getItem().getId());
+          }
+        });
+        sheetMenu.getItems().add(goToSheet);
+        row.contextMenuProperty().bind(Bindings.when(row.emptyProperty()).<ContextMenu>then(((ContextMenu) null)).otherwise(sheetMenu));
+        return row;
+      }
+    });
+  }
+  
+  public void gotToSheet(final int id) {
+    this.controllerRoot.goToCorrectorTab(id);
   }
 }

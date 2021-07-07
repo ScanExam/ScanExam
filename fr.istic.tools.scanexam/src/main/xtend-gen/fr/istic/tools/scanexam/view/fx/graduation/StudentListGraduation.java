@@ -120,6 +120,29 @@ public class StudentListGraduation extends VBox {
     return this.currentIndex = this.getChildren().indexOf(item);
   }
   
+  public int selectItemWithId(final int id) {
+    int _xblockexpression = (int) 0;
+    {
+      int i = 0;
+      boolean trouve = false;
+      while (((i < this.getChildren().size()) && (!trouve))) {
+        {
+          Node _get = this.getChildren().get(i);
+          final StudentItemGraduation item = ((StudentItemGraduation) _get);
+          int _studentId = item.getStudentId();
+          boolean _equals = (_studentId == id);
+          if (_equals) {
+            trouve = true;
+          } else {
+            i++;
+          }
+        }
+      }
+      _xblockexpression = this.currentIndex = i;
+    }
+    return _xblockexpression;
+  }
+  
   public Object setupEvents() {
     return null;
   }

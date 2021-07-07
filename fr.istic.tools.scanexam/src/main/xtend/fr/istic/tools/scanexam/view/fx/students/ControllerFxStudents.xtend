@@ -15,6 +15,11 @@ import javafx.beans.value.ObservableValue
 import javafx.beans.binding.Bindings
 import javafx.util.Callback
 import fr.istic.tools.scanexam.config.LanguageManager
+import javafx.scene.control.TableRow
+import javafx.scene.control.MenuItem
+import javafx.event.EventHandler
+import javafx.event.ActionEvent
+import fr.istic.tools.scanexam.view.fx.ControllerRoot
 
 class ControllerFxStudents {
 	
@@ -25,13 +30,13 @@ class ControllerFxStudents {
 	
 	ServiceGraduation serviceGrad
 	
-	ContextMenu menu
+	ControllerRoot controllerRoot
 	
 	
-	def init(ServiceGraduation serviceG){
+	def init(ServiceGraduation serviceG, ControllerRoot rootController){
 		this.serviceGrad = serviceG
 		
-		this.menu = new ContextMenu
+		this.controllerRoot = rootController
 			
 	}
 	
@@ -92,7 +97,33 @@ class ControllerFxStudents {
 	}
 	
 	def addContextMenuOnEachLines(){
-	
+		table.rowFactory = new Callback<TableView<StudentSheet>, TableRow<StudentSheet>>(){
+			
+			override TableRow<StudentSheet> call(TableView<StudentSheet> tableView){
+				val TableRow<StudentSheet> row = new TableRow<StudentSheet>()
+				val ContextMenu sheetMenu = new ContextMenu
+				val MenuItem goToSheet = new MenuItem(LanguageManager.translate("studentsTab.contextMenu.goToSheet"))
+				
+				//ajout de l'action d'aller à un sheet spécifique
+				goToSheet.setOnAction(new EventHandler<ActionEvent>(){
+					override handle(ActionEvent action){
+						gotToSheet(row.item.id)
+					}
+				})
+				
+				sheetMenu.items.add(goToSheet)
+				
+				//display the contextual menu on non empty rows
+				row.contextMenuProperty().bind(Bindings.when(row.emptyProperty).then(null as ContextMenu).otherwise(sheetMenu))
+				
+				return row
+				
+			}
+		}
 	}
 	
+	def gotToSheet(int id){
+		controllerRoot.goToCorrectorTab(id)
+	}
+
 }

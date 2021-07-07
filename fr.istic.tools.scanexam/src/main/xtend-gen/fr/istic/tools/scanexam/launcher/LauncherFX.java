@@ -70,7 +70,7 @@ public class LauncherFX extends Application implements Launcher {
     final Scene rootScene = new Scene(mainRoot, 1280, 720);
     Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
     StyleManager.getInstance().addUserAgentStylesheet("viewResources/MyStyle.css");
-    controllerStudents.init(LauncherFX.serviceGraduation);
+    controllerStudents.init(LauncherFX.serviceGraduation, controllerRoot);
     controllerGraduation.init(LauncherFX.serviceGraduation, controllerStudents);
     controllerEdition.init(LauncherFX.serviceEdition);
     controllerRoot.setGraduationController(controllerGraduation);
