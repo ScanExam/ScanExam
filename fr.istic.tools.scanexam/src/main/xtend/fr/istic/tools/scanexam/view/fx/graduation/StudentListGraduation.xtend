@@ -85,6 +85,19 @@ class StudentListGraduation extends VBox {
 		currentIndex = children.indexOf(item);
 	}
 	
+	def selectItemWithId(int id){
+		var i = 0
+		var trouve = false
+		while(i < children.size && !trouve){
+			val item = children.get(i) as StudentItemGraduation
+			if(item.studentId == id)
+				trouve = true
+			else
+				i++
+		}
+		currentIndex = i
+	}
+	
 	//-------------//
 	
 	def setupEvents(){

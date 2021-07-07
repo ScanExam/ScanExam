@@ -709,6 +709,12 @@ class ControllerFxGraduation {
 		service.selectSheet(studentList.currentItem.studentId)
 		setSelectedStudent();
 	}
+	
+	def void selectStudent(int id){
+		studentList.selectItemWithId(id)
+		service.selectSheet(studentList.currentItem.studentId)
+		setSelectedStudent();
+	}
 
 	def void setSelectedStudent(){
 		if (!studentList.noItems) {

@@ -163,6 +163,11 @@ public class ControllerRoot implements Initializable {
     }
   }
   
+  public void goToCorrectorTab(final int id) {
+    this.tabPane.getSelectionModel().select(this.correctorTab);
+    this.graduationController.selectStudent(id);
+  }
+  
   @FXML
   public void createNewTemplatePressed() {
     try {

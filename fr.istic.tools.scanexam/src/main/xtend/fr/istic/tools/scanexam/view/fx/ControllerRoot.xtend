@@ -116,6 +116,12 @@ class ControllerRoot implements Initializable {
 		dialog.setResizable(false)
 		dialog.show
 	}
+	
+	def goToCorrectorTab(int id){
+		tabPane.getSelectionModel().select(correctorTab)
+		graduationController.selectStudent(id)
+		
+	}
 
 	@FXML
 	def createNewTemplatePressed() {

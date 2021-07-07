@@ -918,6 +918,12 @@ public class ControllerFxGraduation {
     this.setSelectedStudent();
   }
   
+  public void selectStudent(final int id) {
+    this.studentList.selectItemWithId(id);
+    this.service.selectSheet(this.studentList.getCurrentItem().getStudentId());
+    this.setSelectedStudent();
+  }
+  
   public void setSelectedStudent() {
     boolean _noItems = this.studentList.noItems();
     boolean _not = (!_noItems);
