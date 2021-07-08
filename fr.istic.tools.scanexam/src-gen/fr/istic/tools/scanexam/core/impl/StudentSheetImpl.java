@@ -2,6 +2,8 @@
  */
 package fr.istic.tools.scanexam.core.impl;
 
+import com.google.common.base.Objects;
+
 import fr.istic.tools.scanexam.core.CorePackage;
 import fr.istic.tools.scanexam.core.Grade;
 import fr.istic.tools.scanexam.core.StudentSheet;
@@ -38,7 +40,9 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * </p>
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl#getId <em>Id</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl#getStudentName <em>Student Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl#getStudentID <em>Student ID</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl#getFirstName <em>First Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl#getLastName <em>Last Name</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl#getPosPage <em>Pos Page</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentSheetImpl#getGrades <em>Grades</em>}</li>
  * </ul>
@@ -67,24 +71,64 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	protected int id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getStudentName() <em>Student Name</em>}' attribute.
+	 * The default value of the '{@link #getStudentID() <em>Student ID</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getStudentName()
+	 * @see #getStudentID()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String STUDENT_NAME_EDEFAULT = null;
+	protected static final String STUDENT_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getStudentName() <em>Student Name</em>}' attribute.
+	 * The cached value of the '{@link #getStudentID() <em>Student ID</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getStudentName()
+	 * @see #getStudentID()
 	 * @generated
 	 * @ordered
 	 */
-	protected String studentName = STUDENT_NAME_EDEFAULT;
+	protected String studentID = STUDENT_ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFirstName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String FIRST_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFirstName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String firstName = FIRST_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLastName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String LAST_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLastName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String lastName = LAST_NAME_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getPosPage() <em>Pos Page</em>}' attribute list.
@@ -151,8 +195,8 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getStudentName() {
-		return studentName;
+	public String getStudentID() {
+		return studentID;
 	}
 
 	/**
@@ -160,11 +204,53 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setStudentName(String newStudentName) {
-		String oldStudentName = studentName;
-		studentName = newStudentName;
+	public void setStudentID(String newStudentID) {
+		String oldStudentID = studentID;
+		studentID = newStudentID;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_SHEET__STUDENT_NAME, oldStudentName, studentName));
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_SHEET__STUDENT_ID, oldStudentID, studentID));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFirstName(String newFirstName) {
+		String oldFirstName = firstName;
+		firstName = newFirstName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_SHEET__FIRST_NAME, oldFirstName, firstName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLastName(String newLastName) {
+		String oldLastName = lastName;
+		lastName = newLastName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_SHEET__LAST_NAME, oldLastName, lastName));
 	}
 
 	/**
@@ -226,6 +312,63 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getStudentInfo() {
+		String resLastName = this.getLastName();
+		String resFirstName = this.getFirstName();
+		String resID = this.getStudentID();
+		if ((Objects.equal(resLastName, "?") || Objects.equal(resFirstName, "?"))) {
+			resLastName = "";
+			resFirstName = "";
+		}
+		boolean _equals = Objects.equal(resID, "?");
+		if (_equals) {
+			resID = "";
+		}
+		return ((((resLastName + "_") + resFirstName) + "_") + resID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getSheetName() {
+		if (((!Objects.equal(this.getLastName(), "?")) && (!Objects.equal(this.getFirstName(), "?")))) {
+			String _lastName = this.getLastName();
+			String _plus = (_lastName + " ");
+			String _firstName = this.getFirstName();
+			return (_plus + _firstName);
+		}
+		else {
+			return this.getStudentID();
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSheetName(final String n) {
+		final String temp = n.trim();
+		boolean _contains = temp.contains(" ");
+		if (_contains) {
+			final String[] splitted = temp.split(" ");
+			final String fN = splitted[0];
+			final String lN = temp.substring(fN.length());
+			this.setLastName(lN);
+			this.setFirstName(fN);
+		}
+		else {
+			this.setStudentID(n);
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -245,8 +388,12 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 		switch (featureID) {
 			case CorePackage.STUDENT_SHEET__ID:
 				return getId();
-			case CorePackage.STUDENT_SHEET__STUDENT_NAME:
-				return getStudentName();
+			case CorePackage.STUDENT_SHEET__STUDENT_ID:
+				return getStudentID();
+			case CorePackage.STUDENT_SHEET__FIRST_NAME:
+				return getFirstName();
+			case CorePackage.STUDENT_SHEET__LAST_NAME:
+				return getLastName();
 			case CorePackage.STUDENT_SHEET__POS_PAGE:
 				return getPosPage();
 			case CorePackage.STUDENT_SHEET__GRADES:
@@ -267,8 +414,14 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 			case CorePackage.STUDENT_SHEET__ID:
 				setId((Integer)newValue);
 				return;
-			case CorePackage.STUDENT_SHEET__STUDENT_NAME:
-				setStudentName((String)newValue);
+			case CorePackage.STUDENT_SHEET__STUDENT_ID:
+				setStudentID((String)newValue);
+				return;
+			case CorePackage.STUDENT_SHEET__FIRST_NAME:
+				setFirstName((String)newValue);
+				return;
+			case CorePackage.STUDENT_SHEET__LAST_NAME:
+				setLastName((String)newValue);
 				return;
 			case CorePackage.STUDENT_SHEET__POS_PAGE:
 				getPosPage().clear();
@@ -293,8 +446,14 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 			case CorePackage.STUDENT_SHEET__ID:
 				setId(ID_EDEFAULT);
 				return;
-			case CorePackage.STUDENT_SHEET__STUDENT_NAME:
-				setStudentName(STUDENT_NAME_EDEFAULT);
+			case CorePackage.STUDENT_SHEET__STUDENT_ID:
+				setStudentID(STUDENT_ID_EDEFAULT);
+				return;
+			case CorePackage.STUDENT_SHEET__FIRST_NAME:
+				setFirstName(FIRST_NAME_EDEFAULT);
+				return;
+			case CorePackage.STUDENT_SHEET__LAST_NAME:
+				setLastName(LAST_NAME_EDEFAULT);
 				return;
 			case CorePackage.STUDENT_SHEET__POS_PAGE:
 				getPosPage().clear();
@@ -316,8 +475,12 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 		switch (featureID) {
 			case CorePackage.STUDENT_SHEET__ID:
 				return id != ID_EDEFAULT;
-			case CorePackage.STUDENT_SHEET__STUDENT_NAME:
-				return STUDENT_NAME_EDEFAULT == null ? studentName != null : !STUDENT_NAME_EDEFAULT.equals(studentName);
+			case CorePackage.STUDENT_SHEET__STUDENT_ID:
+				return STUDENT_ID_EDEFAULT == null ? studentID != null : !STUDENT_ID_EDEFAULT.equals(studentID);
+			case CorePackage.STUDENT_SHEET__FIRST_NAME:
+				return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
+			case CorePackage.STUDENT_SHEET__LAST_NAME:
+				return LAST_NAME_EDEFAULT == null ? lastName != null : !LAST_NAME_EDEFAULT.equals(lastName);
 			case CorePackage.STUDENT_SHEET__POS_PAGE:
 				return posPage != null && !posPage.isEmpty();
 			case CorePackage.STUDENT_SHEET__GRADES:
@@ -338,6 +501,13 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 				return computeGrade();
 			case CorePackage.STUDENT_SHEET___IS_GRADED:
 				return isGraded();
+			case CorePackage.STUDENT_SHEET___GET_STUDENT_INFO:
+				return getStudentInfo();
+			case CorePackage.STUDENT_SHEET___GET_SHEET_NAME:
+				return getSheetName();
+			case CorePackage.STUDENT_SHEET___SET_SHEET_NAME__STRING:
+				setSheetName((String)arguments.get(0));
+				return null;
 		}
 		return super.eInvoke(operationID, arguments);
 	}
@@ -354,8 +524,12 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: ");
 		result.append(id);
-		result.append(", studentName: ");
-		result.append(studentName);
+		result.append(", studentID: ");
+		result.append(studentID);
+		result.append(", firstName: ");
+		result.append(firstName);
+		result.append(", lastName: ");
+		result.append(lastName);
 		result.append(", posPage: ");
 		result.append(posPage);
 		result.append(')');

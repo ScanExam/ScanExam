@@ -61,9 +61,9 @@ class ControllerSendMail  {
 				updateMessage(String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size - nbSheetWithoutName))
 				for (studentSheet : studentSheets) {
 
-					val studentMail = mailMap.get(studentSheet.studentName)
+					val studentMail = mailMap.get(studentSheet.sheetName)
 
-					if (studentSheet.studentName !== null && studentMail !== null) {
+					if (studentSheet.sheetName !== null && studentMail !== null) {
 						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(service,
 							controllerGraduation.pdfManager.pdfInputStream, studentSheet, mainPane.width)
 						val sender = new SendMailTls
@@ -109,7 +109,7 @@ class ControllerSendMail  {
 		this.service = service
 
 		nbSheetWithoutName = if (!mailMap.empty)
-			studentSheets.filter(x|!mailMap.containsKey(x.studentName)).size as int
+			studentSheets.filter(x|!mailMap.containsKey(x.sheetName)).size as int
 		else
 			-1
 

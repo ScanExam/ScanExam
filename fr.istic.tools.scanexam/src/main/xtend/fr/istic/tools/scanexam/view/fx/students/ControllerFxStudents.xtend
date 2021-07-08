@@ -64,8 +64,16 @@ class ControllerFxStudents {
 	def updateQuestionList(){
 		
 		var TableColumn<StudentSheet, String> idCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.ID"))
-		idCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("studentName"))
+		idCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("studentID"))
 		table.columns.add(idCol)
+		
+		var TableColumn<StudentSheet, String> lNCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.lastName"))
+		lNCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("lastName"))
+		table.columns.add(lNCol)
+		
+		var TableColumn<StudentSheet, String> fNCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.firstName"))
+		fNCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("firstName"))
+		table.columns.add(fNCol)
 		/*
 		 * TODO
 		 * Si la question est sur 0 pts, ne pas la mettre, remplacer par une colonne ou deux :
@@ -101,8 +109,8 @@ class ControllerFxStudents {
 	
 	def initTable(){
 		table = new TableView
-		table.prefHeight = 720
 		table.prefWidth = 720
+		table.prefHeight = 720
 	}
 	
 	def addContextMenuOnEachLines(){

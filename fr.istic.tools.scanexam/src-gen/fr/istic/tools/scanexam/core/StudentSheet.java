@@ -16,7 +16,9 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getId <em>Id</em>}</li>
- *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentName <em>Student Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentID <em>Student ID</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getFirstName <em>First Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getLastName <em>Last Name</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getPosPage <em>Pos Page</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.StudentSheet#getGrades <em>Grades</em>}</li>
  * </ul>
@@ -49,26 +51,70 @@ public interface StudentSheet extends EObject {
 	void setId(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Student Name</b></em>' attribute.
+	 * Returns the value of the '<em><b>Student ID</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Student Name</em>' attribute.
-	 * @see #setStudentName(String)
-	 * @see fr.istic.tools.scanexam.core.CorePackage#getStudentSheet_StudentName()
+	 * @return the value of the '<em>Student ID</em>' attribute.
+	 * @see #setStudentID(String)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getStudentSheet_StudentID()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getStudentName();
+	String getStudentID();
 
 	/**
-	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentName <em>Student Name</em>}' attribute.
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentID <em>Student ID</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Student Name</em>' attribute.
-	 * @see #getStudentName()
+	 * @param value the new value of the '<em>Student ID</em>' attribute.
+	 * @see #getStudentID()
 	 * @generated
 	 */
-	void setStudentName(String value);
+	void setStudentID(String value);
+
+	/**
+	 * Returns the value of the '<em><b>First Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>First Name</em>' attribute.
+	 * @see #setFirstName(String)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getStudentSheet_FirstName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getFirstName();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.StudentSheet#getFirstName <em>First Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>First Name</em>' attribute.
+	 * @see #getFirstName()
+	 * @generated
+	 */
+	void setFirstName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Last Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Last Name</em>' attribute.
+	 * @see #setLastName(String)
+	 * @see fr.istic.tools.scanexam.core.CorePackage#getStudentSheet_LastName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getLastName();
+
+	/**
+	 * Sets the value of the '{@link fr.istic.tools.scanexam.core.StudentSheet#getLastName <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Last Name</em>' attribute.
+	 * @see #getLastName()
+	 * @generated
+	 */
+	void setLastName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Pos Page</b></em>' attribute list.
@@ -109,5 +155,29 @@ public interface StudentSheet extends EObject {
 	 * @generated
 	 */
 	boolean isGraded();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getStudentInfo();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getSheetName();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model nUnique="false"
+	 * @generated
+	 */
+	void setSheetName(String n);
 
 } // StudentSheet

@@ -37,7 +37,7 @@ public class GradesExportImpl implements GradesExport {
       {
         final Row row = sheet.createRow(rowCount);
         final Cell cellName = row.createCell(0);
-        cellName.setCellValue((((StudentSheet[])Conversions.unwrapArray(studentSheets, StudentSheet.class))[(i).intValue()]).getStudentName());
+        cellName.setCellValue((((StudentSheet[])Conversions.unwrapArray(studentSheets, StudentSheet.class))[(i).intValue()]).getSheetName());
         final Cell cellGrade = row.createCell(1);
         cellGrade.setCellValue((((StudentSheet[])Conversions.unwrapArray(studentSheets, StudentSheet.class))[(i).intValue()]).computeGrade());
         rowCount++;

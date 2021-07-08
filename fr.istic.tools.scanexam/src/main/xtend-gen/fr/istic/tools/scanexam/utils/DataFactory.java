@@ -66,7 +66,7 @@ public class DataFactory {
       final StudentSheet sheet = CoreFactory.eINSTANCE.createStudentSheet();
       sheet.setId(idSheet);
       sheet.getPosPage().addAll(pages);
-      sheet.setStudentName(studentName);
+      sheet.setSheetName(studentName);
       _xblockexpression = sheet;
     }
     return _xblockexpression;

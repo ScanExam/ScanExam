@@ -127,7 +127,7 @@ class ExportExamToPdf {
 			document.addPage(pdf.getPage(i));
 		}
 
-		var File file = File.createTempFile(sheet.studentName, ".pdf");
+		var File file = File.createTempFile(sheet.studentInfo, ".pdf");
 
 		document.save(file);
 		document.close;
@@ -163,7 +163,7 @@ class ExportExamToPdf {
 				document.addPage(pdf.getPage(i));
 			}
 
-			document.save(new File(folderForSaving.absolutePath + File.separator + sheet.studentName + ".pdf"));
+			document.save(new File(folderForSaving.absolutePath + File.separator + sheet.studentInfo + ".pdf"));
 			document.close;
 		}
 		pdf.close();
@@ -194,9 +194,9 @@ class ExportExamToPdf {
 			for (i : sheet.posPage) {
 				document.addPage(pdf.getPage(i));
 			}
-			var File studentExam = File.createTempFile("tempExam" + sheet.studentName, ".pdf");
+			var File studentExam = File.createTempFile("tempExam" + sheet.studentInfo, ".pdf");
 			document.save(studentExam);
-			tempExams.put(sheet.studentName, studentExam);
+			tempExams.put(sheet.sheetName, studentExam);
 			document.close;
 		}
 		pdf.close();
@@ -254,7 +254,7 @@ class ExportExamToPdf {
 	 */
 	def static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(ServiceGraduation service,
 		InputStream examDocument, StudentSheet sheet, double originWidht) {
-		var File studentExam = File.createTempFile(sheet.studentName, ".pdf");
+		var File studentExam = File.createTempFile(sheet.studentInfo, ".pdf");
 
 		var File exam = exportExamsToTempAnnotedPdf(service, examDocument,
 			new ArrayList<StudentSheet>(Arrays.asList(sheet)), originWidht)
@@ -270,7 +270,7 @@ class ExportExamToPdf {
 		document.close;
 		pdf.close();
 
-		return Pair.of(sheet.studentName + ".pdf", studentExam);
+		return Pair.of(sheet.studentInfo + ".pdf", studentExam);
 	}
 
 	/**
@@ -475,7 +475,7 @@ class ExportExamToPdf {
 		// Information globale sur la copie
 		service.selectSheet(sheet.id)
 		val String examName = service.examName
-		val String studentName = sheet.studentName
+		val String studentName = sheet.sheetName
 		val float globalGrade = sheet.computeGrade
 		val float globalScale = service.globalScale
 

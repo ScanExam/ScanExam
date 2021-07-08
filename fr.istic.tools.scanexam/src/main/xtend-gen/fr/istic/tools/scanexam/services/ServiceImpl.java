@@ -229,7 +229,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   public void assignStudentName(final String id) {
     ServiceImpl.logger.info(((("Renaming student :" + Integer.valueOf(this.currentSheetIndex)) + "with name :") + id));
     StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
-    _get.setStudentName(id);
+    _get.setSheetName(id);
   }
   
   /**
@@ -340,7 +340,7 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       int _id = sheet.getId();
       boolean _tripleEquals = (_id == id);
       if (_tripleEquals) {
-        return Optional.<String>ofNullable(sheet.getStudentName());
+        return Optional.<String>ofNullable(sheet.getSheetName());
       }
     }
     return Optional.<String>empty();

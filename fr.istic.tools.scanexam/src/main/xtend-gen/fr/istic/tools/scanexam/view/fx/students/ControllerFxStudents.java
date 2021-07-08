@@ -73,9 +73,19 @@ public class ControllerFxStudents {
     {
       String _translate = LanguageManager.translate("studentsTab.tableView.ID");
       TableColumn<StudentSheet, String> idCol = new TableColumn<StudentSheet, String>(_translate);
-      PropertyValueFactory<StudentSheet, String> _propertyValueFactory = new PropertyValueFactory<StudentSheet, String>("studentName");
+      PropertyValueFactory<StudentSheet, String> _propertyValueFactory = new PropertyValueFactory<StudentSheet, String>("studentID");
       idCol.setCellValueFactory(_propertyValueFactory);
       this.table.getColumns().add(idCol);
+      String _translate_1 = LanguageManager.translate("studentsTab.tableView.lastName");
+      TableColumn<StudentSheet, String> lNCol = new TableColumn<StudentSheet, String>(_translate_1);
+      PropertyValueFactory<StudentSheet, String> _propertyValueFactory_1 = new PropertyValueFactory<StudentSheet, String>("lastName");
+      lNCol.setCellValueFactory(_propertyValueFactory_1);
+      this.table.getColumns().add(lNCol);
+      String _translate_2 = LanguageManager.translate("studentsTab.tableView.firstName");
+      TableColumn<StudentSheet, String> fNCol = new TableColumn<StudentSheet, String>(_translate_2);
+      PropertyValueFactory<StudentSheet, String> _propertyValueFactory_2 = new PropertyValueFactory<StudentSheet, String>("firstName");
+      fNCol.setCellValueFactory(_propertyValueFactory_2);
+      this.table.getColumns().add(fNCol);
       int _numberOfQuestions = this.serviceGrad.numberOfQuestions();
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _numberOfQuestions, true);
       for (final int i : _doubleDotLessThan) {
@@ -96,8 +106,8 @@ public class ControllerFxStudents {
           this.table.getColumns().add(col);
         }
       }
-      String _translate_1 = LanguageManager.translate("studentsTab.total");
-      TableColumn<StudentSheet, Float> col_1 = new TableColumn<StudentSheet, Float>(_translate_1);
+      String _translate_3 = LanguageManager.translate("studentsTab.total");
+      TableColumn<StudentSheet, Float> col_1 = new TableColumn<StudentSheet, Float>(_translate_3);
       col_1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
         @Override
         public ObservableValue<Float> call(final TableColumn.CellDataFeatures<StudentSheet, Float> cd) {
@@ -115,8 +125,8 @@ public class ControllerFxStudents {
   public void initTable() {
     TableView<StudentSheet> _tableView = new TableView<StudentSheet>();
     this.table = _tableView;
-    this.table.setPrefHeight(720);
     this.table.setPrefWidth(720);
+    this.table.setPrefHeight(720);
   }
   
   public void addContextMenuOnEachLines() {

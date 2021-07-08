@@ -706,7 +706,7 @@ public class ControllerFxGraduation {
    */
   public void exportGraduationToPdf(final File folder) {
     final Function1<StudentSheet, Boolean> _function = (StudentSheet sheet) -> {
-      return Boolean.valueOf(((sheet.getStudentName() != null) && (!sheet.getStudentName().matches("\\s*"))));
+      return Boolean.valueOf(((sheet.getSheetName() != null) && (!sheet.getSheetName().matches("\\s*"))));
     };
     final List<StudentSheet> sheets = IterableExtensions.<StudentSheet>toList(IterableExtensions.<StudentSheet>filter(this.service.getStudentSheets(), _function));
     ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.service, this.pdfManager.getPdfInputStream(), sheets, folder, this.mainPane.getImageViewWidth());

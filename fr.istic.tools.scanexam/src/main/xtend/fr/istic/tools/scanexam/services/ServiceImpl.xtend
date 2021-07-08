@@ -171,7 +171,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 */
 	override assignStudentName(String id) {
 		logger.info("Renaming student :" + currentSheetIndex + "with name :" + id)
-		studentSheets.get(currentSheetIndex).studentName = id
+		studentSheets.get(currentSheetIndex).sheetName = id
 	}
 
 	/**
@@ -255,7 +255,7 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	override getStudentName(int id) {
 		for (StudentSheet sheet : studentSheets) {
 			if (sheet.id === id)
-				return Optional.ofNullable(sheet.studentName);
+				return Optional.ofNullable(sheet.sheetName);
 		}
 		return Optional.empty;
 	}

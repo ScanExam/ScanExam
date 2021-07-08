@@ -58,7 +58,7 @@ class DataFactory {
 
 		sheet.posPage.addAll(pages)
 
-		sheet.studentName = studentName
+		sheet.sheetName = studentName
 
 		sheet
 	}

@@ -706,7 +706,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStudentSheet_StudentName() {
+	public EAttribute getStudentSheet_StudentID() {
 		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -715,7 +715,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStudentSheet_PosPage() {
+	public EAttribute getStudentSheet_FirstName() {
 		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -724,8 +724,26 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getStudentSheet_LastName() {
+		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStudentSheet_PosPage() {
+		return (EAttribute)studentSheetEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getStudentSheet_Grades() {
-		return (EReference)studentSheetEClass.getEStructuralFeatures().get(3);
+		return (EReference)studentSheetEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -744,6 +762,33 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 */
 	public EOperation getStudentSheet__IsGraded() {
 		return studentSheetEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getStudentSheet__GetStudentInfo() {
+		return studentSheetEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getStudentSheet__GetSheetName() {
+		return studentSheetEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getStudentSheet__SetSheetName__String() {
+		return studentSheetEClass.getEOperations().get(4);
 	}
 
 	/**
@@ -869,11 +914,16 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		studentSheetEClass = createEClass(STUDENT_SHEET);
 		createEAttribute(studentSheetEClass, STUDENT_SHEET__ID);
-		createEAttribute(studentSheetEClass, STUDENT_SHEET__STUDENT_NAME);
+		createEAttribute(studentSheetEClass, STUDENT_SHEET__STUDENT_ID);
+		createEAttribute(studentSheetEClass, STUDENT_SHEET__FIRST_NAME);
+		createEAttribute(studentSheetEClass, STUDENT_SHEET__LAST_NAME);
 		createEAttribute(studentSheetEClass, STUDENT_SHEET__POS_PAGE);
 		createEReference(studentSheetEClass, STUDENT_SHEET__GRADES);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___COMPUTE_GRADE);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___IS_GRADED);
+		createEOperation(studentSheetEClass, STUDENT_SHEET___GET_STUDENT_INFO);
+		createEOperation(studentSheetEClass, STUDENT_SHEET___GET_SHEET_NAME);
+		createEOperation(studentSheetEClass, STUDENT_SHEET___SET_SHEET_NAME__STRING);
 
 		studentInformationEClass = createEClass(STUDENT_INFORMATION);
 		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__NAME);
@@ -984,13 +1034,22 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
 		initEClass(studentSheetEClass, StudentSheet.class, "StudentSheet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStudentSheet_Id(), theEcorePackage.getEInt(), "id", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getStudentSheet_StudentName(), theEcorePackage.getEString(), "studentName", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentSheet_StudentID(), theEcorePackage.getEString(), "studentID", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentSheet_FirstName(), theEcorePackage.getEString(), "firstName", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentSheet_LastName(), theEcorePackage.getEString(), "lastName", null, 0, 1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStudentSheet_PosPage(), theEcorePackage.getEInt(), "posPage", null, 0, -1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStudentSheet_Grades(), this.getGrade(), null, "grades", null, 0, -1, StudentSheet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getStudentSheet__ComputeGrade(), theEcorePackage.getEFloat(), "computeGrade", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getStudentSheet__IsGraded(), theEcorePackage.getEBoolean(), "isGraded", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getStudentSheet__GetStudentInfo(), theEcorePackage.getEString(), "getStudentInfo", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getStudentSheet__GetSheetName(), theEcorePackage.getEString(), "getSheetName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		EOperation op = initEOperation(getStudentSheet__SetSheetName__String(), null, "setSheetName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEString(), "n", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(studentInformationEClass, StudentInformation.class, "StudentInformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStudentInformation_Name(), theEcorePackage.getEString(), "name", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

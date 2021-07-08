@@ -520,7 +520,7 @@ class ControllerFxGraduation {
 	 * @param folder Dossier où exporter
 	 */
 	def void exportGraduationToPdf(File folder) {
-		val sheets = service.studentSheets.filter[sheet | sheet.studentName !== null && !sheet.studentName.matches("\\s*")].toList
+		val sheets = service.studentSheets.filter[sheet | sheet.sheetName !== null && !sheet.sheetName.matches("\\s*")].toList
 		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(service, pdfManager.pdfInputStream, sheets,folder, mainPane.imageViewWidth)
 	}
 
