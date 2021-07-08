@@ -25,6 +25,7 @@ import fr.istic.tools.scanexam.config.ConfigurationManager
 import static extension fr.istic.tools.scanexam.utils.extensions.LocaleExtensions.*
 import java.util.Collection
 import fr.istic.tools.scanexam.exportation.SendMailTls
+import javax.crypto.spec.SecretKeySpec
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX
@@ -37,43 +38,48 @@ class ControllerConfiguration {
 	 * VARIABLES
 	 */
 	// ----------------------------------------------------------------------------------------------------
-
-
-	/* Pane principale de la vue */
+	/** Pane principale de la vue */
 	@FXML
 	public VBox mainPane
 
-	/* Sélection de la langue */
+	/** Sélection de la langue */
 	@FXML
 	public ComboBox<String> cmbBxLanguage
 
-	/* Champ de l'email */
+	/** Champ de l'email */
 	@FXML
 	public FormattedTextField txtFldEmail
 
-	/* Champ du mot de passe de l'email */
+	/** Champ du mot de passe de l'email */
 	@FXML
 	public PasswordField pwdFldEmailPassword
 
-	/* Champ de l'hébergeur de l'email */
+	/** Champ de l'hébergeur de l'email */
 	@FXML
 	public TextField txtFldEmailHost
 
-	/* Champ du port de l'email */
+	/** Champ du port de l'email */
 	@FXML
 	public TextField txtFldEmailPort
 
-	/* Bouton de sauvegarde de la configuration */
+	/** Bouton de sauvegarde de la configuration */
 	@FXML
 	public Button btnSave
 
-	/* Bouton pour tester le login à l'adresse mail */
+	/** Bouton pour tester le login à l'adresse mail */
 	@FXML
 	public Button btnCheckMail
-	
-	
+
+	/** Configuration */
 	val Config config = ConfigurationManager.instance
-	
+
+	/** Clé de crytage et ses paramètres */
+	val String keyPassword = "To@dstool64"
+	val byte[] salt = new String("12345678").bytes
+	val int iterationCount = 40000
+	val int keyLength = 128
+	val SecretKeySpec key = Encryption.createSecretKey(keyPassword.toCharArray, salt, iterationCount, keyLength)
+
 	// ----------------------------------------------------------------------------------------------------
 	/*
 	 * METHODES
@@ -83,18 +89,18 @@ class ControllerConfiguration {
 	 * Initialise les différents champs avec la valeur actuelle de la configuration
 	 */
 	def initialize() {
-		
-
 		cmbBxLanguage.value = LanguageManager.currentLanguage.capitalizeDisplayName
 		txtFldEmail.text = config.email
-		pwdFldEmailPassword.text = config.emailPassword
+		pwdFldEmailPassword.text = config.emailPassword !== "" ? Encryption.decrypt(config.emailPassword, key) : ""
 		txtFldEmailHost.text = config.mailHost
 		txtFldEmailPort.text = config.mailPort.toString
 
 		cmbBxLanguage.items = FXCollections.observableArrayList(languages)
 
 		txtFldEmail.addFormatValidator(new EmailValidator)
-		txtFldEmail.focusedProperty.addListener( value, oldVal, newVal | !newVal && !txtFldEmail.wrongFormatted ? completeHostInfos)
+		txtFldEmail.focusedProperty.addListener( value, oldVal, newVal |
+			!newVal && !txtFldEmail.wrongFormatted ? completeHostInfos
+		)
 		btnSave.disableProperty.bind(txtFldEmail.wrongFormattedProperty)
 
 		btnCheckMail.onAction = [e|checkMail()]
@@ -115,8 +121,8 @@ class ControllerConfiguration {
 		}
 		quit
 	}
-	
-		/**
+
+	/**
 	 * Met à jour la configuration
 	 * @param language Nouvelle langue
 	 * @param email Nouvel email
@@ -127,26 +133,25 @@ class ControllerConfiguration {
 	 */
 	def boolean updateConfig(String language, String email, String emailPassword, String emailHost, String emailPort) {
 		var needToRestart = false
-		val Locale newLocale = LanguageManager.supportedLocales.findFirst[locale|language.equals(capitalizeDisplayName(locale))]
+		val Locale newLocale = LanguageManager.supportedLocales.findFirst [ locale |
+			language.equals(capitalizeDisplayName(locale))
+		]
 		if (newLocale === null)
 			throw new IllegalArgumentException(newLocale + " is not supported.")
 		needToRestart = newLocale != LanguageManager.currentLanguage
 		config.language = newLocale.toString
 		config.email = email
-		config.emailPassword = emailPassword
+		config.emailPassword = Encryption.encrypt(emailPassword, key)
 		config.mailHost = emailHost
-		config.mailPort = Integer.parseInt(emailPort);
-		ConfigurationManager.save();
+		config.mailPort = Integer.parseInt(emailPort)
+		ConfigurationManager.save
 		return needToRestart
 	}
 
- 
 	def Collection<String> getLanguages() {
 		LanguageManager.supportedLocales.map[local|capitalizeDisplayName(local)].toList
 	}
 
-	
-	
 	/**
 	 * @param name l'adresse mail du login
 	 * @param password le mot de passe du login
@@ -155,9 +160,9 @@ class ControllerConfiguration {
 	 * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
 	 */
 	def SendMailTls.LoginResult checkLogin(String name, String password, String host, String port) {
-		return SendMailTls.checkLogin(name === null ? "" : name, password === null ? "" : password, host === null ? "" : host, Integer.parseInt(port))
+		return SendMailTls.checkLogin(name === null ? "" : name, password === null ? "" : password,
+			host === null ? "" : host, Integer.parseInt(port))
 	}
-
 
 	/**
 	 * @param email une adresse email (non nulle)
@@ -166,11 +171,11 @@ class ControllerConfiguration {
 	def getSmtpInfos(String email) {
 		SendMailTls.getSmtpInformation(email)
 	}
-	
+
 	@FXML
 	def void quit() {
 		val Stage stage = mainPane.scene.window as Stage
-		stage.close();
+		stage.close
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -178,8 +183,6 @@ class ControllerConfiguration {
 	 * SETTERS
 	 */
 	// ----------------------------------------------------------------------------------------------------
-
-
 	/** 
 	 * Complète les informations de l'hôte à partir de l'adresse mail saisie par l'utilisateur, à condition que l'hôte soit connu
 	 */
