@@ -62,14 +62,23 @@ class ControllerFxStudents {
 	}
 	
 	def updateQuestionList(){
+		
+		var TableColumn<StudentSheet, String> idCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.ID"))
+		idCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("studentName"))
+		table.columns.add(idCol)
+		/*
+		 * TODO
+		 * Si la question est sur 0 pts, ne pas la mettre, remplacer par une colonne ou deux :
+		 * - une colonne si c'est un numéro d'étudiant
+		 * - deux colonnes si c'est nom / prénom
+		 * 
+		 * => dans le modèle, se baser sur l'id de la student sheet comme numéro
+		 * 	ET séparer le studentName par deux champs nom prénoms ===> Trouver comment faire dans le modèle
+		 */
+		
 		for(int i : 0 ..< serviceGrad.numberOfQuestions){
-			
-			if(i == 0){
-				var TableColumn<StudentSheet, String> col = new TableColumn(serviceGrad.getQuestion(i).name)
-				col.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("studentName"))
-				table.columns.add(col)
-			}
-			else{
+
+			if(serviceGrad.getQuestion(i).gradeScale.maxPoint != 0f){
 				var TableColumn<StudentSheet, Float> col = new TableColumn(serviceGrad.getQuestion(i).name)
 				col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>{
 					override ObservableValue<Float> call(TableColumn.CellDataFeatures<StudentSheet, Float> cd){

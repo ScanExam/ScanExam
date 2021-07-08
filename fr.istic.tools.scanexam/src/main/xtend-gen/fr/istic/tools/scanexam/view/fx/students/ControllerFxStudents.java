@@ -71,19 +71,20 @@ public class ControllerFxStudents {
   public boolean updateQuestionList() {
     boolean _xblockexpression = false;
     {
+      String _translate = LanguageManager.translate("studentsTab.tableView.ID");
+      TableColumn<StudentSheet, String> idCol = new TableColumn<StudentSheet, String>(_translate);
+      PropertyValueFactory<StudentSheet, String> _propertyValueFactory = new PropertyValueFactory<StudentSheet, String>("studentName");
+      idCol.setCellValueFactory(_propertyValueFactory);
+      this.table.getColumns().add(idCol);
       int _numberOfQuestions = this.serviceGrad.numberOfQuestions();
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _numberOfQuestions, true);
       for (final int i : _doubleDotLessThan) {
-        if ((i == 0)) {
+        float _maxPoint = this.serviceGrad.getQuestion(i).getGradeScale().getMaxPoint();
+        boolean _notEquals = (_maxPoint != 0f);
+        if (_notEquals) {
           String _name = this.serviceGrad.getQuestion(i).getName();
-          TableColumn<StudentSheet, String> col = new TableColumn<StudentSheet, String>(_name);
-          PropertyValueFactory<StudentSheet, String> _propertyValueFactory = new PropertyValueFactory<StudentSheet, String>("studentName");
-          col.setCellValueFactory(_propertyValueFactory);
-          this.table.getColumns().add(col);
-        } else {
-          String _name_1 = this.serviceGrad.getQuestion(i).getName();
-          TableColumn<StudentSheet, Float> col_1 = new TableColumn<StudentSheet, Float>(_name_1);
-          col_1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
+          TableColumn<StudentSheet, Float> col = new TableColumn<StudentSheet, Float>(_name);
+          col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
             @Override
             public ObservableValue<Float> call(final TableColumn.CellDataFeatures<StudentSheet, Float> cd) {
               final Callable<Float> _function = () -> {
@@ -92,12 +93,12 @@ public class ControllerFxStudents {
               return Bindings.<Float>createObjectBinding(_function);
             }
           });
-          this.table.getColumns().add(col_1);
+          this.table.getColumns().add(col);
         }
       }
-      String _translate = LanguageManager.translate("studentsTab.total");
-      TableColumn<StudentSheet, Float> col_2 = new TableColumn<StudentSheet, Float>(_translate);
-      col_2.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
+      String _translate_1 = LanguageManager.translate("studentsTab.total");
+      TableColumn<StudentSheet, Float> col_1 = new TableColumn<StudentSheet, Float>(_translate_1);
+      col_1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
         @Override
         public ObservableValue<Float> call(final TableColumn.CellDataFeatures<StudentSheet, Float> cd) {
           final Callable<Float> _function = () -> {
@@ -106,7 +107,7 @@ public class ControllerFxStudents {
           return Bindings.<Float>createObjectBinding(_function);
         }
       });
-      _xblockexpression = this.table.getColumns().add(col_2);
+      _xblockexpression = this.table.getColumns().add(col_1);
     }
     return _xblockexpression;
   }
