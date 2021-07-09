@@ -11,6 +11,7 @@ import fr.istic.tools.scanexam.view.fx.Encryption;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Locale;
 import javafx.beans.value.ChangeListener;
@@ -102,7 +103,17 @@ public class ControllerConfiguration {
   /**
    * Clé de crytage et ses paramètres
    */
-  private final String keyPassword = "To@dstool64";
+  private final char[] keyPassword = new Function0<char[]>() {
+    @Override
+    public char[] apply() {
+      try {
+        char[] _charArray = InetAddress.getLocalHost().getHostName().toCharArray();
+        return _charArray;
+      } catch (Throwable _e) {
+        throw Exceptions.sneakyThrow(_e);
+      }
+    }
+  }.apply();
   
   private final byte[] salt = new String("12345678").getBytes();
   
@@ -114,7 +125,7 @@ public class ControllerConfiguration {
     @Override
     public SecretKeySpec apply() {
       try {
-        SecretKeySpec _createSecretKey = Encryption.createSecretKey(ControllerConfiguration.this.keyPassword.toCharArray(), ControllerConfiguration.this.salt, ControllerConfiguration.this.iterationCount, ControllerConfiguration.this.keyLength);
+        SecretKeySpec _createSecretKey = Encryption.createSecretKey(ControllerConfiguration.this.keyPassword, ControllerConfiguration.this.salt, ControllerConfiguration.this.iterationCount, ControllerConfiguration.this.keyLength);
         return _createSecretKey;
       } catch (Throwable _e) {
         throw Exceptions.sneakyThrow(_e);

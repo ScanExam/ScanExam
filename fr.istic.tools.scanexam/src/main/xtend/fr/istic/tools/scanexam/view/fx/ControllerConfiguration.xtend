@@ -26,6 +26,7 @@ import static extension fr.istic.tools.scanexam.utils.extensions.LocaleExtension
 import java.util.Collection
 import fr.istic.tools.scanexam.exportation.SendMailTls
 import javax.crypto.spec.SecretKeySpec
+import java.net.InetAddress
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX
@@ -74,11 +75,11 @@ class ControllerConfiguration {
 	val Config config = ConfigurationManager.instance
 
 	/** Clé de crytage et ses paramètres */
-	val String keyPassword = "To@dstool64"
+	val char[] keyPassword = InetAddress.localHost.getHostName.toCharArray
 	val byte[] salt = new String("12345678").bytes
 	val int iterationCount = 40000
 	val int keyLength = 128
-	val SecretKeySpec key = Encryption.createSecretKey(keyPassword.toCharArray, salt, iterationCount, keyLength)
+	val SecretKeySpec key = Encryption.createSecretKey(keyPassword, salt, iterationCount, keyLength)
 
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -98,8 +99,9 @@ class ControllerConfiguration {
 		cmbBxLanguage.items = FXCollections.observableArrayList(languages)
 
 		txtFldEmail.addFormatValidator(new EmailValidator)
-		txtFldEmail.focusedProperty.addListener( value, oldVal, newVal |
-			!newVal && !txtFldEmail.wrongFormatted ? completeHostInfos
+		txtFldEmail.focusedProperty.addListener(
+			value, oldVal, newVal |
+				!newVal && !txtFldEmail.wrongFormatted ? completeHostInfos
 		)
 		btnSave.disableProperty.bind(txtFldEmail.wrongFormattedProperty)
 
