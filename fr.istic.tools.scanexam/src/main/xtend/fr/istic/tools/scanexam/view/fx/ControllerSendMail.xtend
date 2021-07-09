@@ -17,94 +17,98 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
 import javafx.scene.web.HTMLEditor
 import javafx.stage.Stage
+import java.util.HashMap
 
 /**
  * Classe pour envoyer les corrigés par mail en JavaFX
  * @author Julien Cochetn Marius Lumbroso, Théo Giraudet
  */
-class ControllerSendMail  {
+class ControllerSendMail {
 
-	/* Pane principale de la vue */
+	/** Pane principale de la vue */
 	@FXML
 	public Pane mainPane
-	
-	/* Champ de texte du titre */
+
+	/** Champ de texte du titre */
 	@FXML
 	public TextField txtFldTitle
-	
-	/* Champ de texte du mail */
+
+	/** Champ de texte du mail */
 	@FXML
 	public HTMLEditor htmlEditor
-	
+
 	int nbSheetWithoutName = 0
-	
-	Map<String,String> mailMap
-	
+
+	Map<String, String> mailMap
+
 	Collection<StudentSheet> studentSheets
-	
+
 	ControllerFxGraduation controllerGraduation
-	
+
 	ServiceGraduation service
+
 	// ----------------------------------------------------------------------------------------------------
 	/*
 	 * METHODES
 	 */
 	// ----------------------------------------------------------------------------------------------------
-
 	@FXML
 	def void saveAndQuit() {
-
-	val Task<Integer> task = new Task<Integer>() {
+		val Task<Integer> task = new Task<Integer> {
 			protected override Integer call() {
-				var sent = 0;
+				var sent = 0
 				updateProgress(sent, studentSheets.size - nbSheetWithoutName)
-				updateMessage(String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size - nbSheetWithoutName))
+				updateMessage(
+					String.format(LanguageManager.translate("sendMail.progress"), sent,
+						studentSheets.size - nbSheetWithoutName))
 				for (studentSheet : studentSheets) {
-
 					val studentMail = mailMap.get(studentSheet.studentName)
-
 					if (studentSheet.studentName !== null && studentMail !== null) {
 						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(service,
 							controllerGraduation.pdfManager.pdfInputStream, studentSheet, mainPane.width)
 						val sender = new SendMailTls
 						sender.sendMail(controllerGraduation.pdfManager.pdfInputStream, txtFldTitle.text,
 							htmlEditor.htmlText, pair.key, studentMail, pair.value)
-						sent++;
+						sent++
 						updateProgress(sent, studentSheets.size - nbSheetWithoutName)
-						updateMessage(String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size - nbSheetWithoutName))
+						updateMessage(
+							String.format(LanguageManager.translate("sendMail.progress"), sent,
+								studentSheets.size - nbSheetWithoutName))
 					}
 				}
 				return sent
 			}
 		}
-		
+
 		val Service<Integer> service = [task]
-		service.onSucceeded = [e | onFinish(service.value)]
+		service.onSucceeded = [e|onFinish(service.value)]
 		service.start
-		ControllerWaiting.openWaitingDialog(service.messageProperty, service.progressProperty, mainPane.getScene().getWindow() as Stage)
+		ControllerWaiting.openWaitingDialog(service.messageProperty, service.progressProperty,
+			mainPane.scene.window as Stage)
 	}
-	
+
 	private def onFinish(int sent) {
 		DialogMessageSender.sendDialog(
 			AlertType.CONFIRMATION,
 			LanguageManager.translate("sendMail.resultHeader"),
 			LanguageManager.translate("sendMail.resultHeader"),
 			String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size)
-		);
-		
+		)
 		quit
 	}
-	
+
 	@FXML
 	def void quit() {
-  		val Stage stage = mainPane.scene.window as Stage
-  		stage.close();
+		val Stage stage = mainPane.scene.window as Stage
+		stage.close
 	}
-	
-	
+
 	def void init(ServiceGraduation service, ControllerFxGraduation controllerGraduation) {
 		this.controllerGraduation = controllerGraduation
-		this.mailMap = service.studentInfos
+		this.mailMap = new HashMap
+		for (i : 0 ..< service.studentInfos.length) {
+			this.mailMap.put(service.studentInfos.get(i).get(0), service.studentInfos.get(i).get(3))
+		}
 		this.studentSheets = service.studentSheets
 		this.service = service
 
@@ -119,7 +123,7 @@ class ControllerSendMail  {
 				"sendMail.noStudentDataHeader",
 				"sendMail.noStudentDataHeader",
 				"sendMail.noStudentData"
-			);
+			)
 			return
 		} else if (nbSheetWithoutName != 0) {
 			DialogMessageSender.sendDialog(
@@ -131,7 +135,5 @@ class ControllerSendMail  {
 			)
 		}
 	}
-	
-	
-	
+
 }

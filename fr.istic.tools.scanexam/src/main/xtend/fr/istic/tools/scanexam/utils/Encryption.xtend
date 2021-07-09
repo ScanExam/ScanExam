@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fx
+package fr.istic.tools.scanexam.utils
 
 import javax.crypto.Cipher
 import javax.crypto.SecretKey

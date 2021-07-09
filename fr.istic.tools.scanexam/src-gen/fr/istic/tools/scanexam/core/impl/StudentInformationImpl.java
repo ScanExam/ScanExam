@@ -20,7 +20,9 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl#getName <em>Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl#getUserId <em>User Id</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl#getLastName <em>Last Name</em>}</li>
+ *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl#getFirstName <em>First Name</em>}</li>
  *   <li>{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl#getEmailAddress <em>Email Address</em>}</li>
  * </ul>
  *
@@ -28,24 +30,64 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  */
 public class StudentInformationImpl extends MinimalEObjectImpl.Container implements StudentInformation {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * The default value of the '{@link #getUserId() <em>User Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * @see #getUserId()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = null;
+	protected static final String USER_ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * The cached value of the '{@link #getUserId() <em>User Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * @see #getUserId()
 	 * @generated
 	 * @ordered
 	 */
-	protected String name = NAME_EDEFAULT;
+	protected String userId = USER_ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLastName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String LAST_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLastName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String lastName = LAST_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFirstName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String FIRST_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFirstName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String firstName = FIRST_NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getEmailAddress() <em>Email Address</em>}' attribute.
@@ -91,8 +133,8 @@ public class StudentInformationImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName() {
-		return name;
+	public String getUserId() {
+		return userId;
 	}
 
 	/**
@@ -100,11 +142,53 @@ public class StudentInformationImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
+	public void setUserId(String newUserId) {
+		String oldUserId = userId;
+		userId = newUserId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_INFORMATION__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_INFORMATION__USER_ID, oldUserId, userId));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLastName(String newLastName) {
+		String oldLastName = lastName;
+		lastName = newLastName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_INFORMATION__LAST_NAME, oldLastName, lastName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFirstName(String newFirstName) {
+		String oldFirstName = firstName;
+		firstName = newFirstName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.STUDENT_INFORMATION__FIRST_NAME, oldFirstName, firstName));
 	}
 
 	/**
@@ -136,8 +220,12 @@ public class StudentInformationImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case CorePackage.STUDENT_INFORMATION__NAME:
-				return getName();
+			case CorePackage.STUDENT_INFORMATION__USER_ID:
+				return getUserId();
+			case CorePackage.STUDENT_INFORMATION__LAST_NAME:
+				return getLastName();
+			case CorePackage.STUDENT_INFORMATION__FIRST_NAME:
+				return getFirstName();
 			case CorePackage.STUDENT_INFORMATION__EMAIL_ADDRESS:
 				return getEmailAddress();
 		}
@@ -152,8 +240,14 @@ public class StudentInformationImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case CorePackage.STUDENT_INFORMATION__NAME:
-				setName((String)newValue);
+			case CorePackage.STUDENT_INFORMATION__USER_ID:
+				setUserId((String)newValue);
+				return;
+			case CorePackage.STUDENT_INFORMATION__LAST_NAME:
+				setLastName((String)newValue);
+				return;
+			case CorePackage.STUDENT_INFORMATION__FIRST_NAME:
+				setFirstName((String)newValue);
 				return;
 			case CorePackage.STUDENT_INFORMATION__EMAIL_ADDRESS:
 				setEmailAddress((String)newValue);
@@ -170,8 +264,14 @@ public class StudentInformationImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case CorePackage.STUDENT_INFORMATION__NAME:
-				setName(NAME_EDEFAULT);
+			case CorePackage.STUDENT_INFORMATION__USER_ID:
+				setUserId(USER_ID_EDEFAULT);
+				return;
+			case CorePackage.STUDENT_INFORMATION__LAST_NAME:
+				setLastName(LAST_NAME_EDEFAULT);
+				return;
+			case CorePackage.STUDENT_INFORMATION__FIRST_NAME:
+				setFirstName(FIRST_NAME_EDEFAULT);
 				return;
 			case CorePackage.STUDENT_INFORMATION__EMAIL_ADDRESS:
 				setEmailAddress(EMAIL_ADDRESS_EDEFAULT);
@@ -188,8 +288,12 @@ public class StudentInformationImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case CorePackage.STUDENT_INFORMATION__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case CorePackage.STUDENT_INFORMATION__USER_ID:
+				return USER_ID_EDEFAULT == null ? userId != null : !USER_ID_EDEFAULT.equals(userId);
+			case CorePackage.STUDENT_INFORMATION__LAST_NAME:
+				return LAST_NAME_EDEFAULT == null ? lastName != null : !LAST_NAME_EDEFAULT.equals(lastName);
+			case CorePackage.STUDENT_INFORMATION__FIRST_NAME:
+				return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
 			case CorePackage.STUDENT_INFORMATION__EMAIL_ADDRESS:
 				return EMAIL_ADDRESS_EDEFAULT == null ? emailAddress != null : !EMAIL_ADDRESS_EDEFAULT.equals(emailAddress);
 		}
@@ -206,8 +310,12 @@ public class StudentInformationImpl extends MinimalEObjectImpl.Container impleme
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (name: ");
-		result.append(name);
+		result.append(" (userId: ");
+		result.append(userId);
+		result.append(", lastName: ");
+		result.append(lastName);
+		result.append(", firstName: ");
+		result.append(firstName);
 		result.append(", emailAddress: ");
 		result.append(emailAddress);
 		result.append(')');

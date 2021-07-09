@@ -67,10 +67,12 @@ class DataFactory {
 	 * @return une instance d'objet de type {@link StudentInformation}
 	 * @author Théo Giraudet
 	 */
-	def StudentInformation createStudentInformation(String name, String address) {
+	def StudentInformation createStudentInformation(String id, String lastName, String firstName, String mail) {
 		val infos = CoreFactory.eINSTANCE.createStudentInformation
-		infos.name = name
-		infos.emailAddress = address
+		infos.userId = id
+		infos.lastName = lastName
+		infos.firstName = firstName
+		infos.emailAddress = mail
 		infos
 	}
 

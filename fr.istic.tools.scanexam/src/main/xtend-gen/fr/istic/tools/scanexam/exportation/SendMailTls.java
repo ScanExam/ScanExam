@@ -2,15 +2,18 @@ package fr.istic.tools.scanexam.exportation;
 
 import com.sun.mail.util.MailConnectException;
 import fr.istic.tools.scanexam.config.ConfigurationManager;
+import fr.istic.tools.scanexam.utils.Encryption;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.io.File;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.crypto.spec.SecretKeySpec;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -23,6 +26,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -37,6 +41,39 @@ public class SendMailTls {
     
     HOST_NOT_FOUND;
   }
+  
+  /**
+   * Clé de crytage et ses paramètres
+   */
+  private final char[] keyPassword = new Function0<char[]>() {
+    @Override
+    public char[] apply() {
+      try {
+        char[] _charArray = InetAddress.getLocalHost().getHostName().toCharArray();
+        return _charArray;
+      } catch (Throwable _e) {
+        throw Exceptions.sneakyThrow(_e);
+      }
+    }
+  }.apply();
+  
+  private final byte[] salt = new String("12345678").getBytes();
+  
+  private final int iterationCount = 40000;
+  
+  private final int keyLength = 128;
+  
+  private final SecretKeySpec key = new Function0<SecretKeySpec>() {
+    @Override
+    public SecretKeySpec apply() {
+      try {
+        SecretKeySpec _createSecretKey = Encryption.createSecretKey(SendMailTls.this.keyPassword, SendMailTls.this.salt, SendMailTls.this.iterationCount, SendMailTls.this.keyLength);
+        return _createSecretKey;
+      } catch (Throwable _e) {
+        throw Exceptions.sneakyThrow(_e);
+      }
+    }
+  }.apply();
   
   /**
    * @param email une adresse email valide (non null)
@@ -113,27 +150,31 @@ public class SendMailTls {
   private final Properties props;
   
   public SendMailTls() {
-    Properties _properties = new Properties();
-    this.props = _properties;
-    final String sender = ConfigurationManager.instance.getEmail();
-    final String senderPassword = ConfigurationManager.instance.getEmailPassword();
-    final String host = ConfigurationManager.instance.getMailHost();
-    final int port = ConfigurationManager.instance.getMailPort();
-    Objects.<String>requireNonNull(sender, "Sender\'s email is absent in configuration file");
-    Objects.<String>requireNonNull(sender, "Sender\'s email password is absent in configuration file");
-    Objects.<String>requireNonNull(host, "SMTP host of sender\'s email is absent in configuration file");
-    Objects.<Integer>requireNonNull(Integer.valueOf(port), "SMTP port of sender\'s email is absent in configuration file");
-    this.props.put("mail.smtp.auth", "true");
-    this.props.put("mail.smtp.localhost", "ScanExam");
-    this.props.put("mail.smtp.starttls.enable", "true");
-    this.props.put("mail.smtp.host", host);
-    this.props.put("mail.smtp.port", Integer.valueOf(port));
-    this.session = Session.getInstance(this.props, new Authenticator() {
-      @Override
-      protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(sender, senderPassword);
-      }
-    });
+    try {
+      Properties _properties = new Properties();
+      this.props = _properties;
+      final String sender = ConfigurationManager.instance.getEmail();
+      final String senderPassword = Encryption.decrypt(ConfigurationManager.instance.getEmailPassword(), this.key);
+      final String host = ConfigurationManager.instance.getMailHost();
+      final int port = ConfigurationManager.instance.getMailPort();
+      Objects.<String>requireNonNull(sender, "Sender\'s email is absent in configuration file");
+      Objects.<String>requireNonNull(sender, "Sender\'s email password is absent in configuration file");
+      Objects.<String>requireNonNull(host, "SMTP host of sender\'s email is absent in configuration file");
+      Objects.<Integer>requireNonNull(Integer.valueOf(port), "SMTP port of sender\'s email is absent in configuration file");
+      this.props.put("mail.smtp.auth", "true");
+      this.props.put("mail.smtp.localhost", "ScanExam");
+      this.props.put("mail.smtp.starttls.enable", "true");
+      this.props.put("mail.smtp.host", host);
+      this.props.put("mail.smtp.port", Integer.valueOf(port));
+      this.session = Session.getInstance(this.props, new Authenticator() {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+          return new PasswordAuthentication(sender, senderPassword);
+        }
+      });
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   /**

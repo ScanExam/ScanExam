@@ -76,12 +76,14 @@ public class DataFactory {
    * @return une instance d'objet de type {@link StudentInformation}
    * @author Théo Giraudet
    */
-  public StudentInformation createStudentInformation(final String name, final String address) {
+  public StudentInformation createStudentInformation(final String id, final String lastName, final String firstName, final String mail) {
     StudentInformation _xblockexpression = null;
     {
       final StudentInformation infos = CoreFactory.eINSTANCE.createStudentInformation();
-      infos.setName(name);
-      infos.setEmailAddress(address);
+      infos.setUserId(id);
+      infos.setLastName(lastName);
+      infos.setFirstName(firstName);
+      infos.setEmailAddress(mail);
       _xblockexpression = infos;
     }
     return _xblockexpression;

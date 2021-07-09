@@ -45,13 +45,12 @@ public class ControllerFxStudents {
     return _xblockexpression;
   }
   
-  public Object update() {
+  public void update() {
     this.initTable();
     this.updateQuestionList();
     this.updateStudentsList();
     this.addContextMenuOnEachLines();
     this.mainPane.setContent(this.table);
-    return null;
   }
   
   public void updateStudentsList() {

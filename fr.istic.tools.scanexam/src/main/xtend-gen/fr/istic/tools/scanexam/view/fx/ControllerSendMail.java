@@ -10,6 +10,7 @@ import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -22,6 +23,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -75,7 +78,8 @@ public class ControllerSendMail {
         String _translate = LanguageManager.translate("sendMail.progress");
         int _size_1 = ControllerSendMail.this.studentSheets.size();
         int _minus_1 = (_size_1 - ControllerSendMail.this.nbSheetWithoutName);
-        this.updateMessage(String.format(_translate, Integer.valueOf(sent), Integer.valueOf(_minus_1)));
+        this.updateMessage(
+          String.format(_translate, Integer.valueOf(sent), Integer.valueOf(_minus_1)));
         for (final StudentSheet studentSheet : ControllerSendMail.this.studentSheets) {
           {
             final String studentMail = ControllerSendMail.this.mailMap.get(studentSheet.getStudentName());
@@ -92,7 +96,8 @@ public class ControllerSendMail {
               String _translate_1 = LanguageManager.translate("sendMail.progress");
               int _size_3 = ControllerSendMail.this.studentSheets.size();
               int _minus_3 = (_size_3 - ControllerSendMail.this.nbSheetWithoutName);
-              this.updateMessage(String.format(_translate_1, Integer.valueOf(sent), Integer.valueOf(_minus_3)));
+              this.updateMessage(
+                String.format(_translate_1, Integer.valueOf(sent), Integer.valueOf(_minus_3)));
             }
           }
         }
@@ -112,7 +117,8 @@ public class ControllerSendMail {
     service.setOnSucceeded(_function_1);
     service.start();
     Window _window = this.mainPane.getScene().getWindow();
-    ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), ((Stage) _window));
+    ControllerWaiting.openWaitingDialog(service.messageProperty(), service.progressProperty(), 
+      ((Stage) _window));
   }
   
   private void onFinish(final int sent) {
@@ -133,7 +139,13 @@ public class ControllerSendMail {
   
   public void init(final ServiceGraduation service, final ControllerFxGraduation controllerGraduation) {
     this.controllerGraduation = controllerGraduation;
-    this.mailMap = service.getStudentInfos();
+    HashMap<String, String> _hashMap = new HashMap<String, String>();
+    this.mailMap = _hashMap;
+    int _length = ((Object[])Conversions.unwrapArray(service.getStudentInfos(), Object.class)).length;
+    ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _length, true);
+    for (final Integer i : _doubleDotLessThan) {
+      this.mailMap.put(service.getStudentInfos().get((i).intValue()).get(0), service.getStudentInfos().get((i).intValue()).get(3));
+    }
     this.studentSheets = service.getStudentSheets();
     this.service = service;
     int _xifexpression = (int) 0;

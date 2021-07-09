@@ -87,9 +87,9 @@ class Line {
 class Grade {
 	refers GradeEntry[] entries
 	contains Comment[] comments
-	op float getGradeValue(){
+	op float getGradeValue() {
 		val res = entries.stream.map(grade|grade.step).reduce[acc, v|v + acc]
-		if(res.isPresent)
+		if (res.isPresent)
 			res.get
 		else
 			0f
@@ -116,6 +116,8 @@ class StudentSheet {
 }
 
 class StudentInformation {
-	String name
+	String userId
+	String lastName
+	String firstName
 	String emailAddress
 }

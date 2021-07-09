@@ -1,4 +1,4 @@
-package fr.istic.tools.scanexam.view.fx;
+package fr.istic.tools.scanexam.utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

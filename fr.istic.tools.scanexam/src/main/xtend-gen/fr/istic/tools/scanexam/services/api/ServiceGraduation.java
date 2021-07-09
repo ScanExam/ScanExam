@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javafx.util.Pair;
 
@@ -193,19 +192,19 @@ public interface ServiceGraduation extends Service {
   
   /**
    * Définit la liste des informations des étudiants (non null)
-   * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
+   * @param informations sous forme de liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant
    */
-  void setStudentInfos(final Map<String, String> informations);
+  void setStudentInfos(final List<List<String>> informations);
   
   /**
-   * @return l'ensemble de tous les noms des étudiants chargés
+   * @return l'ensemble de tous les identifiants des étudiants chargés
    */
-  Collection<String> getStudentNames();
+  Collection<String> getStudentId();
   
   /**
-   * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
+   * @return une liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant
    */
-  Map<String, String> getStudentInfos();
+  List<List<String>> getStudentInfos();
   
   /**
    * Ajoute une annotation sur la page donee et l'etudiant donne au modele, lui genere une id et la retourne

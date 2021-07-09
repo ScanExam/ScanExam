@@ -8,7 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +19,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import fr.istic.tools.scanexam.utils.DataFactory;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.services.api.ServiceEdition;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
+import fr.istic.tools.scanexam.utils.DataFactory;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 
@@ -30,8 +31,7 @@ public class ExamGraduationServiceTest {
 
 	/*
 	 * Base de confiance : getStudentSheets, assignStudentId,
-	 * getQuestionGradeEntries, getQuestionSelectedGradeEntries,
-	 * getStudentInfos
+	 * getQuestionGradeEntries, getQuestionSelectedGradeEntries, getStudentInfos
 	 */
 
 	ControllerFxGraduation controller;
@@ -446,21 +446,21 @@ public class ExamGraduationServiceTest {
 
 		final int id1 = service.addEntry(0, "foo", 0.5f).get();
 		final int id2 = service.addEntry(0, "bar", 0.5f).get();
-		
+
 		{
 			final var selected = service.getQuestionSelectedGradeEntries(0);
 			assertTrue(selected.isEmpty());
 		}
-		
+
 		final boolean result = service.assignGradeEntry(0, id1);
 		assertTrue(result);
-		
+
 		{
 			final var selected = service.getQuestionSelectedGradeEntries(0);
 			assertEquals(1, selected.size());
 			assertEquals(id1, selected.get(0));
 		}
-		
+
 		{
 			final boolean result2 = service.assignGradeEntry(0, id2);
 			assertTrue(result2);
@@ -469,12 +469,12 @@ public class ExamGraduationServiceTest {
 			assertEquals(id1, selected.get(0));
 			assertEquals(id2, selected.get(1));
 		}
-		
+
 		// Pas d'effet de bord
-		for(int i = 1; i < service.numberOfQuestions(); i++)
+		for (int i = 1; i < service.numberOfQuestions(); i++)
 			assertTrue(service.getQuestionSelectedGradeEntries(i).isEmpty());
 	}
-	
+
 	@Test
 	@Tag("Robustesse")
 	@DisplayName("Test - Assigne des entrées dont la somme dépasse la valeur du barème ou est négative")
@@ -485,10 +485,10 @@ public class ExamGraduationServiceTest {
 		final int id1 = service.addEntry(0, "foo", 0.5f).get();
 		final int id2 = service.addEntry(0, "bar", 1f).get();
 		final int id3 = service.addEntry(0, "bar", -1f).get();
-		
+
 		final boolean result = service.assignGradeEntry(0, id1);
 		assertTrue(result);
-		
+
 		{
 			final boolean result2 = service.assignGradeEntry(0, id2);
 			assertFalse(result2);
@@ -496,7 +496,7 @@ public class ExamGraduationServiceTest {
 			assertEquals(1, selected.size());
 			assertEquals(id1, selected.get(0));
 		}
-		
+
 		{
 			final boolean result2 = service.assignGradeEntry(0, id3);
 			assertFalse(result2);
@@ -504,12 +504,12 @@ public class ExamGraduationServiceTest {
 			assertEquals(1, selected.size());
 			assertEquals(id1, selected.get(0));
 		}
-		
+
 		// Pas d'effet de bord
-		for(int i = 1; i < service.numberOfQuestions(); i++)
+		for (int i = 1; i < service.numberOfQuestions(); i++)
 			assertTrue(service.getQuestionSelectedGradeEntries(i).isEmpty());
 	}
-	
+
 	@Test
 	@Tag("Robustesse")
 	@DisplayName("Test - Assigne une entrée qui n'existe pas")
@@ -518,20 +518,20 @@ public class ExamGraduationServiceTest {
 		openGraduation();
 
 		service.addEntry(0, "foo", 0.5f).get();
-		
+
 		final boolean result = service.assignGradeEntry(0, -1);
 		assertFalse(result);
-		
+
 		{
 			final var selected = service.getQuestionSelectedGradeEntries(0);
 			assertTrue(selected.isEmpty());
 		}
-		
+
 		// Pas d'effet de bord
-		for(int i = 1; i < service.numberOfQuestions(); i++)
+		for (int i = 1; i < service.numberOfQuestions(); i++)
 			assertTrue(service.getQuestionSelectedGradeEntries(i).isEmpty());
 	}
-	
+
 	@Test
 	@Tag("Robustesse")
 	@DisplayName("Test - Assigne une entrée à une question qui n'existe pas")
@@ -540,54 +540,53 @@ public class ExamGraduationServiceTest {
 		openGraduation();
 
 		final int id = service.addEntry(0, "foo", 0.5f).get();
-		
+
 		final boolean result = service.assignGradeEntry(-1, id);
 		assertFalse(result);
-		
+
 		{
 			final var selected = service.getQuestionSelectedGradeEntries(0);
 			assertTrue(selected.isEmpty());
 		}
-		
+
 		// Pas d'effet de bord
-		for(int i = 1; i < service.numberOfQuestions(); i++)
+		for (int i = 1; i < service.numberOfQuestions(); i++)
 			assertTrue(service.getQuestionSelectedGradeEntries(i).isEmpty());
 	}
-	
-	
+
 	@Test
 	@DisplayName("Test - Retire une entrée à une question")
 	void retractGradeEntryTest() {
 		openTemplate();
 		openGraduation();
-		
+
 		final int id1 = service.addEntry(0, "foo", 0.5f).get();
 		final int id2 = service.addEntry(0, "bar", 0.5f).get();
-		
+
 		service.assignGradeEntry(0, id1);
 		service.assignGradeEntry(0, id2);
-		
+
 		final boolean result = service.retractGradeEntry(0, id1);
 		assertTrue(result);
-		
+
 		final var selected = service.getQuestionSelectedGradeEntries(0);
 		assertEquals(1, selected.size());
 		assertEquals(id2, selected.get(0));
 	}
-	
+
 	@Test
 	@Tag("Robustesse")
 	@DisplayName("Test - Retire une entrée à une question dont la nouvelle somme fait dépasser le barème ou est négative")
 	void retractGradeEntryTest2() {
 		openTemplate();
 		openGraduation();
-		
+
 		final int id1 = service.addEntry(0, "foo", -0.25f).get();
 		final int id2 = service.addEntry(0, "bar", 0.5f).get();
-		
+
 		service.assignGradeEntry(0, id2);
 		service.assignGradeEntry(0, id1);
-		
+
 		{
 			service.retractGradeEntry(0, id2);
 			final var selected = service.getQuestionSelectedGradeEntries(0);
@@ -596,90 +595,86 @@ public class ExamGraduationServiceTest {
 			assertEquals(id2, selected.get(0));
 		}
 	}
-	
-	
+
 	@Test
 	@DisplayName("Test - Calcule la note maximale obtenable par l'étudiant pour les réponses déjà notées")
 	void getCurrentMaxGradeTest() {
 		openTemplate();
 		openGraduation();
-		
+
 		final int id1 = service.addEntry(0, "foo", 0.5f).get();
 		final int id2 = service.addEntry(0, "bar", 0.25f).get();
 		service.addEntry(0, "bar2", 1f).get();
 		final int id4 = service.addEntry(1, "foo", 0.75f).get();
-		
+
 		assertEquals(0, service.getCurrentMaxGrade());
-		
+
 		service.assignGradeEntry(0, id1);
 		assertEquals(1, service.getCurrentMaxGrade());
-		
+
 		service.assignGradeEntry(0, id2);
 		assertEquals(1, service.getCurrentMaxGrade());
-		
+
 		service.assignGradeEntry(1, id4);
 		assertEquals(2, service.getCurrentMaxGrade());
 	}
-	
-	
+
 	@Test
 	@DisplayName("Test - Calcule la note obtenue par l'étudiant")
 	void getCurrentMaxGradeTest2() {
 		openTemplate();
 		openGraduation();
-		
+
 		final int id1 = service.addEntry(0, "foo", 0.5f).get();
 		final int id2 = service.addEntry(0, "bar", 0.25f).get();
 		service.addEntry(0, "bar2", 1f).get();
 		final int id4 = service.addEntry(1, "foo", 0.75f).get();
-		
+
 		assertEquals(0, service.getCurrentGrade());
-		
+
 		service.assignGradeEntry(0, id1);
 		assertEquals(0.5, service.getCurrentGrade());
-		
+
 		service.assignGradeEntry(0, id2);
 		assertEquals(0.75, service.getCurrentGrade());
-		
+
 		service.assignGradeEntry(1, id4);
 		assertEquals(1.5, service.getCurrentGrade());
 	}
-	
-	
+
 	@Test
 	@DisplayName("Test - Calcule la note maximale obtenable pour l'examen")
 	void getGlobalScale() {
 		openTemplate();
 		openGraduation();
-		
+
 		assertEquals(2, service.getGlobalScale());
 	}
-	
-	
+
 	@Test
 	@DisplayName("Test - Définit la liste des informations des étudiants")
 	void setStudentInfos() {
 		openTemplate();
 		openGraduation();
-		
+
 		assertTrue(service.getStudentInfos().isEmpty());
-		
-		final var map = new HashMap<String, String>();
-		map.put("foo", "foo@bar.net");
-		map.put("bar", "bar@foo.net");
-		
-		service.setStudentInfos(map);
-		
-		assertEquals(map, service.getStudentInfos());
+
+		final List<List<String>> list = new ArrayList<>();
+		list.add(Arrays.asList("87459658", "Spring", "Jeannette", "j.spring@mail.org"));
+		list.add(Arrays.asList("00458241", "Lapin", "Didier", "didierlapin@mail.org"));
+
+		service.setStudentInfos(list);
+
+		assertEquals(list, service.getStudentInfos());
 	}
-	
+
 	@Test
 	@Tag("Robustesse")
 	@DisplayName("Test - Définit la liste des informations des étudiants avec une entrée nulle")
 	void setStudentInfos2() {
 		openTemplate();
 		openGraduation();
-		
+
 		assertTrue(service.getStudentInfos().isEmpty());
 		assertThrows(NullPointerException.class, () -> service.setStudentInfos(null));
 		assertTrue(service.getStudentInfos().isEmpty());

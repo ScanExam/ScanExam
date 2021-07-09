@@ -760,7 +760,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStudentInformation_Name() {
+	public EAttribute getStudentInformation_UserId() {
 		return (EAttribute)studentInformationEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -769,8 +769,26 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStudentInformation_EmailAddress() {
+	public EAttribute getStudentInformation_LastName() {
 		return (EAttribute)studentInformationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStudentInformation_FirstName() {
+		return (EAttribute)studentInformationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStudentInformation_EmailAddress() {
+		return (EAttribute)studentInformationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -876,7 +894,9 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEOperation(studentSheetEClass, STUDENT_SHEET___IS_GRADED);
 
 		studentInformationEClass = createEClass(STUDENT_INFORMATION);
-		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__NAME);
+		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__USER_ID);
+		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__LAST_NAME);
+		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__FIRST_NAME);
 		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__EMAIL_ADDRESS);
 	}
 
@@ -993,7 +1013,9 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEOperation(getStudentSheet__IsGraded(), theEcorePackage.getEBoolean(), "isGraded", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(studentInformationEClass, StudentInformation.class, "StudentInformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStudentInformation_Name(), theEcorePackage.getEString(), "name", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentInformation_UserId(), theEcorePackage.getEString(), "userId", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentInformation_LastName(), theEcorePackage.getEString(), "lastName", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudentInformation_FirstName(), theEcorePackage.getEString(), "firstName", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStudentInformation_EmailAddress(), theEcorePackage.getEString(), "emailAddress", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource

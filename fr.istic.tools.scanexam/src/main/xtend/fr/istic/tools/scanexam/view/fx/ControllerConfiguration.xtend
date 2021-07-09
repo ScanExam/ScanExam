@@ -1,10 +1,17 @@
 package fr.istic.tools.scanexam.view.fx
 
+import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
+import fr.istic.tools.scanexam.core.config.Config
+import fr.istic.tools.scanexam.exportation.SendMailTls
 import fr.istic.tools.scanexam.exportation.SendMailTls.LoginResult
+import fr.istic.tools.scanexam.utils.Encryption
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
 import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator
+import java.net.InetAddress
+import java.util.Collection
+import java.util.Locale
 import javafx.collections.FXCollections
 import javafx.concurrent.Service
 import javafx.concurrent.Task
@@ -19,14 +26,9 @@ import javafx.scene.control.TextField
 import javafx.scene.image.Image
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
-import java.util.Locale
-import fr.istic.tools.scanexam.core.config.Config
-import fr.istic.tools.scanexam.config.ConfigurationManager
-import static extension fr.istic.tools.scanexam.utils.extensions.LocaleExtensions.*
-import java.util.Collection
-import fr.istic.tools.scanexam.exportation.SendMailTls
 import javax.crypto.spec.SecretKeySpec
-import java.net.InetAddress
+
+import static extension fr.istic.tools.scanexam.utils.extensions.LocaleExtensions.*
 
 /**
  * Classe pour gérer la fenêtre de configuration en JavaFX
