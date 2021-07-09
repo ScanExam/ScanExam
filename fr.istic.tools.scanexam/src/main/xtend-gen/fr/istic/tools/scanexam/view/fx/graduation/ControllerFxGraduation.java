@@ -1181,7 +1181,7 @@ public class ControllerFxGraduation {
       }
       return Boolean.valueOf(_lowerCase.contains(_xifexpression));
     };
-    return IterableExtensions.<String>toList(IterableExtensions.<String>filter(this.service.getStudentNames(), _function));
+    return IterableExtensions.<String>toList(IterableExtensions.<String>filter(this.service.getStudentId(), _function));
   }
   
   public LinkedList<Integer> getStudentIds() {

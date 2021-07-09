@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
@@ -53,9 +52,7 @@ public class ControllerStudentListLoader {
   
   private static final Pattern cellPattern = Pattern.compile("[A-Z]+[1-9][0-9]*");
   
-  private static final List<String> supportedFormat = Arrays.<String>asList("*.ods", "*.ots", "*.sxc", "*.stc", "*.fods", "*.xml", "*.xlsx", "*.xltx", "*.xlsm", 
-    "*.xlsb", "*.xls", "*.xlc", "*.xlm", "*.xlw", "*.xlk", "*.et", "*.xlt", "*.ett", "*.dif", "*.wk1", 
-    "*.xls", "*.123", "*.wb2", "*.csv");
+  private static final List<String> supportedFormat = Arrays.<String>asList("*.xlsx", "*.xls");
   
   /**
    * Pane principale de la vue
@@ -112,7 +109,7 @@ public class ControllerStudentListLoader {
   public void loadFile() {
     FileChooser fileChooser = new FileChooser();
     ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("Calc files", ControllerStudentListLoader.supportedFormat);
+    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter("XLS files", ControllerStudentListLoader.supportedFormat);
     _extensionFilters.add(_extensionFilter);
     String _text = this.txtFldFile.getText();
     final File specifiedFile = new File(_text);
@@ -125,8 +122,7 @@ public class ControllerStudentListLoader {
         String _property = System.getProperty("user.home");
         String _property_1 = System.getProperty("file.separator");
         String _plus = (_property + _property_1);
-        String _plus_1 = (_plus + 
-          "Documents");
+        String _plus_1 = (_plus + "Documents");
         File _file = new File(_plus_1);
         fileChooser.setInitialDirectory(_file);
       }
@@ -207,7 +203,8 @@ public class ControllerStudentListLoader {
     if (_equals) {
       alert.setAlertType(Alert.AlertType.CONFIRMATION);
       alert.setTitle(LanguageManager.translate("studentlist.loadConfirmation.title"));
-      alert.setHeaderText(String.format(LanguageManager.translate("studentlist.loadConfirmation.success"), Integer.valueOf(this.getNumberPair())));
+      alert.setHeaderText(
+        String.format(LanguageManager.translate("studentlist.loadConfirmation.success"), Integer.valueOf(this.getNumberStudent())));
       alert.setContentText(this.getStudentList());
     } else {
       alert.setAlertType(Alert.AlertType.ERROR);
@@ -240,16 +237,16 @@ public class ControllerStudentListLoader {
         return ControllerStudentListLoader.LoadState.Y_NOT_VALID;
       }
     }
-    final Map<String, String> mapInfos = StudentDataManager.loadData(file, firstCell);
-    this.service.setStudentInfos(mapInfos);
+    final List<List<String>> studentsData = StudentDataManager.loadData(file, firstCell);
+    this.service.setStudentInfos(studentsData);
     return ControllerStudentListLoader.LoadState.SUCCESS;
   }
   
   /**
-   * @return le nombre de paires parsée par StudentDataManager, -1 si aucune n'a été parsée
+   * @return le nombre d'élèves parsée par StudentDataManager, -1 si aucune n'a été parsée
    */
-  public int getNumberPair() {
-    final int size = this.service.getStudentNames().size();
+  public int getNumberStudent() {
+    final int size = this.service.getStudentId().size();
     int _xifexpression = (int) 0;
     if ((size <= 0)) {
       _xifexpression = (-1);
@@ -263,13 +260,19 @@ public class ControllerStudentListLoader {
    * @return la liste des données parsées sous forme de String. Chaîne vide si aucune données n'a été parsée
    */
   public String getStudentList() {
-    final Function1<Map.Entry<String, String>, String> _function = (Map.Entry<String, String> entry) -> {
-      String _key = entry.getKey();
-      String _plus = (_key + " - ");
-      String _value = entry.getValue();
-      return (_plus + _value);
+    final Function1<List<String>, String> _function = (List<String> e) -> {
+      String _get = e.get(0);
+      String _plus = (_get + " - ");
+      String _get_1 = e.get(1);
+      String _plus_1 = (_plus + _get_1);
+      String _plus_2 = (_plus_1 + " - ");
+      String _get_2 = e.get(2);
+      String _plus_3 = (_plus_2 + _get_2);
+      String _plus_4 = (_plus_3 + " - ");
+      String _get_3 = e.get(3);
+      return (_plus_4 + _get_3);
     };
-    return IterableExtensions.join(IterableExtensions.<Map.Entry<String, String>, String>map(this.service.getStudentInfos().entrySet(), _function), "\n");
+    return IterableExtensions.join(ListExtensions.<List<String>, String>map(this.service.getStudentInfos(), _function), "\n");
   }
   
   /**

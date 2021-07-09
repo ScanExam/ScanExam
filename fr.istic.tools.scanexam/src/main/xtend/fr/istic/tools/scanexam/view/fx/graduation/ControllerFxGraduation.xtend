@@ -961,7 +961,7 @@ class ControllerFxGraduation {
 	/* STUDENTS */
 	
 	def List<String> getStudentsSuggestedNames(String start){
-		service.studentNames
+		service.studentId
 			.filter[n | n.toLowerCase().contains(start === null ? "" : start.toLowerCase())]
 			.toList
 	}

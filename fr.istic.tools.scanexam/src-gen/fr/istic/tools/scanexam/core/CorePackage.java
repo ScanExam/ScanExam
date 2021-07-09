@@ -963,13 +963,31 @@ public interface CorePackage extends EPackage {
 	int STUDENT_INFORMATION = 13;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The feature id for the '<em><b>User Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_INFORMATION__NAME = 0;
+	int STUDENT_INFORMATION__USER_ID = 0;
+
+	/**
+	 * The feature id for the '<em><b>Last Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_INFORMATION__LAST_NAME = 1;
+
+	/**
+	 * The feature id for the '<em><b>First Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_INFORMATION__FIRST_NAME = 2;
 
 	/**
 	 * The feature id for the '<em><b>Email Address</b></em>' attribute.
@@ -978,7 +996,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_INFORMATION__EMAIL_ADDRESS = 1;
+	int STUDENT_INFORMATION__EMAIL_ADDRESS = 3;
 
 	/**
 	 * The number of structural features of the '<em>Student Information</em>' class.
@@ -987,7 +1005,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_INFORMATION_FEATURE_COUNT = 2;
+	int STUDENT_INFORMATION_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Student Information</em>' class.
@@ -1716,15 +1734,37 @@ public interface CorePackage extends EPackage {
 	EClass getStudentInformation();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentInformation#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentInformation#getUserId <em>User Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see fr.istic.tools.scanexam.core.StudentInformation#getName()
+	 * @return the meta object for the attribute '<em>User Id</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentInformation#getUserId()
 	 * @see #getStudentInformation()
 	 * @generated
 	 */
-	EAttribute getStudentInformation_Name();
+	EAttribute getStudentInformation_UserId();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentInformation#getLastName <em>Last Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Last Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentInformation#getLastName()
+	 * @see #getStudentInformation()
+	 * @generated
+	 */
+	EAttribute getStudentInformation_LastName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentInformation#getFirstName <em>First Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>First Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentInformation#getFirstName()
+	 * @see #getStudentInformation()
+	 * @generated
+	 */
+	EAttribute getStudentInformation_FirstName();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentInformation#getEmailAddress <em>Email Address</em>}'.
@@ -2325,12 +2365,28 @@ public interface CorePackage extends EPackage {
 		EClass STUDENT_INFORMATION = eINSTANCE.getStudentInformation();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>User Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute STUDENT_INFORMATION__NAME = eINSTANCE.getStudentInformation_Name();
+		EAttribute STUDENT_INFORMATION__USER_ID = eINSTANCE.getStudentInformation_UserId();
+
+		/**
+		 * The meta object literal for the '<em><b>Last Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_INFORMATION__LAST_NAME = eINSTANCE.getStudentInformation_LastName();
+
+		/**
+		 * The meta object literal for the '<em><b>First Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_INFORMATION__FIRST_NAME = eINSTANCE.getStudentInformation_FirstName();
 
 		/**
 		 * The meta object literal for the '<em><b>Email Address</b></em>' attribute feature.

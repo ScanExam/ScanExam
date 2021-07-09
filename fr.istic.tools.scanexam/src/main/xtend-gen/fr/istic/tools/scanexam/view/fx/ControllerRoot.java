@@ -265,7 +265,7 @@ public class ControllerRoot implements Initializable {
   
   @FXML
   public void pdfExport() {
-    final Collection<String> nameList = this.serviceGraduation.getStudentNames();
+    final Collection<String> nameList = this.serviceGraduation.getStudentId();
     boolean _isEmpty = nameList.isEmpty();
     if (_isEmpty) {
       DialogMessageSender.sendTranslateDialog(

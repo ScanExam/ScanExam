@@ -5,11 +5,13 @@ import fr.istic.tools.scanexam.config.ConfigurationManager;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.config.Config;
 import fr.istic.tools.scanexam.exportation.SendMailTls;
+import fr.istic.tools.scanexam.utils.Encryption;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import fr.istic.tools.scanexam.utils.extensions.LocaleExtensions;
 import fr.istic.tools.scanexam.view.fx.component.FormattedTextField;
 import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Locale;
 import javafx.beans.value.ChangeListener;
@@ -32,6 +34,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javax.crypto.spec.SecretKeySpec;
+import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -90,31 +95,79 @@ public class ControllerConfiguration {
   @FXML
   public Button btnCheckMail;
   
+  /**
+   * Configuration
+   */
   private final Config config = ConfigurationManager.instance;
+  
+  /**
+   * Clé de crytage et ses paramètres
+   */
+  private final char[] keyPassword = new Function0<char[]>() {
+    @Override
+    public char[] apply() {
+      try {
+        char[] _charArray = InetAddress.getLocalHost().getHostName().toCharArray();
+        return _charArray;
+      } catch (Throwable _e) {
+        throw Exceptions.sneakyThrow(_e);
+      }
+    }
+  }.apply();
+  
+  private final byte[] salt = new String("12345678").getBytes();
+  
+  private final int iterationCount = 40000;
+  
+  private final int keyLength = 128;
+  
+  private final SecretKeySpec key = new Function0<SecretKeySpec>() {
+    @Override
+    public SecretKeySpec apply() {
+      try {
+        SecretKeySpec _createSecretKey = Encryption.createSecretKey(ControllerConfiguration.this.keyPassword, ControllerConfiguration.this.salt, ControllerConfiguration.this.iterationCount, ControllerConfiguration.this.keyLength);
+        return _createSecretKey;
+      } catch (Throwable _e) {
+        throw Exceptions.sneakyThrow(_e);
+      }
+    }
+  }.apply();
   
   /**
    * Initialise les différents champs avec la valeur actuelle de la configuration
    */
   public void initialize() {
-    this.cmbBxLanguage.setValue(LocaleExtensions.capitalizeDisplayName(LanguageManager.getCurrentLanguage()));
-    this.txtFldEmail.setText(this.config.getEmail());
-    this.pwdFldEmailPassword.setText(this.config.getEmailPassword());
-    this.txtFldEmailHost.setText(this.config.getMailHost());
-    this.txtFldEmailPort.setText(Integer.valueOf(this.config.getMailPort()).toString());
-    this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(this.getLanguages()));
-    EmailValidator _emailValidator = new EmailValidator();
-    this.txtFldEmail.addFormatValidator(_emailValidator);
-    final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> value, Boolean oldVal, Boolean newVal) -> {
-      if (((!(newVal).booleanValue()) && (!this.txtFldEmail.getWrongFormatted()))) {
-        this.completeHostInfos();
+    try {
+      this.cmbBxLanguage.setValue(LocaleExtensions.capitalizeDisplayName(LanguageManager.getCurrentLanguage()));
+      this.txtFldEmail.setText(this.config.getEmail());
+      String _xifexpression = null;
+      String _emailPassword = this.config.getEmailPassword();
+      boolean _tripleNotEquals = (_emailPassword != "");
+      if (_tripleNotEquals) {
+        _xifexpression = Encryption.decrypt(this.config.getEmailPassword(), this.key);
+      } else {
+        _xifexpression = "";
       }
-    };
-    this.txtFldEmail.focusedProperty().addListener(_function);
-    this.btnSave.disableProperty().bind(this.txtFldEmail.wrongFormattedProperty());
-    final EventHandler<ActionEvent> _function_1 = (ActionEvent e) -> {
-      this.checkMail();
-    };
-    this.btnCheckMail.setOnAction(_function_1);
+      this.pwdFldEmailPassword.setText(_xifexpression);
+      this.txtFldEmailHost.setText(this.config.getMailHost());
+      this.txtFldEmailPort.setText(Integer.valueOf(this.config.getMailPort()).toString());
+      this.cmbBxLanguage.setItems(FXCollections.<String>observableArrayList(this.getLanguages()));
+      EmailValidator _emailValidator = new EmailValidator();
+      this.txtFldEmail.addFormatValidator(_emailValidator);
+      final ChangeListener<Boolean> _function = (ObservableValue<? extends Boolean> value, Boolean oldVal, Boolean newVal) -> {
+        if (((!(newVal).booleanValue()) && (!this.txtFldEmail.getWrongFormatted()))) {
+          this.completeHostInfos();
+        }
+      };
+      this.txtFldEmail.focusedProperty().addListener(_function);
+      this.btnSave.disableProperty().bind(this.txtFldEmail.wrongFormattedProperty());
+      final EventHandler<ActionEvent> _function_1 = (ActionEvent e) -> {
+        this.checkMail();
+      };
+      this.btnCheckMail.setOnAction(_function_1);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @FXML
@@ -147,25 +200,29 @@ public class ControllerConfiguration {
    * @return true si le programme doit être redémarré pour que l'ensemble de la configuration soit prise en compte
    */
   public boolean updateConfig(final String language, final String email, final String emailPassword, final String emailHost, final String emailPort) {
-    boolean needToRestart = false;
-    final Function1<Locale, Boolean> _function = (Locale locale) -> {
-      return Boolean.valueOf(language.equals(LocaleExtensions.capitalizeDisplayName(locale)));
-    };
-    final Locale newLocale = IterableExtensions.<Locale>findFirst(LanguageManager.getSupportedLocales(), _function);
-    if ((newLocale == null)) {
-      String _plus = (newLocale + " is not supported.");
-      throw new IllegalArgumentException(_plus);
+    try {
+      boolean needToRestart = false;
+      final Function1<Locale, Boolean> _function = (Locale locale) -> {
+        return Boolean.valueOf(language.equals(LocaleExtensions.capitalizeDisplayName(locale)));
+      };
+      final Locale newLocale = IterableExtensions.<Locale>findFirst(LanguageManager.getSupportedLocales(), _function);
+      if ((newLocale == null)) {
+        String _plus = (newLocale + " is not supported.");
+        throw new IllegalArgumentException(_plus);
+      }
+      Locale _currentLanguage = LanguageManager.getCurrentLanguage();
+      boolean _notEquals = (!Objects.equal(newLocale, _currentLanguage));
+      needToRestart = _notEquals;
+      this.config.setLanguage(newLocale.toString());
+      this.config.setEmail(email);
+      this.config.setEmailPassword(Encryption.encrypt(emailPassword, this.key));
+      this.config.setMailHost(emailHost);
+      this.config.setMailPort(Integer.parseInt(emailPort));
+      ConfigurationManager.save();
+      return needToRestart;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
-    Locale _currentLanguage = LanguageManager.getCurrentLanguage();
-    boolean _notEquals = (!Objects.equal(newLocale, _currentLanguage));
-    needToRestart = _notEquals;
-    this.config.setLanguage(newLocale.toString());
-    this.config.setEmail(email);
-    this.config.setEmailPassword(emailPassword);
-    this.config.setMailHost(emailHost);
-    this.config.setMailPort(Integer.parseInt(emailPort));
-    ConfigurationManager.save();
-    return needToRestart;
   }
   
   public Collection<String> getLanguages() {

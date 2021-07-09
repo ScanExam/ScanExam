@@ -1,10 +1,10 @@
 package fr.istic.tools.scanexam.services
 
-import fr.istic.tools.scanexam.utils.DataFactory
 import fr.istic.tools.scanexam.core.Comment
 import fr.istic.tools.scanexam.core.CoreFactory
 import fr.istic.tools.scanexam.core.GradeEntry
 import fr.istic.tools.scanexam.core.Page
+import fr.istic.tools.scanexam.core.QrCodeZone
 import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.core.TextComment
@@ -13,24 +13,23 @@ import fr.istic.tools.scanexam.core.templates.CreationTemplate
 import fr.istic.tools.scanexam.core.templates.TemplatesFactory
 import fr.istic.tools.scanexam.services.api.ServiceEdition
 import fr.istic.tools.scanexam.services.api.ServiceGraduation
+import fr.istic.tools.scanexam.utils.DataFactory
 import fr.istic.tools.scanexam.utils.Tuple3
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 import java.util.ArrayList
+import java.util.Arrays
 import java.util.Base64
 import java.util.Collection
 import java.util.Collections
-import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
-import java.util.Map
 import java.util.Objects
 import java.util.Optional
-import org.apache.logging.log4j.LogManager
-import fr.istic.tools.scanexam.core.QrCodeZone
 import javafx.util.Pair
+import org.apache.logging.log4j.LogManager
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -101,7 +100,8 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @params studentSheets une liste de StudenSheet
 	 * @returns "true" si la correction a pu être créée, "false" sinon
 	 */
-	override boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages, Collection<StudentSheet> uncompleteStudentSheets) {
+	override boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages,
+		Collection<StudentSheet> uncompleteStudentSheets) {
 		graduationTemplate = TemplatesFactory.eINSTANCE.createCorrectionTemplate
 		try {
 			for (StudentSheet sheet : studentSheets) {
@@ -117,16 +117,15 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		}
 
 	}
-	
+
 	/**
 	 * initialise les "grades" pour la studentsheet
 	 * @param sheet la copie de l'élève
 	 */
-	def void initSheet(StudentSheet sheet){
+	def void initSheet(StudentSheet sheet) {
 		for (var i = 0; i < templatePageAmount; i++) {
 			val examPage = getPage(i);
-			for (var j = 0; j < examPage.questions.size; j++)
-			{
+			for (var j = 0; j < examPage.questions.size; j++) {
 				var grade = CoreFactory.eINSTANCE.createGrade()
 				sheet.grades.add(grade);
 			}
@@ -184,46 +183,46 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 		}
 		return Collections.unmodifiableList(graduationTemplate.studentsheets)
 	}
-	
+
 	/**
 	 * ajoute une page en plus dans une copie
 	 * @param id de la copie
 	 * @param numéro de la page à ajouter
 	 */
-	override addPageInStudentSheet(int id, int page){
-		
+	override addPageInStudentSheet(int id, int page) {
+
 		var Collection<StudentSheet> temp = new ArrayList
 		Collections.addAll(temp, graduationTemplate.uncompleteStudentSheets)
-		
+
 		var boolean complete = false
 		var boolean found = false
 		println("temp size = " + temp.size)
-		
-		for(sheet : temp){
+
+		for (sheet : temp) {
 			println("sheet id : " + sheet.id + ", id : " + id)
-			if(sheet.id == id){
+			if (sheet.id == id) {
 				found = true
 				sheet.posPage.add(page)
 				var i = 0
-				while(i < sheet.posPage.size){//on retire un des -1 présent dans les uncompletes
-					if(sheet.posPage.get(i) == -1){
+				while (i < sheet.posPage.size) { // on retire un des -1 présent dans les uncompletes
+					if (sheet.posPage.get(i) == -1) {
 						sheet.posPage.remove(i)
-						i = sheet.posPage.size + 1 //pour sortir
+						i = sheet.posPage.size + 1 // pour sortir
 					}
 					i++
 				}
 				Collections.sort(sheet.posPage)
 
-				if(!sheet.posPage.contains(-1))
+				if (!sheet.posPage.contains(-1))
 					complete = true
 			}
 		}
-		
-		if(!found){//si pas trouvé dans les incomplètes
-			//ajouter la page dans une nouvelle studentsheet puis l'ajouter dans uncompletestudentsheets, et vérifier si elle est complète (sujet de une page)
+
+		if (!found) { // si pas trouvé dans les incomplètes
+		// ajouter la page dans une nouvelle studentsheet puis l'ajouter dans uncompletestudentsheets, et vérifier si elle est complète (sujet de une page)
 			val int[] pages = newIntArrayOfSize(templatePageAmount)
 			for (e : 0 ..< templatePageAmount) {
-				if(e == 0)
+				if (e == 0)
 					pages.set(e, page)
 				else
 					pages.set(e, -1)
@@ -231,21 +230,21 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 			Collections.sort(pages)
 			val dF = new DataFactory()
 			graduationTemplate.uncompleteStudentSheets.add(dF.createStudentSheet(id, pages))
-			if(!pages.contains(-1))
-					complete = true
-			
+			if (!pages.contains(-1))
+				complete = true
+
 		}
-		
-		if(complete){
-			val completeSheet = graduationTemplate.uncompleteStudentSheets.filter[s|s.id==id].get(0)
-			
+
+		if (complete) {
+			val completeSheet = graduationTemplate.uncompleteStudentSheets.filter[s|s.id == id].get(0)
+
 			initSheet(completeSheet)
 			println("studentsheets size " + graduationTemplate.studentsheets.size)
 			graduationTemplate.studentsheets.add(completeSheet)
-			
+
 			println("studentsheets size " + graduationTemplate.studentsheets.size)
 		}
-		
+
 	}
 
 	/**
@@ -511,31 +510,33 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	// ===================================================
 	/**
 	 * Définit la liste des informations des étudiants (non null)
-	 * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
+	 * @param informations sous forme de liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant
 	 */
-	override void setStudentInfos(Map<String, String> informations) {
+	override void setStudentInfos(List<List<String>> informations) {
 		Objects.requireNonNull(informations)
 		val factory = new DataFactory()
-		val listInfos = informations.entrySet.map[e|factory.createStudentInformation(e.key, e.value)].toList
+		val listInfos = informations.map[e|factory.createStudentInformation(e.get(0), e.get(1), e.get(2), e.get(3))]
 		graduationTemplate.informations.clear
 		graduationTemplate.informations.addAll(listInfos)
 	}
 
 	/**
-	 * @return l'ensemble de tous les noms des étudiants chargés
+	 * @return l'ensemble de tous les identifiants des étudiants chargés
 	 */
-	override Collection<String> getStudentNames() {
-		val list = graduationTemplate.informations.map[infos|infos.name].toList
+	override Collection<String> getStudentId() {
+		val list = graduationTemplate.informations.map[infos|infos.userId].toList
 		list
 	}
 
 	/**
-	 * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
+	 * @return une liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant
 	 */
-	override Map<String, String> getStudentInfos() {
-		val map = new HashMap<String, String>()
-		graduationTemplate.informations.forEach[infos|map.put(infos.name, infos.emailAddress)]
-		map
+	override List<List<String>> getStudentInfos() {
+		val list = new ArrayList
+		graduationTemplate.informations.forEach [ infos |
+			list.add(Arrays.asList(infos.userId, infos.lastName, infos.firstName, infos.emailAddress))
+		]
+		list
 	}
 
 	/**

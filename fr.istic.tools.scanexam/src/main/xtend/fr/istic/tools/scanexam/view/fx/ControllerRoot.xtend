@@ -37,7 +37,7 @@ class ControllerRoot implements Initializable {
 	Tab editorTab;
 	@FXML
 	Tab studentsTab
-	
+
 	@FXML
 	CheckMenuItem autoZoom;
 	/* BUTTONS */
@@ -65,7 +65,7 @@ class ControllerRoot implements Initializable {
 
 	@Accessors
 	ControllerFxEdition editionController;
-	
+
 	@Accessors
 	ControllerFxStudents studentsController
 
@@ -85,8 +85,8 @@ class ControllerRoot implements Initializable {
 	def setGraduationNode(Node n) {
 		correctorTab.content = n
 	}
-	
-	def setStudentsNode(Node n){
+
+	def setStudentsNode(Node n) {
 		studentsTab.content = n
 	}
 
@@ -116,11 +116,11 @@ class ControllerRoot implements Initializable {
 		dialog.setResizable(false)
 		dialog.show
 	}
-	
-	def goToCorrectorTab(int id){
+
+	def goToCorrectorTab(int id) {
 		tabPane.getSelectionModel().select(correctorTab)
 		graduationController.selectStudent(id)
-		
+
 	}
 
 	@FXML
@@ -190,7 +190,7 @@ class ControllerRoot implements Initializable {
 	def pdfExport() {
 
 		// Vérification de copies avec aucun nom associé
-		val nameList = serviceGraduation.studentNames
+		val nameList = serviceGraduation.studentId
 
 		if (nameList.empty) {
 			DialogMessageSender.sendTranslateDialog(
@@ -211,8 +211,9 @@ class ControllerRoot implements Initializable {
 		DialogMessageSender.sendDialog(
 			AlertType.WARNING,
 			LanguageManager.translate("sendMail.noStudentDataHeader"),
-			nbSheetWithoutName > 1 ? String.format(LanguageManager.translate("sendMail.notAllStudent"),
-				nbSheetWithoutName) : LanguageManager.translate("sendMail.notAllStudent1"),
+			nbSheetWithoutName > 1
+				? String.format(LanguageManager.translate("sendMail.notAllStudent"), nbSheetWithoutName)
+				: LanguageManager.translate("sendMail.notAllStudent1"),
 			null
 		)
 

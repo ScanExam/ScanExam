@@ -1,6 +1,7 @@
 package fr.istic.tools.scanexam.services.api
 
 import fr.istic.tools.scanexam.core.GradeEntry
+import fr.istic.tools.scanexam.core.Question
 import fr.istic.tools.scanexam.core.StudentSheet
 import fr.istic.tools.scanexam.utils.Tuple3
 import java.io.ByteArrayOutputStream
@@ -8,9 +9,7 @@ import java.io.File
 import java.io.InputStream
 import java.util.Collection
 import java.util.List
-import java.util.Map
 import java.util.Optional
-import fr.istic.tools.scanexam.core.Question
 import javafx.util.Pair
 
 interface ServiceGraduation extends Service {
@@ -36,7 +35,8 @@ interface ServiceGraduation extends Service {
 	 * @param uncompleteStudentSheets les studentSheets incomplètes
 	 * @returns "true" si la correction a pu être créée, "false" sinon
 	 */
-	def boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages, Collection<StudentSheet> uncompleteStudentSheets)
+	def boolean initializeCorrection(Collection<StudentSheet> studentSheets, Collection<Integer> failedPages,
+		Collection<StudentSheet> uncompleteStudentSheets)
 
 	def int getAbsolutePageNumber(int studentId, int offset)
 
@@ -71,13 +71,13 @@ interface ServiceGraduation extends Service {
 	 * @return la liste non modifiable de tous les StudentSheets
 	 */
 	def Collection<StudentSheet> getStudentSheets()
-	
+
 	/**
 	 * ajoute une page en plus dans une copie
 	 * @param id de la copie
 	 * @param numéro de la page à ajouter
 	 */
-	 def void addPageInStudentSheet(int id, int page)
+	def void addPageInStudentSheet(int id, int page)
 
 	/**
 	 * Définit la copie courante à l'ID spécifié si cet ID est bien un ID valide. Ne fait rien sinon
@@ -213,19 +213,19 @@ interface ServiceGraduation extends Service {
 	// ===================================================
 	/**
 	 * Définit la liste des informations des étudiants (non null)
-	 * @param informations une Map Nom de l'étudiant -> adresse mail de l'étudiant
+	 * @param informations sous forme de liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant
 	 */
-	def void setStudentInfos(Map<String, String> informations)
+	def void setStudentInfos(List<List<String>> informations)
 
 	/**
-	 * @return l'ensemble de tous les noms des étudiants chargés
+	 * @return l'ensemble de tous les identifiants des étudiants chargés
 	 */
-	def Collection<String> getStudentNames()
+	def Collection<String> getStudentId()
 
 	/**
-	 * @return une Map contenant les informations des étudiants : Nom de l'étudiant -> adresse mail de l'étudiant
+	 * @return une liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant
 	 */
-	def Map<String, String> getStudentInfos()
+	def List<List<String>> getStudentInfos()
 
 	// ===================================================
 	// Annotations

@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -35,8 +35,8 @@ public class StudentDataManager {
    * @param startXY point situant le début des données pour lire le nom et prénom
    * @author Arthur & Antoine
    */
-  public static Map<String, String> loadData(final File file, final String startXY) {
-    final Map<String, String> mapNomEtudiant = new HashMap<String, String>();
+  public static List<List<String>> loadData(final File file, final String startXY) {
+    final List<List<String>> studentsData = new ArrayList<List<String>>();
     try (final Workbook wb = new Function0<Workbook>() {
       @Override
       public Workbook apply() {
@@ -57,10 +57,11 @@ public class StudentDataManager {
       final DataFormatter formatter = new DataFormatter();
       while ((row != null)) {
         {
-          final Cell cell = row.getCell(x);
-          final String nom = formatter.formatCellValue(cell);
-          final String mail = formatter.formatCellValue(row.getCell((x + 1)));
-          mapNomEtudiant.put(nom, mail);
+          final String id = formatter.formatCellValue(row.getCell(x));
+          final String lastName = formatter.formatCellValue(row.getCell((x + 1)));
+          final String firstName = formatter.formatCellValue(row.getCell((x + 2)));
+          final String mail = formatter.formatCellValue(row.getCell((x + 3)));
+          studentsData.add(Arrays.<String>asList(id, lastName, firstName, mail));
           y++;
           row = sheet.getRow(y);
         }
@@ -76,11 +77,11 @@ public class StudentDataManager {
         throw Exceptions.sneakyThrow(_t);
       }
     }
-    int _size = mapNomEtudiant.size();
+    int _size = studentsData.size();
     String _plus = ("Datas loaded: " + Integer.valueOf(_size));
-    String _plus_1 = (_plus + " pairs found");
+    String _plus_1 = (_plus + " students found");
     StudentDataManager.logger.info(_plus_1);
-    return mapNomEtudiant;
+    return studentsData;
   }
   
   /**

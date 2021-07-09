@@ -51,13 +51,12 @@ public class ControllerFxStudents {
   /**
    * Focntion d'update des éléments de la table view
    */
-  public Object update() {
+  public void update() {
     this.initTable();
     this.updateQuestionList();
     this.updateStudentsList();
     this.addContextMenuOnEachLines();
     this.mainPane.setContent(this.table);
-    return null;
   }
   
   /**

@@ -22,13 +22,21 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeBodyPart
 import javax.mail.internet.MimeMessage
 import javax.mail.internet.MimeMultipart
+import fr.istic.tools.scanexam.utils.Encryption
+import java.net.InetAddress
+import javax.crypto.spec.SecretKeySpec
 
 /**
  * @author Thomas Guibert
  */
 class SendMailTls {
 
-
+	/** Clé de crytage et ses paramètres */
+	val char[] keyPassword = InetAddress.localHost.getHostName.toCharArray
+	val byte[] salt = new String("12345678").bytes
+	val int iterationCount = 40000
+	val int keyLength = 128
+	val SecretKeySpec key = Encryption.createSecretKey(keyPassword, salt, iterationCount, keyLength)
 
 	/**
 	 * @param email une adresse email valide (non null)
@@ -56,12 +64,11 @@ class SendMailTls {
 
 	}
 
-
 	enum LoginResult {
 		SUCCESS,
 		IDENTIFICATION_FAILED,
 		HOST_NOT_FOUND
-		
+
 	}
 
 	/**
@@ -79,7 +86,7 @@ class SendMailTls {
 			"Erreur : Le port de l'adresse mail n'est pas présent dans le fichier configuration")
 
 		val props = new Properties()
-		
+
 		// Propriété du mail
 		props.put("mail.smtp.auth", "true")
 		props.put("mail.smtp.localhost", "ScanExam")
@@ -87,7 +94,7 @@ class SendMailTls {
 		props.put("mail.smtp.host", host)
 		props.put("mail.smtp.port", port)
 		props.put("mail.smtps.timeout", "5000")
-		props.put("mail.smtps.connectiontimeout", "5000");    
+		props.put("mail.smtps.connectiontimeout", "5000");
 
 		try {
 			val session = Session.getInstance(props, new Authenticator() {
@@ -100,44 +107,41 @@ class SendMailTls {
 			transport.close();
 			return LoginResult.SUCCESS
 		} catch (AuthenticationFailedException e) {
-			return LoginResult.IDENTIFICATION_FAILED 
-		} catch(MailConnectException e) {
+			return LoginResult.IDENTIFICATION_FAILED
+		} catch (MailConnectException e) {
 			return LoginResult.HOST_NOT_FOUND
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace
 			return LoginResult.IDENTIFICATION_FAILED
 		}
 	}
-	
-	
+
 	val Session session;
 	val Properties props;
-	
+
 	new() {
-		props = new Properties()
-		
+		props = new Properties
 		val sender = ConfigurationManager.instance.email
-		val senderPassword = ConfigurationManager.instance.emailPassword
+		val senderPassword = Encryption.decrypt(ConfigurationManager.instance.emailPassword, key)
 		val host = ConfigurationManager.instance.mailHost
 		val port = ConfigurationManager.instance.mailPort
 		Objects.requireNonNull(sender, "Sender's email is absent in configuration file")
 		Objects.requireNonNull(sender, "Sender's email password is absent in configuration file")
 		Objects.requireNonNull(host, "SMTP host of sender's email is absent in configuration file")
 		Objects.requireNonNull(port, "SMTP port of sender's email is absent in configuration file")
-		
+
 		props.put("mail.smtp.auth", "true")
 		props.put("mail.smtp.localhost", "ScanExam")
 		props.put("mail.smtp.starttls.enable", "true")
 		props.put("mail.smtp.host", host)
 		props.put("mail.smtp.port", port)
-		
+
 		session = Session.getInstance(props, new Authenticator() {
 			override protected PasswordAuthentication getPasswordAuthentication() {
 				new PasswordAuthentication(sender, senderPassword);
 			}
 		})
 	}
-
 
 	/**
 	 * La fonction sendMail va chercher dans le fichier configMailFile pour trouver le port et les smtp (host) de l'adresse mail donnée puis qui ce charge d'envoier le mail
@@ -148,7 +152,8 @@ class SendMailTls {
 	 * @param messageMail : Contenu du mail
 	 * @param pieceJointe : piece jointe du mail
 	 */
-	def sendMail(InputStream pdfStream, String titleMail, String messageMail, String studentName, String studentAdress, File studentSheet) {
+	def sendMail(InputStream pdfStream, String titleMail, String messageMail, String studentName, String studentAdress,
+		File studentSheet) {
 
 		// Verification des parametres
 		Objects.requireNonNull(titleMail, "Erreur : Le titre du mail ne doit pas etre Null");
