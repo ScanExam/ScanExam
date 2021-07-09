@@ -25,6 +25,9 @@ import javafx.util.Callback;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+/**
+ * Classe qui gère l'onglet du récapitulatif de la correction courrante
+ */
 @SuppressWarnings("all")
 public class ControllerFxStudents {
   @FXML
@@ -45,6 +48,9 @@ public class ControllerFxStudents {
     return _xblockexpression;
   }
   
+  /**
+   * Focntion d'update des éléments de la table view
+   */
   public Object update() {
     this.initTable();
     this.updateQuestionList();
@@ -54,6 +60,9 @@ public class ControllerFxStudents {
     return null;
   }
   
+  /**
+   * Ajout des studentSheets dans la table
+   */
   public void updateStudentsList() {
     List<StudentSheet> _list = IterableExtensions.<StudentSheet>toList(this.serviceGrad.getStudentSheets());
     final List<StudentSheet> sheets = new LinkedList<StudentSheet>(_list);
@@ -68,6 +77,9 @@ public class ControllerFxStudents {
     }
   }
   
+  /**
+   * Définition de chacune des colonnes, et binding des valeurs
+   */
   public boolean updateQuestionList() {
     boolean _xblockexpression = false;
     {
@@ -122,6 +134,9 @@ public class ControllerFxStudents {
     return _xblockexpression;
   }
   
+  /**
+   * Définition/redéfinition de la table
+   */
   public void initTable() {
     TableView<StudentSheet> _tableView = new TableView<StudentSheet>();
     this.table = _tableView;
@@ -129,6 +144,9 @@ public class ControllerFxStudents {
     this.table.setPrefHeight(720);
   }
   
+  /**
+   * Définition du menu contextuel
+   */
   public void addContextMenuOnEachLines() {
     this.table.setRowFactory(new Callback<TableView<StudentSheet>, TableRow<StudentSheet>>() {
       @Override
@@ -150,6 +168,9 @@ public class ControllerFxStudents {
     });
   }
   
+  /**
+   * Méthode appellée dans le menu contextuel pour aller à une copie spécifique
+   */
   public void gotToSheet(final int id) {
     this.controllerRoot.goToCorrectorTab(id);
   }

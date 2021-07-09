@@ -21,6 +21,9 @@ import javafx.event.EventHandler
 import javafx.event.ActionEvent
 import fr.istic.tools.scanexam.view.fx.ControllerRoot
 
+/**
+ * Classe qui gère l'onglet du récapitulatif de la correction courrante
+ */
 class ControllerFxStudents {
 	
 	@FXML
@@ -40,6 +43,9 @@ class ControllerFxStudents {
 			
 	}
 	
+	/**
+	 * Focntion d'update des éléments de la table view
+	 */
 	def update(){
 		
 		initTable()
@@ -52,6 +58,9 @@ class ControllerFxStudents {
 		
 	}
 	
+	/**
+	 * Ajout des studentSheets dans la table
+	 */
 	def updateStudentsList(){
 		val List<StudentSheet> sheets = new LinkedList(serviceGrad.studentSheets.toList)
 		Collections.sort(sheets, [s1, s2|s1.id - s2.id])
@@ -61,6 +70,9 @@ class ControllerFxStudents {
 		}	
 	}
 	
+	/**
+	 * Définition de chacune des colonnes, et binding des valeurs
+	 */
 	def updateQuestionList(){
 		
 		var TableColumn<StudentSheet, String> idCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.ID"))
@@ -74,16 +86,7 @@ class ControllerFxStudents {
 		var TableColumn<StudentSheet, String> fNCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.firstName"))
 		fNCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("firstName"))
 		table.columns.add(fNCol)
-		/*
-		 * TODO
-		 * Si la question est sur 0 pts, ne pas la mettre, remplacer par une colonne ou deux :
-		 * - une colonne si c'est un numéro d'étudiant
-		 * - deux colonnes si c'est nom / prénom
-		 * 
-		 * => dans le modèle, se baser sur l'id de la student sheet comme numéro
-		 * 	ET séparer le studentName par deux champs nom prénoms ===> Trouver comment faire dans le modèle
-		 */
-		
+
 		for(int i : 0 ..< serviceGrad.numberOfQuestions){
 
 			if(serviceGrad.getQuestion(i).gradeScale.maxPoint != 0f){
@@ -107,12 +110,18 @@ class ControllerFxStudents {
 		table.columns.add(col)
 	}
 	
+	/**
+	 * Définition/redéfinition de la table
+	 */
 	def initTable(){
 		table = new TableView
 		table.prefWidth = 720
 		table.prefHeight = 720
 	}
 	
+	/**
+	 * Définition du menu contextuel
+	 */
 	def addContextMenuOnEachLines(){
 		table.rowFactory = new Callback<TableView<StudentSheet>, TableRow<StudentSheet>>(){
 			
@@ -139,6 +148,9 @@ class ControllerFxStudents {
 		}
 	}
 	
+	/**
+	 * Méthode appellée dans le menu contextuel pour aller à une copie spécifique
+	 */
 	def gotToSheet(int id){
 		controllerRoot.goToCorrectorTab(id)
 	}
