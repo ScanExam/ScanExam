@@ -44,9 +44,9 @@ class ControllerFxStudents {
 	}
 	
 	/**
-	 * Focntion d'update des éléments de la table view
+	 * Fonction d'update des éléments de la table view
 	 */
-	def update(){
+	def void update(){
 		
 		initTable()
 		
@@ -150,6 +150,7 @@ class ControllerFxStudents {
 	
 	/**
 	 * Méthode appellée dans le menu contextuel pour aller à une copie spécifique
+	 * @param id l'id de la copie
 	 */
 	def gotToSheet(int id){
 		controllerRoot.goToCorrectorTab(id)

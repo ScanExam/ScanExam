@@ -49,7 +49,7 @@ public class ControllerFxStudents {
   }
   
   /**
-   * Focntion d'update des éléments de la table view
+   * Fonction d'update des éléments de la table view
    */
   public void update() {
     this.initTable();
@@ -169,6 +169,7 @@ public class ControllerFxStudents {
   
   /**
    * Méthode appellée dans le menu contextuel pour aller à une copie spécifique
+   * @param id l'id de la copie
    */
   public void gotToSheet(final int id) {
     this.controllerRoot.goToCorrectorTab(id);
