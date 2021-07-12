@@ -60,13 +60,15 @@ public class DataFactory {
    * @return une instance d'objet de type {@link StudentSheet} avec le nom de l'étudiant
    * @author Julien Cochet
    */
-  public StudentSheet createStudentSheet(final int idSheet, final List<Integer> pages, final String studentName) {
+  public StudentSheet createStudentSheet(final int idSheet, final List<Integer> pages, final String studentId, final String studentLastName, final String studentFirstName) {
     StudentSheet _xblockexpression = null;
     {
       final StudentSheet sheet = CoreFactory.eINSTANCE.createStudentSheet();
       sheet.setId(idSheet);
       sheet.getPosPage().addAll(pages);
-      sheet.setSheetName(studentName);
+      sheet.setStudentID(studentId);
+      sheet.setLastName(studentLastName);
+      sheet.setFirstName(studentFirstName);
       _xblockexpression = sheet;
     }
     return _xblockexpression;

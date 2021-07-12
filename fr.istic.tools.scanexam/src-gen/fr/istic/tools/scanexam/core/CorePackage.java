@@ -926,31 +926,13 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET___GET_STUDENT_INFO = 2;
 
 	/**
-	 * The operation id for the '<em>Get Sheet Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STUDENT_SHEET___GET_SHEET_NAME = 3;
-
-	/**
-	 * The operation id for the '<em>Set Sheet Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STUDENT_SHEET___SET_SHEET_NAME__STRING = 4;
-
-	/**
 	 * The number of operations of the '<em>Student Sheet</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_OPERATION_COUNT = 5;
+	int STUDENT_SHEET_OPERATION_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl <em>Student Information</em>}' class.
@@ -1704,26 +1686,6 @@ public interface CorePackage extends EPackage {
 	EOperation getStudentSheet__GetStudentInfo();
 
 	/**
-	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.StudentSheet#getSheetName() <em>Get Sheet Name</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Sheet Name</em>' operation.
-	 * @see fr.istic.tools.scanexam.core.StudentSheet#getSheetName()
-	 * @generated
-	 */
-	EOperation getStudentSheet__GetSheetName();
-
-	/**
-	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.StudentSheet#setSheetName(java.lang.String) <em>Set Sheet Name</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Sheet Name</em>' operation.
-	 * @see fr.istic.tools.scanexam.core.StudentSheet#setSheetName(java.lang.String)
-	 * @generated
-	 */
-	EOperation getStudentSheet__SetSheetName__String();
-
-	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.StudentInformation <em>Student Information</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2337,22 +2299,6 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STUDENT_SHEET___GET_STUDENT_INFO = eINSTANCE.getStudentSheet__GetStudentInfo();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Sheet Name</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation STUDENT_SHEET___GET_SHEET_NAME = eINSTANCE.getStudentSheet__GetSheetName();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Sheet Name</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation STUDENT_SHEET___SET_SHEET_NAME__STRING = eINSTANCE.getStudentSheet__SetSheetName__String();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl <em>Student Information</em>}' class.

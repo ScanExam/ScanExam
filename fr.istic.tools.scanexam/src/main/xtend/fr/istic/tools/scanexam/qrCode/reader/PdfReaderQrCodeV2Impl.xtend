@@ -166,7 +166,9 @@ class PdfReaderQrCodeV2Impl extends PdfReaderQrCodeImpl {
 	private def void qrCodeAnalysis(Result[] results, BufferedImage bim, PDDocument pdDoc, int page, int qrCodeType) {
 		var int numCopie = -1
 		var int numPageInSubject = -1
-		var String studentName = null
+		var String studentId = null
+		var String studentLastName = null
+		var String studentFirstName = null
 
 		for (result : results) {
 			if (result.text.startsWith(QrCodeType.SHEET_PAGE.toString) ||
@@ -183,13 +185,16 @@ class PdfReaderQrCodeV2Impl extends PdfReaderQrCodeImpl {
 				numPageInSubject = Integer.parseInt(items.get(items.size - 1))
 			} else {
 				if (result.text.startsWith(QrCodeType.STUDENT.toString)) {
-					studentName = studentQrCode(result)
+					val String[] items = pattern.split(result.text)
+					studentId = items.get(items.size - 3)
+					studentLastName = items.get(items.size - 2)
+					studentFirstName = items.get(items.size - 1)
 				}
 			}
 		}
 
 		if (numCopie >= 0 && page >= 0 && numPageInSubject >= 0) {
-			val Copie copie = new Copie(numCopie, page, numPageInSubject, studentName)
+			val Copie copie = new Copie(numCopie, page, numPageInSubject, studentId, studentLastName, studentFirstName)
 			synchronized (sheets) {
 				addCopie(copie)
 			}
@@ -219,16 +224,6 @@ class PdfReaderQrCodeV2Impl extends PdfReaderQrCodeImpl {
 				repositionPdf(pdDoc, docPath, page, diffX, diffY)
 			}
 		}
-	}
-
-	/**
-	 * Retourne l'identifiant d'un étudiant à partir du résultat d'un qr code STUDENT
-	 * @param result Résultat de l'analyse d'un qr code STUDENT
-	 * @return Identifiant de l'étudiant
-	 */
-	private def String studentQrCode(Result result) {
-		val String[] items = pattern.split(result.text)
-		return items.get(items.size - 1)
 	}
 
 	/**

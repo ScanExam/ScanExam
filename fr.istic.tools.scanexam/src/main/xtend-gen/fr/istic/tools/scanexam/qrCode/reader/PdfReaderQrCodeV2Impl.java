@@ -189,7 +189,9 @@ public class PdfReaderQrCodeV2Impl extends PdfReaderQrCodeImpl {
   private void qrCodeAnalysis(final Result[] results, final BufferedImage bim, final PDDocument pdDoc, final int page, final int qrCodeType) {
     int numCopie = (-1);
     int numPageInSubject = (-1);
-    String studentName = null;
+    String studentId = null;
+    String studentLastName = null;
+    String studentFirstName = null;
     for (final Result result : results) {
       if ((result.getText().startsWith(Integer.valueOf(QrCodeType.SHEET_PAGE).toString()) || 
         result.getText().startsWith(Integer.valueOf(QrCodeType.PAGE).toString()))) {
@@ -212,12 +214,21 @@ public class PdfReaderQrCodeV2Impl extends PdfReaderQrCodeImpl {
       } else {
         boolean _startsWith = result.getText().startsWith(Integer.valueOf(QrCodeType.STUDENT).toString());
         if (_startsWith) {
-          studentName = this.studentQrCode(result);
+          final String[] items_1 = this.pattern.split(result.getText());
+          int _size_3 = ((List<String>)Conversions.doWrapArray(items_1)).size();
+          int _minus_3 = (_size_3 - 3);
+          studentId = items_1[_minus_3];
+          int _size_4 = ((List<String>)Conversions.doWrapArray(items_1)).size();
+          int _minus_4 = (_size_4 - 2);
+          studentLastName = items_1[_minus_4];
+          int _size_5 = ((List<String>)Conversions.doWrapArray(items_1)).size();
+          int _minus_5 = (_size_5 - 1);
+          studentFirstName = items_1[_minus_5];
         }
       }
     }
     if ((((numCopie >= 0) && (page >= 0)) && (numPageInSubject >= 0))) {
-      final Copie copie = new Copie(numCopie, page, numPageInSubject, studentName);
+      final Copie copie = new Copie(numCopie, page, numPageInSubject, studentId, studentLastName, studentFirstName);
       synchronized (this.sheets) {
         this.addCopie(copie);
       }
@@ -251,18 +262,6 @@ public class PdfReaderQrCodeV2Impl extends PdfReaderQrCodeImpl {
         this.repositionPdf(pdDoc, this.docPath, page, diffX, diffY);
       }
     }
-  }
-  
-  /**
-   * Retourne l'identifiant d'un étudiant à partir du résultat d'un qr code STUDENT
-   * @param result Résultat de l'analyse d'un qr code STUDENT
-   * @return Identifiant de l'étudiant
-   */
-  private String studentQrCode(final Result result) {
-    final String[] items = this.pattern.split(result.getText());
-    int _size = ((List<String>)Conversions.doWrapArray(items)).size();
-    int _minus = (_size - 1);
-    return items[_minus];
   }
   
   /**

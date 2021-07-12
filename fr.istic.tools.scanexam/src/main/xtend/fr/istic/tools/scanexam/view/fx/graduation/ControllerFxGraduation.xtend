@@ -520,7 +520,7 @@ class ControllerFxGraduation {
 	 * @param folder Dossier où exporter
 	 */
 	def void exportGraduationToPdf(File folder) {
-		val sheets = service.studentSheets.filter[sheet | sheet.sheetName !== null && !sheet.sheetName.matches("\\s*")].toList
+		val sheets = service.studentSheets.filter[sheet | sheet.studentID !== null && !sheet.studentID.matches("\\s*")].toList
 		ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(service, pdfManager.pdfInputStream, sheets,folder, mainPane.imageViewWidth)
 	}
 
@@ -601,7 +601,7 @@ class ControllerFxGraduation {
 		Collections.sort(ids)
 		for (int i : ids) {
 			var student = new StudentItemGraduation(i)
-			var name = service.getStudentName(i).orElse("");
+			var name = service.getStudentId(i).orElse("");
 			if (name === null || name === "") {
 				student.studentName = LanguageManager.translate("name.default") + " " + i
 				}
@@ -1130,7 +1130,7 @@ class ControllerFxGraduation {
     }
     
     def renameStudent(int studentId,String newname){
-        service.assignStudentName(newname)
+        service.assignStudentId(newname)
     }
      def addAnnotation(TextAnotation annot){
     	

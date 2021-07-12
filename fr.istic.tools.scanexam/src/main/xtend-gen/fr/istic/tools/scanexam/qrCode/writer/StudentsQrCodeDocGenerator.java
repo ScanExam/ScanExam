@@ -1,29 +1,22 @@
 package fr.istic.tools.scanexam.qrCode.writer;
 
+import fr.istic.tools.scanexam.importation.StudentDataManager;
 import fr.istic.tools.scanexam.qrCode.QrCodeType;
 import fr.istic.tools.scanexam.qrCode.writer.QRCodeGeneratorImpl;
+import fr.istic.tools.scanexam.qrCode.writer.StudentDataComparator;
 import fr.istic.tools.scanexam.utils.ResourcesUtils;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
-import org.eclipse.xtext.xbase.lib.Functions.Function0;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * Classe pour générer un document contenant le nom, prénom de chaque élève accompagné d'un qr code.
@@ -35,7 +28,7 @@ public class StudentsQrCodeDocGenerator {
   /**
    * Marge autour des qr codes en pixel
    */
-  private final int qrCodeMargin = 1;
+  private final int qrCodeMargin = 2;
   
   /**
    * Produit le document contenant les qr codes d'identification d'élèves à partir d'un fichier XLS
@@ -47,11 +40,15 @@ public class StudentsQrCodeDocGenerator {
    */
   public void generateDocument(final File file, final float labelWidth, final float labelHeight, final boolean alphabeticalOrder, final File outputFile) {
     try {
-      final List<String> students = this.loadStudentsFromFile(file, alphabeticalOrder);
+      final List<List<String>> studentsData = StudentDataManager.loadData(file, "A1");
+      if (alphabeticalOrder) {
+        StudentDataComparator _studentDataComparator = new StudentDataComparator();
+        Collections.<List<String>>sort(studentsData, _studentDataComparator);
+      }
       final PDDocument document = new PDDocument();
       int studentIndex = 0;
-      while ((studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length)) {
-        studentIndex = this.addPage(document, students, studentIndex, labelWidth, labelHeight);
+      while ((studentIndex < ((Object[])Conversions.unwrapArray(studentsData, Object.class)).length)) {
+        studentIndex = this.addPage(document, studentsData, studentIndex, labelWidth, labelHeight);
       }
       document.save(outputFile);
       document.close();
@@ -62,17 +59,17 @@ public class StudentsQrCodeDocGenerator {
   
   /**
    * Produit le document contenant les qr codes d'identification d'élèves à partir d'une liste d'étudiants
-   * @param students Noms/identifiants des élèves
+   * @param studentsData Informations (id, nom, prénom) des élèves
    * @param labelWidth Largeur des étiquettes en mm
    * @param labelHeight Hauteur des étiquettes en mm
    * @param outputFile Fichier pdf où enregistrer le pdf généré
    */
-  public void generateDocument(final List<String> students, final float labelWidth, final float labelHeight, final File outputFile) {
+  public void generateDocument(final List<List<String>> studentsData, final float labelWidth, final float labelHeight, final File outputFile) {
     try {
       final PDDocument document = new PDDocument();
       int studentIndex = 0;
-      while (((studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length) && (studentIndex != (-1)))) {
-        studentIndex = this.addPage(document, students, studentIndex, labelWidth, labelHeight);
+      while (((studentIndex < ((Object[])Conversions.unwrapArray(studentsData, Object.class)).length) && (studentIndex != (-1)))) {
+        studentIndex = this.addPage(document, studentsData, studentIndex, labelWidth, labelHeight);
       }
       document.save(outputFile);
       document.close();
@@ -82,62 +79,15 @@ public class StudentsQrCodeDocGenerator {
   }
   
   /**
-   * Charge la liste des étudiants à partir d'un fichier XLS
-   * @param file Fichier XLS contenant les identifiants des étudiants
-   * @param sort True pour ranger les étudiants par ordre alphabetique
-   * @return Identifiants des étudiants sous forme de liste
-   */
-  private List<String> loadStudentsFromFile(final File file, final boolean sort) {
-    final List<String> students = new ArrayList<String>();
-    try (final Workbook workbook = new Function0<Workbook>() {
-      @Override
-      public Workbook apply() {
-        try {
-          FileInputStream _fileInputStream = new FileInputStream(file);
-          return WorkbookFactory.create(_fileInputStream);
-        } catch (Throwable _e) {
-          throw Exceptions.sneakyThrow(_e);
-        }
-      }
-    }.apply()) {
-      final Sheet sheet = workbook.getSheetAt(0);
-      int rowIndex = 0;
-      Row row = sheet.getRow(rowIndex);
-      final DataFormatter formatter = new DataFormatter();
-      while ((row != null)) {
-        {
-          final Cell cell = row.getCell(0);
-          final String student = formatter.formatCellValue(cell);
-          students.add(student);
-          rowIndex++;
-          row = sheet.getRow(rowIndex);
-        }
-      }
-    } catch (final Throwable _t) {
-      if (_t instanceof IOException) {
-        final IOException e = (IOException)_t;
-        e.printStackTrace();
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
-    }
-    if (sort) {
-      return IterableExtensions.<String>sort(students);
-    } else {
-      return students;
-    }
-  }
-  
-  /**
    * Ajoute à un document, une page contenant les noms, prénoms et qr codes des élèves
    * @param document Document auquel ajouter la page
-   * @param students Noms/identifiants des élèves à inscrire sur cette page
+   * @param studentsData Informations (id, nom, prénom) des élèves à inscrire sur cette page
    * @param firstStudent Index de l'étudiant par lequel commencer
    * @param labelWidth Largeur des étiquettes en mm
    * @param labelHeight Hauteur des étiquettes en mm
    * @return Si aucun qr code n'a été mis, -1 ; si tout les qr codes n'ont pas pu être mis, index du prochain élève à insérer ; taille de la collection d'élèves sinon
    */
-  private int addPage(final PDDocument document, final List<String> students, final int firstStudent, final float labelWidth, final float labelHeight) {
+  private int addPage(final PDDocument document, final List<List<String>> studentsData, final int firstStudent, final float labelWidth, final float labelHeight) {
     try {
       final PDPage page = new PDPage();
       document.addPage(page);
@@ -158,18 +108,24 @@ public class StudentsQrCodeDocGenerator {
       int posX = xMarginPixel;
       int posY = ((pageHeightPixel - yMarginPixel) - labelHeightPixel);
       int studentIndex = firstStudent;
-      while (((posY >= yMarginPixel) && (studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length))) {
+      while (((posY >= yMarginPixel) && (studentIndex < ((Object[])Conversions.unwrapArray(studentsData, Object.class)).length))) {
         {
           while ((((posX + (labelWidthPixel * 2)) <= (pageHeightPixel - xMarginPixel)) && 
-            (studentIndex < ((Object[])Conversions.unwrapArray(students, Object.class)).length))) {
+            (studentIndex < ((Object[])Conversions.unwrapArray(studentsData, Object.class)).length))) {
             {
-              final String name = students.get(studentIndex);
+              final String id = studentsData.get(studentIndex).get(0);
+              final String lastName = studentsData.get(studentIndex).get(1);
+              final String firstName = studentsData.get(studentIndex).get(2);
               String _plus = (Integer.valueOf(QrCodeType.STUDENT) + "_");
-              String _plus_1 = (_plus + name);
-              this.insertQrCode(contentStream, document, (posX + ((labelWidthPixel - qrCodeSize) / 2)), posY, qrCodeSize, _plus_1);
+              String _plus_1 = (_plus + id);
+              String _plus_2 = (_plus_1 + "_");
+              String _plus_3 = (_plus_2 + lastName);
+              String _plus_4 = (_plus_3 + "_");
+              String _plus_5 = (_plus_4 + firstName);
+              this.insertQrCode(contentStream, document, (posX + ((labelWidthPixel - qrCodeSize) / 2)), posY, qrCodeSize, _plus_5);
               int _intValue = Float.valueOf((labelHeightPixel * 0.8f)).intValue();
-              int _plus_2 = (posY + _intValue);
-              this.insertText(contentStream, document, ((posX + labelWidthPixel) + 4), _plus_2, (labelWidthPixel / 5), name);
+              int _plus_6 = (posY + _intValue);
+              this.insertText(contentStream, document, ((posX + labelWidthPixel) + 4), _plus_6, (labelWidthPixel / 5), id);
               int _posX = posX;
               posX = (_posX + (labelWidthPixel * 2));
               studentIndex++;
@@ -205,9 +161,9 @@ public class StudentsQrCodeDocGenerator {
       if ((data != "")) {
         final File qrCodeFile = File.createTempFile("qrcode", ".png");
         final QRCodeGeneratorImpl qrCodeGen = new QRCodeGeneratorImpl();
-        qrCodeGen.generateQRCodeImage(data, size, size, this.qrCodeMargin, qrCodeFile.getPath());
+        qrCodeGen.generateQRCodeImage(data, (size * 4), (size * 4), this.qrCodeMargin, qrCodeFile.getPath());
         final PDImageXObject qrCode = PDImageXObject.createFromFile(qrCodeFile.getPath(), document);
-        contentStream.drawImage(qrCode, posX, posY);
+        contentStream.drawImage(qrCode, posX, posY, size, size);
         qrCodeFile.delete();
       }
     } catch (Throwable _e) {

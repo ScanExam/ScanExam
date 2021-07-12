@@ -64,9 +64,9 @@ class ControllerSendMail {
 						studentSheets.size - nbSheetWithoutName))
 				for (studentSheet : studentSheets) {
 
-					val studentMail = mailMap.get(studentSheet.sheetName)
+					val studentMail = mailMap.get(studentSheet.studentID)
 
-					if (studentSheet.sheetName !== null && studentMail !== null) {
+					if (studentSheet.studentID !== null && studentMail !== null) {
 						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(service,
 							controllerGraduation.pdfManager.pdfInputStream, studentSheet, mainPane.width)
 						val sender = new SendMailTls

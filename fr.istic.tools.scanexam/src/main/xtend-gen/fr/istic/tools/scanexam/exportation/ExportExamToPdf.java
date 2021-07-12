@@ -214,7 +214,7 @@ public class ExportExamToPdf {
           String _plus = ("tempExam" + _studentInfo);
           File studentExam = File.createTempFile(_plus, ".pdf");
           document.save(studentExam);
-          tempExams.put(sheet.getSheetName(), studentExam);
+          tempExams.put(sheet.getStudentID(), studentExam);
           document.close();
         }
       }
@@ -526,7 +526,7 @@ public class ExportExamToPdf {
   private static String generateGradeDetailContent(final ServiceGraduation service, final StudentSheet sheet, final String cssName) {
     service.selectSheet(sheet.getId());
     final String examName = service.getExamName();
-    final String studentName = sheet.getSheetName();
+    final String studentName = sheet.getStudentID();
     final float globalGrade = sheet.computeGrade();
     final float globalScale = service.getGlobalScale();
     final GradeDetailToHtml gradeDetailToHtml = new GradeDetailToHtml(examName, studentName, globalGrade, globalScale);

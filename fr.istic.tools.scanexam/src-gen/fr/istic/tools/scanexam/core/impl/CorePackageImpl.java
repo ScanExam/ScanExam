@@ -778,24 +778,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getStudentSheet__GetSheetName() {
-		return studentSheetEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getStudentSheet__SetSheetName__String() {
-		return studentSheetEClass.getEOperations().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getStudentInformation() {
 		return studentInformationEClass;
 	}
@@ -940,8 +922,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		createEOperation(studentSheetEClass, STUDENT_SHEET___COMPUTE_GRADE);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___IS_GRADED);
 		createEOperation(studentSheetEClass, STUDENT_SHEET___GET_STUDENT_INFO);
-		createEOperation(studentSheetEClass, STUDENT_SHEET___GET_SHEET_NAME);
-		createEOperation(studentSheetEClass, STUDENT_SHEET___SET_SHEET_NAME__STRING);
 
 		studentInformationEClass = createEClass(STUDENT_INFORMATION);
 		createEAttribute(studentInformationEClass, STUDENT_INFORMATION__USER_ID);
@@ -1065,11 +1045,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 		initEOperation(getStudentSheet__IsGraded(), theEcorePackage.getEBoolean(), "isGraded", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getStudentSheet__GetStudentInfo(), theEcorePackage.getEString(), "getStudentInfo", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getStudentSheet__GetSheetName(), theEcorePackage.getEString(), "getSheetName", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		EOperation op = initEOperation(getStudentSheet__SetSheetName__String(), null, "setSheetName", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theEcorePackage.getEString(), "n", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(studentInformationEClass, StudentInformation.class, "StudentInformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStudentInformation_UserId(), theEcorePackage.getEString(), "userId", null, 0, 1, StudentInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -204,7 +204,7 @@ class ControllerRoot implements Initializable {
 
 		val studentSheets = serviceGraduation.studentSheets
 		val nbSheetWithoutName = if (!nameList.empty)
-				studentSheets.filter(x|!nameList.contains(x.sheetName)).size as int
+				studentSheets.filter(x|!nameList.contains(x.studentID)).size as int
 			else
 				-1
 

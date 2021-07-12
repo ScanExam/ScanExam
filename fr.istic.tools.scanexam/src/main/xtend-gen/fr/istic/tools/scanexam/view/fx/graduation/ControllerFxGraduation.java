@@ -706,7 +706,7 @@ public class ControllerFxGraduation {
    */
   public void exportGraduationToPdf(final File folder) {
     final Function1<StudentSheet, Boolean> _function = (StudentSheet sheet) -> {
-      return Boolean.valueOf(((sheet.getSheetName() != null) && (!sheet.getSheetName().matches("\\s*"))));
+      return Boolean.valueOf(((sheet.getStudentID() != null) && (!sheet.getStudentID().matches("\\s*"))));
     };
     final List<StudentSheet> sheets = IterableExtensions.<StudentSheet>toList(IterableExtensions.<StudentSheet>filter(this.service.getStudentSheets(), _function));
     ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.service, this.pdfManager.getPdfInputStream(), sheets, folder, this.mainPane.getImageViewWidth());
@@ -798,7 +798,7 @@ public class ControllerFxGraduation {
     for (final int i : ids) {
       {
         StudentItemGraduation student = new StudentItemGraduation(i);
-        String name = this.service.getStudentName(i).orElse("");
+        String name = this.service.getStudentId(i).orElse("");
         if (((name == null) || (name == ""))) {
           String _translate = LanguageManager.translate("name.default");
           String _plus = (_translate + " ");
@@ -1404,7 +1404,7 @@ public class ControllerFxGraduation {
   }
   
   public void renameStudent(final int studentId, final String newname) {
-    this.service.assignStudentName(newname);
+    this.service.assignStudentId(newname);
   }
   
   public void addAnnotation(final TextAnotation annot) {

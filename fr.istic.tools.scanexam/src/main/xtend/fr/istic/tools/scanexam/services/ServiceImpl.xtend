@@ -168,9 +168,9 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * Associe un nouveau identifiant d'étudiant à la copie courante
 	 * @param id le nouvel identifiant d'étudiant
 	 */
-	override assignStudentName(String id) {
+	override assignStudentId(String id) {
 		logger.info("Renaming student :" + currentSheetIndex + "with name :" + id)
-		studentSheets.get(currentSheetIndex).sheetName = id
+		studentSheets.get(currentSheetIndex).studentID = id
 	}
 
 	/**
@@ -248,13 +248,37 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	}
 
 	/**
+	 * @return l' indentifiant de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+	 * @param id l'ID de la copie
+	 */
+	override getStudentId(int id) {
+		for (StudentSheet sheet : studentSheets) {
+			if (sheet.id === id)
+				return Optional.ofNullable(sheet.studentID);
+		}
+		return Optional.empty;
+	}
+
+	/**
 	 * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
 	 * @param id l'ID de la copie
 	 */
-	override getStudentName(int id) {
+	override getStudentLastName(int id) {
 		for (StudentSheet sheet : studentSheets) {
 			if (sheet.id === id)
-				return Optional.ofNullable(sheet.sheetName);
+				return Optional.ofNullable(sheet.lastName);
+		}
+		return Optional.empty;
+	}
+
+	/**
+	 * @return le prénom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+	 * @param id l'ID de la copie
+	 */
+	override getStudentFirstName(int id) {
+		for (StudentSheet sheet : studentSheets) {
+			if (sheet.id === id)
+				return Optional.ofNullable(sheet.firstName);
 		}
 		return Optional.empty;
 	}

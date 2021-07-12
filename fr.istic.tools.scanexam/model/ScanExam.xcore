@@ -115,41 +115,20 @@ class StudentSheet {
 	op boolean isGraded() {
 		grades.findFirst[g|g.entries.isEmpty] === null
 	}
-	op String getStudentInfo(){
+	op String getStudentInfo() {
 		var resLastName = lastName
 		var resFirstName = firstName
 		var resID = studentID
-		
-		if(resLastName == "?" || resFirstName == "?"){
+
+		if (resLastName == "?" || resFirstName == "?") {
 			resLastName = ""
 			resFirstName = ""
 		}
-		
-		if(resID == "?")
-			resID= ""
-		
-		return resLastName+"_"+resFirstName+"_"+resID
-	}
-	
-	op String getSheetName(){
-		if(lastName != "?" && firstName != "?")
-			return lastName+" "+firstName
-		else
-			return studentID
-	}
-	
-	op void setSheetName(String n){
-		val temp = n.trim
-		if(temp.contains(" ")){
-			val splitted = temp.split(" ")
-			val fN = splitted.get(0)
-			val lN = temp.substring(fN.length)
-			
-			lastName = lN
-			firstName = fN
-		}
-		else
-			studentID = n
+
+		if (resID == "?")
+			resID = ""
+
+		return resID + "_" + resFirstName + "_" + resLastName
 	}
 }
 

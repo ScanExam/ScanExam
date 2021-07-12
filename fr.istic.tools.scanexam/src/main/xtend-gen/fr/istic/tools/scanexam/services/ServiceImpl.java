@@ -225,10 +225,10 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @param id le nouvel identifiant d'étudiant
    */
   @Override
-  public void assignStudentName(final String id) {
+  public void assignStudentId(final String id) {
     ServiceImpl.logger.info(((("Renaming student :" + Integer.valueOf(this.currentSheetIndex)) + "with name :") + id));
     StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
-    _get.setSheetName(id);
+    _get.setStudentID(id);
   }
   
   /**
@@ -329,17 +329,51 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
   }
   
   /**
-   * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * @return l' indentifiant de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
    * @param id l'ID de la copie
    */
   @Override
-  public Optional<String> getStudentName(final int id) {
+  public Optional<String> getStudentId(final int id) {
     Collection<StudentSheet> _studentSheets = this.getStudentSheets();
     for (final StudentSheet sheet : _studentSheets) {
       int _id = sheet.getId();
       boolean _tripleEquals = (_id == id);
       if (_tripleEquals) {
-        return Optional.<String>ofNullable(sheet.getSheetName());
+        return Optional.<String>ofNullable(sheet.getStudentID());
+      }
+    }
+    return Optional.<String>empty();
+  }
+  
+  /**
+   * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * @param id l'ID de la copie
+   */
+  @Override
+  public Optional<String> getStudentLastName(final int id) {
+    Collection<StudentSheet> _studentSheets = this.getStudentSheets();
+    for (final StudentSheet sheet : _studentSheets) {
+      int _id = sheet.getId();
+      boolean _tripleEquals = (_id == id);
+      if (_tripleEquals) {
+        return Optional.<String>ofNullable(sheet.getLastName());
+      }
+    }
+    return Optional.<String>empty();
+  }
+  
+  /**
+   * @return le prénom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * @param id l'ID de la copie
+   */
+  @Override
+  public Optional<String> getStudentFirstName(final int id) {
+    Collection<StudentSheet> _studentSheets = this.getStudentSheets();
+    for (final StudentSheet sheet : _studentSheets) {
+      int _id = sheet.getId();
+      boolean _tripleEquals = (_id == id);
+      if (_tripleEquals) {
+        return Optional.<String>ofNullable(sheet.getFirstName());
       }
     }
     return Optional.<String>empty();

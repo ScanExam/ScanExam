@@ -8,26 +8,35 @@ import java.util.HashSet
 
 	Set<Page> setPages
 	int numCopie
-	String studentName
+	String studentId
+	String studentLastName
+	String studentFirstName
 
 	new(int numCopie, int numPageInPDF, int numPageInSubject) {
 		this.numCopie = numCopie
 		this.setPages = new HashSet<Page>()
 		this.setPages.add(new Page(numPageInSubject, numPageInPDF))
-		this.studentName = null
+		this.studentId = null
+		this.studentLastName = null
+		this.studentFirstName = null
 	}
 
-	new(int numCopie, int numPageInPDF, int numPageInSubject, String studentName) {
+	new(int numCopie, int numPageInPDF, int numPageInSubject, String studentId, String studentLastName,
+		String studentFirstName) {
 		this.numCopie = numCopie
 		this.setPages = new HashSet<Page>()
 		this.setPages.add(new Page(numPageInSubject, numPageInPDF))
-		this.studentName = studentName
+		this.studentId = studentId
+		this.studentLastName = studentLastName
+		this.studentFirstName = studentFirstName
 	}
 
-	new(int numCopie, Set<Page> setPages, String studentName) {
+	new(int numCopie, Set<Page> setPages, String studentId, String studentLastName, String studentFirstName) {
 		this.numCopie = numCopie
 		this.setPages = setPages
-		this.studentName = studentName
+		this.studentId = studentId
+		this.studentLastName = studentLastName
+		this.studentFirstName = studentFirstName
 	}
 
 	def addInSet(Set<Page> pages) {
@@ -43,8 +52,16 @@ import java.util.HashSet
 		return setPages
 	}
 
-	def String getStudentName() {
-		return studentName
+	def String getStudentId() {
+		return studentId
+	}
+
+	def String getStudentLastName() {
+		return studentLastName
+	}
+
+	def String getStudentFirstName() {
+		return studentFirstName
 	}
 
 	def boolean isCopyComplete(int nbPageSubject) {
@@ -59,10 +76,10 @@ import java.util.HashSet
 
 	override String toString() {
 		var String res = "Copie " + numCopie
-		if (studentName !== null) {
-			res += " " + studentName
+		if (studentId !== null && studentLastName !== null && studentFirstName !== null) {
+			res += " " + studentId + " (" + studentLastName + " " + studentFirstName + ")"
 		}
-		res += "[\n"
+		res += " [\n"
 		for (i : 0 ..< setPages.length)
 			res += setPages.get(i).toString() + "\n"
 		return res + "]"

@@ -74,7 +74,7 @@ public class ExamGraduationServiceTest {
 		assertTrue(streamOpt.isPresent());
 
 		assertEquals(3, service.getStudentSheets().size());
-		assertEquals("a", service.getStudentSheets().iterator().next().getSheetName());
+		assertEquals("a", service.getStudentSheets().iterator().next().getStudentID());
 	}
 
 	@Test
@@ -120,7 +120,7 @@ public class ExamGraduationServiceTest {
 	@DisplayName("Test - Nouvelle correction")
 	void createGraduationTest() {
 		final var sheet1 = new DataFactory().createStudentSheet(0, List.of(1, 2, 3));
-		sheet1.setSheetName("a");
+		sheet1.setStudentID("a");
 		final var sheet2 = new DataFactory().createStudentSheet(1, List.of(4, 5, 6));
 		final var sheet3 = new DataFactory().createStudentSheet(2, List.of(7, 8, 9));
 
@@ -132,7 +132,7 @@ public class ExamGraduationServiceTest {
 		assertTrue(result);
 
 		assertEquals(3, service.getStudentSheets().size());
-		assertEquals("a", service.getStudentSheets().iterator().next().getSheetName());
+		assertEquals("a", service.getStudentSheets().iterator().next().getStudentID());
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class ExamGraduationServiceTest {
 	@DisplayName("Test - Nouvelle correction sans qu'un modèle d'édition soit ouvert")
 	void createGraduationTest2() {
 		final var sheet1 = new DataFactory().createStudentSheet(0, List.of(1, 2, 3));
-		sheet1.setSheetName("a");
+		sheet1.setStudentID("a");
 		final var sheet2 = new DataFactory().createStudentSheet(1, List.of(4, 5, 6));
 		final var sheet3 = new DataFactory().createStudentSheet(2, List.of(7, 8, 9));
 
@@ -163,10 +163,10 @@ public class ExamGraduationServiceTest {
 		iterator.next();
 		final StudentSheet sheet = iterator.next();
 
-		assertEquals("b", sheet.getSheetName());
+		assertEquals("b", sheet.getStudentID());
 
-		service.assignStudentName("foo");
-		assertEquals("foo", sheet.getSheetName());
+		service.assignStudentId("foo");
+		assertEquals("foo", sheet.getStudentID());
 	}
 
 	@Test
@@ -185,9 +185,9 @@ public class ExamGraduationServiceTest {
 		while (iterator.hasNext())
 			sheet = iterator.next();
 
-		assertEquals("c", sheet.getSheetName());
-		service.assignStudentName("foo");
-		assertEquals("foo", sheet.getSheetName());
+		assertEquals("c", sheet.getStudentID());
+		service.assignStudentId("foo");
+		assertEquals("foo", sheet.getStudentID());
 	}
 
 	@Test
@@ -204,10 +204,10 @@ public class ExamGraduationServiceTest {
 		// On accède à la première copie
 		final StudentSheet sheet = iterator.next();
 
-		assertEquals("a", sheet.getSheetName());
+		assertEquals("a", sheet.getStudentID());
 
-		service.assignStudentName("foo");
-		assertEquals("foo", sheet.getSheetName());
+		service.assignStudentId("foo");
+		assertEquals("foo", sheet.getStudentID());
 	}
 
 	@Test
@@ -223,9 +223,9 @@ public class ExamGraduationServiceTest {
 		final var iterator = service.getStudentSheets().iterator();
 		final StudentSheet sheet = iterator.next();
 
-		assertEquals("a", sheet.getSheetName());
-		service.assignStudentName("foo");
-		assertEquals("foo", sheet.getSheetName());
+		assertEquals("a", sheet.getStudentID());
+		service.assignStudentId("foo");
+		assertEquals("foo", sheet.getStudentID());
 	}
 
 	@Test
@@ -234,13 +234,13 @@ public class ExamGraduationServiceTest {
 		openTemplate();
 		openGraduation();
 
-		assertEquals("a", service.getStudentName(0).get());
-		assertEquals("c", service.getStudentName(2).get());
-		assertEquals("b", service.getStudentName(1).get());
+		assertEquals("a", service.getStudentId(0).get());
+		assertEquals("c", service.getStudentId(2).get());
+		assertEquals("b", service.getStudentId(1).get());
 
-		service.assignStudentName("foo");
+		service.assignStudentId("foo");
 
-		assertEquals("foo", service.getStudentName(0).get());
+		assertEquals("foo", service.getStudentId());
 	}
 
 	@Test
@@ -250,7 +250,7 @@ public class ExamGraduationServiceTest {
 		openTemplate();
 		openGraduation();
 
-		assertTrue(service.getStudentName(-1).isEmpty());
+		assertTrue(service.getStudentId(-1).isEmpty());
 	}
 
 	@Test
@@ -291,11 +291,11 @@ public class ExamGraduationServiceTest {
 		iterator.next();
 		final StudentSheet sheet = iterator.next();
 
-		assertEquals("b", sheet.getSheetName());
+		assertEquals("b", sheet.getStudentID());
 
-		service.assignStudentName("foo");
+		service.assignStudentId("foo");
 
-		assertEquals("foo", sheet.getSheetName());
+		assertEquals("foo", sheet.getStudentID());
 	}
 
 	@Test
@@ -309,18 +309,18 @@ public class ExamGraduationServiceTest {
 		{
 			service.selectSheet(-1);
 			final StudentSheet sheet = iterator.next();
-			assertEquals("a", sheet.getSheetName());
-			service.assignStudentName("foo");
-			assertEquals("foo", sheet.getSheetName());
+			assertEquals("a", sheet.getStudentID());
+			service.assignStudentId("foo");
+			assertEquals("foo", sheet.getStudentID());
 		}
 
 		{
 			service.nextSheet();
 			service.selectSheet(-10);
 			final StudentSheet sheet = iterator.next();
-			assertEquals("b", sheet.getSheetName());
-			service.assignStudentName("bar");
-			assertEquals("bar", sheet.getSheetName());
+			assertEquals("b", sheet.getStudentID());
+			service.assignStudentId("bar");
+			assertEquals("bar", sheet.getStudentID());
 		}
 	}
 

@@ -164,20 +164,4 @@ public interface StudentSheet extends EObject {
 	 */
 	String getStudentInfo();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	String getSheetName();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model nUnique="false"
-	 * @generated
-	 */
-	void setSheetName(String n);
-
 } // StudentSheet

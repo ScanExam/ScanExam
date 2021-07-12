@@ -52,13 +52,15 @@ class DataFactory {
 	 * @return une instance d'objet de type {@link StudentSheet} avec le nom de l'étudiant
 	 * @author Julien Cochet
 	 */
-	def StudentSheet createStudentSheet(int idSheet, List<Integer> pages, String studentName) {
+	def StudentSheet createStudentSheet(int idSheet, List<Integer> pages, String studentId, String studentLastName, String studentFirstName) {
 		val sheet = CoreFactory.eINSTANCE.createStudentSheet
 		sheet.id = idSheet
 
 		sheet.posPage.addAll(pages)
 
-		sheet.sheetName = studentName
+		sheet.studentID = studentId
+		sheet.lastName = studentLastName
+		sheet.firstName = studentFirstName
 
 		sheet
 	}

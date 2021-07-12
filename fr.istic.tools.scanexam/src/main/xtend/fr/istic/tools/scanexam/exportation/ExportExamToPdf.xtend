@@ -196,7 +196,7 @@ class ExportExamToPdf {
 			}
 			var File studentExam = File.createTempFile("tempExam" + sheet.studentInfo, ".pdf");
 			document.save(studentExam);
-			tempExams.put(sheet.sheetName, studentExam);
+			tempExams.put(sheet.studentID, studentExam);
 			document.close;
 		}
 		pdf.close();
@@ -475,7 +475,7 @@ class ExportExamToPdf {
 		// Information globale sur la copie
 		service.selectSheet(sheet.id)
 		val String examName = service.examName
-		val String studentName = sheet.sheetName
+		val String studentName = sheet.studentID
 		val float globalGrade = sheet.computeGrade
 		val float globalScale = service.globalScale
 

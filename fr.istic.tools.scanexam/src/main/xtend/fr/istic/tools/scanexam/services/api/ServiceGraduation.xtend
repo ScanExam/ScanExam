@@ -59,13 +59,25 @@ interface ServiceGraduation extends Service {
 	 * Associe un nouveau identifiant d'étudiant à la copie courante
 	 * @param id le nouvel identifiant d'étudiant
 	 */
-	def void assignStudentName(String id)
+	def void assignStudentId(String id)
 
 	/**
-	 * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+	 * @return l'indentifiant de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
 	 * @param id l'ID de la copie
 	 */
-	def Optional<String> getStudentName(int id)
+	def Optional<String> getStudentId(int id)
+	
+	/**
+	 * @return le nom de famille de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+	 * @param id l'ID de la copie
+	 */
+	def Optional<String> getStudentLastName(int id)
+	
+	/**
+	 * @return le prénom de famille de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+	 * @param id l'ID de la copie
+	 */
+	def Optional<String> getStudentFirstName(int id)
 
 	/**
 	 * @return la liste non modifiable de tous les StudentSheets

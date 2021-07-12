@@ -82,8 +82,8 @@ public class ControllerSendMail {
           String.format(_translate, Integer.valueOf(sent), Integer.valueOf(_minus_1)));
         for (final StudentSheet studentSheet : ControllerSendMail.this.studentSheets) {
           {
-            final String studentMail = ControllerSendMail.this.mailMap.get(studentSheet.getSheetName());
-            if (((studentSheet.getSheetName() != null) && (studentMail != null))) {
+            final String studentMail = ControllerSendMail.this.mailMap.get(studentSheet.getStudentID());
+            if (((studentSheet.getStudentID() != null) && (studentMail != null))) {
               final Pair<String, File> pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(ControllerSendMail.this.service, 
                 ControllerSendMail.this.controllerGraduation.getPdfManager().getPdfInputStream(), studentSheet, ControllerSendMail.this.mainPane.getWidth());
               final SendMailTls sender = new SendMailTls();

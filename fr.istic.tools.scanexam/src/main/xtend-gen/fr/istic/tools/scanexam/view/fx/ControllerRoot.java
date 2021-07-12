@@ -281,7 +281,7 @@ public class ControllerRoot implements Initializable {
     boolean _not = (!_isEmpty_1);
     if (_not) {
       final Function1<StudentSheet, Boolean> _function = (StudentSheet x) -> {
-        boolean _contains = nameList.contains(x.getSheetName());
+        boolean _contains = nameList.contains(x.getStudentID());
         return Boolean.valueOf((!_contains));
       };
       int _size = IterableExtensions.size(IterableExtensions.<StudentSheet>filter(studentSheets, _function));

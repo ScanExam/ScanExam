@@ -324,44 +324,7 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 		if (_equals) {
 			resID = "";
 		}
-		return ((((resLastName + "_") + resFirstName) + "_") + resID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getSheetName() {
-		if (((!Objects.equal(this.getLastName(), "?")) && (!Objects.equal(this.getFirstName(), "?")))) {
-			String _lastName = this.getLastName();
-			String _plus = (_lastName + " ");
-			String _firstName = this.getFirstName();
-			return (_plus + _firstName);
-		}
-		else {
-			return this.getStudentID();
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setSheetName(final String n) {
-		final String temp = n.trim();
-		boolean _contains = temp.contains(" ");
-		if (_contains) {
-			final String[] splitted = temp.split(" ");
-			final String fN = splitted[0];
-			final String lN = temp.substring(fN.length());
-			this.setLastName(lN);
-			this.setFirstName(fN);
-		}
-		else {
-			this.setStudentID(n);
-		}
+		return ((((resID + "_") + resFirstName) + "_") + resLastName);
 	}
 
 	/**
@@ -503,11 +466,6 @@ public class StudentSheetImpl extends MinimalEObjectImpl.Container implements St
 				return isGraded();
 			case CorePackage.STUDENT_SHEET___GET_STUDENT_INFO:
 				return getStudentInfo();
-			case CorePackage.STUDENT_SHEET___GET_SHEET_NAME:
-				return getSheetName();
-			case CorePackage.STUDENT_SHEET___SET_SHEET_NAME__STRING:
-				setSheetName((String)arguments.get(0));
-				return null;
 		}
 		return super.eInvoke(operationID, arguments);
 	}
