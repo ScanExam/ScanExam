@@ -1,5 +1,3 @@
-
-
 package fr.istic.tools.scanexam.view.fx.graduation
 
 import fr.istic.tools.scanexam.config.LanguageManager
@@ -64,7 +62,7 @@ class Grader extends VBox {
 		editMode.styleClass.add("InfinityButton")
 
 		scrollp.content = itemContainer
-		
+
 		this.cursor = Cursor.MOVE
 		itemContainer.cursor = Cursor.DEFAULT
 		add.cursor = Cursor.DEFAULT
@@ -87,11 +85,10 @@ class Grader extends VBox {
 	VBox itemContainer;
 	ControllerFxGraduation controller;
 	boolean editable;
-	
+
 	QuestionItemGraduation curentQuestion;
 	StudentItemGraduation currentStudent;
-	
-	
+
 	/**
 	 * Met a jours les information presenter par le grader,
 	 * @param la question pour recupere les entries
@@ -104,17 +101,17 @@ class Grader extends VBox {
 		clearDisplay()
 		curentQuestion = qItem;
 		currentStudent = sItem;
-		
-		if ( curentQuestion !== null && currentStudent !== null ) {
+
+		if (curentQuestion !== null && currentStudent !== null) {
 			maxPoints.text = qItem.worth + "";
-	
+
 			// Loads all the gradeEntries from the model
 			var ids = controller.getEntryIds(qItem.questionId);
-			logger.info("All ids are :"  + ids.size())
+			logger.info("All ids are :" + ids.size())
 			// Finds all the selected entries for this student/question
 			var sids = controller.getSelectedEntryIds(qItem.questionId)
-			logger.info("selected ids are :"  + sids.size())
-			
+			logger.info("selected ids are :" + sids.size())
+
 			for (Integer i : ids) {
 				var g = new GradeItem(this);
 				g.setItemId(i);
@@ -129,8 +126,7 @@ class Grader extends VBox {
 				g.leaveEditMode
 			}
 			updateCurrentPoints
-		}
-		else {
+		} else {
 			logger.warn("The current Question or current Student is null")
 		}
 
@@ -148,7 +144,7 @@ class Grader extends VBox {
 		itemContainer.children.add(entry)
 		addEntryToModel(entry, controller.questionList.currentItem);
 	}
-	
+
 	/**
 	 * Removes une grade entry et l'enleve du modele.
 	 * L'entrie est associer a la question courrante
@@ -161,26 +157,27 @@ class Grader extends VBox {
 		updateCurrentPoints
 
 	}
-	
-	def prepForTabChange(){
+
+	def prepForTabChange() {
 		if (editable) {
 			toggleEditMode(false)
 		}
 	}
-	
+
 	/**
 	 * Met a jour l'indicateur des point courrant pour l'etudiant/question courrante
 	 */
-	def updateCurrentPoints(){
-		currentPoints.text = "" + controller.service.getQuestionSelectedGradeEntriesTotalWorth(controller.questionList.currentItem.questionId)
+	def updateCurrentPoints() {
+		currentPoints.text = "" +
+			controller.service.getQuestionSelectedGradeEntriesTotalWorth(controller.questionList.currentItem.questionId)
 		controller.updateStudentDetails
 	}
-	
+
 	/**
 	 * ajoute un entry au modele d'edition
 	 */
 	def void addEntryToModel(GradeItem item, QuestionItemGraduation qItem) {
-		item.itemId = controller.addEntry(qItem.questionId, item.getText,Float.parseFloat(item.getWorth));
+		item.itemId = controller.addEntry(qItem.questionId, item.getText, Float.parseFloat(item.getWorth));
 	}
 
 	/**
@@ -188,35 +185,36 @@ class Grader extends VBox {
 	 */
 	def updateEntryInModel(GradeItem item, QuestionItemGraduation qItem) {
 		logger.log(Level.INFO, "Updating GradeEntry")
-		controller.modifyEntry(qItem.questionId, item.itemId, item.getText,Float.parseFloat(item.getWorth));
+		controller.modifyEntry(qItem.questionId, item.itemId, item.getText, Float.parseFloat(item.getWorth));
 	}
-	
-	def updateEntryWorthInModel(){
-		
+
+	def updateEntryWorthInModel() {
 	}
-	
+
 	/**
 	 * Supprime un entry du modele d'edition
 	 */
 	def removeEntryFromModel(GradeItem item, QuestionItemGraduation qItem) {
 		controller.removeEntry(qItem.questionId, item.id);
 	}
-	
+
 	/**
 	 * Ajoute les point d'un entry a un etudiant pour une question
 	 * @param l'entry a ajouter
 	 */
 	def addPoints(GradeItem item) {
-		logger.info("Adding points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
+		logger.info(
+			"Adding points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" +
+				controller.questionList.currentItem.questionId + ", for Entry ID :" + item.id)
 		var over = controller.applyGrade(controller.questionList.currentItem.questionId, item.id)
 		if (over) {
 			item.displaySuccess
 			updateCurrentPoints
-		}else {
+		} else {
 			item.displayError
 			item.selected = false
 		}
-		
+
 	}
 
 	/**
@@ -224,25 +222,27 @@ class Grader extends VBox {
 	 * @param l'entry a ajouter
 	 */
 	def removePoints(GradeItem item) {
-		logger.log(Level.INFO, "Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" + controller.questionList.currentItem.questionId + ", for Entry ID :" +  item.id)
-		
+		logger.log(Level.INFO,
+			"Removing points for Student ID :" + controller.studentList.currentItem.studentId + ", for Questions ID :" +
+				controller.questionList.currentItem.questionId + ", for Entry ID :" + item.id)
+
 		var over = controller.removeGrade(controller.questionList.currentItem.questionId, item.id)
 		if (over) {
 			item.displaySuccess
 			updateCurrentPoints
-		}else {
+		} else {
 			item.displayError
 			item.selected = true
 		}
 	}
-	
+
 	/**
 	 * Met a zero le grader
 	 */
 	def clearDisplay() {
 		itemContainer.children.clear();
 	}
-	
+
 	/**
 	 * Toggles between "editable" states, when edtiable, we can add, remove and modify the worth of a grader entry in the model
 	 */
@@ -263,23 +263,24 @@ class Grader extends VBox {
 			this.children.remove(add)
 		}
 	}
-	
+
 	/**
 	 * interacts with the checkbox for the entry in the index in params
 	 * @param the index of the grade entry
 	 */
-	def interactUsingIndex(int index){
+	def interactUsingIndex(int index) {
 		if (index < 1) {
-			logger.info("Cant select an entry below 1") 
+			logger.info("Cant select an entry below 1")
 			return
 		}
 		if (index > itemContainer.children.size) {
-			logger.info("Cant select entry with index :" + index + ", there is only " + itemContainer.children.size + " entries in the grader") 
+			logger.info("Cant select entry with index :" + index + ", there is only " + itemContainer.children.size +
+				" entries in the grader")
 			return
 		}
-		var item  = itemContainer.children.get(index-1) as GradeItem
+		var item = itemContainer.children.get(index - 1) as GradeItem
 		if (!item.checkDisabled) {
-			item.selected =  !item.selected
+			item.selected = !item.selected
 			item.checkBoxUsed
 		}
 	}
@@ -287,40 +288,29 @@ class Grader extends VBox {
 	static class GradeItem extends VBox {
 		new(Grader grader) {
 			this.grader = grader
-			topRow = new HBox()
-			
+			topRow = new HBox
 
-			/* 
-			textArea = new TextArea(text.text)
-			textArea.wrapText = true
-			textArea.maxWidth = 130
-			textArea.margin = new Insets(10, 0, 0, 10)
-			*/
-			
-			stackPane = new StackPane()
-			
+			stackPane = new StackPane
+
 			text = LanguageManager.translate("grader.defaultText")
-			
-			webView = new WebView()
-			webEngine = webView.getEngine();
-			webEngine.loadContent(text);
-			//webView.maxWidth = 130
-			//webView.maxHeight = 130
-			//webView.setMaxSize(130, 110);	
-			webView.setPrefSize(Region.USE_COMPUTED_SIZE,Region.USE_COMPUTED_SIZE)
-    		webView.setMinSize(100,100)
-			
-			stackPane.getChildren().add(webView)
 
-			check = new CheckBox()
+			webView = new WebView
+			webEngine = webView.getEngine
+			webEngine.loadContent(text)
+			webView.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+			webView.setMinSize(100, 100)
 
-			worth = new Label("1");
+			stackPane.children.add(webView)
+
+			check = new CheckBox
+
+			worth = new Label("1")
 			worthField = new TextField(worth.text)
 			worthField.styleClass.add("mytext-field")
-			remove = new Button(LanguageManager.translate("grader.button.removeEntry"));
+			remove = new Button(LanguageManager.translate("grader.button.removeEntry"))
 			topRow.children.addAll(check, worthField)
-			this.children.addAll(topRow, stackPane,remove)
-			
+			this.children.addAll(topRow, stackPane, remove)
+
 			topRow.styleClass.add("GradeItemTopRow")
 			webView.styleClass.add("WebView")
 			this.styleClass.add("GradeItem")
@@ -328,17 +318,17 @@ class Grader extends VBox {
 			setupEvents
 		}
 
-		int id;
-		String text;
+		int id
+		String text
 		HBox topRow
-		Label worth;
-		CheckBox check;
-		Grader grader;
+		Label worth
+		CheckBox check
+		Grader grader
 		StackPane stackPane
 		WebView webView
 		WebEngine webEngine
-		TextField worthField;
-		Button remove;
+		TextField worthField
+		Button remove
 
 		def getText() {
 			text
@@ -355,27 +345,27 @@ class Grader extends VBox {
 		def setItemId(int id) {
 			this.id = id;
 		}
-		
+
 		/**
 		 * Changes the color of the checkbox to represent a unsuccesfull action
 		 */
-		def displayError(){
+		def displayError() {
 			check.styleClass.remove("goodCheckBox")
 			check.styleClass.add("badCheckBox")
 		}
-		
+
 		/**
 		 * Changes the color of the checkbox to represent a successfull action
 		 */
-		def displaySuccess(){
+		def displaySuccess() {
 			check.styleClass.remove("badCheckBox")
 			check.styleClass.add("goodCheckBox")
 		}
-		
+
 		/**
 		 * Changes the color of the checkbox to represent a default state
 		 */
-		def displayDefault(){
+		def displayDefault() {
 			check.styleClass.remove("badCheckBox")
 			check.styleClass.remove("goodCheckBox")
 		}
@@ -384,20 +374,29 @@ class Grader extends VBox {
 		 * Change le text modifié par le HTML Editor
 		 */
 		def setText(String text) {
-			//webEngine = webView.getEngine();
-			this.text = text;
-			webEngine.loadContent(text);
+			val String delimiters = "<p>|</p>"
+			val splitedText = text.split(delimiters)
+			this.text = ""
+			if (splitedText.length >= 3) {
+				for (i : 1 ..< splitedText.length - 1) {
+					this.text += splitedText.get(i)
+					if ((i + 1) < splitedText.length - 1) {
+						this.text += "<br></br>"
+					}
+				}
+			}
+			webEngine.loadContent(this.text)
 		}
-		
+
 		/**
 		 * Changes the text present in as a description of this entry
 		 * and updates it in the model
 		 */
-		def changeText(String text){
+		def changeText(String text) {
 			setText(text)
-			grader.updateEntryInModel(this,grader.controller.questionList.currentItem)
+			grader.updateEntryInModel(this, grader.controller.questionList.currentItem)
 		}
-	
+
 		def setWorth(float worth) {
 			this.worth.text = worth + ""
 			this.worthField.text = worth + ""
@@ -410,13 +409,11 @@ class Grader extends VBox {
 		def getSelected() {
 			check.selected
 		}
-		
-		def getCheckDisabled()
-		{
+
+		def getCheckDisabled() {
 			check.disabled
 		}
-		
-		
+
 		/**
 		 * Enters an "Editable" state, where the worth label is replace by a text field, and the checkbox is disabled
 		 */
@@ -424,11 +421,10 @@ class Grader extends VBox {
 			topRow.children.remove(worth)
 			topRow.children.add(worthField);
 			check.disable = true
-			//this.children.remove(text);
 			this.children.add(remove)
-		
+
 		}
-		
+
 		/**
 		 * Leaves an "Editable" state, where the worth label is replace by a text field, and the checkbox is disabled
 		 */
@@ -438,14 +434,12 @@ class Grader extends VBox {
 			topRow.children.add(worth);
 			check.disable = false
 			worth.text = worthField.text
-			//this.children.remove(textArea);
-			//this.children.add(text)
 		}
 
 		/**
 		 * checks the state of the checkbox and updates the point counter
 		 */
-		def checkBoxUsed(){
+		def checkBoxUsed() {
 			if (check.selected) {
 				grader.addPoints(this)
 			} else {
@@ -493,7 +487,6 @@ class Grader extends VBox {
 			stage.initStyle(StageStyle.DECORATED);
 			stage.setResizable(false)
 			stage.setTitle("Editeur HTML");
-			// layout = ClassLoader.getSystemResource("resources_utils/HTML.FXML");
 			var inputLayout = ResourcesUtils.getInputStreamResource("viewResources/HTML.fxml")
 			var fxmlLoader = new FXMLLoader
 			fxmlLoader.setResources(LanguageManager.currentBundle)
@@ -524,10 +517,12 @@ class Grader extends VBox {
 			}
 
 		}
-		this.onMousePressed = [event |
-			{ controller.currentTool = SelectedTool.MOVE_GRADER_TOOL;
-			
-		}]
+		this.onMousePressed = [ event |
+			{
+				controller.currentTool = SelectedTool.MOVE_GRADER_TOOL;
+
+			}
+		]
 
 	}
 }

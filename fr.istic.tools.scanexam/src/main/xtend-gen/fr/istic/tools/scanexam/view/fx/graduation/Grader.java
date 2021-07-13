@@ -38,6 +38,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 
 @SuppressWarnings("all")
 public class Grader extends VBox {
@@ -154,8 +155,31 @@ public class Grader extends VBox {
      * Change le text modifié par le HTML Editor
      */
     public void setText(final String text) {
-      this.text = text;
-      this.webEngine.loadContent(text);
+      final String delimiters = "<p>|</p>";
+      final String[] splitedText = text.split(delimiters);
+      this.text = "";
+      int _length = splitedText.length;
+      boolean _greaterEqualsThan = (_length >= 3);
+      if (_greaterEqualsThan) {
+        int _length_1 = splitedText.length;
+        int _minus = (_length_1 - 1);
+        ExclusiveRange _doubleDotLessThan = new ExclusiveRange(1, _minus, true);
+        for (final Integer i : _doubleDotLessThan) {
+          {
+            String _text = this.text;
+            String _get = splitedText[(i).intValue()];
+            this.text = (_text + _get);
+            int _length_2 = splitedText.length;
+            int _minus_1 = (_length_2 - 1);
+            boolean _lessThan = (((i).intValue() + 1) < _minus_1);
+            if (_lessThan) {
+              String _text_1 = this.text;
+              this.text = (_text_1 + "<br></br>");
+            }
+          }
+        }
+      }
+      this.webEngine.loadContent(this.text);
     }
     
     /**
@@ -565,7 +589,8 @@ public class Grader extends VBox {
     if (_greaterThan) {
       int _size_1 = this.itemContainer.getChildren().size();
       String _plus = ((("Cant select entry with index :" + Integer.valueOf(index)) + ", there is only ") + Integer.valueOf(_size_1));
-      String _plus_1 = (_plus + " entries in the grader");
+      String _plus_1 = (_plus + 
+        " entries in the grader");
       Grader.logger.info(_plus_1);
       return;
     }
