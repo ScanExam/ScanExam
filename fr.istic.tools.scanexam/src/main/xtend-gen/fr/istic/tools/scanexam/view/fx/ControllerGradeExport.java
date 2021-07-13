@@ -1,5 +1,6 @@
 package fr.istic.tools.scanexam.view.fx;
 
+import com.google.common.base.Objects;
 import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.exportation.GradesExportImpl;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
@@ -12,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
@@ -39,16 +41,22 @@ public class ControllerGradeExport {
   public Pane mainPane;
   
   /**
-   * Indique si les élèves doivent être rangé par ordre alphabétique
+   * Indique si les élèves doivent être rangé
    */
   @FXML
   public CheckBox order;
   
   /**
-   * Menu des formats d'étiquettes prédéfinis
+   * Label devant le menu
    */
   @FXML
-  public MenuButton formatMenu;
+  public Label menuLabel;
+  
+  /**
+   * Menu des manièrre de trier
+   */
+  @FXML
+  public MenuButton orderByMenu;
   
   /**
    * Bouton de validation
@@ -94,7 +102,26 @@ public class ControllerGradeExport {
     } else {
       ControllerGradeExport.logger.warn("File not chosen");
     }
-    new GradesExportImpl().exportGrades(this.controllerGraduation.getService().getStudentSheets(), file);
+    boolean _isSelected = this.order.isSelected();
+    if (_isSelected) {
+      String _text = this.orderByMenu.getText();
+      String _translate_1 = LanguageManager.translate("studentsTab.tableView.ID");
+      boolean _equals = Objects.equal(_text, _translate_1);
+      if (_equals) {
+        new GradesExportImpl().exportGrades(this.controllerGraduation.getService().getStudentSheetsOrderBy(0), file);
+      } else {
+        String _text_1 = this.orderByMenu.getText();
+        String _translate_2 = LanguageManager.translate("studentsTab.tableView.lastName");
+        boolean _equals_1 = Objects.equal(_text_1, _translate_2);
+        if (_equals_1) {
+          new GradesExportImpl().exportGrades(this.controllerGraduation.getService().getStudentSheetsOrderBy(1), file);
+        } else {
+          new GradesExportImpl().exportGrades(this.controllerGraduation.getService().getStudentSheetsOrderBy(2), file);
+        }
+      }
+    } else {
+      new GradesExportImpl().exportGrades(this.controllerGraduation.getService().getStudentSheets(), file);
+    }
     this.quit();
   }
   
@@ -111,29 +138,45 @@ public class ControllerGradeExport {
    */
   public void initialize(final ControllerFxGraduation controllerGraduation) {
     this.controllerGraduation = controllerGraduation;
+    this.enableOrdering(this.order.isSelected());
+    this.order.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(final ActionEvent e) {
+        ControllerGradeExport.this.enableOrdering(ControllerGradeExport.this.order.isSelected());
+      }
+    });
     final EventHandler<ActionEvent> formatMenuEvent = new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent e) {
         Object _source = e.getSource();
         final String selection = ((MenuItem) _source).getText();
-        ControllerGradeExport.this.formatMenu.setText(selection);
+        ControllerGradeExport.this.orderByMenu.setText(selection);
       }
     };
-    ObservableList<MenuItem> _items = this.formatMenu.getItems();
+    ObservableList<MenuItem> _items = this.orderByMenu.getItems();
     String _translate = LanguageManager.translate("studentsTab.tableView.ID");
     MenuItem _menuItem = new MenuItem(_translate);
     _items.add(_menuItem);
-    ObservableList<MenuItem> _items_1 = this.formatMenu.getItems();
-    String _translate_1 = LanguageManager.translate("studentsTab.tableView.firstName");
+    ObservableList<MenuItem> _items_1 = this.orderByMenu.getItems();
+    String _translate_1 = LanguageManager.translate("studentsTab.tableView.lastName");
     MenuItem _menuItem_1 = new MenuItem(_translate_1);
     _items_1.add(_menuItem_1);
-    ObservableList<MenuItem> _items_2 = this.formatMenu.getItems();
-    String _translate_2 = LanguageManager.translate("studentsTab.tableView.lastName");
+    ObservableList<MenuItem> _items_2 = this.orderByMenu.getItems();
+    String _translate_2 = LanguageManager.translate("studentsTab.tableView.firstName");
     MenuItem _menuItem_2 = new MenuItem(_translate_2);
     _items_2.add(_menuItem_2);
-    ObservableList<MenuItem> _items_3 = this.formatMenu.getItems();
+    ObservableList<MenuItem> _items_3 = this.orderByMenu.getItems();
     for (final MenuItem item : _items_3) {
       item.setOnAction(formatMenuEvent);
     }
+  }
+  
+  /**
+   * Active ou non les champs se rapportant à la saisie pour le nombre de copies voulues
+   * @param enable True pour activer les champs
+   */
+  private void enableOrdering(final boolean enable) {
+    this.menuLabel.setDisable((!enable));
+    this.orderByMenu.setDisable((!enable));
   }
 }
