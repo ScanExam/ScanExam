@@ -12,6 +12,7 @@ l'onglet "Issues" de Github.
 # Manuel d'utilisation de ScanExam
 
 L'application ScanExam est fournie avec un manuel d'utilisation. Cela permet dans un premier temps de vous familiariser avec ses fonctionnalités, et également de vous montrer un déroulement classique d'utilisation.
+Vous pouvez vous y rendre en cliquant juste <a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_intro.md">ici</a> !
 
 # Comment installer le programme ?
 
