@@ -28,6 +28,8 @@ import org.apache.logging.log4j.LogManager
 import org.eclipse.xtend.lib.annotations.Accessors
 import javafx.scene.control.TabPane
 import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents
+import javafx.scene.control.Alert
+import javafx.scene.image.ImageView
 
 class ControllerRoot implements Initializable {
 
@@ -349,5 +351,18 @@ class ControllerRoot implements Initializable {
 
 	override initialize(URL location, ResourceBundle resources) {
 	}
-
+	
+	
+	@FXML
+	def openAbout(){
+		val Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(LanguageManager.translate("menu.help.about"));
+        alert.setHeaderText(LanguageManager.translate("about.title"));
+        val Image image = new Image(ResourcesUtils.getInputStreamResource("istic_logo.png"));
+		val ImageView imageView = new ImageView(image);
+		alert.setGraphic(imageView);
+        alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, DANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, GHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, GUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, LOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
+ 
+        alert.showAndWait();
+	}
 }

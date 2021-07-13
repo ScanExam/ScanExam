@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,11 +37,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -466,6 +469,23 @@ public class ControllerRoot implements Initializable {
   
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {
+  }
+  
+  @FXML
+  public Optional<ButtonType> openAbout() {
+    Optional<ButtonType> _xblockexpression = null;
+    {
+      final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle(LanguageManager.translate("menu.help.about"));
+      alert.setHeaderText(LanguageManager.translate("about.title"));
+      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("istic_logo.png");
+      final Image image = new Image(_inputStreamResource);
+      final ImageView imageView = new ImageView(image);
+      alert.setGraphic(imageView);
+      alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, DANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, GHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, GUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, LOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
+      _xblockexpression = alert.showAndWait();
+    }
+    return _xblockexpression;
   }
   
   @Pure

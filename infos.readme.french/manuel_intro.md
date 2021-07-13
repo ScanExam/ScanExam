@@ -8,5 +8,5 @@ ScanExam est un outil d’assistance à la correction d’examens sur table. L'o
 L'objectif de ScanExam est alors simple, permettre au correcteur de passer le moins de temps possible à corriger, en réduisant au maximum le temps de manutention.
 
 
-<a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_creation.md">creation</a>
-<a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_correction.md">correction</a>
+## <a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_creation.md">Création de l'examen dans ScanExam</a>
+## <a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_correction.md">Correction de l'examen dans ScanExam</a>
