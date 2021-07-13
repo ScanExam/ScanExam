@@ -1,22 +1,18 @@
 package fr.istic.tools.scanexam.qrCode.writer
 
+import fr.istic.tools.scanexam.importation.StudentDataManager
+import fr.istic.tools.scanexam.qrCode.QrCodeType
 import fr.istic.tools.scanexam.utils.ResourcesUtils
 import java.io.File
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Comparator
+import java.util.List
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
-import java.util.List
-import java.util.ArrayList
-import org.apache.poi.ss.usermodel.WorkbookFactory
-import java.io.FileInputStream
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.DataFormatter
-import java.io.IOException
-import fr.istic.tools.scanexam.qrCode.QrCodeType
 
 /**
  * Classe pour générer un document contenant le nom, prénom de chaque élève accompagné d'un qr code.
@@ -31,7 +27,7 @@ class StudentsQrCodeDocGenerator {
 	 */
 	// ----------------------------------------------------------------------------------------------------
 	/** Marge autour des qr codes en pixel */
-	val int qrCodeMargin = 1
+	val int qrCodeMargin = 2
 
 	// ----------------------------------------------------------------------------------------------------
 	/*
@@ -48,11 +44,14 @@ class StudentsQrCodeDocGenerator {
 	 */
 	def void generateDocument(File file, float labelWidth, float labelHeight, boolean alphabeticalOrder,
 		File outputFile) {
-		val List<String> students = loadStudentsFromFile(file, alphabeticalOrder)
+		val List<List<String>> studentsData = StudentDataManager.loadData(file, "A1")
+		if (alphabeticalOrder) {
+			Collections.sort(studentsData, new StudentDataComparator)
+		}
 		val PDDocument document = new PDDocument
 		var studentIndex = 0
-		while (studentIndex < students.length) {
-			studentIndex = addPage(document, students, studentIndex, labelWidth, labelHeight)
+		while (studentIndex < studentsData.length) {
+			studentIndex = addPage(document, studentsData, studentIndex, labelWidth, labelHeight)
 		}
 		document.save(outputFile)
 		document.close
@@ -60,61 +59,31 @@ class StudentsQrCodeDocGenerator {
 
 	/**
 	 * Produit le document contenant les qr codes d'identification d'élèves à partir d'une liste d'étudiants
-	 * @param students Noms/identifiants des élèves
+	 * @param studentsData Informations (id, nom, prénom) des élèves
 	 * @param labelWidth Largeur des étiquettes en mm
 	 * @param labelHeight Hauteur des étiquettes en mm
 	 * @param outputFile Fichier pdf où enregistrer le pdf généré
 	 */
-	def void generateDocument(List<String> students, float labelWidth, float labelHeight, File outputFile) {
+	def void generateDocument(List<List<String>> studentsData, float labelWidth, float labelHeight, File outputFile) {
 		val PDDocument document = new PDDocument
 		var studentIndex = 0
-		while (studentIndex < students.length && studentIndex != -1) {
-			studentIndex = addPage(document, students, studentIndex, labelWidth, labelHeight)
+		while (studentIndex < studentsData.length && studentIndex != -1) {
+			studentIndex = addPage(document, studentsData, studentIndex, labelWidth, labelHeight)
 		}
 		document.save(outputFile)
 		document.close
 	}
 
 	/**
-	 * Charge la liste des étudiants à partir d'un fichier XLS
-	 * @param file Fichier XLS contenant les identifiants des étudiants
-	 * @param sort True pour ranger les étudiants par ordre alphabetique
-	 * @return Identifiants des étudiants sous forme de liste
-	 */
-	private def List<String> loadStudentsFromFile(File file, boolean sort) {
-		val List<String> students = new ArrayList
-		try(val Workbook workbook = WorkbookFactory.create(new FileInputStream(file))) {
-			val Sheet sheet = workbook.getSheetAt(0)
-			var int rowIndex = 0
-			var Row row = sheet.getRow(rowIndex)
-			val formatter = new DataFormatter
-			while (row !== null) {
-				val cell = row.getCell(0)
-				val student = formatter.formatCellValue(cell)
-				students.add(student)
-				rowIndex++
-				row = sheet.getRow(rowIndex)
-			}
-		} catch (IOException e) {
-			e.printStackTrace
-		}
-		if (sort) {
-			return students.sort
-		} else {
-			return students
-		}
-	}
-
-	/**
 	 * Ajoute à un document, une page contenant les noms, prénoms et qr codes des élèves
 	 * @param document Document auquel ajouter la page
-	 * @param students Noms/identifiants des élèves à inscrire sur cette page
+	 * @param studentsData Informations (id, nom, prénom) des élèves à inscrire sur cette page
 	 * @param firstStudent Index de l'étudiant par lequel commencer
 	 * @param labelWidth Largeur des étiquettes en mm
 	 * @param labelHeight Hauteur des étiquettes en mm
 	 * @return Si aucun qr code n'a été mis, -1 ; si tout les qr codes n'ont pas pu être mis, index du prochain élève à insérer ; taille de la collection d'élèves sinon
 	 */
-	private def int addPage(PDDocument document, List<String> students, int firstStudent, float labelWidth,
+	private def int addPage(PDDocument document, List<List<String>> studentsData, int firstStudent, float labelWidth,
 		float labelHeight) {
 		val PDPage page = new PDPage
 		document.addPage(page)
@@ -133,14 +102,16 @@ class StudentsQrCodeDocGenerator {
 
 		var studentIndex = firstStudent
 
-		while (posY >= yMarginPixel && studentIndex < students.length) {
+		while (posY >= yMarginPixel && studentIndex < studentsData.length) {
 			while ((posX + (labelWidthPixel * 2)) <= (pageHeightPixel - xMarginPixel) &&
-				studentIndex < students.length) {
-				val String name = students.get(studentIndex)
+				studentIndex < studentsData.length) {
+				val String id = studentsData.get(studentIndex).get(0)
+				val String lastName = studentsData.get(studentIndex).get(1)
+				val String firstName = studentsData.get(studentIndex).get(2)
 				insertQrCode(contentStream, document, posX + ((labelWidthPixel - qrCodeSize) / 2), posY, qrCodeSize,
-					QrCodeType.STUDENT + "_" + name)
+					QrCodeType.STUDENT + "_" + id + "_" + lastName + "_" + firstName)
 				insertText(contentStream, document, posX + labelWidthPixel + 4,
-					posY + (labelHeightPixel * 0.8f).intValue, labelWidthPixel / 5, name)
+					posY + (labelHeightPixel * 0.8f).intValue, labelWidthPixel / 5, id)
 				posX += (labelWidthPixel * 2)
 				studentIndex++
 			}
@@ -169,9 +140,9 @@ class StudentsQrCodeDocGenerator {
 		if (data !== "") {
 			val File qrCodeFile = File.createTempFile("qrcode", ".png")
 			val qrCodeGen = new QRCodeGeneratorImpl
-			qrCodeGen.generateQRCodeImage(data, size, size, qrCodeMargin, qrCodeFile.path)
+			qrCodeGen.generateQRCodeImage(data, size * 4, size * 4, qrCodeMargin, qrCodeFile.path)
 			val PDImageXObject qrCode = PDImageXObject.createFromFile(qrCodeFile.path, document)
-			contentStream.drawImage(qrCode, posX, posY)
+			contentStream.drawImage(qrCode, posX, posY, size, size)
 			qrCodeFile.delete
 		}
 	}
@@ -218,5 +189,13 @@ class StudentsQrCodeDocGenerator {
 			}
 		}
 		return texts
+	}
+}
+
+class StudentDataComparator implements Comparator<List<String>> {
+	override int compare(List<String> o1, List<String> o2) {
+		val String firstString_o1 = o1.get(0)
+		val String firstString_o2 = o2.get(0)
+		return firstString_o1.compareTo(firstString_o2)
 	}
 }

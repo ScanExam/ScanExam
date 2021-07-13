@@ -19,6 +19,7 @@ import java.util.Base64
  * Source : https://www.delftstack.com/fr/howto/java/java-password-encryption/
  */
 class Encryption {
+
 	def static SecretKeySpec createSecretKey(char[] password, byte[] salt, int iterationCount,
 		int keyLength) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		var SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")

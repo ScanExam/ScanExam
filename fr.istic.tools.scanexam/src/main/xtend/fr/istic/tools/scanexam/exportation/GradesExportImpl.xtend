@@ -33,7 +33,7 @@ class GradesExportImpl implements GradesExport {
 			val Row row = sheet.createRow(rowCount)
 
 			val Cell cellName = row.createCell(0)
-			cellName.cellValue = studentSheets.get(i).studentName
+			cellName.cellValue = studentSheets.get(i).studentID
 
 			val Cell cellGrade = row.createCell(1)
 			cellGrade.cellValue = studentSheets.get(i).computeGrade

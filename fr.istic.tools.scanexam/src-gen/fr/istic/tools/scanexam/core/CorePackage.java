@@ -845,13 +845,31 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET__ID = 0;
 
 	/**
-	 * The feature id for the '<em><b>Student Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Student ID</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET__STUDENT_NAME = 1;
+	int STUDENT_SHEET__STUDENT_ID = 1;
+
+	/**
+	 * The feature id for the '<em><b>First Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET__FIRST_NAME = 2;
+
+	/**
+	 * The feature id for the '<em><b>Last Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET__LAST_NAME = 3;
 
 	/**
 	 * The feature id for the '<em><b>Pos Page</b></em>' attribute list.
@@ -860,7 +878,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET__POS_PAGE = 2;
+	int STUDENT_SHEET__POS_PAGE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Grades</b></em>' containment reference list.
@@ -869,7 +887,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET__GRADES = 3;
+	int STUDENT_SHEET__GRADES = 5;
 
 	/**
 	 * The number of structural features of the '<em>Student Sheet</em>' class.
@@ -878,7 +896,7 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_FEATURE_COUNT = 4;
+	int STUDENT_SHEET_FEATURE_COUNT = 6;
 
 	/**
 	 * The operation id for the '<em>Compute Grade</em>' operation.
@@ -899,13 +917,22 @@ public interface CorePackage extends EPackage {
 	int STUDENT_SHEET___IS_GRADED = 1;
 
 	/**
+	 * The operation id for the '<em>Get Student Info</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDENT_SHEET___GET_STUDENT_INFO = 2;
+
+	/**
 	 * The number of operations of the '<em>Student Sheet</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDENT_SHEET_OPERATION_COUNT = 2;
+	int STUDENT_SHEET_OPERATION_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl <em>Student Information</em>}' class.
@@ -1574,15 +1601,37 @@ public interface CorePackage extends EPackage {
 	EAttribute getStudentSheet_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentName <em>Student Name</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentID <em>Student ID</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Student Name</em>'.
-	 * @see fr.istic.tools.scanexam.core.StudentSheet#getStudentName()
+	 * @return the meta object for the attribute '<em>Student ID</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#getStudentID()
 	 * @see #getStudentSheet()
 	 * @generated
 	 */
-	EAttribute getStudentSheet_StudentName();
+	EAttribute getStudentSheet_StudentID();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentSheet#getFirstName <em>First Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>First Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#getFirstName()
+	 * @see #getStudentSheet()
+	 * @generated
+	 */
+	EAttribute getStudentSheet_FirstName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.istic.tools.scanexam.core.StudentSheet#getLastName <em>Last Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Last Name</em>'.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#getLastName()
+	 * @see #getStudentSheet()
+	 * @generated
+	 */
+	EAttribute getStudentSheet_LastName();
 
 	/**
 	 * Returns the meta object for the attribute list '{@link fr.istic.tools.scanexam.core.StudentSheet#getPosPage <em>Pos Page</em>}'.
@@ -1625,6 +1674,16 @@ public interface CorePackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getStudentSheet__IsGraded();
+
+	/**
+	 * Returns the meta object for the '{@link fr.istic.tools.scanexam.core.StudentSheet#getStudentInfo() <em>Get Student Info</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Student Info</em>' operation.
+	 * @see fr.istic.tools.scanexam.core.StudentSheet#getStudentInfo()
+	 * @generated
+	 */
+	EOperation getStudentSheet__GetStudentInfo();
 
 	/**
 	 * Returns the meta object for class '{@link fr.istic.tools.scanexam.core.StudentInformation <em>Student Information</em>}'.
@@ -2178,12 +2237,28 @@ public interface CorePackage extends EPackage {
 		EAttribute STUDENT_SHEET__ID = eINSTANCE.getStudentSheet_Id();
 
 		/**
-		 * The meta object literal for the '<em><b>Student Name</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Student ID</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute STUDENT_SHEET__STUDENT_NAME = eINSTANCE.getStudentSheet_StudentName();
+		EAttribute STUDENT_SHEET__STUDENT_ID = eINSTANCE.getStudentSheet_StudentID();
+
+		/**
+		 * The meta object literal for the '<em><b>First Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_SHEET__FIRST_NAME = eINSTANCE.getStudentSheet_FirstName();
+
+		/**
+		 * The meta object literal for the '<em><b>Last Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDENT_SHEET__LAST_NAME = eINSTANCE.getStudentSheet_LastName();
 
 		/**
 		 * The meta object literal for the '<em><b>Pos Page</b></em>' attribute list feature.
@@ -2216,6 +2291,14 @@ public interface CorePackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STUDENT_SHEET___IS_GRADED = eINSTANCE.getStudentSheet__IsGraded();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Student Info</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STUDENT_SHEET___GET_STUDENT_INFO = eINSTANCE.getStudentSheet__GetStudentInfo();
 
 		/**
 		 * The meta object literal for the '{@link fr.istic.tools.scanexam.core.impl.StudentInformationImpl <em>Student Information</em>}' class.

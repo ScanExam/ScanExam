@@ -21,6 +21,9 @@ import javafx.event.EventHandler
 import javafx.event.ActionEvent
 import fr.istic.tools.scanexam.view.fx.ControllerRoot
 
+/**
+ * Classe qui gère l'onglet du récapitulatif de la correction courrante
+ */
 class ControllerFxStudents {
 	
 	@FXML
@@ -40,7 +43,10 @@ class ControllerFxStudents {
 			
 	}
 	
-	def update(){
+	/**
+	 * Fonction d'update des éléments de la table view
+	 */
+	def void update(){
 		
 		initTable()
 		
@@ -52,6 +58,9 @@ class ControllerFxStudents {
 		
 	}
 	
+	/**
+	 * Ajout des studentSheets dans la table
+	 */
 	def updateStudentsList(){
 		val List<StudentSheet> sheets = new LinkedList(serviceGrad.studentSheets.toList)
 		Collections.sort(sheets, [s1, s2|s1.id - s2.id])
@@ -61,15 +70,26 @@ class ControllerFxStudents {
 		}	
 	}
 	
+	/**
+	 * Définition de chacune des colonnes, et binding des valeurs
+	 */
 	def updateQuestionList(){
+		
+		var TableColumn<StudentSheet, String> idCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.ID"))
+		idCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("studentID"))
+		table.columns.add(idCol)
+		
+		var TableColumn<StudentSheet, String> lNCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.lastName"))
+		lNCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("lastName"))
+		table.columns.add(lNCol)
+		
+		var TableColumn<StudentSheet, String> fNCol = new TableColumn(LanguageManager.translate("studentsTab.tableView.firstName"))
+		fNCol.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("firstName"))
+		table.columns.add(fNCol)
+
 		for(int i : 0 ..< serviceGrad.numberOfQuestions){
-			
-			if(i == 0){
-				var TableColumn<StudentSheet, String> col = new TableColumn(serviceGrad.getQuestion(i).name)
-				col.setCellValueFactory(new PropertyValueFactory<StudentSheet, String>("studentName"))
-				table.columns.add(col)
-			}
-			else{
+
+			if(serviceGrad.getQuestion(i).gradeScale.maxPoint != 0f){
 				var TableColumn<StudentSheet, Float> col = new TableColumn(serviceGrad.getQuestion(i).name)
 				col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>{
 					override ObservableValue<Float> call(TableColumn.CellDataFeatures<StudentSheet, Float> cd){
@@ -90,12 +110,18 @@ class ControllerFxStudents {
 		table.columns.add(col)
 	}
 	
+	/**
+	 * Définition/redéfinition de la table
+	 */
 	def initTable(){
 		table = new TableView
-		table.prefHeight = 720
 		table.prefWidth = 720
+		table.prefHeight = 720
 	}
 	
+	/**
+	 * Définition du menu contextuel
+	 */
 	def addContextMenuOnEachLines(){
 		table.rowFactory = new Callback<TableView<StudentSheet>, TableRow<StudentSheet>>(){
 			
@@ -122,6 +148,10 @@ class ControllerFxStudents {
 		}
 	}
 	
+	/**
+	 * Méthode appellée dans le menu contextuel pour aller à une copie spécifique
+	 * @param id l'id de la copie
+	 */
 	def gotToSheet(int id){
 		controllerRoot.goToCorrectorTab(id)
 	}

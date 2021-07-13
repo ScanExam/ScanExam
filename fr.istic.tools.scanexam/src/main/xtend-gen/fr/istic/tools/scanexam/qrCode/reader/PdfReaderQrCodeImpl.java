@@ -479,15 +479,33 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
           final Set<Page> pages = oldCopie.getPagesCopie();
           pages.addAll(copie.getPagesCopie());
           String _xifexpression_1 = null;
-          String _studentName = oldCopie.getStudentName();
-          boolean _tripleNotEquals = (_studentName != null);
+          String _studentId = oldCopie.getStudentId();
+          boolean _tripleNotEquals = (_studentId != null);
           if (_tripleNotEquals) {
-            _xifexpression_1 = oldCopie.getStudentName();
+            _xifexpression_1 = oldCopie.getStudentId();
           } else {
-            _xifexpression_1 = copie.getStudentName();
+            _xifexpression_1 = copie.getStudentId();
           }
-          final String studentName = _xifexpression_1;
-          final Copie newCopie = new Copie(numCopie, pages, studentName);
+          final String studentId = _xifexpression_1;
+          String _xifexpression_2 = null;
+          String _studentLastName = oldCopie.getStudentLastName();
+          boolean _tripleNotEquals_1 = (_studentLastName != null);
+          if (_tripleNotEquals_1) {
+            _xifexpression_2 = oldCopie.getStudentLastName();
+          } else {
+            _xifexpression_2 = copie.getStudentLastName();
+          }
+          final String studentLastName = _xifexpression_2;
+          String _xifexpression_3 = null;
+          String _studentFirstName = oldCopie.getStudentFirstName();
+          boolean _tripleNotEquals_2 = (_studentFirstName != null);
+          if (_tripleNotEquals_2) {
+            _xifexpression_3 = oldCopie.getStudentFirstName();
+          } else {
+            _xifexpression_3 = copie.getStudentFirstName();
+          }
+          final String studentFirstName = _xifexpression_3;
+          final Copie newCopie = new Copie(numCopie, pages, studentId, studentLastName, studentFirstName);
           _xblockexpression_1 = this.sheets.add(newCopie);
         }
         _xifexpression = _xblockexpression_1;
@@ -526,18 +544,22 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
         final int[] pagesArray = new int[this.nbPagesInSheet];
         final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
-        final String studentName = (((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getStudentName();
+        final String studentId = (((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getStudentId();
         final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
-        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
+        final String studentLastName = (((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getStudentLastName();
+        final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
+        final String studentFirstName = (((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getStudentFirstName();
+        final Set<Copie> _converted_temp_5 = (Set<Copie>)temp;
+        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_5, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
         ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, _length_1, true);
         for (final Integer j : _doubleDotLessThan_1) {
-          final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
-          final Set<Copie> _converted_temp_5 = (Set<Copie>)temp;
-          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
-            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_5, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
+          final Set<Copie> _converted_temp_6 = (Set<Copie>)temp;
+          final Set<Copie> _converted_temp_7 = (Set<Copie>)temp;
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_6, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
+            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_7, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        if ((studentName != null)) {
-          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray)), studentName));
+        if ((((studentId != null) && (studentLastName != null)) && (studentFirstName != null))) {
+          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray)), studentId, studentLastName, studentFirstName));
         } else {
           res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
         }
@@ -566,22 +588,26 @@ public class PdfReaderQrCodeImpl implements PdfReaderQrCode {
         final int index = (((Copie[])Conversions.unwrapArray(_converted_temp_1, Copie.class))[(i).intValue()]).getNumCopie();
         final int[] pagesArray = new int[this.nbPagesInSheet];
         final Set<Copie> _converted_temp_2 = (Set<Copie>)temp;
-        final String studentName = (((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getStudentName();
+        final String studentId = (((Copie[])Conversions.unwrapArray(_converted_temp_2, Copie.class))[(i).intValue()]).getStudentId();
+        final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
+        final String studentLastName = (((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getStudentLastName();
+        final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
+        final String studentFirstName = (((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getStudentFirstName();
         ExclusiveRange _doubleDotLessThan_1 = new ExclusiveRange(0, this.nbPagesInSheet, true);
         for (final Integer e : _doubleDotLessThan_1) {
           pagesArray[(e).intValue()] = (-1);
         }
-        final Set<Copie> _converted_temp_3 = (Set<Copie>)temp;
-        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_3, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
+        final Set<Copie> _converted_temp_5 = (Set<Copie>)temp;
+        int _length_1 = ((Object[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_5, Copie.class))[(i).intValue()]).getPagesCopie(), Object.class)).length;
         ExclusiveRange _doubleDotLessThan_2 = new ExclusiveRange(0, _length_1, true);
         for (final Integer j : _doubleDotLessThan_2) {
-          final Set<Copie> _converted_temp_4 = (Set<Copie>)temp;
-          final Set<Copie> _converted_temp_5 = (Set<Copie>)temp;
-          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_4, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
-            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_5, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
+          final Set<Copie> _converted_temp_6 = (Set<Copie>)temp;
+          final Set<Copie> _converted_temp_7 = (Set<Copie>)temp;
+          pagesArray[(((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_6, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInSubject()] = 
+            (((Page[])Conversions.unwrapArray((((Copie[])Conversions.unwrapArray(_converted_temp_7, Copie.class))[(i).intValue()]).getPagesCopie(), Page.class))[(j).intValue()]).getNumPageInPDF();
         }
-        if ((studentName != null)) {
-          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray)), studentName));
+        if ((((studentId != null) && (studentLastName != null)) && (studentFirstName != null))) {
+          res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray)), studentId, studentLastName, studentFirstName));
         } else {
           res.add(dF.createStudentSheet(index, ((List<Integer>)Conversions.doWrapArray(pagesArray))));
         }

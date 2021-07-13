@@ -141,7 +141,7 @@ public class ExportExamToPdf {
       for (final Integer i : _posPage) {
         document.addPage(pdf.getPage((i).intValue()));
       }
-      File file = File.createTempFile(sheet.getStudentName(), ".pdf");
+      File file = File.createTempFile(sheet.getStudentInfo(), ".pdf");
       document.save(file);
       document.close();
       return file;
@@ -174,8 +174,8 @@ public class ExportExamToPdf {
           }
           String _absolutePath = folderForSaving.getAbsolutePath();
           String _plus = (_absolutePath + File.separator);
-          String _studentName = sheet.getStudentName();
-          String _plus_1 = (_plus + _studentName);
+          String _studentInfo = sheet.getStudentInfo();
+          String _plus_1 = (_plus + _studentInfo);
           String _plus_2 = (_plus_1 + ".pdf");
           File _file = new File(_plus_2);
           document.save(_file);
@@ -210,11 +210,11 @@ public class ExportExamToPdf {
           for (final Integer i : _posPage) {
             document.addPage(pdf.getPage((i).intValue()));
           }
-          String _studentName = sheet.getStudentName();
-          String _plus = ("tempExam" + _studentName);
+          String _studentInfo = sheet.getStudentInfo();
+          String _plus = ("tempExam" + _studentInfo);
           File studentExam = File.createTempFile(_plus, ".pdf");
           document.save(studentExam);
-          tempExams.put(sheet.getStudentName(), studentExam);
+          tempExams.put(sheet.getStudentID(), studentExam);
           document.close();
         }
       }
@@ -279,7 +279,7 @@ public class ExportExamToPdf {
    */
   public static Pair<String, File> exportStudentExamToTempPdfWithAnnotations(final ServiceGraduation service, final InputStream examDocument, final StudentSheet sheet, final double originWidht) {
     try {
-      File studentExam = File.createTempFile(sheet.getStudentName(), ".pdf");
+      File studentExam = File.createTempFile(sheet.getStudentInfo(), ".pdf");
       List<StudentSheet> _asList = Arrays.<StudentSheet>asList(sheet);
       ArrayList<StudentSheet> _arrayList = new ArrayList<StudentSheet>(_asList);
       File exam = ExportExamToPdf.exportExamsToTempAnnotedPdf(service, examDocument, _arrayList, originWidht);
@@ -292,8 +292,8 @@ public class ExportExamToPdf {
       document.save(studentExam);
       document.close();
       pdf.close();
-      String _studentName = sheet.getStudentName();
-      String _plus = (_studentName + ".pdf");
+      String _studentInfo = sheet.getStudentInfo();
+      String _plus = (_studentInfo + ".pdf");
       return Pair.<String, File>of(_plus, studentExam);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -526,7 +526,7 @@ public class ExportExamToPdf {
   private static String generateGradeDetailContent(final ServiceGraduation service, final StudentSheet sheet, final String cssName) {
     service.selectSheet(sheet.getId());
     final String examName = service.getExamName();
-    final String studentName = sheet.getStudentName();
+    final String studentName = sheet.getStudentID();
     final float globalGrade = sheet.computeGrade();
     final float globalScale = service.getGlobalScale();
     final GradeDetailToHtml gradeDetailToHtml = new GradeDetailToHtml(examName, studentName, globalGrade, globalScale);

@@ -25,6 +25,9 @@ import javafx.util.Callback;
 import org.eclipse.xtext.xbase.lib.ExclusiveRange;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+/**
+ * Classe qui gère l'onglet du récapitulatif de la correction courrante
+ */
 @SuppressWarnings("all")
 public class ControllerFxStudents {
   @FXML
@@ -45,6 +48,9 @@ public class ControllerFxStudents {
     return _xblockexpression;
   }
   
+  /**
+   * Fonction d'update des éléments de la table view
+   */
   public void update() {
     this.initTable();
     this.updateQuestionList();
@@ -53,6 +59,9 @@ public class ControllerFxStudents {
     this.mainPane.setContent(this.table);
   }
   
+  /**
+   * Ajout des studentSheets dans la table
+   */
   public void updateStudentsList() {
     List<StudentSheet> _list = IterableExtensions.<StudentSheet>toList(this.serviceGrad.getStudentSheets());
     final List<StudentSheet> sheets = new LinkedList<StudentSheet>(_list);
@@ -67,22 +76,36 @@ public class ControllerFxStudents {
     }
   }
   
+  /**
+   * Définition de chacune des colonnes, et binding des valeurs
+   */
   public boolean updateQuestionList() {
     boolean _xblockexpression = false;
     {
+      String _translate = LanguageManager.translate("studentsTab.tableView.ID");
+      TableColumn<StudentSheet, String> idCol = new TableColumn<StudentSheet, String>(_translate);
+      PropertyValueFactory<StudentSheet, String> _propertyValueFactory = new PropertyValueFactory<StudentSheet, String>("studentID");
+      idCol.setCellValueFactory(_propertyValueFactory);
+      this.table.getColumns().add(idCol);
+      String _translate_1 = LanguageManager.translate("studentsTab.tableView.lastName");
+      TableColumn<StudentSheet, String> lNCol = new TableColumn<StudentSheet, String>(_translate_1);
+      PropertyValueFactory<StudentSheet, String> _propertyValueFactory_1 = new PropertyValueFactory<StudentSheet, String>("lastName");
+      lNCol.setCellValueFactory(_propertyValueFactory_1);
+      this.table.getColumns().add(lNCol);
+      String _translate_2 = LanguageManager.translate("studentsTab.tableView.firstName");
+      TableColumn<StudentSheet, String> fNCol = new TableColumn<StudentSheet, String>(_translate_2);
+      PropertyValueFactory<StudentSheet, String> _propertyValueFactory_2 = new PropertyValueFactory<StudentSheet, String>("firstName");
+      fNCol.setCellValueFactory(_propertyValueFactory_2);
+      this.table.getColumns().add(fNCol);
       int _numberOfQuestions = this.serviceGrad.numberOfQuestions();
       ExclusiveRange _doubleDotLessThan = new ExclusiveRange(0, _numberOfQuestions, true);
       for (final int i : _doubleDotLessThan) {
-        if ((i == 0)) {
+        float _maxPoint = this.serviceGrad.getQuestion(i).getGradeScale().getMaxPoint();
+        boolean _notEquals = (_maxPoint != 0f);
+        if (_notEquals) {
           String _name = this.serviceGrad.getQuestion(i).getName();
-          TableColumn<StudentSheet, String> col = new TableColumn<StudentSheet, String>(_name);
-          PropertyValueFactory<StudentSheet, String> _propertyValueFactory = new PropertyValueFactory<StudentSheet, String>("studentName");
-          col.setCellValueFactory(_propertyValueFactory);
-          this.table.getColumns().add(col);
-        } else {
-          String _name_1 = this.serviceGrad.getQuestion(i).getName();
-          TableColumn<StudentSheet, Float> col_1 = new TableColumn<StudentSheet, Float>(_name_1);
-          col_1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
+          TableColumn<StudentSheet, Float> col = new TableColumn<StudentSheet, Float>(_name);
+          col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
             @Override
             public ObservableValue<Float> call(final TableColumn.CellDataFeatures<StudentSheet, Float> cd) {
               final Callable<Float> _function = () -> {
@@ -91,12 +114,12 @@ public class ControllerFxStudents {
               return Bindings.<Float>createObjectBinding(_function);
             }
           });
-          this.table.getColumns().add(col_1);
+          this.table.getColumns().add(col);
         }
       }
-      String _translate = LanguageManager.translate("studentsTab.total");
-      TableColumn<StudentSheet, Float> col_2 = new TableColumn<StudentSheet, Float>(_translate);
-      col_2.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
+      String _translate_3 = LanguageManager.translate("studentsTab.total");
+      TableColumn<StudentSheet, Float> col_1 = new TableColumn<StudentSheet, Float>(_translate_3);
+      col_1.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<StudentSheet, Float>, ObservableValue<Float>>() {
         @Override
         public ObservableValue<Float> call(final TableColumn.CellDataFeatures<StudentSheet, Float> cd) {
           final Callable<Float> _function = () -> {
@@ -105,18 +128,24 @@ public class ControllerFxStudents {
           return Bindings.<Float>createObjectBinding(_function);
         }
       });
-      _xblockexpression = this.table.getColumns().add(col_2);
+      _xblockexpression = this.table.getColumns().add(col_1);
     }
     return _xblockexpression;
   }
   
+  /**
+   * Définition/redéfinition de la table
+   */
   public void initTable() {
     TableView<StudentSheet> _tableView = new TableView<StudentSheet>();
     this.table = _tableView;
-    this.table.setPrefHeight(720);
     this.table.setPrefWidth(720);
+    this.table.setPrefHeight(720);
   }
   
+  /**
+   * Définition du menu contextuel
+   */
   public void addContextMenuOnEachLines() {
     this.table.setRowFactory(new Callback<TableView<StudentSheet>, TableRow<StudentSheet>>() {
       @Override
@@ -138,6 +167,10 @@ public class ControllerFxStudents {
     });
   }
   
+  /**
+   * Méthode appellée dans le menu contextuel pour aller à une copie spécifique
+   * @param id l'id de la copie
+   */
   public void gotToSheet(final int id) {
     this.controllerRoot.goToCorrectorTab(id);
   }

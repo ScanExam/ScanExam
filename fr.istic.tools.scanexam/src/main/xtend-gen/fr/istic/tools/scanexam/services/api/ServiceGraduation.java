@@ -56,13 +56,37 @@ public interface ServiceGraduation extends Service {
    * Associe un nouveau identifiant d'étudiant à la copie courante
    * @param id le nouvel identifiant d'étudiant
    */
-  void assignStudentName(final String id);
+  void assignStudentId(final String id);
   
   /**
-   * @return le nom de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * Associe un nouveau nom de famille à l'étudiant de la copie courante
+   * @param lastName Nouveau nom de famille de l'étudiant
+   */
+  void assignLastName(final String lastName);
+  
+  /**
+   * Associe un nouveau prénom à l'étudiant de la copie courante
+   * @param firstName Nouveau prénom de l'étudiant
+   */
+  void assignFirstName(final String firstName);
+  
+  /**
+   * @return l'indentifiant de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
    * @param id l'ID de la copie
    */
-  Optional<String> getStudentName(final int id);
+  Optional<String> getStudentId(final int id);
+  
+  /**
+   * @return le nom de famille de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * @param id l'ID de la copie
+   */
+  Optional<String> getStudentLastName(final int id);
+  
+  /**
+   * @return le prénom de famille de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
+   * @param id l'ID de la copie
+   */
+  Optional<String> getStudentFirstName(final int id);
   
   /**
    * @return la liste non modifiable de tous les StudentSheets
@@ -199,7 +223,17 @@ public interface ServiceGraduation extends Service {
   /**
    * @return l'ensemble de tous les identifiants des étudiants chargés
    */
-  Collection<String> getStudentId();
+  Collection<String> getStudentIds();
+  
+  /**
+   * @return l'ensemble de tous les nom de familles des étudiants chargés
+   */
+  Collection<String> getStudentLastNames();
+  
+  /**
+   * @return l'ensemble de tous les prénoms des étudiants chargés
+   */
+  Collection<String> getStudentFirstNames();
   
   /**
    * @return une liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant

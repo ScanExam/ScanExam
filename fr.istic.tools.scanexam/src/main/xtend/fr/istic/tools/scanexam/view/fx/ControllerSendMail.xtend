@@ -25,15 +25,15 @@ import java.util.HashMap
  */
 class ControllerSendMail {
 
-	/** Pane principale de la vue */
+	/* Pane principale de la vue */
 	@FXML
 	public Pane mainPane
 
-	/** Champ de texte du titre */
+	/* Champ de texte du titre */
 	@FXML
 	public TextField txtFldTitle
 
-	/** Champ de texte du mail */
+	/* Champ de texte du mail */
 	@FXML
 	public HTMLEditor htmlEditor
 
@@ -54,22 +54,25 @@ class ControllerSendMail {
 	// ----------------------------------------------------------------------------------------------------
 	@FXML
 	def void saveAndQuit() {
-		val Task<Integer> task = new Task<Integer> {
+
+		val Task<Integer> task = new Task<Integer>() {
 			protected override Integer call() {
-				var sent = 0
+				var sent = 0;
 				updateProgress(sent, studentSheets.size - nbSheetWithoutName)
 				updateMessage(
 					String.format(LanguageManager.translate("sendMail.progress"), sent,
 						studentSheets.size - nbSheetWithoutName))
 				for (studentSheet : studentSheets) {
-					val studentMail = mailMap.get(studentSheet.studentName)
-					if (studentSheet.studentName !== null && studentMail !== null) {
+
+					val studentMail = mailMap.get(studentSheet.studentID)
+
+					if (studentSheet.studentID !== null && studentMail !== null) {
 						val pair = ExportExamToPdf.exportStudentExamToTempPdfWithAnnotations(service,
 							controllerGraduation.pdfManager.pdfInputStream, studentSheet, mainPane.width)
 						val sender = new SendMailTls
 						sender.sendMail(controllerGraduation.pdfManager.pdfInputStream, txtFldTitle.text,
 							htmlEditor.htmlText, pair.key, studentMail, pair.value)
-						sent++
+						sent++;
 						updateProgress(sent, studentSheets.size - nbSheetWithoutName)
 						updateMessage(
 							String.format(LanguageManager.translate("sendMail.progress"), sent,
@@ -84,7 +87,7 @@ class ControllerSendMail {
 		service.onSucceeded = [e|onFinish(service.value)]
 		service.start
 		ControllerWaiting.openWaitingDialog(service.messageProperty, service.progressProperty,
-			mainPane.scene.window as Stage)
+			mainPane.getScene().getWindow() as Stage)
 	}
 
 	private def onFinish(int sent) {
@@ -93,14 +96,15 @@ class ControllerSendMail {
 			LanguageManager.translate("sendMail.resultHeader"),
 			LanguageManager.translate("sendMail.resultHeader"),
 			String.format(LanguageManager.translate("sendMail.progress"), sent, studentSheets.size)
-		)
+		);
+
 		quit
 	}
 
 	@FXML
 	def void quit() {
 		val Stage stage = mainPane.scene.window as Stage
-		stage.close
+		stage.close();
 	}
 
 	def void init(ServiceGraduation service, ControllerFxGraduation controllerGraduation) {
@@ -113,7 +117,7 @@ class ControllerSendMail {
 		this.service = service
 
 		nbSheetWithoutName = if (!mailMap.empty)
-			studentSheets.filter(x|!mailMap.containsKey(x.studentName)).size as int
+			studentSheets.filter(x|!mailMap.containsKey(x.studentID)).size as int
 		else
 			-1
 

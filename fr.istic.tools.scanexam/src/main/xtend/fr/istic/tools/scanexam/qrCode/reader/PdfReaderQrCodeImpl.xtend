@@ -337,8 +337,12 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 			val int numCopie = oldCopie.numCopie
 			val Set<Page> pages = oldCopie.pagesCopie
 			pages.addAll(copie.pagesCopie)
-			val String studentName = oldCopie.studentName !== null ? oldCopie.studentName : copie.studentName
-			val Copie newCopie = new Copie(numCopie, pages, studentName)
+			val String studentId = oldCopie.studentId !== null ? oldCopie.studentId : copie.studentId
+			val String studentLastName = oldCopie.studentLastName !== null ? oldCopie.studentLastName : copie.
+					studentLastName
+			val String studentFirstName = oldCopie.studentFirstName !== null ? oldCopie.studentFirstName : copie.
+					studentFirstName
+			val Copie newCopie = new Copie(numCopie, pages, studentId, studentLastName, studentFirstName)
 			sheets.add(newCopie)
 		} else {
 			sheets.add(copie)
@@ -367,14 +371,16 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
-			val studentName = temp.get(i).studentName
+			val studentId = temp.get(i).studentId
+			val studentLastName = temp.get(i).studentLastName
+			val studentFirstName = temp.get(i).studentFirstName
 
 			for (j : 0 ..< temp.get(i).pagesCopie.length) {
 				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject,
 					temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-			if (studentName !== null) {
-				res.add(dF.createStudentSheet(index, pagesArray, studentName))
+			if (studentId !== null && studentLastName !== null && studentFirstName !== null) {
+				res.add(dF.createStudentSheet(index, pagesArray, studentId, studentLastName, studentFirstName))
 			} else {
 				res.add(dF.createStudentSheet(index, pagesArray))
 			}
@@ -398,7 +404,9 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 		for (i : 0 ..< temp.length) {
 			val int index = temp.get(i).numCopie
 			val int[] pagesArray = newIntArrayOfSize(nbPagesInSheet)
-			val studentName = temp.get(i).studentName
+			val studentId = temp.get(i).studentId
+			val studentLastName = temp.get(i).studentLastName
+			val studentFirstName = temp.get(i).studentFirstName
 			for (e : 0 ..< nbPagesInSheet) {
 				pagesArray.set(e, -1)
 			}
@@ -407,8 +415,8 @@ class PdfReaderQrCodeImpl implements PdfReaderQrCode {
 				pagesArray.set(temp.get(i).pagesCopie.get(j).numPageInSubject,
 					temp.get(i).pagesCopie.get(j).numPageInPDF)
 			}
-			if (studentName !== null) {
-				res.add(dF.createStudentSheet(index, pagesArray, studentName))
+			if (studentId !== null && studentLastName !== null && studentFirstName !== null) {
+				res.add(dF.createStudentSheet(index, pagesArray, studentId, studentLastName, studentFirstName))
 			} else {
 				res.add(dF.createStudentSheet(index, pagesArray))
 			}
