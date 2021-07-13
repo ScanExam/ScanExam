@@ -27,17 +27,17 @@ public class StudentDetails extends VBox {
   private ControllerFxGraduation controller;
   
   /**
-   * Champ de text econtenant le nom de l'étudiant
+   * Champ de text contenant l'identifiant de l'étudiant
    */
-  private RenameFieldSuggests name;
+  private RenameFieldSuggests userId;
   
   /**
-   * Label affichant l'identifiant de l'étudiant
+   * Label affichant l'identifiant de l'étudiant pour l'application
    */
   private Label idLabel;
   
   /**
-   * Label affichant l'identifiant de l'étudiant
+   * Label affichant la note de l'étudiant
    */
   private Label gradeLabel;
   
@@ -64,28 +64,28 @@ public class StudentDetails extends VBox {
     this.controller = controller;
     this.setAlignment(Pos.CENTER);
     String _translate = LanguageManager.translate("label.student.name");
-    Label nameRow = new Label(_translate);
+    Label userIdRow = new Label(_translate);
     String _translate_1 = LanguageManager.translate("label.student.id");
     Label idRow = new Label(_translate_1);
     String _translate_2 = LanguageManager.translate("label.student.grade");
     Label gradeRow = new Label(_translate_2);
     String _translate_3 = LanguageManager.translate("label.student.quality");
     Label qualityRow = new Label(_translate_3);
-    nameRow.getStyleClass().add("RowTitle");
+    userIdRow.getStyleClass().add("RowTitle");
     idRow.getStyleClass().add("RowTitle");
     gradeRow.getStyleClass().add("RowTitle");
     qualityRow.getStyleClass().add("RowTitle");
     RenameFieldSuggests _renameFieldSuggests = new RenameFieldSuggests();
-    this.name = _renameFieldSuggests;
-    this.name.setAlignment(Pos.CENTER);
+    this.userId = _renameFieldSuggests;
+    this.userId.setAlignment(Pos.CENTER);
     Label _label = new Label();
     this.idLabel = _label;
     Label _label_1 = new Label();
     this.gradeLabel = _label_1;
     Circle _circle = new Circle(8, Color.GRAY);
     this.qualityCircle = _circle;
-    this.getChildren().add(nameRow);
-    this.getChildren().add(this.name);
+    this.getChildren().add(userIdRow);
+    this.getChildren().add(this.userId);
     this.getChildren().add(idRow);
     this.getChildren().add(this.idLabel);
     this.getChildren().add(gradeRow);
@@ -99,31 +99,44 @@ public class StudentDetails extends VBox {
     final ChangeListener<String> _function = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
       this.commitRename();
     };
-    this.name.getTextProperty().addListener(_function);
+    this.userId.getTextProperty().addListener(_function);
     final ChangeListener<String> _function_1 = (ObservableValue<? extends String> obs, String oldVal, String newVal) -> {
-      this.findSuggestions(newVal);
+      this.findUserIdSuggestions(newVal);
     };
-    this.name.getFieldTextProperty().addListener(_function_1);
+    this.userId.getFieldTextProperty().addListener(_function_1);
   }
   
   public void commitRename() {
-    String _text = this.name.getText();
-    String _plus = ("Renaming to" + _text);
+    String _text = this.userId.getText();
+    String _plus = ("Renaming to " + _text);
     StudentDetails.logger.info(_plus);
-    this.currentItem.setStudentName(this.name.getText());
+    this.currentItem.setStudentName(this.userId.getText());
     this.controller.getStudentList().updateInModel(this.currentItem);
   }
   
-  public void findSuggestions(final String start) {
+  public void findUserIdSuggestions(final String start) {
     StudentDetails.logger.info("Changing");
-    List<String> l = this.controller.getStudentsSuggestedNames(start);
-    this.name.showSuggestion(l);
+    List<String> l = this.controller.getStudentsSuggestedIds(start);
+    this.userId.showSuggestion(l);
   }
   
+  /**
+   * def findLastNameSuggestions(String start) {
+   * logger.info("Changing")
+   * var l = controller.getStudentsSuggestedLastNames(start)
+   * lastName.showSuggestion(l)
+   * }
+   * 
+   * def findFirstNameSuggestions(String start) {
+   * logger.info("Changing")
+   * var l = controller.getStudentsSuggestedFirstNames(start)
+   * firstName.showSuggestion(l)
+   * }
+   */
   public void display(final StudentItemGraduation item) {
     this.setVisible(true);
     this.currentItem = item;
-    this.setName();
+    this.setUserId();
     this.setId();
     this.updateGrade();
   }
@@ -166,10 +179,19 @@ public class StudentDetails extends VBox {
   /**
    * SETTERS
    */
-  private void setName() {
-    this.name.setText(this.currentItem.getStudentName());
+  private void setUserId() {
+    this.userId.setText(this.currentItem.getStudentName());
   }
   
+  /**
+   * private def setLastName() {
+   * lastName.text = currentItem.studentName
+   * }
+   * 
+   * private def setFirstName() {
+   * firstName.text = currentItem.studentName
+   * }
+   */
   private void setId() {
     int _studentId = this.currentItem.getStudentId();
     String _plus = (Integer.valueOf(_studentId) + "");

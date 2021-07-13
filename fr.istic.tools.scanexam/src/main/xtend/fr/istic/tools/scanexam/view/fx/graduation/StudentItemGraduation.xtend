@@ -13,63 +13,65 @@ import javafx.scene.paint.Color
 import fr.istic.tools.scanexam.config.LanguageManager
 
 class StudentItemGraduation extends HBox {
+
 	new(int studentId) {
 		super()
-		this.studentId = studentId;
-		name = new Label(LanguageManager.translate("name.default"));
-		this.children.addAll(name);
-		
+		this.studentId = studentId
+		name = new Label(LanguageManager.translate("name.default"))
+		this.children.addAll(name)
+
 		this.styleClass.add("ListItem")
-		setupEvents()
+		setupEvents
 	}
-	
-	StudentListGraduation list;
-	Label name;
-	int studentId;
-	//---GETTERS/SETTERS---//
-	
+
+	StudentListGraduation list
+	Label name
+	int studentId
+
+	// ---GETTERS/SETTERS---//
 	def setList(StudentListGraduation list) {
-		this.list = list;
+		this.list = list
 	}
-	def setStudentId(int id){
+
+	def setStudentId(int id) {
 		studentId = id
 	}
-	def getStudentId(){
+
+	def getStudentId() {
 		studentId
 	}
-	def getStudentName(){
+
+	def getStudentName() {
 		this.name.text
 	}
-	def setStudentName(String name){
+
+	def setStudentName(String name) {
 		this.name.text = name
 	}
-	
-	//---METHODS---//
-	def void setFocus(boolean b) {//sets the color of the zone and the item in the list
+
+	// ---METHODS---//
+	def void setFocus(boolean b) { // sets the color of the zone and the item in the list
 		if (b) {
-			color = FxSettings.ITEM_HIGHLIGHT_COLOR	
-			this.name.styleClass.add("focusedText")		
-		}
-		else {
+			color = FxSettings.ITEM_HIGHLIGHT_COLOR
+			this.name.styleClass.add("focusedText")
+		} else {
 			color = FxSettings.ITEM_NORMAL_COLOR
-			this.name.styleClass.remove("focusedText")	
+			this.name.styleClass.remove("focusedText")
 		}
 	}
-	
-	def setColor(Color color){
-		var bf = new BackgroundFill(color,CornerRadii.EMPTY,Insets.EMPTY);
+
+	def setColor(Color color) {
+		var bf = new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)
 		this.background = new Background(bf)
 	}
-	
-	def setupEvents(){
+
+	def setupEvents() {
 		val item = this
-		this.onMouseClicked = new EventHandler<MouseEvent>(){
-			
+		this.onMouseClicked = new EventHandler<MouseEvent>() {
 			override handle(MouseEvent event) {
-				list.controller.selectStudent(item);
+				list.controller.selectStudent(item)
 			}
-			
 		}
 	}
-	
+
 }

@@ -5,7 +5,6 @@ import fr.istic.tools.scanexam.config.LanguageManager;
 import fr.istic.tools.scanexam.core.Question;
 import fr.istic.tools.scanexam.core.StudentSheet;
 import fr.istic.tools.scanexam.exportation.ExportExamToPdf;
-import fr.istic.tools.scanexam.exportation.GradesExportImpl;
 import fr.istic.tools.scanexam.services.api.ServiceGraduation;
 import fr.istic.tools.scanexam.utils.Tuple3;
 import fr.istic.tools.scanexam.view.fx.FxSettings;
@@ -709,7 +708,8 @@ public class ControllerFxGraduation {
       return Boolean.valueOf(((sheet.getStudentID() != null) && (!sheet.getStudentID().matches("\\s*"))));
     };
     final List<StudentSheet> sheets = IterableExtensions.<StudentSheet>toList(IterableExtensions.<StudentSheet>filter(this.service.getStudentSheets(), _function));
-    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.service, this.pdfManager.getPdfInputStream(), sheets, folder, this.mainPane.getImageViewWidth());
+    ExportExamToPdf.exportExamsOfStudentsToPdfsWithAnnotations(this.service, this.pdfManager.getPdfInputStream(), sheets, folder, 
+      this.mainPane.getImageViewWidth());
   }
   
   /**
@@ -892,7 +892,8 @@ public class ControllerFxGraduation {
     boolean _xblockexpression = false;
     {
       this.hideAnotations();
-      this.mainPane.zoomTo(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), this.questionList.getCurrentItem().getW());
+      this.mainPane.zoomTo(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), 
+        this.questionList.getCurrentItem().getW());
       this.addAnnotationButton.setSelected(false);
       this.annotationMode = false;
       _xblockexpression = this.autoZoom = this.previousZoomMode;
@@ -1023,7 +1024,8 @@ public class ControllerFxGraduation {
       boolean _not = (!_atCorrectPage);
       if (_not) {
         ControllerFxGraduation.logger.info("Changing page");
-        this.selectPage(this.service.getAbsolutePageNumber(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
+        this.selectPage(
+          this.service.getAbsolutePageNumber(this.studentList.getCurrentItem().getStudentId(), this.questionList.getCurrentItem().getPage()));
       }
     } else {
       ControllerFxGraduation.logger.warn("Cannot find correct page, student list or question is is empty");
@@ -1035,7 +1037,8 @@ public class ControllerFxGraduation {
    */
   public void updateDisplayedQuestion() {
     if (this.autoZoom) {
-      this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), this.questionList.getCurrentItem().getW());
+      this.setZoomArea(this.questionList.getCurrentItem().getX(), this.questionList.getCurrentItem().getY(), this.questionList.getCurrentItem().getH(), 
+        this.questionList.getCurrentItem().getW());
     }
   }
   
@@ -1170,7 +1173,7 @@ public class ControllerFxGraduation {
   /**
    * STUDENTS
    */
-  public List<String> getStudentsSuggestedNames(final String start) {
+  public List<String> getStudentsSuggestedIds(final String start) {
     final Function1<String, Boolean> _function = (String n) -> {
       String _lowerCase = n.toLowerCase();
       String _xifexpression = null;
@@ -1181,7 +1184,35 @@ public class ControllerFxGraduation {
       }
       return Boolean.valueOf(_lowerCase.contains(_xifexpression));
     };
-    return IterableExtensions.<String>toList(IterableExtensions.<String>filter(this.service.getStudentId(), _function));
+    return IterableExtensions.<String>toList(IterableExtensions.<String>filter(this.service.getStudentIds(), _function));
+  }
+  
+  public List<String> getStudentsSuggestedLastNames(final String start) {
+    final Function1<String, Boolean> _function = (String n) -> {
+      String _lowerCase = n.toLowerCase();
+      String _xifexpression = null;
+      if ((start == null)) {
+        _xifexpression = "";
+      } else {
+        _xifexpression = start.toLowerCase();
+      }
+      return Boolean.valueOf(_lowerCase.contains(_xifexpression));
+    };
+    return IterableExtensions.<String>toList(IterableExtensions.<String>filter(this.service.getStudentLastNames(), _function));
+  }
+  
+  public List<String> getStudentsSuggestedFirstNames(final String start) {
+    final Function1<String, Boolean> _function = (String n) -> {
+      String _lowerCase = n.toLowerCase();
+      String _xifexpression = null;
+      if ((start == null)) {
+        _xifexpression = "";
+      } else {
+        _xifexpression = start.toLowerCase();
+      }
+      return Boolean.valueOf(_lowerCase.contains(_xifexpression));
+    };
+    return IterableExtensions.<String>toList(IterableExtensions.<String>filter(this.service.getStudentFirstNames(), _function));
   }
   
   public LinkedList<Integer> getStudentIds() {
@@ -1328,38 +1359,6 @@ public class ControllerFxGraduation {
     return _xblockexpression;
   }
   
-  public void exportGrades() {
-    FileChooser fileChooser = new FileChooser();
-    ObservableList<FileChooser.ExtensionFilter> _extensionFilters = fileChooser.getExtensionFilters();
-    String _translate = LanguageManager.translate("exportExcel.fileFormat");
-    List<String> _asList = Arrays.<String>asList("*.xlsx");
-    FileChooser.ExtensionFilter _extensionFilter = new FileChooser.ExtensionFilter(_translate, _asList);
-    _extensionFilters.add(_extensionFilter);
-    String _property = System.getProperty("user.home");
-    String _property_1 = System.getProperty("file.separator");
-    String _plus = (_property + _property_1);
-    String _plus_1 = (_plus + 
-      "Documents");
-    File _file = new File(_plus_1);
-    fileChooser.setInitialDirectory(_file);
-    File file = fileChooser.showSaveDialog(this.mainPane.getScene().getWindow());
-    if ((file != null)) {
-      boolean _contains = file.getName().contains(".xlsx");
-      boolean _not = (!_contains);
-      if (_not) {
-        String _absolutePath = file.getAbsolutePath();
-        String _plus_2 = (_absolutePath + ".xlsx");
-        File _file_1 = new File(_plus_2);
-        file = _file_1;
-      }
-      this.saveTemplate(file.getPath());
-      ControllerFxGraduation.logger.info("Export grade in Excel");
-    } else {
-      ControllerFxGraduation.logger.warn("File not chosen");
-    }
-    new GradesExportImpl().exportGrades(this.service.getStudentSheets(), file);
-  }
-  
   public boolean applyGrade(final int questionId, final int gradeId) {
     return this.service.assignGradeEntry(questionId, gradeId);
   }
@@ -1403,12 +1402,22 @@ public class ControllerFxGraduation {
     this.service.removeEntry(questionId, gradeEntryId);
   }
   
-  public void renameStudent(final int studentId, final String newname) {
-    this.service.assignStudentId(newname);
+  public void setCurrentStudentUserId(final String userId) {
+    this.service.assignStudentId(userId);
+  }
+  
+  public void setCurrentStudentLastName(final String lastName) {
+    this.service.assignLastName(lastName);
+  }
+  
+  public void setCurrentStudentFirstName(final String firstName) {
+    this.service.assignFirstName(firstName);
   }
   
   public void addAnnotation(final TextAnotation annot) {
-    annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), this.questionList.getCurrentItem().getPage()));
+    annot.setAnnotId(this.service.addNewAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), 
+      annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), this.questionList.getCurrentItem().getQuestionId(), 
+      this.questionList.getCurrentItem().getPage()));
     int _annotId = annot.getAnnotId();
     String _plus = ("Adding new Annotation to Model : ID = " + Integer.valueOf(_annotId));
     ControllerFxGraduation.logger.info(_plus);
@@ -1418,7 +1427,9 @@ public class ControllerFxGraduation {
     int _annotId = annot.getAnnotId();
     String _plus = ("Updating annotation in Model : ID = " + Integer.valueOf(_annotId));
     ControllerFxGraduation.logger.info(_plus);
-    this.service.updateAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), annot.getAnnotPointerY(), annot.getAnnotText(), annot.getAnnotId(), this.questionList.getCurrentItem().getQuestionId(), this.studentList.getCurrentItem().getStudentId());
+    this.service.updateAnnotation(annot.getAnnotX(), annot.getAnnotY(), annot.getAnnotW(), annot.getAnnotH(), annot.getAnnotPointerX(), 
+      annot.getAnnotPointerY(), annot.getAnnotText(), annot.getAnnotId(), this.questionList.getCurrentItem().getQuestionId(), 
+      this.studentList.getCurrentItem().getStudentId());
   }
   
   public void removeAnnotation(final TextAnotation annot) {

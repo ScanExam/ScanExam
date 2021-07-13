@@ -190,7 +190,7 @@ class ControllerRoot implements Initializable {
 	def pdfExport() {
 
 		// Vérification de copies avec aucun nom associé
-		val nameList = serviceGraduation.studentId
+		val nameList = serviceGraduation.studentIds
 
 		if (nameList.empty) {
 			DialogMessageSender.sendTranslateDialog(
@@ -305,7 +305,16 @@ class ControllerRoot implements Initializable {
 
 	@FXML
 	def gradeExport() {
-		graduationController.exportGrades
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GradeExportUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.edit.gradeExport"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerGradeExport>controller.initialize(graduationController)
+		dialog.setScene(new Scene(view, 384, 160))
+		dialog.setResizable(false)
+		dialog.show
 	}
 
 	@FXML

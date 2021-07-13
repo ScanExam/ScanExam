@@ -240,7 +240,7 @@ public class ExamGraduationServiceTest {
 
 		service.assignStudentId("foo");
 
-		assertEquals("foo", service.getStudentId());
+		assertEquals("foo", service.getStudentIds());
 	}
 
 	@Test

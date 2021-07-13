@@ -30,6 +30,7 @@ import java.util.Objects
 import java.util.Optional
 import javafx.util.Pair
 import org.apache.logging.log4j.LogManager
+import fr.istic.tools.scanexam.core.StudentInformation
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -171,6 +172,30 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	override assignStudentId(String id) {
 		logger.info("Renaming student :" + currentSheetIndex + "with name :" + id)
 		studentSheets.get(currentSheetIndex).studentID = id
+
+		val List<String> studentInfos = getStudentInfos(id)
+		if (studentInfos.size >= 3) {
+			studentSheets.get(currentSheetIndex).lastName = studentInfos.get(1)
+			studentSheets.get(currentSheetIndex).firstName = studentInfos.get(2)
+		}
+	}
+
+	/**
+	 * Associe un nouveau nom de famille à l'étudiant de la copie courante
+	 * @param lastName Nouveau nom de famille de l'étudiant
+	 */
+	override void assignLastName(String lastName) {
+		logger.info("Renaming student" + currentSheetIndex + "'s lastname with :" + lastName)
+		studentSheets.get(currentSheetIndex).lastName = lastName
+	}
+
+	/**
+	 * Associe un nouveau prénom à l'étudiant de la copie courante
+	 * @param firstName Nouveau prénom de l'étudiant
+	 */
+	override void assignFirstName(String firstName) {
+		logger.info("Renaming student" + currentSheetIndex + "'s firstname with :" + firstName)
+		studentSheets.get(currentSheetIndex).firstName = firstName
 	}
 
 	/**
@@ -547,8 +572,24 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	/**
 	 * @return l'ensemble de tous les identifiants des étudiants chargés
 	 */
-	override Collection<String> getStudentId() {
+	override Collection<String> getStudentIds() {
 		val list = graduationTemplate.informations.map[infos|infos.userId].toList
+		list
+	}
+
+	/**
+	 * @return l'ensemble de tous les noms de famille des étudiants chargés
+	 */
+	override Collection<String> getStudentLastNames() {
+		val list = graduationTemplate.informations.map[infos|infos.lastName].toList
+		list
+	}
+
+	/**
+	 * @return l'ensemble de tous les prénoms des étudiants chargés
+	 */
+	override Collection<String> getStudentFirstNames() {
+		val list = graduationTemplate.informations.map[infos|infos.firstName].toList
 		list
 	}
 
@@ -561,6 +602,24 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 			list.add(Arrays.asList(infos.userId, infos.lastName, infos.firstName, infos.emailAddress))
 		]
 		list
+	}
+
+	/**
+	 * A partir de l'identifiant d'un étudiant, retourne, dans l'ordre, identifiant (le même que donné en paramètre), nom, prénom et mail de l'étudiant
+	 * @return Identifiant, nom, prénom et mail de l'étudiant
+	 */
+	def List<String> getStudentInfos(String studentId) {
+		var int i = 0
+		val List<StudentInformation> infos = graduationTemplate.informations
+		var List<String> info = new ArrayList
+		while (i < infos.size && info.empty) {
+			if (infos.get(i).userId == studentId) {
+				info = Arrays.asList(infos.get(i).userId, infos.get(i).lastName, infos.get(i).firstName,
+					infos.get(i).emailAddress)
+			}
+			i++
+		}
+		info
 	}
 
 	/**

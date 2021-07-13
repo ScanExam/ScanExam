@@ -158,7 +158,8 @@ public class ControllerStudentListLoader {
       boolean _matches = ControllerStudentListLoader.cellPattern.matcher(this.txtFldFirstCell.getText()).matches();
       boolean _not = (!_matches);
       if (_not) {
-        _xifexpression = Optional.<String>of("studentlist.info.badCellFormat");
+        _xifexpression = Optional.<String>of(
+          "studentlist.info.badCellFormat");
       } else {
         _xifexpression = Optional.<String>empty();
       }
@@ -246,7 +247,7 @@ public class ControllerStudentListLoader {
    * @return le nombre d'élèves parsée par StudentDataManager, -1 si aucune n'a été parsée
    */
   public int getNumberStudent() {
-    final int size = this.service.getStudentId().size();
+    final int size = this.service.getStudentIds().size();
     int _xifexpression = (int) 0;
     if ((size <= 0)) {
       _xifexpression = (-1);

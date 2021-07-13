@@ -6,32 +6,35 @@ import org.apache.logging.log4j.LogManager
 
 class StudentListGraduation extends VBox {
 	static val logger = LogManager.logger
-	new(ControllerFxGraduation controller){
+
+	new(ControllerFxGraduation controller) {
 		this.controller = controller
 		currentIndex = 0;
 		this.spacing = 5;
 		setupEvents
 	}
-	
+
 	ControllerFxGraduation controller;
-	
+
 	int currentIndex;
-	//---GETTERS/SETTERS---//
-	def getController(){
+
+	// ---GETTERS/SETTERS---//
+	def getController() {
 		controller
 	}
-	def getCurrentIndex(){
+
+	def getCurrentIndex() {
 		currentIndex
 	}
-	def  getCurrentItem(){
-		if (noItems) return null
-		children.get(currentIndex) as StudentItemGraduation 
-	}	
-	//---------------------//
-	
-	
-	//---METHODS---//
-	def boolean noItems(){
+
+	def getCurrentItem() {
+		if(noItems) return null
+		children.get(currentIndex) as StudentItemGraduation
+	}
+
+	// ---------------------//
+	// ---METHODS---//
+	def boolean noItems() {
 		return children.isEmpty
 	}
 
@@ -39,32 +42,33 @@ class StudentListGraduation extends VBox {
 		item.list = this
 		children.add(item)
 	}
-	
+
 	def removeItem(StudentItemGraduation item) {
 		children.remove(item)
 	}
-	
-	def clearItems(){
+
+	def clearItems() {
 		currentIndex = 0;
 		children.clear
 	}
-	
+
 	def void updateInModel(StudentItemGraduation item) {
 		logger.info("Updating " + item.studentId + " to model")
-		controller.renameStudent(item.studentId,item.studentName)
+		controller.currentStudentUserId = item.studentName
 	}
-	
+
 	/**
 	 * Method used for highlighting
 	 */
-	 def focusItem(StudentItemGraduation item) {
-	 	if (item === null) return void
-	 	for (Node n : children) {
+	def focusItem(StudentItemGraduation item) {
+		if(item === null) return void
+		for (Node n : children) {
 			var question = n as StudentItemGraduation;
 			question.focus = false
 		}
 		item.focus = true
-	 }
+	}
+
 	def selectNextItem() {
 		if (currentIndex + 1 < children.size) {
 			currentIndex++
@@ -72,7 +76,7 @@ class StudentListGraduation extends VBox {
 			currentIndex = 0
 		}
 	}
-	
+
 	def selectPreviousItem() {
 		if (currentIndex > 0) {
 			currentIndex--
@@ -80,27 +84,25 @@ class StudentListGraduation extends VBox {
 			currentIndex = children.size - 1
 		}
 	}
-	
+
 	def selectItem(StudentItemGraduation item) {
 		currentIndex = children.indexOf(item);
 	}
-	
-	def selectItemWithId(int id){
+
+	def selectItemWithId(int id) {
 		var i = 0
 		var trouve = false
-		while(i < children.size && !trouve){
+		while (i < children.size && !trouve) {
 			val item = children.get(i) as StudentItemGraduation
-			if(item.studentId == id)
+			if (item.studentId == id)
 				trouve = true
 			else
 				i++
 		}
 		currentIndex = i
 	}
-	
-	//-------------//
-	
-	def setupEvents(){
-		
+
+	// -------------//
+	def setupEvents() {
 	}
 }

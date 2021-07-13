@@ -62,17 +62,29 @@ interface ServiceGraduation extends Service {
 	def void assignStudentId(String id)
 
 	/**
+	 * Associe un nouveau nom de famille à l'étudiant de la copie courante
+	 * @param lastName Nouveau nom de famille de l'étudiant
+	 */
+	def void assignLastName(String lastName)
+
+	/**
+	 * Associe un nouveau prénom à l'étudiant de la copie courante
+	 * @param firstName Nouveau prénom de l'étudiant
+	 */
+	def void assignFirstName(String firstName)
+
+	/**
 	 * @return l'indentifiant de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
 	 * @param id l'ID de la copie
 	 */
 	def Optional<String> getStudentId(int id)
-	
+
 	/**
 	 * @return le nom de famille de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
 	 * @param id l'ID de la copie
 	 */
 	def Optional<String> getStudentLastName(int id)
-	
+
 	/**
 	 * @return le prénom de famille de l'etudiant dont l'ID de la copie est id si la copie existe, Optional.empty sinon
 	 * @param id l'ID de la copie
@@ -232,7 +244,17 @@ interface ServiceGraduation extends Service {
 	/**
 	 * @return l'ensemble de tous les identifiants des étudiants chargés
 	 */
-	def Collection<String> getStudentId()
+	def Collection<String> getStudentIds()
+
+	/**
+	 * @return l'ensemble de tous les nom de familles des étudiants chargés
+	 */
+	def Collection<String> getStudentLastNames()
+
+	/**
+	 * @return l'ensemble de tous les prénoms des étudiants chargés
+	 */
+	def Collection<String> getStudentFirstNames()
 
 	/**
 	 * @return une liste contenant dans l'ordre, identifiant, nom, prénom et mail de l'étudiant

@@ -122,16 +122,14 @@ class ControllerStudentListLoader {
 
 		txtFldFirstCell.addFormatValidator(
 			text |
-				!cellPattern.matcher(txtFldFirstCell.text).matches
-					? Optional.of("studentlist.info.badCellFormat")
-					: Optional.empty
+				!cellPattern.matcher(txtFldFirstCell.text).matches ? Optional.of(
+					"studentlist.info.badCellFormat") : Optional.empty
 		)
 
 		txtFldFile.addFormatValidator(
 			text |
-				supportedFormat.map[f|f.substring(1)].findFirst[f|text.endsWith(f)] !== null
-					? Optional.empty
-					: Optional.of("studentlist.info.fileNotValid")
+				supportedFormat.map[f|f.substring(1)].findFirst[f|text.endsWith(f)] !== null ? Optional.
+					empty : Optional.of("studentlist.info.fileNotValid")
 		)
 		txtFldFile.addFormatValidator(new ValidFilePathValidator)
 	}
@@ -182,7 +180,7 @@ class ControllerStudentListLoader {
 	 * @return le nombre d'élèves parsée par StudentDataManager, -1 si aucune n'a été parsée
 	 */
 	def int getNumberStudent() {
-		val size = service.studentId.size
+		val size = service.studentIds.size
 		return size <= 0 ? -1 : size
 	}
 

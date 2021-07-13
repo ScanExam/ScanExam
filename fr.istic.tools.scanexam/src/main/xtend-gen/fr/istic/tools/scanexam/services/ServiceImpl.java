@@ -229,6 +229,37 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
     ServiceImpl.logger.info(((("Renaming student :" + Integer.valueOf(this.currentSheetIndex)) + "with name :") + id));
     StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
     _get.setStudentID(id);
+    final List<String> studentInfos = this.getStudentInfos(id);
+    int _size = studentInfos.size();
+    boolean _greaterEqualsThan = (_size >= 3);
+    if (_greaterEqualsThan) {
+      StudentSheet _get_1 = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+      _get_1.setLastName(studentInfos.get(1));
+      StudentSheet _get_2 = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+      _get_2.setFirstName(studentInfos.get(2));
+    }
+  }
+  
+  /**
+   * Associe un nouveau nom de famille à l'étudiant de la copie courante
+   * @param lastName Nouveau nom de famille de l'étudiant
+   */
+  @Override
+  public void assignLastName(final String lastName) {
+    ServiceImpl.logger.info(((("Renaming student" + Integer.valueOf(this.currentSheetIndex)) + "\'s lastname with :") + lastName));
+    StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    _get.setLastName(lastName);
+  }
+  
+  /**
+   * Associe un nouveau prénom à l'étudiant de la copie courante
+   * @param firstName Nouveau prénom de l'étudiant
+   */
+  @Override
+  public void assignFirstName(final String firstName) {
+    ServiceImpl.logger.info(((("Renaming student" + Integer.valueOf(this.currentSheetIndex)) + "\'s firstname with :") + firstName));
+    StudentSheet _get = ((StudentSheet[])Conversions.unwrapArray(this.getStudentSheets(), StudentSheet.class))[this.currentSheetIndex];
+    _get.setFirstName(firstName);
   }
   
   /**
@@ -757,11 +788,43 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
    * @return l'ensemble de tous les identifiants des étudiants chargés
    */
   @Override
-  public Collection<String> getStudentId() {
+  public Collection<String> getStudentIds() {
     List<String> _xblockexpression = null;
     {
       final Function1<StudentInformation, String> _function = (StudentInformation infos) -> {
         return infos.getUserId();
+      };
+      final List<String> list = IterableExtensions.<String>toList(ListExtensions.<StudentInformation, String>map(this.graduationTemplate.getInformations(), _function));
+      _xblockexpression = list;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * @return l'ensemble de tous les noms de famille des étudiants chargés
+   */
+  @Override
+  public Collection<String> getStudentLastNames() {
+    List<String> _xblockexpression = null;
+    {
+      final Function1<StudentInformation, String> _function = (StudentInformation infos) -> {
+        return infos.getLastName();
+      };
+      final List<String> list = IterableExtensions.<String>toList(ListExtensions.<StudentInformation, String>map(this.graduationTemplate.getInformations(), _function));
+      _xblockexpression = list;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * @return l'ensemble de tous les prénoms des étudiants chargés
+   */
+  @Override
+  public Collection<String> getStudentFirstNames() {
+    List<String> _xblockexpression = null;
+    {
+      final Function1<StudentInformation, String> _function = (StudentInformation infos) -> {
+        return infos.getFirstName();
       };
       final List<String> list = IterableExtensions.<String>toList(ListExtensions.<StudentInformation, String>map(this.graduationTemplate.getInformations(), _function));
       _xblockexpression = list;
@@ -782,6 +845,32 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       };
       this.graduationTemplate.getInformations().forEach(_function);
       _xblockexpression = list;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
+   * A partir de l'identifiant d'un étudiant, retourne, dans l'ordre, identifiant (le même que donné en paramètre), nom, prénom et mail de l'étudiant
+   * @return Identifiant, nom, prénom et mail de l'étudiant
+   */
+  public List<String> getStudentInfos(final String studentId) {
+    List<String> _xblockexpression = null;
+    {
+      int i = 0;
+      final List<StudentInformation> infos = this.graduationTemplate.getInformations();
+      List<String> info = new ArrayList<String>();
+      while (((i < infos.size()) && info.isEmpty())) {
+        {
+          String _userId = infos.get(i).getUserId();
+          boolean _equals = com.google.common.base.Objects.equal(_userId, studentId);
+          if (_equals) {
+            info = Arrays.<String>asList(infos.get(i).getUserId(), infos.get(i).getLastName(), infos.get(i).getFirstName(), 
+              infos.get(i).getEmailAddress());
+          }
+          i++;
+        }
+      }
+      _xblockexpression = info;
     }
     return _xblockexpression;
   }
