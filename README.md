@@ -9,6 +9,10 @@ Il permet une navigation rapide entre les copies, et une correction qui l'est to
 Attention, l'application est encore en phase de développement et peut donc avoir de (nombreux) bugs ! Si vous y êtes confrontés, n'hésitez pas à les reporter dans
 l'onglet "Issues" de Github.
 
+# Manuel d'utilisation de ScanExam
+
+L'application ScanExam est fournie avec un manuel d'utilisation. Cela permet dans un premier temps de vous familiariser avec ses fonctionnalités, et également de vous montrer un déroulement classique d'utilisation.
+
 # Comment installer le programme ?
 
 # Comment build le programme ?
