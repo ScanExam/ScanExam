@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -50,6 +53,11 @@ public class ControllerStudentsQrCodeDocGenerator {
   private static final Logger logger = LogManager.getLogger();
   
   /**
+   * Format de cellule accepté
+   */
+  private static final Pattern cellPattern = Pattern.compile("[A-Z]+[1-9][0-9]*");
+  
+  /**
    * Formats supportés pour la liste des étudiants
    */
   private static final List<String> supportedFormat = Arrays.<String>asList("*.xlsx", "*.xls");
@@ -65,6 +73,12 @@ public class ControllerStudentsQrCodeDocGenerator {
    */
   @FXML
   public FormattedTextField txtFldFile;
+  
+  /**
+   * Champ de la première casse
+   */
+  @FXML
+  public FormattedTextField txtFldFirstCell;
   
   /**
    * Indique si les élèves doivent être rangé par ordre alphabétique
@@ -105,7 +119,7 @@ public class ControllerStudentsQrCodeDocGenerator {
     if ((((!saveFile.isEmpty()) && (!Objects.equal(this.labelWidth.getText(), ""))) && (!Objects.equal(this.labelHeight.getText(), "")))) {
       String _text = this.txtFldFile.getText();
       File _file = new File(_text);
-      final ControllerStudentsQrCodeDocGenerator.LoadState state = this.exportStudentsQrCodes(_file, 
+      final ControllerStudentsQrCodeDocGenerator.LoadState state = this.exportStudentsQrCodes(_file, this.txtFldFirstCell.getText(), 
         Float.parseFloat(this.labelWidth.getText().replace(",", ".")), 
         Float.parseFloat(this.labelHeight.getText().replace(",", ".")), this.alphabeticalOrder.isSelected(), saveFile.get());
       boolean _isDisable = this.btnOk.isDisable();
@@ -149,6 +163,29 @@ public class ControllerStudentsQrCodeDocGenerator {
     this.txtFldFile.addFormatValidator(_function);
     ValidFilePathValidator _validFilePathValidator = new ValidFilePathValidator();
     this.txtFldFile.addFormatValidator(_validFilePathValidator);
+    final UnaryOperator<TextFormatter.Change> _function_1 = (TextFormatter.Change change) -> {
+      TextFormatter.Change _xblockexpression = null;
+      {
+        change.setText(change.getText().toUpperCase());
+        _xblockexpression = change;
+      }
+      return _xblockexpression;
+    };
+    TextFormatter<String> _textFormatter = new TextFormatter<String>(_function_1);
+    this.txtFldFirstCell.setTextFormatter(_textFormatter);
+    final FormatValidator _function_2 = (String text) -> {
+      Optional<String> _xifexpression = null;
+      boolean _matches = ControllerStudentsQrCodeDocGenerator.cellPattern.matcher(this.txtFldFirstCell.getText()).matches();
+      boolean _not = (!_matches);
+      if (_not) {
+        _xifexpression = Optional.<String>of("studentlist.info.badCellFormat");
+      } else {
+        _xifexpression = Optional.<String>empty();
+      }
+      return _xifexpression;
+    };
+    this.txtFldFirstCell.addFormatValidator(_function_2);
+    this.btnOk.disableProperty().bind(this.txtFldFile.wrongFormattedProperty().or(this.txtFldFirstCell.wrongFormattedProperty()));
     final EventHandler<ActionEvent> formatMenuEvent = new EventHandler<ActionEvent>() {
       @Override
       public void handle(final ActionEvent e) {
@@ -259,20 +296,9 @@ public class ControllerStudentsQrCodeDocGenerator {
   }
   
   /**
-   * Envoie la liste des étudiants et le fichier où enregistrer le document des qr codes au générateur
-   * @param studentsList Chemin du fichier contenant la liste des étudiants
-   * @param labelWidth Largeur des étiquettes en mm
-   * @param labelHeight Hauteur des étiquettes en mm
-   * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
-   * @param exportFile Chemin du fichier où enregistrer le document des qr codes
-   * @return un LoadState représentant l'état terminal de l'export des qr codes
+   * Rempli les labels d'hauteur et de largeur selon le format choisi
+   * @param itemText Format choisi
    */
-  private ControllerStudentsQrCodeDocGenerator.LoadState exportStudentsQrCodes(final File studentsList, final float labelWidth, final float labelHeight, final boolean alphabeticalOrder, final File exportFile) {
-    final StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator();
-    generator.generateDocument(studentsList, labelWidth, labelHeight, alphabeticalOrder, exportFile);
-    return ControllerStudentsQrCodeDocGenerator.LoadState.SUCCESS;
-  }
-  
   private void selectFormat(final String itemText) {
     boolean _notEquals = (!Objects.equal(itemText, "Personnalisé"));
     if (_notEquals) {
@@ -282,5 +308,21 @@ public class ControllerStudentsQrCodeDocGenerator {
       int _minus = (_length - 2);
       this.labelHeight.setText((dimensions[1]).substring(0, _minus));
     }
+  }
+  
+  /**
+   * Envoie la liste des étudiants et le fichier où enregistrer le document des qr codes au générateur
+   * @param studentsList Chemin du fichier contenant la liste des étudiants
+   * @param firstCell Cellule la plus en haut à gauche à prendre en compte
+   * @param labelWidth Largeur des étiquettes en mm
+   * @param labelHeight Hauteur des étiquettes en mm
+   * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
+   * @param exportFile Chemin du fichier où enregistrer le document des qr codes
+   * @return un LoadState représentant l'état terminal de l'export des qr codes
+   */
+  private ControllerStudentsQrCodeDocGenerator.LoadState exportStudentsQrCodes(final File studentsList, final String firstCell, final float labelWidth, final float labelHeight, final boolean alphabeticalOrder, final File exportFile) {
+    final StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator();
+    generator.generateDocument(studentsList, firstCell, labelWidth, labelHeight, alphabeticalOrder, exportFile);
+    return ControllerStudentsQrCodeDocGenerator.LoadState.SUCCESS;
   }
 }

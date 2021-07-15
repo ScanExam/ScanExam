@@ -33,14 +33,15 @@ public class StudentsQrCodeDocGenerator {
   /**
    * Produit le document contenant les qr codes d'identification d'élèves à partir d'un fichier XLS
    * @param file Fichier XLS contenant les identifiants des étudiants
+   * @param firstCell Cellule la plus en haut à gauche à prendre en compte
    * @param labelWidth Largeur des étiquettes en mm
    * @param labelHeight Hauteur des étiquettes en mm
    * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
    * @param outputFile Fichier pdf où enregistrer le pdf généré
    */
-  public void generateDocument(final File file, final float labelWidth, final float labelHeight, final boolean alphabeticalOrder, final File outputFile) {
+  public void generateDocument(final File file, final String firstCell, final float labelWidth, final float labelHeight, final boolean alphabeticalOrder, final File outputFile) {
     try {
-      final List<List<String>> studentsData = StudentDataManager.loadData(file, "A1");
+      final List<List<String>> studentsData = StudentDataManager.loadData(file, firstCell);
       if (alphabeticalOrder) {
         StudentDataComparator _studentDataComparator = new StudentDataComparator();
         Collections.<List<String>>sort(studentsData, _studentDataComparator);

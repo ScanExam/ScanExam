@@ -13,19 +13,22 @@
 		<FormattedTextField fx:id="txtFldFile" layoutX="126.0" layoutY="20.0" prefHeight="25.0" prefWidth="160.0" />
 		<Button layoutX="296.0" layoutY="20.0" mnemonicParsing="false" onAction="#loadStudentsList" text="%button.browser" />
 		
-		<Label layoutX="14.0" layoutY="66.0" prefHeight="17.0" prefWidth="192.0" text="%studentsQrCodeDoc.alphabeticalOrder" />
-      	<CheckBox fx:id="alphabeticalOrder" layoutX="200.0" layoutY="66.0" mnemonicParsing="false" />
+		<Label layoutX="14.0" layoutY="66.0" prefHeight="17.0" prefWidth="96.0" text="%studentlist.firstCell" />
+		<FormattedTextField fx:id="txtFldFirstCell" defaultValue="A1" layoutX="114.0" layoutY="62.0" prefHeight="25.0" prefWidth="256.0" />
 		
-		<Label layoutX="14.0" layoutY="108.0" prefHeight="17.0" prefWidth="192.0" text="%studentsQrCodeDoc.format" />
-      	<MenuButton fx:id="formatMenu" layoutX="200.0" layoutY="104.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="%studentsQrCodeDoc.custom"> </MenuButton>
+		<Label layoutX="14.0" layoutY="108.0" prefHeight="17.0" prefWidth="192.0" text="%studentsQrCodeDoc.alphabeticalOrder" />
+      	<CheckBox fx:id="alphabeticalOrder" layoutX="200.0" layoutY="108.0" mnemonicParsing="false" />
 		
-		<Label layoutX="14.0" layoutY="150.0" prefHeight="17.0" prefWidth="160.0" text="%studentsQrCodeDoc.labelWidth" />
-		<FormattedTextField fx:id="labelWidth" layoutX="200.0" layoutY="148.0" prefHeight="25.0" prefWidth="170.0" />
+		<Label layoutX="14.0" layoutY="150.0" prefHeight="17.0" prefWidth="192.0" text="%studentsQrCodeDoc.format" />
+      	<MenuButton fx:id="formatMenu" layoutX="200.0" layoutY="146.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="%studentsQrCodeDoc.custom"> </MenuButton>
 		
-		<Label layoutX="14.0" layoutY="192.0" prefHeight="17.0" prefWidth="160.0" text="%studentsQrCodeDoc.labelHeight" />
-		<FormattedTextField fx:id="labelHeight" layoutX="200.0" layoutY="190.0" prefHeight="25.0" prefWidth="170.0" />
+		<Label layoutX="14.0" layoutY="192.0" prefHeight="17.0" prefWidth="160.0" text="%studentsQrCodeDoc.labelWidth" />
+		<FormattedTextField fx:id="labelWidth" layoutX="200.0" layoutY="190.0" prefHeight="25.0" prefWidth="170.0" />
 		
-		<Button layoutX="83.0" layoutY="234.0" mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
-		<Button fx:id="btnOk" layoutX="210.0" layoutY="234.0" mnemonicParsing="false" onAction="#saveAndQuit" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />
+		<Label layoutX="14.0" layoutY="234.0" prefHeight="17.0" prefWidth="160.0" text="%studentsQrCodeDoc.labelHeight" />
+		<FormattedTextField fx:id="labelHeight" layoutX="200.0" layoutY="232.0" prefHeight="25.0" prefWidth="170.0" />
+		
+		<Button layoutX="83.0" layoutY="276.0" mnemonicParsing="false" onAction="#quit" prefHeight="25.0" prefWidth="84.0" text="%button.cancel" />
+		<Button fx:id="btnOk" layoutX="210.0" layoutY="276.0" mnemonicParsing="false" onAction="#saveAndQuit" prefHeight="25.0" prefWidth="84.0" text="%button.ok" />
 	</children>
 </Pane>

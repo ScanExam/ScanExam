@@ -37,14 +37,15 @@ class StudentsQrCodeDocGenerator {
 	/**
 	 * Produit le document contenant les qr codes d'identification d'élèves à partir d'un fichier XLS
 	 * @param file Fichier XLS contenant les identifiants des étudiants
+	 * @param firstCell Cellule la plus en haut à gauche à prendre en compte
 	 * @param labelWidth Largeur des étiquettes en mm
 	 * @param labelHeight Hauteur des étiquettes en mm
 	 * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
 	 * @param outputFile Fichier pdf où enregistrer le pdf généré
 	 */
-	def void generateDocument(File file, float labelWidth, float labelHeight, boolean alphabeticalOrder,
+	def void generateDocument(File file, String firstCell, float labelWidth, float labelHeight, boolean alphabeticalOrder,
 		File outputFile) {
-		val List<List<String>> studentsData = StudentDataManager.loadData(file, "A1")
+		val List<List<String>> studentsData = StudentDataManager.loadData(file, firstCell)
 		if (alphabeticalOrder) {
 			Collections.sort(studentsData, new StudentDataComparator)
 		}

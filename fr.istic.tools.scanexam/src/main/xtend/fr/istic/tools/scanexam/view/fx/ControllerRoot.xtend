@@ -300,7 +300,7 @@ class ControllerRoot implements Initializable {
 		val Stage dialog = new Stage
 		dialog.setTitle(LanguageManager.translate("menu.file.exportStudentsQrCodes"))
 		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		dialog.setScene(new Scene(view, 384, 276))
+		dialog.setScene(new Scene(view, 384, 318))
 		dialog.setResizable(false)
 		dialog.show
 	}
