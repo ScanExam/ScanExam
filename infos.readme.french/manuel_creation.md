@@ -3,7 +3,6 @@ La première étape de la correction d'examen asistée par ScanExam, est la pré
 - Définir le barème de l’examen en spécifiant les points de chaque question
 - Indiquer la position de chaque question
 - Indiquer la position où seront insérer les QR codes
-
 Ces étapes assurent le bon déroulement des futures corrections via ScanExam et faciliteront la navigation entre les copies d'étudiants et leurs réponses.
 ## Création d'un nouveau sujet d'examen
 Pour créer un nouveau sujet d'examen dans ScanExam, ouvrez le menu "Fichier" et cliquez sur le bouton "Nouveau sujet d'examen". Dans la nouvelle fênetre, cliquez sur le bouton "Parcourir..." et sélectionner le sujet souhaité au format PDF. Définissez ensuite le nom de votre examen dans le champ juste en dessous. Une fois ces deux étapes réalisées, vous pouvez valider.
@@ -14,7 +13,6 @@ Afin de les afficher lors de la phase de correction, vous devez définir les zon
 ## Gestion des questions
 La colonne de gauche affiche toutes les zones de questions crées. Cliquer sur un item vous permettra de sélection de la zone souhaitée, vous pouvez également sélectionner une zone en cliquant directement sur elle. Une fois sélectionnée vous pouvez, dans la colonne de droite, modifier le nom et le barème de la question. Des boutons pour supprimer la zone sont également présents dans les deux colonnes.
 ## Ajouter zone QR code
-## Enregistrer le fichier d'examen
-## Charger un sujet d'exmamen
+ScanExam insère des QR codes sur les sujets d'examen afin de reconnaitre les copies à la correction. Vous pouvez choisir où seront insérer les qr codes grâce au bouton "Ajouter zone QR code". Il ne peut y avoir qu'une zone par sujet et pour toutes les pages. Si lors de l'export aucune zone n'a été définie, une zone sera placé automatiquement en bas à gauche du sujet.
 ## Exporter le sujet d'examen en PDF
 ## Exporte les identifiants des identifiants en qr codes
