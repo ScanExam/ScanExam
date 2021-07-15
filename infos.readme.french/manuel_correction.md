@@ -22,7 +22,7 @@ De plus, vous avez la possiblité de charger une correction déjà commencée. I
 Comme vu dans la partie création, ScanExam propose plusieurs types d'examens.
 En effet, vous pouvez choisir en amont de placer un QRCode, directement sur le sujet ou via des autocollants, qui contiendra les informations disponibles d'un étudiant; son nom, prénom, numéro d'étudiant ou bien son numéro d'anonymat par exemple. Si c'est le cas, lors du chargement des copies, l'application sera en mesure de lier chaque étudiant à sa copie. Au cas échéant, il vous faudra importer la liste des étudiants en allant dans **Fichier -> Charger la liste des étudiants** (voir figure 2) et lier chaque copie à son étudiant. La liste des étudiants se présente sous la forme d'un tableau Excel et reprend le nom d'un étudiant et son adresse mail. Pour effectuer la liaison, vous trouverez un petit **symbole de crayon** en dessous de la liste des copies (voir figure 3).
 
-<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_name.png?raw=true">
+<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_name.PNG?raw=true">
 
 ***Figure 3** : Exemple de placement du symbole du crayon afin de d'attribuer un étudiant à sa copie*
 
@@ -43,7 +43,7 @@ La grille de correction et le barème sont totalement dynamiques dans ScanExam. 
 
 En effet, chaque question possède une **grille d’évaluation** (voir figure 2) auquel on peut ajouter différents critères d’évaluation en fonction des attentes du correcteur. Il est aussi possible de modifier le texte correspondant à chaque critère à l’aide d’un éditeur de texte riche, permettant ainsi de mettre de la couleur, du gras, etc (voir figure 4).
 
-<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_grader.png?raw=true">
+<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_grader.PNG?raw=true">
 
 ***Figure 4** : Exemple d'une grille de notation*
 
@@ -51,7 +51,7 @@ En effet, chaque question possède une **grille d’évaluation** (voir figure 2
 
 Lors de votre correction, ou bien à la fin de celle ci, vous aurez sûrement envire de revoir votre correction dans sa généralité. Cela sera possible grade à l'**onglet Etudiants** (voir figure 2). En vous rendant dans cet onglet, vous aurez un aperçu des copies avec un récapitulatif de chaque question par étudiant ainsi que leur note finale (exemple en figure 5).
 
-<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_annotations.png?raw=true">
+<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_students_vue.PNG?raw=true">
 
 ***Figure 5** : Visuel de l'onglet Etudiants d'une correction terminée*
 
