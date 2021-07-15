@@ -21,8 +21,10 @@ import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
@@ -469,6 +471,30 @@ public class ControllerRoot implements Initializable {
   
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {
+  }
+  
+  @FXML
+  public void openGuide() {
+    Desktop _xifexpression = null;
+    boolean _isDesktopSupported = Desktop.isDesktopSupported();
+    if (_isDesktopSupported) {
+      _xifexpression = Desktop.getDesktop();
+    } else {
+      _xifexpression = null;
+    }
+    final Desktop desktop = _xifexpression;
+    if (((desktop != null) && desktop.isSupported(Desktop.Action.BROWSE))) {
+      try {
+        desktop.browse(URI.create(LanguageManager.translate("guide.link")));
+      } catch (final Throwable _t) {
+        if (_t instanceof Exception) {
+          final Exception e = (Exception)_t;
+          e.printStackTrace();
+        } else {
+          throw Exceptions.sneakyThrow(_t);
+        }
+      }
+    }
   }
   
   @FXML
