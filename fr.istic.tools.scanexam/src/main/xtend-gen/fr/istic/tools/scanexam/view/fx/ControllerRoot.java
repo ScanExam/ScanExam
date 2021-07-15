@@ -46,6 +46,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -509,6 +510,7 @@ public class ControllerRoot implements Initializable {
       final ImageView imageView = new ImageView(image);
       alert.setGraphic(imageView);
       alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, DANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, GHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, GUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, LOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
+      alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
       _xblockexpression = alert.showAndWait();
     }
     return _xblockexpression;

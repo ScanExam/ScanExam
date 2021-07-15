@@ -32,6 +32,7 @@ import javafx.scene.control.Alert
 import javafx.scene.image.ImageView
 import java.awt.Desktop
 import java.net.URI
+import javafx.scene.layout.Region
 
 class ControllerRoot implements Initializable {
 
@@ -374,8 +375,8 @@ class ControllerRoot implements Initializable {
         val Image image = new Image(ResourcesUtils.getInputStreamResource("istic_logo.png"));
 		val ImageView imageView = new ImageView(image);
 		alert.setGraphic(imageView);
-        alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, \nDANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, \nGHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, \nGUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, \nLOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
-
+        alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, DANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, GHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, GUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, LOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
  		
         alert.showAndWait();
 	}
