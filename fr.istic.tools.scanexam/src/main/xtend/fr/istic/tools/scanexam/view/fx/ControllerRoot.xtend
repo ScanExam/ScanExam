@@ -30,6 +30,8 @@ import javafx.scene.control.TabPane
 import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents
 import javafx.scene.control.Alert
 import javafx.scene.image.ImageView
+import java.awt.Desktop
+import java.net.URI
 
 class ControllerRoot implements Initializable {
 
@@ -352,6 +354,17 @@ class ControllerRoot implements Initializable {
 	override initialize(URL location, ResourceBundle resources) {
 	}
 	
+	@FXML
+	def openGuide() {
+		val Desktop desktop = Desktop.isDesktopSupported ? Desktop.getDesktop : null
+	    if (desktop !== null && desktop.isSupported(Desktop.Action.BROWSE)) {
+	        try {
+	            desktop.browse(URI.create(LanguageManager.translate("guide.link")))
+	        } catch (Exception e) {
+	            e.printStackTrace
+	        }
+	    }
+	}
 	
 	@FXML
 	def openAbout(){
