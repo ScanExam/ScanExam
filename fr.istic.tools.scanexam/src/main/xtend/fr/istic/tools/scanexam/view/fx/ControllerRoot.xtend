@@ -374,8 +374,9 @@ class ControllerRoot implements Initializable {
         val Image image = new Image(ResourcesUtils.getInputStreamResource("istic_logo.png"));
 		val ImageView imageView = new ImageView(image);
 		alert.setGraphic(imageView);
-        alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, DANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, GHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, GUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, LOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
- 
+        alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, \nDANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, \nGHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, \nGUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, \nLOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
+
+ 		
         alert.showAndWait();
 	}
 }
