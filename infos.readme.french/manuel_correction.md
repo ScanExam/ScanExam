@@ -10,4 +10,4 @@ Comme le montre la **figure 1** ci dessus, la correction se déroule en plusieur
 
 <img align="center" src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_vue.png?raw=true">
 
-Pour commencer, il faut importer vos copies numérisées ainsi que le modèle que vous avez créé lors de la création de l'examen dans l'application. Cet import se trouve dans le menu **<a color="red">Fichier -> Nouvelle correction</a>**.
+Pour commencer, il faut importer vos copies numérisées ainsi que le modèle que vous avez créé lors de la création de l'examen dans l'application. Cet import se trouve dans le menu **<font color="red">Fichier -> Nouvelle correction</font>**.
