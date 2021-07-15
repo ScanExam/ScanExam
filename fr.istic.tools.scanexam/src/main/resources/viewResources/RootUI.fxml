@@ -45,6 +45,12 @@
 						<MenuItem disable="true" mnemonicParsing="false" text="%menu.view.resetzoom" />
 					</items>
 				</Menu>
+            <Menu mnemonicParsing="false" text="%menu.help">
+              <items>
+                <MenuItem mnemonicParsing="false" text="%menu.help.guide" onAction="#openGuide"/>
+                <MenuItem mnemonicParsing="false" text="%menu.help.about" onAction="#openAbout"/>
+              </items>
+            </Menu>
 			</menus>
 		</MenuBar>
 		<TabPane fx:id="tabPane" side="LEFT" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">

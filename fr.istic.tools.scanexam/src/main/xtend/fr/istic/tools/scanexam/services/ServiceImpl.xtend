@@ -31,6 +31,7 @@ import java.util.Optional
 import javafx.util.Pair
 import org.apache.logging.log4j.LogManager
 import fr.istic.tools.scanexam.core.StudentInformation
+import java.util.Comparator
 
 /**
  * Classe servant de façade aux données concernant la correction
@@ -202,11 +203,32 @@ class ServiceImpl implements ServiceGraduation, ServiceEdition {
 	 * @return la liste non modifiable de tous les StudentSheets
 	 */
 	override getStudentSheets() {
-
 		if (graduationTemplate === null) {
-			return List.of();
+			return List.of
 		}
 		return Collections.unmodifiableList(graduationTemplate.studentsheets)
+	}
+
+	/**
+	 * Retourne une liste triée non modifiable de tous les StudentSheets
+	 * @param order Elément servant au tri : 0 = studentID; 1 = lastName; 2 = firstName
+	 * @return Liste triée non modifiable de tous les StudentSheets
+	 */
+	override List<StudentSheet> getStudentSheetsOrderBy(int order) {
+		if (graduationTemplate === null) {
+			return List.of
+		}
+		val List<StudentSheet> sheets = graduationTemplate.studentsheets.clone
+		Collections.sort(sheets, new Comparator<StudentSheet> {
+			override int compare(StudentSheet o1, StudentSheet o2) {
+				switch order {
+					case 1: return o1.lastName.compareTo(o2.lastName)
+					case 2: return o1.firstName.compareTo(o2.firstName)
+					default: return o1.studentID.compareTo(o2.studentID)
+				}
+			}
+		})
+		return Collections.unmodifiableList(sheets)
 	}
 
 	/**

@@ -21,10 +21,13 @@ import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition;
 import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation;
 import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents;
 import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -36,11 +39,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -210,7 +216,7 @@ public class ControllerRoot implements Initializable {
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
       loader.<ControllerStudentListLoader>getController().initialize(this.serviceGraduation);
-      Scene _scene = new Scene(view, 384, 160);
+      Scene _scene = new Scene(view, 384, 206);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();
@@ -410,7 +416,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      Scene _scene = new Scene(view, 384, 276);
+      Scene _scene = new Scene(view, 384, 374);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();
@@ -466,6 +472,48 @@ public class ControllerRoot implements Initializable {
   
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {
+  }
+  
+  @FXML
+  public void openGuide() {
+    Desktop _xifexpression = null;
+    boolean _isDesktopSupported = Desktop.isDesktopSupported();
+    if (_isDesktopSupported) {
+      _xifexpression = Desktop.getDesktop();
+    } else {
+      _xifexpression = null;
+    }
+    final Desktop desktop = _xifexpression;
+    if (((desktop != null) && desktop.isSupported(Desktop.Action.BROWSE))) {
+      try {
+        desktop.browse(URI.create(LanguageManager.translate("guide.link")));
+      } catch (final Throwable _t) {
+        if (_t instanceof Exception) {
+          final Exception e = (Exception)_t;
+          e.printStackTrace();
+        } else {
+          throw Exceptions.sneakyThrow(_t);
+        }
+      }
+    }
+  }
+  
+  @FXML
+  public Optional<ButtonType> openAbout() {
+    Optional<ButtonType> _xblockexpression = null;
+    {
+      final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle(LanguageManager.translate("menu.help.about"));
+      alert.setHeaderText(LanguageManager.translate("about.title"));
+      InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("istic_logo.png");
+      final Image image = new Image(_inputStreamResource);
+      final ImageView imageView = new ImageView(image);
+      alert.setGraphic(imageView);
+      alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, DANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, GHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, GUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, LOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
+      alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+      _xblockexpression = alert.showAndWait();
+    }
+    return _xblockexpression;
   }
   
   @Pure

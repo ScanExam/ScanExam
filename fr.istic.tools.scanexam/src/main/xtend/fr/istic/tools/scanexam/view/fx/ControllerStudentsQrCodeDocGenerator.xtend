@@ -23,6 +23,8 @@ import javafx.scene.control.MenuButton
 import javafx.scene.control.MenuItem
 import javafx.event.EventHandler
 import javafx.event.ActionEvent
+import javafx.scene.control.TextFormatter
+import java.util.regex.Pattern
 
 /**
  * Classe gérant l'interface de génération de document qr code d'élèves
@@ -42,6 +44,8 @@ class ControllerStudentsQrCodeDocGenerator {
 	// ----------------------------------------------------------------------------------------------------
 	/** Logger du programme */
 	static val logger = LogManager.logger
+	/** Format de cellule accepté */
+	static val Pattern cellPattern = Pattern.compile("[A-Z]+[1-9][0-9]*")
 	/** Formats supportés pour la liste des étudiants */
 	val static supportedFormat = Arrays.asList("*.xlsx", "*.xls")
 
@@ -51,6 +55,9 @@ class ControllerStudentsQrCodeDocGenerator {
 	/** Champ du fichier à charger */
 	@FXML
 	public FormattedTextField txtFldFile
+	/** Champ de la première casse */
+	@FXML
+	public FormattedTextField txtFldFirstCell
 	/** Indique si les élèves doivent être rangé par ordre alphabétique */
 	@FXML
 	public CheckBox alphabeticalOrder
@@ -76,7 +83,7 @@ class ControllerStudentsQrCodeDocGenerator {
 	def void saveAndQuit() {
 		val Optional<File> saveFile = selectSavePath
 		if (!saveFile.empty && labelWidth.text != "" && labelHeight.text != "") {
-			val state = exportStudentsQrCodes(new File(txtFldFile.text),
+			val state = exportStudentsQrCodes(new File(txtFldFile.text), txtFldFirstCell.text,
 				Float.parseFloat(labelWidth.text.replace(",", ".")),
 				Float.parseFloat(labelHeight.text.replace(",", ".")), alphabeticalOrder.isSelected, saveFile.get)
 			if (!btnOk.disable)
@@ -104,6 +111,20 @@ class ControllerStudentsQrCodeDocGenerator {
 					: Optional.of("file.info.fileNotValid")
 		)
 		txtFldFile.addFormatValidator(new ValidFilePathValidator)
+
+		txtFldFirstCell.textFormatter = new TextFormatter<String> [ change |
+			change.text = change.text.toUpperCase
+			change
+		]
+
+		txtFldFirstCell.addFormatValidator(
+			text |
+				!cellPattern.matcher(txtFldFirstCell.text).matches
+					? Optional.of("studentlist.info.badCellFormat")
+					: Optional.empty
+		)
+
+		btnOk.disableProperty.bind(txtFldFile.wrongFormattedProperty.or(txtFldFirstCell.wrongFormattedProperty))
 
 		val EventHandler<ActionEvent> formatMenuEvent = new EventHandler<ActionEvent> {
 			override handle(ActionEvent e) {
@@ -181,28 +202,33 @@ class ControllerStudentsQrCodeDocGenerator {
 		alert.showAndWait
 	}
 
-	/**
-	 * Envoie la liste des étudiants et le fichier où enregistrer le document des qr codes au générateur
-	 * @param studentsList Chemin du fichier contenant la liste des étudiants
-	 * @param labelWidth Largeur des étiquettes en mm
-	 * @param labelHeight Hauteur des étiquettes en mm
-	 * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
-	 * @param exportFile Chemin du fichier où enregistrer le document des qr codes
-	 * @return un LoadState représentant l'état terminal de l'export des qr codes
+	/** 
+	 * Rempli les labels d'hauteur et de largeur selon le format choisi
+	 * @param itemText Format choisi
 	 */
-	private def LoadState exportStudentsQrCodes(File studentsList, float labelWidth, float labelHeight,
-		boolean alphabeticalOrder, File exportFile) {
-		val StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator
-		generator.generateDocument(studentsList, labelWidth, labelHeight, alphabeticalOrder, exportFile)
-		return LoadState.SUCCESS
-	}
-
 	private def void selectFormat(String itemText) {
 		if (itemText != "Personnalisé") {
 			val dimensions = itemText.split(" x ")
 			labelWidth.text = dimensions.get(0)
 			labelHeight.text = dimensions.get(1).substring(0, dimensions.get(1).length - 2)
 		}
+	}
+
+	/**
+	 * Envoie la liste des étudiants et le fichier où enregistrer le document des qr codes au générateur
+	 * @param studentsList Chemin du fichier contenant la liste des étudiants
+	 * @param firstCell Cellule la plus en haut à gauche à prendre en compte
+	 * @param labelWidth Largeur des étiquettes en mm
+	 * @param labelHeight Hauteur des étiquettes en mm
+	 * @param alphabeticalOrder Indique si les étudiants doivent être mis par ordre alphabetique
+	 * @param exportFile Chemin du fichier où enregistrer le document des qr codes
+	 * @return un LoadState représentant l'état terminal de l'export des qr codes
+	 */
+	private def LoadState exportStudentsQrCodes(File studentsList, String firstCell, float labelWidth,
+		float labelHeight, boolean alphabeticalOrder, File exportFile) {
+		val StudentsQrCodeDocGenerator generator = new StudentsQrCodeDocGenerator
+		generator.generateDocument(studentsList, firstCell, labelWidth, labelHeight, alphabeticalOrder, exportFile)
+		return LoadState.SUCCESS
 	}
 
 }

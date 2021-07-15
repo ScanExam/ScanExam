@@ -34,6 +34,13 @@ class PdfReaderThreadManager extends Thread implements Runnable {
 	}
 
 	override run() {
+		/* TODO et FIXME
+		 * Intégrer la preuve de concept de l'adresse : https://github.com/ScanExam/QRCodeFixMemoryError/blob/master/src/main/java/QRCodeLivrable/QRCodeBasique/ReaderThreadManager.java
+		 * Cette P.O.C sert à mieux gérer la mémoire des thread
+		 * et surtout à passer outre que PDFBox ne soit pas threadsafe
+		 * Il faut cependant revoir la formule qui permet la subdivision afin de trouver quelque chose de moins empirique
+		 */
+		
 		val ExecutorService service = Executors.newFixedThreadPool(nbThread)
 		val CountDownLatch latchThreads = new CountDownLatch(nbThread)
 		val PDFRenderer pdf = new PDFRenderer(doc)

@@ -97,6 +97,13 @@ interface ServiceGraduation extends Service {
 	def Collection<StudentSheet> getStudentSheets()
 
 	/**
+	 * Retourne une liste triée non modifiable de tous les StudentSheets
+	 * @param order Elément servant au tri : 0 = studentID; 1 = lastName; 2 = firstName
+	 * @return Liste triée non modifiable de tous les StudentSheets
+	 */
+	def List<StudentSheet> getStudentSheetsOrderBy(int order)
+
+	/**
 	 * ajoute une page en plus dans une copie
 	 * @param id de la copie
 	 * @param numéro de la page à ajouter

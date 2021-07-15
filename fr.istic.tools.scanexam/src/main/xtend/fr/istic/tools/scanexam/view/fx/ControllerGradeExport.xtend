@@ -17,13 +17,14 @@ import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
 import javafx.scene.control.MenuItem
 import javafx.event.EventHandler
 import javafx.event.ActionEvent
+import javafx.scene.control.Label
 
 /**
  * Classe gérant l'interface pour l'export des notes en fichier excel
  * @author Julien Cochet
  */
 class ControllerGradeExport {
-	
+
 	// ----------------------------------------------------------------------------------------------------
 	/*
 	 * VARIABLES
@@ -35,16 +36,19 @@ class ControllerGradeExport {
 	/** Pane principale de la vue */
 	@FXML
 	public Pane mainPane
-	/** Indique si les élèves doivent être rangé par ordre alphabétique */
+	/** Indique si les élèves doivent être rangé */
 	@FXML
 	public CheckBox order
-	/** Menu des formats d'étiquettes prédéfinis */
+	/** Label devant le menu */
 	@FXML
-	public MenuButton formatMenu
+	public Label menuLabel
+	/** Menu des manièrre de trier */
+	@FXML
+	public MenuButton orderByMenu
 	/** Bouton de validation */
 	@FXML
 	public Button btnOk
-	
+
 	/** Controller gérant la correction */
 	ControllerFxGraduation controllerGraduation
 
@@ -71,7 +75,19 @@ class ControllerGradeExport {
 		} else {
 			logger.warn("File not chosen")
 		}
-		(new GradesExportImpl).exportGrades(controllerGraduation.service.studentSheets, file)
+		if (order.selected) {
+			if (orderByMenu.text == LanguageManager.translate("studentsTab.tableView.ID")) {
+				(new GradesExportImpl).exportGrades(controllerGraduation.service.getStudentSheetsOrderBy(0), file)
+			} else {
+				if (orderByMenu.text == LanguageManager.translate("studentsTab.tableView.lastName")) {
+					(new GradesExportImpl).exportGrades(controllerGraduation.service.getStudentSheetsOrderBy(1), file)
+				} else {
+					(new GradesExportImpl).exportGrades(controllerGraduation.service.getStudentSheetsOrderBy(2), file)
+				}
+			}
+		} else {
+			(new GradesExportImpl).exportGrades(controllerGraduation.service.studentSheets, file)
+		}
 		quit
 	}
 
@@ -80,26 +96,41 @@ class ControllerGradeExport {
 		val Stage stage = mainPane.scene.window as Stage
 		stage.close
 	}
-	
+
 	/**
 	 * Initialise le composant avec le controller gérant la correction
 	 * @param controllerGraduation Controller gérant la correction
 	 */
 	def initialize(ControllerFxGraduation controllerGraduation) {
 		this.controllerGraduation = controllerGraduation
-		
+
+		enableOrdering(order.selected)
+		order.setOnAction(new EventHandler<ActionEvent> {
+			override handle(ActionEvent e) {
+				enableOrdering(order.selected)
+			}
+		})
+
 		val EventHandler<ActionEvent> formatMenuEvent = new EventHandler<ActionEvent> {
 			override handle(ActionEvent e) {
 				val String selection = (e.source as MenuItem).text
-				formatMenu.text = selection
+				orderByMenu.text = selection
 			}
 		}
-		formatMenu.items.add(new MenuItem(LanguageManager.translate("studentsTab.tableView.ID")))
-		formatMenu.items.add(new MenuItem(LanguageManager.translate("studentsTab.tableView.firstName")))
-		formatMenu.items.add(new MenuItem(LanguageManager.translate("studentsTab.tableView.lastName")))
-		for (item : formatMenu.items) {
+		orderByMenu.items.add(new MenuItem(LanguageManager.translate("studentsTab.tableView.ID")))
+		orderByMenu.items.add(new MenuItem(LanguageManager.translate("studentsTab.tableView.lastName")))
+		orderByMenu.items.add(new MenuItem(LanguageManager.translate("studentsTab.tableView.firstName")))
+		for (item : orderByMenu.items) {
 			item.onAction = formatMenuEvent
 		}
 	}
 
+	/**
+	 * Active ou non les champs se rapportant à la saisie pour le nombre de copies voulues
+	 * @param enable True pour activer les champs
+	 */
+	private def void enableOrdering(boolean enable) {
+		menuLabel.disable = !enable
+		orderByMenu.disable = !enable
+	}
 }

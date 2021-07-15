@@ -2,246 +2,382 @@ package fr.istic.tools.scanexam.view.fx
 
 import fr.istic.tools.scanexam.config.ConfigurationManager
 import fr.istic.tools.scanexam.config.LanguageManager
-import fr.istic.tools.scanexam.core.config.Config
-import fr.istic.tools.scanexam.exportation.SendMailTls
-import fr.istic.tools.scanexam.exportation.SendMailTls.LoginResult
-import fr.istic.tools.scanexam.utils.Encryption
+import fr.istic.tools.scanexam.services.api.ServiceEdition
+import fr.istic.tools.scanexam.services.api.ServiceGraduation
 import fr.istic.tools.scanexam.utils.ResourcesUtils
-import fr.istic.tools.scanexam.view.fx.component.FormattedTextField
-import fr.istic.tools.scanexam.view.fx.component.validator.EmailValidator
-import java.net.InetAddress
-import java.util.Collection
-import java.util.Locale
-import javafx.collections.FXCollections
-import javafx.concurrent.Service
-import javafx.concurrent.Task
+import fr.istic.tools.scanexam.view.fx.editor.ControllerFxEdition
+import fr.istic.tools.scanexam.view.fx.graduation.ControllerFxGraduation
+import fr.istic.tools.scanexam.view.fx.utils.DialogMessageSender
+import java.io.File
+import java.net.URL
+import java.util.ResourceBundle
 import javafx.fxml.FXML
-import javafx.scene.Cursor
-import javafx.scene.control.Alert
+import javafx.fxml.FXMLLoader
+import javafx.fxml.Initializable
+import javafx.scene.Node
+import javafx.scene.Parent
+import javafx.scene.Scene
 import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.Button
-import javafx.scene.control.ComboBox
-import javafx.scene.control.PasswordField
-import javafx.scene.control.TextField
+import javafx.scene.control.CheckMenuItem
+import javafx.scene.control.MenuItem
+import javafx.scene.control.Tab
 import javafx.scene.image.Image
-import javafx.scene.layout.VBox
+import javafx.stage.DirectoryChooser
 import javafx.stage.Stage
-import javax.crypto.spec.SecretKeySpec
+import org.apache.logging.log4j.LogManager
+import org.eclipse.xtend.lib.annotations.Accessors
+import javafx.scene.control.TabPane
+import fr.istic.tools.scanexam.view.fx.students.ControllerFxStudents
+import javafx.scene.control.Alert
+import javafx.scene.image.ImageView
+import java.awt.Desktop
+import java.net.URI
+import javafx.scene.layout.Region
 
-import static extension fr.istic.tools.scanexam.utils.extensions.LocaleExtensions.*
+class ControllerRoot implements Initializable {
 
-/**
- * Classe pour gérer la fenêtre de configuration en JavaFX
- * @author Julien Cochet
- */
-class ControllerConfiguration {
-
-	// ----------------------------------------------------------------------------------------------------
-	/*
-	 * VARIABLES
-	 */
-	// ----------------------------------------------------------------------------------------------------
-	/** Pane principale de la vue */
 	@FXML
-	public VBox mainPane
-
-	/** Sélection de la langue */
+	Tab correctorTab;
 	@FXML
-	public ComboBox<String> cmbBxLanguage
-
-	/** Champ de l'email */
+	Tab editorTab;
 	@FXML
-	public FormattedTextField txtFldEmail
+	Tab studentsTab
 
-	/** Champ du mot de passe de l'email */
 	@FXML
-	public PasswordField pwdFldEmailPassword
-
-	/** Champ de l'hébergeur de l'email */
+	CheckMenuItem autoZoom;
+	/* BUTTONS */
 	@FXML
-	public TextField txtFldEmailHost
-
-	/** Champ du port de l'email */
+	MenuItem saveGraduationButton;
 	@FXML
-	public TextField txtFldEmailPort
-
-	/** Bouton de sauvegarde de la configuration */
+	MenuItem saveTemplateButton;
 	@FXML
-	public Button btnSave
-
-	/** Bouton pour tester le login à l'adresse mail */
+	MenuItem exportToExamButton;
 	@FXML
-	public Button btnCheckMail
+	MenuItem loadStudentNamesButton;
+	@FXML
+	MenuItem pdfExportButton;
+	@FXML
+	MenuItem sendMailButton;
+	@FXML
+	MenuItem pdfExportGradeButton;
+	@FXML
+	MenuItem linkManuallySheetsButton
+	@FXML
+	TabPane tabPane;
 
-	/** Configuration */
-	val Config config = ConfigurationManager.instance
+	@Accessors
+	ControllerFxGraduation graduationController;
 
-	/** Clé de crytage et ses paramètres */
-	val char[] keyPassword = InetAddress.localHost.getHostName.toCharArray
-	val byte[] salt = new String("12345678").bytes
-	val int iterationCount = 40000
-	val int keyLength = 128
-	val SecretKeySpec key = Encryption.createSecretKey(keyPassword, salt, iterationCount, keyLength)
+	@Accessors
+	ControllerFxEdition editionController;
 
-	// ----------------------------------------------------------------------------------------------------
-	/*
-	 * METHODES
-	 */
-	// ----------------------------------------------------------------------------------------------------
-	/**
-	 * Initialise les différents champs avec la valeur actuelle de la configuration
-	 */
-	def initialize() {
-		cmbBxLanguage.value = LanguageManager.currentLanguage.capitalizeDisplayName
-		txtFldEmail.text = config.email
-		pwdFldEmailPassword.text = config.emailPassword !== "" ? Encryption.decrypt(config.emailPassword, key) : ""
-		txtFldEmailHost.text = config.mailHost
-		txtFldEmailPort.text = config.mailPort.toString
+	@Accessors
+	ControllerFxStudents studentsController
 
-		cmbBxLanguage.items = FXCollections.observableArrayList(languages)
+	var ServiceEdition serviceEdition
+	var ServiceGraduation serviceGraduation
 
-		txtFldEmail.addFormatValidator(new EmailValidator)
-		txtFldEmail.focusedProperty.addListener(
-			value, oldVal, newVal |
-				!newVal && !txtFldEmail.wrongFormatted ? completeHostInfos
-		)
-		btnSave.disableProperty.bind(txtFldEmail.wrongFormattedProperty)
+	static val logger = LogManager.logger
 
-		btnCheckMail.onAction = [e|checkMail()]
+	def init() {
+		tabPane.selectionModel.selectedItemProperty.addListener([obs, oldVal, newVal|graduationController.changedTab])
+	}
+
+	def setEditorNode(Node n) {
+		editorTab.content = n
+	}
+
+	def setGraduationNode(Node n) {
+		correctorTab.content = n
+	}
+
+	def setStudentsNode(Node n) {
+		studentsTab.content = n
 	}
 
 	@FXML
-	def void saveAndQuit() {
-		val needRestart = updateConfig(cmbBxLanguage.value, txtFldEmail.text, pwdFldEmailPassword.text,
-			txtFldEmailHost.text, txtFldEmailPort.text)
-		if (needRestart) {
-			val alert = new Alert(AlertType.INFORMATION)
-			val stage = alert.getDialogPane().getScene().getWindow() as Stage
-			stage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-			alert.alertType = AlertType.CONFIRMATION
-			alert.setTitle(LanguageManager.translate("config.restartDialog.title"))
-			alert.setHeaderText(LanguageManager.translate("config.restartDialog.text"))
-			alert.showAndWait
+	def loadTemplatePressedEditor() {
+		tabPane.getSelectionModel().select(editorTab)
+		editionController.loadTemplatePressed
+	}
+
+	@FXML
+	def saveGraduation() {
+		graduationController.saveExam
+	}
+
+	@FXML
+	def loadTemplatePressedCorrector() {
+		tabPane.getSelectionModel().select(correctorTab)
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GraduationLoaderUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.loadGraduation"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
+		loader.<ControllerGraduationLoader>controller.initialize(serviceGraduation, editionController,
+			graduationController)
+		dialog.setScene(new Scene(view, 384, 355))
+		dialog.setResizable(false)
+		dialog.show
+	}
+
+	def goToCorrectorTab(int id) {
+		tabPane.getSelectionModel().select(correctorTab)
+		graduationController.selectStudent(id)
+
+	}
+
+	@FXML
+	def createNewTemplatePressed() {
+		tabPane.getSelectionModel().select(editorTab)
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/TemplateCreatorUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.new"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerTemplateCreator>controller.initialize(editionController)
+		dialog.setScene(new Scene(view, 384, 155))
+		dialog.setResizable(false);
+		dialog.show
+	}
+
+	@FXML
+	def SaveTemplatePressed() {
+		editionController.saveTemplatePressed
+	}
+
+	@FXML
+	def loadStudentList() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentListLoaderUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentList"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerStudentListLoader>controller.initialize(serviceGraduation)
+		dialog.setScene(new Scene(view, 384, 206))
+		dialog.setResizable(false);
+		dialog.show
+	}
+
+	@FXML
+	def updateConfig() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ConfigUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.edit.updateconfig"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerConfiguration>controller.initialize()
+		dialog.setScene(new Scene(view, 384, 280))
+		dialog.setResizable(false);
+		dialog.show
+	}
+
+	@FXML
+	def linkManuallySheets() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.resources = LanguageManager.currentBundle
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/ManuallyLinkSheets.fxml"))
+		val Stage dialog = new Stage
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerLinkManuallySheets>controller.init(serviceGraduation, graduationController.pdfManager,
+			graduationController)
+		dialog.title = LanguageManager.translate("menu.edit.linkSheetsTitle")
+		dialog.setScene(new Scene(view))
+		dialog.setResizable(false);
+		dialog.show
+	}
+
+	@FXML
+	def pdfExport() {
+
+		// Vérification de copies avec aucun nom associé
+		val nameList = serviceGraduation.studentIds
+
+		if (nameList.empty) {
+			DialogMessageSender.sendTranslateDialog(
+				AlertType.WARNING,
+				"sendMail.noStudentDataHeader",
+				"sendMail.noStudentDataHeader",
+				"sendMail.noStudentData"
+			);
+			return
 		}
-		quit
-	}
 
-	/**
-	 * Met à jour la configuration
-	 * @param language Nouvelle langue
-	 * @param email Nouvel email
-	 * @param emailPassword Nouveau mot de passe de l'email
-	 * @param emailHost Nouvel hébergeur de l'email
-	 * @param emailPort Nouveau port de l'email
-	 * @return true si le programme doit être redémarré pour que l'ensemble de la configuration soit prise en compte
-	 */
-	def boolean updateConfig(String language, String email, String emailPassword, String emailHost, String emailPort) {
-		var needToRestart = false
-		val Locale newLocale = LanguageManager.supportedLocales.findFirst [ locale |
-			language.equals(capitalizeDisplayName(locale))
-		]
-		if (newLocale === null)
-			throw new IllegalArgumentException(newLocale + " is not supported.")
-		needToRestart = newLocale != LanguageManager.currentLanguage
-		config.language = newLocale.toString
-		config.email = email
-		config.emailPassword = Encryption.encrypt(emailPassword, key)
-		config.mailHost = emailHost
-		config.mailPort = Integer.parseInt(emailPort)
-		ConfigurationManager.save
-		return needToRestart
-	}
-
-	def Collection<String> getLanguages() {
-		LanguageManager.supportedLocales.map[local|capitalizeDisplayName(local)].toList
-	}
-
-	/**
-	 * @param name l'adresse mail du login
-	 * @param password le mot de passe du login
-	 * @param host l'host SMTP
-	 * @param port le port SMTP
-	 * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
-	 */
-	def SendMailTls.LoginResult checkLogin(String name, String password, String host, String port) {
-		return SendMailTls.checkLogin(name === null ? "" : name, password === null ? "" : password,
-			host === null ? "" : host, Integer.parseInt(port))
-	}
-
-	/**
-	 * @param email une adresse email (non nulle)
-	 * @return une paire composée de l'Host et du Port SMTP pour cette adresse mail, si ceux-ci se trouvent dans le fichier mailing/configMailFile.properties
-	 */
-	def getSmtpInfos(String email) {
-		SendMailTls.getSmtpInformation(email)
-	}
-
-	@FXML
-	def void quit() {
-		val Stage stage = mainPane.scene.window as Stage
-		stage.close
-	}
-
-	// ----------------------------------------------------------------------------------------------------
-	/*
-	 * SETTERS
-	 */
-	// ----------------------------------------------------------------------------------------------------
-	/** 
-	 * Complète les informations de l'hôte à partir de l'adresse mail saisie par l'utilisateur, à condition que l'hôte soit connu
-	 */
-	private def void completeHostInfos() {
-		if (txtFldEmail.text != "") {
-			val infos = getSmtpInfos(txtFldEmail.text)
-			txtFldEmailHost.text = infos.key
-			txtFldEmailPort.text = infos.value
-		}
-	}
-
-	/**
-	 * @param name l'adresse mail du login
-	 * @param password le mot de passe du login
-	 * @param host l'host SMTP
-	 * @param port le port SMTP
-	 * @return true si le programme a réussi à se connecter à l'adresse mail, false sinon
-	 */
-	private def void checkMail() {
-		val Task<LoginResult> task = [
-			{
-				mainPane.scene.setCursor(Cursor.WAIT)
-				mainPane.disable = true
-				val result = checkLogin(txtFldEmail.text, pwdFldEmailPassword.text, txtFldEmailHost.text,
-					txtFldEmailPort.text)
-				mainPane.disable = false
-				mainPane.scene.setCursor(Cursor.DEFAULT)
-				result
-			}
-		]
-		val Service<LoginResult> service = [task]
-		service.onSucceeded = [e|sendCheckMailResult(service.value)]
-		service.start
-	}
-
-	/**
-	 * Affiche une boîte de dialogue prévenant l'utilisateur de la réussite ou non de la connexion à son adresse mail
-	 * @param result un LoginResult
-	 */
-	private def void sendCheckMailResult(LoginResult result) {
-		val alert = new Alert(AlertType.NONE)
-		val stage = alert.getDialogPane().getScene().getWindow() as Stage
-		stage.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
-		if (result == LoginResult.SUCCESS) {
-			alert.alertType = AlertType.CONFIRMATION
-			alert.setTitle(LanguageManager.translate("config.emailConfirmationDialog.title"))
-			alert.setHeaderText(LanguageManager.translate("config.emailConfirmationDialog.success"))
-		} else {
-			alert.alertType = AlertType.ERROR
-			alert.setTitle(LanguageManager.translate("config.emailConfirmationDialog.title"))
-			if (result == LoginResult.HOST_NOT_FOUND)
-				alert.setHeaderText(LanguageManager.translate("config.emailConfirmationDialog.hostNotFound"))
+		val studentSheets = serviceGraduation.studentSheets
+		val nbSheetWithoutName = if (!nameList.empty)
+				studentSheets.filter(x|!nameList.contains(x.studentID)).size as int
 			else
-				alert.setHeaderText(LanguageManager.translate("config.emailConfirmationDialog.badLogin"))
+				-1
+
+		DialogMessageSender.sendDialog(
+			AlertType.WARNING,
+			LanguageManager.translate("sendMail.noStudentDataHeader"),
+			nbSheetWithoutName > 1
+				? String.format(LanguageManager.translate("sendMail.notAllStudent"), nbSheetWithoutName)
+				: LanguageManager.translate("sendMail.notAllStudent1"),
+			null
+		)
+
+		// Sélection du dossier	
+		var dirChooser = new DirectoryChooser
+		dirChooser.initialDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") +
+			"Documents")
+		var directory = dirChooser.showDialog(new Stage)
+		if (directory === null) {
+			logger.warn("Directory not chosen")
+		} else {
+			// Export
+			graduationController.exportGraduationToPdf(directory)
 		}
-		alert.showAndWait
+	}
+
+	@FXML
+	def sendMail() {
+		val config = ConfigurationManager.instance
+		val rightConfig = config.email == "" || config.emailPassword == "" || config.mailHost == "" ||
+			config.mailPort == 0
+		if (rightConfig) {
+			DialogMessageSender.sendTranslateDialog(
+				AlertType.ERROR,
+				"error",
+				"sendMail.noCredentialTitle",
+				"sendMail.noCredentialBody"
+			);
+		} else {
+			val FXMLLoader loader = new FXMLLoader
+			loader.setResources(LanguageManager.currentBundle)
+
+			val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/SendMailUI.fxml"))
+			val Stage dialog = new Stage
+
+			loader.<ControllerSendMail>controller.init(serviceGraduation, graduationController)
+
+			dialog.setTitle(LanguageManager.translate("menu.edit.sendmail"))
+			dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+			dialog.setScene(new Scene(view, 672, 416))
+			dialog.setResizable(false);
+			dialog.show
+		}
+	}
+
+	@FXML
+	def loadStudentCopiesPressed() {
+		tabPane.getSelectionModel().select(correctorTab)
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GraduationCreatorUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.loadStudentSheet"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerGraduationCreator>controller.initialize(serviceGraduation, editionController,
+			graduationController, this)
+		dialog.setScene(new Scene(view, 384, 405))
+		dialog.setResizable(false);
+		dialog.show
+	}
+
+	@FXML
+	def exportToSheets() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/StudentSheetExportUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.exportToExam"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerStudentSheetExport>controller.initialize(editionController, serviceEdition)
+		dialog.setScene(new Scene(view, 384, 160))
+		dialog.setResizable(false);
+		dialog.show
+	}
+
+	@FXML
+	def exportStudentsQrCodes() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(
+			ResourcesUtils.getInputStreamResource("viewResources/StudentsQrCodeDocGeneratorUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.file.exportStudentsQrCodes"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")))
+		dialog.setScene(new Scene(view, 384, 374))
+		dialog.setResizable(false)
+		dialog.show
+	}
+
+	@FXML
+	def gradeExport() {
+		val FXMLLoader loader = new FXMLLoader
+		loader.setResources(LanguageManager.currentBundle)
+		val Parent view = loader.load(ResourcesUtils.getInputStreamResource("viewResources/GradeExportUI.fxml"))
+		val Stage dialog = new Stage
+		dialog.setTitle(LanguageManager.translate("menu.edit.gradeExport"))
+		dialog.icons.add(new Image(ResourcesUtils.getInputStreamResource("logo.png")));
+		loader.<ControllerGradeExport>controller.initialize(graduationController)
+		dialog.setScene(new Scene(view, 384, 160))
+		dialog.setResizable(false)
+		dialog.show
+	}
+
+	@FXML
+	def saveCorrection() {
+		graduationController.saveExam
+	}
+
+	@FXML
+	def toggleAutoZoom() {
+		graduationController.toAutoZoom = autoZoom.selected
+	}
+
+	def init(ServiceEdition serviceEdition, ServiceGraduation serviceGraduation) {
+		/*
+		 * FIXME
+		 * la méthode graduationController.loadedModel.not ne vérifie pas si
+		 * un élément peut générer une NPE. Plusieurs exemples :
+		 * - pour l'export des notes : si le grader ne contient pas encore de notes : NPE
+		 * - pour lier les pages mal reconnues : si il n'y a pas de pages mal reconnues : NPE
+		 */
+		this.serviceEdition = serviceEdition
+		this.serviceGraduation = serviceGraduation
+		saveGraduationButton.disableProperty.bind(graduationController.loadedModel.not)
+		saveTemplateButton.disableProperty.bind(editionController.loadedModel.not)
+		exportToExamButton.disableProperty.bind(editionController.loadedModel.not)
+		loadStudentNamesButton.disableProperty.bind(graduationController.loadedModel.not)
+		pdfExportButton.disableProperty.bind(graduationController.loadedModel.not)
+		sendMailButton.disableProperty.bind(graduationController.loadedModel.not)
+		pdfExportGradeButton.disableProperty.bind(graduationController.loadedModel.not)
+		linkManuallySheetsButton.disableProperty.bind(graduationController.loadedModel.not)
+	}
+
+	override initialize(URL location, ResourceBundle resources) {
+	}
+	
+	@FXML
+	def openGuide() {
+		val Desktop desktop = Desktop.isDesktopSupported ? Desktop.getDesktop : null
+	    if (desktop !== null && desktop.isSupported(Desktop.Action.BROWSE)) {
+	        try {
+	            desktop.browse(URI.create(LanguageManager.translate("guide.link")))
+	        } catch (Exception e) {
+	            e.printStackTrace
+	        }
+	    }
+	}
+	
+	@FXML
+	def openAbout(){
+		val Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(LanguageManager.translate("menu.help.about"));
+        alert.setHeaderText(LanguageManager.translate("about.title"));
+        val Image image = new Image(ResourcesUtils.getInputStreamResource("istic_logo.png"));
+		val ImageView imageView = new ImageView(image);
+		alert.setGraphic(imageView);
+        alert.setContentText("BEUREL Luca, CARUANA Romain, COCHET Julien, DANLOS Benjamin, DEGAS Antoine, DERRIEN Steven, GHOUTI TERKI Rida, MA Qian, GIRAUDET Théo, GUIBERT Thomas, LALANDE MARCHAND Arthur, LELOUP Alexis, LOCKE Stefan, LUMBROSO Marius, PAYS Matthieu​");
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+ 		
+        alert.showAndWait();
 	}
 }

@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -271,6 +272,33 @@ public class ServiceImpl implements ServiceGraduation, ServiceEdition {
       return List.<StudentSheet>of();
     }
     return Collections.<StudentSheet>unmodifiableList(this.graduationTemplate.getStudentsheets());
+  }
+  
+  /**
+   * Retourne une liste triée non modifiable de tous les StudentSheets
+   * @param order Elément servant au tri : 0 = studentID; 1 = lastName; 2 = firstName
+   * @return Liste triée non modifiable de tous les StudentSheets
+   */
+  @Override
+  public List<StudentSheet> getStudentSheetsOrderBy(final int order) {
+    if ((this.graduationTemplate == null)) {
+      return List.<StudentSheet>of();
+    }
+    final List<StudentSheet> sheets = (List<StudentSheet>)Conversions.doWrapArray(((StudentSheet[])Conversions.unwrapArray(this.graduationTemplate.getStudentsheets(), StudentSheet.class)).clone());
+    Collections.<StudentSheet>sort(sheets, new Comparator<StudentSheet>() {
+      @Override
+      public int compare(final StudentSheet o1, final StudentSheet o2) {
+        switch (order) {
+          case 1:
+            return o1.getLastName().compareTo(o2.getLastName());
+          case 2:
+            return o1.getFirstName().compareTo(o2.getFirstName());
+          default:
+            return o1.getStudentID().compareTo(o2.getStudentID());
+        }
+      }
+    });
+    return Collections.<StudentSheet>unmodifiableList(sheets);
   }
   
   /**
