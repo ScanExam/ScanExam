@@ -17,6 +17,8 @@ Comme le montre la **figure 1** ci dessus, la correction se déroule en plusieur
 Pour commencer, il faut importer vos copies numérisées ainsi que le modèle que vous avez créé lors de la création de l'examen dans l'application. Cet import se trouve dans le menu **Fichier -> Nouvelle correction** (voir figure 2). Vous pourrez alors sélectionner dans une nouvelle fenêtre, votre modèle au format XMI et vos copies d'étudiants au format d'un unique PDF. Dans la fenêtre de sélection, vous aurez 2 choix, soit vous importez votre modèle, soit, si le modèle est déjà chargé depuis l'onglet de création, vous n'aurez pas besoin de le charger et le modèle sera déjà reconnu.
 De plus, vous avez la possiblité de charger une correction déjà commencée. Il faudra alors vous rendre dans **Fichier -> Charger une correction** (voir figure 2). Tout comme la nouvelle correction, il vous faudra charger le modèle de l'examen si il n'est pas déjà chargé depuis l'onglet de création, mais au lieu de chercher vos copies, vous allez directement charger un deuxième fichier au format XMI qui sera votre fichier de sauvegarde.
 
+Une fois fait, vous serez automatiquement renvoyé sur l'onglet **Copies** ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+)
+
 ### 2. Identification des étudiants
 
 Comme vu dans la partie création, ScanExam propose plusieurs types d'examens.
