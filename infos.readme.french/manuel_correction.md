@@ -2,13 +2,13 @@
 
 Dans cette partie, nous allons aborder la correction d'un examen dans l'application, ainsi que toutes les fonctionnalités qui sont associées à la correction.
 
-<img align="center" src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_schema.png?raw=true">
+<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_schema.png?raw=true">
 
-***Figure 1** : Schéma illustrant les étapes importantes de la correction d'un examen dans ScanExam*
+* **Figure 1** : Schéma illustrant les étapes importantes de la correction d'un examen dans ScanExam*
 
 Comme le montre la **figure 1** ci dessus, la correction se déroule en plusieurs étapes; cela commence avec l'import des copies des étudiants. Il faudra donc au préalable avoir créé un examen dans l'application et l'avoir fait passer à vos élèves, pour numériser leurs copies. Une fois les copies numérisées, vous pouvez commencer la correction dans ScanExam.
 
-<img align="center" src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_vue.png?raw=true">
+<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_vue.png?raw=true">
 
 ***Figure 2** : Vue de la fenêtre principale de correction*
 
@@ -19,4 +19,11 @@ De plus, vous avez la possiblité de charger une correction déjà commencée. I
 
 ### 2. Identification des étudiants
 
-Comme vu dans la partie création, ScanExam propose plusieurs types d'examens. En effet, vous pouvez choisir en amont de placer un QRCode, directement sur le sujet ou via des autocollants, qui contiendra les informations disponibles d'un étudiant; son nom, prénom, numéro d'étudiant ou bien son numéro d'anonymat par exemple. Si c'est le cas, lors du chargement des copies, l'application sera en mesure de lier chaque étudiant à sa copie. Au cas échéant, il vous faudra importer la liste des étudiants en allant dans **Fichier -> Charger la liste des étudiants** (figure 2)
+Comme vu dans la partie création, ScanExam propose plusieurs types d'examens.
+En effet, vous pouvez choisir en amont de placer un QRCode, directement sur le sujet ou via des autocollants, qui contiendra les informations disponibles d'un étudiant; son nom, prénom, numéro d'étudiant ou bien son numéro d'anonymat par exemple. Si c'est le cas, lors du chargement des copies, l'application sera en mesure de lier chaque étudiant à sa copie. Au cas échéant, il vous faudra importer la liste des étudiants en allant dans **Fichier -> Charger la liste des étudiants** (figure 2) et lier chaque copie à son étudiant. La liste des étudiants se présente sous la forme d'un tableau Excel et reprend le nom d'un étudiant et son adresse mail. Pour effectuer la liaison, vous trouverez un petit **symbole de crayon** en dessous de la liste des copies (figure 3).
+
+<img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_name.png?raw=true">
+
+***Figure 3** : Exemple de placement du symbole du crayon afin de d'attribuer un étudiant à sa copie*
+
+Plus tard, lors de la fin de votre correction, il est important d'importer la liste des étudiants si vous souhaitez envoyer la correction d'une copie à son étudiant, par mail.
