@@ -213,7 +213,7 @@ public class ControllerRoot implements Initializable {
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
       loader.<ControllerStudentListLoader>getController().initialize(this.serviceGraduation);
-      Scene _scene = new Scene(view, 384, 160);
+      Scene _scene = new Scene(view, 384, 206);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();
@@ -413,7 +413,7 @@ public class ControllerRoot implements Initializable {
       InputStream _inputStreamResource = ResourcesUtils.getInputStreamResource("logo.png");
       Image _image = new Image(_inputStreamResource);
       _icons.add(_image);
-      Scene _scene = new Scene(view, 384, 318);
+      Scene _scene = new Scene(view, 384, 374);
       dialog.setScene(_scene);
       dialog.setResizable(false);
       dialog.show();
