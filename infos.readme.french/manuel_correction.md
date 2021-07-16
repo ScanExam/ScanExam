@@ -1,7 +1,8 @@
-# Manuel d'utilisation de ScanExam : correction de l'examen
+# Manuel d'utilisation de ScanExam : Correction d'un examen
 
-Dans cette partie, nous allons aborder la correction d'un examen dans l'application, ainsi que toutes les fonctionnalités qui sont associées à la correction.
-</br><a href="https://github.com/ScanExam/ScanExam/blob/dev/infos.readme.french/manuel_intro.md">Retour</a>
+Cette page détaille la coorection d'un examen sur ScanExam. Pour revenir à l'introduction du manuel de ScanExam, cliquez <a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_intro.md">ici</a>.
+
+## Introduction
 
 <img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_schema.png?raw=true">
 
@@ -12,6 +13,8 @@ Comme le montre la **figure 1** ci-dessus, la correction se déroule en plusieur
 <img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_vue.png?raw=true">
 
 ***Figure 2** : Vue de la fenêtre principale de correction. Cette image sera une référence dans le texte plus tard par le biais d'un code couleur.*
+
+## Correction
 
 ### Commencer la correction
 
@@ -70,7 +73,6 @@ Vous pouvez ajouter des annotations en cliquant sur le bouton **Ajouter Annotati
 ***Figure 6** : Exemple d'une annotation et de ses boutons utiles*
 
 De plus, pour ne pas gêner le correcteur, il est possible grâce au bouton **Visualiser Annotations** ![#ffb6c1](https://via.placeholder.com/15/ffb6c1/000000?text=+) (voir figure 2) d’afficher ou de masquer les annotations déjà présentes sur la question en cours de correction. Pour plus de flexibilité, les boîtes de texte des annotations ainsi que l’endroit où elles pointent sont déplaçables afin de s’adapter à l’espace disponible autour de la réponse (voir figure 6).
-
 
 ### Export et diffusion des notes
 
