@@ -10,3 +10,4 @@ L'objectif de ScanExam est alors simple, permettre au correcteur de passer le mo
 
 ## <a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_creation.md">Création de l'examen dans ScanExam</a>
 ## <a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_correction.md">Correction de l'examen dans ScanExam</a>
+## <a href="https://github.com/ScanExam/ScanExam/tree/dev">Retour</a>
