@@ -1,6 +1,6 @@
 # Manuel d'utilisation de ScanExam : Création d'un examen
 
-Cette page détaille la création d'un examen sur ScanExam. Pour revenir à l'introduction du manuel de ScanExam, cliquez <a href="https://github.com/ScanExam/ScanExam/blob/dev/infos.readme.french/manuel_intro.md">ici</a>.
+Cette page détaille la création d'un examen sur ScanExam. Pour revenir à l'introduction du manuel de ScanExam, cliquez <a href="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/manuel_intro.md">ici</a>.
 
 ## Introduction
 
