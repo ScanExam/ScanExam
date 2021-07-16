@@ -16,12 +16,13 @@ Vous pouvez vous y rendre en cliquant juste <a href="https://github.com/ScanExam
 
 # Comment installer le programme ?
 
+Téléchargez la dernière release disponible sur ce git et double-cliquez sur le .jar, ou executez la commande java -jar ScanExam.release-X.X dans un terminal ouvert dans le dossier du fichier.
+
 # Comment build le programme ?
 
 ```
 cd fr.istic.tools.scanexam
 mvn compile assembly:single
-Move file pfo_example.pdf to `target` directory
 java -jar target/ScanExam-jar-with-dependencies.jar
 ```
 
