@@ -13,6 +13,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 
+/**
+ * Affiche un pdf avec des annotations
+ * //TODO Ajouter la possibilité de dessiner sur le pdf
+ */
 @SuppressWarnings("all")
 public class PdfPaneWithAnotations extends Pane {
   public PdfPaneWithAnotations(final ControllerFxGraduation controller) {
@@ -43,9 +47,12 @@ public class PdfPaneWithAnotations extends Pane {
     List<Integer> ids = this.controller.getService().getAnnotationIds(qItem.getQuestionId(), sItem.getStudentId());
     for (final int id : ids) {
       this.addAnotation(
-        this.controller.getService().getAnnotationX(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationY(id, qItem.getQuestionId(), sItem.getStudentId()), 
-        this.controller.getService().getAnnotationHeight(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationWidth(id, qItem.getQuestionId(), sItem.getStudentId()), 
-        this.controller.getService().getAnnotationPointerX(id, qItem.getQuestionId(), sItem.getStudentId()), this.controller.getService().getAnnotationPointerY(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationX(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationY(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationHeight(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationWidth(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationPointerX(id, qItem.getQuestionId(), sItem.getStudentId()), 
+        this.controller.getService().getAnnotationPointerY(id, qItem.getQuestionId(), sItem.getStudentId()), 
         this.controller.getService().getAnnotationText(id, qItem.getQuestionId(), sItem.getStudentId()), id);
     }
   }
