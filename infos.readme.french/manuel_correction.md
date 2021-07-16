@@ -1,7 +1,7 @@
 # Manuel d'utilisation de ScanExam : correction de l'examen
 
 Dans cette partie, nous allons aborder la correction d'un examen dans l'application, ainsi que toutes les fonctionnalités qui sont associées à la correction.
-<a href="https://github.com/ScanExam/ScanExam/blob/dev/infos.readme.french/manuel_intro.md">Retour</a>
+</br><a href="https://github.com/ScanExam/ScanExam/blob/dev/infos.readme.french/manuel_intro.md">Retour</a>
 
 <img src="https://github.com/ScanExam/ScanExam/blob/master/infos.readme.french/correction_schema.png?raw=true">
 
