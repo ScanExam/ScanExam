@@ -39,11 +39,11 @@ La colonne de gauche "**Questions**" ![#b6e620](https://via.placeholder.com/15/b
 
 ### Ajouter zone QR code
 
-ScanExam insère des QR codes sur les sujets d'examen afin de reconnaitre les copies à la correction. Vous pouvez choisir où seront insérer les qr codes grâce au bouton **Ajouter zone QR code** ![#4049cc](https://via.placeholder.com/15/4049cc/000000?text=+) (voir figure 2). Il ne peut y avoir qu'une zone par sujet et pour toutes les pages. Si lors de l'export aucune zone n'a été définie, une zone sera placé automatiquement en bas à gauche du sujet.
+ScanExam insère des QR codes sur les sujets d'examen afin de reconnaitre les copies à la correction. Vous pouvez choisir où seront insérés les QR codes grâce au bouton **Ajouter zone QR code** ![#4049cc](https://via.placeholder.com/15/4049cc/000000?text=+) (voir figure 2). Il ne peut y avoir qu'une zone par sujet et pour toutes les pages. Si lors de l'export aucune zone n'a été définie, une zone sera placée automatiquement en bas à gauche du sujet.
 
 ### Exporter le sujet d'examen en PDF
 
-Une fois toutes les questions définies et le fichier enregistré vous pouvez exporter votre sujet pour l'imprimer. Pour cela, ouvrez le menu **Fichier** ![#ed1d25](https://via.placeholder.com/15/ed1d25/000000?text=+) (voir figure 2) et cliquez sur le bouton **Exporter le sujet d'examen en PDF**. Dans la nouvelle fenêtre, une option vous permet de différencier les copies ou non. Si vous choisissez cette option, chaque page aura son propre QR code, ce qui permettera à l'application de remettre les copies dans l'ordre à la correction et donc à vous, de ne pas faire ce tri. Vous devrez indiquer le nombre de sujet souhaité, vous pouvez indiquer un nombre plus élevé que nécessaire. Si vous ne différencier pas les copies, assurez-vous que des copies d'élèves de sont pas mélangées entre elles à l'importation.
+Une fois toutes les questions définies et le fichier enregistré, vous pouvez exporter votre sujet pour l'imprimer. Pour cela, ouvrez le menu **Fichier** ![#ed1d25](https://via.placeholder.com/15/ed1d25/000000?text=+) (voir figure 2) et cliquez sur le bouton **Exporter le sujet d'examen en PDF**. Dans la nouvelle fenêtre, une option vous permet de différencier les copies ou non. Si vous choisissez cette option, chaque page aura son propre QR code, ce qui permettera à l'application de remettre les copies dans l'ordre à la correction et donc à vous, de ne pas faire ce tri. Vous devrez indiquer le nombre de sujets souhaités; vous pouvez indiquer un nombre plus élevé que nécessaire. Si vous ne différenciez pas les copies, assurez-vous que des copies d'élèves de sont pas mélangées entre elles à l'importation.
 
 ### Exporter les identifiants des identifiants en qr codes
 
